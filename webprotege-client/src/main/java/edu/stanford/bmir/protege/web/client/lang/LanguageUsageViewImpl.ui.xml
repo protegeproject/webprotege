@@ -1,0 +1,37 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            padding: 2px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+        .propertyField {
+            flex-basis: 200px;
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .langTagField {
+            flex-basis: 40px;
+            flex-grow: 0;
+            flex-shrink: 1;
+        }
+        .usageCountField {
+            flex-basis: 40px;
+            flex-grow: 0;
+            flex-shrink: 1;
+            text-align: right;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelNeutral}">
+        <primitive:PrimitiveDataEditorImpl enabled="false" annotationPropertiesAllowed="true" showLinksForEntities="false" ui:field="propertyField" addStyleNames="{style.propertyField}"/>
+        <g:Label ui:field="langTagField" addStyleNames="{style.langTagField}"/>
+        <g:Label ui:field="usageCountField" addStyleNames="{style.usageCountField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

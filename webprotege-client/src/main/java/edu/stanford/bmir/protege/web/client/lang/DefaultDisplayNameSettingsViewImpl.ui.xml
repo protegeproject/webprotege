@@ -3,15 +3,31 @@
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .usageContainer {
+
+        }
+        .usageContainer > * {
+            background-color: white;
+            padding: 3px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 2px;
+
+        }
+        .col {
+            max-width: 400px;
+        }
+    </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.form}">
         <div class="{wp.style.formGroup}">
             <ui:text from="{msg.language_displayName_helpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.language_displayName_priorityList_title}" addStyleNames="{wp.style.formLabel}"/>
-            <div style="max-width: 400px">
+            <div class="{style.col}">
                 <editor:ValueListFlexEditorImpl ui:field="languagesList"/>
             </div>
         </div>
+        <g:Button ui:field="resetButton" text="{msg.language_defaultDisplayName_reset_title}" addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

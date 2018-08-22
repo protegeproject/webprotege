@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -31,11 +30,10 @@ import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_SETTINGS;
 
 /**
@@ -79,6 +77,12 @@ public class ProjectSettingsPresenter {
 
     @Nonnull
     private final AnnotationPropertyIriRenderer annotationPropertyIriRenderer;
+
+    @Nonnull
+    private Optional<ProjectSettings> currentProjectSettings = Optional.empty();
+
+    @Nonnull
+    private Optional<ImmutableList<DictionaryLanguageUsage>> currentLanguageUsage = Optional.empty();
 
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
@@ -132,7 +136,7 @@ public class ProjectSettingsPresenter {
         // TODO: Check that the user can do this
         settingsPresenter.addSection(messages.newEntitySettings()).setWidget(entityCrudKitSettingsEditor);
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
-        settingsPresenter.addSection("Default Display Name Settings").setWidget(defaultDisplayNameSettingsView);
+        settingsPresenter.addSection(messages.language_defaultDisplayName_title()).setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
         settingsPresenter.setBusy(container, true);
@@ -146,11 +150,23 @@ public class ProjectSettingsPresenter {
                                            EntityCrudKitSettings<?> settings = result.getSettings();
                                            entityCrudKitSettingsEditor.setValue(settings);
                                        });
+        defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
+    }
+
+    private void handleResetDisplayNameLanguages() {
+        currentLanguageUsage.ifPresent(langUsage -> {
+            ImmutableList<DictionaryLanguageData> langUsageData = langUsage.stream()
+                                                                           .map(DictionaryLanguageUsage::getDictionaryLanguage)
+                                                                           .collect(toImmutableList());
+            defaultDisplayNameSettingsView.setPrimaryLanguages(langUsageData);
+        });
     }
 
     private void displayProjectSettings(@Nonnull AcceptsOneWidget container,
                                         @Nonnull ProjectSettings projectSettings,
                                         @Nonnull ImmutableList<DictionaryLanguageUsage> languages) {
+        this.currentProjectSettings = Optional.of(projectSettings);
+        this.currentLanguageUsage = Optional.of(languages);
         generalSettingsView.setDisplayName(projectSettings.getProjectDisplayName());
         generalSettingsView.setDescription(projectSettings.getProjectDescription());
 
@@ -177,17 +193,15 @@ public class ProjectSettingsPresenter {
     private void displayDefaultDisplayNameLanguages(@Nonnull DisplayNameSettings displayNameSettings,
                                                     @Nonnull ImmutableList<DictionaryLanguageUsage> languages) {
         ImmutableList<DictionaryLanguageData> langList = displayNameSettings.getPrimaryDisplayNameLanguages();
-        ImmutableList.Builder<DictionaryLanguageData> builder = ImmutableList.builder();
-        Set<DictionaryLanguage> added = new HashSet<>();
-        langList.forEach(l -> {
-            added.add(l.getDictionaryLanguage());
-            builder.add(l);
-        });
-        languages.stream()
-                 .map(DictionaryLanguageUsage::getDictionaryLanguage)
-                 .filter(l -> !added.contains(l.getDictionaryLanguage()))
-                 .forEach(builder::add);
-        defaultDisplayNameSettingsView.setPrimaryLanguages(builder.build());
+        if (!langList.isEmpty()) {
+            defaultDisplayNameSettingsView.setPrimaryLanguages(langList);
+        }
+        else {
+            ImmutableList<DictionaryLanguageData> activeLanguages = languages.stream()
+                                                                             .map(DictionaryLanguageUsage::getDictionaryLanguage)
+                                                                             .collect(toImmutableList());
+            defaultDisplayNameSettingsView.setPrimaryLanguages(activeLanguages);
+        }
     }
 
 

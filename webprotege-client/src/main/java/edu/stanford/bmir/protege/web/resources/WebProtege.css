@@ -269,23 +269,22 @@
 }
 
 .wp-panel-neutral {
-
 }
 
 .wp-panel-neutral .gwt-TextBox {
-
+    border-color: transparent;
 }
 
 .wp-panel-neutral .gwt-PasswordTextBox {
-
+    border-color: transparent;
 }
 
 .wp-panel-neutral .gwt-TextArea {
-
+    border-color: transparent;
 }
 
 .wp-panel-neutral .gwt-SuggestBox {
-
+    border-color: transparent;
 }
 
 .wp-table-header {

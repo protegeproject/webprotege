@@ -322,6 +322,11 @@ public class ClientProjectModule {
     Storage provideLocalStorage() {
         return Storage.getLocalStorageIfSupported();
     }
+
+    @Provides
+    LanguageUsageView provideLanguageUsageView(LanguageUsageViewImpl impl) {
+        return impl;
+    }
 }
 
 

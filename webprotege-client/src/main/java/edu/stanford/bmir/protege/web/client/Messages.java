@@ -1136,4 +1136,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Default Language Settings")
     @Key("language.defaultSettings.title")
     String language_defaultSettings_title();
+
+    @DefaultMessage("Default Display Name Settings")
+    @Key("language.defaultDisplayName.title")
+    String language_defaultDisplayName_title();
+
+    @DefaultMessage("Reset to referenced languages")
+    @Key("language.defaultDisplayName.reset.title")
+    String language_defaultDisplayName_reset_title();
 }
