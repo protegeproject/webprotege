@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.State;
+import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
@@ -70,6 +71,8 @@ public class RpcWhiteList implements Action, Result {
     PropertyValue propertyValue;
 
     DisplayNameSettings displayNameSettings;
+
+    DictionaryLanguageUsage dictionaryLanguageUsage;
 
     public RpcWhiteList() {
     }
@@ -224,5 +227,13 @@ public class RpcWhiteList implements Action, Result {
 
     public void setDisplayNameSettings(DisplayNameSettings displayNameSettings) {
         this.displayNameSettings = displayNameSettings;
+    }
+
+    public DictionaryLanguageUsage getDictionaryLanguageUsage() {
+        return dictionaryLanguageUsage;
+    }
+
+    public void setDictionaryLanguageUsage(DictionaryLanguageUsage dictionaryLanguageUsage) {
+        this.dictionaryLanguageUsage = dictionaryLanguageUsage;
     }
 }

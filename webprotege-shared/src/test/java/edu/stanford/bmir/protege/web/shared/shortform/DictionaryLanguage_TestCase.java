@@ -12,6 +12,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DictionaryLanguage_TestCase {
@@ -26,6 +28,17 @@ public class DictionaryLanguage_TestCase {
     @Before
     public void setUp() {
         dictionaryLanguage = DictionaryLanguage.create(annotationIri, lang);
+    }
+
+    @Test
+    public void shouldAcceptNullPropertyIri() {
+        DictionaryLanguage dictionaryLanguage = DictionaryLanguage.create(null, "");
+        assertThat(dictionaryLanguage.getAnnotationPropertyIri(), is(nullValue()));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldNotAcceptNullLang() {
+        DictionaryLanguage dictionaryLanguage = DictionaryLanguage.create(annotationIri, null);
     }
 
     @Test

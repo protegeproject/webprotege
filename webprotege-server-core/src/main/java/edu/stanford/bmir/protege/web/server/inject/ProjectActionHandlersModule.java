@@ -34,6 +34,7 @@ import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHand
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.obo.*;
 import edu.stanford.bmir.protege.web.server.perspective.*;
+import edu.stanford.bmir.protege.web.server.project.GetProjectInfoActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetProjectPrefixDeclarationsActionHandler;
 import edu.stanford.bmir.protege.web.server.project.SetProjectPrefixDeclarationsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
@@ -551,6 +552,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler providesGetMatchingEntitiesAction(GetMatchingEntitiesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesGetProjectInfoActionHandler(GetProjectInfoActionHandler handler) {
         return handler;
     }
 }

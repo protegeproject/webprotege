@@ -9,7 +9,9 @@
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.language_displayName_priorityList_title}" addStyleNames="{wp.style.formLabel}"/>
-            <editor:ValueListFlexEditorImpl ui:field="languagesList"/>
+            <div style="max-width: 400px">
+                <editor:ValueListFlexEditorImpl ui:field="languagesList"/>
+            </div>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

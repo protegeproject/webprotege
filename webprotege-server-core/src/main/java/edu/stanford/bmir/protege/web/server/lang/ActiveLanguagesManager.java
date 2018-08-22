@@ -6,9 +6,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguageComparators;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import org.semanticweb.owlapi.model.*;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
@@ -50,6 +56,10 @@ public class ActiveLanguagesManager {
         this.rootOntology = rootOntology;
     }
 
+    private static boolean isLabellingAnnotation(OWLAnnotationAssertionAxiom ax) {
+        return ax.getValue() instanceof OWLLiteral && (ax.getProperty().isLabel() || ax.getProperty().getIRI().equals(SKOSVocabulary.PREFLABEL.getIRI()));
+    }
+
     /**
      * Gets the languages used in the project, ranked in descending order in terms
      * of usage – the most commonly used languages appear first.  This ranking may change
@@ -64,11 +74,29 @@ public class ActiveLanguagesManager {
     }
 
     /**
+     * Gets the languages used in the project, ranked in descending order in terms of usage.  The most commonly
+     * user languages appear first.
+     */
+    @Nonnull
+    public synchronized ImmutableList<DictionaryLanguageUsage> getLanguageUsage() {
+        ImmutableList<DictionaryLanguage> langs = getLanguagesRankedByUsage();
+        return langs.stream()
+                    .filter(DictionaryLanguage::isAnnotationBased)
+                    .map(lang -> {
+                        DictionaryLanguageData langData = DictionaryLanguageData.get(lang.getAnnotationPropertyIri(),
+                                                                                     lang.getLang());
+                        return DictionaryLanguageUsage.get(langData, activeLangs.count(lang));
+                    })
+                    .collect(toImmutableList());
+    }
+
+    /**
      * Updates the active languages from the list of applied changes
+     *
      * @param changes The changes.
      */
     public synchronized void handleChanges(@Nonnull List<OWLOntologyChange> changes) {
-        if(changes.isEmpty()) {
+        if (changes.isEmpty()) {
             return;
         }
         changes.stream()
@@ -128,10 +156,5 @@ public class ActiveLanguagesManager {
                                                         projectId,
                                                         language,
                                                         activeLangs.count(language)));
-    }
-
-
-    private static boolean isLabellingAnnotation(OWLAnnotationAssertionAxiom ax) {
-        return ax.getValue() instanceof OWLLiteral && (ax.getProperty().isLabel() || ax.getProperty().getIRI().equals(SKOSVocabulary.PREFLABEL.getIRI()));
     }
 }
