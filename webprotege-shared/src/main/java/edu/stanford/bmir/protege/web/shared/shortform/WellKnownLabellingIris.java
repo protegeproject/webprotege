@@ -26,15 +26,9 @@ public enum WellKnownLabellingIris {
 
     DC_ELEMENTS_TITLE(DublinCoreVocabulary.TITLE.getIRI(), DublinCoreVocabulary.TITLE.getPrefixedName()),
 
-    SKOS_ALT_LABEL(SKOSVocabulary.ALTLABEL.getIRI(), SKOSVocabulary.ALTLABEL.getPrefixedName()),
-
-    SKOS_HIDDEN_LABEL(SKOSVocabulary.HIDDENLABEL.getIRI(), SKOSVocabulary.HIDDENLABEL.getPrefixedName()),
-
     SCHEMA_NAME(IRI.create(Namespaces.SCHEMA.getPrefixIRI() + "name"), Namespaces.SCHEMA.getPrefixName() + ":name"),
 
-    SCHEMA_IDENTIFIER(IRI.create(Namespaces.SCHEMA.getPrefixIRI() + "identifier"), Namespaces.SCHEMA.getPrefixName() + ":identifier"),
-
-    SCHEMA_ALTERNATE_NAME(IRI.create(Namespaces.SCHEMA.getPrefixIRI() + "alternateName"), Namespaces.SCHEMA.getPrefixName() + ":alternateName");
+    SCHEMA_IDENTIFIER(IRI.create(Namespaces.SCHEMA.getPrefixIRI() + "identifier"), Namespaces.SCHEMA.getPrefixName() + ":identifier");
 
     private final IRI iri;
 
