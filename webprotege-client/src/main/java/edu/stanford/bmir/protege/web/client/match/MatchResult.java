@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
@@ -41,15 +42,10 @@ public class MatchResult extends Composite {
     HTMLPanel outer;
 
     @Inject
-    public MatchResult(@Nonnull PrimitiveDataIconProvider iconProvider) {
+    public MatchResult(@Nonnull PrimitiveDataIconProvider iconProvider,
+                       @Nullable EntityNodeHtmlRenderer renderer) {
         this.iconProvider = iconProvider;
-        renderer = new EntityNodeHtmlRenderer(new LoggedInUserProvider() {
-            @Nonnull
-            @Override
-            public UserId getCurrentUserId() {
-                return UserId.getGuest();
-            }
-        });
+        this.renderer = renderer;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

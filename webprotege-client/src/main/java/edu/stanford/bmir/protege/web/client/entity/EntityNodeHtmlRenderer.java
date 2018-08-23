@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
@@ -12,6 +13,7 @@ import edu.stanford.protege.gwt.graphtree.client.TreeNodeRenderer;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 
@@ -23,15 +25,18 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
-    private static final String NO_DISPLAY_NAME = "No display name";
-
     private final LoggedInUserProvider loggedInUserProvider;
+
+    @Nullable
+    private final Messages messages;
 
     private DisplayNameSettings displayNameSettings = DisplayNameSettings.empty();
 
     @Inject
-    public EntityNodeHtmlRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
+    public EntityNodeHtmlRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider,
+                                  @Nullable Messages messages) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
+        this.messages = checkNotNull(messages);
     }
 
     public void setDisplayLanguage(@Nonnull DisplayNameSettings displayNameSettings) {
@@ -61,7 +66,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
                 sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
-                sb.append(NO_DISPLAY_NAME);
+                sb.append(messages.language_noDisplayName());
                 sb.append("</span>");
 
             }
@@ -76,7 +81,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             if (node.getBrowserText().isEmpty()) {
                 // No rendering available given the settings
                 sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
-                sb.append(NO_DISPLAY_NAME);
+                sb.append(messages.language_noDisplayName());
                 sb.append("</span>");
             }
             else {

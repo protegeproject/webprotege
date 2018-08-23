@@ -1144,4 +1144,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Reset to referenced languages")
     @Key("language.defaultDisplayName.reset.title")
     String language_defaultDisplayName_reset_title();
+
+    @DefaultMessage("No display name")
+    @Key("language.no_display_name")
+    String language_noDisplayName();
 }
