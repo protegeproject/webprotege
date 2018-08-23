@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.shortform;
 
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.BasicDBObject;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.Namespaces;
@@ -67,5 +68,9 @@ public enum WellKnownLabellingIris {
     @Nonnull
     public static Optional<WellKnownLabellingIris> get(@Nonnull IRI iri) {
         return Optional.ofNullable(BY_IRI.get(iri));
+    }
+
+    public static boolean isWellKnownLabellingIri(@Nonnull IRI iri) {
+        return BY_IRI.containsKey(iri);
     }
 }

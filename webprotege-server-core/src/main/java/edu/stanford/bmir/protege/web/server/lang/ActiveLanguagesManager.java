@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -25,6 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris.isWellKnownLabellingIri;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
@@ -57,7 +59,8 @@ public class ActiveLanguagesManager {
     }
 
     private static boolean isLabellingAnnotation(OWLAnnotationAssertionAxiom ax) {
-        return ax.getValue() instanceof OWLLiteral && (ax.getProperty().isLabel() || ax.getProperty().getIRI().equals(SKOSVocabulary.PREFLABEL.getIRI()));
+        return ax.getValue() instanceof OWLLiteral
+                && isWellKnownLabellingIri(ax.getProperty().getIRI());
     }
 
     /**
