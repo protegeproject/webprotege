@@ -65,10 +65,11 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         else if (!displayNameSettings.getPrimaryDisplayNameLanguages().isEmpty()) {
             String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
-                sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
-                sb.append(messages.language_noDisplayName());
-                sb.append("</span>");
-
+                if (!node.isDeprecated()) {
+                    sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
+                    sb.append(messages.language_noDisplayName());
+                    sb.append("</span>");
+                }
             }
             else {
                 sb.append("<span class='wp-entity-node__display-name__primary-language'>");
@@ -78,7 +79,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         }
         else {
             // Rendering is based on the project settings
-            if (node.getBrowserText().isEmpty()) {
+            if (node.getBrowserText().isEmpty() && !node.isDeprecated()) {
                 // No rendering available given the settings
                 sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
                 sb.append(messages.language_noDisplayName());
