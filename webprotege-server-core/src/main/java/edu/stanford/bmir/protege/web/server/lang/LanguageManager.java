@@ -44,10 +44,11 @@ public class LanguageManager {
             return activeLanguagesManager.getLanguagesRankedByUsage();
         }
         else {
-            return ImmutableList.<DictionaryLanguage>builder()
-                    .addAll(defaultDisplayLanguages)
-                    .addAll(activeLanguagesManager.getLanguagesRankedByUsage())
-                    .build();
+            return defaultDisplayLanguages;
         }
+    }
+
+    public synchronized List<DictionaryLanguage> getActiveLanguages() {
+        return activeLanguagesManager.getLanguagesRankedByUsage();
     }
 }

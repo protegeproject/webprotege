@@ -23,6 +23,8 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
+    private static final String NO_RENDERING_AVAILABLE = "&bull;&bull;&bull;&bull;&bull;";
+
     private final LoggedInUserProvider loggedInUserProvider;
 
     private DisplayNameSettings displayNameSettings = DisplayNameSettings.empty();
@@ -59,7 +61,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
                 sb.append("<span class='wp-entity-node__display-name__default-language'>");
-                sb.append("&bull;&bull;&bull;&bull;&bull;");
+                sb.append(NO_RENDERING_AVAILABLE);
                 sb.append("</span>");
 
             }
@@ -70,17 +72,20 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             }
         }
         else {
-            // Plain
-            sb.append(node.getBrowserText());
+            // Rendering is based on the project settings
+            if (node.getBrowserText().isEmpty()) {
+                // No rendering available given the settings
+                sb.append(NO_RENDERING_AVAILABLE);
+            }
+            else {
+                sb.append(node.getBrowserText());
+            }
         }
         String secondaryText = node.getText(displayNameSettings.getSecondaryDisplayNameLanguages(), null);
         if (secondaryText != null) {
             sb.append(" <span class='wp-entity-node__display-name__secondary-language'>");
             sb.append(secondaryText);
             sb.append("</span>");
-        }
-        else {
-            // TODO:  Indicate no secondary?
         }
         sb.append("</div>");
 

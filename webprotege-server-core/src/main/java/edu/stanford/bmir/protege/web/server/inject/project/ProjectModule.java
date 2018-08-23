@@ -536,7 +536,7 @@ public class ProjectModule {
     @Provides
     MultiLingualDictionary provideDictionary(MultiLingualDictionaryImpl dictionary, LanguageManager languageManager) {
         // Preload existing languages to avoid delays after loading in the UI
-        dictionary.loadLanguages(languageManager.getLanguages());
+        dictionary.loadLanguages(languageManager.getActiveLanguages());
         return dictionary;
     }
 
