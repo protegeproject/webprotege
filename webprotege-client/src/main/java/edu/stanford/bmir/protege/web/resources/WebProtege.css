@@ -81,6 +81,10 @@
     line-height: 1.2;
 }
 
+.wp-form-help-text--checkbox-indented {
+    margin-left: 20px;
+}
+
 .warningLabel {
     border: solid 1px #ffe884;
     background-color: #faf6c3;

@@ -84,11 +84,15 @@ public class ActiveLanguagesManager {
     public synchronized ImmutableList<DictionaryLanguageUsage> getLanguageUsage() {
         ImmutableList<DictionaryLanguage> langs = getLanguagesRankedByUsage();
         return langs.stream()
-                    .filter(DictionaryLanguage::isAnnotationBased)
                     .map(lang -> {
-                        DictionaryLanguageData langData = DictionaryLanguageData.get(lang.getAnnotationPropertyIri(),
-                                                                                     lang.getLang());
-                        return DictionaryLanguageUsage.get(langData, activeLangs.count(lang));
+                        if (lang.isAnnotationBased()) {
+                            DictionaryLanguageData langData = DictionaryLanguageData.get(lang.getAnnotationPropertyIri(),
+                                                                                         lang.getLang());
+                            return DictionaryLanguageUsage.get(langData, activeLangs.count(lang));
+                        }
+                        else {
+                            return DictionaryLanguageUsage.get(DictionaryLanguageData.localName(), 0);
+                        }
                     })
                     .collect(toImmutableList());
     }

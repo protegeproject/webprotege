@@ -29,3 +29,18 @@
     -webkit-text-decoration-style: dotted;
     color: #909090;
 }
+
+.wp-entity-node__display-name__no-display-name {
+    border-radius: 3px;
+    font-weight: 500;
+    white-space: nowrap;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-size: 9px;
+    margin-left: 4px;
+    pointer-events: auto;
+    color: darkgoldenrod;
+    border: 1px solid darkgoldenrod;
+}

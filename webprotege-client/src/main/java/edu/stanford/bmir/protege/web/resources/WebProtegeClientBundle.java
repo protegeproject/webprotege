@@ -182,6 +182,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-help-text")
         String formHelpText();
 
+        @ClassName("wp-form-help-text--checkbox-indented")
+        String formHelpTextCheckBoxIndented();
+
         @ClassName("wp-table-header")
         String tableHeader();
 

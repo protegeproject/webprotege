@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
@@ -17,8 +19,12 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * Matthew Horridge
@@ -27,12 +33,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DefaultDisplayNameSettingsViewImpl extends Composite implements DefaultDisplayNameSettingsView {
 
-    private ResetLanguagesHandler resetLanguagesHandler = () -> {};
-
-    interface DisplayLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, DefaultDisplayNameSettingsViewImpl> {
-
-    }
-
     private static DisplayLanguagesViewImplUiBinder ourUiBinder = GWT.create(DisplayLanguagesViewImplUiBinder.class);
 
     @UiField(provided = true)
@@ -40,6 +40,11 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
 
     @UiField
     Button resetButton;
+
+    @UiField
+    CheckBox fallbackCheckBox;
+
+    private ResetLanguagesHandler resetLanguagesHandler = () -> {};
 
     @Inject
     public DefaultDisplayNameSettingsViewImpl(@Nonnull Provider<DictionaryLanguageDataEditor> editorProvider) {
@@ -57,16 +62,31 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
     @Nonnull
     @Override
     public ImmutableList<DictionaryLanguageData> getPrimaryLanguages() {
-        return languagesList.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
+        ImmutableList<DictionaryLanguageData> specifiedList = languagesList.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
+        if (fallbackCheckBox.getValue()) {
+            return Streams.concat(specifiedList.stream(),
+                                  Stream.of(DictionaryLanguageData.localName())).collect(toImmutableList());
+        }
+        else {
+            return specifiedList;
+        }
     }
 
     @Override
     public void setPrimaryLanguages(@Nonnull List<DictionaryLanguageData> primaryLanguages) {
-        languagesList.setValue(primaryLanguages);
+        Map<Boolean, ImmutableList<DictionaryLanguageData>> langs = primaryLanguages.stream()
+                                                                                    .collect(partitioningBy(DictionaryLanguageData::isAnnotationBased,
+                                                                                                            toImmutableList()));
+        languagesList.setValue(langs.getOrDefault(true, ImmutableList.of()));
+        fallbackCheckBox.setValue(!langs.get(false).isEmpty());
     }
 
     @Override
     public void setResetLanguagesHandler(@Nonnull ResetLanguagesHandler handler) {
         this.resetLanguagesHandler = checkNotNull(handler);
+    }
+
+    interface DisplayLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, DefaultDisplayNameSettingsViewImpl> {
+
     }
 }

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
@@ -31,7 +32,7 @@ public abstract class DictionaryLanguageData {
     private DictionaryLanguage dictionaryLanguage = null;
 
     @Nonnull
-    public static DictionaryLanguageData get(@Nonnull IRI propertyIri,
+    public static DictionaryLanguageData get(@Nullable IRI propertyIri,
                                              @Nonnull String browserText,
                                              @Nonnull String lang) {
         return new AutoValue_DictionaryLanguageData(propertyIri, browserText, lang);
@@ -39,16 +40,23 @@ public abstract class DictionaryLanguageData {
 
     @JsonCreator
     @Nonnull
-    public static DictionaryLanguageData get(@Nonnull @JsonProperty(PROPERTY_IRI) IRI propertyIri,
+    public static DictionaryLanguageData get(@Nullable @JsonProperty(PROPERTY_IRI) IRI propertyIri,
                                              @Nonnull @JsonProperty(LANGUAGE_TAG) String languageTag) {
         return get(propertyIri, getBrowserText(propertyIri), languageTag);
+    }
+
+    public static DictionaryLanguageData localName() {
+        return get(null, "");
     }
 
     public static DictionaryLanguageData rdfsLabel(@Nonnull String languageTag) {
         return get(RDFS_LABEL.getIRI(), languageTag);
     }
 
-    private static String getBrowserText(@Nonnull IRI propertyIri) {
+    private static String getBrowserText(@Nullable IRI propertyIri) {
+        if(propertyIri == null) {
+            return "";
+        }
         return WellKnownLabellingIris.get(propertyIri)
                                      .map(l -> l.getPrefixedName())
                                      .orElse(propertyIri.toString());
@@ -62,7 +70,7 @@ public abstract class DictionaryLanguageData {
 
 
     @JsonProperty(PROPERTY_IRI)
-    @Nonnull
+    @Nullable
     public abstract IRI getAnnotationPropertyIri();
 
     @JsonIgnore
@@ -87,6 +95,9 @@ public abstract class DictionaryLanguageData {
     @JsonIgnore
     @Nonnull
     public Optional<OWLAnnotationPropertyData> getAnnotationPropertyData() {
+        if(getAnnotationPropertyIri() == null) {
+            return Optional.empty();
+        }
         return Optional.of(
                 OWLAnnotationPropertyData.get(
                         DataFactory.getOWLAnnotationProperty(getAnnotationPropertyIri()),
@@ -99,5 +110,9 @@ public abstract class DictionaryLanguageData {
     private DictionaryLanguage createDictionaryLanguage() {
         return DictionaryLanguage.create(getAnnotationPropertyIri(),
                                          getLanguageTag());
+    }
+
+    public boolean isAnnotationBased() {
+        return getAnnotationPropertyIri() != null;
     }
 }

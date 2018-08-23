@@ -23,7 +23,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
-    private static final String NO_RENDERING_AVAILABLE = "&bull;&bull;&bull;&bull;&bull;";
+    private static final String NO_DISPLAY_NAME = "No display name";
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -60,8 +60,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         else if (!displayNameSettings.getPrimaryDisplayNameLanguages().isEmpty()) {
             String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
-                sb.append("<span class='wp-entity-node__display-name__default-language'>");
-                sb.append(NO_RENDERING_AVAILABLE);
+                sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
+                sb.append(NO_DISPLAY_NAME);
                 sb.append("</span>");
 
             }
@@ -75,7 +75,9 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             // Rendering is based on the project settings
             if (node.getBrowserText().isEmpty()) {
                 // No rendering available given the settings
-                sb.append(NO_RENDERING_AVAILABLE);
+                sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
+                sb.append(NO_DISPLAY_NAME);
+                sb.append("</span>");
             }
             else {
                 sb.append(node.getBrowserText());
