@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,13 +15,13 @@ import static org.hamcrest.Matchers.*;
  */
 public class DictionaryLanguageIO_TestCase {
 
-    private static final DictionaryLanguage FIRST_LANGUAGE = DictionaryLanguage.rdfsLabel("en");
+    private static final DictionaryLanguageData FIRST_LANGUAGE = DictionaryLanguageData.rdfsLabel("en");
 
-    private static final DictionaryLanguage SECOND_LANGUAGE = DictionaryLanguage.rdfsLabel("fr");
+    private static final DictionaryLanguageData SECOND_LANGUAGE = DictionaryLanguageData.rdfsLabel("fr");
 
-    private static final DictionaryLanguage EMPTY_LANG = DictionaryLanguage.rdfsLabel("");
+    private static final DictionaryLanguageData EMPTY_LANG = DictionaryLanguageData.rdfsLabel("");
 
-    private static final DictionaryLanguage LOCAL_NAME_LANGUAGE = DictionaryLanguage.localName();
+    private static final DictionaryLanguageData LOCAL_NAME_LANGUAGE = DictionaryLanguageData.localName();
 
 
 
@@ -37,28 +38,28 @@ public class DictionaryLanguageIO_TestCase {
     @Test
     public void shouldParseFromString() {
         DictionaryLanguageIO io = new DictionaryLanguageIO();
-        ImmutableList<DictionaryLanguage> dictionaryLanguages = io.parse("http://www.w3.org/2000/01/rdf-schema#label@en|http://www.w3.org/2000/01/rdf-schema#label@fr");
+        ImmutableList<DictionaryLanguageData> dictionaryLanguages = io.parse("http://www.w3.org/2000/01/rdf-schema#label@en|http://www.w3.org/2000/01/rdf-schema#label@fr");
         assertThat(dictionaryLanguages, contains(FIRST_LANGUAGE, SECOND_LANGUAGE));
     }
 
     @Test
     public void shouldParseEmptyLang() {
         DictionaryLanguageIO io = new DictionaryLanguageIO();
-        ImmutableList<DictionaryLanguage> dictionaryLanguages = io.parse("http://www.w3.org/2000/01/rdf-schema#label@");
+        ImmutableList<DictionaryLanguageData> dictionaryLanguages = io.parse("http://www.w3.org/2000/01/rdf-schema#label@");
         assertThat(dictionaryLanguages, contains(EMPTY_LANG));
     }
 
     @Test
     public void shouldParseEmptyIriAndLang() {
         DictionaryLanguageIO io = new DictionaryLanguageIO();
-        ImmutableList<DictionaryLanguage> dictionaryLanguages = io.parse("@");
+        ImmutableList<DictionaryLanguageData> dictionaryLanguages = io.parse("@");
         assertThat(dictionaryLanguages, contains(LOCAL_NAME_LANGUAGE));
     }
 
     @Test
     public void shouldParseEmptyString() {
         DictionaryLanguageIO io = new DictionaryLanguageIO();
-        ImmutableList<DictionaryLanguage> dictionaryLanguages = io.parse("");
+        ImmutableList<DictionaryLanguageData> dictionaryLanguages = io.parse("");
         assertThat(dictionaryLanguages, is(ImmutableList.of()));
     }
 }

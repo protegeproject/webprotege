@@ -73,6 +73,8 @@ public class DisplayNameSettingsPresenter {
     private void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
         checkNotNull(displayLanguage);
         GWT.log("[DisplayNameSettingsPresenter] setDisplayLanguage: " + displayLanguage);
+        view.setPrimaryDisplayNameLanguages(displayLanguage.getPrimaryDisplayNameLanguages());
+        view.setSecondaryDisplayNameLanguages(displayLanguage.getSecondaryDisplayNameLanguages());
 
     }
 }

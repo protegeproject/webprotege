@@ -1,16 +1,20 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.storage.client.Storage;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,78 +40,32 @@ public class DisplayLanguageStorage {
     }
 
     public void store(@Nonnull DisplayNameSettings language) {
-        storage.removeItem(getPrimaryLangIriKey());
-        storage.removeItem(getPrimaryLangTagKey());
-
-//        language.getPrimaryLanguage().ifPresent(primaryLang -> {
-//            Optional.ofNullable(primaryLang.getAnnotationPropertyIri()).ifPresent(iri -> {
-//                storage.setItem(getPrimaryLangIriKey(), iri.toString());
-//            });
-//            storage.setItem(getPrimaryLangTagKey(), primaryLang.getLang());
-//        });
-//
-//        language.getSecondaryLanguage().ifPresent(secondaryLang -> {
-//            Optional.ofNullable(secondaryLang.getAnnotationPropertyIri()).ifPresent(iri -> {
-//                storage.setItem(getSecondaryLangIriKey(), iri.toString());
-//            });
-//            storage.setItem(getSecondaryLangTagKey(), secondaryLang.getLang());
-//        });
+        DictionaryLanguageIO io = new DictionaryLanguageIO();
+        storage.setItem(getPrimaryKey(), io.write(language.getPrimaryDisplayNameLanguages()));
+        storage.setItem(getSecondaryKey(), io.write(language.getSecondaryDisplayNameLanguages()));
     }
 
-    private String getPrimaryLangTagKey() {
-        return getKey() + ".primary.tag";
+    private String getPrimaryKey() {
+        return getKey() + ".primary";
     }
 
-    private String getPrimaryLangIriKey() {
-        return getKey() + ".primary.iri";
-    }
-
-    private String getSecondaryLangTagKey() {
-        return getKey() + ".secondary.tag";
-    }
-
-    private String getSecondaryLangIriKey() {
-        return getKey() + ".secondary.iri";
+    private String getSecondaryKey() {
+        return getKey() + ".secondary";
     }
 
     @Nonnull
     public DisplayNameSettings get(@Nonnull DisplayNameSettings def) {
-        Optional<DictionaryLanguage> primary = getPrimaryDisplayLanguage();
-        Optional<DictionaryLanguage> secondary = getSecondaryDisplayLanguage();
-        return DisplayNameSettings.get(ImmutableList.of(),
-                                       ImmutableList.of());
-    }
-
-    private Optional<DictionaryLanguage> getPrimaryDisplayLanguage() {
-        return getPrimaryLanguageIri()
-                .map(iri -> DictionaryLanguage.create(IRI.create(iri),
-                                                      getPrimaryLanguageTag()));
-    }
-
-    private String getPrimaryLanguageTag() {
-        return Optional.ofNullable(storage.getItem(getPrimaryLangTagKey())).orElse("");
-    }
-
-    private Optional<String> getPrimaryLanguageIri() {
-        return Optional.ofNullable(storage.getItem(getPrimaryLangIriKey()));
-    }
-
-    private Optional<DictionaryLanguage> getSecondaryDisplayLanguage() {
-        return getSecondaryLanguageIri()
-                .map(iri -> DictionaryLanguage.create(IRI.create(iri),
-                                                      getSecondaryLanguageTag()));
-    }
-
-    private String getSecondaryLanguageTag() {
-        return Optional.ofNullable(storage.getItem(getSecondaryLangTagKey())).orElse("");
-    }
-
-    private Optional<String> getSecondaryLanguageIri() {
-        return Optional.ofNullable(storage.getItem(getSecondaryLangIriKey()));
+        DictionaryLanguageIO io = new DictionaryLanguageIO();
+        String primaryVal = storage.getItem(getPrimaryKey());
+        ImmutableList<DictionaryLanguageData> primary = io.parse(primaryVal);
+        String secondaryVal = storage.getItem(getSecondaryKey());
+        ImmutableList<DictionaryLanguageData> secondary = io.parse(secondaryVal);
+        return DisplayNameSettings.get(primary, secondary);
     }
 
     public void clear() {
-        storage.removeItem(getKey());
+        storage.removeItem(getPrimaryKey());
+        storage.removeItem(getSecondaryKey());
     }
 
 

@@ -3,8 +3,12 @@ package edu.stanford.bmir.protege.web.client.lang;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import org.semanticweb.owlapi.model.IRI;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,13 +26,16 @@ public class DictionaryLanguageIO {
 
     private static final String IRI_LANG_SEPARATOR = "@";
 
-    public String write(ImmutableList<DictionaryLanguage> list) {
+    public String write(List<DictionaryLanguageData> list) {
         return list.stream()
-                   .map(l -> Optional.ofNullable(l.getAnnotationPropertyIri()).map(Object::toString).orElse("") + IRI_LANG_SEPARATOR + l.getLang())
+                   .map(l -> Optional.ofNullable(l.getAnnotationPropertyIri()).map(Object::toString).orElse("") + IRI_LANG_SEPARATOR + l.getLanguageTag())
                    .collect(Collectors.joining(DELIMITER));
     }
 
-    public ImmutableList<DictionaryLanguage> parse(String in) {
+    public ImmutableList<DictionaryLanguageData> parse(@Nullable String in) {
+        if(in == null) {
+            return ImmutableList.of();
+        }
         return Splitter.on(DELIMITER)
                        .splitToList(in).stream()
                        .map(dls -> Splitter.on("@").splitToList(dls))
@@ -46,6 +53,7 @@ public class DictionaryLanguageIO {
                            }
                        })
                        .filter(Objects::nonNull)
+                       .map(dl -> DictionaryLanguageData.get(dl.getAnnotationPropertyIri(), dl.getLang()))
                        .collect(toImmutableList());
     }
 }
