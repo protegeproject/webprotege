@@ -27,14 +27,14 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    @Nullable
+    @Nonnull
     private final Messages messages;
 
     private DisplayNameSettings displayNameSettings = DisplayNameSettings.empty();
 
     @Inject
     public EntityNodeHtmlRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider,
-                                  @Nullable Messages messages) {
+                                  @Nonnull Messages messages) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
         this.messages = checkNotNull(messages);
     }
