@@ -124,7 +124,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         changeListBuilder.addAxiom(context.getTargetOntology(),
                                    dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(),
                                                                               iri,
-                                                                              dataFactory.getOWLLiteral(label, "")));
+                                                                              dataFactory.getOWLLiteral(label, context.getDictionaryLanguage().getLang())));
         return entity;
     }
 

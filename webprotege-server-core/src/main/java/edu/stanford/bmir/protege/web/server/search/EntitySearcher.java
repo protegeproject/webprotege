@@ -275,7 +275,7 @@ public class EntitySearcher {
                                               ImmutableIntArray positions,
                                               MatchType matchType) {
         StringBuilder highlighted = new StringBuilder();
-        if (displayShortForm.equals(matchedShortForm)) {
+        if (!displayShortForm.isEmpty() && displayShortForm.equals(matchedShortForm)) {
             highlightSearchResult(displayShortForm, positions, highlighted);
         }
         else {
