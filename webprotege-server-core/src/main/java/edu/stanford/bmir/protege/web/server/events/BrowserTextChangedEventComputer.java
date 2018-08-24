@@ -65,13 +65,10 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
                             ImmutableMap<DictionaryLanguage, String> shortForms = dictionaryManager.getShortForms(entity);
                             shortFormMap.put(entity, shortForms);
                         });
-        System.out.println("[BrowserTextChangedEventComputer] prepared for ontology changes");
-        System.out.println("Map: " + shortFormMap);
     }
 
     @Override
     public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> changes, List<ProjectEvent<?>> projectEventList) {
-        System.out.println("[BrowserTextChangedEventComputer] Translating ontology changes");
         Set<OWLEntity> processedEntities = new HashSet<>();
         changes.getChangeList().stream()
                .flatMap(change -> changeSubjectsProvider.getChangeSubjects(change).stream())
@@ -79,10 +76,7 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
                .forEach(entity -> {
                    ImmutableMap<DictionaryLanguage, String> oldShortForms = shortFormMap.get(entity);
                    ImmutableMap<DictionaryLanguage, String> shortForms = dictionaryManager.getShortForms(entity);
-                   System.out.printf("Old short forms: %s\n", oldShortForms);
-                   System.out.printf("New short forms: %s\n", shortForms);
                    if(oldShortForms == null || !shortForms.equals(oldShortForms)) {
-                       System.out.printf("[BrowserTextChangedEventComputer] BT: %s, New Map: %s\n", dictionaryManager.getShortForm(entity), shortForms);
                        projectEventList.add(new BrowserTextChangedEvent(entity, dictionaryManager.getShortForm(entity), projectId, dictionaryManager.getShortForms(entity)));
                    }
                });
