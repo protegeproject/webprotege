@@ -522,8 +522,5 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-entity-node__display-name__secondary-language")
         String wpEntityNode__secondaryLanguage();
-
-        @ClassName("wp-entity-node__display-name__default-language")
-        String wpEntityNode__displayName__defaultLanguage();
     }
 }

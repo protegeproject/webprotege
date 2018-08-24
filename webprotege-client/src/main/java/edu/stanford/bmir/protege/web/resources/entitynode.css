@@ -15,10 +15,6 @@
 
 }
 
-.wp-entity-node__display-name__default-language {
-    color: #a0a0a0;
-}
-
 .wp-entity-node__display-name__primary-language {
 
 }
@@ -39,9 +35,11 @@
     padding-left: 3px;
     padding-right: 3px;
     font-size: 9px;
-    margin-left: 4px;
+    /*margin-left: 4px;*/
     pointer-events: auto;
-    background-color: #a0a0a0;
-    color: white;
+    /*background-color: #a0a0a0;*/
+    /*color: white;*/
+    color: #a0a0a0;
     cursor: help;
+    letter-spacing: 0.1rem;
 }

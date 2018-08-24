@@ -27,6 +27,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private static final String NO_DISPLAY_NAME = "_______";
+
     @Nonnull
     private final Messages messages;
 
@@ -49,29 +51,43 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         GWT.log("[EntityNodeHtmlRenderer] Rendering node: " + node);
         StringBuilder sb = new StringBuilder();
         sb.append("<div class='wp-entity-node'>");
+        renderIcon(node, sb);
+        renderDisplayName(node, sb);
+        renderCommentsIcon(node, sb);
+        renderWatchesIcon(node, sb);
+        renderTags(node, sb);
+        sb.append("</div>");
+        return sb.toString();
+    }
+
+    private void renderIcon(EntityNode node, StringBuilder sb) {
         String iconIri;
         DataResource icon = getIcon(node);
         sb.append("<img src='").append(icon.getSafeUri().asString()).append("'/>");
+    }
+
+    private void renderDisplayName(EntityNode node, StringBuilder sb) {
         if (node.isDeprecated()) {
             sb.append("<div class='wp-entity-node__deprecated-entity wp-entity-node__display-name'>");
         }
         else {
             sb.append("<div class='wp-entity-node__display-name'>");
         }
+        renderPrimaryDisplayName(node, sb);
+        renderSecondaryDisplayName(node, sb);
+        sb.append("</div>");
+    }
 
+    private void renderPrimaryDisplayName(EntityNode node, StringBuilder sb) {
         if (node.getEntity().isBuiltIn()) {
             sb.append(node.getBrowserText());
         }
         else if (!displayNameSettings.getPrimaryDisplayNameLanguages().isEmpty()) {
+            // Rendering is based on user settings
             String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
                 if (!node.isDeprecated()) {
-                    sb.append("<span class='wp-entity-node__display-name__no-display-name' title='")
-                      .append(messages.language_noDisplayName_help(node.getEntity().getEntityType().getPrintName().toLowerCase(),
-                                                                   node.getBrowserText()))
-                      .append("'>");
-                    sb.append(messages.language_noDisplayName());
-                    sb.append("</span>");
+                    renderNoDisplayName(node, sb);
                 }
             }
             else {
@@ -84,26 +100,31 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             // Rendering is based on the project settings
             if (node.getBrowserText().isEmpty() && !node.isDeprecated()) {
                 // No rendering available given the settings
-                sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
-                sb.append(messages.language_noDisplayName());
-                sb.append("</span>");
+                renderNoDisplayName(node, sb);
             }
             else {
                 sb.append(node.getBrowserText());
             }
         }
+    }
+
+    private void renderSecondaryDisplayName(EntityNode node, StringBuilder sb) {
         String secondaryText = node.getText(displayNameSettings.getSecondaryDisplayNameLanguages(), null);
         if (secondaryText != null) {
             sb.append(" <span class='wp-entity-node__display-name__secondary-language'>");
             sb.append(secondaryText);
             sb.append("</span>");
         }
-        sb.append("</div>");
+    }
 
+    private void renderCommentsIcon(EntityNode node, StringBuilder sb) {
         if (node.getOpenCommentCount() > 0) {
             sb.append("<img style='padding-left: 6px;' src='").append(BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString()).append("'/>");
             sb.append("<div style='padding-left: 4px; padding-bottom: 4px; font-size: smaller;'> (").append(node.getOpenCommentCount()).append(")</div>");
         }
+    }
+
+    private void renderWatchesIcon(EntityNode node, StringBuilder sb) {
         node.getWatches().stream()
             .filter(w -> loggedInUserProvider.getCurrentUserId().equals(w.getUserId()))
             .map(Watch::getType)
@@ -117,20 +138,34 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
                 }
                 sb.append("'/>");
             });
+    }
+
+    private void renderTags(EntityNode node, StringBuilder sb) {
         Collection<Tag> tags = node.getTags();
         tags.forEach(tag -> {
-            sb.append("<div title='")
-              .append(tag.getDescription())
-              .append("' class='wp-tag wp-tag--inline-tag' style='color:")
-              .append(tag.getColor().getHex())
-              .append("; background-color:")
-              .append(tag.getBackgroundColor().getHex())
-              .append(";'>");
-            sb.append(tag.getLabel());
-            sb.append("</div>");
+            renderTag(tag, sb);
         });
+    }
+
+    private void renderTag(Tag tag, StringBuilder sb) {
+        sb.append("<div title='")
+          .append(tag.getDescription())
+          .append("' class='wp-tag wp-tag--inline-tag' style='color:")
+          .append(tag.getColor().getHex())
+          .append("; background-color:")
+          .append(tag.getBackgroundColor().getHex())
+          .append(";'>");
+        sb.append(tag.getLabel());
         sb.append("</div>");
-        return sb.toString();
+    }
+
+    private void renderNoDisplayName(EntityNode node, StringBuilder sb) {
+        sb.append("<span class='wp-entity-node__display-name__no-display-name' title='")
+          .append(messages.language_noDisplayName_help(node.getEntity().getEntityType().getPrintName().toLowerCase(),
+                                                       node.getBrowserText()))
+          .append("'>");
+        sb.append(NO_DISPLAY_NAME);
+        sb.append("</span>");
     }
 
     @Nonnull
