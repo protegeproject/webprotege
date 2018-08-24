@@ -24,7 +24,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
-    private static final String NO_DISPLAY_NAME = "_______";
+    private static final String NO_DISPLAY_NAME = "_____";
 
     private final LoggedInUserProvider loggedInUserProvider;
 
