@@ -115,6 +115,6 @@ public class DictionaryManager {
 
     @Nonnull
     public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
-        return dictionary.getShortForms(entity);
+        return dictionary.getShortForms(entity, languageManager.getActiveLanguages());
     }
 }

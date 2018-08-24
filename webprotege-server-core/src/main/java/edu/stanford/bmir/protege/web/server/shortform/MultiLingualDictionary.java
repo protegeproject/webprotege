@@ -80,4 +80,9 @@ public interface MultiLingualDictionary {
      */
     @Nonnull
     ImmutableMap<DictionaryLanguage,String> getShortForms(OWLEntity entity);
+
+    /**
+     * Gets the short forms in the specified languages for the specified entity.
+     */
+    ImmutableMap<DictionaryLanguage,String> getShortForms(OWLEntity entity, List<DictionaryLanguage> languages);
 }

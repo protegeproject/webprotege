@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -116,6 +117,12 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
             }
         });
         return resultBuilder.build();
+    }
+
+    @Override
+    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity, List<DictionaryLanguage> languages) {
+        findDictionaries(languages);
+        return getShortForms(entity);
     }
 
     /**
