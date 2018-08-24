@@ -27,18 +27,11 @@
 }
 
 .wp-entity-node__display-name__no-display-name {
-    border-radius: 1px;
     font-weight: 500;
     white-space: nowrap;
-    padding-top: 1px;
-    padding-bottom: 1px;
     padding-left: 3px;
     padding-right: 3px;
-    font-size: 9px;
-    /*margin-left: 4px;*/
     pointer-events: auto;
-    /*background-color: #a0a0a0;*/
-    /*color: white;*/
     color: #a0a0a0;
     cursor: help;
     letter-spacing: 0.1rem;
