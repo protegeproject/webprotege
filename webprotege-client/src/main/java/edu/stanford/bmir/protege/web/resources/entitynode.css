@@ -31,7 +31,7 @@
 }
 
 .wp-entity-node__display-name__no-display-name {
-    border-radius: 3px;
+    border-radius: 1px;
     font-weight: 500;
     white-space: nowrap;
     padding-top: 1px;
@@ -41,6 +41,6 @@
     font-size: 9px;
     margin-left: 4px;
     pointer-events: auto;
-    color: darkgoldenrod;
-    border: 1px solid darkgoldenrod;
+    background-color: #a0a0a0;
+    color: white;
 }

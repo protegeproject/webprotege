@@ -1145,7 +1145,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("language.defaultDisplayName.reset.title")
     String language_defaultDisplayName_reset_title();
 
-    @DefaultMessage("No display name")
+    @DefaultMessage("???")
     @Key("language.no_display_name")
     String language_noDisplayName();
 }
