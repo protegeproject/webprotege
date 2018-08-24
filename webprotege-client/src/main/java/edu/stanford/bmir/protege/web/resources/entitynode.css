@@ -23,7 +23,7 @@
     margin-left: 3px;
     text-decoration: underline;
     -webkit-text-decoration-style: dotted;
-    color: #909090;
+    /*color: #909090;*/
 }
 
 .wp-entity-node__display-name__no-display-name {
@@ -32,7 +32,7 @@
     padding-left: 3px;
     padding-right: 3px;
     pointer-events: auto;
-    color: #a0a0a0;
+    /*color: #a0a0a0;*/
     cursor: help;
     letter-spacing: 0.1rem;
 }

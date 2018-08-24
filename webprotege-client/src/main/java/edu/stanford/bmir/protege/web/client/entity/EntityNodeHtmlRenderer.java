@@ -13,7 +13,6 @@ import edu.stanford.protege.gwt.graphtree.client.TreeNodeRenderer;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 
@@ -25,9 +24,9 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private static final String NO_DISPLAY_NAME = "_______";
+
+    private final LoggedInUserProvider loggedInUserProvider;
 
     @Nonnull
     private final Messages messages;
@@ -86,9 +85,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             // Rendering is based on user settings
             String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
-                if (!node.isDeprecated()) {
-                    renderNoDisplayName(node, sb);
-                }
+                renderNoDisplayName(node, sb);
             }
             else {
                 sb.append("<span class='wp-entity-node__display-name__primary-language'>");
@@ -98,7 +95,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         }
         else {
             // Rendering is based on the project settings
-            if (node.getBrowserText().isEmpty() && !node.isDeprecated()) {
+            if (node.getBrowserText().isEmpty()) {
                 // No rendering available given the settings
                 renderNoDisplayName(node, sb);
             }
