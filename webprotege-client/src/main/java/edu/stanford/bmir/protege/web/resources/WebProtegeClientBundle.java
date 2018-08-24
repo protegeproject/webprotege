@@ -511,9 +511,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-entity-node")
         String wpEntityNode();
 
-        @ClassName("wp-entity-node__deprecated-entity")
-        String deprecatedEntity();
-
         @ClassName("wp-entity-node__display-name")
         String wpEntityNode__displayName();
 

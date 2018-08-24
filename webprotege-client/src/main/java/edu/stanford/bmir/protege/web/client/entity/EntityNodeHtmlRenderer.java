@@ -68,7 +68,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private void renderDisplayName(EntityNode node, StringBuilder sb) {
         if (node.isDeprecated()) {
-            sb.append("<div class='wp-entity-node__deprecated-entity wp-entity-node__display-name'>");
+            sb.append("<div class='wp-entity-node__display-name wp-entity-node__display-name--deprecated-entity'>");
         }
         else {
             sb.append("<div class='wp-entity-node__display-name'>");

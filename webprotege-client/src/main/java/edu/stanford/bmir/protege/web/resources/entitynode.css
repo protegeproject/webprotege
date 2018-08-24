@@ -6,7 +6,7 @@
     align-items: center;
 }
 
-.wp-entity-node__deprecated-entity {
+.wp-entity-node__display-name--deprecated-entity {
     text-decoration: line-through;
     color: #a0a0a0;
 }
