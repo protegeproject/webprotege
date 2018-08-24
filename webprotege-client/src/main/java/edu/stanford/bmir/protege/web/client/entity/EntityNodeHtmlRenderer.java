@@ -66,7 +66,10 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
                 if (!node.isDeprecated()) {
-                    sb.append("<span class='wp-entity-node__display-name__no-display-name'>");
+                    sb.append("<span class='wp-entity-node__display-name__no-display-name' title='")
+                      .append(messages.language_noDisplayName_help(node.getEntity().getEntityType().getPrintName().toLowerCase(),
+                                                                   node.getBrowserText()))
+                      .append("'>");
                     sb.append(messages.language_noDisplayName());
                     sb.append("</span>");
                 }
