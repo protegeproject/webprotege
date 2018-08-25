@@ -1,5 +1,7 @@
 @external wp-*;
 
+@url plusIconUrl svgPlusIcon;
+
 .wp-btn {
     border: none;
     border-radius: 2px;
@@ -119,6 +121,10 @@
 
 .wp-btn-add {
     background-color: #aaaaaa;
+    background-image: plusIconUrl;
+    background-repeat: no-repeat;
+    background-position-x: -1px;
+    background-position-y: -1px;
     color: white;
     width: 20px;
     height: 20px;

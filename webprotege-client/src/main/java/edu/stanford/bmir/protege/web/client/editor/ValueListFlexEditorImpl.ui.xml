@@ -17,7 +17,6 @@
 
         </g:HTMLPanel>
         <g:Button title="{msg.add}" visible="false" addStyleNames="{wp.buttons.addButton} {style.addButton}" ui:field="addButton">
-            <div style="position: relative; top:-0.2em;">+</div>
         </g:Button>
     </g:HTMLPanel>
 </ui:UiBinder>
