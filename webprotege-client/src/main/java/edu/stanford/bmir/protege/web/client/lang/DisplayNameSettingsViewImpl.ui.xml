@@ -19,21 +19,24 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form} {wp.style.panelFilled}">
         <div class="{wp.style.formGroup}">
-            <g:Label text="Primary Display Name" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="{msg.language_localDisplayName_primary_title}"
+                     addStyleNames="{wp.style.formLabel}"/>
             <editor:ValueListFlexEditorImpl enabled="true" newRowMode="MANUAL"
-                                            ui:field="primaryDisplayNameLanguages" addStyleNames="{style.langList}"/>
-            <g:Label
-                    text="The primary display name is used as the display name for entities throughout the user interface.  Specify a list of property language pairs that should be used to generate the display name.  Leave blank to use the project default."
-                    addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
+                                            ui:field="primaryDisplayNameLanguages"
+                                            addStyleNames="{style.langList}"/>
+            <g:Label text="{msg.language_localDisplayName_primary_helpText}"
+                     addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
 
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Secondary Display Name" addStyleNames="{wp.style.formLabel}"/>
-            <editor:ValueListFlexEditorImpl enabled="true" newRowMode="MANUAL"
-                                            ui:field="secondaryDisplayNameLanguages" addStyleNames="{style.langList}"/>
-            <g:Label
-                    text="The secondary display name is displayed along side the primary display name in hierarchies and lists of entities.  Specify a list of property language pairs that should be used to generate the display name.  Leave blank to use the project default."
-                    addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
+            <g:Label text="{msg.language_localDisplayName_secondary_title}"
+                     addStyleNames="{wp.style.formLabel}"/>
+            <editor:ValueListFlexEditorImpl enabled="true"
+                                            newRowMode="MANUAL"
+                                            ui:field="secondaryDisplayNameLanguages"
+                                            addStyleNames="{style.langList}"/>
+            <g:Label text="{msg.language_localDisplayName_secondary_helpText}"
+                     addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
 
         </div>
     </g:HTMLPanel>

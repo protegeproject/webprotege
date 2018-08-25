@@ -1148,4 +1148,25 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("language.no_display_name.help")
     String language_noDisplayName_help(String typeName, String defDisplayName);
+
+    @DefaultMessage("Primary Display Name")
+    @Key("language.localDisplayName.primary.title")
+    String language_localDisplayName_primary_title();
+
+    @DefaultMessage("The primary display name is used as the display name for entities throughout the user interface.  " +
+            "Specify a list of property language pairs that should be used to generate the display name.  " +
+            "This setting is a local setting that takes precedence over the project default. " +
+            "Leave blank to use the project default.")
+    @Key("language.localDisplayName.primary.helpText")
+    String language_localDisplayName_primary_helpText();
+
+    @DefaultMessage("Secondary Display Name")
+    @Key("language.localDisplayName.secondary.title")
+    String language_localDisplayName_secondary_title();
+
+    @DefaultMessage("The secondary display name is displayed alongside the primary display name in hierarchies " +
+            "and lists of entities.  Specify a list of property language pairs that should be used to generate the " +
+            "secondary display name.  Leave blank for no secondary display name.")
+    @Key("language.localDisplayName.secondary.helpText")
+    String language_localDisplayName_secondary_helpText();
 }
