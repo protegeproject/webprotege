@@ -136,7 +136,7 @@ public class ProjectSettingsPresenter {
         // TODO: Check that the user can do this
         settingsPresenter.addSection(messages.newEntitySettings()).setWidget(entityCrudKitSettingsEditor);
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
-        settingsPresenter.addSection(messages.language_defaultDisplayName_title()).setWidget(defaultDisplayNameSettingsView);
+        settingsPresenter.addSection(messages.displayName_settings_project_title()).setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
         settingsPresenter.setBusy(container, true);

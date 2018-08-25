@@ -158,8 +158,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private void renderNoDisplayName(EntityNode node, StringBuilder sb) {
         sb.append("<span class='wp-entity-node__display-name__no-display-name' title='")
-          .append(messages.language_noDisplayName_help(node.getEntity().getEntityType().getPrintName().toLowerCase(),
-                                                       node.getBrowserText()))
+          .append(messages.displayName_noDisplayName_helpText(node.getEntity().getEntityType().getPrintName().toLowerCase(),
+                                                              node.getBrowserText()))
           .append("'>");
         sb.append(NO_DISPLAY_NAME);
         sb.append("</span>");

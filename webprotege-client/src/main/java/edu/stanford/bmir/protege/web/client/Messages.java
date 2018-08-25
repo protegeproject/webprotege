@@ -1122,51 +1122,52 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("app.settings.url.port")
     String applicationSettings_url_port();
 
-    @DefaultMessage("Specify a list of annotation property and language pairs that should be used for entity display names.  " +
-            "The display name for an entity will be chosen based on its annotations and the ordering " +
-            "of the pairs listed below. Properties and languages that appear closer to the top of the list are given priority over " +
-            "properties and languages that appear closer to the bottom of the list.")
-    @Key("language.displayName.helpText")
-    String language_displayName_helpText();
-
-    @DefaultMessage("Display name property and language priority")
-    @Key("language.displayName.priorityList.title")
-    String language_displayName_priorityList_title();
-
     @DefaultMessage("New Entity Language Settings")
     @Key("language.defaultSettings.title")
     String language_defaultSettings_title();
 
     @DefaultMessage("Display Name Settings")
-    @Key("language.defaultDisplayName.title")
-    String language_defaultDisplayName_title();
+    @Key("displayName.settings.project.title")
+    String displayName_settings_project_title();
+
+    @DefaultMessage("Specify a list of annotation property and language pairs that should be used for entity display names.  " +
+            "The display name for an entity will be chosen based on its annotations and the ordering " +
+            "of the pairs listed below. Properties and languages that appear closer to the top of the list are given priority over " +
+            "properties and languages that appear closer to the bottom of the list.")
+    @Key("displayName.settings.project.helpText")
+    String displayName_settings_project_helpText();
+
+    @DefaultMessage("Display name property and language priority")
+    @Key("displayName.settings.project.priorityList.title")
+    String displayName_settings_project_priorityList_title();
 
     @DefaultMessage("Reset to referenced languages")
-    @Key("language.defaultDisplayName.reset.title")
-    String language_defaultDisplayName_reset_title();
+    @Key("displayName.settings.project.reset.title")
+    String displayName_settings_project_reset_title();
 
-    @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
-    @Key("language.no_display_name.help")
-    String language_noDisplayName_help(String typeName, String defDisplayName);
 
     @DefaultMessage("Primary Display Name")
-    @Key("language.localDisplayName.primary.title")
-    String language_localDisplayName_primary_title();
+    @Key("displayName.settings.local.primary.title")
+    String displayName_settings_local_primary_title();
 
     @DefaultMessage("The primary display name is used as the display name for entities throughout the user interface.  " +
             "Specify a list of property language pairs that should be used to generate the display name.  " +
             "This setting is a local setting that takes precedence over the project default. " +
             "Leave blank to use the project default.")
-    @Key("language.localDisplayName.primary.helpText")
-    String language_localDisplayName_primary_helpText();
+    @Key("displayName.settings.local.primary.helpText")
+    String displayName_settings_local_primary_helpText();
 
     @DefaultMessage("Secondary Display Name")
-    @Key("language.localDisplayName.secondary.title")
-    String language_localDisplayName_secondary_title();
+    @Key("displayName.settings.local.secondary.title")
+    String displayName_settings_local_secondary_title();
 
     @DefaultMessage("The secondary display name is displayed alongside the primary display name in hierarchies " +
             "and lists of entities.  Specify a list of property language pairs that should be used to generate the " +
             "secondary display name.  Leave blank for no secondary display name.")
-    @Key("language.localDisplayName.secondary.helpText")
-    String language_localDisplayName_secondary_helpText();
+    @Key("displayName.settings.local.secondary.helpText")
+    String displayName_settings_local_secondary_helpText();
+
+    @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
+    @Key("displayName.no_display_name.helpText")
+    String displayName_noDisplayName_helpText(String typeName, String defDisplayName);
 }

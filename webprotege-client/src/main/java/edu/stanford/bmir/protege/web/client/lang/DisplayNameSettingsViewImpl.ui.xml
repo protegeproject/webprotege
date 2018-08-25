@@ -19,23 +19,23 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form} {wp.style.panelFilled}">
         <div class="{wp.style.formGroup}">
-            <g:Label text="{msg.language_localDisplayName_primary_title}"
+            <g:Label text="{msg.displayName_settings_local_primary_title}"
                      addStyleNames="{wp.style.formLabel}"/>
             <editor:ValueListFlexEditorImpl enabled="true" newRowMode="MANUAL"
                                             ui:field="primaryDisplayNameLanguages"
                                             addStyleNames="{style.langList}"/>
-            <g:Label text="{msg.language_localDisplayName_primary_helpText}"
+            <g:Label text="{msg.displayName_settings_local_primary_helpText}"
                      addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
 
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="{msg.language_localDisplayName_secondary_title}"
+            <g:Label text="{msg.displayName_settings_local_secondary_title}"
                      addStyleNames="{wp.style.formLabel}"/>
             <editor:ValueListFlexEditorImpl enabled="true"
                                             newRowMode="MANUAL"
                                             ui:field="secondaryDisplayNameLanguages"
                                             addStyleNames="{style.langList}"/>
-            <g:Label text="{msg.language_localDisplayName_secondary_helpText}"
+            <g:Label text="{msg.displayName_settings_local_secondary_helpText}"
                      addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
 
         </div>
