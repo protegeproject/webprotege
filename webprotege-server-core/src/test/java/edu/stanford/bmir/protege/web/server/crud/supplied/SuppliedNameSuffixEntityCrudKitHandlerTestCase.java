@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +68,9 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
 
     private SuppliedNameSuffixEntityCrudKitHandler handler;
 
+    @Mock
+    private DictionaryLanguage dictionaryLanguage;
+
     @Before
     public void setUp() throws Exception {
         dataFactory = new OWLDataFactoryImpl();
@@ -75,7 +79,9 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getDataFactory()).thenReturn(dataFactory);
         when(crudContext.getTargetOntology()).thenReturn(ontology);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
+        when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
+        when(dictionaryLanguage.getLang()).thenReturn("");
         handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings);
     }
 
