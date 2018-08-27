@@ -1,6 +1,7 @@
 @external wp-*;
 
 @url plusIconUrl svgPlusIcon;
+@url crossIconUrl svgCrossIcon;
 
 .wp-btn {
     border: none;
@@ -146,6 +147,10 @@
 
 .wp-btn-delete {
     background-color: #aaaaaa;
+    background-image: crossIconUrl;
+    background-repeat: no-repeat;
+    background-position-x: -1px;
+    background-position-y: -1px;
     color: white;
     width: 20px;
     height: 20px;

@@ -26,6 +26,8 @@
             padding-left: 20px;
             padding-right: 10px;
             justify-content: flex-end;
+            align-self: start;
+            margin-top: 3px;
         }
         .deleteButton {
             visibility: hidden;
