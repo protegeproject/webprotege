@@ -39,6 +39,8 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class CommentedEntitiesViewImpl extends Composite implements CommentedEntitiesView, HasSelectionHandlers<CommentedEntityData> {
 
+    private final CommentedEntityDataRenderer renderer;
+
     interface CommentedEntitiesViewImplUiBinder extends UiBinder<HTMLPanel, CommentedEntitiesViewImpl> {
 
     }
@@ -104,7 +106,8 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
         this.paginatorPresenter = paginatorPresenter;
 
         ProvidesKey<CommentedEntityData> keyProvider = item -> item.getEntityData().getEntity();
-        list = new CellList<>(new CommentedEntityDataRenderer(),
+        renderer = new CommentedEntityDataRenderer();
+        list = new CellList<>(renderer,
                               WebProtegeCellListResources.INSTANCE,
                               keyProvider);
         final SingleSelectionModel<CommentedEntityData> selectionModel = new SingleSelectionModel<>(keyProvider);
@@ -206,5 +209,10 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
     @Override
     public void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler) {
         paginatorPresenter.setPageNumberChangedHandler(handler);
+    }
+
+    @Override
+    public void setGoToEntityHandler(@Nonnull GoToEntityHandler handler) {
+        renderer.setGoToButtonHandler(handler::handleGoToEntity);
     }
 }

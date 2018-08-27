@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.entity.EntityItemMapper;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
@@ -19,7 +20,6 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.*;
-import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -136,51 +136,14 @@ public class QueryPortletViewImpl extends Composite implements QueryPortletView 
 
         Place place = placeController.getWhere();
         if(place instanceof ProjectViewPlace) {
-            Item<?> item = ed.getEntity().accept(new OWLEntityVisitorEx<Item<?>>() {
-                @Nonnull
-                @Override
-                public Item<?> visit(@Nonnull OWLClass cls) {
-                    return new OWLClassItem(cls);
-                }
-
-                @Nonnull
-                @Override
-                public Item<?> visit(@Nonnull OWLObjectProperty property) {
-                    return new OWLObjectPropertyItem(property);
-                }
-
-                @Nonnull
-                @Override
-                public Item<?> visit(@Nonnull OWLDataProperty property) {
-                    return new OWLDataPropertyItem(property);
-                }
-
-                @Nonnull
-                @Override
-                public Item<?> visit(@Nonnull OWLNamedIndividual individual) {
-                    return new OWLNamedIndividualItem(individual);
-                }
-
-                @Nonnull
-                @Override
-                public Item<?> visit(@Nonnull OWLDatatype datatype) {
-                    return null;
-                }
-
-                @Nonnull
-                @Override
-                public Item<?> visit(@Nonnull OWLAnnotationProperty property) {
-                    return new OWLAnnotationPropertyItem(property);
-                }
-            });
-            if (item != null) {
+            EntityItemMapper.getItem(ed.getEntity()).ifPresent(item -> {
                 ProjectViewPlace nextPlace = ((ProjectViewPlace) place).builder()
                                                                        .withPerspectiveId(perspectiveId)
                                                                        .clearSelection()
                                                                        .withSelectedItem(item)
                                                                        .build();
                 placeController.goTo(nextPlace);
-            }
+            });
         }
     }
 
@@ -207,4 +170,5 @@ public class QueryPortletViewImpl extends Composite implements QueryPortletView 
     interface QueryPortletViewImplUiBinder extends UiBinder<HTMLPanel, QueryPortletViewImpl> {
 
     }
+
 }

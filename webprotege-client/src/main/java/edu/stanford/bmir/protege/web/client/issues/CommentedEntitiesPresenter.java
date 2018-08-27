@@ -2,10 +2,15 @@ package edu.stanford.bmir.protege.web.client.issues;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.entity.EntityItemMapper;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
@@ -13,6 +18,10 @@ import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChanged
 import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.place.Item;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -49,6 +58,12 @@ public class CommentedEntitiesPresenter {
 
     private final SelectionModel selectionModel;
 
+    @Nonnull
+    private final EntityTypePerspectiveMapper perspectiveMapper;
+
+    @Nonnull
+    private final PlaceController placeController;
+
     private final Set<OWLEntity> currentEntites = new HashSet<>();
 
     private final List<CommentedEntityData> pageElements = new ArrayList<>();
@@ -60,11 +75,15 @@ public class CommentedEntitiesPresenter {
     public CommentedEntitiesPresenter(@Nonnull ProjectId projectId,
                                       @Nonnull CommentedEntitiesView view,
                                       @Nonnull DispatchServiceManager dispatchServiceManager,
-                                      @Nonnull SelectionModel selectionModel) {
+                                      @Nonnull SelectionModel selectionModel,
+                                      @Nonnull EntityTypePerspectiveMapper perspectiveMapper,
+                                      @Nonnull PlaceController placeController) {
         this.projectId = projectId;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.selectionModel = selectionModel;
+        this.perspectiveMapper = perspectiveMapper;
+        this.placeController = placeController;
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -76,6 +95,7 @@ public class CommentedEntitiesPresenter {
         view.setSelectionHandler(this::handleEntitySelected);
         view.setPageNumberChangedHandler(pageNumber -> reload());
         view.setSortingKeyChangedHandler(this::reload);
+        view.setGoToEntityHandler(this::handleGoToEntity);
         reload();
         eventBus.addProjectEventHandler(projectId, ON_BROWSER_TEXT_CHANGED, this::handleBrowserTextChanged);
         eventBus.addProjectEventHandler(projectId, ON_COMMENT_POSTED, this::handleCommentPosted);
@@ -98,6 +118,21 @@ public class CommentedEntitiesPresenter {
 
     private void handleEntitySelected(SelectionEvent<CommentedEntityData> event) {
         selectionModel.setSelection(event.getSelectedItem().getEntityData().getEntity());
+    }
+
+    private void handleGoToEntity(@Nonnull OWLEntityData entityData) {
+        Place place = placeController.getWhere();
+        if(!(place instanceof ProjectViewPlace)) {
+            return;
+        }
+        PerspectiveId nextPerspectiveId = perspectiveMapper.getPerspectiveId(entityData.getEntity().getEntityType());
+        ProjectViewPlace currentPlace = (ProjectViewPlace) place;
+        ProjectViewPlace.Builder nextPlaceBuilder = currentPlace.builder();
+        nextPlaceBuilder.clearSelection();
+        nextPlaceBuilder.withPerspectiveId(nextPerspectiveId);
+        nextPlaceBuilder.clearSelection();
+        EntityItemMapper.getItem(entityData.getEntity()).ifPresent(nextPlaceBuilder::withSelectedItem);
+        placeController.goTo(nextPlaceBuilder.build());
     }
 
     private void reload() {
