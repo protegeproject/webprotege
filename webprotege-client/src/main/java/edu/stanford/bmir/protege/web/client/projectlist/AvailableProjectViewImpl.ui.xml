@@ -24,6 +24,9 @@
         .ownerIconField {
             padding-right: 5px;
         }
+        .menuButton {
+            align-self: center;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{wp.projectList.row}">
@@ -34,6 +37,6 @@
         </g:HTMLPanel>
         <g:Label ui:field="lastOpenedAtField" addStyleNames="{wp.projectList.lastOpenCol} {wp.projectList.cell}"/>
         <g:Label ui:field="modifiedAtField" addStyleNames="{wp.projectList.lastModifiedCol} {wp.projectList.cell}"/>
-        <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{wp.projectList.menuButtonCol} {wp.projectList.cell}"/>
+        <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{wp.projectList.menuButtonCol} {wp.projectList.cell} {style.menuButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
