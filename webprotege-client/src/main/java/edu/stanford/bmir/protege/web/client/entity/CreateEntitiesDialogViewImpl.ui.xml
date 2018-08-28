@@ -1,11 +1,40 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .langTagField {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .resetButton {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-left: 7px;
+        }
+        .langTagPanel {
+            display: flex;
+            flex-direction: row;
+        }
+    </ui:style>
     <g:HTMLPanel>
-        <text:ExpandingTextBoxImpl ui:field="textBox"
-                                   mode="MULTI_LINE"
-                                   placeholder="{msg.createEntityInstructions}"
-                                   anchorVisible="false"/>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Names" ui:field="entityNamesLabel" addStyleNames="{wp.style.formLabel}"/>
+            <text:ExpandingTextBoxImpl ui:field="textBox"
+                                       mode="MULTI_LINE"
+                                       anchorVisible="false"/>
+            <g:Label addStyleNames="{wp.style.formHelpText}"
+                     text="{msg.createEntityInstructions}"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Language Tag" addStyleNames="{wp.style.formLabel}"/>
+            <g:HTMLPanel addStyleNames="{style.langTagPanel}">
+                <primitive:DefaultLanguageEditor ui:field="langField" addStyleNames="{style.langTagField}"/>
+                <g:Button ui:field="resetButton" text="Reset" addStyleNames="{style.resetButton} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
+            </g:HTMLPanel>
+            <g:Label text="Leave blank for no language tag.  Press 'Reset' to reset the language tag to the project default." addStyleNames="{wp.style.formHelpText}"/>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>

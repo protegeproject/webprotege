@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
+import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 
@@ -10,8 +11,22 @@ import javax.annotation.Nonnull;
  */
 public interface CreateEntityDialogView extends IsWidget, HasInitialFocusable {
 
+    interface ResetLangTagHandler {
+        void handleResetLangTag();
+    }
+
+    void setEntityType(@Nonnull EntityType<?> entityType);
+
     @Nonnull
     String getText();
 
+    @Nonnull
+    String getLangTag();
+
+    void setLangTag(@Nonnull String langTag);
+
     void clear();
+
+    void setResetLangTagHandler(@Nonnull ResetLangTagHandler handler);
+
 }

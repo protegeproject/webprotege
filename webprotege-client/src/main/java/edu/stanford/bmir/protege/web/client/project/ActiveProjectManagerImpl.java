@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -49,6 +50,7 @@ public class ActiveProjectManagerImpl implements ActiveProjectManager {
         this.placeController = placeController;
         this.dispatchServiceManager = dispatchServiceManager;
         eventBus.addHandler(PlaceChangeEvent.TYPE, event -> handlePlaceChange());
+        eventBus.addHandler(ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED, this::handleProjectSettingsChangedEvent);
     }
 
     @Nonnull
@@ -90,4 +92,9 @@ public class ActiveProjectManagerImpl implements ActiveProjectManager {
             eventBus.fireEvent(new ActiveProjectChangedEvent(activeProject).asGWTEvent());
         }
     }
+
+    private void handleProjectSettingsChangedEvent(@Nonnull ProjectSettingsChangedEvent event) {
+        cachedProjectDetails = Optional.empty();
+    }
+
 }
