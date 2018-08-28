@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
+        @external .wp-panel-filled;
 
         textarea pre {
             margin: 0;
@@ -43,13 +44,14 @@
             padding-bottom: 2px;
             padding-right: 2px;
             padding-top: 2px;
+            box-sizing: border-box;
             font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-            border: 1px solid transparent;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            -ms-box-sizing: border-box;
-            line-height: 16px;
+            line-height: literal("var(--input--line-height)")
 
+        }
+
+        .wp-panel-filled .main pre {
+            border: 1px solid transparent;
         }
 
         .button-loc {

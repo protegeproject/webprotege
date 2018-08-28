@@ -21,7 +21,7 @@
             min-width: 0;
         }
         .language-field {
-            flex-basis: 36px;
+            flex-basis: literal("var(--lang-field--width)");
             flex-grow: 0;
             flex-shrink: 0;
             min-width: 0;

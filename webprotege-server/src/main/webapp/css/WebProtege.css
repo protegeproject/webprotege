@@ -1,36 +1,39 @@
 :root {
-    --selected-item--background-color: #d5e1fa;/* #116cd6; */
-    --selected-item--color: inherit;
+    --selected-item--background-color:          #d5e1fa; /* #116cd6; */
+    --selected-item--color:                     inherit;
 
-    --selected-menu-item--background-color: #116cd6;
-    --selected-menu-item--color: white;
+    --selected-menu-item--background-color:     #116cd6;
+    --selected-menu-item--color:                white;
 
-    --selected-tab--color: #116cd6;
+    --selected-tab--color:                      #116cd6;
 
-    --topbar--background-color: #f0f0f0;
+    --topbar--background-color:                 #f0f0f0;
 
-    --inlay-panel--background-color: #f0f0f0;
+    --inlay-panel--background-color:            #f0f0f0;
 
-    --inlay-panel--border: 1px solid #e0e0e0;
+    --inlay-panel--border:                      1px solid #e0e0e0;
 
-    --inlay-panel--border-radius: 3px;
+    --inlay-panel--border-radius:               3px;
 
-    --inlay-panel--alternate-background-color: #fafaff;
+    --inlay-panel--alternate-background-color:  #fafaff;
 
-    --view-toolbar--background-color: #f0f0f0;
+    --view-toolbar--background-color:           #f0f0f0;
 
-    --error--color: #af0002;
+    --error--color:                             #af0002;
 
-    --outline: #94c0ed solid 2px;
+    --outline:                                  #94c0ed solid 2px;
 
-    --widgetmap-view-header-font-weight: 400;
-    --widgetmap-view-header-padding-left: 3px;
+    --widgetmap-view-header-font-weight:        400;
+    --widgetmap-view-header-padding-left:       3px;
 
     --gt-tree__row--selected--background-color: var(--selected-item--background-color);
-    --gt-tree__row--selected--color: var(--selected-item--color);
+    --gt-tree__row--selected--color:            var(--selected-item--color);
 
-    -webkit-font-smoothing: subpixel-antialiased;
-    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing:                     subpixel-antialiased;
+    text-rendering:                             optimizeLegibility;
+
+    --input--line-height: 18px;
+    --lang-field--width: 45px;
 }
 
 body, input, textarea, keygen, select, button {
@@ -88,7 +91,7 @@ pre {
 }
 
 .gwt-TextBox, textarea, .gwt-PasswordTextBox {
-    line-height: 18px;
+    line-height: var(--input--line-height);
     background-color: #ffffff;
     padding: 2px;
 }
@@ -96,9 +99,10 @@ pre {
 .gwt-SuggestBox, .gwt-SuggestBox [disabled] {
     font-size: 12px;
     padding: 2px;
-    line-height: 16px;
+    line-height: var(--input--line-height);
     color: #000000;
     background: transparent;
+    box-sizing: border-box;
 }
 
 .gwt-SuggestBox:focus {

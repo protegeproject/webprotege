@@ -14,7 +14,7 @@
         .langField {
             flex-grow: 0;
             flex-shrink: 0;
-            width: 40px;
+            width: literal("var(--lang-field--width)");
             margin-left: 2px;
         }
     </ui:style>

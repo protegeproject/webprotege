@@ -48,6 +48,10 @@
             box-shadow:       0 0 10px 0 #e0e0e0
         }
 
+        .buttonBar > button+button {
+            margin-left: 5px;
+        }
+
         .titleSeparator {
             width: 20px;
         }
