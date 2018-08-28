@@ -46,6 +46,12 @@
     box-sizing: border-box;
     padding-left: 5px;
     padding-right: 5px;
+    background-color: #e0e0e0;
+    color: #505050;
+}
+
+.wp-btn--input:hover {
+    background-color: #d5d5d5;
 }
 
 .wp-btn--dialog {

@@ -34,7 +34,7 @@
                 <primitive:DefaultLanguageEditor ui:field="langField" addStyleNames="{style.langTagField}"/>
                 <div class="{wp.style.formAfterInput}">
                     <g:Button ui:field="resetButton" text="Reset"
-                              addStyleNames="{wp.buttons.button} {wp.buttons.inputButton} {wp.buttons.escapeButton}"/>
+                              addStyleNames="{wp.buttons.button} {wp.buttons.inputButton}"/>
                 </div>
             </g:HTMLPanel>
             <g:Label text="Leave blank for no language tag.  Press 'Reset' to reset the language tag to the project default." addStyleNames="{wp.style.formHelpText}"/>
