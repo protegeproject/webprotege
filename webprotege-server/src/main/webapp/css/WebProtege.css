@@ -38,6 +38,8 @@ body, input, textarea, keygen, select, button {
     font-weight: 400;
     color: #505050;
     font-size: 12px;
+    margin: 0;
+    padding: 0;
 }
 
 input, textarea {
@@ -97,6 +99,10 @@ pre {
     line-height: 16px;
     color: #000000;
     background: transparent;
+}
+
+.gwt-SuggestBox:focus {
+    z-index: 5;
 }
 
 .gwt-SuggestBoxPopup {

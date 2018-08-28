@@ -194,6 +194,15 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-help-text")
         String formHelpText();
 
+        @ClassName("wp-form-input-group")
+        String formInputGroup();
+
+        @ClassName("wp-form-before-input")
+        String formBeforeInput();
+
+        @ClassName("wp-form-after-input")
+        String formAfterInput();
+
         @ClassName("wp-form-help-text--checkbox-indented")
         String formHelpTextCheckBoxIndented();
 
@@ -383,6 +392,13 @@ public interface WebProtegeClientBundle extends ClientBundle {
          */
         @ClassName("wp-btn--dialog")
         String dialogButton();
+
+        /**
+         * A button that appears before or after an input as if it is attached to the input
+         * @return
+         */
+        @ClassName("wp-btn--input")
+        String inputButton();
 
         /**
          * The primary button on a page or on a settings

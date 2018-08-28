@@ -30,9 +30,12 @@
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="Language Tag" addStyleNames="{wp.style.formLabel}"/>
-            <g:HTMLPanel addStyleNames="{style.langTagPanel}">
+            <g:HTMLPanel addStyleNames="{style.langTagPanel} {wp.style.formInputGroup}">
                 <primitive:DefaultLanguageEditor ui:field="langField" addStyleNames="{style.langTagField}"/>
-                <g:Button ui:field="resetButton" text="Reset" addStyleNames="{style.resetButton} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
+                <div class="{wp.style.formAfterInput}">
+                    <g:Button ui:field="resetButton" text="Reset"
+                              addStyleNames="{wp.buttons.button} {wp.buttons.inputButton} {wp.buttons.escapeButton}"/>
+                </div>
             </g:HTMLPanel>
             <g:Label text="Leave blank for no language tag.  Press 'Reset' to reset the language tag to the project default." addStyleNames="{wp.style.formHelpText}"/>
         </div>
