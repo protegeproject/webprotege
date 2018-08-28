@@ -16,8 +16,9 @@ public class CreateAnnotationPropertiesAction extends CreateEntitiesInHierarchyA
 
     public CreateAnnotationPropertiesAction(@Nonnull ProjectId projectId,
                                             @Nonnull String sourceText,
+                                            @Nonnull String langTag,
                                             @Nonnull Optional<OWLAnnotationProperty> parent) {
-        super(projectId, sourceText, parent);
+        super(projectId, sourceText, langTag, parent);
     }
 
     /**

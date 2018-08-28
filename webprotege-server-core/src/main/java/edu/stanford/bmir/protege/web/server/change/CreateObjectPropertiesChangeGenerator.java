@@ -29,8 +29,9 @@ public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitie
                                                  @Provided @Nonnull MessageFormatter msg,
                                                  @Provided @Nonnull OWLOntology rootOntology,
                                                  @Nonnull String sourceText,
+                                                 @Nonnull String langTag,
                                                  @Nonnull Optional<OWLObjectProperty> parent) {
-        super(OBJECT_PROPERTY, sourceText, parent, rootOntology, dataFactory, msg);
+        super(OBJECT_PROPERTY, sourceText, langTag, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

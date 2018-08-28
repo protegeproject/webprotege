@@ -34,8 +34,9 @@ public class CreateIndividualsChangeListGenerator extends AbstractCreateEntities
                                                 @Provided @Nonnull MessageFormatter msg,
                                                 @Provided @Nonnull OWLOntology rootOntology,
                                                 @Nonnull Optional<OWLClass> parent,
-                                                @Nonnull String sourceText) {
-        super(NAMED_INDIVIDUAL, sourceText, parent, rootOntology, dataFactory, msg);
+                                                @Nonnull String sourceText,
+                                                @Nonnull String langTag) {
+        super(NAMED_INDIVIDUAL, sourceText, langTag, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

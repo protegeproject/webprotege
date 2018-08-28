@@ -323,9 +323,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private void handleCreateAnnotationProperty() {
         createEntityPresenter.createEntities(ANNOTATION_PROPERTY,
                                              annotationPropertyTree,
-                                             (projectId, browserText) ->
+                                             (projectId, browserText, langTag) ->
                                                      new CreateAnnotationPropertiesAction(projectId,
                                                                                           browserText,
+                                                                                          langTag,
                                                                                           getSelectedAnnotationProperty())
         );
     }
@@ -333,9 +334,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private void handleCreateDataProperty() {
         createEntityPresenter.createEntities(DATA_PROPERTY,
                                              dataPropertyTree,
-                                             (projectId, browserText) ->
+                                             (projectId, browserText, langTag) ->
                                                      new CreateDataPropertiesAction(projectId,
                                                                                     browserText,
+                                                                                    langTag,
                                                                                     getSelectedDataProperty())
         );
     }
@@ -343,9 +345,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private void handleCreateObjectProperty() {
         createEntityPresenter.createEntities(OBJECT_PROPERTY,
                                              objectPropertyTree,
-                                             (projectId, browserText) ->
+                                             (projectId, browserText, langTag) ->
                                                      new CreateObjectPropertiesAction(projectId,
                                                                                       browserText,
+                                                                                      langTag,
                                                                                       getSelectedObjectProperty())
         );
     }

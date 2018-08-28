@@ -66,6 +66,7 @@ public class CreateObjectPropertiesActionHandler extends AbstractProjectChangeHa
     protected ChangeListGenerator<Set<OWLObjectProperty>> getChangeListGenerator(CreateObjectPropertiesAction action,
                                                                                  ExecutionContext executionContext) {
         return changeGeneratorFactory.create(action.getSourceText(),
+                                             action.getLangTag(),
                                              action.getParent());
     }
 

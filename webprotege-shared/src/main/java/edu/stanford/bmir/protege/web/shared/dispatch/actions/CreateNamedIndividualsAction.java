@@ -21,6 +21,8 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
 
     private String sourceText;
 
+    private String langTag;
+
     private CreateNamedIndividualsAction() {
     }
 
@@ -31,10 +33,12 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
-                                        @Nonnull String sourceText) {
+                                        @Nonnull String sourceText,
+                                        @Nonnull String langTag) {
         super(projectId);
         this.type = null;
         this.sourceText = checkNotNull(sourceText);
+        this.langTag = checkNotNull(langTag);
     }
 
     /**
@@ -46,10 +50,12 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
      */
     public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
                                         @Nonnull OWLClass type,
-                                        @Nonnull String sourceText) {
+                                        @Nonnull String sourceText,
+                                        @Nonnull String langTag) {
         super(projectId);
         this.type = checkNotNull(type);
         this.sourceText = checkNotNull(sourceText);
+        this.langTag = checkNotNull(langTag);
     }
 
     /**
@@ -61,10 +67,12 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
      */
     public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
                                         @Nonnull Optional<OWLClass> type,
-                                        @Nonnull String sourceText) {
+                                        @Nonnull String sourceText,
+                                        @Nonnull String langTag) {
         super(projectId);
         this.type = type.orElse(null);
         this.sourceText = checkNotNull(sourceText);
+        this.langTag = checkNotNull(langTag);
     }
 
 
@@ -83,5 +91,10 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
     @Nonnull
     public String getSourceText() {
         return sourceText;
+    }
+
+    @Nonnull
+    public String getLangTag() {
+        return langTag;
     }
 }

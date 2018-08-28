@@ -35,8 +35,9 @@ public class CreateDataPropertiesChangeGenerator extends AbstractCreateEntitiesC
                                                @Provided @Nonnull MessageFormatter msg,
                                                @Provided @Nonnull OWLOntology rootOntology,
                                                @Nonnull String sourceText,
+                                               @Nonnull String langTag,
                                                @Nonnull Optional<OWLDataProperty> parent) {
-        super(DATA_PROPERTY, sourceText, parent, rootOntology, dataFactory, msg);
+        super(DATA_PROPERTY, sourceText, langTag, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

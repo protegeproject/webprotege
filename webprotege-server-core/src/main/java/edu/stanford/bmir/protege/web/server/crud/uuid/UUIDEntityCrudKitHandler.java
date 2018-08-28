@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -69,7 +70,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     @Override
-    public <E extends OWLEntity> E create(ChangeSetEntityCrudSession session, EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(@Nonnull ChangeSetEntityCrudSession session, @Nonnull EntityType<E> entityType, @Nonnull final EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull final EntityCrudContext context, @Nonnull final OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
         String suppliedName = shortForm.getShortForm();
@@ -78,11 +79,11 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         final OWLLiteral labellingLiteral;
         if(parsedIRI.isPresent()) {
             entityIRI = parsedIRI.get();
-            labellingLiteral = getLabellingLiteral(entityIRI.toString(), context);
+            labellingLiteral = getLabellingLiteral(entityIRI.toString(), langTag, context);
         }
         else {
             entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, targetOntology, context.getPrefixedNameExpander());
-            labellingLiteral = getLabellingLiteral(suppliedName, context);
+            labellingLiteral = getLabellingLiteral(suppliedName, langTag, context);
         }
         final E entity =  dataFactory.getOWLEntity(entityType, entityIRI);
         builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
@@ -116,10 +117,10 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
 
-    private static OWLLiteral getLabellingLiteral(String suppliedName, EntityCrudContext context) {
+    private static OWLLiteral getLabellingLiteral(String suppliedName, Optional<String> langTag, EntityCrudContext context) {
         OWLDataFactory dataFactory = context.getDataFactory();
         DictionaryLanguage dictionaryLanguage = context.getDictionaryLanguage();
-        return dataFactory.getOWLLiteral(suppliedName, dictionaryLanguage.getLang());
+        return dataFactory.getOWLLiteral(suppliedName, langTag.orElse(dictionaryLanguage.getLang()));
     }
 
 }

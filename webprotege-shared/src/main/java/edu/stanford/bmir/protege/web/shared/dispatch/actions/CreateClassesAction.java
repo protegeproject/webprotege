@@ -21,7 +21,8 @@ public class CreateClassesAction extends CreateEntitiesInHierarchyAction<CreateC
 
     public CreateClassesAction(@Nonnull ProjectId projectId,
                                @Nonnull String sourceText,
+                               @Nonnull String langTag,
                                @Nonnull Optional<OWLClass> superClass) {
-        super(projectId, sourceText, superClass);
+        super(projectId, sourceText, langTag, superClass);
     }
 }

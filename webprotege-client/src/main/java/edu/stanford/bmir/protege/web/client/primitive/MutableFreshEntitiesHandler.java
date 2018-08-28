@@ -53,7 +53,7 @@ public class MutableFreshEntitiesHandler implements FreshEntitiesHandler {
         if(entity != null) {
             return (E) entity;
         }
-        E freshEntity = DataFactory.getFreshOWLEntity(type, browserText);
+        E freshEntity = DataFactory.getFreshOWLEntity(type, browserText, Optional.empty());
         entitiesTable.put(browserText, type, freshEntity);
         return freshEntity;
     }

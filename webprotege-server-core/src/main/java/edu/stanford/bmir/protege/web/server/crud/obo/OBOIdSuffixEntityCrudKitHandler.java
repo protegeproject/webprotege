@@ -17,13 +17,14 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
+import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -89,7 +90,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     }
 
     @Override
-    public <E extends OWLEntity> E create(OBOIdSession session, EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(@Nonnull OBOIdSession session, @Nonnull EntityType<E> entityType, @Nonnull EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull EntityCrudContext context, @Nonnull OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
         final IRI iri = getNextIRI(session, targetOntology, context.getUserId());
@@ -98,7 +99,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         DictionaryLanguage language = context.getDictionaryLanguage();
         IRI annotationPropertyIri = language.getAnnotationPropertyIri();
         if (annotationPropertyIri != null) {
-            final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
+            final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
             OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
             builder.addAxiom(targetOntology, ax);
         }
@@ -166,9 +167,11 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         }
     }
 
-    private static OWLLiteral getLabellingLiteral(EntityShortForm shortForm, EntityCrudContext context) {
+    private static OWLLiteral getLabellingLiteral(EntityShortForm shortForm,
+                                                  Optional<String> langTag,
+                                                  EntityCrudContext context) {
         OWLDataFactory dataFactory = context.getDataFactory();
         DictionaryLanguage dictionaryLanguage = context.getDictionaryLanguage();
-        return dataFactory.getOWLLiteral(shortForm.getShortForm(), dictionaryLanguage.getLang());
+        return dataFactory.getOWLLiteral(shortForm.getShortForm(), langTag.orElse(dictionaryLanguage.getLang()));
     }
 }

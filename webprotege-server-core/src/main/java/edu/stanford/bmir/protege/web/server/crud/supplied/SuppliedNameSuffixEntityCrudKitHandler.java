@@ -10,14 +10,11 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
-import org.semanticweb.owlapi.io.XMLUtils;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
+import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -71,11 +68,11 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public <E extends OWLEntity> E create(
-            ChangeSetEntityCrudSession session,
-            EntityType<E> entityType,
-            EntityShortForm shortForm,
-            EntityCrudContext context,
-            OntologyChangeList.Builder<E> changeListBuilder) {
+            @Nonnull ChangeSetEntityCrudSession session,
+            @Nonnull EntityType<E> entityType,
+            @Nonnull EntityShortForm shortForm,
+            @Nonnull Optional<String> langTag, @Nonnull EntityCrudContext context,
+            @Nonnull OntologyChangeList.Builder<E> changeListBuilder) {
 
         // The supplied name can either be a fully quoted IRI, a prefixed name or some other string
         final OWLDataFactory dataFactory = context.getDataFactory();
@@ -124,7 +121,8 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         changeListBuilder.addAxiom(context.getTargetOntology(),
                                    dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(),
                                                                               iri,
-                                                                              dataFactory.getOWLLiteral(label, context.getDictionaryLanguage().getLang())));
+                                                                              dataFactory.getOWLLiteral(label,
+                                                                                                        langTag.orElse(context.getDictionaryLanguage().getLang()))));
         return entity;
     }
 

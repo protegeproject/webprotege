@@ -36,6 +36,9 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     private final String sourceText;
 
     @Nonnull
+    private final String langTag;
+
+    @Nonnull
     private final Optional<P> parent;
 
     @Nonnull
@@ -71,12 +74,14 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      */
     public AbstractCreateEntitiesChangeListGenerator(@Nonnull EntityType<E> entityType,
                                                      @Nonnull String sourceText,
+                                                     @Nonnull String langTag,
                                                      @Nonnull Optional<P> parent,
                                                      @Nonnull OWLOntology rootOntology,
                                                      @Nonnull OWLDataFactory dataFactory,
                                                      @Nonnull MessageFormatter msg) {
         this.entityType = entityType;
         this.sourceText = sourceText;
+        this.langTag = langTag;
         this.parent = parent;
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
@@ -98,7 +103,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
                 freshEntity = DataFactory.getOWLEntity(entityType, expanded);
             }
             else {
-                freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText);
+                freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText, Optional.of(langTag.trim()));
                 builder.addAxiom(rootOntology, dataFactory.getOWLDeclarationAxiom(freshEntity));
             }
             for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, context, parent)) {

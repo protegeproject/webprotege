@@ -59,6 +59,7 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
     @Override
     protected ChangeListGenerator<Set<OWLClass>> getChangeListGenerator(CreateClassesAction action, ExecutionContext executionContext) {
         return changeGeneratorFactory.create(action.getSourceText(),
+                                             action.getLangTag(),
                                              action.getParent());
     }
 

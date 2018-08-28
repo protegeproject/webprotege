@@ -17,6 +17,7 @@ public class RdfsLabelWithLexicalValueAndLang extends TypeSafeMatcher<OWLAnnotat
 
     public RdfsLabelWithLexicalValueAndLang(String expectedValue, String lang) {
         this.expectedValue = expectedValue;
+        this.lang = lang;
     }
 
     @Override

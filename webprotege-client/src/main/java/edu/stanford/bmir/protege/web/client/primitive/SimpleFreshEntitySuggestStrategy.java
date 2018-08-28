@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/03/2014
@@ -27,7 +28,7 @@ public class SimpleFreshEntitySuggestStrategy implements FreshEntitySuggestStrat
     public List<EntitySuggestion> getSuggestions(String query, List<EntityType<?>> suggestedTypes) {
         List<EntitySuggestion> suggestions = Lists.newArrayList();
         for(EntityType<?> allowedType : suggestedTypes) {
-                OWLEntity entity = DataFactory.getFreshOWLEntity(allowedType, query);
+                OWLEntity entity = DataFactory.getFreshOWLEntity(allowedType, query, Optional.empty());
                 OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query, ImmutableMap.of());
                 suggestions.add(new EntitySuggestion(entityData, formatSuggestText(query, allowedType)));
         }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntitiesInHierarchyAction;
@@ -84,9 +85,11 @@ public class CreateEntityPresenter {
                                       @Nonnull ActionFactory actionFactory,
                                       @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
 
+        GWT.log("[CreateEntityPresenter] handleCreateEntities.  Lang: " + dialogController.getLangTag());
         currentLangTag = Optional.of(dialogController.getLangTag());
         CreateEntitiesInHierarchyAction<?, ?> action = actionFactory.createAction(projectId,
-                                                                                  enteredText);
+                                                                                  enteredText,
+                                                                                  dialogController.getLangTag());
         dispatchServiceManager.execute(action,
                                        result -> {
                                            result.getEntities().stream()
@@ -107,6 +110,6 @@ public class CreateEntityPresenter {
     interface ActionFactory {
         CreateEntitiesInHierarchyAction<?, ?> createAction(
                 @Nonnull ProjectId projectId,
-                @Nonnull String createFromText);
+                @Nonnull String createFromText, String langTag);
     }
 }

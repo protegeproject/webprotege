@@ -212,9 +212,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private void handleCreateSubClasses() {
         createEntityPresenter.createEntities(CLASS,
-                                             treeWidget, (projectId, browserText) ->
+                                             treeWidget, (projectId, browserText, langTag) ->
                                                      new CreateClassesAction(projectId,
                                                                              browserText,
+                                                                             langTag,
                                                                              getFirstSelectedClass())
         );
     }

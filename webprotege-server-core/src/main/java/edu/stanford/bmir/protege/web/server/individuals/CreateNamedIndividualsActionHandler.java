@@ -62,6 +62,7 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
                                                 @Nonnull ExecutionContext executionContext) {
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
                                                                                                 factory.create(action.getType(),
+                                                                                                               action.getLangTag(),
                                                                                                                action.getSourceText()));
         Set<EntityNode> individualData = result.getSubject().stream()
                                                .map(renderer::render)

@@ -52,6 +52,7 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
     protected ChangeListGenerator<Set<OWLDataProperty>> getChangeListGenerator(CreateDataPropertiesAction action,
                                                                                ExecutionContext executionContext) {
         return changeGeneratorFactory.create(action.getSourceText(),
+                                             action.getLangTag(),
                                              action.getParent());
     }
 

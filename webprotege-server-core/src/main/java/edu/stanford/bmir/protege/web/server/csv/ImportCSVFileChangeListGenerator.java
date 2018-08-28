@@ -101,10 +101,10 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     private OWLAxiom getPlacementAxiom(String displayName) {
         OWLAxiom placementAxiom;
         if(descriptor.getRowImportType() == CSVRowImportType.CLASS) {
-            placementAxiom = dataFactory.getOWLSubClassOfAxiom(DataFactory.getFreshOWLEntity(CLASS, displayName), importRootClass);
+            placementAxiom = dataFactory.getOWLSubClassOfAxiom(DataFactory.getFreshOWLEntity(CLASS, displayName, Optional.empty()), importRootClass);
         }
         else {
-            placementAxiom = dataFactory.getOWLClassAssertionAxiom(importRootClass, DataFactory.getFreshOWLEntity(EntityType.NAMED_INDIVIDUAL, displayName));
+            placementAxiom = dataFactory.getOWLClassAssertionAxiom(importRootClass, DataFactory.getFreshOWLEntity(EntityType.NAMED_INDIVIDUAL, displayName, Optional.empty()));
         }
         return placementAxiom;
     }
@@ -115,11 +115,11 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         }
         OWLClassExpression superCls;
         if (columnType == ColumnType.CLASS) {
-            final OWLClass filler = DataFactory.getFreshOWLEntity(CLASS, value);
+            final OWLClass filler = DataFactory.getFreshOWLEntity(CLASS, value, Optional.empty());
             superCls = dataFactory.getOWLObjectSomeValuesFrom(columnProperty, filler);
         }
         else if (columnType == ColumnType.NAMED_INDIVIDUAL) {
-            final OWLNamedIndividual filler = DataFactory.getFreshOWLEntity(EntityType.NAMED_INDIVIDUAL, value);
+            final OWLNamedIndividual filler = DataFactory.getFreshOWLEntity(EntityType.NAMED_INDIVIDUAL, value, Optional.empty());
             superCls = dataFactory.getOWLObjectHasValue(columnProperty, filler);
         }
         else {
@@ -167,11 +167,11 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
 
     private OWLAxiom getAxiom(String rowEntityDisplayName, CSVColumnDescriptor columnDescriptor, OWLClassExpression superCls) {
         if (descriptor.getRowImportType() == CSVRowImportType.CLASS) {
-            OWLClass rowCls = DataFactory.getFreshOWLEntity(CLASS, rowEntityDisplayName);
+            OWLClass rowCls = DataFactory.getFreshOWLEntity(CLASS, rowEntityDisplayName, Optional.empty());
             return dataFactory.getOWLSubClassOfAxiom(rowCls, superCls);
         }
         else {
-            OWLNamedIndividual rowInd = DataFactory.getFreshOWLEntity(EntityType.NAMED_INDIVIDUAL, rowEntityDisplayName);
+            OWLNamedIndividual rowInd = DataFactory.getFreshOWLEntity(EntityType.NAMED_INDIVIDUAL, rowEntityDisplayName, Optional.empty());
             return dataFactory.getOWLClassAssertionAxiom(superCls, rowInd);
         }
     }

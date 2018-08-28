@@ -206,7 +206,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         controller.clear();
         controller.setEntityType(EntityType.NAMED_INDIVIDUAL);
         controller.setCreateEntityHandler(createFromText -> {
-            dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, createFromText),
+            dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, createFromText, controller.getLangTag()),
                                            result -> {
                                                Set<EntityNode> individuals = result.getIndividuals();
                                                view.addListData(individuals);

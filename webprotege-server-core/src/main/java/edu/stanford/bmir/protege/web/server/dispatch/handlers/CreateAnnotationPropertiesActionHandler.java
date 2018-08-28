@@ -55,7 +55,9 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     @Override
     protected ChangeListGenerator<Set<OWLAnnotationProperty>> getChangeListGenerator(CreateAnnotationPropertiesAction action,
                                                                                      ExecutionContext executionContext) {
-        return changeGeneratorFactory.create(action.getSourceText(), action.getParent());
+        return changeGeneratorFactory.create(action.getSourceText(),
+                                             action.getLangTag(),
+                                             action.getParent());
     }
 
     @Override

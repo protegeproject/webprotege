@@ -17,8 +17,9 @@ public class CreateObjectPropertiesAction extends CreateEntitiesInHierarchyActio
 
     public CreateObjectPropertiesAction(@Nonnull ProjectId projectId,
                                         @Nonnull String sourceText,
+                                        @Nonnull String langTag,
                                         @Nonnull Optional<OWLObjectProperty> parent) {
-        super(projectId, sourceText, parent);
+        super(projectId, sourceText, langTag, parent);
     }
 
     @GwtSerializationConstructor

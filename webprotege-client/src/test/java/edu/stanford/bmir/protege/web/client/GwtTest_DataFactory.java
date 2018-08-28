@@ -114,12 +114,4 @@ public class GwtTest_DataFactory extends GWTTestCase {
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
         finishTest();
     }
-
-
-    public void test_getFreshEntityReturnsFreshEntity() {
-        OWLClass cls = DataFactory.getFreshOWLEntity(EntityType.CLASS, "X");
-        assertTrue(DataFactory.isFreshEntity(cls));
-        assertEquals("X", DataFactory.getFreshEntityShortName(cls));
-        finishTest();
-    }
 }

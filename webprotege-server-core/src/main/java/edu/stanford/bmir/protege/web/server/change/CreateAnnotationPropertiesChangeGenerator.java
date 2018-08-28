@@ -34,8 +34,9 @@ public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEnt
                                                      @Provided @Nonnull MessageFormatter msg,
                                                      @Provided @Nonnull OWLOntology rootOntology,
                                                      @Nonnull String sourceText,
+                                                     @Nonnull String langTag,
                                                      @Nonnull Optional<OWLAnnotationProperty> parent) {
-        super(ANNOTATION_PROPERTY, sourceText, parent, rootOntology, dataFactory, msg);
+        super(ANNOTATION_PROPERTY, sourceText, langTag, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

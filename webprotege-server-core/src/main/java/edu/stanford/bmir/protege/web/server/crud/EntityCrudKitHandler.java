@@ -5,6 +5,9 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
+import java.util.Optional;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -22,8 +25,7 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings, C e
 
     /**
      * Creates a fresh change set session.  Each time a set of changes is applied to an ontology a session is created
-     * and passes to the {@link #create(ChangeSetEntityCrudSession, EntityType, EntityShortForm, EntityCrudContext,
-     * OntologyChangeList.Builder)}
+     * and passes to the {@link #create(ChangeSetEntityCrudSession, EntityType, EntityShortForm, Optional, EntityCrudContext, OntologyChangeList.Builder)}
      * method.  The session can be used to persist things like counters over multiple entity creations.
      *
      * @return A {@link C}.  Not {@code null}.
@@ -31,9 +33,10 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings, C e
     C createChangeSetSession();
 
     <E extends OWLEntity> E create(
-            C session,
-            EntityType<E> entityType,
-            EntityShortForm shortForm,
-            EntityCrudContext context,
-            OntologyChangeList.Builder<E> changeListBuilder) throws CannotGenerateFreshEntityIdException;
+            @Nonnull C session,
+            @Nonnull EntityType<E> entityType,
+            @Nonnull EntityShortForm shortForm,
+            @Nonnull Optional<String> langTag,
+            @Nonnull EntityCrudContext context,
+            @Nonnull OntologyChangeList.Builder<E> changeListBuilder) throws CannotGenerateFreshEntityIdException;
 }

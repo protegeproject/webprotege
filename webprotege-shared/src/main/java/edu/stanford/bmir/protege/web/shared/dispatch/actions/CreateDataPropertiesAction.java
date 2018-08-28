@@ -17,8 +17,9 @@ public class CreateDataPropertiesAction extends CreateEntitiesInHierarchyAction<
 
     public CreateDataPropertiesAction(@Nonnull ProjectId projectId,
                                       @Nonnull String sourceText,
+                                      @Nonnull String langTag,
                                       @Nonnull Optional<OWLDataProperty> parent) {
-        super(projectId, sourceText, parent);
+        super(projectId, sourceText, langTag, parent);
     }
 
     @GwtSerializationConstructor

@@ -26,6 +26,7 @@ import java.util.Optional;
 import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.hasIRI;
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.owlThing;
+import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueAndLang.rdfsLabelWithLexicalValueAndLang;
 import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -86,7 +87,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Test
     public void shouldAddDeclaration() {
         when(entityShortForm.getShortForm()).thenReturn("A");
-        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
         ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
@@ -97,14 +98,14 @@ public class UUIDEntityCrudKitHandlerTestCase {
     public void shouldAddLabelEqualToSuppliedName() {
         String suppliedName = "MyLabel";
         when(entityShortForm.getShortForm()).thenReturn(suppliedName);
-        handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
-        verifyHasLabelEqualTo(suppliedName);
+        handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
+        verifyHasLabelEqualTo(suppliedName, "en");
     }
 
     @Test
     public void shouldCreatedExpandedPrefixName() {
         when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
-        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
         assertThat(cls, is(owlThing()));
     }
 
@@ -112,8 +113,8 @@ public class UUIDEntityCrudKitHandlerTestCase {
     public void shouldAddLabelEqualToPrefixedName() {
         String suppliedName = "owl:Thing";
         when(entityShortForm.getShortForm()).thenReturn(suppliedName);
-        handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
-        verifyHasLabelEqualTo(suppliedName);
+        handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
+        verifyHasLabelEqualTo(suppliedName, "en");
     }
 
     @Test
@@ -121,17 +122,17 @@ public class UUIDEntityCrudKitHandlerTestCase {
         String expectedIRI = "http://stuff.com/A";
         String shortForm = "<" + expectedIRI + ">";
         when(entityShortForm.getShortForm()).thenReturn(shortForm);
-        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
         assertThat(cls, hasIRI(expectedIRI));
-        verifyHasLabelEqualTo(expectedIRI);
+        verifyHasLabelEqualTo(expectedIRI, "en");
     }
 
 
-    private void verifyHasLabelEqualTo(String label) {
+    private void verifyHasLabelEqualTo(String label, String langTag) {
         ArgumentCaptor<OWLAnnotationAssertionAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLAnnotationAssertionAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLAnnotationAssertionAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, (Matcher) hasItem(rdfsLabelWithLexicalValue(label)));
+        assertThat(addedAxioms, (Matcher) hasItem(rdfsLabelWithLexicalValueAndLang(label, langTag)));
     }
 
 

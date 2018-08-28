@@ -34,8 +34,9 @@ public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeLi
                                         @Provided @Nonnull MessageFormatter msg,
                                         @Provided @Nonnull OWLOntology rootOntology,
                                         @Nonnull String sourceText,
+                                        @Nonnull String langTag,
                                         @Nonnull Optional<OWLClass> parent) {
-        super(CLASS, sourceText, parent, rootOntology, dataFactory, msg);
+        super(CLASS, sourceText, langTag, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

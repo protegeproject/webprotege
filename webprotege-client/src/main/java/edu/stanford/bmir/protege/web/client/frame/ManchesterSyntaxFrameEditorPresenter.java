@@ -61,7 +61,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     private CreateAsEntityTypeHandler createAsEntityTypeHandler = new CreateAsEntityTypeHandler() {
         @Override
         public void handleCreateHasEntity(String name, EntityType<?> entityType) {
-            OWLEntity entity = DataFactory.getFreshOWLEntity(entityType, name);
+            OWLEntity entity = DataFactory.getFreshOWLEntity(entityType, name, Optional.empty());
             freshEntities.add(DataFactory.getOWLEntityData(entity, name, ImmutableMap.of()));
             checkSyntax();
         }

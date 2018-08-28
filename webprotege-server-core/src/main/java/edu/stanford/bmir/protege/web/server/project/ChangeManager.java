@@ -326,12 +326,14 @@ public class ChangeManager implements HasApplyChanges {
                         IRI currentIRI = entity.getIRI();
                         if (!iriRenameMap.containsKey(currentIRI)) {
                             String shortName = DataFactory.getFreshEntityShortName(entity);
+                            Optional<String> langTag = DataFactory.getFreshEntityLangTag(entity);
+                            EntityType<? extends OWLEntity> entityType = entity.getEntityType();
                             OWLEntityCreator<? extends OWLEntity> creator = getEntityCreator(session,
                                                                                              crudContext,
                                                                                              userId,
                                                                                              shortName,
-                                                                                             (EntityType<? extends OWLEntity>) entity
-                                                                                                     .getEntityType());
+                                                                                             langTag,
+                                                                                             entityType);
                             freshEntityChanges.addAll(creator.getChanges());
                             IRI replacementIRI = creator.getEntity().getIRI();
                             iriRenameMap.put(currentIRI, replacementIRI);
@@ -533,19 +535,18 @@ public class ChangeManager implements HasApplyChanges {
                                                                        EntityCrudContext context,
                                                                        UserId userId,
                                                                        String shortName,
+                                                                       Optional<String> langTag,
                                                                        EntityType<E> entityType) {
         Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (entity.isPresent()) {
             return new OWLEntityCreator<>(entity.get(), Collections.emptyList());
         }
         OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
-        EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler =
-                getEntityCrudKitHandler();
+        EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler = getEntityCrudKitHandler();
         handler.createChangeSetSession();
         E ent = handler.create(session, entityType,
-                               EntityShortForm.get(shortName),
-                               context,
-                               builder);
+                               EntityShortForm.get(shortName), langTag,
+                               context, builder);
         return new OWLEntityCreator<>(ent, builder.build(ent).getChanges());
 
     }

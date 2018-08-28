@@ -19,10 +19,13 @@ public abstract class AbstractCreateEntitiesAction<R extends AbstractCreateEntit
 
     private String sourceText;
 
+    private String langTag;
+
     public AbstractCreateEntitiesAction(@Nonnull ProjectId projectId,
-                                        @Nonnull String sourceText) {
+                                        @Nonnull String sourceText, String langTag) {
         super(projectId);
         this.sourceText = checkNotNull(sourceText);
+        this.langTag = checkNotNull(langTag);
     }
 
     @GwtSerializationConstructor
@@ -31,5 +34,10 @@ public abstract class AbstractCreateEntitiesAction<R extends AbstractCreateEntit
 
     public String getSourceText() {
         return sourceText;
+    }
+
+    @Nonnull
+    public String getLangTag() {
+        return langTag;
     }
 }
