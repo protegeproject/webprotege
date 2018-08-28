@@ -17,6 +17,7 @@
             flex-shrink: 0;
         }
         .sharingDropDown {
+            margin-left: 5px;
             text-transform: lowercase;
         }
     </ui:style>

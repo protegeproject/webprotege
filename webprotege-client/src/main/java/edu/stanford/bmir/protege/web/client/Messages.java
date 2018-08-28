@@ -332,7 +332,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String frame_annotations();
 
     
-    @DefaultMessage("Parent Classes")
+    @DefaultMessage("Parents")
     @Key("frame.classes")
     String frame_classes();
 

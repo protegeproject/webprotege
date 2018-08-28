@@ -32,7 +32,7 @@
     -webkit-font-smoothing:                     subpixel-antialiased;
     text-rendering:                             optimizeLegibility;
 
-    --input--line-height: 18px;
+    --input--line-height: 16px;
     --lang-field--width: 45px;
 }
 
