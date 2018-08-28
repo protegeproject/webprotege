@@ -38,8 +38,6 @@
             </g:ListBox> of the following:
         </g:HTMLPanel>
         <g:FlowPanel ui:field="criteriaViewsContainer" addStyleNames="{style.viewsContainer}"/>
-        <g:Button ui:field="addButton" addStyleNames="{wp.buttons.addButton} {style.addButton}">
-            <div style="position: relative; top:-0.2em;">+</div>
-        </g:Button>
+        <g:Button ui:field="addButton" addStyleNames="{wp.buttons.addButton} {style.addButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
