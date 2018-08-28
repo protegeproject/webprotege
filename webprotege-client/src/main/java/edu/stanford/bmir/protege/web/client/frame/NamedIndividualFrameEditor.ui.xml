@@ -14,6 +14,11 @@
         </div>
 
         <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
+            <frame:PropertyValueListEditor ui:field="annotations"/>
+        </div>
+
+        <div class="{wp.style.formGroup}">
             <g:Label text="{msg.frame_types}" addStyleNames="{wp.style.formLabel}"/>
             <wp:PrimitiveDataListEditor ui:field="types"/>
         </div>

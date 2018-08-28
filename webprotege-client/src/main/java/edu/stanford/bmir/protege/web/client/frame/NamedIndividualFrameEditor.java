@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -36,6 +37,8 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -57,6 +60,9 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     protected TextBox iriField;
 
     @UiField(provided = true)
+    PropertyValueListEditor annotations;
+
+    @UiField(provided = true)
     protected PropertyValueListEditor assertions;
 
     @UiField(provided = true)
@@ -64,6 +70,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
 
     @UiField(provided = true)
     protected PrimitiveDataListEditor sameAs;
+
 
     private Optional<NamedIndividualFrame> editedFrame = Optional.empty();
 
@@ -74,7 +81,11 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     private EntityDisplay entityDisplay = entityData -> {};
 
     @Inject
-    public NamedIndividualFrameEditor(PropertyValueListEditor assertionsEditor, ProjectId projectId, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
+    public NamedIndividualFrameEditor(PropertyValueListEditor annotationsEditor,
+                                      PropertyValueListEditor assertionsEditor,
+                                      Provider<PrimitiveDataEditor> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
+        this.annotations = annotationsEditor;
+        this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         assertions = assertionsEditor;
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
         types = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
@@ -92,7 +103,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     }
 
     public boolean isDirty() {
-        return assertions.isDirty() || dirty || types.isDirty() || sameAs.isDirty();
+        return annotations.isDirty() || assertions.isDirty() || dirty || types.isDirty() || sameAs.isDirty();
     }
 
     /**
@@ -114,13 +125,14 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
         this.enabled = enabled;
         iriField.setEnabled(false);
         types.setEnabled(enabled);
+        annotations.setEnabled(enabled);
         assertions.setEnabled(enabled);
         sameAs.setEnabled(enabled);
     }
 
     @Override
     public boolean isWellFormed() {
-        return types.isWellFormed() && assertions.isWellFormed() && sameAs.isWellFormed();
+        return types.isWellFormed() && annotations.isWellFormed() && assertions.isWellFormed() && sameAs.isWellFormed();
     }
 
     @Override
@@ -141,7 +153,8 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
         editedFrame = Optional.of(frame);
         String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
         iriField.setValue(decodedIri);
-        assertions.setValue(frame.getPropertyValueList());
+        annotations.setValue(new PropertyValueList(frame.getAnnotationPropertyValues()));
+        assertions.setValue(new PropertyValueList(frame.getLogicalPropertyValues()));
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
         types.setValue(new ArrayList<>(frame.getClasses()));
         sameAs.setValue(new ArrayList<>(frame.getSameIndividuals()));
@@ -149,10 +162,17 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     }
 
     private ImmutableSet<PropertyValue> getPropertyValues() {
-        return assertions.getValue()
+        Stream<PropertyValue> annosStream = annotations.getValue()
+                                                  .map(PropertyValueList::getPropertyValues)
+                                                  .orElse(ImmutableSet.of())
+                                                  .stream();
+
+        Stream<PropertyValue> logicalStream = assertions.getValue()
                          .map(PropertyValueList::getPropertyValues)
                          .map(ImmutableSet::copyOf)
-                         .orElse(ImmutableSet.of());
+                         .orElse(ImmutableSet.of())
+                         .stream();
+        return Streams.concat(annosStream, logicalStream).collect(toImmutableSet());
     }
 
     private ImmutableSet<OWLClassData> getTypes() {
@@ -171,6 +191,17 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
                      .collect(toImmutableSet());
     }
 
+    @UiHandler("annotations")
+    protected void handleAnnotationsDirtyChanged(DirtyChangedEvent event) {
+        setDirty(true, EventStrategy.FIRE_EVENTS);
+    }
+
+    @UiHandler("annotations")
+    protected void handleAnnotationsChange(ValueChangeEvent<Optional<PropertyValueList>> event) {
+        if (isWellFormed()) {
+            ValueChangeEvent.fire(this, getValue());
+        }
+    }
     @UiHandler("assertions")
     protected void handleAssertionsDirtyChanged(DirtyChangedEvent event) {
         setDirty(true, EventStrategy.FIRE_EVENTS);
@@ -220,6 +251,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     public void clearValue() {
         iriField.setText("");
         types.clearValue();
+        annotations.clearValue();
         assertions.clearValue();
         sameAs.clearValue();
         entityDisplay.setDisplayedEntity(Optional.empty());

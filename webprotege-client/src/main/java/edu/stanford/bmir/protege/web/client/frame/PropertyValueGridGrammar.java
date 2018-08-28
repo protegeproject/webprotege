@@ -69,14 +69,6 @@ public class PropertyValueGridGrammar {
 
     public static PropertyValueGridGrammar getNamedIndividualGrammar() {
         PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
-        grammar.addProduction(ANNOTATION_PROPERTY, LITERAL);
-        grammar.addProduction(ANNOTATION_PROPERTY, IRI);
-//        grammar.addProduction(ANNOTATION_PROPERTY, CLASS);
-//        grammar.addProduction(ANNOTATION_PROPERTY, OBJECT_PROPERTY);
-//        grammar.addProduction(ANNOTATION_PROPERTY, DATA_PROPERTY);
-//        grammar.addProduction(ANNOTATION_PROPERTY, ANNOTATION_PROPERTY);
-//        grammar.addProduction(ANNOTATION_PROPERTY, NAMED_INDIVIDUAL);
-//        grammar.addProduction(ANNOTATION_PROPERTY, DATA_TYPE);
         grammar.addProduction(OBJECT_PROPERTY, NAMED_INDIVIDUAL);
         grammar.addProduction(OBJECT_PROPERTY, CLASS);
         grammar.addProduction(DATA_PROPERTY, LITERAL);
