@@ -20,7 +20,7 @@
         <mail.smtp.port/>
         <application.analytics/>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
-        <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
+        <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
     </properties>
 
     <scm>
