@@ -4,16 +4,11 @@
     <ui:style>
         .main {
             max-width: 350px;
-            font-size: 13px;
             background-color: #ffffff;
             padding: 40px;
         }
         .main p {
             margin-bottom: 10px;
-        }
-        .main h1 {
-            font-size: 16px;
-            font-weight: bold;
         }
         .html {
             height: 100%;
