@@ -37,6 +37,11 @@
             align-items: stretch;
         }
 
+        .login-form input {
+            line-height: 1.2rem;
+            padding: 0.2rem;
+        }
+
         .wp-login__footnote a {
             color: inherit;
         }
