@@ -71,6 +71,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgIriIcon();
 
+    @Source("Wikipedia_W.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgWikipediaIcon();
+
     @Source("plus.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgPlusIcon();
@@ -232,6 +236,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String linkIconInset();
 
         String iriIconInset();
+
+        String wikipediaIconInset();
 
         String numberIconInset();
 

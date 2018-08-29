@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
-             xmlns:tag="urn:import:edu.stanford.bmir.protege.web.client.tag">
+>
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
@@ -20,6 +20,7 @@
             <wp:PropertyValueListEditor ui:field="annotations"/>
         </div>
 
+
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.frame_classes}" addStyleNames="{wp.style.formLabel}"/>
             <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="{msg.frame_enterAClassName}"/>
@@ -29,6 +30,7 @@
             <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
             <wp:PropertyValueListEditor ui:field="properties"/>
         </div>
+
 
     </g:HTMLPanel>
 </ui:UiBinder>

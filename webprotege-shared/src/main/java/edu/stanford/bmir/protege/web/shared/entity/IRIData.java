@@ -56,6 +56,10 @@ public abstract class IRIData extends OWLPrimitiveData {
                 || "https".equalsIgnoreCase(getObject().getScheme());
     }
 
+    public boolean isWikipediaLink() {
+        return isHTTPLink() && getObject().toString().contains("wikipedia.org/wiki/");
+    }
+
     @Override
     public String getUnquotedBrowserText() {
         return getObject().toString();

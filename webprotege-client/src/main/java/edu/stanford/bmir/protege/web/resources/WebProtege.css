@@ -11,6 +11,7 @@
 @url individualIconUrl svgIndividualIcon;
 @url linkIconUrl svgLinkIcon;
 @url iriIconUrl svgIriIcon;
+@url wikipediaIcon svgWikipediaIcon;
 @url literalIconUrl svgLiteralIcon;
 @url numberIconUrl svgNumberIcon;
 @url commentIconUrl svgCommentSmallFilledIcon;
@@ -184,6 +185,16 @@
     background-image: iriIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
+
+.wikipediaIconInset {
+    background-image: wikipediaIcon;
+    background-repeat: no-repeat;
+    background-position: 2px 1px;
+    background-size: 18px;
     width: auto;
     height: auto;
     padding-left: 22px !important;
