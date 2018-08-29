@@ -3,7 +3,7 @@
 
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-
+    <ui:with field="version" type="edu.stanford.bmir.protege.web.client.VersionInfo"/>
     <ui:style>
 
         @external .wp-login__footnote;
@@ -82,6 +82,9 @@
             <p>The work is supported by Grant GM121724 from the National Institute
                 of General Medical Sciences
                 at the United States National Institutes of Health.
+            </p>
+            <p>
+                Version <ui:text from="{version.versionString}"/> @ <ui:text from="{version.buildTimestamp}"/>
             </p>
             <p>
                 <a href="html/privacy.html" target="_blank">

@@ -19,6 +19,8 @@
         <mail.smtp.auth/>
         <mail.smtp.port/>
         <application.analytics/>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     </properties>
 
     <dependencyManagement>
