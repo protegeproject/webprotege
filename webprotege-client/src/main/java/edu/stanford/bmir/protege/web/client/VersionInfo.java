@@ -10,8 +10,14 @@ import com.google.gwt.i18n.client.Constants;
 public interface VersionInfo extends Constants {
 
     @Key("version")
-    String versionString();
+    String version();
 
     @Key("build.timestamp")
     String buildTimestamp();
+
+    @Key("build.number")
+    String buildNumber();
+
+    @Key("version.string")
+    String versionString();
 }

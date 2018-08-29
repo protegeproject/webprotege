@@ -89,7 +89,7 @@
                 at the United States National Institutes of Health.
             </p>
             <p>
-                WebProtégé <ui:text from="{version.versionString}"/>
+                WebProtégé <ui:text from="{version.versionString}"/> <ui:text from="{version.buildNumber}"/>
                 <a href="html/privacy.html" target="_blank">
                     Privacy Policy</a>.
                 <a href="html/termsofuse.html" target="_blank">Terms of Use</a>
