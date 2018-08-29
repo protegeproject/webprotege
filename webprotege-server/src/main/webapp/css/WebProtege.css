@@ -45,6 +45,16 @@ body, input, textarea, keygen, select, button {
     padding: 0;
 }
 
+h1 {
+    font-size: 2em;
+    margin-bottom: 0.67em;
+    font-weight: bold;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-margin-start: 0;
+    -webkit-margin-end: 0;
+}
+
 input, textarea {
     margin: 0;
     border: none;
