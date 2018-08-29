@@ -56,7 +56,8 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
                         new PerspectiveId("Individuals"),
                         new PerspectiveId("Comments"),
                         new PerspectiveId("Changes by Entity"),
-                        new PerspectiveId("History")
+                        new PerspectiveId("History"),
+                        new PerspectiveId("Query")
                 )
         );
     }

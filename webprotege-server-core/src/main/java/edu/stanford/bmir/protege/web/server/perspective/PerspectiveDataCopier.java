@@ -38,7 +38,7 @@ public class PerspectiveDataCopier {
             File templateDefaultPerspectiveDataDirectory = new File(url.toURI());
             defaultPerspectiveDataDirectory.getParentFile().mkdirs();
             FileUtils.copyDirectory(templateDefaultPerspectiveDataDirectory, defaultPerspectiveDataDirectory, false);
-            logger.info("Copied default perspective data to %s (from %s)",
+            logger.info("Copied default perspective data to {} (from {})",
                         defaultPerspectiveDataDirectory,
                         templateDefaultPerspectiveDataDirectory);
             File[] perspectiveFiles = defaultPerspectiveDataDirectory.listFiles();
@@ -49,14 +49,14 @@ public class PerspectiveDataCopier {
                         String strippedFileName = fileName.substring(0, fileName.length() - 5);
                         String hashedFileName = computeMD5(strippedFileName) + ".json";
                         file.renameTo(new File(defaultPerspectiveDataDirectory, hashedFileName));
-                        logger.info("Installed \"%s\" as %s", fileName, hashedFileName);
+                        logger.info("Installed \"{}\" as {}", fileName, hashedFileName);
                     }
                 }
             }
         }
         catch (IOException | URISyntaxException e) {
             logger.info("There was a problem copying the default perspective data.  " +
-                                "Details: %s", e.getMessage());
+                                "Details: {}", e.getMessage());
         }
     }
 
