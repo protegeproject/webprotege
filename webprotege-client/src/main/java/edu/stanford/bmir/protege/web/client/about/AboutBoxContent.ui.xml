@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="version" type="edu.stanford.bmir.protege.web.client.VersionInfo"/>
     <ui:style>
         .main {
             max-width: 350px;
@@ -20,5 +21,9 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTML ui:field="html" styleName="{style.html}"/>
+        <div>
+            WebProtégé
+            <ui:text from="{version.versionString}"/>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>
