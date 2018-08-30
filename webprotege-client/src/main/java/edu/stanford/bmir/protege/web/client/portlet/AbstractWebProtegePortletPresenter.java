@@ -1,13 +1,13 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
-import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -37,7 +37,6 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     private Optional<OWLEntityData> displayedEntityData = Optional.empty();
 
 
-
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DisplayNameRenderer displayNameRenderer) {
@@ -46,13 +45,11 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         this.projectId = checkNotNull(projectId);
         this.displayNameRenderer = displayNameRenderer;
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
-                if (portletUi.map(ui -> ui.asWidget().isAttached()).orElse(true)) {
-                    if (trackSelection) {
-                        handleBeforeSetEntity(e.getPreviousSelection());
-                        handleAfterSetEntity(e.getLastSelection());
-                    }
-                }
-            }
+                                                                                          if (trackSelection) {
+                                                                                              handleBeforeSetEntity(e.getPreviousSelection());
+                                                                                              handleAfterSetEntity(e.getLastSelection());
+                                                                                          }
+                                                                                      }
         );
     }
 
@@ -77,7 +74,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private void handleBrowserTextChanged(@Nonnull BrowserTextChangedEvent event) {
         getSelectedEntity().ifPresent(selEntity -> {
-            if(selEntity.equals(event.getEntity())) {
+            if (selEntity.equals(event.getEntity())) {
                 setDisplayedEntity(Optional.of(DataFactory.getOWLEntityData(event.getEntity(),
                                                                             event.getNewBrowserText(),
                                                                             event.getShortForms())));
@@ -109,7 +106,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private void updateViewTitle() {
         portletUi.ifPresent(ui -> {
-            if(displayedEntityData.isPresent()) {
+            if (displayedEntityData.isPresent()) {
                 displayedEntityData.ifPresent(entityData -> {
                     String subTitle = displayNameRenderer.getBrowserText(entityData);
                     ui.setSubtitle(subTitle);
