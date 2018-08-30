@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -20,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
@@ -36,6 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
@@ -93,6 +96,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
+    private TreeWidgetUpdater updater;
+
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
@@ -109,7 +114,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull EntityHierarchyDropHandler dropHandler,
                                           @Nonnull FilterView filterView,
                                           @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
-                                          @Nonnull DisplayNameRenderer displayNameRenderer, @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
+                                          @Nonnull DisplayNameRenderer displayNameRenderer,
+                                          @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
+                                          @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
         super(selectionModel, projectId, displayNameRenderer);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
@@ -138,6 +145,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
+        this.updater = updaterFactory.create(treeWidget, hierarchyModel);
     }
 
 
@@ -180,6 +188,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         setSelectionInTree(getSelectedEntity());
 
         eventBus.addProjectEventHandler(getProjectId(), ON_DISPLAY_LANGUAGE_CHANGED, this::handleDisplayLanguageChanged);
+        updater.start(eventBus);
     }
 
     private void handleDisplayLanguageChanged(@Nonnull DisplayNameSettingsChangedEvent event) {

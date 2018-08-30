@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction.getMatchingEntities;
+import static edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED;
 
 /**
  * Matthew Horridge
@@ -57,6 +59,11 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
         view.setExecuteHandler(this::handleExecute);
         portletUi.setWidget(view);
         presenter.start(view.getCriteriaContainer());
+        eventBus.addApplicationEventHandler(ON_PROJECT_SETTINGS_CHANGED, this::handleProjectSettingsChanged);
+    }
+
+    private void handleProjectSettingsChanged(@Nonnull ProjectSettingsChangedEvent event) {
+        handleExecute();
     }
 
     private void displayResult(GetMatchingEntitiesResult result) {
@@ -68,7 +75,6 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private void handleExecute() {
         Optional<? extends Criteria> criteria = presenter.getCriteria();
-        String s = criteria.map(Object::toString).orElse("Empty");
         criteria.ifPresent(c -> {
             PageRequest pageRequest = PageRequest.requestPageWithSize(view.getPageNumber(), PAGE_SIZE);
             view.setExecuteEnabled(false);

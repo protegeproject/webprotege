@@ -56,6 +56,9 @@ public class ProjectTagsPresenter implements Presenter {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private Optional<EventBus> eventBus = Optional.empty();
+
     @Inject
     public ProjectTagsPresenter(@Nonnull ProjectId projectId,
                                 @Nonnull ProjectTagsView projectTagsView,
@@ -77,6 +80,7 @@ public class ProjectTagsPresenter implements Presenter {
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        this.eventBus = Optional.of(eventBus);
         projectTagsView.setTagListChangedHandler(this::handleTagListChanged);
         settingsPresenter.start(container);
         settingsPresenter.setBusy(container, true);

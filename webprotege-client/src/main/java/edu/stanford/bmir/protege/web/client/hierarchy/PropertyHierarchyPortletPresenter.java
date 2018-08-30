@@ -113,6 +113,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final TagVisibilityPresenter tagVisibilityPresenter;
 
+    @Nonnull
+    private final TreeWidgetUpdaterFactory updaterFactory;
+
     private boolean transmittingSelectionFromHierarchy = false;
 
     private boolean settingSelectionInHierarchy = false;
@@ -137,7 +140,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull HierarchyActionStatePresenter actionStatePresenter,
                                              @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider,
                                              @Nonnull FilterView filterView,
-                                             @Nonnull TagVisibilityPresenter tagVisibilityPresenter, DisplayNameRenderer displayNameRenderer) {
+                                             @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
+                                             @Nonnull DisplayNameRenderer displayNameRenderer,
+                                             @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = view;
         this.messages = messages;
@@ -161,6 +166,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.entityHierarchyDropHandlerProvider = entityHierarchyDropHandlerProvider;
         this.filterView = filterView;
         this.tagVisibilityPresenter = tagVisibilityPresenter;
+        this.updaterFactory = updaterFactory;
     }
 
     @Override
@@ -237,6 +243,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         view.addHierarchy(hierarchyId,
                           label,
                           treeWidget);
+        TreeWidgetUpdater updater = updaterFactory.create(treeWidget, model);
+        updater.start(eventBus);
     }
 
     private void handleSelectionChanged(SelectionChangeEvent selectionChangeEvent) {
