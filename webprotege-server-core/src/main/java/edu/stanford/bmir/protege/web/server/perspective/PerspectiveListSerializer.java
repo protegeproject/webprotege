@@ -22,7 +22,7 @@ public class PerspectiveListSerializer {
     }
 
     public List<PerspectiveId> deserializePerspectiveList(File file) throws IOException {
-        String s = Files.toString(file, Charset.forName("utf-8"));
+        String s = Files.asCharSource(file, Charset.forName("utf-8")).read();
         return createGson().fromJson(s, new TypeToken<List<PerspectiveId>>(){}.getType());
     }
 
