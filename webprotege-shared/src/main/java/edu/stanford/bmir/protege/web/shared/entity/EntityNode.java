@@ -58,7 +58,6 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
     public String getText(@Nonnull List<DictionaryLanguageData> prefLang, String defaultText) {
         return prefLang.stream()
-                       .peek(s -> System.out.println("[EntityNode] getText:  " + s))
                        .map(language -> getShortForms().get(language.getDictionaryLanguage()))
                        .filter(Objects::nonNull)
                        .findFirst()
