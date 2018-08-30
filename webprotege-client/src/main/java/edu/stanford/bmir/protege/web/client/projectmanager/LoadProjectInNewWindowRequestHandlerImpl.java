@@ -52,7 +52,7 @@ public class LoadProjectInNewWindowRequestHandlerImpl implements LoadProjectInNe
     private void handleOpenInNewWindow(ImmutableList<PerspectiveId> perspectives, ProjectId projectId) {
         PerspectiveId perspectiveId;
         if(perspectives.isEmpty()) {
-            perspectiveId = new PerspectiveId("Other");
+            perspectiveId = PerspectiveId.get("Other");
         }
         else {
             perspectiveId = perspectives.get(0);

@@ -18,12 +18,12 @@ public class PerspectiveId_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        perspectiveId = new PerspectiveId(id);
+        perspectiveId = PerspectiveId.get(id);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_id_IsNull() {
-        new PerspectiveId(null);
+        PerspectiveId.get(null);
     }
 
     @Test
@@ -43,17 +43,17 @@ public class PerspectiveId_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(perspectiveId, is(new PerspectiveId(id)));
+        assertThat(perspectiveId, is(PerspectiveId.get(id)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        assertThat(perspectiveId, is(not(new PerspectiveId("String-4c96af5c-31d0-4b5a-9d57-ed48e6668da4"))));
+        assertThat(perspectiveId, is(not(PerspectiveId.get("String-4c96af5c-31d0-4b5a-9d57-ed48e6668da4"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(perspectiveId.hashCode(), is(new PerspectiveId(id).hashCode()));
+        assertThat(perspectiveId.hashCode(), is(PerspectiveId.get(id).hashCode()));
     }
 
     @Test

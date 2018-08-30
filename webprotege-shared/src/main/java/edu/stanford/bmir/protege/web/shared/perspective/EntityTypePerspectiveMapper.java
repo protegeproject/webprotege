@@ -16,11 +16,11 @@ import static org.semanticweb.owlapi.model.EntityType.*;
  */
 public class EntityTypePerspectiveMapper {
 
-    public static final PerspectiveId CLASSES_PERSPECTIVE = new PerspectiveId("Classes" );
+    public static final PerspectiveId CLASSES_PERSPECTIVE = PerspectiveId.get("Classes");
 
-    public static final PerspectiveId PROPERTIES_PERSPECTIVE = new PerspectiveId("Properties" );
+    public static final PerspectiveId PROPERTIES_PERSPECTIVE = PerspectiveId.get("Properties");
 
-    public static final PerspectiveId INDIVIDUALS_PERSPECTIVE = new PerspectiveId("Individuals" );
+    public static final PerspectiveId INDIVIDUALS_PERSPECTIVE = PerspectiveId.get("Individuals");
 
     @Inject
     public EntityTypePerspectiveMapper() {

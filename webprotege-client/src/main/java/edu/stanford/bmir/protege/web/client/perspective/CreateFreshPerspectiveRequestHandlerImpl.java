@@ -23,7 +23,7 @@ public class CreateFreshPerspectiveRequestHandlerImpl implements CreateFreshPers
             if(trimmedInput.isEmpty()) {
                 return;
             }
-            callback.createNewPerspective(new PerspectiveId(trimmedInput));
+            callback.createNewPerspective(PerspectiveId.get(trimmedInput));
         });
     }
 }

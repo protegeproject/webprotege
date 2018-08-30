@@ -53,7 +53,7 @@ public class ProjectViewPlaceTokenizer implements WebProtegePlaceTokenizer<Proje
         GWT.log("[ProjectViewPlaceTokenizer] Parsed: ProjectId: " + projectId);
         GWT.log("[ProjectViewPlaceTokenizer] Parsed: PerspectiveId: " + perspectiveId);
         GWT.log("[ProjectViewPlaceTokenizer] Parsed: Selection: " + selectionString);
-        ProjectViewPlace.Builder builder = new ProjectViewPlace.Builder(ProjectId.get(projectId), new PerspectiveId(perspectiveId));
+        ProjectViewPlace.Builder builder = new ProjectViewPlace.Builder(ProjectId.get(projectId), PerspectiveId.get(perspectiveId));
 
         if(selectionString != null) {
             ItemTokenizer tokenizer = new ItemTokenizer();

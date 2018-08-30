@@ -27,6 +27,6 @@ public class LoadProjectRequestHandlerImpl implements LoadProjectRequestHandler 
 
     @Override
     public void handleProjectLoadRequest(ProjectId projectId) {
-        placeController.goTo(ProjectViewPlace.builder(projectId, new PerspectiveId("Classes")).build());
+        placeController.goTo(ProjectViewPlace.builder(projectId, PerspectiveId.get("Classes")).build());
     }
 }

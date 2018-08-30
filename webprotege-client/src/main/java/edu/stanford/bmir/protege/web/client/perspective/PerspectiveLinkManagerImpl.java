@@ -49,15 +49,15 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
     public void getBookmarkedPerspectives(Callback callback) {
         callback.handlePerspectives(
                 Arrays.asList(
-                        new PerspectiveId("Classes"),
-                        new PerspectiveId("OWL Classes"),
-                        new PerspectiveId("Properties"),
-                        new PerspectiveId("OWL Properties"),
-                        new PerspectiveId("Individuals"),
-                        new PerspectiveId("Comments"),
-                        new PerspectiveId("Changes by Entity"),
-                        new PerspectiveId("History"),
-                        new PerspectiveId("Query")
+                        PerspectiveId.get("Classes"),
+                        PerspectiveId.get("OWL Classes"),
+                        PerspectiveId.get("Properties"),
+                        PerspectiveId.get("OWL Properties"),
+                        PerspectiveId.get("Individuals"),
+                        PerspectiveId.get("Comments"),
+                        PerspectiveId.get("Changes by Entity"),
+                        PerspectiveId.get("History"),
+                        PerspectiveId.get("Query")
                 )
         );
     }

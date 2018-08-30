@@ -17,6 +17,6 @@ public class PerspectiveIdDeserializer implements JsonDeserializer<PerspectiveId
 
     @Override
     public PerspectiveId deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        return new PerspectiveId(jsonElement.getAsString());
+        return PerspectiveId.get(jsonElement.getAsString());
     }
 }

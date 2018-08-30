@@ -70,8 +70,8 @@ public class PlaceUrl_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        when(typeMapper.getPerspectiveId(Matchers.any())).thenReturn(new PerspectiveId("TheClassPerspective"));
-        when(typeMapper.getDefaultPerspectiveId()).thenReturn(new PerspectiveId("TheDefaultPerspective"));
+        when(typeMapper.getPerspectiveId(Matchers.any())).thenReturn(PerspectiveId.get("TheClassPerspective"));
+        when(typeMapper.getDefaultPerspectiveId()).thenReturn(PerspectiveId.get("TheDefaultPerspective"));
 
         when(hostProvider.get()).thenReturn(THE_APPLICATION_HOST);
         when(portProvider.get()).thenReturn(Optional.empty());
