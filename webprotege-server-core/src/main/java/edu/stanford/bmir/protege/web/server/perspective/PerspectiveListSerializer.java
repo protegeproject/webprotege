@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import com.google.common.io.Files;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -18,25 +16,18 @@ import java.util.List;
  */
 public class PerspectiveListSerializer {
 
+    @Nonnull
+    private final ObjectMapper objectMapper;
+
     public PerspectiveListSerializer() {
+        objectMapper = new ObjectMapper();
     }
 
-    public List<PerspectiveId> deserializePerspectiveList(File file) throws IOException {
-        String s = Files.asCharSource(file, Charset.forName("utf-8")).read();
-        return createGson().fromJson(s, new TypeToken<List<PerspectiveId>>(){}.getType());
+    public List<PerspectiveId> deserializePerspectiveList(File fromFile) throws IOException {
+        return objectMapper.readValue(fromFile, new TypeReference<List<PerspectiveId>>(){});
     }
 
     public void serializePerspectiveList(List<PerspectiveId> perspectiveIds, File toFile) throws IOException {
-        String json = createGson().toJson(perspectiveIds);
-        Files.write(json.getBytes(Charset.forName("utf-8")), toFile);
-    }
-
-    private Gson createGson() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        builder.disableHtmlEscaping();
-        builder.registerTypeAdapter(PerspectiveId.class, new PerspectiveIdSerializer());
-        builder.registerTypeAdapter(PerspectiveId.class, new PerspectiveIdDeserializer());
-        return builder.create();
+        objectMapper.writeValue(toFile, perspectiveIds);
     }
 }
