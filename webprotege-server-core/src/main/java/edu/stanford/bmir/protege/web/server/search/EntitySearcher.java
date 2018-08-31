@@ -117,6 +117,7 @@ public class EntitySearcher {
         this.entityTypes = new HashSet<>(checkNotNull(entityTypes));
         this.searchString = checkNotNull(searchString);
         this.searchWords = Stream.of(searchString.split("\\s+"))
+                                 .filter(s -> !s.isEmpty())
                                  .map(SearchString::parseSearchString)
                                  .collect(toImmutableList());
         this.tagsManager = checkNotNull(tagsManager);

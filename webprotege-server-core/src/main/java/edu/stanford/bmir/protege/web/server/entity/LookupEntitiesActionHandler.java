@@ -5,9 +5,9 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -22,7 +22,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -88,8 +90,9 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         Set<OWLEntity> addedEntities = new HashSet<>();
         List<SearchString> searchStrings = Stream.of(entityLookupRequest.getSearchString().split("\\s+|_|:"))
-                .map(SearchString::parseSearchString)
-                .collect(toList());
+                                                 .filter(s -> !s.isEmpty())
+                                                 .map(SearchString::parseSearchString)
+                                                 .collect(toList());
         return dictionaryManager.getShortFormsContaining(searchStrings,
                                                          entityLookupRequest.getSearchedEntityTypes(),
                                                          languageManager.getLanguages())
