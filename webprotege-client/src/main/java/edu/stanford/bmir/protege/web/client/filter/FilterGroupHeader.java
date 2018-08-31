@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * Matthew Horridge
@@ -23,7 +24,7 @@ public class FilterGroupHeader extends Composite {
     private static FilterGroupHeaderUiBinder ourUiBinder = GWT.create(FilterGroupHeaderUiBinder.class);
 
     @UiField
-    InlineLabel label;
+    Label label;
 
     @UiField
     HasClickHandlers selectNoneButton;

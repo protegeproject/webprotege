@@ -2,17 +2,25 @@ package edu.stanford.bmir.protege.web.client.tag;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager.getTagHiddenClassName;
 import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.ON;
 
 /**
@@ -25,21 +33,28 @@ import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.ON;
 public class TagVisibilityPresenter {
 
     @Nonnull
-    private final FilterId filterId;
+    private final ProjectId projectId;
 
-    private final String tagsHiddenClassName;
+    @Nonnull
+    private final Messages messages;
+
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
 
     private Optional<IsWidget> tagsView = Optional.empty();
 
     private Optional<FilterView> filterView = Optional.empty();
 
-    private boolean tagsVisible = true;
+    private final Map<FilterId, Tag> filterId2Tag = new HashMap<>();
 
     @Inject
-    public TagVisibilityPresenter(@Nonnull Messages messages,
-                                  @Nonnull WebProtegeClientBundle clientBundle) {
-        this.tagsHiddenClassName = clientBundle.tags().tagsHidden();
-        this.filterId = new FilterId(messages.tags_DisplayTags());
+    public TagVisibilityPresenter(@Nonnull ProjectId projectId,
+                                  @Nonnull Messages messages,
+                                  @Nonnull WebProtegeClientBundle clientBundle,
+                                  @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.projectId = checkNotNull(projectId);
+        this.messages = checkNotNull(messages);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     /**
@@ -52,27 +67,55 @@ public class TagVisibilityPresenter {
     public void start(@Nonnull FilterView filterView, @Nonnull IsWidget tagsView) {
         this.filterView = Optional.of(checkNotNull(filterView));
         this.tagsView = Optional.of(checkNotNull(tagsView));
-        filterView.addFilter(filterId, ON);
+        resetCurrentStyles();
+        dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
+                                       result -> {
+                                           filterView.addFilterGroup(messages.tags_displayedTags());
+                                            result.getTags().forEach(tag -> {
+                                                FilterId filterId = new FilterId(tag.getLabel());
+                                                filterView.addFilter(
+                                                        filterId,
+                                                        ON
+                                                );
+                                                filterId2Tag.put(filterId, tag);
+                                            });
+                                            filterView.closeCurrentGroup();
+                                       });
         filterView.addValueChangeHandler(this::handleFilterChanged);
-        updateVisibility();
     }
 
     private void handleFilterChanged(ValueChangeEvent<FilterSet> event) {
         filterView.ifPresent(v -> {
             FilterSet filterSet = v.getFilterSet();
-            this.tagsVisible = filterSet.hasSetting(filterId, ON);
-            updateVisibility();
+            updateVisibility(filterSet);
         });
     }
 
-    private void updateVisibility() {
+    private void resetCurrentStyles() {
+        removeCurrentTagStyles();
+        filterId2Tag.clear();
+    }
+
+    private void removeCurrentTagStyles() {
         tagsView.ifPresent(v -> {
-            if(tagsVisible) {
-                v.asWidget().getElement().removeClassName(tagsHiddenClassName);
-            }
-            else {
-                v.asWidget().getElement().addClassName(tagsHiddenClassName);
-            }
+            filterId2Tag.values().forEach(tag -> {
+                Widget widget = v.asWidget();
+                widget.removeStyleName(getTagHiddenClassName(tag.getTagId()));
+            });
+        });
+    }
+
+    private void updateVisibility(FilterSet filterSet) {
+        tagsView.ifPresent(v -> {
+            Widget widget = v.asWidget();
+            filterId2Tag.forEach((filterId, tag) -> {
+                if(filterSet.hasSetting(filterId, ON)) {
+                    widget.removeStyleName(getTagHiddenClassName(tag.getTagId()));
+                }
+                else {
+                    widget.addStyleName(getTagHiddenClassName(tag.getTagId()));
+                }
+            });
         });
     }
 

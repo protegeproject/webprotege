@@ -1055,6 +1055,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("tags.deleteTag")
     String tags_deleteTag();
 
+    @DefaultMessage("Displayed tags")
+    @Key("tags.displayedTags")
+    String tags_displayedTags();
+
     @DefaultMessage("The tag <strong>{0}</strong> is used to tag <strong>{1,number}&nbsp;entities</strong>.  Are you sure that you want to delete this tag?" +
             "<br><br>" +
             "This operation cannot be undone.")
