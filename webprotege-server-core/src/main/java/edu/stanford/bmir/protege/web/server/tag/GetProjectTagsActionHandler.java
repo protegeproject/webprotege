@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_TAGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
 /**
  * Matthew Horridge
@@ -48,7 +49,7 @@ public class GetProjectTagsActionHandler extends AbstractProjectActionHandler<Ge
     @Nullable
     @Override
     protected BuiltInAction getRequiredExecutableBuiltInAction() {
-        return EDIT_PROJECT_TAGS;
+        return VIEW_PROJECT;
     }
 
     @Nonnull
