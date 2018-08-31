@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
@@ -139,23 +140,16 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private void renderTags(EntityNode node, StringBuilder sb) {
         Collection<Tag> tags = node.getTags();
-        tags.forEach(tag -> {
-            renderTag(tag, sb);
-        });
+        tags.forEach(tag -> renderTag(tag, sb));
     }
 
     private void renderTag(Tag tag, StringBuilder sb) {
         sb.append("<div title='")
           .append(tag.getDescription())
           .append("' class='wp-tag wp-tag--inline-tag ")
-          .append("wp-tag-")
-          .append(tag.getTagId().getId())
+          .append(ProjectTagsStyleManager.getTagClassName(tag.getTagId()))
           .append("'")
-          .append(" style='color:")
-          .append(tag.getColor().getHex())
-          .append("; background-color:")
-          .append(tag.getBackgroundColor().getHex())
-          .append(";'>");
+          .append(">");
         sb.append(tag.getLabel());
         sb.append("</div>");
     }

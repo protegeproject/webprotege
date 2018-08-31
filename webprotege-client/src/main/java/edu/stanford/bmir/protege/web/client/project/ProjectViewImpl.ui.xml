@@ -1,7 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
         >
-
+    <ui:with field="pt" type="edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager"/>
     <ui:style>
         .main {
             display: flex;
@@ -23,6 +23,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}" debugId="ProjectView">
+        <style id="{pt.getProjectTagStylesElementId}"/>
         <g:SimplePanel addStyleNames="{style.topBar}" ui:field="topBar" debugId="TopBarContainer"/>
         <g:SimplePanel addStyleNames="{style.linkBar}" ui:field="perspectiveLinkBarViewContainer"/>
         <g:SimpleLayoutPanel addStyleNames="{style.center}" ui:field="perspectiveViewContainer"/>

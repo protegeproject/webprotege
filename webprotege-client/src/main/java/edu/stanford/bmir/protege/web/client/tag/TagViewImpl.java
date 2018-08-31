@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.tag.TagId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -48,6 +49,11 @@ public class TagViewImpl extends Composite implements TagView {
     }
 
     @Override
+    public void setTagId(@Nonnull TagId tagId) {
+        getElement().addClassName("wp-tag-" + tagId.getId());
+    }
+
+    @Override
     public void setLabel(@Nonnull String label) {
         this.label.getElement().setInnerText(checkNotNull(label));
     }
@@ -55,16 +61,6 @@ public class TagViewImpl extends Composite implements TagView {
     @Override
     public void setDescription(@Nonnull String description) {
         label.setTitle(description);
-    }
-
-    @Override
-    public void setColor(@Nonnull Color color) {
-        label.getElement().getStyle().setColor(checkNotNull(color).getHex());
-    }
-
-    @Override
-    public void setBackgroundColor(@Nonnull Color backgroundColor) {
-        label.getElement().getStyle().setBackgroundColor(checkNotNull(backgroundColor).getHex());
     }
 
     @Override

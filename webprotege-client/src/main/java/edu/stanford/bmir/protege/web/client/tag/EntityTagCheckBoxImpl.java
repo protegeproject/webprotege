@@ -49,10 +49,9 @@ public class EntityTagCheckBoxImpl extends Composite implements EntityTagCheckBo
     @Override
     public void setTag(@Nonnull Tag tag) {
         this.tag = checkNotNull(tag);
+        tagView.setTagId(tag.getTagId());
         tagView.setLabel(tag.getLabel());
         tagView.setDescription(tag.getDescription());
-        tagView.setColor(tag.getColor());
-        tagView.setBackgroundColor(tag.getBackgroundColor());
     }
 
     @Nonnull

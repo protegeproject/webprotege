@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -9,12 +11,15 @@ import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPresenter;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
+import edu.stanford.bmir.protege.web.shared.tag.ProjectTagsChangedEvent;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -47,17 +52,21 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final EventPollingManager eventPollingManager;
 
+    private final ProjectTagsStyleManager projectTagsStyleManager;
 
+
+    @AutoFactory
     @Inject
     public ProjectPresenter(ProjectId projectId,
-                            ProjectView view,
-                            BusyView busyView,
-                            DispatchServiceManager dispatchServiceManager,
-                            EventPollingManager eventPollingManager,
-                            TopBarPresenter topBarPresenter,
-                            PerspectiveSwitcherPresenter linkBarPresenter,
-                            PerspectivePresenter perspectivePresenter,
-                            PermissionScreener permissionScreener) {
+                            @Provided ProjectView view,
+                            @Provided BusyView busyView,
+                            @Provided DispatchServiceManager dispatchServiceManager,
+                            @Provided EventPollingManager eventPollingManager,
+                            @Provided TopBarPresenter topBarPresenter,
+                            @Provided PerspectiveSwitcherPresenter linkBarPresenter,
+                            @Provided PerspectivePresenter perspectivePresenter,
+                            @Provided PermissionScreener permissionScreener,
+                            @Provided ProjectTagsStyleManager projectTagsStyleManager) {
         this.projectId = projectId;
         this.view = view;
         this.busyView = busyView;
@@ -67,6 +76,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
         this.perspectivePresenter = perspectivePresenter;
+        this.projectTagsStyleManager = projectTagsStyleManager;
     }
 
     @Nonnull
@@ -96,7 +106,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                            perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
                                            eventPollingManager.start();
                                            container.setWidget(view);
-                                       });
+            dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
+                                           r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
+        });
     }
 
     @Override

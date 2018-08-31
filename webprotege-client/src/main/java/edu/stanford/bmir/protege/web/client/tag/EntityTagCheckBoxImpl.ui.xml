@@ -10,7 +10,10 @@
             cursor: pointer;
         }
         .main .gwt-CheckBox label {
-            display: none;
+            /*display: none;*/
+        }
+        .checkBox {
+            margin-right: 5px;
         }
         .tag {
             width: 100%;
@@ -22,7 +25,7 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:CheckBox ui:field="checkBox"/>
+        <g:CheckBox addStyleNames="{style.checkBox}" ui:field="checkBox"/>
         <tag:TagViewImpl ui:field="tagView" addStyleNames="{style.tag}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

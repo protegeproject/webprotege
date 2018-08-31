@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -9,12 +10,14 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,19 +37,23 @@ public class LoadProjectActionHandler implements ApplicationActionHandler<LoadPr
 
     private static final Logger logger = LoggerFactory.getLogger(LoadProjectActionHandler.class);
 
+    @Nonnull
     private final ProjectDetailsManager projectDetailsManager;
 
+    @Nonnull
     private final ProjectManager projectManager;
 
+    @Nonnull
     private final AccessManager accessManager;
 
+    @Nonnull
     private final UserActivityManager userActivityManager;
 
     @Inject
-    public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager,
-                                    ProjectManager projectManager,
-                                    AccessManager accessManager,
-                                    UserActivityManager userActivityManager) {
+    public LoadProjectActionHandler(@Nonnull ProjectDetailsManager projectDetailsManager,
+                                    @Nonnull ProjectManager projectManager,
+                                    @Nonnull AccessManager accessManager,
+                                    @Nonnull UserActivityManager userActivityManager) {
         this.projectDetailsManager = projectDetailsManager;
         this.accessManager = accessManager;
         this.projectManager = projectManager;
@@ -87,6 +94,8 @@ public class LoadProjectActionHandler implements ApplicationActionHandler<LoadPr
         if (!executionContext.getUserId().isGuest()) {
             userActivityManager.addRecentProject(executionContext.getUserId(), action.getProjectId(), System.currentTimeMillis());
         }
-        return new LoadProjectResult(action.getProjectId(), executionContext.getUserId(), projectDetails);
+        return LoadProjectResult.get(action.getProjectId(),
+                                     executionContext.getUserId(),
+                                     projectDetails);
     }
 }

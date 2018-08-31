@@ -100,10 +100,9 @@ public class TagListPresenter {
 
     private TagView createTagViewForTag(@Nonnull Tag tag) {
         TagView tagView = tagViewProvider.get();
+        tagView.setTagId(tag.getTagId());
         tagView.setLabel(tag.getLabel());
         tagView.setDescription(tag.getDescription());
-        tagView.setColor(tag.getColor());
-        tagView.setBackgroundColor(tag.getBackgroundColor());
         return tagView;
     }
 

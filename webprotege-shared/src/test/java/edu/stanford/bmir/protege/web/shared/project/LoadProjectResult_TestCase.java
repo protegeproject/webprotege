@@ -27,12 +27,12 @@ public class LoadProjectResult_TestCase {
     @Before
     public void setUp()
             throws Exception {
-        loadProjectResult = new LoadProjectResult(projectId, loadedBy, projectDetails);
+        loadProjectResult = LoadProjectResult.get(projectId, loadedBy, projectDetails);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new LoadProjectResult(null, loadedBy, projectDetails);
+        LoadProjectResult.get(null, loadedBy, projectDetails);
     }
 
     @Test
@@ -42,12 +42,12 @@ public class LoadProjectResult_TestCase {
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_loadedBy_IsNull() {
-        new LoadProjectResult(projectId, null, projectDetails);
+        LoadProjectResult.get(projectId, null, projectDetails);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectDetails_IsNull() {
-        new LoadProjectResult(projectId, loadedBy, null);
+        LoadProjectResult.get(projectId, loadedBy, null);
     }
 
     @Test
@@ -68,13 +68,13 @@ public class LoadProjectResult_TestCase {
     @Test
     public void shouldBeEqualToOther() {
         MatcherAssert.assertThat(loadProjectResult,
-                                 Matchers.is(new LoadProjectResult(projectId, loadedBy, projectDetails)));
+                                 Matchers.is(LoadProjectResult.get(projectId, loadedBy, projectDetails)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
         MatcherAssert.assertThat(loadProjectResult,
-                                 Matchers.is(Matchers.not(new LoadProjectResult(Mockito.mock(ProjectId.class),
+                                 Matchers.is(Matchers.not(LoadProjectResult.get(Mockito.mock(ProjectId.class),
                                                                                 loadedBy,
                                                                                 projectDetails))));
     }
@@ -82,7 +82,7 @@ public class LoadProjectResult_TestCase {
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_loadedBy() {
         MatcherAssert.assertThat(loadProjectResult,
-                                 Matchers.is(Matchers.not(new LoadProjectResult(projectId,
+                                 Matchers.is(Matchers.not(LoadProjectResult.get(projectId,
                                                                                 Mockito.mock(UserId.class),
                                                                                 projectDetails))));
     }
@@ -90,7 +90,7 @@ public class LoadProjectResult_TestCase {
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectDetails() {
         MatcherAssert.assertThat(loadProjectResult,
-                                 Matchers.is(Matchers.not(new LoadProjectResult(projectId,
+                                 Matchers.is(Matchers.not(LoadProjectResult.get(projectId,
                                                                                 loadedBy,
                                                                                 Mockito.mock(ProjectDetails.class)))));
     }
@@ -98,7 +98,7 @@ public class LoadProjectResult_TestCase {
     @Test
     public void shouldBeEqualToOtherHashCode() {
         MatcherAssert.assertThat(loadProjectResult.hashCode(),
-                                 Matchers.is(new LoadProjectResult(projectId, loadedBy, projectDetails).hashCode()));
+                                 Matchers.is(LoadProjectResult.get(projectId, loadedBy, projectDetails).hashCode()));
     }
 
     @Test
