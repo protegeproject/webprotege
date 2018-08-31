@@ -55,7 +55,7 @@ public class ProjectTagsStyleManager {
         sb.append(".").append(getTagHiddenClassName(tag.getTagId())).append("{");
         sb.append("}");
         sb.append(".").append(getTagHiddenClassName(tag.getTagId())).append(" .").append(getTagClassName(tag.getTagId())).append("{");
-        sb.append("visibility: collapse;");
+        sb.append("display: none;");
         sb.append("}");
     }
 
