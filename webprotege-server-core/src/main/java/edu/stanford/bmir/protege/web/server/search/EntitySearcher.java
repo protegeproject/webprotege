@@ -102,8 +102,6 @@ public class EntitySearcher {
 
     @AutoFactory
     public EntitySearcher(@Provided @Nonnull ProjectId projectId,
-                          @Provided @Nonnull OWLOntology rootOntology,
-                          @Provided @Nonnull HasGetRendering renderingSupplier,
                           @Provided @Nonnull DictionaryManager dictionaryManager,
                           @Provided @Nonnull LanguageManager languageManager,
                           @Nonnull Set<EntityType<?>> entityTypes,
