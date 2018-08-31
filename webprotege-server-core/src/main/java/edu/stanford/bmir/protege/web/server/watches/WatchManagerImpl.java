@@ -45,6 +45,8 @@ public class WatchManagerImpl implements WatchManager {
 
     private final EventManager<ProjectEvent<?>> eventManager;
 
+    private boolean attached = false;
+
     @Inject
     public WatchManagerImpl(@Nonnull ProjectId projectId,
                             @Nonnull WatchRecordRepository repository,
@@ -58,7 +60,11 @@ public class WatchManagerImpl implements WatchManager {
         this.eventManager = checkNotNull(eventManager);
     }
 
-    public void attach() {
+    public synchronized void attach() {
+        if(attached) {
+            return;
+        }
+        attached = true;
         // Note, there is no need to keep hold of Handler Registrations here as these will be cleaned up and
         // terminated when the relevant project is disposed.
         eventManager.addHandler(CLASS_FRAME_CHANGED,

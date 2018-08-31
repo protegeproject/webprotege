@@ -31,7 +31,9 @@ public class AnnotationAssertionAxiomsIndexCachingImpl implements AnnotationAsse
     private final OWLOntology rootOntology;
 
     private final Cache<IRI, ImmutableCollection<OWLAnnotationAssertionAxiom>> axiomsBySubject;
-    
+
+    private boolean attached = false;
+
     @Inject
     public AnnotationAssertionAxiomsIndexCachingImpl(@RootOntology OWLOntology rootOntology) {
         this.rootOntology = checkNotNull(rootOntology);
@@ -40,7 +42,11 @@ public class AnnotationAssertionAxiomsIndexCachingImpl implements AnnotationAsse
     }
 
     @Nonnull
-    public Runnable attachOntologyListener() {
+    public synchronized Runnable attachOntologyListener() {
+        if(attached) {
+            return () -> {};
+        }
+        attached = true;
         OWLOntologyChangeListener listener = this::handleOntologyChanged;
         rootOntology.getOWLOntologyManager().addOntologyChangeListener(listener);
         return () -> rootOntology.getOWLOntologyManager().removeOntologyChangeListener(listener);

@@ -49,6 +49,8 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     @Nonnull
     private DictionaryBuilder dictionaryBuilder;
 
+    private boolean loaded = false;
+
     @Inject
     public MultiLingualDictionaryImpl(@Nonnull ProjectId projectId,
                                       @Nonnull DictionaryBuilder dictionaryBuilder,
@@ -59,7 +61,11 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     }
 
     @Override
-    public void loadLanguages(@Nonnull List<DictionaryLanguage> languages) {
+    public synchronized void loadLanguages(@Nonnull List<DictionaryLanguage> languages) {
+        if(loaded) {
+            return;
+        }
+        loaded = true;
         // It's suffices to ask for the dictionaries corresponding to these languages
         findDictionaries(languages);
     }

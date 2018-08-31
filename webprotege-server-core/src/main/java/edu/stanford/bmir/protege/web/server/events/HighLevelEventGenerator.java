@@ -59,7 +59,6 @@ public class HighLevelEventGenerator implements EventTranslator {
                                          final List<ProjectEvent<?>> projectEventList) {
         // TODO: NEED TIDYING AND SPLITTING UP
         final Set<OWLEntity> changedEntities = new HashSet<>();
-
         for(OWLOntologyChange change : changes.getChangeList()) {
             change.accept(new OWLOntologyChangeVisitor() {
                 @Override

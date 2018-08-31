@@ -86,6 +86,10 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
     public void handleWatchTriggered(@Nonnull Set<UserId> usersToNotify,
                                      @Nonnull OWLEntity modifiedEntity,
                                      @Nonnull UserId byUser) {
+        logger.info("{} [WatchTriggeredHandlerImpl] Handling watch triggered for {} by {}, notifying {}",
+                    projectId,
+                    modifiedEntity,
+                    byUser);
         List<String> emailAddresses = usersToNotify.stream()
                                                    // The user should have view permissions to be notified
                                                    .filter(u -> accessManager.hasPermission(forUser(u),

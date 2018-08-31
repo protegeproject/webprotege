@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -11,6 +12,7 @@ import java.util.Set;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
+@ProjectSingleton
 public interface WatchTriggeredHandler {
 
     /**
