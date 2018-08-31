@@ -147,7 +147,11 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
     private void renderTag(Tag tag, StringBuilder sb) {
         sb.append("<div title='")
           .append(tag.getDescription())
-          .append("' class='wp-tag wp-tag--inline-tag' style='color:")
+          .append("' class='wp-tag wp-tag--inline-tag ")
+          .append("wp-tag-")
+          .append(tag.getTagId().getId())
+          .append("'")
+          .append(" style='color:")
           .append(tag.getColor().getHex())
           .append("; background-color:")
           .append(tag.getBackgroundColor().getHex())
