@@ -4,6 +4,7 @@
     border-radius: 3px;
     font-weight: 500;
     white-space: nowrap;
+    cursor: default;
 }
 
 .wp-tag--tag-list-tag {
