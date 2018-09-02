@@ -75,7 +75,7 @@ public class GwtTest_PrimitiveDataSuggestOracle extends GWTTestCase {
     private static class EntitySuggestOracleStub extends EntitySuggestOracle {
 
         public EntitySuggestOracleStub() {
-            super(null, 10, null);
+            super(null, 10, null, null);
         }
 
         @Override

@@ -53,12 +53,12 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
     }
 
     public String getText(@Nonnull DictionaryLanguageData prefLang) {
-        return getText(Collections.singletonList(prefLang), getBrowserText());
+        return getText(Collections.singletonList(prefLang.getDictionaryLanguage()), getBrowserText());
     }
 
-    public String getText(@Nonnull List<DictionaryLanguageData> prefLang, String defaultText) {
+    public String getText(@Nonnull List<DictionaryLanguage> prefLang, String defaultText) {
         return prefLang.stream()
-                       .map(language -> getShortForms().get(language.getDictionaryLanguage()))
+                       .map(language -> getShortForms().get(language))
                        .filter(Objects::nonNull)
                        .findFirst()
                        .orElse(defaultText);

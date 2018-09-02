@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -14,7 +16,9 @@ import java.io.Serializable;
 @SuppressWarnings("GwtInconsistentSerializableClass")
 public class EntityLookupResult implements Serializable, Comparable<EntityLookupResult> {
 
-    private OWLEntityData visualEntity;
+    private DictionaryLanguage language;
+
+    private EntityNode entityNode;
     
     private EntityNameMatchResult matchResult;
 
@@ -24,14 +28,19 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
     private EntityLookupResult() {
     }
 
-    public EntityLookupResult(OWLEntityData visualEntity, EntityNameMatchResult matchResult, String directLink) {
-        this.visualEntity = visualEntity;
+    public EntityLookupResult(DictionaryLanguage language, EntityNode entityNode, EntityNameMatchResult matchResult, String directLink) {
+        this.language = language;
+        this.entityNode = entityNode;
         this.matchResult = matchResult;
         this.directLink = directLink;
     }
 
+    public DictionaryLanguage getLanguage() {
+        return language;
+    }
+
     public OWLEntityData getOWLEntityData() {
-        return visualEntity;
+        return entityNode.getEntityData();
     }
 
 
@@ -43,11 +52,16 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
         return directLink;
     }
 
+    @Nonnull
+    public EntityNode getEntityNode() {
+        return entityNode;
+    }
+
     public String getDisplayText() {
         int browserTextMatchStart = matchResult.getStart();
         int browserTextMatchEnd = matchResult.getEnd();
         StringBuilder sb = new StringBuilder();
-        String browserText = visualEntity.getBrowserText();
+        String browserText = entityNode.getBrowserText();
         if (browserTextMatchStart < browserText.length() && browserTextMatchEnd <= browserText.length()) {
             sb.append("<div>");
             sb.append(browserText.substring(0, browserTextMatchStart));
@@ -65,10 +79,6 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
 
     @Override
     public int compareTo(EntityLookupResult other) {
-        int diff =  this.matchResult.compareTo(other.matchResult);
-        if(diff != 0) {
-            return diff;
-        }
-        return visualEntity.compareToIgnorePrefixNames(other.visualEntity);
+        return this.matchResult.compareTo(other.matchResult);
     }
 }

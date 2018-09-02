@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.shortform.Dictionary;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchType;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
 import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -47,6 +49,9 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     private final RenderingManager renderingManager;
 
     @Nonnull
+    private final EntityNodeRenderer entityNodeRenderer;
+
+    @Nonnull
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
@@ -57,12 +62,14 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
                                        @Nonnull ProjectId projectId,
                                        @Nonnull PlaceUrl placeUrl,
                                        @Nonnull RenderingManager renderingManager,
+                                       @Nonnull EntityNodeRenderer entityNodeRenderer,
                                        @Nonnull DictionaryManager dictionaryManager,
                                        @Nonnull LanguageManager languageManager) {
         super(accessManager);
         this.projectId = projectId;
         this.placeUrl = placeUrl;
         this.renderingManager = renderingManager;
+        this.entityNodeRenderer = entityNodeRenderer;
         this.dictionaryManager = dictionaryManager;
         this.languageManager = languageManager;
     }
@@ -119,7 +126,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
                                     OWLEntityData ed = DataFactory.getOWLEntityData(match.getEntity(),
                                                                                     match.getShortForm(),
                                                                                     dictionaryManager.getShortForms(match.getEntity()));
-                                    return new OWLEntityDataMatch(ed, result);
+                                    return new OWLEntityDataMatch(match.getLanguage(), ed, result);
                                 })
                                 .limit(entityLookupRequest.getSearchLimit())
                                 .map(this::toEntityLookupResult)
@@ -128,20 +135,28 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     }
 
     private EntityLookupResult toEntityLookupResult(OWLEntityDataMatch match) {
-        return new EntityLookupResult(match.getEntityData(),
+        return new EntityLookupResult(match.getDictionaryLanguage(),
+                                      entityNodeRenderer.render(match.getEntityData().getEntity()),
                                       match.getMatchResult(),
                                       placeUrl.getEntityUrl(projectId, match.getEntityData().getEntity()));
     }
 
     private static class OWLEntityDataMatch implements Comparable<OWLEntityDataMatch> {
 
+        private DictionaryLanguage dictionaryLanguage;
+
         private OWLEntityData visualEntity;
 
         private EntityNameMatchResult matchResult;
 
-        private OWLEntityDataMatch(OWLEntityData visualEntity, EntityNameMatchResult matchResult) {
+        private OWLEntityDataMatch(DictionaryLanguage dictionaryLanguage, OWLEntityData visualEntity, EntityNameMatchResult matchResult) {
+            this.dictionaryLanguage = dictionaryLanguage;
             this.visualEntity = visualEntity;
             this.matchResult = matchResult;
+        }
+
+        public DictionaryLanguage getDictionaryLanguage() {
+            return dictionaryLanguage;
         }
 
         public OWLEntityData getEntityData() {
