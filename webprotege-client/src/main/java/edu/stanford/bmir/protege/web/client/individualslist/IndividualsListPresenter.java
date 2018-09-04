@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -206,19 +207,22 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private void handleCreateIndividuals() {
         createEntityPresenter.createEntities(NAMED_INDIVIDUAL,
-                                             individuals -> {
-                                                 view.addListData(individuals);
-                                                 individuals.forEach(node -> elementsMap.put(node.getEntity(), node));
-                                                 if (!individuals.isEmpty()) {
-                                                     EntityNode next = individuals.iterator().next();
-                                                     view.setSelectedIndividual((OWLNamedIndividualData) next.getEntityData());
-                                                 }
-                                             },
+                                             individuals -> handleIndividualsCreated(individuals),
                                              (projectId, createFromText, langTag)
                                                      -> new CreateNamedIndividualsAction(projectId,
                                                                                          currentType.orElse(DataFactory.getOWLThing()),
                                                                                          createFromText,
                                                                                          langTag));
+    }
+
+    private void handleIndividualsCreated(ImmutableCollection<EntityNode> individuals) {
+        view.addListData(individuals);
+        individuals.forEach(node -> elementsMap.put(node.getEntity(), node));
+        if (!individuals.isEmpty()) {
+            EntityNode next = individuals.iterator().next();
+            view.setSelectedIndividual((OWLNamedIndividualData) next.getEntityData());
+            selectionModel.setSelection(next.getEntity());
+        }
     }
 
     private void handleDeleteIndividuals() {
