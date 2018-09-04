@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Sep 2018
  */
-public class CreateEntitiesInHierarchyHandler<E extends OWLEntity> implements EntitiesCreatedHandler<E> {
+public class CreateEntitiesInHierarchyHandler<E extends OWLEntity> implements EntitiesCreatedHandler {
 
     @Nonnull
     private final TreeWidget<EntityNode, OWLEntity> treeWidget;
@@ -30,9 +30,10 @@ public class CreateEntitiesInHierarchyHandler<E extends OWLEntity> implements En
     }
 
     @Override
-    public void handleEntitiesCreated(ImmutableCollection<E> entities) {
+    public void handleEntitiesCreated(ImmutableCollection<EntityNode> entities) {
         entities.stream()
                 .findFirst()
+                .map(EntityNode::getEntity)
                 .ifPresent(e -> {
                     treeWidget.getSelectedKeyPaths().stream()
                               .findFirst()

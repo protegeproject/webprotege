@@ -42,9 +42,9 @@ public class CreateDataPropertiesChangeGenerator extends AbstractCreateEntitiesC
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLDataProperty freshEntity,
-                                                        ChangeGenerationContext context,
-                                                        Optional<OWLDataProperty> parent) {
+    protected Set<? extends OWLAxiom> createParentPlacementAxioms(OWLDataProperty freshEntity,
+                                                                  ChangeGenerationContext context,
+                                                                  Optional<OWLDataProperty> parent) {
         if (parent.isPresent()) {
             OWLAxiom ax = dataFactory.getOWLSubDataPropertyOfAxiom(freshEntity, parent.get());
             return singleton(ax);

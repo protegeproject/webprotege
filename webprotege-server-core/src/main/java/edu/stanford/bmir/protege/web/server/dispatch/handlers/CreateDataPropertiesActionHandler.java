@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -8,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.CreateDataPropertiesChangeGen
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 
 /**
@@ -37,15 +39,19 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
     @Nonnull
     private final CreateDataPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
+    @Nonnull
+    private final EntityNodeRenderer entityNodeRenderer;
+
     @Inject
     public CreateDataPropertiesActionHandler(@Nonnull AccessManager accessManager,
                                              @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                              @Nonnull HasApplyChanges applyChanges,
                                              @Nonnull ProjectId projectId,
-                                             @Nonnull CreateDataPropertiesChangeGeneratorFactory changeGeneratorFactory) {
+                                             @Nonnull CreateDataPropertiesChangeGeneratorFactory changeGeneratorFactory, @Nonnull EntityNodeRenderer entityNodeRenderer) {
         super(accessManager, eventManager, applyChanges);
-        this.projectId = projectId;
-        this.changeGeneratorFactory = changeGeneratorFactory;
+        this.projectId = checkNotNull(projectId);
+        this.changeGeneratorFactory = checkNotNull(changeGeneratorFactory);
+        this.entityNodeRenderer = checkNotNull(entityNodeRenderer);
     }
 
     @Override
@@ -64,7 +70,9 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
         Map<OWLDataProperty, String> map = new HashMap<>();
         Set<OWLDataProperty> properties = changeApplicationResult.getSubject();
         return new CreateDataPropertiesResult(projectId,
-                                              ImmutableSet.copyOf(properties),
+                                              properties.stream()
+                                                    .map(entityNodeRenderer::render)
+                                                    .collect(toImmutableSet()),
                                               eventList);
     }
 

@@ -9,12 +9,12 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
 import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 /**
@@ -41,14 +41,12 @@ public class CreateIndividualsChangeListGenerator extends AbstractCreateEntities
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity,
-                                                        ChangeGenerationContext context,
-                                                        Optional<OWLClass> parent) {
-        if(parent.isPresent() && !parent.get().isOWLThing()) {
-            return singleton(dataFactory.getOWLClassAssertionAxiom(parent.get(), freshEntity));
-        }
-        else {
-            return emptySet();
-        }
+    protected Set<? extends OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity,
+                                                                  ChangeGenerationContext context,
+                                                                  Optional<OWLClass> parent) {
+        return parent.filter(par -> !par.isOWLThing())
+                     .map(par -> dataFactory.getOWLClassAssertionAxiom(par, freshEntity))
+                     .map(Collections::singleton)
+                     .orElse(emptySet());
     }
 }

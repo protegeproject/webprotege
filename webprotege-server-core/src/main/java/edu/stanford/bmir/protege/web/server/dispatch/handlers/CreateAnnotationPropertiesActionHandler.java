@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -8,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.CreateAnnotationPropertiesCha
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -22,6 +22,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static java.util.Arrays.asList;
@@ -40,16 +42,20 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     @Nonnull
     private final CreateAnnotationPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
+    @Nonnull
+    private final EntityNodeRenderer entityNodeRenderer;
+
     @Inject
     public CreateAnnotationPropertiesActionHandler(@Nonnull AccessManager accessManager,
                                                    @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                                    @Nonnull HasApplyChanges applyChanges,
                                                    @Nonnull ProjectId projectId,
                                                    @Nonnull RenderingManager renderer,
-                                                   @Nonnull CreateAnnotationPropertiesChangeGeneratorFactory changeGeneratorFactory) {
+                                                   @Nonnull CreateAnnotationPropertiesChangeGeneratorFactory changeGeneratorFactory, @Nonnull EntityNodeRenderer entityNodeRenderer) {
         super(accessManager, eventManager, applyChanges);
-        this.projectId = projectId;
-        this.changeGeneratorFactory = changeGeneratorFactory;
+        this.projectId = checkNotNull(projectId);
+        this.changeGeneratorFactory = checkNotNull(changeGeneratorFactory);
+        this.entityNodeRenderer = checkNotNull(entityNodeRenderer);
     }
 
     @Override
@@ -67,7 +73,9 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
                                                                   EventList<ProjectEvent<?>> eventList) {
         Set<OWLAnnotationProperty> properties = changeApplicationResult.getSubject();
         return new CreateAnnotationPropertiesResult(projectId,
-                                                    ImmutableSet.copyOf(properties),
+                                                    properties.stream()
+                                                          .map(entityNodeRenderer::render)
+                                                          .collect(toImmutableSet()),
                                                     eventList);
     }
 

@@ -41,9 +41,9 @@ public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeLi
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLClass freshEntity,
-                                                        ChangeGenerationContext context,
-                                                        Optional<OWLClass> parent) {
+    protected Set<? extends OWLAxiom> createParentPlacementAxioms(OWLClass freshEntity,
+                                                                  ChangeGenerationContext context,
+                                                                  Optional<OWLClass> parent) {
         if (parent.isPresent()) {
             OWLAxiom ax = dataFactory.getOWLSubClassOfAxiom(freshEntity, parent.get());
             return Collections.singleton(ax);

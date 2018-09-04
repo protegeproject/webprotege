@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -8,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.CreateObjectPropertiesChangeG
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
@@ -22,6 +22,8 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 
@@ -39,15 +41,20 @@ public class CreateObjectPropertiesActionHandler extends AbstractProjectChangeHa
     @Nonnull
     private final CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
+    @Nonnull
+    private final EntityNodeRenderer entityNodeRenderer;
+
     @Inject
     public CreateObjectPropertiesActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                                @Nonnull HasApplyChanges applyChanges,
                                                @Nonnull ProjectId projectId,
-                                               @Nonnull CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory) {
+                                               @Nonnull CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory,
+                                               @Nonnull EntityNodeRenderer entityNodeRenderer) {
         super(accessManager, eventManager, applyChanges);
-        this.projectId = projectId;
-        this.changeGeneratorFactory = changeGeneratorFactory;
+        this.projectId = checkNotNull(projectId);
+        this.changeGeneratorFactory = checkNotNull(changeGeneratorFactory);
+        this.entityNodeRenderer = checkNotNull(entityNodeRenderer);
     }
 
     @Nonnull
@@ -73,6 +80,10 @@ public class CreateObjectPropertiesActionHandler extends AbstractProjectChangeHa
     @Override
     protected CreateObjectPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLObjectProperty>> changeApplicationResult, CreateObjectPropertiesAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Set<OWLObjectProperty> result = changeApplicationResult.getSubject();
-        return new CreateObjectPropertiesResult(projectId, ImmutableSet.copyOf(result), eventList);
+        return new CreateObjectPropertiesResult(projectId,
+                                                result.stream()
+                                                      .map(entityNodeRenderer::render)
+                                                      .collect(toImmutableSet()),
+                                                eventList);
     }
 }

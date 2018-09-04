@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntitiesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntityResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntitiesInHierarchyAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
@@ -84,27 +86,25 @@ public class CreateEntityPresenter {
 
     private <E extends OWLEntity> void handleCreateEntities(@Nonnull String enteredText,
                                       @Nonnull ActionFactory<E> actionFactory,
-                                      @Nonnull EntitiesCreatedHandler<E> entitiesCreatedHandler) {
+                                      @Nonnull EntitiesCreatedHandler entitiesCreatedHandler) {
 
         GWT.log("[CreateEntityPresenter] handleCreateEntities.  Lang: " + dialogController.getLangTag());
         currentLangTag = Optional.of(dialogController.getLangTag());
-        CreateEntitiesInHierarchyAction<?, E> action = actionFactory.createAction(projectId,
-                                                                                  enteredText,
-                                                                                  dialogController.getLangTag());
+        AbstractCreateEntitiesAction<? extends AbstractCreateEntityResult<E>, E> action = actionFactory.createAction(projectId,
+                                                                                                                  enteredText,
+                                                                                                                  dialogController.getLangTag());
         dispatchServiceManager.execute(action,
-                                       result -> {
-                                            entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
-                                       });
+                                       result -> entitiesCreatedHandler.handleEntitiesCreated(result.getEntities()));
 
     }
 
     public interface ActionFactory<E extends OWLEntity> {
-        CreateEntitiesInHierarchyAction<?, E> createAction(
+        AbstractCreateEntitiesAction<?, E> createAction(
                 @Nonnull ProjectId projectId,
                 @Nonnull String createFromText, String langTag);
     }
 
-    public interface EntitiesCreatedHandler<E extends OWLEntity> {
-        void handleEntitiesCreated(ImmutableCollection<E> entities);
+    public interface EntitiesCreatedHandler {
+        void handleEntitiesCreated(ImmutableCollection<EntityNode> entities);
     }
 }

@@ -151,9 +151,9 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @return A possibly empty set of axioms representing axioms that need to be added to the project ontologies to
      * associate the specified fresh entity with its optional parent.  Not {@code null}.
      */
-    protected abstract Set<OWLAxiom> createParentPlacementAxioms(E freshEntity,
-                                                                 ChangeGenerationContext context,
-                                                                 Optional<P> parent);
+    protected abstract Set<? extends OWLAxiom> createParentPlacementAxioms(E freshEntity,
+                                                                           ChangeGenerationContext context,
+                                                                           Optional<P> parent);
 
     @Nonnull
     @Override

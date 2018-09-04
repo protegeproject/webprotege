@@ -2,11 +2,12 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -39,6 +40,7 @@ import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_INDIVIDUAL;
 import static java.util.stream.Collectors.toSet;
+import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 /**
  * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 12/09/2013
@@ -68,7 +70,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     private final UIAction deleteAction;
 
     @Nonnull
-    private final CreateEntitiesDialogController controller;
+    private final CreateEntityPresenter createEntityPresenter;
 
     private final Map<OWLEntity, EntityNode> elementsMap = new HashMap<>();
 
@@ -92,14 +94,14 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                     DispatchServiceManager dispatchServiceManager,
                                     LoggedInUserProjectPermissionChecker permissionChecker,
                                     Messages messages,
-                                    @Nonnull CreateEntitiesDialogController controller, EntityNodeUpdater entityNodeUpdater) {
+                                    @Nonnull CreateEntityPresenter createEntityPresenter, EntityNodeUpdater entityNodeUpdater) {
         this.projectId = projectId;
         this.selectionModel = selectionModel;
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.messages = messages;
-        this.controller = controller;
+        this.createEntityPresenter = createEntityPresenter;
         this.entityNodeUpdater = entityNodeUpdater;
         view.addSelectionHandler(event -> {
             event.getSelectedItem().stream().findFirst().ifPresent(sel -> {
@@ -176,10 +178,10 @@ public class IndividualsListPresenter implements EntityNodeIndex {
             elementsMap.clear();
             result.getIndividuals()
                   .forEach(node -> elementsMap.put(node.getEntity(), node));
-            if(!view.getSelectedIndividuals().equals(curSel)) {
+            if (!view.getSelectedIndividuals().equals(curSel)) {
                 Optional<EntityNode> selectedIndividual = view.getSelectedIndividual();
                 selectedIndividual.ifPresent(sel -> selectionModel.setSelection(sel.getEntity()));
-                if(!selectedIndividual.isPresent()) {
+                if (!selectedIndividual.isPresent()) {
                     selectionModel.clearSelection();
                 }
             }
@@ -203,21 +205,20 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     }
 
     private void handleCreateIndividuals() {
-        controller.clear();
-        controller.setEntityType(EntityType.NAMED_INDIVIDUAL);
-        controller.setCreateEntityHandler(createFromText -> {
-            dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, createFromText, controller.getLangTag()),
-                                           result -> {
-                                               Set<EntityNode> individuals = result.getIndividuals();
-                                               view.addListData(individuals);
-                                               individuals.forEach(node -> elementsMap.put(node.getEntity(), node));
-                                               if (!individuals.isEmpty()) {
-                                                   EntityNode next = individuals.iterator().next();
-                                                   view.setSelectedIndividual((OWLNamedIndividualData) next.getEntityData());
-                                               }
-                                           });
-        });
-        WebProtegeDialog.showDialog(controller);
+        createEntityPresenter.createEntities(NAMED_INDIVIDUAL,
+                                             individuals -> {
+                                                 view.addListData(individuals);
+                                                 individuals.forEach(node -> elementsMap.put(node.getEntity(), node));
+                                                 if (!individuals.isEmpty()) {
+                                                     EntityNode next = individuals.iterator().next();
+                                                     view.setSelectedIndividual((OWLNamedIndividualData) next.getEntityData());
+                                                 }
+                                             },
+                                             (projectId, createFromText, langTag)
+                                                     -> new CreateNamedIndividualsAction(projectId,
+                                                                                         currentType.orElse(DataFactory.getOWLThing()),
+                                                                                         createFromText,
+                                                                                         langTag));
     }
 
     private void handleDeleteIndividuals() {

@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -15,30 +16,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public class CreateNamedIndividualsAction extends AbstractHasProjectAction<CreateNamedIndividualsResult> {
+public class CreateNamedIndividualsAction extends AbstractCreateEntitiesAction<CreateNamedIndividualsResult, OWLNamedIndividual> {
 
     private OWLClass type;
 
-    private String sourceText;
-
-    private String langTag;
-
     private CreateNamedIndividualsAction() {
-    }
-
-    /**
-     * Constructs a CreateNamedIndividualsAction.
-     * @param projectId The project identifier which identifies the project to create the individuals in.
-     * @param sourceText The input text that the individuals will be created from.
-     * @throws NullPointerException if any parameters are {@code null}.
-     */
-    public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
-                                        @Nonnull String sourceText,
-                                        @Nonnull String langTag) {
-        super(projectId);
-        this.type = null;
-        this.sourceText = checkNotNull(sourceText);
-        this.langTag = checkNotNull(langTag);
     }
 
     /**
@@ -52,29 +34,9 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
                                         @Nonnull OWLClass type,
                                         @Nonnull String sourceText,
                                         @Nonnull String langTag) {
-        super(projectId);
+        super(projectId, sourceText, langTag);
         this.type = checkNotNull(type);
-        this.sourceText = checkNotNull(sourceText);
-        this.langTag = checkNotNull(langTag);
     }
-
-    /**
-     * Constructs a CreateNamedIndividualsAction.
-     * @param projectId The project identifier which identifies the project to create the individuals in.
-     * @param type A type for the individuals.  Not {@code null}.
-     * @param sourceText The input text that the individuals will be created from.
-     * @throws NullPointerException if any parameters are {@code null}.
-     */
-    public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
-                                        @Nonnull Optional<OWLClass> type,
-                                        @Nonnull String sourceText,
-                                        @Nonnull String langTag) {
-        super(projectId);
-        this.type = type.orElse(null);
-        this.sourceText = checkNotNull(sourceText);
-        this.langTag = checkNotNull(langTag);
-    }
-
 
     /**
      * Gets the type for the individuals.
@@ -84,17 +46,13 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
         return Optional.ofNullable(type);
     }
 
-    /**
-     * Gets the text that the individuals will be created from
-     * @return The text
-     */
-    @Nonnull
-    public String getSourceText() {
-        return sourceText;
-    }
 
-    @Nonnull
-    public String getLangTag() {
-        return langTag;
+    @Override
+    public String toString() {
+        return toStringHelper("CreateNamedIndividualsAction")
+                .add("type", type)
+                .add("sourceText", getSourceText())
+                .add("langTag", getLangTag())
+                .toString();
     }
 }

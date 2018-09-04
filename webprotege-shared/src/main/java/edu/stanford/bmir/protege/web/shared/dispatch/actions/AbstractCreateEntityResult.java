@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
+import com.google.common.collect.ImmutableCollection;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -25,10 +27,14 @@ public abstract class AbstractCreateEntityResult<E extends OWLEntity> implements
 
     private EventList<ProjectEvent<?>> eventList;
 
+    private ImmutableCollection<EntityNode> entities;
+
     public AbstractCreateEntityResult(@Nonnull ProjectId projectId,
-                                      @Nonnull EventList<ProjectEvent<?>> eventList) {
+                                      @Nonnull EventList<ProjectEvent<?>> eventList,
+                                      ImmutableCollection<EntityNode> entities) {
         this.projectId = checkNotNull(projectId);
         this.eventList = checkNotNull(eventList);
+        this.entities = checkNotNull(entities);
     }
 
     @GwtSerializationConstructor
@@ -45,5 +51,9 @@ public abstract class AbstractCreateEntityResult<E extends OWLEntity> implements
     @Override
     public EventList<ProjectEvent<?>> getEventList() {
         return eventList;
+    }
+
+    public ImmutableCollection<EntityNode> getEntities() {
+        return entities;
     }
 }

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import com.google.common.collect.ImmutableCollection;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CreateObjectPropertiesResult extends CreateEntitiesInHierarchyResult<OWLObjectProperty> {
 
     public CreateObjectPropertiesResult(@Nonnull ProjectId projectId,
-                                        @Nonnull ImmutableCollection<OWLObjectProperty> entities,
+                                        @Nonnull ImmutableCollection<EntityNode> entities,
                                         EventList<ProjectEvent<?>> eventList) {
         super(projectId, entities, eventList);
     }

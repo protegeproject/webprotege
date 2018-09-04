@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -17,7 +18,7 @@ import javax.annotation.Nonnull;
 public class CreateDataPropertiesResult extends CreateEntitiesInHierarchyResult<OWLDataProperty> {
 
     public CreateDataPropertiesResult(@Nonnull ProjectId projectId,
-                                      @Nonnull ImmutableSet<OWLDataProperty> parent,
+                                      @Nonnull ImmutableSet<EntityNode> parent,
                                       @Nonnull EventList<ProjectEvent<?>> eventList) {
         super(projectId, parent, eventList);
     }

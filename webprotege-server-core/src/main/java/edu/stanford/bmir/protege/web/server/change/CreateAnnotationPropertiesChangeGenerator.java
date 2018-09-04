@@ -41,9 +41,9 @@ public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEnt
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLAnnotationProperty freshEntity,
-                                                        ChangeGenerationContext context,
-                                                        Optional<OWLAnnotationProperty> parent) {
+    protected Set<? extends OWLAxiom> createParentPlacementAxioms(OWLAnnotationProperty freshEntity,
+                                                                  ChangeGenerationContext context,
+                                                                  Optional<OWLAnnotationProperty> parent) {
         if(parent.isPresent()) {
             OWLAxiom ax = dataFactory.getOWLSubAnnotationPropertyOfAxiom(freshEntity, parent.get());
             return Collections.singleton(ax);

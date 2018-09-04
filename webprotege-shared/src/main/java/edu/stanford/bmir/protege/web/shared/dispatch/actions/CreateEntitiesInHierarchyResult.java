@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import com.google.common.collect.ImmutableCollection;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -17,21 +18,13 @@ import javax.annotation.Nonnull;
  */
 public abstract class CreateEntitiesInHierarchyResult<E extends OWLEntity> extends AbstractCreateEntityResult<E> {
 
-    private ImmutableCollection<E> entities;
-
     public CreateEntitiesInHierarchyResult(@Nonnull ProjectId projectId,
-                                           @Nonnull ImmutableCollection<E> entities,
+                                           @Nonnull ImmutableCollection<EntityNode> entities,
                                            @Nonnull EventList<ProjectEvent<?>> eventList) {
-        super(projectId, eventList);
-        this.entities = entities;
+        super(projectId, eventList, entities);
     }
 
     @GwtSerializationConstructor
     protected CreateEntitiesInHierarchyResult() {
-    }
-
-    @Nonnull
-    public ImmutableCollection<E> getEntities() {
-        return entities;
     }
 }

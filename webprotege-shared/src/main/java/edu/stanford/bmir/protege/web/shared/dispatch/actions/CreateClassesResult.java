@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -21,7 +22,7 @@ public class CreateClassesResult extends CreateEntitiesInHierarchyResult<OWLClas
     }
 
     public CreateClassesResult(ProjectId projectId,
-                               ImmutableSet<OWLClass> classes,
+                               ImmutableSet<EntityNode> classes,
                                EventList<ProjectEvent<?>> eventList) {
         super(projectId, classes, eventList);
     }

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.change.CreateClassesChangeGeneratorF
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
@@ -20,8 +21,11 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static java.util.Arrays.asList;
@@ -34,13 +38,18 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
     @Nonnull
     private final CreateClassesChangeGeneratorFactory changeGeneratorFactory;
 
+    @Nonnull
+    private final EntityNodeRenderer entityNodeRenderer;
+
     @Inject
     public CreateClassesActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                       @Nonnull HasApplyChanges applyChanges,
-                                      @Nonnull CreateClassesChangeGeneratorFactory changeFactory) {
+                                      @Nonnull CreateClassesChangeGeneratorFactory changeFactory,
+                                      @Nonnull EntityNodeRenderer entityNodeRenderer) {
         super(accessManager, eventManager, applyChanges);
         this.changeGeneratorFactory = checkNotNull(changeFactory);
+        this.entityNodeRenderer = checkNotNull(entityNodeRenderer);
     }
 
     @Nonnull
@@ -67,7 +76,7 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
     protected CreateClassesResult createActionResult(ChangeApplicationResult<Set<OWLClass>> changeApplicationResult, CreateClassesAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Set<OWLClass> classes = changeApplicationResult.getSubject();
         return new CreateClassesResult(action.getProjectId(),
-                                       ImmutableSet.copyOf(classes),
+                                       classes.stream().map(entityNodeRenderer::render).collect(toImmutableSet()),
                                        eventList);
     }
 }

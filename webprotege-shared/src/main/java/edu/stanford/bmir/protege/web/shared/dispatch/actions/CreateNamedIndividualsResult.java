@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import com.google.common.collect.ImmutableCollection;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,19 +17,12 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public class CreateNamedIndividualsResult implements Result {
-
-
-    private Set<EntityNode> individuals = new HashSet<>();
+public class CreateNamedIndividualsResult extends AbstractCreateEntityResult<OWLNamedIndividual> {
 
     private CreateNamedIndividualsResult() {
     }
 
-    public CreateNamedIndividualsResult(Set<EntityNode> individuals) {
-        this.individuals = individuals;
-    }
-
-    public Set<EntityNode> getIndividuals() {
-        return new HashSet<>(individuals);
+    public CreateNamedIndividualsResult(@Nonnull ProjectId projectId, @Nonnull EventList<ProjectEvent<?>> eventList, ImmutableCollection<EntityNode> entities) {
+        super(projectId, eventList, entities);
     }
 }
