@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
@@ -51,12 +52,12 @@ public class CreateEntityPresenter {
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
-                               TreeWidget<EntityNode, OWLEntity> treeWidget,
+                               @Nonnull EntitiesCreatedHandler entitiesCreatedHandler,
                                @Nonnull ActionFactory actionFactory) {
         dialogController.clear();
         dialogController.setEntityType(entityType);
         dialogController.setCreateEntityHandler(createEntityInfo -> {
-            handleCreateEntities(createEntityInfo, actionFactory, treeWidget);
+            handleCreateEntities(createEntityInfo, actionFactory, entitiesCreatedHandler);
         });
         dialogController.setResetLangTagHandler(this::resetLangTag);
         displayCurrentLangTagOrProjectDefaultLangTag();
@@ -81,35 +82,29 @@ public class CreateEntityPresenter {
         });
     }
 
-    private void handleCreateEntities(@Nonnull String enteredText,
-                                      @Nonnull ActionFactory actionFactory,
-                                      @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
+    private <E extends OWLEntity> void handleCreateEntities(@Nonnull String enteredText,
+                                      @Nonnull ActionFactory<E> actionFactory,
+                                      @Nonnull EntitiesCreatedHandler<E> entitiesCreatedHandler) {
 
         GWT.log("[CreateEntityPresenter] handleCreateEntities.  Lang: " + dialogController.getLangTag());
         currentLangTag = Optional.of(dialogController.getLangTag());
-        CreateEntitiesInHierarchyAction<?, ?> action = actionFactory.createAction(projectId,
+        CreateEntitiesInHierarchyAction<?, E> action = actionFactory.createAction(projectId,
                                                                                   enteredText,
                                                                                   dialogController.getLangTag());
         dispatchServiceManager.execute(action,
                                        result -> {
-                                           result.getEntities().stream()
-                                                 .findFirst()
-                                                 .ifPresent(e -> {
-                                                     treeWidget.getSelectedKeyPaths().stream()
-                                                               .findFirst()
-                                                               .ifPresent(parentPath -> {
-                                                                   treeWidget.setSelected(parentPath.pathByAppending(e),
-                                                                                          true, () -> {});
-                                                                   treeWidget.revealTreeNodesForKey(e, RevealMode.REVEAL_FIRST);
-                                                               });
-                                                 });
+                                            entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
                                        });
 
     }
 
-    interface ActionFactory {
-        CreateEntitiesInHierarchyAction<?, ?> createAction(
+    public interface ActionFactory<E extends OWLEntity> {
+        CreateEntitiesInHierarchyAction<?, E> createAction(
                 @Nonnull ProjectId projectId,
                 @Nonnull String createFromText, String langTag);
+    }
+
+    public interface EntitiesCreatedHandler<E extends OWLEntity> {
+        void handleEntitiesCreated(ImmutableCollection<E> entities);
     }
 }
