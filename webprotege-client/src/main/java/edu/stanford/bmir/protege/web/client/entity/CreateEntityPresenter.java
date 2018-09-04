@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.hierarchy;
+package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
