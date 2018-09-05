@@ -69,7 +69,7 @@ public class CreateNewProjectPresenter {
 
     public boolean validate() {
         if (view.getProjectName().isEmpty()) {
-            MessageBox.showAlert("Project name missing", "Please enter a project name");
+            view.showProjectNameMissingMessage();
             return false;
         }
         return true;
@@ -88,7 +88,7 @@ public class CreateNewProjectPresenter {
     }
 
     private void createEmptyProject(ProjectCreatedHandler projectCreatedHandler) {
-        NewProjectSettings newProjectSettings = new NewProjectSettings(
+        NewProjectSettings newProjectSettings = NewProjectSettings.get(
                 loggedInUserManager.getLoggedInUserId(),
                 view.getProjectName(),
                 view.getProjectDescription());
@@ -116,7 +116,7 @@ public class CreateNewProjectPresenter {
         FileUploadResponse response = new FileUploadResponse(event.getResults());
         if (response.wasUploadAccepted()) {
             DocumentId documentId = response.getDocumentId();
-            NewProjectSettings newProjectSettings = new NewProjectSettings(
+            NewProjectSettings newProjectSettings = NewProjectSettings.get(
                     loggedInUserManager.getLoggedInUserId(),
                     view.getProjectName(),
                     view.getProjectDescription(),

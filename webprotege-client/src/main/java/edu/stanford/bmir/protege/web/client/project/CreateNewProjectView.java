@@ -59,4 +59,9 @@ public interface CreateNewProjectView extends HasInitialFocusable, IsWidget {
      * Asks the file upload form to submit the form data.
      */
     void submitFormData();
+
+    /**
+     * Displays a message saying that the project name is missing
+     */
+    void showProjectNameMissingMessage();
 }

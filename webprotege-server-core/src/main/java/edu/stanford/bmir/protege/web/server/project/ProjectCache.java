@@ -5,6 +5,7 @@ import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
@@ -191,9 +192,10 @@ public class ProjectCache {
 
     public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, OWLOntologyStorageException, IOException {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
-        if(newProjectSettings.hasSourceDocument()) {
+        Optional<DocumentId> sourceDocumentId = newProjectSettings.getSourceDocumentId();
+        if(sourceDocumentId.isPresent()) {
             ProjectImporter importer = projectImporterFactory.getProjectImporter(projectId);
-            importer.createProjectFromSources(newProjectSettings.getSourceDocumentId(), newProjectSettings.getProjectOwner());
+            importer.createProjectFromSources(sourceDocumentId.get(), newProjectSettings.getProjectOwner());
         }
         return getProjectInternal(projectId, AccessMode.NORMAL).getProjectId();
     }
