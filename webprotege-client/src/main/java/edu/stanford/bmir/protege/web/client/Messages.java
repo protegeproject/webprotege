@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client;
 
 
 import com.google.gwt.i18n.client.LocalizableResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 import static com.google.gwt.i18n.client.LocalizableResource.*;
 
@@ -709,9 +710,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.language")
     String projectSettings_language();
 
-    @DefaultMessage("Enter a language tag for labelling new entities and to use as the primary display language.  Leave empty for no language tag.")
+    @DefaultMessage("Enter a language tag for labelling new entities and to use as the primary display language.  <em>Leave empty for no language tag</em>.")
     @Key("projectSettings.language.helpText")
-    String projectSettings_language_helpText();
+    SafeHtml projectSettings_language_helpText();
 
     
     @DefaultMessage("Display name")

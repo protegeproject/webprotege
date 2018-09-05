@@ -55,6 +55,11 @@ h1 {
     -webkit-margin-end: 0;
 }
 
+em {
+    font-style: normal;
+    font-weight: 600;
+}
+
 input, textarea {
     margin: 0;
     border: none;

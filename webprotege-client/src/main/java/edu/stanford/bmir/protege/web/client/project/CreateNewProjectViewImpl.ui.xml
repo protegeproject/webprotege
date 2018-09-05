@@ -8,7 +8,7 @@
 
         }
         .formField {
-            width: 500px;
+            max-width: 500px;
         }
         .uploadContainer {
             padding-top: 10px;
@@ -26,7 +26,7 @@
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.projectSettings_language}"  addStyleNames="{wp.style.formLabel}"/>
             <primitive:DefaultLanguageEditor ui:field="projectLanguageField" addStyleNames="{style.formField}"/>
-            <g:Label text="{msg.projectSettings_language_helpText}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
+            <label class="{wp.style.formHelpText} {style.helpText}"><ui:safehtml from="{msg.projectSettings_language_helpText}"/></label>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.projectSettings_description}"  addStyleNames="{wp.style.formLabel}"/>
