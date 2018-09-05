@@ -29,7 +29,8 @@ public interface CreateNewProjectView extends HasInitialFocusable, IsWidget {
 
     /**
      * Gets the language used for labelling new entities and displaying entities.
-     * @return The (possibly empty) language
+     * @return The (possibly empty) language.  This is trimmed so that there is no
+     * leading or trailing white space.
      */
     @Nonnull
     String getProjectLanguage();

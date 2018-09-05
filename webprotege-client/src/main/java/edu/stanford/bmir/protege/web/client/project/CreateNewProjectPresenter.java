@@ -89,6 +89,7 @@ public class CreateNewProjectPresenter {
         NewProjectSettings newProjectSettings = NewProjectSettings.get(
                 loggedInUserManager.getLoggedInUserId(),
                 view.getProjectName(),
+                view.getProjectLanguage(),
                 view.getProjectDescription());
         submitCreateNewProjectRequest(newProjectSettings, projectCreatedHandler);
     }
@@ -114,6 +115,7 @@ public class CreateNewProjectPresenter {
             NewProjectSettings newProjectSettings = NewProjectSettings.get(
                     loggedInUserManager.getLoggedInUserId(),
                     view.getProjectName(),
+                    view.getProjectLanguage(),
                     view.getProjectDescription(),
                     documentId
             );
