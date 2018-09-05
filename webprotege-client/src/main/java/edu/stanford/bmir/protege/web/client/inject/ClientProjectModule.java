@@ -130,12 +130,6 @@ public class ClientProjectModule {
     }
 
     @Provides
-    @LanguageCodes
-    List<LanguageCode> provideLanguageCodes(LangCodesProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
     EntityCrudKitSettingsEditor provideEntityCrudKitSettingsEditor(EntityCrudKitSettingsEditorImpl editor) {
         return editor;
     }

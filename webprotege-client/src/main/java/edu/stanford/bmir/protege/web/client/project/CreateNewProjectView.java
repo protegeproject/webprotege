@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.project;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
 
@@ -25,6 +26,13 @@ public interface CreateNewProjectView extends HasInitialFocusable, IsWidget {
      */
     @Nonnull
     String getProjectDescription();
+
+    /**
+     * Gets the language used for labelling new entities and displaying entities.
+     * @return The (possibly empty) language
+     */
+    @Nonnull
+    String getProjectLanguage();
 
     /**
      * Specified whether the file upload section of the view should be enabled/visible.

@@ -29,6 +29,8 @@ import edu.stanford.bmir.protege.web.client.form.FormElementViewImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
+import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
@@ -77,6 +79,9 @@ import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
+
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -475,5 +480,12 @@ public class ClientApplicationModule {
     BusyView provideBusyView(BusyViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    @LanguageCodes
+    List<LanguageCode> provideLanguageCodes(LangCodesProvider provider) {
+        return provider.get();
+    }
+
 
 }

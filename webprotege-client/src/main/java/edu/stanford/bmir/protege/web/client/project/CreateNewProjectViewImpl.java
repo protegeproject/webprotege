@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,11 +42,15 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     @UiField
     HTMLPanel fileUploadArea;
 
+    @UiField(provided = true)
+    DefaultLanguageEditor projectLanguageField;
+
     private HandlerRegistration submitCompleteHandlerRegistraion = () -> {};
 
 
     @Inject
-    public CreateNewProjectViewImpl() {
+    public CreateNewProjectViewImpl(@Nonnull DefaultLanguageEditor languageEditor) {
+        this.projectLanguageField = checkNotNull(languageEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -59,6 +64,12 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     @Override
     public String getProjectDescription() {
         return projectDescriptionField.getText().trim();
+    }
+
+    @Nonnull
+    @Override
+    public String getProjectLanguage() {
+        return projectLanguageField.getValue().orElse("").trim();
     }
 
     @Override

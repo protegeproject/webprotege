@@ -705,6 +705,14 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.description")
     String projectSettings_description();
 
+    @DefaultMessage("Language")
+    @Key("projectSettings.language")
+    String projectSettings_language();
+
+    @DefaultMessage("Enter a language tag for labelling new entities and to use as the primary display language.  Leave empty for no language tag.")
+    @Key("projectSettings.language.helpText")
+    String projectSettings_language_helpText();
+
     
     @DefaultMessage("Display name")
     @Key("projectSettings.displayName")

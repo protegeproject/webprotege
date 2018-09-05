@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
@@ -13,11 +14,19 @@
             padding-top: 10px;
             padding-bottom: 10px;
         }
+        .helpText {
+            max-width: 480px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.form}">
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.projectName}" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="projectNameField" addStyleNames="{style.formField}"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.projectSettings_language}"  addStyleNames="{wp.style.formLabel}"/>
+            <primitive:DefaultLanguageEditor ui:field="projectLanguageField" addStyleNames="{style.formField}"/>
+            <g:Label text="{msg.projectSettings_language_helpText}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.projectSettings_description}"  addStyleNames="{wp.style.formLabel}"/>
