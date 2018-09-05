@@ -78,11 +78,9 @@ public class CreateNewProjectPresenter {
 
     public void submitCreateProjectRequest(ProjectCreatedHandler handler) {
         if (view.isFileUploadSpecified()) {
-            GWT.log("[CreateNewProjectPresenter] Creating project from existing sources");
             uploadSourcesAndCreateProject(handler);
         }
         else {
-            GWT.log("[CreateNewProjectPresenter] Creating empty project");
             createEmptyProject(handler);
         }
     }
@@ -99,15 +97,12 @@ public class CreateNewProjectPresenter {
     private void uploadSourcesAndCreateProject(@Nonnull ProjectCreatedHandler projectCreatedHandler) {
         checkNotNull(projectCreatedHandler);
         String postUrl = GWT.getModuleBaseURL() + "submitfile";
-        GWT.log("[CreateNewProjectPresenter] File upload submission URL: " + postUrl);
         view.setFileUploadPostUrl(postUrl);
         ProgressMonitor.get().showProgressMonitor("Uploading sources", "Uploading file");
         view.setSubmitCompleteHandler(event -> {
-            GWT.log("[CreateNewProjectPresenter] Form submission complete.  Sources have been uploaded.");
             ProgressMonitor.get().hideProgressMonitor();
             handleSourcesUploadComplete(event, projectCreatedHandler);
         });
-        GWT.log("[CreateNewProjectPresenter] Submitting existing sources as form data.");
         view.submitFormData();
     }
 
