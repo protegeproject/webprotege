@@ -22,7 +22,7 @@ public class DisplayNameRenderer {
 
     @Nonnull
     public String getBrowserText(@Nonnull OWLPrimitiveData primitiveData) {
-        return displayNameSettingsManager.getDisplayLanguage()
+        return displayNameSettingsManager.getLocalDisplayNameSettings()
                                          .getPrimaryDisplayNameLanguages()
                                          .stream()
                                          .map(l -> primitiveData.getShortForms().get(l))

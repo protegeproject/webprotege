@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
@@ -29,6 +30,9 @@ public class DisplayNameSettingsManager {
     private final DisplayLanguageStorage displayLanguageStorage;
 
     @Nonnull
+    private final ActiveProjectManager activeProjectManager;
+
+    @Nonnull
     private DisplayNameSettings displayNameSettings = DisplayNameSettings.empty();
 
     private boolean loaded = false;
@@ -36,14 +40,16 @@ public class DisplayNameSettingsManager {
     @Inject
     public DisplayNameSettingsManager(@Nonnull ProjectId projectId,
                                       @Nonnull EventBus eventBus,
-                                      @Nonnull DisplayLanguageStorage displayLanguageStorage) {
+                                      @Nonnull DisplayLanguageStorage displayLanguageStorage,
+                                      @Nonnull ActiveProjectManager activeProjectManager) {
         this.projectId = checkNotNull(projectId);
         this.eventBus = checkNotNull(eventBus);
         this.displayLanguageStorage = checkNotNull(displayLanguageStorage);
+        this.activeProjectManager = checkNotNull(activeProjectManager);
     }
 
     @Nonnull
-    public DisplayNameSettings getDisplayLanguage() {
+    public DisplayNameSettings getLocalDisplayNameSettings() {
         if(!loaded) {
             loaded = true;
             displayNameSettings = displayLanguageStorage.get(DisplayNameSettings.empty());
@@ -51,7 +57,7 @@ public class DisplayNameSettingsManager {
         return displayNameSettings;
     }
 
-    public void setDisplayLanguage(@Nonnull DisplayNameSettings displayNameSettings) {
+    public void setLocalDisplayNameSettings(@Nonnull DisplayNameSettings displayNameSettings) {
         checkNotNull(displayNameSettings);
         if(this.displayNameSettings.equals(displayNameSettings)) {
             return;

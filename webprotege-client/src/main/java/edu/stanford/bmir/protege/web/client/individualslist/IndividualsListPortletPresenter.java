@@ -37,7 +37,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         presenter.installActions(portletUi);
         presenter.start(portletUi, eventBus);
         presenter.setEntityDisplay(this);
-        presenter.setDisplayLanguage(displayNameSettingsManager.getDisplayLanguage());
+        presenter.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
         handleAfterSetEntity(Optional.empty());
     }
 

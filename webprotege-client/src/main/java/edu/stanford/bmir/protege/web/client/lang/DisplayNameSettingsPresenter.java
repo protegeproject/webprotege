@@ -4,13 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -60,19 +58,19 @@ public class DisplayNameSettingsPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        setDisplayLanguage(displayNameSettingsManager.getDisplayLanguage());
+        setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
     }
 
 
     public void stop() {
-        displayNameSettingsManager.setDisplayLanguage(getDisplayLanguage());
+        displayNameSettingsManager.setLocalDisplayNameSettings(getDisplayLanguage());
     }
 
 
 
     private void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
         checkNotNull(displayLanguage);
-        GWT.log("[DisplayNameSettingsPresenter] setDisplayLanguage: " + displayLanguage);
+        GWT.log("[DisplayNameSettingsPresenter] setLocalDisplayNameSettings: " + displayLanguage);
         view.setPrimaryDisplayNameLanguages(displayLanguage.getPrimaryDisplayNameLanguages());
         view.setSecondaryDisplayNameLanguages(displayLanguage.getSecondaryDisplayNameLanguages());
 

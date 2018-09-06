@@ -169,7 +169,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         actionStatePresenter.start(eventBus);
 
         hierarchyModel.start(eventBus, CLASS_HIERARCHY);
-        renderer.setDisplayLanguage(displayNameSettingsManager.getDisplayLanguage());
+        renderer.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
                                                       node -> node.getEntity()));
