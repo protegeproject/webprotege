@@ -25,7 +25,7 @@
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.displayName_settings_project_priorityList_title}" addStyleNames="{wp.style.formLabel}"/>
             <div class="{style.col}">
-                <editor:ValueListFlexEditorImpl ui:field="languagesList"/>
+                <editor:ValueListFlexEditorImpl ui:field="languagesList" reorderEnabled="true"/>
             </div>
         </div>
         <div class="{wp.style.formGroup}">

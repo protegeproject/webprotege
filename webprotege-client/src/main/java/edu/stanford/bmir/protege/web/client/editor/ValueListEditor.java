@@ -21,4 +21,6 @@ public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled {
     void setDeleteConfirmationPrompt(@Nonnull DeleteConfirmationPrompt<O> prompt);
 
     void setNewRowMode(@Nonnull NewRowMode newRowMode);
+
+    void setReorderEnabled(boolean enabled);
 }

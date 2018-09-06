@@ -13,9 +13,11 @@
         }
     </ui:style>
     <g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{style.container} {wp.valueList.valueList}" ui:field="container">
+        <g:Button ui:field="moveUpButton" visible="false" addStyleNames="{wp.buttons.upButton}"/>
+        <g:Button ui:field="moveDownButton" visible="false" addStyleNames="{wp.buttons.downButton}"/>
+        <g:FlowPanel addStyleNames="{style.container} {wp.valueList.valueList}" ui:field="container">
 
-        </g:HTMLPanel>
+        </g:FlowPanel>
         <g:Button title="{msg.add}" visible="false" addStyleNames="{wp.buttons.addButton} {style.addButton}" ui:field="addButton">
         </g:Button>
     </g:HTMLPanel>

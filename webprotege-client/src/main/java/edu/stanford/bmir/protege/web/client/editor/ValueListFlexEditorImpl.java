@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -13,9 +14,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import elemental.client.Browser;
+import elemental.dom.Element;
+import elemental.events.EventRemover;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -31,14 +35,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEditor<O>, HasPlaceholder, HasEnabled {
 
-    private ValueListFlexEditorDirection direction = ValueListFlexEditorDirection.COLUMN;
-
-    interface ValueListInlineEditorImplUiBinder extends UiBinder<HTMLPanel, ValueListFlexEditorImpl> {
-
-    }
-
     private static ValueListInlineEditorImplUiBinder ourUiBinder = GWT.create(ValueListInlineEditorImplUiBinder.class);
 
+    @UiField
+    FlowPanel container;
+
+    @UiField
+    Button addButton;
+
+    @UiField
+    Button moveUpButton;
+
+    @UiField
+    Button moveDownButton;
+
+    private ValueListFlexEditorDirection direction = ValueListFlexEditorDirection.COLUMN;
 
     private ValueEditorFactory<O> valueEditorFactory;
 
@@ -59,11 +70,9 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     // Don't prompt by default
     private DeleteConfirmationPrompt<O> deleteConfirmationPrompt = (value, callback) -> callback.deleteValue(true);
 
-    @UiField
-    HTMLPanel container;
+    private EventRemover focusInEventRemover = () -> {};
 
-    @UiField
-    Button addButton;
+    private EventRemover focusOutEventRemover = () -> {};
 
     public ValueListFlexEditorImpl(ValueEditorFactory<O> valueEditorFactory) {
         this.valueEditorFactory = valueEditorFactory;
@@ -72,16 +81,60 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         valueChangeHandler = event -> handleValueEditorValueChanged();
         dirtyChangedHandler = event -> handleValueEditorDirtyChanged(event);
         updateEnabled();
+        moveUpButton.addMouseDownHandler(mouseDownEvent -> {
+            mouseDownEvent.preventDefault();
+            handleMoveRowUp();
+        });
+        moveDownButton.addMouseDownHandler(mouseDownEvent -> {
+            mouseDownEvent.preventDefault();
+            handleMoveRowDown();
+        });
     }
-
 
     @UiHandler("addButton")
     public void addButtonClick(ClickEvent event) {
         ValueEditor<O> valueEditor = addValueEditor(true);
-        if(valueEditor instanceof HasRequestFocus) {
+        if (valueEditor instanceof HasRequestFocus) {
             Scheduler.get().scheduleDeferred(((HasRequestFocus) valueEditor)::requestFocus);
         }
         updateEnabled();
+    }
+
+    private Optional<ValueEditor<O>> getFocusedEditor() {
+        return currentEditors.stream()
+                      .filter(ElementalUtil::isWidgetOrDescendantWidgetActive)
+                      .findFirst();
+    }
+
+    private void handleMoveRowUp() {
+        getFocusedEditor().ifPresent(this::handleMoveRowUp);
+    }
+
+    private void handleMoveRowDown() {
+        getFocusedEditor().ifPresent(this::handleMoveRowDown);
+    }
+
+
+    private void handleMoveRowUp(ValueEditor<O> editor) {
+        int currentIndex = currentEditors.indexOf(editor);
+        if (currentIndex > 0) {
+            currentEditors.remove(currentIndex);
+            currentEditors.add(currentIndex - 1, editor);
+            ValueListFlexEditorContainer<O> editorContainer = (ValueListFlexEditorContainer<O>) container.getWidget(currentIndex - 1);
+            container.remove(editorContainer);
+            container.insert(editorContainer, currentIndex);
+        }
+    }
+
+    private void handleMoveRowDown(ValueEditor<O> editor) {
+        int currentIndex = currentEditors.indexOf(editor);
+        if (currentIndex > -1 && currentIndex < currentEditors.size() - 1) {
+            currentEditors.remove(currentIndex);
+            currentEditors.add(currentIndex + 1, editor);
+            ValueListFlexEditorContainer<O> editorContainer = (ValueListFlexEditorContainer<O>) container.getWidget(currentIndex + 1);
+            container.remove(editorContainer);
+            container.insert(editorContainer, currentIndex);
+        }
     }
 
     @Override
@@ -107,7 +160,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     @Override
     public void setNewRowMode(@Nonnull NewRowMode newRowMode) {
         this.newRowMode = checkNotNull(newRowMode);
-        if(newRowMode == NewRowMode.MANUAL) {
+        if (newRowMode == NewRowMode.MANUAL) {
             addButton.setVisible(true);
         }
         else {
@@ -116,15 +169,10 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     }
 
     @Override
-    public void setValue(List<O> object) {
-        clearInternal();
-        for(O value : object) {
-            ValueEditor<O> editor = addValueEditor(true);
-            editor.setValue(value);
-        }
-        ensureBlank();
-        updateEnabled();
-        dirty = false;
+    public void setReorderEnabled(boolean enabled) {
+        moveUpButton.setVisible(enabled);
+        moveDownButton.setVisible(enabled);
+        updateReorderButtonStates();
     }
 
     private void clearInternal() {
@@ -143,20 +191,31 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     @Override
     public Optional<List<O>> getValue() {
         List<O> editedValues = new ArrayList<O>();
-        for(ValueEditor<O> editor : currentEditors) {
+        for (ValueEditor<O> editor : currentEditors) {
             Optional<O> value = editor.getValue();
-            if(value.isPresent() && editor.isWellFormed()) {
+            if (value.isPresent() && editor.isWellFormed()) {
                 editedValues.add(value.get());
             }
         }
         return Optional.of(editedValues);
     }
 
+    @Override
+    public void setValue(List<O> object) {
+        clearInternal();
+        for (O value : object) {
+            ValueEditor<O> editor = addValueEditor(true);
+            editor.setValue(value);
+        }
+        ensureBlank();
+        updateEnabled();
+        dirty = false;
+    }
 
     @Override
     public boolean isWellFormed() {
-        for(ValueEditor<O> editor : currentEditors) {
-            if(!editor.isWellFormed()) {
+        for (ValueEditor<O> editor : currentEditors) {
+            if (!editor.isWellFormed()) {
                 return false;
             }
         }
@@ -165,8 +224,8 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     @Override
     public boolean isDirty() {
-        for(ValueEditor<O> editor : currentEditors) {
-            if(editor.isDirty()) {
+        for (ValueEditor<O> editor : currentEditors) {
+            if (editor.isDirty()) {
                 return true;
             }
         }
@@ -185,7 +244,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     }
 
     private void updateEnabled() {
-        for(int i = 0; i < container.getWidgetCount(); i++) {
+        for (int i = 0; i < container.getWidgetCount(); i++) {
             ValueListFlexEditorContainer editorContainer = (ValueListFlexEditorContainer) container.getWidget(i);
             editorContainer.setEnabled(enabled);
 
@@ -209,7 +268,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     private void ensureBlank() {
         if (isEnabled()) {
-            if(currentEditors.isEmpty()
+            if (currentEditors.isEmpty()
                     || (newRowMode == NewRowMode.AUTOMATIC && currentEditors.get(currentEditors.size() - 1).getValue().isPresent())) {
                 addValueEditor(false);
             }
@@ -231,10 +290,10 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         editorContainer.setDeleteButtonClickedHandler(event -> handleDelete(editor));
 
 
-        if(editor instanceof HasEnabled) {
+        if (editor instanceof HasEnabled) {
             ((HasEnabled) editor).setEnabled(enabled);
         }
-        if(editor instanceof HasPlaceholder) {
+        if (editor instanceof HasPlaceholder) {
             ((HasPlaceholder) editor).setPlaceholder(placeholder);
         }
         return editor;
@@ -243,7 +302,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     public void setDirection(ValueListFlexEditorDirection direction) {
         this.direction = direction;
         Style style = getElement().getStyle();
-        if(direction == ValueListFlexEditorDirection.COLUMN) {
+        if (direction == ValueListFlexEditorDirection.COLUMN) {
             style.setProperty("flexDirection", "column");
             style.clearProperty("flexFlow");
             style.clearMargin();
@@ -253,7 +312,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
             style.setProperty("flexFlow", "wrap");
             style.setMargin(-5, Style.Unit.PX);
         }
-        for(int i = 0; i < container.getWidgetCount(); i++) {
+        for (int i = 0; i < container.getWidgetCount(); i++) {
             ValueListFlexEditorContainer<O> editorContainer = (ValueListFlexEditorContainer<O>) container.getWidget(i);
             editorContainer.setDirection(direction);
         }
@@ -261,7 +320,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     private void handleDelete(ValueEditor<O> editor) {
         Optional<O> value = editor.getValue();
-        if(!value.isPresent()) {
+        if (!value.isPresent()) {
             return;
         }
         deleteConfirmationPrompt.shouldDeleteValue(value.get(), delete -> {
@@ -275,9 +334,9 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
                 if (!after.equals(before)) {
                     ValueChangeEvent.fire(this, after);
                 }
-                if(remIndex != -1) {
+                if (remIndex != -1) {
                     int nextIndex = Math.min(remIndex, container.getWidgetCount() - 1);
-                    if(nextIndex != -1) {
+                    if (nextIndex != -1) {
                         ValueListFlexEditorContainer<O> editorContainer = (ValueListFlexEditorContainer<O>) container.getWidget(nextIndex);
                         editorContainer.deleteButton.setFocus(true);
                     }
@@ -288,7 +347,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     private int removeEditor(ValueEditor<O> editor) {
         int index = currentEditors.indexOf(editor);
-        if(index == -1) {
+        if (index == -1) {
             return index;
         }
         currentEditors.remove(editor);
@@ -300,7 +359,6 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         return valueEditorFactory.createEditor();
     }
 
-
     private void handleValueEditorValueChanged() {
         dirty = true;
         ValueChangeEvent.fire(this, getValue());
@@ -310,5 +368,35 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     private void handleValueEditorDirtyChanged(DirtyChangedEvent event) {
         this.fireEvent(event);
         ensureBlank();
+    }
+
+    private void updateReorderButtonStates() {
+        boolean enable = getValue().map(v -> v.size() > 1).orElse(false) && ElementalUtil.isWidgetOrDescendantWidgetActive(this);
+        moveUpButton.setEnabled(enable);
+        moveDownButton.setEnabled(enable);
+    }
+
+    interface ValueListInlineEditorImplUiBinder extends UiBinder<HTMLPanel, ValueListFlexEditorImpl> {
+
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        Element element = (Element) getElement();
+        focusInEventRemover = element.addEventListener(BrowserEvents.FOCUSIN, evt -> {
+            updateReorderButtonStates();
+        });
+        focusOutEventRemover = element.addEventListener(BrowserEvents.FOCUSOUT, evt -> {
+            updateReorderButtonStates();
+        });
+        updateReorderButtonStates();
+    }
+
+    @Override
+    protected void onDetach() {
+        focusInEventRemover.remove();
+        focusOutEventRemover.remove();
+        super.onDetach();
     }
 }

@@ -2,6 +2,8 @@
 
 @url plusIconUrl svgPlusIcon;
 @url crossIconUrl svgCrossIcon;
+@url upArrowIconUrl upArrowIcon;
+@url downArrowIconUrl downArrowIcon;
 
 .wp-btn {
     border: none;
@@ -209,4 +211,53 @@
 
 .wp-topbar__btn:hover {
     color: #101010;
+}
+
+.wp-btn-up {
+    background-color: #aaaaaa;
+    background-image: upArrowIconUrl;
+    background-repeat: no-repeat;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.wp-btn-up:hover {
+    background-color: #0300d8;
+}
+
+.wp-btn-up:disabled {
+    background-color: #a0a0a0;
+    opacity: 0.3;
+}
+
+
+.wp-btn-down {
+    background-color: #aaaaaa;
+    background-image: downArrowIconUrl;
+    background-repeat: no-repeat;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.wp-btn-down:hover {
+    background-color: #0300d8;
+}
+
+.wp-btn-down:disabled {
+    background-color: #a0a0a0;
+    opacity: 0.3;
 }

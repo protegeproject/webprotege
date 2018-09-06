@@ -98,6 +98,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource gotoIcon();
 
+    @Source("up-arrow.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource upArrowIcon();
+
+    @Source("down-arrow.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource downArrowIcon();
+
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();
@@ -448,6 +456,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-add-tab")
         String addTabButton();
+
+        @ClassName("wp-btn-up")
+        String upButton();
+
+        @ClassName("wp-btn-down")
+        String downButton();
     }
 
     interface SettingsPageCss extends CssResource {

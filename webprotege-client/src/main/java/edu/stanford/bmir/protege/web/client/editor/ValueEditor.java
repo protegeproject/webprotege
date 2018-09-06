@@ -30,5 +30,4 @@ public interface ValueEditor<O> extends HasDirty, HasValueChangeHandlers<Optiona
             return java.util.Optional.empty();
         }
     }
-
 }
