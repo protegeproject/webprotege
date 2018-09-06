@@ -11,11 +11,12 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ApplicationPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.CompositeRequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInValidator;
+import edu.stanford.bmir.protege.web.shared.lang.DefaultDisplayNameSettingsFactory;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
-import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
-import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
-import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.*;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
@@ -49,14 +51,14 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
     private final UserInSessionFactory userInSessionFactory;
 
     @Inject
-    public CreateNewProjectActionHandler(ProjectManager pm,
-                                         ProjectDetailsManager projectDetailsManager,
-                                         AccessManager accessManager,
+    public CreateNewProjectActionHandler(@Nonnull ProjectManager pm,
+                                         @Nonnull ProjectDetailsManager projectDetailsManager,
+                                         @Nonnull AccessManager accessManager,
                                          @Nonnull UserInSessionFactory userInSessionFactory) {
-        this.pm = pm;
-        this.projectDetailsManager = projectDetailsManager;
-        this.accessManager = accessManager;
-        this.userInSessionFactory = userInSessionFactory;
+        this.pm = checkNotNull(pm);
+        this.projectDetailsManager = checkNotNull(projectDetailsManager);
+        this.accessManager = checkNotNull(accessManager);
+        this.userInSessionFactory = checkNotNull(userInSessionFactory);
     }
 
     @Nonnull
@@ -82,13 +84,13 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
     public CreateNewProjectResult execute(@Nonnull CreateNewProjectAction action, @Nonnull ExecutionContext executionContext) {
         try {
             UserId userId = executionContext.getUserId();
-            if(!accessManager.hasPermission(forUser(userId), ApplicationResource.get(), CREATE_EMPTY_PROJECT)) {
+            if (!accessManager.hasPermission(forUser(userId), ApplicationResource.get(), CREATE_EMPTY_PROJECT)) {
                 throw new PermissionDeniedException("You do not have permission to create new projects",
                                                     userInSessionFactory.getUserInSession(userId));
             }
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
-            if(newProjectSettings.hasSourceDocument()) {
-                if(!accessManager.hasPermission(forUser(userId), ApplicationResource.get(), UPLOAD_PROJECT)) {
+            if (newProjectSettings.hasSourceDocument()) {
+                if (!accessManager.hasPermission(forUser(userId), ApplicationResource.get(), UPLOAD_PROJECT)) {
                     throw new PermissionDeniedException("You do not have permission to upload projects",
                                                         userInSessionFactory.getUserInSession(userId));
                 }

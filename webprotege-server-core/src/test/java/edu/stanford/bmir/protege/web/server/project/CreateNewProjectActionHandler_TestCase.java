@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.Resource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
@@ -12,11 +13,15 @@ import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManage
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
+import edu.stanford.bmir.protege.web.shared.lang.DefaultDisplayNameSettingsFactory;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +53,6 @@ public class CreateNewProjectActionHandler_TestCase {
     @Mock
     private ProjectSharingSettingsManager projectSharingSettingsManager;
 
-    @Mock
     private NewProjectSettings newProjectSettings;
 
     @Mock
@@ -75,14 +79,28 @@ public class CreateNewProjectActionHandler_TestCase {
     @Mock
     private UserInSession userInSession;
 
+    private DefaultDisplayNameSettingsFactory displayNameSettingsFactory;
+
+    private String langTag = "en-GB";
+
     @Before
     public void setUp() throws Exception {
-        handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, accessManager, userInSessionFactory);
-        when(projectManager.createNewProject(newProjectSettings)).thenReturn(projectId);
+        displayNameSettingsFactory = new DefaultDisplayNameSettingsFactory();
+        newProjectSettings = NewProjectSettings.get(UserId.getUserId("The Owner"),
+                                                    "The display name",
+                                                    langTag,
+                                                    "The Project Description");
+        handler = new CreateNewProjectActionHandler(projectManager,
+                                                    projectDetailsManager,
+                                                    accessManager,
+                                                    userInSessionFactory);
+        when(projectManager.createNewProject(this.newProjectSettings)).thenReturn(projectId);
         when(executionContext.getUserId()).thenReturn(userId);
         when(userId.getUserName()).thenReturn("User_Name");
         when(userInSessionFactory.getUserInSession(any())).thenReturn(userInSession);
         when(projectDetailsManager.getProjectDetails(projectId)).thenReturn(projectDetails);
+        when(projectDetails.withDefaultLanguage(any())).thenReturn(projectDetails);
+        when(projectDetails.withDefaultDisplayNameSettings(any())).thenReturn(projectDetails);
         when(requestContext.getUserId()).thenReturn(userId);
         setPermission(true);
 
@@ -127,7 +145,6 @@ public class CreateNewProjectActionHandler_TestCase {
         setPermission(false);
         executeCreateNewProject();
     }
-
 
 
     @Test

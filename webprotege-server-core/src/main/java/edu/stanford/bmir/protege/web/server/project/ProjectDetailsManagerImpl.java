@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
+import edu.stanford.bmir.protege.web.shared.lang.DefaultDisplayNameSettingsFactory;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -17,15 +14,13 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSett
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;
-import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,19 +36,27 @@ import static java.util.stream.Collectors.toList;
  */
 public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
+    @Nonnull
     private final ProjectDetailsRepository repository;
 
+    @Nonnull
     private final SlackWebhookRepository slackWebhookRepository;
 
+    @Nonnull
     private final WebhookRepository webhookRepository;
 
+    @Nonnull
+    private final DefaultDisplayNameSettingsFactory displayNameSettingsFactory;
+
     @Inject
-    public ProjectDetailsManagerImpl(ProjectDetailsRepository repository,
-                                     SlackWebhookRepository slackWebhookRepository,
-                                     WebhookRepository webhookRepository) {
+    public ProjectDetailsManagerImpl(@Nonnull ProjectDetailsRepository repository,
+                                     @Nonnull SlackWebhookRepository slackWebhookRepository,
+                                     @Nonnull WebhookRepository webhookRepository,
+                                     @Nonnull DefaultDisplayNameSettingsFactory displayNameSettingsFactory) {
         this.repository = checkNotNull(repository);
         this.webhookRepository = checkNotNull(webhookRepository);
         this.slackWebhookRepository = checkNotNull(slackWebhookRepository);
+        this.displayNameSettingsFactory = checkNotNull(displayNameSettingsFactory);
     }
 
     @Override
@@ -65,8 +68,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                 settings.getProjectDescription(),
                 settings.getProjectOwner(),
                 false,
-                DictionaryLanguage.rdfsLabel(""),
-                DisplayNameSettings.empty(),
+                DictionaryLanguage.rdfsLabel(settings.getLangTag()),
+                displayNameSettingsFactory.getDefaultDisplayNameSettings(settings.getLangTag()),
                 now,
                 settings.getProjectOwner(),
                 now,
