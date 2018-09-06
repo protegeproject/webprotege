@@ -26,17 +26,12 @@ public class DisplayNameSettingsPresenter {
     private final DisplayNameSettingsView view;
 
     @Nonnull
-    private final AnnotationPropertyIriRenderer annotationPropertyIriRenderer;
-
-    @Nonnull
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
     @Inject
     public DisplayNameSettingsPresenter(@Nonnull DisplayNameSettingsView view,
-                                        @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
                                         @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
         this.view = checkNotNull(view);
-        this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
     }
 
