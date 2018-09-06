@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.shortform;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -23,6 +24,7 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class DictionaryLanguageData {
 
     private static final String PROPERTY_IRI = "propertyIri";
@@ -34,8 +36,15 @@ public abstract class DictionaryLanguageData {
     @Nonnull
     public static DictionaryLanguageData get(@Nullable IRI propertyIri,
                                              @Nonnull String browserText,
-                                             @Nonnull String lang) {
-        return new AutoValue_DictionaryLanguageData(propertyIri, browserText, lang);
+                                             @Nullable String lang) {
+        String normalisedLang;
+        if(lang == null) {
+            normalisedLang = "";
+        }
+        else {
+            normalisedLang = lang.toLowerCase();
+        }
+        return new AutoValue_DictionaryLanguageData(propertyIri, browserText, normalisedLang);
     }
 
     @JsonCreator
