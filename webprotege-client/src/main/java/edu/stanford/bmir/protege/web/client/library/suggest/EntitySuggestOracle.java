@@ -76,9 +76,8 @@ public class EntitySuggestOracle extends SuggestOracle {
             public void handleSuccess(LookupEntitiesResult result) {
                 List<EntitySuggestion> suggestions = new ArrayList<>();
                 for (final EntityLookupResult entity : result.getEntityLookupResults()) {
-                    if (entity.getLanguage().isAnnotationBased()) {
-                        renderer.setPrimaryDisplayLanguage(entity.getLanguage());
-                    }
+                    GWT.log("EntitySuggestOracle] " + entity);
+                    renderer.setPrimaryDisplayLanguage(entity.getLanguage());
                     renderer.setHighlight(entity.getMatchResult().getStart(),
                                           entity.getMatchResult().getEnd());
                     suggestions.add(new EntitySuggestion(entity.getOWLEntityData(),
