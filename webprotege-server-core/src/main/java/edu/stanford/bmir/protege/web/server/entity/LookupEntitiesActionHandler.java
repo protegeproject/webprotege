@@ -116,7 +116,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
                                     int first = 0;
                                     int start = matchPositions.get(first);
                                     int length = searchStrings.get(first).getSearchString().length();
-                                    EntityNameMatchResult result = new EntityNameMatchResult(
+                                    EntityNameMatchResult result = EntityNameMatchResult.get(
                                             start,
                                             start + length,
                                             // We sort things here now, so just make everything a substring match
@@ -135,7 +135,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     }
 
     private EntityLookupResult toEntityLookupResult(OWLEntityDataMatch match) {
-        return new EntityLookupResult(match.getDictionaryLanguage(),
+        return EntityLookupResult.get(match.getDictionaryLanguage(),
                                       entityNodeRenderer.render(match.getEntityData().getEntity()),
                                       match.getMatchResult(),
                                       placeUrl.getEntityUrl(projectId, match.getEntityData().getEntity()));

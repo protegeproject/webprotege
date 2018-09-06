@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -13,55 +15,40 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2012
  */
-@SuppressWarnings("GwtInconsistentSerializableClass")
-public class EntityLookupResult implements Serializable, Comparable<EntityLookupResult> {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class EntityLookupResult implements Comparable<EntityLookupResult> {
 
-    private DictionaryLanguage language;
-
-    private EntityNode entityNode;
-    
-    private EntityNameMatchResult matchResult;
-
-    private String directLink;
-
-    @GwtSerializationConstructor
-    private EntityLookupResult() {
-    }
-
-    public EntityLookupResult(DictionaryLanguage language, EntityNode entityNode, EntityNameMatchResult matchResult, String directLink) {
-        this.language = language;
-        this.entityNode = entityNode;
-        this.matchResult = matchResult;
-        this.directLink = directLink;
-    }
-
-    public DictionaryLanguage getLanguage() {
-        return language;
-    }
-
-    public OWLEntityData getOWLEntityData() {
-        return entityNode.getEntityData();
-    }
-
-
-    public EntityNameMatchResult getMatchResult() {
-        return matchResult;
-    }
-
-    public String getDirectLink() {
-        return directLink;
+    public static EntityLookupResult get(@Nonnull DictionaryLanguage language,
+                                         @Nonnull EntityNode entityNode,
+                                         @Nonnull EntityNameMatchResult matchResult,
+                                         @Nonnull String directLink) {
+        return new AutoValue_EntityLookupResult(language, entityNode, matchResult, directLink);
     }
 
     @Nonnull
-    public EntityNode getEntityNode() {
-        return entityNode;
+    public abstract DictionaryLanguage getLanguage();
+
+    @Nonnull
+    public abstract EntityNode getEntityNode();
+
+    @Nonnull
+    public OWLEntityData getOWLEntityData() {
+        return getEntityNode().getEntityData();
     }
 
+    @Nonnull
+    public abstract EntityNameMatchResult getMatchResult();
+
+    @Nonnull
+    public abstract String getDirectLink();
+
     public String getDisplayText() {
+        EntityNameMatchResult matchResult = getMatchResult();
         int browserTextMatchStart = matchResult.getStart();
         int browserTextMatchEnd = matchResult.getEnd();
         StringBuilder sb = new StringBuilder();
-        String browserText = entityNode.getBrowserText();
+        String browserText = getEntityNode().getBrowserText();
         if (browserTextMatchStart < browserText.length() && browserTextMatchEnd <= browserText.length()) {
             sb.append("<div>");
             sb.append(browserText.substring(0, browserTextMatchStart));
@@ -78,7 +65,7 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
     }
 
     @Override
-    public int compareTo(EntityLookupResult other) {
-        return this.matchResult.compareTo(other.matchResult);
+    public int compareTo(@Nonnull EntityLookupResult other) {
+        return this.getMatchResult().compareTo(other.getMatchResult());
     }
 }

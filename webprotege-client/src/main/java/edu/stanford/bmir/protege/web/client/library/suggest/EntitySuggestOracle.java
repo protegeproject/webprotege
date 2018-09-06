@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.library.suggest;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -75,7 +76,9 @@ public class EntitySuggestOracle extends SuggestOracle {
             public void handleSuccess(LookupEntitiesResult result) {
                 List<EntitySuggestion> suggestions = new ArrayList<>();
                 for (final EntityLookupResult entity : result.getEntityLookupResults()) {
-                    renderer.setPrimaryDisplayLanguage(entity.getLanguage());
+                    if (entity.getLanguage().isAnnotationBased()) {
+                        renderer.setPrimaryDisplayLanguage(entity.getLanguage());
+                    }
                     renderer.setHighlight(entity.getMatchResult().getStart(),
                                           entity.getMatchResult().getEnd());
                     suggestions.add(new EntitySuggestion(entity.getOWLEntityData(),

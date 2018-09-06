@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
+
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -12,87 +16,39 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/11/2013
  */
-public class EntityNameMatchResult implements Serializable, Comparable<EntityNameMatchResult> {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class EntityNameMatchResult implements Comparable<EntityNameMatchResult> {
 
-    private int start;
-
-    private int end;
-
-    private EntityNameMatchType matchType;
-
-    private PrefixNameMatchType prefixNameMatchType;
-
-    @SuppressWarnings("unused")
-    private EntityNameMatchResult() {
-    }
-
-    public EntityNameMatchResult(int start, int end, EntityNameMatchType matchType, PrefixNameMatchType prefixNameMatchType) {
+    public static EntityNameMatchResult get(int start, int end, EntityNameMatchType matchType, PrefixNameMatchType prefixNameMatchType) {
         checkArgument(start > -1);
         checkArgument(end > -1);
         checkArgument(start <= end);
-        this.start = start;
-        this.end = end;
-        this.matchType = checkNotNull(matchType);
-        this.prefixNameMatchType = checkNotNull(prefixNameMatchType);
+        return new AutoValue_EntityNameMatchResult(start, end, matchType, prefixNameMatchType);
     }
 
-    public int getStart() {
-        return start;
-    }
+    public abstract int getStart();
 
-    public int getEnd() {
-        return end;
-    }
+    public abstract int getEnd();
 
-    public EntityNameMatchType getMatchType() {
-        return matchType;
-    }
+    public abstract EntityNameMatchType getMatchType();
 
-    public PrefixNameMatchType getPrefixNameMatchType() {
-        return prefixNameMatchType;
-    }
+    public abstract PrefixNameMatchType getPrefixNameMatchType();
 
     @Override
-    public int hashCode() {
-        return "EntityNameMatchResult".hashCode() + start + 13 * end + matchType.hashCode() + prefixNameMatchType.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(o == this) {
-            return true;
-        }
-        if(!(o instanceof EntityNameMatchResult)) {
-            return false;
-        }
-        EntityNameMatchResult other = (EntityNameMatchResult) o;
-        return this.start == other.start && this.end == other.end && this.matchType == other.matchType && this.prefixNameMatchType == other.prefixNameMatchType;
-    }
-
-    @Override
-    public int compareTo(EntityNameMatchResult entityNameMatchResult) {
-        final int typeDiff = this.matchType.compareTo(entityNameMatchResult.matchType);
+    public int compareTo(@Nonnull EntityNameMatchResult entityNameMatchResult) {
+        final int typeDiff = this.getMatchType().compareTo(entityNameMatchResult.getMatchType());
         if(typeDiff != 0) {
             return typeDiff;
         }
-        final int prefixNameMatchTypeDiff = this.prefixNameMatchType.compareTo(entityNameMatchResult.prefixNameMatchType);
+        final int prefixNameMatchTypeDiff = this.getPrefixNameMatchType().compareTo(entityNameMatchResult.getPrefixNameMatchType());
         if(prefixNameMatchTypeDiff != 0) {
             return prefixNameMatchTypeDiff;
         }
-        final int startDiff = this.start - entityNameMatchResult.start;
+        final int startDiff = this.getStart() - entityNameMatchResult.getStart();
         if(startDiff != 0) {
             return startDiff;
         }
-        return this.end - entityNameMatchResult.end;
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("EntityNameMatchResult")
-                          .add("start", start)
-                          .add("end", end)
-                          .add("matchType", matchType)
-                          .add("prefixNameMatchType", prefixNameMatchType).toString();
+        return this.getEnd() - entityNameMatchResult.getEnd();
     }
 }

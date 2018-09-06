@@ -19,6 +19,9 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
+import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchType;
+import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
@@ -73,6 +76,12 @@ public class RpcWhiteList implements Action, Result {
     DisplayNameSettings displayNameSettings;
 
     DictionaryLanguageUsage dictionaryLanguageUsage;
+
+    EntityNameMatchType entityNameMatchType;
+
+    PrefixNameMatchType prefixNameMatchType;
+
+    EntityNameMatchResult entityNameMatchResult;
 
     public RpcWhiteList() {
     }
@@ -235,5 +244,29 @@ public class RpcWhiteList implements Action, Result {
 
     public void setDictionaryLanguageUsage(DictionaryLanguageUsage dictionaryLanguageUsage) {
         this.dictionaryLanguageUsage = dictionaryLanguageUsage;
+    }
+
+    public EntityNameMatchType getEntityNameMatchType() {
+        return entityNameMatchType;
+    }
+
+    public PrefixNameMatchType getPrefixNameMatchType() {
+        return prefixNameMatchType;
+    }
+
+    public void setEntityNameMatchType(EntityNameMatchType entityNameMatchType) {
+        this.entityNameMatchType = entityNameMatchType;
+    }
+
+    public void setPrefixNameMatchType(PrefixNameMatchType prefixNameMatchType) {
+        this.prefixNameMatchType = prefixNameMatchType;
+    }
+
+    public EntityNameMatchResult getEntityNameMatchResult() {
+        return entityNameMatchResult;
+    }
+
+    public void setEntityNameMatchResult(EntityNameMatchResult entityNameMatchResult) {
+        this.entityNameMatchResult = entityNameMatchResult;
     }
 }

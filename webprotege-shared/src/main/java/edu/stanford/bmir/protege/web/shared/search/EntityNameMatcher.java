@@ -98,7 +98,7 @@ public class EntityNameMatcher {
         final EntityNameMatchType matchType = matchIndexHelper.getBestMatchType();
         if (matchType != EntityNameMatchType.NONE) {
             int matchIndex = matchIndexHelper.getBestMatchIndex();
-            return java.util.Optional.of(new EntityNameMatchResult(matchIndex, matchIndex + searchString.length(), matchType, matchIndexHelper.getBestMatchPrefixNameMatchType()));
+            return java.util.Optional.of(EntityNameMatchResult.get(matchIndex, matchIndex + searchString.length(), matchType, matchIndexHelper.getBestMatchPrefixNameMatchType()));
         }
         else {
             return java.util.Optional.empty();
@@ -106,7 +106,7 @@ public class EntityNameMatcher {
     }
 
     private EntityNameMatchResult createExactMatchResultForQuotedString(String text) {
-        return new EntityNameMatchResult(1, text.length() - 1, EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
+        return EntityNameMatchResult.get(1, text.length() - 1, EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
     }
 
     private PrefixNameMatchType getPrefixNameMatchTypeForExactMatch(String text) {
@@ -114,7 +114,7 @@ public class EntityNameMatcher {
     }
 
     private EntityNameMatchResult createExactMatchResultForString(String text) {
-        return new EntityNameMatchResult(0, text.length(), EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
+        return EntityNameMatchResult.get(0, text.length(), EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
     }
 
     private static int indexOfIgnoreCase(String searchFor, String in, int start) {
