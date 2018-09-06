@@ -112,6 +112,7 @@ public abstract class DictionaryLanguageData {
                                          getLanguageTag());
     }
 
+    @JsonIgnore
     public boolean isAnnotationBased() {
         return getAnnotationPropertyIri() != null;
     }
