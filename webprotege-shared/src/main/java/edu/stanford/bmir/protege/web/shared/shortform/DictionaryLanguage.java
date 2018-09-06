@@ -48,13 +48,13 @@ public abstract class DictionaryLanguage {
      * Creates a {@link DictionaryLanguage} that is for the specified annotation property and lang
      *
      * @param annotationPropertyIri The annotation property
-     * @param lang                  The language.  May be empty.
+     * @param lang                  The language.  May be empty.  This will be normalised to a lower case string
      */
     @JsonCreator
     @Nonnull
     public static DictionaryLanguage create(@Nullable @JsonProperty(PROPERTY_IRI) IRI annotationPropertyIri,
                                             @Nonnull @JsonProperty(LANG) String lang) {
-        return new AutoValue_DictionaryLanguage(annotationPropertyIri, lang);
+        return new AutoValue_DictionaryLanguage(annotationPropertyIri, lang.toLowerCase());
     }
 
     @Nonnull
