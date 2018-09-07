@@ -23,7 +23,8 @@
                      addStyleNames="{wp.style.formLabel}"/>
             <editor:ValueListFlexEditorImpl enabled="true" newRowMode="MANUAL"
                                             ui:field="primaryDisplayNameLanguages"
-                                            addStyleNames="{style.langList}"/>
+                                            addStyleNames="{style.langList}"
+                                            reorderEnabled="true"/>
             <g:Label text="{msg.displayName_settings_local_primary_helpText}"
                      addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
 
@@ -34,7 +35,8 @@
             <editor:ValueListFlexEditorImpl enabled="true"
                                             newRowMode="MANUAL"
                                             ui:field="secondaryDisplayNameLanguages"
-                                            addStyleNames="{style.langList}"/>
+                                            addStyleNames="{style.langList}"
+                                            reorderEnabled="true"/>
             <g:Label text="{msg.displayName_settings_local_secondary_helpText}"
                      addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
 
