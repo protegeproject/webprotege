@@ -4,6 +4,8 @@ package edu.stanford.bmir.protege.web.client;
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 
+import java.util.Optional;
+
 import static com.google.gwt.i18n.client.LocalizableResource.*;
 
 @DefaultLocale()
@@ -1184,6 +1186,13 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("displayName.settings.local.secondary.helpText")
     String displayName_settings_local_secondary_helpText();
 
+
+    @DefaultMessage("<em>Note: The current display name settings are not configured to display the language tag <strong>{0}</strong></em><br>" +
+            "<br>" +
+            "You may continue and change the display name settings afterwards.  To edit the local display name settings please use the Display menu. " +
+            "To edit the global display name settings please see the Project Settings page.")
+    SafeHtml displayName_noDisplayNameForLangTag(String langTag);
+
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("displayName.no_display_name.helpText")
     String displayName_noDisplayName_helpText(String typeName, String defDisplayName);
@@ -1195,4 +1204,5 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Move down")
     @Key("list.moveDown")
     String list_moveDown();
+
 }

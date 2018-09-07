@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
+import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
@@ -44,4 +45,13 @@ public abstract class DisplayNameSettings {
     @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES)
     @Nonnull
     public abstract ImmutableList<DictionaryLanguageData> getSecondaryDisplayNameLanguages();
+
+    public boolean hasDisplayNameLanguageForLangTag(@Nonnull String langTag) {
+        Stream<DictionaryLanguageData> languages = Streams.concat(
+                getPrimaryDisplayNameLanguages().stream(),
+                getSecondaryDisplayNameLanguages().stream()
+        );
+        return languages.anyMatch(l -> langTag.equalsIgnoreCase(l.getLanguageTag()));
+
+    }
 }

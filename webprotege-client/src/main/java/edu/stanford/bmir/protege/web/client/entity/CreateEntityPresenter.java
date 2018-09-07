@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.common.collect.ImmutableCollection;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntityResult;
@@ -40,17 +41,22 @@ public class CreateEntityPresenter {
     @Nonnull
     private final ActiveProjectManager activeProjectManager;
 
+    @Nonnull
+    private final DisplayNameSettingsManager displayNameSettingsManager;
+
     private Optional<String> currentLangTag = Optional.empty();
 
     @Inject
     public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
                                  @Nonnull ProjectId projectId,
                                  @Nonnull CreateEntitiesDialogController dialogController,
-                                 @Nonnull ActiveProjectManager activeProjectManager) {
+                                 @Nonnull ActiveProjectManager activeProjectManager,
+                                 @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
         this.dialogController = checkNotNull(dialogController);
         this.activeProjectManager = checkNotNull(activeProjectManager);
+        this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
@@ -62,6 +68,7 @@ public class CreateEntityPresenter {
             handleCreateEntities(createEntityInfo, actionFactory, entitiesCreatedHandler);
         });
         dialogController.setResetLangTagHandler(this::resetLangTag);
+        dialogController.setLangTagChangedHandler(this::handleLangTagChanged);
         displayCurrentLangTagOrProjectDefaultLangTag();
         WebProtegeDialog.showDialog(dialogController);
     }
@@ -69,6 +76,21 @@ public class CreateEntityPresenter {
     private void resetLangTag() {
         currentLangTag = Optional.empty();
         displayCurrentLangTagOrProjectDefaultLangTag();
+    }
+
+    private void handleLangTagChanged() {
+        String langTag = dialogController.getLangTag();
+        dialogController.setNoDisplayLanguageForLangTagVisible(false);
+        if(displayNameSettingsManager.getLocalDisplayNameSettings().hasDisplayNameLanguageForLangTag(langTag)) {
+            return;
+        }
+        activeProjectManager.getActiveProjectDetails(details -> {
+            details.ifPresent(d -> {
+                if(!d.getDefaultDisplayNameSettings().hasDisplayNameLanguageForLangTag(langTag)) {
+                    dialogController.setNoDisplayLanguageForLangTagVisible(true);
+                }
+            });
+        });
     }
 
     private void displayCurrentLangTagOrProjectDefaultLangTag() {
@@ -79,6 +101,7 @@ public class CreateEntityPresenter {
                     String defaultLangTag = d.getDefaultDictionaryLanguage().getLang();
                     currentLangTag = Optional.of(defaultLangTag);
                     dialogController.setLangTag(defaultLangTag);
+                    handleLangTagChanged();
                 }
             });
         });

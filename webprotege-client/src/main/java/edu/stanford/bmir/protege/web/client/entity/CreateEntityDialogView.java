@@ -15,6 +15,10 @@ public interface CreateEntityDialogView extends IsWidget, HasInitialFocusable {
         void handleResetLangTag();
     }
 
+    interface LangTagChangedHandler {
+        void handleLangTagChanged();
+    }
+
     void setEntityType(@Nonnull EntityType<?> entityType);
 
     @Nonnull
@@ -29,4 +33,7 @@ public interface CreateEntityDialogView extends IsWidget, HasInitialFocusable {
 
     void setResetLangTagHandler(@Nonnull ResetLangTagHandler handler);
 
+    void setLangTagChangedHandler(@Nonnull LangTagChangedHandler handler);
+
+    void setNoDisplayLanguageForLangTagVisible(boolean visible);
 }

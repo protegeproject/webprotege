@@ -5,10 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
@@ -44,13 +42,22 @@ public class CreateEntitiesDialogViewImpl extends Composite implements  CreateEn
     @UiField
     Button resetButton;
 
+    @UiField
+    HTML noDisplayLangTagWarningField;
+
+    @Nonnull
+    private final Messages messages;
+
     private ResetLangTagHandler resetLangTagHandler = () -> {};
 
+    private LangTagChangedHandler langTagChangedHandler = () -> {};
 
     @Inject
-    public CreateEntitiesDialogViewImpl(DefaultLanguageEditor languageEditor) {
+    public CreateEntitiesDialogViewImpl(DefaultLanguageEditor languageEditor, @Nonnull Messages messages) {
         this.langField = checkNotNull(languageEditor);
+        this.messages = checkNotNull(messages);
         initWidget(ourUiBinder.createAndBindUi(this));
+        langField.addValueChangeHandler(event -> langTagChangedHandler.handleLangTagChanged());
     }
 
     @Override
@@ -72,6 +79,20 @@ public class CreateEntitiesDialogViewImpl extends Composite implements  CreateEn
     @Override
     public void setResetLangTagHandler(@Nonnull ResetLangTagHandler handler) {
         this.resetLangTagHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setLangTagChangedHandler(@Nonnull LangTagChangedHandler handler) {
+        this.langTagChangedHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setNoDisplayLanguageForLangTagVisible(boolean visible) {
+        noDisplayLangTagWarningField.setVisible(visible);
+        if(visible) {
+            String langTag = langField.getValue().orElse("");
+            noDisplayLangTagWarningField.setHTML(messages.displayName_noDisplayNameForLangTag(langTag));
+        }
     }
 
     @Override

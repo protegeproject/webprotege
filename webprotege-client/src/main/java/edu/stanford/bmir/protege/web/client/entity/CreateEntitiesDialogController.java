@@ -53,6 +53,10 @@ public class CreateEntitiesDialogController extends WebProtegeDialogController<S
         view.setResetLangTagHandler(handler);
     }
 
+    public void setLangTagChangedHandler(@Nonnull CreateEntityDialogView.LangTagChangedHandler handler) {
+        view.setLangTagChangedHandler(handler);
+    }
+
     public void setEntityType(@Nonnull EntityType<?> entityType) {
         setTitle(messages.create() + " " + entityType.getPrintName());
         view.setEntityType(entityType);
@@ -81,6 +85,10 @@ public class CreateEntitiesDialogController extends WebProtegeDialogController<S
     @Override
     public String getData() {
         return view.getText();
+    }
+
+    public void setNoDisplayLanguageForLangTagVisible(boolean visible) {
+        view.setNoDisplayLanguageForLangTagVisible(visible);
     }
 
     public interface CreateEntityHandler {
