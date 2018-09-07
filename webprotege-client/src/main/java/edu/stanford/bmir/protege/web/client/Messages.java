@@ -1187,4 +1187,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("The {0} {1} does not have a primary display name under the current display name settings")
     @Key("displayName.no_display_name.helpText")
     String displayName_noDisplayName_helpText(String typeName, String defDisplayName);
+
+    @DefaultMessage("Move up")
+    @Key("list.moveUp")
+    String list_moveUp();
+
+    @DefaultMessage("Move down")
+    @Key("list.moveDown")
+    String list_moveDown();
 }
