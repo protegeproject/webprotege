@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -34,6 +35,9 @@ public class SearchString {
     }
 
     public static List<SearchString> parseMultiWordSearchString(@Nonnull String query) {
+        if(query.isEmpty()) {
+            return Collections.emptyList();
+        }
         return Stream.of(query.split("\\s+|_|:"))
                      .filter(s -> !s.isEmpty())
                      .map(SearchString::parseSearchString)

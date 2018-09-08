@@ -109,16 +109,20 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
         Counter counter = new Counter();
         PageRequest pageRequest = action.getPageRequest();
 
-        SearchString searchString = SearchString.parseSearchString(action.getFilterString());
         Optional<Page<OWLNamedIndividual>> page = stream.peek(i -> counter.increment())
                                                         .filter(i -> {
-                                                            if(searchString.length() == 0) {
+                                                            if(searchStrings.isEmpty()) {
                                                                 return true;
                                                             }
                                                             String shortForm = dictionaryManager.getShortForm(i);
                                                             Scanner scanner = new Scanner(shortForm, shortForm);
-                                                            int index = scanner.indexOf(searchString, 0);
-                                                            return index != -1;
+                                                            for(SearchString searchString : searchStrings) {
+                                                                int index = scanner.indexOf(searchString, 0);
+                                                                if(index == -1) {
+                                                                    return false;
+                                                                }
+                                                            }
+                                                            return true;
                                                         })
                                                         .distinct()
                                                         .map(i -> new IndividualRendering(i, renderingManager.getShortForm(i).toLowerCase()))
