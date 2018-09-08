@@ -37,6 +37,10 @@ public class DataFactory {
         return dataFactory.getOWLThing();
     }
 
+    public static OWLClassData getOWLThingData() {
+        return OWLClassData.get(getOWLThing(), "owl:Thing", ImmutableMap.of());
+    }
+
     public static IRI getIRI(String iri) {
         return IRI.create(iri);
     }

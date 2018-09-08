@@ -4,13 +4,18 @@
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
              xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
-             xmlns:list="urn:import:edu.stanford.bmir.protege.web.client.list">
+             xmlns:list="urn:import:edu.stanford.bmir.protege.web.client.list"
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
             display: flex;
             flex-direction: column;
             align-items: stretch;
+        }
+        .typeBox {
+
         }
         .searchBox {
             flex-grow: 0;
@@ -30,18 +35,42 @@
             flex-grow: 1;
             flex-shrink: 1;
             overflow: auto;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            margin: 1px;
         }
         .bottomBar {
             background-color: literal("var(--inlay-panel--background-color)");
         }
+        .typeGroup {
+            border-top: 1px solid #e0e0e0;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+        .listGroup {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 1;
+            flex-grow: 1;
+        }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
-        <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}" placeholder="{msg.enterSearchStringToFilterList}"/>
-        <list:ListBox ui:field="individualsList" addStyleNames="{style.individualsList}"/>
+        <div class="{wp.style.formGroup} {style.typeGroup}">
+            <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:PrimitiveDataEditor ui:field="typeField" classesAllowed="true" enabled="true"/>
+        </div>
+        <div class="{style.listGroup}">
+            <g:Label text="Individuals" addStyleNames="{wp.style.formLabel}"/>
+            <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}"
+                                     placeholder="{msg.enterSearchStringToFilterList}"/>
+            <list:ListBox ui:field="individualsList" addStyleNames="{style.individualsList}"/>
+        </div>
+
         <g:HTMLPanel addStyleNames="{style.bottomBar}">
-            <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
-            <pagination:PaginatorView ui:field="paginator"/>
-        </g:HTMLPanel>
+                <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
+                <pagination:PaginatorView ui:field="paginator"/>
+            </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>

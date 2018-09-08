@@ -2,8 +2,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         .listBox {
-            /*border: 1px solid cyan;*/
-            /*position: relative;*/
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;

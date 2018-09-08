@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 
@@ -21,6 +22,18 @@ import java.util.Optional;
  * Date: 12/09/2013
  */
 public interface IndividualsListView extends HasSelectionHandlers<List<EntityNode>>, HasBusy, IsWidget {
+
+
+    interface TypeChangedHandler {
+        void handleTypeChanged();
+    }
+
+    void setTypeChangedHandler(@Nonnull TypeChangedHandler handler);
+
+    void setCurrentType(@Nonnull OWLClassData cls);
+
+    @Nonnull
+    Optional<OWLClassData> getCurrentType();
 
     void setListData(List<EntityNode> individuals);
 

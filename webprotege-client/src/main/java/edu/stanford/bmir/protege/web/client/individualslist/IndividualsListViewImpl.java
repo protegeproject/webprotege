@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -13,10 +14,10 @@ import edu.stanford.bmir.protege.web.client.list.ListBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -60,17 +61,25 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     protected BusyView busyView;
 
+    @UiField(provided = true)
+    PrimitiveDataEditor typeField;
+
+    private TypeChangedHandler typeChangedHandler = () -> {};
+
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
     @Inject
     public IndividualsListViewImpl(@Nonnull PaginatorPresenter paginatorPresenter,
-                                   @Nonnull IndividualsListCellRenderer renderer) {
+                                   @Nonnull IndividualsListCellRenderer renderer,
+                                   @Nonnull PrimitiveDataEditor typeField) {
         this.paginatorPresenter = paginatorPresenter;
         paginator = paginatorPresenter.getView();
         this.renderer = checkNotNull(renderer);
+        this.typeField = checkNotNull(typeField);
         initWidget(ourUiBinder.createAndBindUi(this));
         individualsList.setRenderer(renderer);
         individualsList.setKeyExtractor(node -> (OWLNamedIndividual) node.getEntity());
+        typeField.addValueChangeHandler(this::handleTypeChanged);
     }
 
     @Override
@@ -82,6 +91,28 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiHandler("searchBox")
     protected void handleSearchStringChanged(KeyUpEvent event) {
         searchStringChangedHandler.handleSearchStringChanged();
+    }
+
+    private void handleTypeChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
+        typeChangedHandler.handleTypeChanged();
+    }
+
+    @Override
+    public void setTypeChangedHandler(@Nonnull TypeChangedHandler handler) {
+        this.typeChangedHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setCurrentType(@Nonnull OWLClassData cls) {
+        typeField.setValue(cls);
+    }
+
+    @Nonnull
+    @Override
+    public Optional<OWLClassData> getCurrentType() {
+        return typeField.getValue()
+                        .filter(type -> type instanceof OWLClassData)
+                        .map(type -> (OWLClassData) type);
     }
 
     @Override

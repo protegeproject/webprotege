@@ -127,6 +127,13 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                         DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> setDisplayLanguage(event.getDisplayLanguage()));
         entityNodeUpdater.start(eventBus, this);
+        view.setTypeChangedHandler(this::handleTypeChanged);
+        resetType();
+    }
+
+    private void resetType() {
+        view.setCurrentType(DataFactory.getOWLThingData());
+        updateList();
     }
 
     public void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
@@ -145,16 +152,16 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     }
 
     public void clearType() {
-        currentType = Optional.empty();
+//        currentType = Optional.empty();
     }
 
     public void setType(OWLClass type) {
-        if (currentType.equals(Optional.of(type))) {
-            return;
-        }
-        currentType = Optional.of(type);
-        view.setPageNumber(1);
-        updateList();
+//        if (currentType.equals(Optional.of(type))) {
+//            return;
+//        }
+//        currentType = Optional.of(type);
+//        view.setPageNumber(1);
+//        updateList();
     }
 
     private void updateList() {
@@ -203,6 +210,11 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         else {
             view.setStatusMessage(format(displayedIndividuals) + " of " + format(totalIndividuals) + suffix);
         }
+    }
+
+    private void handleTypeChanged() {
+        currentType = view.getCurrentType().map(ed -> ed.getEntity());
+        updateList();
     }
 
     private void handleCreateIndividuals() {
