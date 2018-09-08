@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -17,7 +20,7 @@ public class SearchString {
 
     private SearchString(@Nonnull String rawSearchString) {
         this.rawSearchString = rawSearchString;
-        if(rawSearchString.startsWith("*")) {
+        if (rawSearchString.startsWith("*")) {
             searchString = rawSearchString.substring(1).toLowerCase();
         }
         else {
@@ -28,6 +31,13 @@ public class SearchString {
     @Nonnull
     public static SearchString parseSearchString(@Nonnull String query) {
         return new SearchString(query);
+    }
+
+    public static List<SearchString> parseMultiWordSearchString(@Nonnull String query) {
+        return Stream.of(query.split("\\s+|_|:"))
+                     .filter(s -> !s.isEmpty())
+                     .map(SearchString::parseSearchString)
+                     .collect(toList());
     }
 
     public String getRawSearchString() {
@@ -43,7 +53,7 @@ public class SearchString {
     }
 
     public boolean isWildCard() {
-        return rawSearchString.charAt(0) == '*';
+        return rawSearchString.length() > 0 && rawSearchString.charAt(0) == '*';
     }
 
     public boolean matches(@Nonnull String string, int start) {

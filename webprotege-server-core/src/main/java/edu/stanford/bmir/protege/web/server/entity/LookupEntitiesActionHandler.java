@@ -96,10 +96,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     private List<EntityLookupResult> lookupEntities(final EntityLookupRequest entityLookupRequest) {
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         Set<OWLEntity> addedEntities = new HashSet<>();
-        List<SearchString> searchStrings = Stream.of(entityLookupRequest.getSearchString().split("\\s+|_|:"))
-                                                 .filter(s -> !s.isEmpty())
-                                                 .map(SearchString::parseSearchString)
-                                                 .collect(toList());
+        List<SearchString> searchStrings = SearchString.parseMultiWordSearchString(entityLookupRequest.getSearchString());
         return dictionaryManager.getShortFormsContaining(searchStrings,
                                                          entityLookupRequest.getSearchedEntityTypes(),
                                                          languageManager.getLanguages())
