@@ -17,6 +17,7 @@
             flex-shrink: 0;
             padding: 2px;
             margin: 1px;
+            border-bottom: 1px solid literal("var(--inlay-panel--background-color)");
         }
         .statusLabel {
             flex-grow: 0;
