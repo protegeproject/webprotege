@@ -121,9 +121,9 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                                             return index != -1;
                                                         })
                                                         .distinct()
-                                                        .map(renderingManager::getRendering)
+                                                        .map(i -> new IndividualRendering(i, renderingManager.getShortForm(i).toLowerCase()))
                                                         .sorted()
-                                                        .map(OWLNamedIndividualData::getEntity)
+                                                        .map(IndividualRendering::getIndividual)
                                                         .collect(toPage(pageRequest.getPageNumber(),
                                                                         pageRequest.getPageSize()));
         OWLClassData type = renderingManager.getRendering(action.getType());
@@ -153,6 +153,29 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
 
         public int getCount() {
             return count;
+        }
+    }
+
+    private static class IndividualRendering implements Comparable<IndividualRendering> {
+        private final OWLNamedIndividual individual;
+        private final String rendering;
+
+        public IndividualRendering(OWLNamedIndividual individual, String rendering) {
+            this.individual = individual;
+            this.rendering = rendering;
+        }
+
+        public OWLNamedIndividual getIndividual() {
+            return individual;
+        }
+
+        public String getRendering() {
+            return rendering;
+        }
+
+        @Override
+        public int compareTo(IndividualRendering o) {
+            return this.rendering.compareTo(o.rendering);
         }
     }
 }
