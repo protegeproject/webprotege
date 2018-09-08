@@ -208,4 +208,24 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>webprotege.stanford.edu</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.ltgt.gwt.maven</groupId>
+                        <artifactId>gwt-maven-plugin</artifactId>
+                        <configuration>
+                            <moduleName>edu.stanford.bmir.protege.web.WebProtege</moduleName>
+                            <moduleShortName>webprotege</moduleShortName>
+                            <classpathScope>compile+runtime</classpathScope>
+                            <localWorkers>6</localWorkers>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
