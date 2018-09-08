@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.list;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -15,7 +14,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -75,15 +73,13 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     public void setListData(@Nonnull List<E> elements) {
         contentHolder.clear();
         int row = 0;
-        ImmutableList.Builder<E> builder = ImmutableList.builder();
         StringBuilder sb = new StringBuilder();
         for(E element : elements) {
-            builder.add(element);
             IsWidget rendering = renderElement(row, element);
             contentHolder.add(rendering);
             row++;
         }
-        this.elements = builder.build();
+        this.elements = new ArrayList<>(elements);
     }
 
     private IsWidget renderElement(int row, E element) {
@@ -104,6 +100,7 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
 
 
     public void updateElement(E element) {
+
         int elementCount = elements.size();
         for(int index = 0; index < elementCount; index++) {
             E e = elements.get(index);

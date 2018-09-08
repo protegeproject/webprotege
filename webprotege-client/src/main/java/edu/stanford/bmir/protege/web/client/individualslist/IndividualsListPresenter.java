@@ -255,9 +255,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                       .collect(toSet());
         dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, entities),
                                        view,
-                                       result -> {
-                                           updateList();
-                                       });
+                                       result -> updateList());
     }
 
     private void updateButtonStates() {
