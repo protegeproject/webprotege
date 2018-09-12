@@ -107,7 +107,7 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                  .map(OWLIndividual::asOWLNamedIndividual);
         }
         Counter counter = new Counter();
-        PageRequest pageRequest = action.getPageRequest();
+        PageRequest pageRequest = action.getPageRequest().orElse(PageRequest.requestFirstPage());
 
         Optional<Page<OWLNamedIndividual>> page = stream.peek(i -> counter.increment())
                                                         .filter(i -> {

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -43,18 +44,6 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        Optional<OWLClass> selectedClass;
-        if(getSelectionModel().getLastSelectedClass().isPresent()) {
-            selectedClass = Optional.of(getSelectionModel().getLastSelectedClass().get());
-        }
-        else {
-            selectedClass = Optional.empty();
-        }
-        if(selectedClass.isPresent()) {
-            presenter.setType(selectedClass.get());
-        }
-        else {
-            presenter.setType(DataFactory.getOWLThing());
-        }
+        entity.filter(OWLEntity::isOWLNamedIndividual).map(e -> (OWLNamedIndividual) e).ifPresent(i -> presenter.setSelectedIndividual(i));
     }
 }

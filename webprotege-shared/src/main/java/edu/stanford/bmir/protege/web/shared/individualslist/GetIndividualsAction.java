@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,6 +24,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
 
     private OWLClass type;
 
+    @Nullable
     private PageRequest pageRequest;
 
     private String searchString;
@@ -51,7 +54,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
         super(projectId);
         this.type = checkNotNull(type);
         this.searchString = checkNotNull(filterString);
-        this.pageRequest = pageRequest.orElse(PageRequest.requestFirstPage());
+        this.pageRequest = pageRequest.orElse(null);
     }
 
     /**
@@ -78,13 +81,13 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      *
      * @return Gets the page request.
      */
-    public PageRequest getPageRequest() {
-        return pageRequest;
+    public Optional<PageRequest> getPageRequest() {
+        return Optional.ofNullable(pageRequest);
     }
 
     @Override
     public int hashCode() {
-        return "GetIndividualsAction".hashCode() + type.hashCode() + pageRequest.hashCode();
+        return "GetIndividualsAction".hashCode() + type.hashCode() + Objects.hashCode(pageRequest);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
             return false;
         }
         GetIndividualsAction other = (GetIndividualsAction) o;
-        return this.type.equals(other.type) && this.pageRequest.equals(other.pageRequest);
+        return this.type.equals(other.type) && Objects.equals(this.pageRequest, other.pageRequest);
     }
 
     @Override

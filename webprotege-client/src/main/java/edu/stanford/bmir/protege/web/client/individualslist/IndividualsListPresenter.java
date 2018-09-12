@@ -29,6 +29,7 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -149,19 +150,6 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         hasPortletActions.addAction(createAction);
         hasPortletActions.addAction(deleteAction);
         updateButtonStates();
-    }
-
-    public void clearType() {
-//        currentType = Optional.empty();
-    }
-
-    public void setType(OWLClass type) {
-//        if (currentType.equals(Optional.of(type))) {
-//            return;
-//        }
-//        currentType = Optional.of(type);
-//        view.setPageNumber(1);
-//        updateList();
     }
 
     private void updateList() {
@@ -286,5 +274,10 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     public void updateNode(@Nonnull EntityNode entityNode) {
         elementsMap.put(entityNode.getEntity(), entityNode);
         view.updateNode(entityNode);
+    }
+
+    public void setSelectedIndividual(@Nonnull OWLNamedIndividual individual) {
+        checkNotNull(individual);
+
     }
 }
