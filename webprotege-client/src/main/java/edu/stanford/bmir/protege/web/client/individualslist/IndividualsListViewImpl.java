@@ -2,22 +2,18 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView;
 import edu.stanford.bmir.protege.web.client.list.ListBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -67,7 +63,13 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     AcceptsOneWidget typeFieldContainer;
 
+    @UiField
+    com.google.gwt.user.client.ui.ListBox retrievalTypeField;
+
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
+
+    private InstanceRetrievalTypeChangedHandler retrievalTypeChangedHandler = () -> {};
+
 
     @Inject
     public IndividualsListViewImpl(@Nonnull PaginatorPresenter paginatorPresenter,
@@ -94,6 +96,12 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiHandler("searchBox")
     protected void handleSearchStringChanged(KeyUpEvent event) {
         searchStringChangedHandler.handleSearchStringChanged();
+    }
+
+    @UiHandler("retrievalTypeField")
+    public void levelFieldChange(ChangeEvent event) {
+        GWT.log("[IndividualsListViewImpl] Retrieval Type Changed");
+        retrievalTypeChangedHandler.handleInstanceRetrievalTypeChanged();
     }
 
     @Override
@@ -165,8 +173,13 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     }
 
     @Override
-    public void setSearchStringChangedHandler(SearchStringChangedHandler handler) {
+    public void setSearchStringChangedHandler(@Nonnull SearchStringChangedHandler handler) {
         searchStringChangedHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setInstanceRetrievalTypeChangedHandler(@Nonnull InstanceRetrievalTypeChangedHandler handler) {
+        this.retrievalTypeChangedHandler = checkNotNull(handler);
     }
 
     @Override

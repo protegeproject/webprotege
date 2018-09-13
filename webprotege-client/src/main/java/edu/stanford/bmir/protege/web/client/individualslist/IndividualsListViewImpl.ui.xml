@@ -7,6 +7,7 @@
              xmlns:hierarchy="urn:import:edu.stanford.bmir.protege.web.client.hierarchy">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:import field="edu.stanford.bmir.protege.web.client.individualslist.InstanceRetrievalType.*"/>
     <ui:style>
         .main {
             display: flex;
@@ -54,6 +55,11 @@
             flex-shrink: 1;
             flex-grow: 1;
         }
+        .levelField {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin: 1px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
@@ -63,6 +69,10 @@
         </div>
         <div class="{style.listGroup}">
             <g:Label text="Individuals" addStyleNames="{wp.style.formLabel}"/>
+            <g:ListBox ui:field="retrievalTypeField" addStyleNames="{style.levelField}">
+                <g:item value="ALL_INSTANCES">Direct and Indirect Individuals</g:item>
+                <g:item value="DIRECT_INSTANCES">Direct individuals</g:item>
+            </g:ListBox>
             <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}"
                                      placeholder="{msg.enterSearchStringToFilterList}"/>
             <list:ListBox ui:field="individualsList" addStyleNames="{style.individualsList}"/>

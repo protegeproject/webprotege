@@ -46,7 +46,9 @@ public interface IndividualsListView extends HasSelectionHandlers<List<EntityNod
 
     void clearSearchString();
 
-    void setSearchStringChangedHandler(SearchStringChangedHandler handler);
+    void setSearchStringChangedHandler(@Nonnull SearchStringChangedHandler handler);
+
+    void setInstanceRetrievalTypeChangedHandler(@Nonnull InstanceRetrievalTypeChangedHandler handler);
 
     void setPageCount(int pageCount);
 
