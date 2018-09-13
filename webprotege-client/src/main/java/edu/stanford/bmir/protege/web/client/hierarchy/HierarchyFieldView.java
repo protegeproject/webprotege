@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -49,4 +51,6 @@ public interface HierarchyFieldView extends IsWidget {
     void setMoveToChildButtonEnabled(boolean enabled);
 
     void setMoveToSiblingButtonEnabled(boolean enabled);
+
+    void setEntityType(@Nonnull PrimitiveType entityType);
 }

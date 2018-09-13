@@ -10,11 +10,14 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
+import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -134,5 +137,10 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @Override
     public void setMoveToSiblingButtonEnabled(boolean enabled) {
         moveToSiblingButton.setEnabled(enabled);
+    }
+
+    @Override
+    public void setEntityType(@Nonnull PrimitiveType entityType) {
+        entityField.setAllowedTypes(Collections.singleton(entityType));
     }
 }
