@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView.EntityChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -31,6 +32,9 @@ public class HierarchyFieldPresenter {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private EntityChangedHandler entityChangedHandler;
+
     @Inject
     public HierarchyFieldPresenter(@Nonnull HierarchyFieldView view,
                                    @Nonnull DispatchServiceManager dispatchServiceManager) {
@@ -47,9 +51,14 @@ public class HierarchyFieldPresenter {
         updateButtonState();
     }
 
+    public void setEntityChangedHandler(@Nonnull EntityChangedHandler handler) {
+        this.entityChangedHandler = checkNotNull(handler);
+    }
+
     private void handleEntityChanged() {
         GWT.log("[HierarchyFieldPresenter] Handling Entity Changed");
         updateButtonState();
+        entityChangedHandler.handleEntityChanged();
     }
 
     private void updateButtonState() {

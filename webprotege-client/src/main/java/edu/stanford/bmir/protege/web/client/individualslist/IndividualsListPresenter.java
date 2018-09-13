@@ -134,6 +134,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         entityNodeUpdater.start(eventBus, this);
         hierarchyFieldPresenter.setEntityType(PrimitiveType.CLASS);
         hierarchyFieldPresenter.start(view.getTypeFieldContainer());
+        hierarchyFieldPresenter.setEntityChangedHandler(this::handleTypeChanged);
         resetType();
     }
 
