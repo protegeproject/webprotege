@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
@@ -135,6 +136,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         hierarchyFieldPresenter.setEntityType(PrimitiveType.CLASS);
         hierarchyFieldPresenter.start(view.getTypeFieldContainer());
         hierarchyFieldPresenter.setEntityChangedHandler(this::handleTypeChanged);
+        hierarchyFieldPresenter.setHierarchyId(HierarchyId.CLASS_HIERARCHY);
         view.setInstanceRetrievalTypeChangedHandler(this::handleRetrievalTypeChanged);
         resetType();
     }

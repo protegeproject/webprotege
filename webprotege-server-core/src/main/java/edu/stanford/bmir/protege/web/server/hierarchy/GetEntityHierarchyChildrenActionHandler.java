@@ -4,11 +4,14 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import edu.stanford.protege.gwt.graphtree.shared.graph.SuccessorMap;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -16,7 +19,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator.alphaNumerically;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -36,19 +41,23 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
     @Nonnull
     private final GraphNodeRenderer nodeRenderer;
 
+    @Nonnull
+    private final DictionaryManager dictionaryManager;
+
     @Inject
     public GetEntityHierarchyChildrenActionHandler(@Nonnull AccessManager accessManager,
                                                    @Nonnull HierarchyProviderMapper hierarchyProviderMapper,
                                                    @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
-                                                   @Nonnull GraphNodeRenderer nodeRenderer) {
+                                                   @Nonnull GraphNodeRenderer nodeRenderer, @Nonnull DictionaryManager dictionaryManager) {
         super(accessManager);
         this.hierarchyProviderMapper = hierarchyProviderMapper;
         this.deprecatedEntityChecker = deprecatedEntityChecker;
         this.nodeRenderer = nodeRenderer;
+        this.dictionaryManager = dictionaryManager;
     }
 
     static GetHierarchyChildrenResult emptyResult() {
-        return new GetHierarchyChildrenResult(SuccessorMap.<EntityNode>builder().build());
+        return new GetHierarchyChildrenResult();
     }
 
     @Nonnull
@@ -73,15 +82,18 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
         }
         OWLEntity parent = action.getEntity();
         GraphNode<EntityNode> parentNode = nodeRenderer.toGraphNode(parent, hierarchyProvider.get());
-        SuccessorMap.Builder<EntityNode> successorMap = SuccessorMap.builder();
-        hierarchyProvider.get().getChildren(parent).stream()
+        Page<GraphNode<EntityNode>> page = hierarchyProvider.get().getChildren(parent).stream()
                          // Filter out deprecated entities that are displayed under owl:Thing, owl:topObjectProperty
                          // owl:topDataProperty
                          .filter(child -> isNotDeprecatedTopLevelEntity(parent, child))
-                         .map(child -> nodeRenderer.toGraphNode(child, hierarchyProvider.get()))
-                         .forEach(childNode -> successorMap.add(parentNode, childNode));
-        successorMap.sort(comparing(node -> node.getUserObject().getBrowserText(), alphaNumerically()));
-        return new GetHierarchyChildrenResult(successorMap.build());
+                         .sorted(comparing(dictionaryManager::getShortForm))
+                         .collect(PageCollector.toPage(action.getPageRequest().getPageNumber(),
+                                                       action.getPageRequest().getPageSize()))
+                         .map(pg ->
+                             pg.transform(child -> nodeRenderer.toGraphNode(child, hierarchyProvider.get()))
+                         ).orElse(Page.emptyPage());
+
+        return new GetHierarchyChildrenResult(parentNode, page);
     }
 
     private boolean isNotDeprecatedTopLevelEntity(OWLEntity parent, OWLEntity child) {

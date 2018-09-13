@@ -117,15 +117,15 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
         dispatchServiceManager.execute(new GetHierarchyChildrenAction(projectId, parent, hierarchyId),
                                        result -> {
                                            cacheEdges(parent, result);
-                                           callback.handleSuccessorNodes(result.getChildren());
+                                           callback.handleSuccessorNodes(result.getSuccessorMap());
                                        });
     }
 
     private void cacheEdges(@Nonnull OWLEntity parent, GetHierarchyChildrenResult result) {
-        result.getChildren().getSuccessors().stream()
+        result.getChildren().getPageElements().stream()
               .map(GraphNode::getUserObject)
               .forEach(node -> {
-                  nodeCache.put(node.getEntity(), node);
+                  nodeCache.put(parent, node);
                   parent2ChildMap.put(parent, node.getEntity());
               });
     }

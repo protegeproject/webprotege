@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -20,16 +21,31 @@ public class GetHierarchyChildrenAction extends AbstractHasProjectAction<GetHier
 
     private HierarchyId hierarchyId;
 
+    private PageRequest pageRequest;
+
     public GetHierarchyChildrenAction(@Nonnull ProjectId projectId,
                                       @Nonnull OWLEntity entity,
-                                      @Nonnull HierarchyId hierarchyId) {
+                                      @Nonnull HierarchyId hierarchyId,
+                                      @Nonnull PageRequest pageRequest) {
         super(projectId);
         this.entity = checkNotNull(entity);
         this.hierarchyId = checkNotNull(hierarchyId);
+        this.pageRequest = checkNotNull(pageRequest);
+    }
+
+    public GetHierarchyChildrenAction(@Nonnull ProjectId projectId,
+                                      @Nonnull OWLEntity entity,
+                                      @Nonnull HierarchyId hierarchyId) {
+        this(projectId, entity, hierarchyId, PageRequest.requestSinglePage());
     }
 
     @GwtSerializationConstructor
     private GetHierarchyChildrenAction() {
+    }
+
+    @Nonnull
+    public PageRequest getPageRequest() {
+        return pageRequest;
     }
 
     public OWLEntity getEntity() {
