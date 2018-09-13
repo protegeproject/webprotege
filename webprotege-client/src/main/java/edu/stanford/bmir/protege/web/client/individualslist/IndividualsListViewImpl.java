@@ -64,30 +64,25 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     protected BusyView busyView;
 
-    @Nonnull
-    private final HierarchyFieldPresenter typePresenter;
-
-    @UiField(provided = true)
-    HierarchyFieldView typeField;
-
-    private TypeChangedHandler typeChangedHandler = () -> {};
+    @UiField
+    AcceptsOneWidget typeFieldContainer;
 
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
     @Inject
     public IndividualsListViewImpl(@Nonnull PaginatorPresenter paginatorPresenter,
-                                   @Nonnull IndividualsListCellRenderer renderer,
-                                   @Nonnull HierarchyFieldPresenter typePresenter,
-                                   @Nonnull PrimitiveDataEditor typeField) {
+                                   @Nonnull IndividualsListCellRenderer renderer) {
         this.paginatorPresenter = paginatorPresenter;
         paginator = paginatorPresenter.getView();
         this.renderer = checkNotNull(renderer);
-        this.typePresenter = typePresenter;
-        this.typeField = typePresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
         individualsList.setRenderer(renderer);
         individualsList.setKeyExtractor(node -> (OWLNamedIndividual) node.getEntity());
-        typeField.addValueChangeHandler(this::handleTypeChanged);
+    }
+
+    @Nonnull
+    public AcceptsOneWidget getTypeFieldContainer() {
+        return typeFieldContainer;
     }
 
     @Override
@@ -99,28 +94,6 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiHandler("searchBox")
     protected void handleSearchStringChanged(KeyUpEvent event) {
         searchStringChangedHandler.handleSearchStringChanged();
-    }
-
-    private void handleTypeChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-        typeChangedHandler.handleTypeChanged();
-    }
-
-    @Override
-    public void setTypeChangedHandler(@Nonnull TypeChangedHandler handler) {
-        this.typeChangedHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setCurrentType(@Nonnull OWLClassData cls) {
-        typeField.setEntity(cls);
-    }
-
-    @Nonnull
-    @Override
-    public Optional<OWLClassData> getCurrentType() {
-        return typeField.getEntity()
-                        .filter(type -> type instanceof OWLClassData)
-                        .map(type -> (OWLClassData) type);
     }
 
     @Override

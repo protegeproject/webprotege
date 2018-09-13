@@ -280,6 +280,11 @@
     font-size: 18px;
 }
 
+.wp-btn-move-to-parent:disabled {
+    background-color: #a0a0a0;
+    opacity: 0.3;
+}
+
 .wp-btn-move-to-sibling {
     background-color: #aaaaaa;
     background-image: moveToSiblingIconUrl;
@@ -293,6 +298,11 @@
     padding: 0;
     cursor: pointer;
     font-size: 18px;
+}
+
+.wp-btn-move-to-sibling:disabled {
+    background-color: #a0a0a0;
+    opacity: 0.3;
 }
 
 
@@ -309,4 +319,9 @@
     padding: 0;
     cursor: pointer;
     font-size: 18px;
+}
+
+.wp-btn-move-to-child:disabled {
+    background-color: #a0a0a0;
+    opacity: 0.3;
 }

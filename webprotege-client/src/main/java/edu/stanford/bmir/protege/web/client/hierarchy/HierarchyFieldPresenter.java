@@ -1,12 +1,17 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,10 +34,6 @@ public class HierarchyFieldPresenter {
         this.view = checkNotNull(view);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
-    @Nonnull
-    public HierarchyFieldView getView() {
-        return view;
-    }
 
     public void start(@Nonnull AcceptsOneWidget viewContainer) {
         viewContainer.setWidget(view);
@@ -44,6 +45,7 @@ public class HierarchyFieldPresenter {
     }
 
     private void handleEntityChanged() {
+        GWT.log("[HierarchyFieldPresenter] Handling Entity Changed");
         updateButtonState();
     }
 
@@ -70,5 +72,14 @@ public class HierarchyFieldPresenter {
 
     private void handleMoveToChild() {
 
+    }
+
+    public void setEntity(OWLClassData cls) {
+        view.setEntity(cls);
+        updateButtonState();
+    }
+
+    public Optional<OWLEntityData> getEntity() {
+        return view.getEntity();
     }
 }

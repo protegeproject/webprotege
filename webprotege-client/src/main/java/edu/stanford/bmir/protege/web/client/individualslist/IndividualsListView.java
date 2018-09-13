@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -23,17 +24,7 @@ import java.util.Optional;
  */
 public interface IndividualsListView extends HasSelectionHandlers<List<EntityNode>>, HasBusy, IsWidget {
 
-
-    interface TypeChangedHandler {
-        void handleTypeChanged();
-    }
-
-    void setTypeChangedHandler(@Nonnull TypeChangedHandler handler);
-
-    void setCurrentType(@Nonnull OWLClassData cls);
-
-    @Nonnull
-    Optional<OWLClassData> getCurrentType();
+    public AcceptsOneWidget getTypeFieldContainer();
 
     void setListData(List<EntityNode> individuals);
 

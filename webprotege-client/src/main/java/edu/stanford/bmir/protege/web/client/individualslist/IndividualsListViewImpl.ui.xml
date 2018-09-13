@@ -57,7 +57,7 @@
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
         <div class="{wp.style.formGroup} {style.typeGroup}">
             <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
-            <hierarchy:HierarchyFieldView ui:field="typeField"/>
+            <g:SimplePanel ui:field="typeFieldContainer"/>
         </div>
         <div class="{style.listGroup}">
             <g:Label text="Individuals" addStyleNames="{wp.style.formLabel}"/>

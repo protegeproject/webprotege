@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -56,6 +57,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final HierarchyFieldPresenter hierarchyFieldPresenter;
+
     private final Messages messages;
 
     private final IndividualsListView view;
@@ -95,6 +98,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                     final SelectionModel selectionModel,
                                     DispatchServiceManager dispatchServiceManager,
                                     LoggedInUserProjectPermissionChecker permissionChecker,
+                                    HierarchyFieldPresenter hierarchyFieldPresenter,
                                     Messages messages,
                                     @Nonnull CreateEntityPresenter createEntityPresenter, EntityNodeUpdater entityNodeUpdater) {
         this.projectId = projectId;
@@ -102,6 +106,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.hierarchyFieldPresenter = hierarchyFieldPresenter;
         this.messages = messages;
         this.createEntityPresenter = createEntityPresenter;
         this.entityNodeUpdater = entityNodeUpdater;
@@ -128,12 +133,12 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                         DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> setDisplayLanguage(event.getDisplayLanguage()));
         entityNodeUpdater.start(eventBus, this);
-        view.setTypeChangedHandler(this::handleTypeChanged);
+        hierarchyFieldPresenter.start(view.getTypeFieldContainer());
         resetType();
     }
 
     private void resetType() {
-        view.setCurrentType(DataFactory.getOWLThingData());
+        hierarchyFieldPresenter.setEntity(DataFactory.getOWLThingData());
         updateList();
     }
 
@@ -201,7 +206,10 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     }
 
     private void handleTypeChanged() {
-        currentType = view.getCurrentType().map(ed -> ed.getEntity());
+        currentType = hierarchyFieldPresenter.getEntity()
+                                             .filter(ed -> ed instanceof OWLClassData)
+                                             .map(ed -> (OWLClassData) ed)
+                                             .map(ed -> ed.getEntity());
         updateList();
     }
 
