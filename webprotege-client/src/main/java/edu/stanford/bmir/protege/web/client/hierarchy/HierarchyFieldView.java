@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.EntityType;
@@ -20,7 +21,7 @@ public interface HierarchyFieldView extends IsWidget {
     }
 
     interface MoveToChildHandler {
-        void handleMoveToChild();
+        void handleMoveToChild(UIObject target);
     }
 
     interface MoveToSiblingHanler {

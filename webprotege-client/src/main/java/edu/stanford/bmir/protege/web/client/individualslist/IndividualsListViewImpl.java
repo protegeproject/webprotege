@@ -37,7 +37,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     private final PaginatorPresenter paginatorPresenter;
 
-    private IndividualsListCellRenderer renderer;
+    private EntityNodeListCellRenderer renderer;
 
     interface IndividualsListViewImplUiBinder extends UiBinder<HTMLPanel, IndividualsListViewImpl> {
 
@@ -73,7 +73,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Inject
     public IndividualsListViewImpl(@Nonnull PaginatorPresenter paginatorPresenter,
-                                   @Nonnull IndividualsListCellRenderer renderer) {
+                                   @Nonnull EntityNodeListCellRenderer renderer) {
         this.paginatorPresenter = paginatorPresenter;
         paginator = paginatorPresenter.getView();
         this.renderer = checkNotNull(renderer);

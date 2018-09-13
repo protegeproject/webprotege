@@ -24,6 +24,8 @@ import edu.stanford.bmir.protege.web.client.hierarchy.PropertyHierarchyPortletVi
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.*;
+import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupView;
+import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
@@ -326,6 +328,11 @@ public class ClientProjectModule {
 
     @Provides
     HierarchyFieldView provideHierarchyFieldView(HierarchyFieldViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityNodeListPopupView provideEntityNodeListPopupView(EntityNodeListPopupViewImpl impl) {
         return impl;
     }
 }

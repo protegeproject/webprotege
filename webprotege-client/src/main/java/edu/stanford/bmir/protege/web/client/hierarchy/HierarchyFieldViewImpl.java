@@ -33,7 +33,7 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     private MoveToParentHandler moveToParentHandler = () -> {};
 
     @Nonnull
-    private MoveToChildHandler moveToChildHandler = () -> {};
+    private MoveToChildHandler moveToChildHandler = (uiObject) -> {};
 
     @Nonnull
     private MoveToSiblingHanler moveToSiblingHandler = () -> {};
@@ -78,7 +78,7 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
 
     @UiHandler("moveToChildButton")
     public void moveToChildButtonClick(ClickEvent event) {
-        moveToChildHandler.handleMoveToChild();
+        moveToChildHandler.handleMoveToChild(moveToChildButton);
     }
 
     @UiHandler("entityField")

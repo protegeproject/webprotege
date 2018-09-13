@@ -17,13 +17,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 29 Jul 2018
  */
-public class IndividualsListCellRenderer implements ListBoxCellRenderer<EntityNode> {
+public class EntityNodeListCellRenderer implements ListBoxCellRenderer<EntityNode> {
 
     @Nonnull
     private final EntityNodeHtmlRenderer renderer;
 
     @Inject
-    public IndividualsListCellRenderer(@Nonnull EntityNodeHtmlRenderer renderer) {
+    public EntityNodeListCellRenderer(@Nonnull EntityNodeHtmlRenderer renderer) {
         this.renderer = checkNotNull(renderer);
     }
 

@@ -1,0 +1,32 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:list="urn:import:edu.stanford.bmir.protege.web.client.list"
+             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            max-height: 300px;
+            max-width: 500px;
+        }
+        .label {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+        .list {
+            flex-grow: 1;
+            flex-shrink: 1;
+            cursor: pointer;
+        }
+        .paginator {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label visible="false" ui:field="titleLabel" addStyleNames="{wp.style.formLabel} {style.label} {wp.style.panelFilled}"/>
+        <list:ListBox ui:field="listBox" addStyleNames="{style.list}"/>
+        <pagination:PaginatorViewImpl ui:field="paginatorView" addStyleNames="{style.paginator} {wp.style.panelFilled}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

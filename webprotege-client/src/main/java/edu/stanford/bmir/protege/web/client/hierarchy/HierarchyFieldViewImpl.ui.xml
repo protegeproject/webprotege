@@ -32,7 +32,10 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Button ui:field="moveToParentButton" title="{msg.moveToParent}" addStyleNames="{wp.buttons.moveToParent} {style.classNavButton}"/>
         <div class="{style.classFieldRow}">
-            <primitive:PrimitiveDataEditorImpl ui:field="entityField" classesAllowed="true" enabled="true"
+            <primitive:PrimitiveDataEditorImpl ui:field="entityField"
+                                               classesAllowed="true"
+                                               enabled="true"
+                                               placeholder="Type a class name"
                                                addStyleNames="{style.classField}"/>
             <g:Button ui:field="moveToSiblingButton" title="{msg.moveToSibling}" addStyleNames="{wp.buttons.moveToSibling} {style.classNavButton}"/>
         </div>

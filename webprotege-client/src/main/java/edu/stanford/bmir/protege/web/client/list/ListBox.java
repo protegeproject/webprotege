@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.client.list;
 
 import com.google.common.base.Objects;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -32,7 +30,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  * Stanford Center for Biomedical Informatics Research
  * 7 Aug 2017
  */
-public class ListBox<K, E> extends Composite implements HasSelectionHandlers<List<E>> {
+public class ListBox<K, E> extends Composite implements HasSelectionHandlers<List<E>>, HasClickHandlers, HasDoubleClickHandlers {
 
     interface ListBoxUiBinder extends UiBinder<HTMLPanel, ListBox> {
 
@@ -63,6 +61,16 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
 
     public ListBox() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Override
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return focusPanel.addClickHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+        return focusPanel.addDoubleClickHandler(handler);
     }
 
     public void setRenderer(@Nonnull ListBoxCellRenderer<E> renderer) {
@@ -187,6 +195,11 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
         });
     }
 
+    @UiHandler("focusPanel")
+    public void handleDoubleClick(DoubleClickEvent event) {
+
+    }
+
 
     @UiHandler("focusPanel")
     public void focusPanelKeyUp(KeyDownEvent event) {
@@ -234,7 +247,7 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     }
 
 
-    private static class SelectionInterval {
+    public static class SelectionInterval {
 
         private static final SelectionInterval EMPTY = new SelectionInterval(-1, -1);
 
