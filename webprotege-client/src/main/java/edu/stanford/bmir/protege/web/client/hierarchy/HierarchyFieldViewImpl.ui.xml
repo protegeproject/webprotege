@@ -35,7 +35,7 @@
             <primitive:PrimitiveDataEditorImpl ui:field="entityField"
                                                classesAllowed="true"
                                                enabled="true"
-                                               placeholder="Type a class name"
+                                               placeholder="Type a class name to view individuals by class"
                                                addStyleNames="{style.classField}"/>
             <g:Button ui:field="moveToSiblingButton" title="{msg.moveToSibling}" addStyleNames="{wp.buttons.moveToSibling} {style.classNavButton}"/>
         </div>

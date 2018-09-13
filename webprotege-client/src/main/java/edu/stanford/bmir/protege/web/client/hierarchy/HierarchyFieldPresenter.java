@@ -143,13 +143,18 @@ public class HierarchyFieldPresenter {
         GWT.log("[HierarchyFieldPresenter] Showing children: " + result);
         List<GraphNode<EntityNode>> pageElements = result.getChildren()
                                                          .getPageElements();
-        EntityNodeListPopupPresenter popup = popupProvider.get();
-        popup.setListData(result.getChildren().transform(GraphNode::getUserObject));
-        popup.showRelativeTo(target, (sel) -> {
-            popup.getFirstSelectedElement()
-                 .map(EntityNode::getEntityData)
-                 .ifPresent(this::setEntityAndFireEvents);
-        });
+        if(pageElements.size() == 1) {
+            setEntityAndFireEvents(pageElements.get(0).getUserObject().getEntityData());
+        }
+        else {
+            EntityNodeListPopupPresenter popup = popupProvider.get();
+            popup.setListData(result.getChildren().transform(GraphNode::getUserObject));
+            popup.showRelativeTo(target, (sel) -> {
+                popup.getFirstSelectedElement()
+                     .map(EntityNode::getEntityData)
+                     .ifPresent(this::setEntityAndFireEvents);
+            });
+        }
     }
 
     public Optional<OWLEntityData> getEntity() {
@@ -172,5 +177,9 @@ public class HierarchyFieldPresenter {
 
     public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
         this.hierarchyId = Optional.of(hierarchyId);
+    }
+
+    public void clearEntity() {
+        view.clearEntity();
     }
 }
