@@ -10,11 +10,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
+import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView;
 import edu.stanford.bmir.protege.web.client.list.ListBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -61,8 +64,11 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     protected BusyView busyView;
 
+    @Nonnull
+    private final HierarchyFieldPresenter typePresenter;
+
     @UiField(provided = true)
-    PrimitiveDataEditor typeField;
+    HierarchyFieldView typeField;
 
     private TypeChangedHandler typeChangedHandler = () -> {};
 
@@ -71,11 +77,13 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @Inject
     public IndividualsListViewImpl(@Nonnull PaginatorPresenter paginatorPresenter,
                                    @Nonnull IndividualsListCellRenderer renderer,
+                                   @Nonnull HierarchyFieldPresenter typePresenter,
                                    @Nonnull PrimitiveDataEditor typeField) {
         this.paginatorPresenter = paginatorPresenter;
         paginator = paginatorPresenter.getView();
         this.renderer = checkNotNull(renderer);
-        this.typeField = checkNotNull(typeField);
+        this.typePresenter = typePresenter;
+        this.typeField = typePresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
         individualsList.setRenderer(renderer);
         individualsList.setKeyExtractor(node -> (OWLNamedIndividual) node.getEntity());
@@ -104,13 +112,13 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Override
     public void setCurrentType(@Nonnull OWLClassData cls) {
-        typeField.setValue(cls);
+        typeField.setEntity(cls);
     }
 
     @Nonnull
     @Override
     public Optional<OWLClassData> getCurrentType() {
-        return typeField.getValue()
+        return typeField.getEntity()
                         .filter(type -> type instanceof OWLClassData)
                         .map(type -> (OWLClassData) type);
     }

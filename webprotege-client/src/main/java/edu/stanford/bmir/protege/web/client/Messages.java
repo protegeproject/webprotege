@@ -1205,4 +1205,15 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("list.moveDown")
     String list_moveDown();
 
+    @DefaultMessage("Jump to parent")
+    @Key("hierarchy.moveToParent")
+    String moveToParent();
+
+    @DefaultMessage("Jump to sibling")
+    @Key("hierarchy.moveToSibling")
+    String moveToSibling();
+
+    @DefaultMessage("Jump to child")
+    @Key("hierarchy.moveToChild")
+    String moveToChild();
 }

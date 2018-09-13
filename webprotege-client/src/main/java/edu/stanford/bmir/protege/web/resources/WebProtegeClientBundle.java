@@ -106,6 +106,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource downArrowIcon();
 
+    @Source("move-to-parent.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource moveToParentIcon();
+
+    @Source("move-to-child.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource moveToChildIcon();
+
+    @Source("move-to-sibling.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource moveToSiblingIcon();
+
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();
@@ -462,6 +474,15 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-down")
         String downButton();
+
+        @ClassName("wp-btn-move-to-parent")
+        String moveToParent();
+
+        @ClassName("wp-btn-move-to-sibling")
+        String moveToSibling();
+
+        @ClassName("wp-btn-move-to-child")
+        String moveToChild();
     }
 
     interface SettingsPageCss extends CssResource {

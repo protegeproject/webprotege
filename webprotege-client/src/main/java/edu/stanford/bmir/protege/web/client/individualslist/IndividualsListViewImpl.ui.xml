@@ -1,11 +1,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist"
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
              xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
              xmlns:list="urn:import:edu.stanford.bmir.protege.web.client.list"
-             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+             xmlns:hierarchy="urn:import:edu.stanford.bmir.protege.web.client.hierarchy">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
@@ -58,7 +57,7 @@
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
         <div class="{wp.style.formGroup} {style.typeGroup}">
             <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
-            <primitive:PrimitiveDataEditor ui:field="typeField" classesAllowed="true" enabled="true"/>
+            <hierarchy:HierarchyFieldView ui:field="typeField"/>
         </div>
         <div class="{style.listGroup}">
             <g:Label text="Individuals" addStyleNames="{wp.style.formLabel}"/>

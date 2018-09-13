@@ -4,6 +4,9 @@
 @url crossIconUrl svgCrossIcon;
 @url upArrowIconUrl upArrowIcon;
 @url downArrowIconUrl downArrowIcon;
+@url moveToParentIconUrl moveToParentIcon;
+@url moveToSiblingIconUrl moveToSiblingIcon;
+@url moveToChildIconUrl moveToChildIcon;
 
 .wp-btn {
     border: none;
@@ -260,4 +263,50 @@
 .wp-btn-down:disabled {
     background-color: #a0a0a0;
     opacity: 0.3;
+}
+
+.wp-btn-move-to-parent {
+    background-color: #aaaaaa;
+    background-image: moveToParentIconUrl;
+    background-repeat: no-repeat;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.wp-btn-move-to-sibling {
+    background-color: #aaaaaa;
+    background-image: moveToSiblingIconUrl;
+    background-repeat: no-repeat;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
+.wp-btn-move-to-child {
+    background-color: #aaaaaa;
+    background-image: moveToChildIconUrl;
+    background-repeat: no-repeat;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    font-size: 18px;
 }
