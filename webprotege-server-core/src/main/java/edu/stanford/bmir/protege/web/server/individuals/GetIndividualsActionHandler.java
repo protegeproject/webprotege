@@ -8,36 +8,32 @@ import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.shortform.Scanner;
-import edu.stanford.bmir.protege.web.server.shortform.SearchString;
-import edu.stanford.bmir.protege.web.server.shortform.ShortFormMatch;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.apache.commons.lang.StringUtils;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
-import static edu.stanford.bmir.protege.web.server.pagination.PageCollector.toPage;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode.ALL_INSTANCES;
+import static edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode.DIRECT_INSTANCES;
 
 /**
  * Author: Matthew Horridge<br>
@@ -68,6 +64,9 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     @Nonnull
     private final LanguageManager languageManager;
 
+    @Nonnull
+    private final IndividualsIndex individualsIndex;
+
     @Inject
     public GetIndividualsActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull ProjectId projectId,
@@ -75,7 +74,7 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                        @Nonnull RenderingManager renderingManager,
                                        @Nonnull EntityNodeRenderer entityNodeRenderer,
                                        @Nonnull DictionaryManager dictionaryManager,
-                                       @Nonnull LanguageManager languageManager) {
+                                       @Nonnull LanguageManager languageManager, @Nonnull IndividualsIndex individualsIndex) {
         super(accessManager);
         this.projectId = projectId;
         this.rootOntology = rootOntology;
@@ -83,6 +82,7 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
         this.entityNodeRenderer = entityNodeRenderer;
         this.dictionaryManager = dictionaryManager;
         this.languageManager = languageManager;
+        this.individualsIndex = individualsIndex;
     }
 
     @Nullable
@@ -95,52 +95,33 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     @Override
     public GetIndividualsResult execute(@Nonnull GetIndividualsAction action,
                                         @Nonnull ExecutionContext executionContext) {
-        List<SearchString> searchStrings = SearchString.parseMultiWordSearchString(action.getFilterString());
-        Stream<OWLNamedIndividual> stream;
-        Optional<OWLClass> type = action.getType();
-        if (type.isPresent()) {
-            stream = rootOntology.getImportsClosure().stream()
-                                 .flatMap(o -> o.getClassAssertionAxioms(type.get()).stream())
-                                 .map(OWLClassAssertionAxiom::getIndividual)
-                                 .filter(OWLIndividual::isNamed)
-                                 .map(OWLIndividual::asOWLNamedIndividual);
+        OWLClass type = action.getType().orElse(DataFactory.getOWLThing());
+        IndividualsQueryResult result;
+        String filterString = action.getFilterString();
+        PageRequest pageRequest = action.getPageRequest().orElse(PageRequest.requestSinglePage());
+        if(action.getType().isPresent()) {
+            result = individualsIndex.getIndividuals(type,
+                                                     action.getInstanceRetrievalMode(),
+                                                     filterString,
+                                                     pageRequest);
         }
         else {
-            stream = rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
+            result = individualsIndex.getIndividuals(filterString,
+                                                     pageRequest);
         }
-        Counter counter = new Counter();
-        PageRequest pageRequest = action.getPageRequest().orElse(PageRequest.requestFirstPage());
-
-        Optional<Page<OWLNamedIndividual>> page = stream.peek(i -> counter.increment())
-                                                        .filter(i -> {
-                                                            if(searchStrings.isEmpty()) {
-                                                                return true;
-                                                            }
-                                                            String shortForm = dictionaryManager.getShortForm(i);
-                                                            Scanner scanner = new Scanner(shortForm, shortForm);
-                                                            for(SearchString searchString : searchStrings) {
-                                                                int index = scanner.indexOf(searchString, 0);
-                                                                if(index == -1) {
-                                                                    return false;
-                                                                }
-                                                            }
-                                                            return true;
-                                                        })
-                                                        .distinct()
-                                                        .map(i -> new IndividualRendering(i, renderingManager.getShortForm(i).toLowerCase()))
-                                                        .sorted()
-                                                        .map(IndividualRendering::getIndividual)
-                                                        .collect(toPage(pageRequest.getPageNumber(),
-                                                                        pageRequest.getPageSize()));
-        OWLClassData typeData = renderingManager.getRendering(type.orElse(DataFactory.getOWLThing()));
+        OWLClassData typeData = renderingManager.getRendering(type);
         logger.info(BROWSING,
                     "{} {} retrieved instances of {} ({})",
                     projectId,
                     executionContext.getUserId(),
                     type,
                     typeData.getBrowserText());
-        Page<EntityNode> entityNodes = page.map(pg -> pg.transform(entityNodeRenderer::render)).orElse(Page.emptyPage());
-        return new GetIndividualsResult(type.map(t -> typeData), entityNodes, counter.getCount(), (int) entityNodes.getTotalElements());
+        Page<OWLNamedIndividual> pg = result.getIndividuals();
+        Page<EntityNode> entityNodes = pg.transform(entityNodeRenderer::render);
+        Optional<OWLClassData> renderedType = action.getType().map(t -> typeData);
+        return new GetIndividualsResult(renderedType,
+                                        entityNodes,
+                                        result.getIndividualsCount());
     }
 
     @Nonnull
@@ -163,7 +144,9 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     }
 
     private static class IndividualRendering implements Comparable<IndividualRendering> {
+
         private final OWLNamedIndividual individual;
+
         private final String rendering;
 
         public IndividualRendering(OWLNamedIndividual individual, String rendering) {

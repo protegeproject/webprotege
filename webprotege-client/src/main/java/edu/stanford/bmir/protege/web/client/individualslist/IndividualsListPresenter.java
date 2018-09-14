@@ -172,13 +172,14 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         GetIndividualsAction action = new GetIndividualsAction(projectId,
                                                                currentType,
                                                                view.getSearchString(),
+                                                               view.getRetrievalType(),
                                                                pageRequest);
         dispatchServiceManager.execute(action, view, result -> {
             Collection<EntityNode> curSel = view.getSelectedIndividuals();
             view.setListData(result.getIndividuals());
             view.setStatusMessageVisible(true);
             int displayedIndividuals = result.getIndividuals().size();
-            int totalIndividuals = result.getTotalIndividuals();
+            long totalIndividuals = result.getTotalIndividuals();
             Page<EntityNode> paginatedResult = result.getPaginatedResult();
             view.setPageCount(paginatedResult.getPageCount());
             view.setPageNumber(paginatedResult.getPageNumber());
@@ -197,7 +198,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         });
     }
 
-    private void updateStatusLabel(int displayedIndividuals, int totalIndividuals) {
+    private void updateStatusLabel(int displayedIndividuals, long totalIndividuals) {
         String suffix;
         if (totalIndividuals == 1) {
             suffix = " instance";

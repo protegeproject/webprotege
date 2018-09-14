@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsump
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
+import edu.stanford.bmir.protege.web.server.individuals.IndividualsIndex;
+import edu.stanford.bmir.protege.web.server.individuals.IndividualsIndexImpl;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
@@ -585,5 +587,11 @@ public class ProjectModule {
         EntityTagsRepositoryCachingImpl rep = new EntityTagsRepositoryCachingImpl(impl);
         rep.preloadCache();
         return rep;
+    }
+
+    @Provides
+    @ProjectSingleton
+    IndividualsIndex provideIndividualsIndex(IndividualsIndexImpl impl) {
+        return impl;
     }
 }

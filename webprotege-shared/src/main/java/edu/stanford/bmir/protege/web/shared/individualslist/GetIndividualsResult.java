@@ -26,20 +26,17 @@ public class GetIndividualsResult implements Result {
 
     private Page<EntityNode> result;
 
-    private int totalIndividuals;
-
-    private int matchedIndividuals;
+    private long totalIndividuals;
 
     @GwtSerializationConstructor
     private GetIndividualsResult() {
     }
 
     public GetIndividualsResult(Optional<OWLClassData> type,
-                                Page<EntityNode> result, int totalIndividuals, int matchedIndividuals) {
+                                Page<EntityNode> result, long totalIndividuals) {
         this.type = type.orElse(null);
         this.result = result;
         this.totalIndividuals = totalIndividuals;
-        this.matchedIndividuals = matchedIndividuals;
     }
 
     public Optional<OWLClassData> getType() {
@@ -50,12 +47,8 @@ public class GetIndividualsResult implements Result {
         return result;
     }
 
-    public int getTotalIndividuals() {
+    public long getTotalIndividuals() {
         return totalIndividuals;
-    }
-
-    public int getMatchedIndividuals() {
-        return matchedIndividuals;
     }
 
     public List<EntityNode> getIndividuals() {

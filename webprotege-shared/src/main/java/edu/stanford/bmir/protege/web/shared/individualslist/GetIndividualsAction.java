@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.individualslist;
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -30,6 +31,8 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
 
     private String searchString;
 
+    private InstanceRetrievalMode instanceRetrievalMode;
+
 
     @GwtSerializationConstructor
     private GetIndividualsAction() {
@@ -51,10 +54,12 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
     public GetIndividualsAction(@Nonnull ProjectId projectId,
                                 @Nonnull Optional<OWLClass> type,
                                 @Nonnull String filterString,
+                                @Nonnull InstanceRetrievalMode instanceRetrievalMode,
                                 @Nonnull Optional<PageRequest> pageRequest) {
         super(projectId);
         this.type = checkNotNull(type).orElse(null);
         this.searchString = checkNotNull(filterString);
+        this.instanceRetrievalMode = checkNotNull(instanceRetrievalMode);
         this.pageRequest = pageRequest.orElse(null);
     }
 
@@ -75,6 +80,10 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
     @Nonnull
     public String getFilterString() {
         return searchString;
+    }
+
+    public InstanceRetrievalMode getInstanceRetrievalMode() {
+        return instanceRetrievalMode;
     }
 
     /**

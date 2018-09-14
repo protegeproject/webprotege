@@ -7,7 +7,7 @@
              xmlns:hierarchy="urn:import:edu.stanford.bmir.protege.web.client.hierarchy">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <ui:import field="edu.stanford.bmir.protege.web.client.individualslist.InstanceRetrievalType.*"/>
+    <ui:import field="edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode.*"/>
     <ui:style>
         .main {
             display: flex;

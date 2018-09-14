@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -174,12 +175,12 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Nonnull
     @Override
-    public InstanceRetrievalType getRetrievalType() {
-        return InstanceRetrievalType.values()[retrievalTypeField.getSelectedIndex()];
+    public InstanceRetrievalMode getRetrievalType() {
+        return InstanceRetrievalMode.values()[retrievalTypeField.getSelectedIndex()];
     }
 
     @Override
-    public void setRetrievalType(@Nonnull InstanceRetrievalType retrievalType) {
+    public void setRetrievalType(@Nonnull InstanceRetrievalMode retrievalType) {
         retrievalTypeField.setSelectedIndex(retrievalType.ordinal());
     }
 

@@ -7,8 +7,8 @@ import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 
 import javax.annotation.Nonnull;
@@ -47,9 +47,9 @@ public interface IndividualsListView extends HasSelectionHandlers<List<EntityNod
     void clearSearchString();
 
     @Nonnull
-    InstanceRetrievalType getRetrievalType();
+    InstanceRetrievalMode getRetrievalType();
 
-    void setRetrievalType(@Nonnull InstanceRetrievalType retrievalType);
+    void setRetrievalType(@Nonnull InstanceRetrievalMode retrievalType);
 
     void setRetrievalTypeEnabled(boolean enabled);
 
