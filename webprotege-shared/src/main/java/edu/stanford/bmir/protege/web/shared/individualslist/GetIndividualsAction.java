@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividualsResult> {
 
+    @Nullable
     private OWLClass type;
 
     @Nullable
@@ -48,11 +49,11 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public GetIndividualsAction(@Nonnull ProjectId projectId,
-                                @Nonnull OWLClass type,
+                                @Nonnull Optional<OWLClass> type,
                                 @Nonnull String filterString,
                                 @Nonnull Optional<PageRequest> pageRequest) {
         super(projectId);
-        this.type = checkNotNull(type);
+        this.type = checkNotNull(type).orElse(null);
         this.searchString = checkNotNull(filterString);
         this.pageRequest = pageRequest.orElse(null);
     }
@@ -63,8 +64,8 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      * @return The requested type.  This could be owl:Thing.  Not {@code null}.
      */
     @Nonnull
-    public OWLClass getType() {
-        return type;
+    public Optional<OWLClass> getType() {
+        return Optional.ofNullable(type);
     }
 
     /**
@@ -87,7 +88,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
 
     @Override
     public int hashCode() {
-        return "GetIndividualsAction".hashCode() + type.hashCode() + Objects.hashCode(pageRequest);
+        return "GetIndividualsAction".hashCode() + Objects.hashCode(this.type) + Objects.hashCode(pageRequest);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
             return false;
         }
         GetIndividualsAction other = (GetIndividualsAction) o;
-        return this.type.equals(other.type) && Objects.equals(this.pageRequest, other.pageRequest);
+        return Objects.equals(this.type, other.type) && Objects.equals(this.pageRequest, other.pageRequest);
     }
 
     @Override

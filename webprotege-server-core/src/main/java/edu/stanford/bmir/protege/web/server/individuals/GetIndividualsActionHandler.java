@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.Scanner;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.server.shortform.ShortFormMatch;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -96,15 +97,16 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                         @Nonnull ExecutionContext executionContext) {
         List<SearchString> searchStrings = SearchString.parseMultiWordSearchString(action.getFilterString());
         Stream<OWLNamedIndividual> stream;
-        if (action.getType().isOWLThing()) {
-            stream = rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
-        }
-        else {
+        Optional<OWLClass> type = action.getType();
+        if (type.isPresent()) {
             stream = rootOntology.getImportsClosure().stream()
-                                 .flatMap(o -> o.getClassAssertionAxioms(action.getType()).stream())
+                                 .flatMap(o -> o.getClassAssertionAxioms(type.get()).stream())
                                  .map(OWLClassAssertionAxiom::getIndividual)
                                  .filter(OWLIndividual::isNamed)
                                  .map(OWLIndividual::asOWLNamedIndividual);
+        }
+        else {
+            stream = rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
         }
         Counter counter = new Counter();
         PageRequest pageRequest = action.getPageRequest().orElse(PageRequest.requestFirstPage());
@@ -130,15 +132,15 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                                         .map(IndividualRendering::getIndividual)
                                                         .collect(toPage(pageRequest.getPageNumber(),
                                                                         pageRequest.getPageSize()));
-        OWLClassData type = renderingManager.getRendering(action.getType());
+        OWLClassData typeData = renderingManager.getRendering(type.orElse(DataFactory.getOWLThing()));
         logger.info(BROWSING,
                     "{} {} retrieved instances of {} ({})",
                     projectId,
                     executionContext.getUserId(),
-                    action.getType(),
-                    renderingManager.getRendering(action.getType()).getBrowserText());
+                    type,
+                    typeData.getBrowserText());
         Page<EntityNode> entityNodes = page.map(pg -> pg.transform(entityNodeRenderer::render)).orElse(Page.emptyPage());
-        return new GetIndividualsResult(type, entityNodes, counter.getCount(), (int) entityNodes.getTotalElements());
+        return new GetIndividualsResult(type.map(t -> typeData), entityNodes, counter.getCount(), (int) entityNodes.getTotalElements());
     }
 
     @Nonnull

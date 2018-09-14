@@ -16,8 +16,8 @@
             padding: 1px;
             box-sizing: border-box;
         }
-        .typeBox {
-
+        .typeFieldContainer {
+            margin-bottom: 1rem;
         }
         .searchBox {
             flex-grow: 0;
@@ -65,14 +65,14 @@
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
         <div class="{wp.style.formGroup} {style.typeGroup}">
             <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
-            <g:SimplePanel ui:field="typeFieldContainer"/>
-        </div>
-        <div class="{style.listGroup}">
-            <g:Label text="Individuals" addStyleNames="{wp.style.formLabel}"/>
+            <g:SimplePanel ui:field="typeFieldContainer" addStyleNames="{style.typeFieldContainer}"/>
             <g:ListBox ui:field="retrievalTypeField" addStyleNames="{style.levelField}">
                 <g:item value="ALL_INSTANCES">Direct and Indirect Individuals</g:item>
                 <g:item value="DIRECT_INSTANCES">Direct individuals</g:item>
             </g:ListBox>
+        </div>
+        <div class="{style.listGroup}">
+            <g:Label text="Individuals" addStyleNames="{wp.style.formLabel}"/>
             <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}"
                                      placeholder="{msg.enterSearchStringToFilterList}"/>
             <list:ListBox ui:field="individualsList" addStyleNames="{style.individualsList}"/>

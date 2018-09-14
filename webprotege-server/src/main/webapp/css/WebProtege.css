@@ -173,6 +173,11 @@ select {
     padding: 1px;
 }
 
+select:disabled {
+    color: #c0c0c0;
+}
+
+
 .gwt-MenuBar-vertical {
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);

@@ -147,6 +147,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private void resetType() {
         hierarchyFieldPresenter.clearEntity();
+        view.setRetrievalTypeEnabled(false);
         updateList();
     }
 
@@ -168,9 +169,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     private void updateList() {
         Optional<PageRequest> pageRequest = Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
                                                                                         PAGE_SIZE));
-        OWLClass type = currentType.orElse(DataFactory.getOWLThing());
         GetIndividualsAction action = new GetIndividualsAction(projectId,
-                                                               type,
+                                                               currentType,
                                                                view.getSearchString(),
                                                                pageRequest);
         dispatchServiceManager.execute(action, view, result -> {
@@ -183,7 +183,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
             view.setPageCount(paginatedResult.getPageCount());
             view.setPageNumber(paginatedResult.getPageNumber());
             updateStatusLabel(displayedIndividuals, totalIndividuals);
-            entityDisplay.setDisplayedEntity(Optional.of(result.getType()));
+            entityDisplay.setDisplayedEntity(result.getType().map(t -> (OWLEntityData) t));
             elementsMap.clear();
             result.getIndividuals()
                   .forEach(node -> elementsMap.put(node.getEntity(), node));
@@ -214,6 +214,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     }
 
     private void handleTypeChanged() {
+        view.setRetrievalTypeEnabled(hierarchyFieldPresenter.getEntity().isPresent());
         currentType = hierarchyFieldPresenter.getEntity()
                                              .filter(ed -> ed instanceof OWLClassData)
                                              .map(ed -> (OWLClassData) ed)

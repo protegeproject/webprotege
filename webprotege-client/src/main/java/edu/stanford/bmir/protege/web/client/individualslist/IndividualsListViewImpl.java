@@ -172,6 +172,23 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
         searchBox.setText("");
     }
 
+    @Nonnull
+    @Override
+    public InstanceRetrievalType getRetrievalType() {
+        return InstanceRetrievalType.values()[retrievalTypeField.getSelectedIndex()];
+    }
+
+    @Override
+    public void setRetrievalType(@Nonnull InstanceRetrievalType retrievalType) {
+        retrievalTypeField.setSelectedIndex(retrievalType.ordinal());
+    }
+
+    @Override
+    public void setRetrievalTypeEnabled(boolean enabled) {
+        retrievalTypeField.setEnabled(enabled);
+    }
+
+
     @Override
     public void setSearchStringChangedHandler(@Nonnull SearchStringChangedHandler handler) {
         searchStringChangedHandler = checkNotNull(handler);

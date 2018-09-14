@@ -7,7 +7,9 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,6 +21,7 @@ public class GetIndividualsResult implements Result {
 
 
     @SuppressWarnings("GwtInconsistentSerializableClass" )
+    @Nullable
     private OWLClassData type;
 
     private Page<EntityNode> result;
@@ -31,16 +34,16 @@ public class GetIndividualsResult implements Result {
     private GetIndividualsResult() {
     }
 
-    public GetIndividualsResult(OWLClassData type,
+    public GetIndividualsResult(Optional<OWLClassData> type,
                                 Page<EntityNode> result, int totalIndividuals, int matchedIndividuals) {
-        this.type = type;
+        this.type = type.orElse(null);
         this.result = result;
         this.totalIndividuals = totalIndividuals;
         this.matchedIndividuals = matchedIndividuals;
     }
 
-    public OWLClassData getType() {
-        return type;
+    public Optional<OWLClassData> getType() {
+        return Optional.ofNullable(type);
     }
 
     public Page<EntityNode> getPaginatedResult() {
