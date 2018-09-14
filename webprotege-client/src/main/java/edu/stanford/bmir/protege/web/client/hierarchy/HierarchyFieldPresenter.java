@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView.EntityChangedHandler;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupPresenter;
+import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -18,10 +19,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,10 +38,10 @@ public class HierarchyFieldPresenter {
     private final HierarchyFieldView view;
 
     @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
+    private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final Provider<EntityNodeListPopupPresenter> popupProvider;
+    private final EntityNodeListPopupPresenterFactory popupPresenterFactory;
 
     @Nonnull
     private EntityChangedHandler entityChangedHandler = () -> {};
@@ -53,11 +52,11 @@ public class HierarchyFieldPresenter {
     public HierarchyFieldPresenter(@Nonnull ProjectId projectId,
                                    @Nonnull HierarchyFieldView view,
                                    @Nonnull DispatchServiceManager dispatchServiceManager,
-                                   @Nonnull Provider<EntityNodeListPopupPresenter> popupProvider) {
+                                   @Nonnull EntityNodeListPopupPresenterFactory popupPresenterFactory) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
-        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
-        this.popupProvider = checkNotNull(popupProvider);
+        this.dispatch = checkNotNull(dispatchServiceManager);
+        this.popupPresenterFactory = checkNotNull(popupPresenterFactory);
     }
 
     public void start(@Nonnull AcceptsOneWidget viewContainer) {
@@ -87,10 +86,10 @@ public class HierarchyFieldPresenter {
             view.setMoveToParentButtonEnabled(!e.isTopEntity());
             view.setMoveToSiblingButtonEnabled(!e.isTopEntity() && !e.isBottomEntity());
             hierarchyId.ifPresent(id -> {
-                dispatchServiceManager.execute(new GetHierarchyChildrenAction(projectId,
-                                                                              e,
-                                                                              id,
-                                                                              PageRequest.requestPageWithSize(1, 1)),
+                dispatch.execute(new GetHierarchyChildrenAction(projectId,
+                                                                e,
+                                                                id,
+                                                                PageRequest.requestPageWithSize(1, 1)),
                                                result -> view.setMoveToChildButtonEnabled(!result.getChildren().getPageElements().isEmpty()));
             });
 
@@ -107,10 +106,10 @@ public class HierarchyFieldPresenter {
     }
 
     private void getPathsToRootAndMoveToParent(HierarchyId id, OWLEntity entity) {
-        dispatchServiceManager.execute(new GetHierarchyPathsToRootAction(projectId,
-                                                                         entity,
-                                                                         id),
-                                       this::handlePathsToRoot);
+        dispatch.execute(new GetHierarchyPathsToRootAction(projectId,
+                                                           entity,
+                                                           id),
+                         this::handlePathsToRoot);
     }
 
     private void handlePathsToRoot(GetHierarchyPathsToRootResult result) {
@@ -131,20 +130,21 @@ public class HierarchyFieldPresenter {
     private void getSiblingsAndMoveToSibling(@Nonnull HierarchyId id,
                                              @Nonnull OWLEntity entity,
                                              @Nonnull UIObject target) {
-        dispatchServiceManager.execute(new GetHierarchySiblingsAction(projectId,
-                                                                      entity,
-                                                                      id,
-                                                                      PageRequest.requestSinglePage()),
-                                       result -> handleHierarchySiblings(result, target));
-    }
-
-    private void handleHierarchySiblings(@Nonnull GetHierarchySiblingsResult result,
-                                         @Nonnull UIObject target) {
-        List<GraphNode<EntityNode>> pageElements = result.getSiblingsPage().getPageElements();
-        EntityNodeListPopupPresenter popup = popupProvider.get();
-        popup.setListData(result.getSiblingsPage().transform(GraphNode::getUserObject));
+        EntityNodeListPopupPresenter popup =
+                popupPresenterFactory.create((pageRequest, consumer) -> {
+                    dispatch.execute(new GetHierarchySiblingsAction(projectId,
+                                                                    entity,
+                                                                    id,
+                                                                    pageRequest),
+                                     result -> {
+                                         Page<EntityNode> data = result.getSiblingsPage()
+                                                                       .transform(GraphNode::getUserObject);
+                                         consumer.consumeListData(data);
+                                     });
+                });
         popup.showRelativeTo(target, (sel) -> handlePopupClose(popup));
     }
+
 
     private void handleMoveToChild(UIObject target) {
         hierarchyId.ifPresent(id -> {
@@ -156,24 +156,19 @@ public class HierarchyFieldPresenter {
     private void getChildrenAndMoveToChild(@Nonnull HierarchyId id,
                                            @Nonnull OWLEntity entity,
                                            @Nonnull UIObject target) {
-        dispatchServiceManager.execute(new GetHierarchyChildrenAction(projectId,
-                                                                      entity,
-                                                                      id),
-                                       result -> handleHierarchyChildren(result, target));
-    }
-
-    private void handleHierarchyChildren(GetHierarchyChildrenResult result, UIObject target) {
-        GWT.log("[HierarchyFieldPresenter] Showing children: " + result);
-        List<GraphNode<EntityNode>> pageElements = result.getChildren()
-                                                         .getPageElements();
-        if(pageElements.size() == 1) {
-            setEntityAndFireEvents(pageElements.get(0).getUserObject().getEntityData());
-        }
-        else {
-            EntityNodeListPopupPresenter popup = popupProvider.get();
-            popup.setListData(result.getChildren().transform(GraphNode::getUserObject));
-            popup.showRelativeTo(target, (sel) -> handlePopupClose(popup));
-        }
+        EntityNodeListPopupPresenter popup =
+                popupPresenterFactory.create(((pageRequest, consumer) -> {
+                    dispatch.execute(new GetHierarchyChildrenAction(projectId,
+                                                                    entity,
+                                                                    id,
+                                                                    pageRequest),
+                                     result -> {
+                                         Page<EntityNode> data = result.getChildren()
+                                                                       .transform(GraphNode::getUserObject);
+                                         consumer.consumeListData(data);
+                                     });
+                }));
+        popup.showRelativeTo(target, (set) -> handlePopupClose(popup));
     }
 
     private void handlePopupClose(EntityNodeListPopupPresenter popup) {
