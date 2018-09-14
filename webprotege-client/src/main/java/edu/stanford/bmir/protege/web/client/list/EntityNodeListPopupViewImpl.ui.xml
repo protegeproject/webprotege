@@ -7,8 +7,8 @@
         .main {
             display: flex;
             flex-direction: column;
-            max-height: 300px;
-            max-width: 500px;
+            height: 300px;
+            width: 400px;
         }
         .label {
             flex-grow: 0;
