@@ -4,7 +4,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -24,8 +23,8 @@ public interface HierarchyFieldView extends IsWidget {
         void handleMoveToChild(UIObject target);
     }
 
-    interface MoveToSiblingHanler {
-        void handleMoveToSibling();
+    interface MoveToSiblingHandler {
+        void handleMoveToSibling(UIObject target);
     }
 
     interface EntityChangedHandler {
@@ -36,7 +35,7 @@ public interface HierarchyFieldView extends IsWidget {
 
     void setMoveToChildHandler(@Nonnull MoveToChildHandler handler);
 
-    void setMoveToSiblingHandler(@Nonnull MoveToSiblingHanler handler);
+    void setMoveToSiblingHandler(@Nonnull MoveToSiblingHandler handler);
 
     void setEntityChangedHandler(@Nonnull EntityChangedHandler handler);
 

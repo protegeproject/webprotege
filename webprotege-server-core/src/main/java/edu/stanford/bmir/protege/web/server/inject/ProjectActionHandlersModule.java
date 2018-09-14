@@ -20,10 +20,7 @@ import edu.stanford.bmir.protege.web.server.entity.MergeEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
 import edu.stanford.bmir.protege.web.server.form.SetFormDataActionHandler;
 import edu.stanford.bmir.protege.web.server.frame.*;
-import edu.stanford.bmir.protege.web.server.hierarchy.GetEntityHierarchyChildrenActionHandler;
-import edu.stanford.bmir.protege.web.server.hierarchy.GetHierarchyPathsToRootActionHandler;
-import edu.stanford.bmir.protege.web.server.hierarchy.GetHierarchyRootsActionHandler;
-import edu.stanford.bmir.protege.web.server.hierarchy.MoveHierarchyNodeActionHandler;
+import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.issues.*;
@@ -557,6 +554,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler providesGetProjectInfoActionHandler(GetProjectInfoActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesGetHierarchySiblingsActionHandler(GetHierarchySiblingsActionHandler handler) {
         return handler;
     }
 }

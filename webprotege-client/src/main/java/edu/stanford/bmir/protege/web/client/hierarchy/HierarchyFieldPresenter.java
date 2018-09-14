@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
@@ -20,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -119,8 +121,29 @@ public class HierarchyFieldPresenter {
                                      .ifPresent(this::setEntityAndFireEvents));
     }
 
-    private void handleMoveToSibling() {
+    private void handleMoveToSibling(UIObject target) {
+        hierarchyId.ifPresent(id -> {
+            view.getEntity().map(OWLEntityData::getEntity)
+                .ifPresent(entity -> getSiblingsAndMoveToSibling(id, entity, target));
+        });
+    }
 
+    private void getSiblingsAndMoveToSibling(@Nonnull HierarchyId id,
+                                             @Nonnull OWLEntity entity,
+                                             @Nonnull UIObject target) {
+        dispatchServiceManager.execute(new GetHierarchySiblingsAction(projectId,
+                                                                      entity,
+                                                                      id,
+                                                                      PageRequest.requestSinglePage()),
+                                       result -> handleHierarchySiblings(result, target));
+    }
+
+    private void handleHierarchySiblings(@Nonnull GetHierarchySiblingsResult result,
+                                         @Nonnull UIObject target) {
+        List<GraphNode<EntityNode>> pageElements = result.getSiblingsPage().getPageElements();
+        EntityNodeListPopupPresenter popup = popupProvider.get();
+        popup.setListData(result.getSiblingsPage().transform(GraphNode::getUserObject));
+        popup.showRelativeTo(target, (sel) -> handlePopupClose(popup));
     }
 
     private void handleMoveToChild(UIObject target) {
@@ -149,12 +172,14 @@ public class HierarchyFieldPresenter {
         else {
             EntityNodeListPopupPresenter popup = popupProvider.get();
             popup.setListData(result.getChildren().transform(GraphNode::getUserObject));
-            popup.showRelativeTo(target, (sel) -> {
-                popup.getFirstSelectedElement()
-                     .map(EntityNode::getEntityData)
-                     .ifPresent(this::setEntityAndFireEvents);
-            });
+            popup.showRelativeTo(target, (sel) -> handlePopupClose(popup));
         }
+    }
+
+    private void handlePopupClose(EntityNodeListPopupPresenter popup) {
+        popup.getFirstSelectedElement()
+             .map(EntityNode::getEntityData)
+             .ifPresent(this::setEntityAndFireEvents);
     }
 
     public Optional<OWLEntityData> getEntity() {

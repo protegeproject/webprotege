@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,7 +35,7 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     private MoveToChildHandler moveToChildHandler = (uiObject) -> {};
 
     @Nonnull
-    private MoveToSiblingHanler moveToSiblingHandler = () -> {};
+    private MoveToSiblingHandler moveToSiblingHandler = (target) -> {};
 
     @Nonnull
     private EntityChangedHandler entityChangedHandler = () -> {};
@@ -73,7 +72,7 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
 
     @UiHandler("moveToSiblingButton")
     public void moveToSiblingButtonClick(ClickEvent event) {
-        moveToSiblingHandler.handleMoveToSibling();
+        moveToSiblingHandler.handleMoveToSibling(moveToSiblingButton);
     }
 
     @UiHandler("moveToChildButton")
@@ -97,7 +96,7 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     }
 
     @Override
-    public void setMoveToSiblingHandler(@Nonnull MoveToSiblingHanler handler) {
+    public void setMoveToSiblingHandler(@Nonnull MoveToSiblingHandler handler) {
         this.moveToSiblingHandler = checkNotNull(handler);
     }
 
