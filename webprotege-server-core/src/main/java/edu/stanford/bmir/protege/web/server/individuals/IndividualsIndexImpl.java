@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.Scanner;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
+import edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator;
 import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
@@ -142,6 +143,8 @@ public class IndividualsIndexImpl implements IndividualsIndex {
 
         private final String rendering;
 
+        private final AlphaNumericStringComparator comparator = new AlphaNumericStringComparator();
+
         public IndividualRendering(OWLNamedIndividual individual, String rendering) {
             this.individual = individual;
             this.rendering = rendering;
@@ -157,7 +160,7 @@ public class IndividualsIndexImpl implements IndividualsIndex {
 
         @Override
         public int compareTo(IndividualRendering o) {
-            return this.rendering.compareTo(o.rendering);
+            return comparator.compare(this.rendering, o.rendering);
         }
     }
 }

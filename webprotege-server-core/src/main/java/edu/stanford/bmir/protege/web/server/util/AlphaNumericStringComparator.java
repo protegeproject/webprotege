@@ -100,9 +100,9 @@ public class AlphaNumericStringComparator implements Comparator<String> {
             if(matchType1 == DIGITS) {
                 // Segments are digits
                 String s1Digits = matcher1.group(DIGITS);
-                int n1 = Integer.parseInt(s1Digits);
+                long n1 = Long.parseLong(s1Digits);
                 String s2Digits = matcher2.group(DIGITS);
-                int n2 = Integer.parseInt(s2Digits);
+                long n2 = Long.parseLong(s2Digits);
                 // Smaller numbers before larger numbers
                 if(n1 < n2) {
                     return S1_BEFORE_S2;
