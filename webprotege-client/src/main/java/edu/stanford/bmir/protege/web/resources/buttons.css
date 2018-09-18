@@ -7,6 +7,7 @@
 @url moveToParentIconUrl moveToParentIcon;
 @url moveToSiblingIconUrl moveToSiblingIcon;
 @url moveToChildIconUrl moveToChildIcon;
+@url syncSelectionIconUrl syncSelectionIcon;
 
 .wp-btn {
     border: none;
@@ -242,8 +243,10 @@
 
 
 .wp-btn-down {
-    background-color: #aaaaaa;
-    background-image: downArrowIconUrl;
+    /*background-color: #aaaaaa;*/
+    /*background-image: downArrowIconUrl;*/
+    background-color: rebeccapurple;
+    -webkit-mask:  moveToParentIconUrl no-repeat;
     background-repeat: no-repeat;
     color: white;
     width: 20px;
@@ -265,47 +268,60 @@
     opacity: 0.3;
 }
 
-.wp-btn-move-to-parent {
-    background-color: #aaaaaa;
-    background-image: moveToParentIconUrl;
+.wp-btn-sync-selection {
+    background-color: #505050;
+    -webkit-mask:  syncSelectionIconUrl no-repeat;
     background-repeat: no-repeat;
-    color: white;
     width: 20px;
     height: 20px;
-    border-radius: 10px;
-    border: 1px solid transparent;
     margin: 0;
     padding: 0;
     cursor: pointer;
-    font-size: 18px;
 }
 
-.wp-btn-move-to-parent:hover {
-    background-color: #0300d8;
+.wp-btn-sync-selection:hover {
+    background-color: #6C1A91;
 }
 
-.wp-btn-move-to-parent:disabled {
+
+.wp-btn-sync-selection:disabled {
     background-color: #a0a0a0;
     opacity: 0.3;
 }
 
-.wp-btn-move-to-sibling {
-    background-color: #aaaaaa;
-    background-image: moveToSiblingIconUrl;
+.wp-btn-move-to-parent {
+    background-color: #505050;
+    -webkit-mask:  moveToParentIconUrl no-repeat;
     background-repeat: no-repeat;
-    color: white;
     width: 20px;
     height: 20px;
-    border-radius: 10px;
-    border: 1px solid transparent;
     margin: 0;
     padding: 0;
     cursor: pointer;
-    font-size: 18px;
+}
+
+.wp-btn-move-to-parent:hover {
+    background-color: #6C1A91;
+}
+
+.wp-btn-move-to-parent:disabled {
+    background-color: #a0a0a0;
+    opacity:          0.3;
+}
+
+.wp-btn-move-to-sibling {
+    background-color:  #505050;
+    -webkit-mask:      moveToSiblingIconUrl no-repeat;
+    background-repeat: no-repeat;
+    width:             20px;
+    height:            20px;
+    margin:            0;
+    padding:           0;
+    cursor:            pointer;
 }
 
 .wp-btn-move-to-sibling:hover {
-    background-color: #0300d8;
+    background-color: #6C1A91;
 }
 
 .wp-btn-move-to-sibling:disabled {
@@ -315,22 +331,18 @@
 
 
 .wp-btn-move-to-child {
-    background-color: #aaaaaa;
-    background-image: moveToChildIconUrl;
+    background-color: #505050;
+    -webkit-mask:  moveToChildIconUrl no-repeat;
     background-repeat: no-repeat;
-    color: white;
     width: 20px;
     height: 20px;
-    border-radius: 10px;
-    border: 1px solid transparent;
     margin: 0;
     padding: 0;
     cursor: pointer;
-    font-size: 18px;
 }
 
 .wp-btn-move-to-child:hover {
-    background-color: #0300d8;
+    background-color: #6C1A91;
 }
 
 .wp-btn-move-to-child:disabled {

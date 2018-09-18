@@ -30,7 +30,12 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Button ui:field="moveToParentButton" title="{msg.moveToParent}" addStyleNames="{wp.buttons.moveToParent} {style.classNavButton}"/>
+        <div style="display: flex; flex-direction: row;">
+            <g:Button ui:field="moveToParentButton" title="{msg.moveToParent}"
+                      addStyleNames="{wp.buttons.moveToParent} {style.classNavButton}"/>
+            <g:Button ui:field="syncSelection" title="Sync Selection"
+                      addStyleNames="{wp.buttons.syncSelection} {style.classNavButton}"/>
+        </div>
         <div class="{style.classFieldRow}">
             <primitive:PrimitiveDataEditorImpl ui:field="entityField"
                                                classesAllowed="true"

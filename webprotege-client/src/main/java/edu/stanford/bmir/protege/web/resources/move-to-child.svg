@@ -2,10 +2,13 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-    <path d="M10 14 L10 5 L6 5"
+    <!-- Arrow head -->
+    <path d="M6 10 L10 15 L14 10"
           style="stroke:rgb(255,255,255);stroke-width:2;fill:none;"
           stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="M7 10 L10 14 L13 10"
+    <!-- Arrow stem -->
+    <path d="M10 14 L10 3 L3 3"
           style="stroke:rgb(255,255,255);stroke-width:2;fill:none;"
           stroke-linejoin="round" stroke-linecap="round"/>
+
 </svg>

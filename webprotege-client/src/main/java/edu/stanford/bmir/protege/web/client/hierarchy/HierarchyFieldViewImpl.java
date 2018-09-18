@@ -58,6 +58,9 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @UiField
     Button moveToParentButton;
 
+    @UiField
+    Button syncSelection;
+
     @Inject
     public HierarchyFieldViewImpl(@Nonnull PrimitiveDataEditorImpl entityField) {
         this.entityField = checkNotNull(entityField);

@@ -98,6 +98,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource gotoIcon();
 
+    @Source("sync-selection.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource syncSelectionIcon();
+
+
     @Source("up-arrow.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource upArrowIcon();
@@ -474,6 +479,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-down")
         String downButton();
+
+        @ClassName("wp-btn-sync-selection")
+        String syncSelection();
 
         @ClassName("wp-btn-move-to-parent")
         String moveToParent();
