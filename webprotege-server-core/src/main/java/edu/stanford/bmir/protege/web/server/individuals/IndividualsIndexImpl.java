@@ -126,7 +126,7 @@ public class IndividualsIndexImpl implements IndividualsIndex {
             return true;
         }
         String shortForm = dictionaryManager.getShortForm(i);
-        Scanner scanner = new Scanner(shortForm, shortForm);
+        Scanner scanner = new Scanner(shortForm, shortForm.toLowerCase());
         for (SearchString searchString : searchStrings) {
             int index = scanner.indexOf(searchString, 0);
             if (index == -1) {
