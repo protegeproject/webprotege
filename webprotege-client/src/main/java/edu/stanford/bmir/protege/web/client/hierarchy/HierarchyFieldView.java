@@ -15,6 +15,10 @@ import java.util.Optional;
  */
 public interface HierarchyFieldView extends IsWidget {
 
+    interface SyncClassWithLastSelectedClassHandler {
+        void handleSyncWithLastSelectedClass();
+    }
+
     interface MoveToParentHandler {
         void handleMoveToParent();
     }
@@ -31,6 +35,8 @@ public interface HierarchyFieldView extends IsWidget {
         void handleEntityChanged();
     }
 
+    void setSyncClassWithLastSelectedClassHandler(@Nonnull SyncClassWithLastSelectedClassHandler handler);
+
     void setMoveToParentHandler(@Nonnull MoveToParentHandler handler);
 
     void setMoveToChildHandler(@Nonnull MoveToChildHandler handler);
@@ -45,6 +51,8 @@ public interface HierarchyFieldView extends IsWidget {
     void setEntity(@Nonnull OWLEntityData entity);
 
     void clearEntity();
+
+    void setSyncClassWithLastSelectedClassEnabled(boolean enabled);
 
     void setMoveToParentButtonEnabled(boolean enabled);
 

@@ -29,6 +29,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldView {
 
     @Nonnull
+    private SyncClassWithLastSelectedClassHandler syncClassWithLastSelectedClassHandler = () -> {};
+
+    @Nonnull
     private MoveToParentHandler moveToParentHandler = () -> {};
 
     @Nonnull
@@ -59,7 +62,7 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     Button moveToParentButton;
 
     @UiField
-    Button syncSelection;
+    Button syncSelectionButton;
 
     @Inject
     public HierarchyFieldViewImpl(@Nonnull PrimitiveDataEditorImpl entityField) {
@@ -86,6 +89,17 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @UiHandler("entityField")
     public void handleEntityChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
         entityChangedHandler.handleEntityChanged();
+    }
+
+    @UiHandler("syncSelectionButton")
+    public void syncSelectionButtonClick(ClickEvent event) {
+        syncClassWithLastSelectedClassHandler.handleSyncWithLastSelectedClass();
+    }
+
+
+    @Override
+    public void setSyncClassWithLastSelectedClassHandler(@Nonnull SyncClassWithLastSelectedClassHandler handler) {
+        this.syncClassWithLastSelectedClassHandler = checkNotNull(handler);
     }
 
     @Override
@@ -124,6 +138,11 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @Override
     public void clearEntity() {
         entityField.clearValue();
+    }
+
+    @Override
+    public void setSyncClassWithLastSelectedClassEnabled(boolean enabled) {
+        syncSelectionButton.setEnabled(enabled);
     }
 
     @Override
