@@ -17,7 +17,7 @@
             box-sizing: border-box;
         }
         .typeFieldContainer {
-            margin-bottom: 1rem;
+            margin-bottom: 0.3rem;
         }
         .searchBox {
             flex-grow: 0;
