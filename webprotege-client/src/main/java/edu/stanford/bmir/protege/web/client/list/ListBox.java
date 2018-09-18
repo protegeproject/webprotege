@@ -10,6 +10,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 
@@ -236,13 +237,15 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     }
 
     private void setRowStyles(int row, boolean selected) {
-        if (selected) {
-            contentHolder.getWidget(row).removeStyleName(BUNDLE.style().noSelection());
-            contentHolder.getWidget(row).addStyleName(BUNDLE.style().selection());
-        }
-        else {
-            contentHolder.getWidget(row).removeStyleName(BUNDLE.style().selection());
-            contentHolder.getWidget(row).addStyleName(BUNDLE.style().noSelection());
+        if(-1 < row && row < contentHolder.getWidgetCount()) {
+            if (selected) {
+                contentHolder.getWidget(row).removeStyleName(BUNDLE.style().noSelection());
+                contentHolder.getWidget(row).addStyleName(BUNDLE.style().selection());
+            }
+            else {
+                contentHolder.getWidget(row).removeStyleName(BUNDLE.style().selection());
+                contentHolder.getWidget(row).addStyleName(BUNDLE.style().noSelection());
+            }
         }
     }
 
