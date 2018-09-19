@@ -103,6 +103,12 @@ public class EntityNodeListPopupViewImpl extends Composite implements EntityNode
     }
 
     @Override
+    public void setTitleLabel(@Nonnull String title) {
+        titleLabel.setText(checkNotNull(title));
+        titleLabel.setVisible(true);
+    }
+
+    @Override
     public void setPageCount(int pageCount) {
         paginatorPresenter.setPageCount(pageCount);
     }

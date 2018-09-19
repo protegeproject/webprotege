@@ -247,6 +247,7 @@
     /*background-image: downArrowIconUrl;*/
     background-color: rebeccapurple;
     -webkit-mask:  moveToParentIconUrl no-repeat;
+    mask: moveToParentIconUrl no-repeat;
     background-repeat: no-repeat;
     color: white;
     width: 20px;
@@ -270,6 +271,7 @@
 
 .wp-btn-sync-selection {
     background-color: #505050;
+    mask:  syncSelectionIconUrl no-repeat;
     -webkit-mask:  syncSelectionIconUrl no-repeat;
     background-repeat: no-repeat;
     width: 20px;
@@ -311,6 +313,7 @@
 
 .wp-btn-move-to-sibling {
     background-color:  #505050;
+    mask:      moveToSiblingIconUrl no-repeat;
     -webkit-mask:      moveToSiblingIconUrl no-repeat;
     background-repeat: no-repeat;
     width:             20px;
@@ -332,6 +335,7 @@
 
 .wp-btn-move-to-child {
     background-color: #505050;
+    mask:  moveToChildIconUrl no-repeat;
     -webkit-mask:  moveToChildIconUrl no-repeat;
     background-repeat: no-repeat;
     width: 20px;

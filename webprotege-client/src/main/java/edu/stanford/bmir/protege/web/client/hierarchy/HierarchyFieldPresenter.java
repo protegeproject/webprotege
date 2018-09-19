@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.UIObject;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView.EntityChangedHandler;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupPresenter;
@@ -57,19 +58,24 @@ public class HierarchyFieldPresenter {
     @Nonnull
     private final ClassIriRenderer classIriRenderer;
 
+    @Nonnull
+    private final Messages messages;
+
     @Inject
     public HierarchyFieldPresenter(@Nonnull ProjectId projectId,
                                    @Nonnull HierarchyFieldView view,
                                    @Nonnull DispatchServiceManager dispatchServiceManager,
                                    @Nonnull EntityNodeListPopupPresenterFactory popupPresenterFactory,
                                    @Nonnull SelectionModel selectionModel,
-                                   @Nonnull ClassIriRenderer classIriRenderer) {
+                                   @Nonnull ClassIriRenderer classIriRenderer,
+                                   @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatchServiceManager);
         this.popupPresenterFactory = checkNotNull(popupPresenterFactory);
         this.selectionModel = checkNotNull(selectionModel);
         this.classIriRenderer = checkNotNull(classIriRenderer);
+        this.messages = checkNotNull(messages);
     }
 
     public void start(@Nonnull AcceptsOneWidget viewContainer) {
@@ -168,7 +174,7 @@ public class HierarchyFieldPresenter {
                                          consumer.consumeListData(data);
                                      });
                 });
-        popup.showRelativeTo(target, (sel) -> handlePopupClose(popup));
+        popup.showRelativeTo(target, (sel) -> handlePopupClose(popup), messages.hierarchy_siblings());
     }
 
 
@@ -194,7 +200,7 @@ public class HierarchyFieldPresenter {
                                          consumer.consumeListData(data);
                                      });
                 }));
-        popup.showRelativeTo(target, (set) -> handlePopupClose(popup));
+        popup.showRelativeTo(target, (set) -> handlePopupClose(popup), messages.hierarchy_children());
     }
 
     private void handlePopupClose(EntityNodeListPopupPresenter popup) {

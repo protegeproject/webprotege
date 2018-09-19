@@ -68,10 +68,12 @@ public class EntityNodeListPopupPresenter {
     }
 
     public void showRelativeTo(@Nonnull UIObject uiObject,
-                               @Nonnull PopupClosedHandler handler) {
+                               @Nonnull PopupClosedHandler handler,
+                               @Nonnull String title) {
         PopupPanel popupPanel = new PopupPanel(true, true);
         popupPanel.setAutoHideOnHistoryEventsEnabled(true);
         popupPanel.setWidget(view);
+        view.setTitleLabel(title);
         view.setAcceptSelectionHandler((sel) -> {
             popupPanel.setVisible(false);
             handler.handlePopupClosed(sel);

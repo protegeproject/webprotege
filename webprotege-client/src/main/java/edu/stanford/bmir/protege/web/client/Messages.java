@@ -1216,4 +1216,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Jump to child")
     @Key("hierarchy.moveToChild")
     String moveToChild();
+
+    @DefaultMessage("Siblings")
+    @Key("hierarchy.siblings")
+    String hierarchy_siblings();
+
+    @DefaultMessage("Children")
+    @Key("hierarchy.children")
+    String hierarchy_children();
 }

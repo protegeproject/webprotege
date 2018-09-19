@@ -31,4 +31,6 @@ public interface EntityNodeListPopupView extends IsWidget, HasPagination, HasDou
 
     @Nonnull
     List<EntityNode> getSelection();
+
+    void setTitleLabel(@Nonnull String title);
 }

@@ -13,6 +13,7 @@
         .label {
             flex-grow: 0;
             flex-shrink: 0;
+            padding: 2px;
         }
         .list {
             flex-grow: 1;
