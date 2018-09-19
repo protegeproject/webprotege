@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -16,8 +15,6 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedEvent;
-import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedHandler;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -51,15 +48,16 @@ public class HierarchyFieldPresenter {
     private final SelectionModel selectionModel;
 
     @Nonnull
-    private EntityChangedHandler entityChangedHandler = () -> {};
-
-    private Optional<HierarchyId> hierarchyId = Optional.empty();
-
-    @Nonnull
     private final ClassIriRenderer classIriRenderer;
 
     @Nonnull
     private final Messages messages;
+
+    @Nonnull
+    private EntityChangedHandler entityChangedHandler = () -> {
+    };
+
+    private Optional<HierarchyId> hierarchyId = Optional.empty();
 
     @Inject
     public HierarchyFieldPresenter(@Nonnull ProjectId projectId,
@@ -92,7 +90,6 @@ public class HierarchyFieldPresenter {
     }
 
 
-
     public void setEntityChangedHandler(@Nonnull EntityChangedHandler handler) {
         this.entityChangedHandler = checkNotNull(handler);
     }
@@ -109,7 +106,12 @@ public class HierarchyFieldPresenter {
     }
 
     private void updateButtonState() {
-        view.setSyncClassWithLastSelectedClassEnabled(selectionModel.getLastSelectedClass().isPresent());
+        view.setSyncClassWithLastSelectedClassEnabled(
+                selectionModel.getLastSelectedClass().isPresent()
+                        && !selectionModel
+                        .getLastSelectedClass()
+                        .equals(view.getEntity().map(OWLEntityData::getEntity)));
+
         view.setMoveToParentButtonEnabled(false);
         view.setMoveToChildButtonEnabled(false);
         view.setMoveToSiblingButtonEnabled(false);
@@ -122,7 +124,10 @@ public class HierarchyFieldPresenter {
                                                                 e,
                                                                 id,
                                                                 PageRequest.requestPageWithSize(1, 1)),
-                                               result -> view.setMoveToChildButtonEnabled(!result.getChildren().getPageElements().isEmpty()));
+                                 result -> view.setMoveToChildButtonEnabled(!result
+                                         .getChildren()
+                                         .getPageElements()
+                                         .isEmpty()));
             });
 
         });
@@ -132,8 +137,8 @@ public class HierarchyFieldPresenter {
     private void handleMoveToParent() {
         hierarchyId.ifPresent(id -> {
             view.getEntity()
-                .map(OWLEntityData::getEntity)
-                .ifPresent(entity -> getPathsToRootAndMoveToParent(id, entity));
+                    .map(OWLEntityData::getEntity)
+                    .ifPresent(entity -> getPathsToRootAndMoveToParent(id, entity));
         });
     }
 
@@ -146,16 +151,16 @@ public class HierarchyFieldPresenter {
 
     private void handlePathsToRoot(GetHierarchyPathsToRootResult result) {
         result.getPaths().stream()
-              .findFirst()
-              .ifPresent(path -> path.getLastPredecessor()
-                                     .map(last -> last.getUserObject().getEntityData())
-                                     .ifPresent(this::setEntityAndFireEvents));
+                .findFirst()
+                .ifPresent(path -> path.getLastPredecessor()
+                        .map(last -> last.getUserObject().getEntityData())
+                        .ifPresent(this::setEntityAndFireEvents));
     }
 
     private void handleMoveToSibling(UIObject target) {
         hierarchyId.ifPresent(id -> {
             view.getEntity().map(OWLEntityData::getEntity)
-                .ifPresent(entity -> getSiblingsAndMoveToSibling(id, entity, target));
+                    .ifPresent(entity -> getSiblingsAndMoveToSibling(id, entity, target));
         });
     }
 
@@ -170,7 +175,7 @@ public class HierarchyFieldPresenter {
                                                                     pageRequest),
                                      result -> {
                                          Page<EntityNode> data = result.getSiblingsPage()
-                                                                       .transform(GraphNode::getUserObject);
+                                                 .transform(GraphNode::getUserObject);
                                          consumer.consumeListData(data);
                                      });
                 });
@@ -181,7 +186,7 @@ public class HierarchyFieldPresenter {
     private void handleMoveToChild(UIObject target) {
         hierarchyId.ifPresent(id -> {
             view.getEntity().map(OWLEntityData::getEntity)
-                .ifPresent(entity -> getChildrenAndMoveToChild(id, entity, target));
+                    .ifPresent(entity -> getChildrenAndMoveToChild(id, entity, target));
         });
     }
 
@@ -196,7 +201,7 @@ public class HierarchyFieldPresenter {
                                                                     pageRequest),
                                      result -> {
                                          Page<EntityNode> data = result.getChildren()
-                                                                       .transform(GraphNode::getUserObject);
+                                                 .transform(GraphNode::getUserObject);
                                          consumer.consumeListData(data);
                                      });
                 }));
@@ -205,22 +210,22 @@ public class HierarchyFieldPresenter {
 
     private void handlePopupClose(EntityNodeListPopupPresenter popup) {
         popup.getFirstSelectedElement()
-             .map(EntityNode::getEntityData)
-             .ifPresent(this::setEntityAndFireEvents);
+                .map(EntityNode::getEntityData)
+                .ifPresent(this::setEntityAndFireEvents);
     }
 
     public Optional<OWLEntityData> getEntity() {
         return view.getEntity();
     }
 
-    private void setEntityAndFireEvents(@Nonnull OWLEntityData entity) {
-        setEntity(entity);
-        entityChangedHandler.handleEntityChanged();
-    }
-
     public void setEntity(OWLEntityData cls) {
         view.setEntity(cls);
         updateButtonState();
+    }
+
+    private void setEntityAndFireEvents(@Nonnull OWLEntityData entity) {
+        setEntity(entity);
+        entityChangedHandler.handleEntityChanged();
     }
 
     public void setEntityType(PrimitiveType entityType) {
