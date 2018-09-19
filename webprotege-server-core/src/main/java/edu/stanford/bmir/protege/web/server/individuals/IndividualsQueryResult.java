@@ -1,7 +1,13 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -10,22 +16,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14 Sep 2018
  */
-public class IndividualsQueryResult {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class IndividualsQueryResult {
 
-    private final Page<OWLNamedIndividual> queryResultPage;
-
-    private final long individualsCount;
-
-    public IndividualsQueryResult(Page<OWLNamedIndividual> queryResultPage, long individualsCount) {
-        this.queryResultPage = checkNotNull(queryResultPage);
-        this.individualsCount = individualsCount;
+    public static IndividualsQueryResult get(Page<OWLNamedIndividual> queryResultPage,
+                                             long individualsCount,
+                                             OWLClass type,
+                                             InstanceRetrievalMode mode) {
+        return new AutoValue_IndividualsQueryResult(queryResultPage,
+                                                    individualsCount,
+                                                    type,
+                                                    mode);
     }
 
-    public Page<OWLNamedIndividual> getIndividuals() {
-        return queryResultPage;
-    }
+    @Nonnull
+    public abstract Page<OWLNamedIndividual> getIndividuals();
 
-    public long getIndividualsCount() {
-        return individualsCount;
-    }
+    public abstract long getIndividualsCount();
+
+    @Nonnull
+    public abstract OWLClass getType();
+
+    @Nonnull
+    public abstract InstanceRetrievalMode getMode();
 }

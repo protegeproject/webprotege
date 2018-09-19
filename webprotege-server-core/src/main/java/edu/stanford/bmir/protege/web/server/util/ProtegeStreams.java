@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.util;
 
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -64,5 +63,11 @@ public class ProtegeStreams {
             ontologyStream = Stream.of(o);
         }
         return ontologyStream;
+    }
+
+    public static <A extends OWLAxiom> Stream<A> axiomStream(@Nonnull OWLOntology o,
+                                                             @Nonnull Imports imports,
+                                                             @Nonnull AxiomType<A> axiomType) {
+        return ontologyStream(o, imports).flatMap(ont -> ont.getAxioms(axiomType).stream());
     }
 }

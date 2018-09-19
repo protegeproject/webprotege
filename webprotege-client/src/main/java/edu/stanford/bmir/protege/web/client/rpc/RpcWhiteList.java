@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.State;
+import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
@@ -82,6 +83,8 @@ public class RpcWhiteList implements Action, Result {
     PrefixNameMatchType prefixNameMatchType;
 
     EntityNameMatchResult entityNameMatchResult;
+
+    InstanceRetrievalMode instanceRetrievalMode;
 
     public RpcWhiteList() {
     }
@@ -268,5 +271,13 @@ public class RpcWhiteList implements Action, Result {
 
     public void setEntityNameMatchResult(EntityNameMatchResult entityNameMatchResult) {
         this.entityNameMatchResult = entityNameMatchResult;
+    }
+
+    public InstanceRetrievalMode getInstanceRetrievalMode() {
+        return instanceRetrievalMode;
+    }
+
+    public void setInstanceRetrievalMode(InstanceRetrievalMode instanceRetrievalMode) {
+        this.instanceRetrievalMode = instanceRetrievalMode;
     }
 }

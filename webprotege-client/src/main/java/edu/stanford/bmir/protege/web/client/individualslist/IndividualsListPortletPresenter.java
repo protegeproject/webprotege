@@ -37,13 +37,14 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         presenter.installActions(portletUi);
         presenter.start(portletUi, eventBus);
-        presenter.setEntityDisplay(this);
         presenter.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
-        handleAfterSetEntity(Optional.empty());
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        entity.filter(OWLEntity::isOWLNamedIndividual).map(e -> (OWLNamedIndividual) e).ifPresent(i -> presenter.setSelectedIndividual(i));
+        Optional<OWLNamedIndividual> sel = entity.filter(OWLEntity::isOWLNamedIndividual)
+                .map(e -> (OWLNamedIndividual) e);
+        sel.ifPresent(presenter::setSelectedIndividual);
     }
 }

@@ -241,6 +241,7 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
             if (selected) {
                 contentHolder.getWidget(row).removeStyleName(BUNDLE.style().noSelection());
                 contentHolder.getWidget(row).addStyleName(BUNDLE.style().selection());
+                contentHolder.getWidget(row).getElement().scrollIntoView();
             }
             else {
                 contentHolder.getWidget(row).removeStyleName(BUNDLE.style().selection());
