@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.individualslist;
+package edu.stanford.bmir.protege.web.shared.individuals;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
