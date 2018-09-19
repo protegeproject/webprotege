@@ -282,7 +282,7 @@
 }
 
 .wp-btn-sync-selection:hover {
-    background-color: #6C1A91;
+    background-color: literal("var(--btn--hover--color)");
 }
 
 
@@ -303,7 +303,7 @@
 }
 
 .wp-btn-move-to-parent:hover {
-    background-color: #6C1A91;
+    background-color: literal("var(--btn--hover--color)");
 }
 
 .wp-btn-move-to-parent:disabled {
@@ -324,7 +324,7 @@
 }
 
 .wp-btn-move-to-sibling:hover {
-    background-color: #6C1A91;
+    background-color: literal("var(--btn--hover--color)");
 }
 
 .wp-btn-move-to-sibling:disabled {
@@ -346,7 +346,7 @@
 }
 
 .wp-btn-move-to-child:hover {
-    background-color: #6C1A91;
+    background-color: literal("var(--btn--hover--color)");
 }
 
 .wp-btn-move-to-child:disabled {
