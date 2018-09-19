@@ -49,7 +49,7 @@ public class PerspectiveFileManager {
     }
 
     private synchronized void copyDefaultPerspectiveDataIfNecessary() {
-        if(!defaultPerspectivesDirectory.exists()) {
+        if(!defaultPerspectivesDirectory.exists() || !getDefaultPerspectiveList().exists()) {
             PerspectiveDataCopier copier = new PerspectiveDataCopier(defaultPerspectivesDirectory);
             copier.copyDefaultPerspectiveData();
         }
