@@ -2,12 +2,11 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-    <circle cx="5" cy="3" r="2" stroke-width="1.5" style="stroke:#000000;fill:none;"/>
-    <circle cx="12" cy="8" r="2" stroke-width="1.5" style="stroke:#000000;fill:none;"/>
-    <circle cx="12" cy="14" r="2" stroke-width="1.5" style="stroke:#000000;fill:none;"/>
+    <circle cx="5" cy="3" r="2.2" style="stroke:#000000;fill:#000000;"/>
+    <circle cx="12" cy="8" r="2.2" style="stroke:#000000;fill:000000;"/>
+    <circle cx="12" cy="14" r="2.2" style="stroke:#000000;fill:000000;"/>
 
-    <line x1="5" y1="5" x2="5" y2="16" style="stroke:currentColor" stroke-width="1.5"/>
-    <line x1="5" y1="8" x2="10" y2="8" style="stroke:currentColor" stroke-width="1.5"/>
-    <line x1="5" y1="14" x2="10" y2="14" style="stroke:currentColor" stroke-width="1.5"/>
-
+    <line x1="5" y1="5" x2="5" y2="16" style="stroke:currentColor" stroke-width="2"/>
+    <line x1="5" y1="8" x2="10" y2="8" style="stroke:currentColor" stroke-width="2"/>
+    <line x1="5" y1="14" x2="10" y2="14" style="stroke:currentColor" stroke-width="2"/>
 </svg>
