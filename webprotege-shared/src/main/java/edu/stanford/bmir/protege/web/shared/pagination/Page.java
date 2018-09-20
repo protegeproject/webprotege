@@ -54,6 +54,10 @@ public class Page<T> implements Serializable, Iterable<T>, IsSerializable {
         return new ArrayList<T>(pageElements);
     }
 
+    public int getPageSize() {
+        return pageElements.size();
+    }
+
     public long getTotalElements() {
         return totalElements;
     }

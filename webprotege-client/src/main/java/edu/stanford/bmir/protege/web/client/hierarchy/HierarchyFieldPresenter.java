@@ -83,9 +83,7 @@ public class HierarchyFieldPresenter {
         view.setMoveToParentHandler(this::handleMoveToParent);
         view.setMoveToSiblingHandler(this::handleMoveToSibling);
         view.setMoveToChildHandler(this::handleMoveToChild);
-        selectionModel.addSelectionChangedHandler(event -> {
-            updateButtonState();
-        });
+        selectionModel.addSelectionChangedHandler(event -> updateButtonState());
         updateButtonState();
     }
 

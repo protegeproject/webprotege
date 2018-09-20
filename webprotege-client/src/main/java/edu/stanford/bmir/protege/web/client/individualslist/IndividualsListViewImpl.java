@@ -175,17 +175,17 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Nonnull
     @Override
-    public InstanceRetrievalMode getRetrievalType() {
+    public InstanceRetrievalMode getRetrievalMode() {
         return InstanceRetrievalMode.values()[retrievalTypeField.getSelectedIndex()];
     }
 
     @Override
-    public void setRetrievalType(@Nonnull InstanceRetrievalMode retrievalType) {
+    public void setRetrievalMode(@Nonnull InstanceRetrievalMode retrievalType) {
         retrievalTypeField.setSelectedIndex(retrievalType.ordinal());
     }
 
     @Override
-    public void setRetrievalTypeEnabled(boolean enabled) {
+    public void setRetrievalModeEnabled(boolean enabled) {
         retrievalTypeField.setEnabled(enabled);
     }
 

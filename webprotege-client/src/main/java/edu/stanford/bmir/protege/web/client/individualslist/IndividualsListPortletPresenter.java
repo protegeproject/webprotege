@@ -4,12 +4,10 @@ import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -45,6 +43,6 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         Optional<OWLNamedIndividual> sel = entity.filter(OWLEntity::isOWLNamedIndividual)
                 .map(e -> (OWLNamedIndividual) e);
-        sel.ifPresent(presenter::setSelectedIndividual);
+        sel.ifPresent(presenter::setDisplayedIndividual);
     }
 }
