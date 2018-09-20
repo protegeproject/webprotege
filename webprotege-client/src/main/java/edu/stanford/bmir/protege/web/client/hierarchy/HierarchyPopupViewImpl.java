@@ -14,6 +14,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -69,5 +70,10 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
     @Override
     public void setModel(@Nonnull EntityHierarchyModel model) {
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
+    }
+
+    @Override
+    public void revealEntity(@Nonnull OWLEntity selectedEntity) {
+        treeWidget.revealTreeNodesForKey(selectedEntity, RevealMode.REVEAL_FIRST);
     }
 }

@@ -95,7 +95,10 @@ public class HierarchyFieldPresenter {
     }
 
     private void handleShowPopupHierarchy(UIObject target) {
-        hierarchyPopupPresenter.ifPresent(presenter -> presenter.show(target, (sel) -> setEntityAndFireEvents(sel.getEntityData())));
+        hierarchyPopupPresenter.ifPresent(presenter -> {
+            view.getEntity().ifPresent(entity -> presenter.setSelectedEntity(entity.getEntity()));
+            presenter.show(target, (sel) -> setEntityAndFireEvents(sel.getEntityData()));
+        });
     }
 
 

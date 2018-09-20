@@ -17,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,6 +40,8 @@ public class HierarchyPopupPresenter {
     private final EntityHierarchyModel model;
 
     private PopupPanel popupPanel;
+
+    private Optional<OWLEntity> selectedEntity = Optional.empty();
 
     @Inject
     @AutoFactory
@@ -63,9 +66,16 @@ public class HierarchyPopupPresenter {
         popupPanel.setWidget(view);
         popupPanel.showRelativeTo(target);
         view.setSelectionChangedHandler(sel -> {
-            popupPanel.hide();
-            popupClosedHandler.accept(sel);
+            if(!Optional.of(sel.getEntity()).equals(selectedEntity)) {
+                popupPanel.hide();
+                selectedEntity = Optional.of(sel.getEntity());
+                popupClosedHandler.accept(sel);
+            }
         });
     }
 
+    public void setSelectedEntity(@Nonnull OWLEntity selectedEntity) {
+        this.selectedEntity = Optional.of(selectedEntity);
+        view.revealEntity(selectedEntity);
+    }
 }
