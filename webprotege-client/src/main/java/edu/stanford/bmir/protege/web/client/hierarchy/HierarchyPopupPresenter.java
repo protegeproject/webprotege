@@ -5,14 +5,9 @@ import com.google.auto.factory.Provided;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
-import com.google.inject.Provider;
-import com.google.inject.Provides;
-import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
-import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
-import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -56,8 +51,8 @@ public class HierarchyPopupPresenter {
         popupPanel.setAutoHideOnHistoryEventsEnabled(true);
     }
 
-    public void start() {
-        model.start(new WebProtegeEventBus(new SimpleEventBus()),
+    public void start(@Nonnull WebProtegeEventBus eventBus) {
+        model.start(eventBus,
                     hierarchyId);
         view.setModel(model);
     }

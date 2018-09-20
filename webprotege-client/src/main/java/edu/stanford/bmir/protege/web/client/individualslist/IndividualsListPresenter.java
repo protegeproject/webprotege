@@ -128,7 +128,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         hierarchyFieldPresenter.setEntityType(PrimitiveType.CLASS);
         hierarchyFieldPresenter.setEntityChangedHandler(this::handleTypeChanged);
         hierarchyFieldPresenter.setHierarchyId(HierarchyId.CLASS_HIERARCHY);
-        hierarchyFieldPresenter.start(view.getTypeFieldContainer());
+        hierarchyFieldPresenter.start(view.getTypeFieldContainer(), eventBus);
         view.setInstanceRetrievalTypeChangedHandler(this::handleRetrievalTypeChanged);
         if(selectionModel.getSelection().map(Entity::isOWLNamedIndividual).orElse(false)) {
             selectionModel.getSelection()

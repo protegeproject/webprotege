@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -63,6 +64,8 @@ public class HierarchyFieldPresenter {
 
     private Optional<HierarchyPopupPresenter> hierarchyPopupPresenter = Optional.empty();
 
+    private WebProtegeEventBus eventBus;
+
     @Inject
     public HierarchyFieldPresenter(@Nonnull ProjectId projectId,
                                    @Nonnull HierarchyFieldView view,
@@ -82,7 +85,9 @@ public class HierarchyFieldPresenter {
         this.hierarchyPopupPresenterFactory = checkNotNull(hierarchyPopupPresenterFactory);
     }
 
-    public void start(@Nonnull AcceptsOneWidget viewContainer) {
+    public void start(@Nonnull AcceptsOneWidget viewContainer,
+                      @Nonnull WebProtegeEventBus eventBus) {
+        this.eventBus = checkNotNull(eventBus);
         viewContainer.setWidget(view);
         view.setSyncClassWithLastSelectedClassHandler(this::handleSyncWithLastSelectedClass);
         view.setEntityChangedHandler(this::handleEntityChanged);
@@ -95,9 +100,17 @@ public class HierarchyFieldPresenter {
     }
 
     private void handleShowPopupHierarchy(UIObject target) {
-        hierarchyPopupPresenter.ifPresent(presenter -> {
-            view.getEntity().ifPresent(entity -> presenter.setSelectedEntity(entity.getEntity()));
-            presenter.show(target, (sel) -> setEntityAndFireEvents(sel.getEntityData()));
+        hierarchyId.ifPresent(id -> {
+            if(!hierarchyPopupPresenter.isPresent()) {
+                HierarchyPopupPresenter hierarchyPopupPresenter = hierarchyPopupPresenterFactory.create(id);
+                hierarchyPopupPresenter.start(eventBus);
+                this.hierarchyPopupPresenter = Optional.of(hierarchyPopupPresenter);
+            }
+            hierarchyPopupPresenter.ifPresent(presenter -> {
+                view.getEntity().ifPresent(entity -> presenter.setSelectedEntity(entity.getEntity()));
+                presenter.show(target, (sel) -> setEntityAndFireEvents(sel.getEntityData()));
+            });
+
         });
     }
 
@@ -246,9 +259,6 @@ public class HierarchyFieldPresenter {
 
     public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
         this.hierarchyId = Optional.of(hierarchyId);
-        HierarchyPopupPresenter hierarchyPopupPresenter = hierarchyPopupPresenterFactory.create(hierarchyId);
-        hierarchyPopupPresenter.start();
-        this.hierarchyPopupPresenter = Optional.of(hierarchyPopupPresenter);
     }
 
     public void clearEntity() {
