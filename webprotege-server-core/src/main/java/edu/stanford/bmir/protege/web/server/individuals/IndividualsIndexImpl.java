@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,7 +118,7 @@ public class IndividualsIndexImpl implements IndividualsIndex {
                                                                  @Nonnull InstanceRetrievalMode preferredMode,
                                                                  int pageSize) {
 
-        OWLClass actualType;
+        OWLClass actualType = null;
         OWLClass matchingDirectType = null;
         OWLClass matchingIndirectType = null;
         if (preferredType.isPresent()) {
@@ -145,12 +146,15 @@ public class IndividualsIndexImpl implements IndividualsIndex {
             else if(matchingIndirectType != null) {
                 actualType = matchingIndirectType;
             }
-            else {
-                actualType = dataFactory.getOWLThing();
-            }
         }
-        else {
-            actualType = dataFactory.getOWLThing();
+        if(actualType == null) {
+            // Try for a specific type
+            actualType = EntitySearcher.getTypes(individual, rootOntology.getImportsClosure())
+                    .stream()
+                    .filter(ClassExpression::isOWLClass)
+                    .map(ClassExpression::asOWLClass)
+                    .findFirst()
+                    .orElse(dataFactory.getOWLThing());
         }
         InstanceRetrievalMode actualMode;
         if(preferredMode == ALL_INSTANCES) {
