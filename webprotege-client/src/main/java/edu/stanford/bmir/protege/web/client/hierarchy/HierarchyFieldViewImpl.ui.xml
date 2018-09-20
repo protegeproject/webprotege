@@ -35,6 +35,8 @@
                       addStyleNames="{wp.buttons.moveToParent} {style.classNavButton}"/>
             <g:Button ui:field="syncSelectionButton" title="Sync Selection"
                       addStyleNames="{wp.buttons.syncSelection} {style.classNavButton}"/>
+            <g:Button ui:field="selectFromHierarchyButton" title="Select from hierarchy"
+                      addStyleNames="{wp.buttons.showHierarchy} {style.classNavButton}"/>
         </div>
         <div class="{style.classFieldRow}">
             <primitive:PrimitiveDataEditorImpl ui:field="entityField"

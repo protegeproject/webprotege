@@ -102,6 +102,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource syncSelectionIcon();
 
+    @Source("hierarchy-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource hierarchyIcon();
+
 
     @Source("up-arrow.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -491,6 +495,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-move-to-child")
         String moveToChild();
+
+        @ClassName("wp-btn-show-hierarchy")
+        String showHierarchy();
     }
 
     interface SettingsPageCss extends CssResource {

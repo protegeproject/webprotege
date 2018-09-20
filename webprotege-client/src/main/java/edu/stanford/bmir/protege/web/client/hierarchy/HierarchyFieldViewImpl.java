@@ -43,6 +43,9 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @Nonnull
     private EntityChangedHandler entityChangedHandler = () -> {};
 
+    @Nonnull
+    private ShowPopupHierarchyHandler showPopupHierarchyHandler = (target) -> {};
+
     interface HierarchyFieldViewImplUiBinder extends UiBinder<HTMLPanel, HierarchyFieldViewImpl> {
 
     }
@@ -64,12 +67,14 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @UiField
     Button syncSelectionButton;
 
+    @UiField
+    Button selectFromHierarchyButton;
+
     @Inject
     public HierarchyFieldViewImpl(@Nonnull PrimitiveDataEditorImpl entityField) {
         this.entityField = checkNotNull(entityField);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
-
 
     @UiHandler("moveToParentButton")
     public void moveToParentButtonClick(ClickEvent event) {
@@ -96,6 +101,11 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
         syncClassWithLastSelectedClassHandler.handleSyncWithLastSelectedClass();
     }
 
+    @UiHandler("selectFromHierarchyButton")
+    public void selectFromHierarchyButtonClick(ClickEvent event) {
+        showPopupHierarchyHandler.handleShowPopupHierarchy(selectFromHierarchyButton);
+    }
+
 
     @Override
     public void setSyncClassWithLastSelectedClassHandler(@Nonnull SyncClassWithLastSelectedClassHandler handler) {
@@ -120,6 +130,11 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @Override
     public void setEntityChangedHandler(@Nonnull EntityChangedHandler handler) {
         this.entityChangedHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setShowPopupHierarchyHandler(@Nonnull ShowPopupHierarchyHandler handler) {
+        this.showPopupHierarchyHandler = checkNotNull(handler);
     }
 
     @Nonnull

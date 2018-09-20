@@ -71,6 +71,11 @@ textarea {
     resize: none;
 }
 
+button {
+    border: none;
+    margin: 0;
+}
+
 a {
     color: blue;
     cursor: pointer;

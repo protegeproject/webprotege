@@ -1,0 +1,71 @@
+package edu.stanford.bmir.protege.web.client.hierarchy;
+
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.UIObject;
+import com.google.inject.Provider;
+import com.google.inject.Provides;
+import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
+import org.semanticweb.owlapi.model.OWLEntity;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.function.Consumer;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 20 Sep 2018
+ */
+public class HierarchyPopupPresenter {
+
+
+    @Nonnull
+    private final HierarchyId hierarchyId;
+
+    @Nonnull
+    private final HierarchyPopupView view;
+
+    @Nonnull
+    private final EntityHierarchyModel model;
+
+    private PopupPanel popupPanel;
+
+    @Inject
+    @AutoFactory
+    public HierarchyPopupPresenter(@Nonnull HierarchyId hierarchyId,
+                                   @Provided @Nonnull HierarchyPopupView view,
+                                   @Provided @Nonnull EntityHierarchyModel model) {
+        this.hierarchyId = checkNotNull(hierarchyId);
+        this.view = view;
+        this.model = checkNotNull(model);
+        popupPanel = new PopupPanel(true, true);
+        popupPanel.setAutoHideEnabled(true);
+        popupPanel.setAutoHideOnHistoryEventsEnabled(true);
+    }
+
+    public void start() {
+        model.start(new WebProtegeEventBus(new SimpleEventBus()),
+                    hierarchyId);
+        view.setModel(model);
+    }
+
+    public void show(@Nonnull UIObject target, Consumer<EntityNode> popupClosedHandler) {
+        popupPanel.setWidget(view);
+        popupPanel.showRelativeTo(target);
+        view.setSelectionChangedHandler(sel -> {
+            popupPanel.hide();
+            popupClosedHandler.accept(sel);
+        });
+    }
+
+}

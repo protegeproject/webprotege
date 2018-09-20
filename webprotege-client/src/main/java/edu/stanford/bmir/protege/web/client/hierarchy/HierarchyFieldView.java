@@ -35,6 +35,10 @@ public interface HierarchyFieldView extends IsWidget {
         void handleEntityChanged();
     }
 
+    interface ShowPopupHierarchyHandler {
+        void handleShowPopupHierarchy(UIObject target);
+    }
+
     void setSyncClassWithLastSelectedClassHandler(@Nonnull SyncClassWithLastSelectedClassHandler handler);
 
     void setMoveToParentHandler(@Nonnull MoveToParentHandler handler);
@@ -44,6 +48,8 @@ public interface HierarchyFieldView extends IsWidget {
     void setMoveToSiblingHandler(@Nonnull MoveToSiblingHandler handler);
 
     void setEntityChangedHandler(@Nonnull EntityChangedHandler handler);
+
+    void setShowPopupHierarchyHandler(@Nonnull ShowPopupHierarchyHandler handler);
 
     @Nonnull
     Optional<OWLEntityData> getEntity();

@@ -54,10 +54,14 @@ public class HierarchyFieldPresenter {
     private final Messages messages;
 
     @Nonnull
-    private EntityChangedHandler entityChangedHandler = () -> {
-    };
+    private EntityChangedHandler entityChangedHandler = () -> {};
+
+    @Nonnull
+    private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
 
     private Optional<HierarchyId> hierarchyId = Optional.empty();
+
+    private Optional<HierarchyPopupPresenter> hierarchyPopupPresenter = Optional.empty();
 
     @Inject
     public HierarchyFieldPresenter(@Nonnull ProjectId projectId,
@@ -66,7 +70,8 @@ public class HierarchyFieldPresenter {
                                    @Nonnull EntityNodeListPopupPresenterFactory popupPresenterFactory,
                                    @Nonnull SelectionModel selectionModel,
                                    @Nonnull ClassIriRenderer classIriRenderer,
-                                   @Nonnull Messages messages) {
+                                   @Nonnull Messages messages,
+                                   @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatchServiceManager);
@@ -74,6 +79,7 @@ public class HierarchyFieldPresenter {
         this.selectionModel = checkNotNull(selectionModel);
         this.classIriRenderer = checkNotNull(classIriRenderer);
         this.messages = checkNotNull(messages);
+        this.hierarchyPopupPresenterFactory = checkNotNull(hierarchyPopupPresenterFactory);
     }
 
     public void start(@Nonnull AcceptsOneWidget viewContainer) {
@@ -83,8 +89,13 @@ public class HierarchyFieldPresenter {
         view.setMoveToParentHandler(this::handleMoveToParent);
         view.setMoveToSiblingHandler(this::handleMoveToSibling);
         view.setMoveToChildHandler(this::handleMoveToChild);
+        view.setShowPopupHierarchyHandler(this::handleShowPopupHierarchy);
         selectionModel.addSelectionChangedHandler(event -> updateButtonState());
         updateButtonState();
+    }
+
+    private void handleShowPopupHierarchy(UIObject target) {
+        hierarchyPopupPresenter.ifPresent(presenter -> presenter.show(target, (sel) -> setEntityAndFireEvents(sel.getEntityData())));
     }
 
 
@@ -232,6 +243,9 @@ public class HierarchyFieldPresenter {
 
     public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
         this.hierarchyId = Optional.of(hierarchyId);
+        HierarchyPopupPresenter hierarchyPopupPresenter = hierarchyPopupPresenterFactory.create(hierarchyId);
+        hierarchyPopupPresenter.start();
+        this.hierarchyPopupPresenter = Optional.of(hierarchyPopupPresenter);
     }
 
     public void clearEntity() {
