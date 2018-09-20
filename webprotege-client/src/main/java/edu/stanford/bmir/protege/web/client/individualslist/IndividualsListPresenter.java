@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -129,6 +130,15 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         hierarchyFieldPresenter.setHierarchyId(HierarchyId.CLASS_HIERARCHY);
         hierarchyFieldPresenter.start(view.getTypeFieldContainer());
         view.setInstanceRetrievalTypeChangedHandler(this::handleRetrievalTypeChanged);
+        if(selectionModel.getSelection().map(Entity::isOWLNamedIndividual).orElse(false)) {
+            selectionModel.getSelection()
+                    .filter(Entity::isOWLNamedIndividual)
+                    .map(Entity::asOWLNamedIndividual)
+                    .ifPresent(this::setDisplayedIndividual);
+        }
+        else {
+            reset();
+        }
     }
 
     public void installActions(HasPortletActions hasPortletActions) {
@@ -150,7 +160,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         updateList();
     }
 
-    public void clearType() {
+    public void reset() {
         hierarchyFieldPresenter.clearEntity();
         view.setRetrievalModeEnabled(false);
         updateList();
