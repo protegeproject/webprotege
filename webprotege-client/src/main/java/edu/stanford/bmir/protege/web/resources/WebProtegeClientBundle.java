@@ -468,8 +468,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn--accept")
         String acceptButton();
 
-
-
         @ClassName("wp-topbar__btn")
         String topBarButton();
 

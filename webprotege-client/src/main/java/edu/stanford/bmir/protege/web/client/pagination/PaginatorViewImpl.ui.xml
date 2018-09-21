@@ -5,18 +5,17 @@
     <ui:style>
         .main {
             padding: 2px;
-        }
-        .button {
-            display: inline-block;
-            vertical-align: baseline;
+            display: flex;
+            align-items: baseline;
+            flex-direction: row;
         }
         .number {
-            display: inline-block;
             vertical-align: baseline;
+            margin-right: 4px;
         }
         .label {
-            display: inline-block;
             vertical-align: baseline;
+            margin-right: 4px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
@@ -24,7 +23,14 @@
         <g:TextBox ui:field="pageNumberField" addStyleNames="{style.number}" visibleLength="5"/>
         <g:Label text=" {msg.pagination_of} " addStyleNames="{style.label}"/>
         <g:Label ui:field="pageCountField" addStyleNames="{style.label}"/>
-        <g:Button ui:field="previousButton" addStyleNames="{style.button}" text="{msg.pagination_prev}"/>
-        <g:Button ui:field="nextButton" addStyleNames="{style.number}" text="{msg.pagination_next}"/>
+        <div style="padding-left: 5px; display: flex; flex-direction: row;">
+            <g:Button ui:field="previousButton"
+                      addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"
+                      text="{msg.pagination_prev}"/>
+            <g:Button ui:field="nextButton"
+                      addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"
+                      text="{msg.pagination_next}"/>
+        </div>
+
     </g:HTMLPanel>
 </ui:UiBinder>
