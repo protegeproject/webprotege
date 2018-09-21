@@ -233,6 +233,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private void handleTypeChanged() {
         view.setRetrievalModeEnabled(hierarchyFieldPresenter.getEntity().isPresent());
+        view.setPageNumber(1);
         currentType = hierarchyFieldPresenter.getEntity()
                 .filter(ed -> ed instanceof OWLClassData)
                 .map(ed -> (OWLClassData) ed)
