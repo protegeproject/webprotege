@@ -196,6 +196,10 @@ public class IndividualsIndexImpl implements IndividualsIndex {
 
     private Stream<OWLNamedIndividual> getIndividualsMatching(@Nonnull OWLClass type,
                                                               @Nonnull InstanceRetrievalMode mode) {
+        if(type.isOWLThing() && mode == ALL_INSTANCES) {
+            // Signature
+            return rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
+        }
         Stream<OWLClass> direct = Stream.of(type);
         Stream<OWLClass> ancestors;
         if (mode == ALL_INSTANCES) {
