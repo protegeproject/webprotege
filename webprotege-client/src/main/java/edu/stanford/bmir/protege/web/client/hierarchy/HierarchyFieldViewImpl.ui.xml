@@ -48,6 +48,8 @@
                                                enabled="true"
                                                placeholder="Type a class name to view individuals by class"
                                                addStyleNames="{style.classField}"/>
+            <g:Button ui:field="searchButton" title="{msg.search}"
+                      addStyleNames="{wp.buttons.search} {style.classNavButton}"/>
             </div>
     </g:HTMLPanel>
 </ui:UiBinder>

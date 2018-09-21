@@ -70,6 +70,9 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @UiField
     Button selectFromHierarchyButton;
 
+    @UiField
+    Button searchButton;
+
     @Inject
     public HierarchyFieldViewImpl(@Nonnull PrimitiveDataEditorImpl entityField) {
         this.entityField = checkNotNull(entityField);
@@ -104,6 +107,11 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @UiHandler("selectFromHierarchyButton")
     public void selectFromHierarchyButtonClick(ClickEvent event) {
         showPopupHierarchyHandler.handleShowPopupHierarchy(selectFromHierarchyButton);
+    }
+
+    @UiHandler("searchButton")
+    public void searchButtonClick(ClickEvent event) {
+        entityField.clearValue();
     }
 
 
