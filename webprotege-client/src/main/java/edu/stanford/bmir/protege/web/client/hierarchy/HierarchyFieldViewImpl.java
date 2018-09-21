@@ -112,6 +112,7 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     @UiHandler("searchButton")
     public void searchButtonClick(ClickEvent event) {
         entityField.clearValue();
+        entityField.requestFocus();
     }
 
 

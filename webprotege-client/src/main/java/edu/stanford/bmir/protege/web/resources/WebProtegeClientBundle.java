@@ -488,22 +488,25 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn-down")
         String downButton();
 
-        @ClassName("wp-btn-sync-selection")
+        @ClassName("wp-btn-g")
+        String btnGlyph();
+
+        @ClassName("wp-btn-g--sync-selection")
         String syncSelection();
 
-        @ClassName("wp-btn-move-to-parent")
+        @ClassName("wp-btn-g--move-to-parent")
         String moveToParent();
 
-        @ClassName("wp-btn-move-to-sibling")
+        @ClassName("wp-btn-g--move-to-sibling")
         String moveToSibling();
 
-        @ClassName("wp-btn-move-to-child")
+        @ClassName("wp-btn-g--move-to-child")
         String moveToChild();
 
-        @ClassName("wp-btn-show-hierarchy")
+        @ClassName("wp-btn-g--show-hierarchy")
         String showHierarchy();
 
-        @ClassName("wp-btn-search")
+        @ClassName("wp-btn-g--search")
         String search();
     }
 

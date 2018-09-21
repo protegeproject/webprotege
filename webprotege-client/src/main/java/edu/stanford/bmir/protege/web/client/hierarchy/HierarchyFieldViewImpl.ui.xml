@@ -31,25 +31,25 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <div style="display: flex; flex-direction: row;">
             <g:Button ui:field="syncSelectionButton" title="Sync Selection"
-                      addStyleNames="{wp.buttons.syncSelection} {style.classNavButton}"/>
+                      addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.syncSelection} {style.classNavButton}"/>
             <g:Button ui:field="selectFromHierarchyButton" title="Select from hierarchy"
-                      addStyleNames="{wp.buttons.showHierarchy} {style.classNavButton}"/>
+                      addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.showHierarchy} {style.classNavButton}"/>
             <g:Button ui:field="moveToParentButton" title="{msg.moveToParent}"
-                      addStyleNames="{wp.buttons.moveToParent} {style.classNavButton}"/>
+                      addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.moveToParent} {style.classNavButton}"/>
             <g:Button ui:field="moveToChildButton" title="{msg.moveToChild}"
-                      addStyleNames="{wp.buttons.moveToChild} {style.moveToChildButton} {style.classNavButton}"/>
+                      addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.moveToChild} {style.moveToChildButton} {style.classNavButton}"/>
             <g:Button ui:field="moveToSiblingButton" title="{msg.moveToSibling}"
-                      addStyleNames="{wp.buttons.moveToSibling} {style.classNavButton}"/>
+                      addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.moveToSibling} {style.classNavButton}"/>
 
         </div>
         <div class="{style.classFieldRow}">
             <primitive:PrimitiveDataEditorImpl ui:field="entityField"
                                                classesAllowed="true"
                                                enabled="true"
-                                               placeholder="Type a class name to view individuals by class"
+                                               placeholder="Type in a class name"
                                                addStyleNames="{style.classField}"/>
             <g:Button ui:field="searchButton" title="{msg.search}"
-                      addStyleNames="{wp.buttons.search} {style.classNavButton}"/>
+                      addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.search} {style.classNavButton}"/>
             </div>
     </g:HTMLPanel>
 </ui:UiBinder>
