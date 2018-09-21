@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -72,5 +73,9 @@ public class HierarchyPopupPresenter {
     public void setSelectedEntity(@Nonnull OWLEntity selectedEntity) {
         this.selectedEntity = Optional.of(selectedEntity);
         view.revealEntity(selectedEntity);
+    }
+
+    public void setDisplayNameSettings(@Nonnull DisplayNameSettings settings) {
+        view.setDisplayNameSettings(settings);
     }
 }

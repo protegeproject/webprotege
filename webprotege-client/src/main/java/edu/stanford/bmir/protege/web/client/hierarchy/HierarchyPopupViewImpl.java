@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
@@ -31,6 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 20 Sep 2018
  */
 public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupView {
+
+    private final EntityNodeHtmlRenderer renderer;
 
     interface HierarchyPopupViewImplUiBinder extends UiBinder<HTMLPanel, HierarchyPopupViewImpl> {
 
@@ -58,7 +61,8 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
                     };
                     t.schedule(200);
                 }));
-        renderer.setRenderTags(false);
+        this.renderer = renderer;
+        this.renderer.setRenderTags(false);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -75,5 +79,11 @@ public class HierarchyPopupViewImpl extends Composite implements HierarchyPopupV
     @Override
     public void revealEntity(@Nonnull OWLEntity selectedEntity) {
         treeWidget.revealTreeNodesForKey(selectedEntity, RevealMode.REVEAL_FIRST);
+    }
+
+    @Override
+    public void setDisplayNameSettings(@Nonnull DisplayNameSettings settings) {
+        renderer.setDisplayLanguage(settings);
+        treeWidget.setRenderer(renderer);
     }
 }

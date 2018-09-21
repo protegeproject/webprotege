@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldView.EntityChangedHandler;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupPresenter;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupPresenterFactory;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
@@ -60,6 +61,9 @@ public class HierarchyFieldPresenter {
     @Nonnull
     private final HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory;
 
+    @Nonnull
+    private final DisplayNameSettingsManager displayNameSettingsManager;
+
     private Optional<HierarchyId> hierarchyId = Optional.empty();
 
     private Optional<HierarchyPopupPresenter> hierarchyPopupPresenter = Optional.empty();
@@ -74,7 +78,8 @@ public class HierarchyFieldPresenter {
                                    @Nonnull SelectionModel selectionModel,
                                    @Nonnull ClassIriRenderer classIriRenderer,
                                    @Nonnull Messages messages,
-                                   @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory) {
+                                   @Nonnull HierarchyPopupPresenterFactory hierarchyPopupPresenterFactory,
+                                   @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatchServiceManager);
@@ -83,6 +88,7 @@ public class HierarchyFieldPresenter {
         this.classIriRenderer = checkNotNull(classIriRenderer);
         this.messages = checkNotNull(messages);
         this.hierarchyPopupPresenterFactory = checkNotNull(hierarchyPopupPresenterFactory);
+        this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
     }
 
     public void start(@Nonnull AcceptsOneWidget viewContainer,
@@ -104,11 +110,13 @@ public class HierarchyFieldPresenter {
             if(!hierarchyPopupPresenter.isPresent()) {
                 HierarchyPopupPresenter hierarchyPopupPresenter = hierarchyPopupPresenterFactory.create(id);
                 hierarchyPopupPresenter.start(eventBus);
+                hierarchyPopupPresenter.setDisplayNameSettings(displayNameSettingsManager.getLocalDisplayNameSettings());
                 this.hierarchyPopupPresenter = Optional.of(hierarchyPopupPresenter);
             }
             hierarchyPopupPresenter.ifPresent(presenter -> {
                 view.getEntity().ifPresent(entity -> presenter.setSelectedEntity(entity.getEntity()));
                 presenter.show(target, (sel) -> setEntityAndFireEvents(sel.getEntityData()));
+                presenter.setDisplayNameSettings(displayNameSettingsManager.getLocalDisplayNameSettings());
             });
 
         });

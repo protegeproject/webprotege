@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -19,4 +20,6 @@ public interface HierarchyPopupView extends IsWidget {
     void setModel(@Nonnull EntityHierarchyModel model);
 
     void revealEntity(@Nonnull OWLEntity selectedEntity);
+
+    void setDisplayNameSettings(@Nonnull DisplayNameSettings settings);
 }
