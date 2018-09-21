@@ -124,18 +124,20 @@ public class IndividualsIndexImpl implements IndividualsIndex {
         if (preferredType.isPresent()) {
             // Search through class assertion axioms in order to find a matching preferred type
             OWLClass thePreferredType = preferredType.get();
-            for(OWLOntology ontology : rootOntology.getImportsClosure()) {
-                for(OWLClassAssertionAxiom ax : rootOntology.getClassAssertionAxioms(individual)) {
-                    if (!ax.getClassExpression().isAnonymous()) {
-                        //
-                        OWLClass typeCls = ax.getClassExpression().asOWLClass();
-                        if(ax.getClassExpression().equals(thePreferredType)) {
-                            // Found a direct type that matches the preferred type
-                            matchingDirectType = typeCls;
-                        }
-                        else if(classHierarchyProvider.getAncestors(thePreferredType).contains(typeCls)) {
-                            // Found an indirect type of the preferred type
-                            matchingIndirectType = typeCls;
+            if (!thePreferredType.isOWLThing()) {
+                for(OWLOntology ontology : rootOntology.getImportsClosure()) {
+                    for(OWLClassAssertionAxiom ax : rootOntology.getClassAssertionAxioms(individual)) {
+                        if (!ax.getClassExpression().isAnonymous()) {
+                            //
+                            OWLClass typeCls = ax.getClassExpression().asOWLClass();
+                            if(ax.getClassExpression().equals(thePreferredType)) {
+                                // Found a direct type that matches the preferred type
+                                matchingDirectType = typeCls;
+                            }
+                            else if(classHierarchyProvider.getAncestors(thePreferredType).contains(typeCls)) {
+                                // Found an indirect type of the preferred type
+                                matchingIndirectType = typeCls;
+                            }
                         }
                     }
                 }
