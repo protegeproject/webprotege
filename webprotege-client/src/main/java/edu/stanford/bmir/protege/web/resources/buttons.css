@@ -9,6 +9,7 @@
 @url moveToChildIconUrl moveToChildIcon;
 @url syncSelectionIconUrl syncSelectionIcon;
 @url hierarchyIconUrl hierarchyIcon;
+@url searchIconUrl searchIcon;
 
 .wp-btn {
     border: none;
@@ -374,6 +375,28 @@
 }
 
 .wp-btn-show-hierarchy:disabled {
+    background-color: #a0a0a0;
+    opacity: 0.3;
+}
+
+.wp-btn-search {
+    background-color: #505050;
+    mask:  searchIconUrl no-repeat;
+    -webkit-mask:  searchIconUrl no-repeat;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.wp-btn-search:hover {
+    background-color: literal("var(--btn--hover--color)");
+}
+
+.wp-btn-search:disabled {
     background-color: #a0a0a0;
     opacity: 0.3;
 }

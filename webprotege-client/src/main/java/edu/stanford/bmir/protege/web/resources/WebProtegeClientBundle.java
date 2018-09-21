@@ -127,6 +127,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource moveToSiblingIcon();
 
+    @Source("search-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource searchIcon();
+
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();
@@ -498,6 +502,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-show-hierarchy")
         String showHierarchy();
+
+        @ClassName("wp-btn-search")
+        String search();
     }
 
     interface SettingsPageCss extends CssResource {
