@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -65,7 +66,10 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     AcceptsOneWidget typeFieldContainer;
 
     @UiField
-    com.google.gwt.user.client.ui.ListBox retrievalTypeField;
+    RadioButton indirectRadioButton;
+
+    @UiField
+    RadioButton directRadioButton;
 
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
@@ -99,8 +103,14 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
         searchStringChangedHandler.handleSearchStringChanged();
     }
 
-    @UiHandler("retrievalTypeField")
-    public void levelFieldChange(ChangeEvent event) {
+    @UiHandler("directRadioButton")
+    public void directChanged(ValueChangeEvent<Boolean> event) {
+        GWT.log("[IndividualsListViewImpl] Retrieval Type Changed");
+        retrievalTypeChangedHandler.handleInstanceRetrievalTypeChanged();
+    }
+
+    @UiHandler("indirectRadioButton")
+    public void indirectChanges(ValueChangeEvent<Boolean> event) {
         GWT.log("[IndividualsListViewImpl] Retrieval Type Changed");
         retrievalTypeChangedHandler.handleInstanceRetrievalTypeChanged();
     }
@@ -176,17 +186,23 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @Nonnull
     @Override
     public InstanceRetrievalMode getRetrievalMode() {
-        return InstanceRetrievalMode.values()[retrievalTypeField.getSelectedIndex()];
+        if(indirectRadioButton.getValue()) {
+            return InstanceRetrievalMode.ALL_INSTANCES;
+        }
+        else {
+            return InstanceRetrievalMode.DIRECT_INSTANCES;
+        }
     }
 
     @Override
     public void setRetrievalMode(@Nonnull InstanceRetrievalMode retrievalType) {
-        retrievalTypeField.setSelectedIndex(retrievalType.ordinal());
+        directRadioButton.setValue(retrievalType == InstanceRetrievalMode.DIRECT_INSTANCES);
     }
 
     @Override
     public void setRetrievalModeEnabled(boolean enabled) {
-        retrievalTypeField.setEnabled(enabled);
+        indirectRadioButton.setEnabled(enabled);
+        directRadioButton.setEnabled(enabled);
     }
 
 

@@ -56,9 +56,15 @@
             flex-grow: 1;
         }
         .levelField {
+            display: flex;
+            flex-direction: row;
             flex-grow: 0;
             flex-shrink: 0;
             margin: 1px;
+            padding: 5px;
+        }
+        .levelRadio {
+            padding-left: 10px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
@@ -66,10 +72,11 @@
         <div class="{wp.style.formGroup} {style.typeGroup}">
             <g:Label text="Class" addStyleNames="{wp.style.formLabel}"/>
             <g:SimplePanel ui:field="typeFieldContainer" addStyleNames="{style.typeFieldContainer}"/>
-            <g:ListBox ui:field="retrievalTypeField" addStyleNames="{style.levelField}">
-                <g:item value="ALL_INSTANCES">Direct and Indirect Individuals</g:item>
-                <g:item value="DIRECT_INSTANCES">Direct individuals</g:item>
-            </g:ListBox>
+            <div class="{style.levelField}">
+                <g:RadioButton value="true" ui:field="indirectRadioButton" text="All instances" name="mode" addStyleNames="{style.levelRadio}"/>
+                <g:RadioButton ui:field="directRadioButton" text="Direct instances only" name="mode" addStyleNames="{style.levelRadio}"/>
+            </div>
+
         </div>
         <div class="{style.listGroup}">
             <g:Label text="Individuals" addStyleNames="{wp.style.formLabel}"/>

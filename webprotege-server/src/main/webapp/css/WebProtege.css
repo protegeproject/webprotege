@@ -589,8 +589,10 @@ td {
 }
 
 .gwt-CheckBox {
-    display: inline-block;
+    display: flex;
     overflow: hidden;
+    align-items: center;
+    align-self: baseline;
 }
 
 .gwt-CheckBox > label {
