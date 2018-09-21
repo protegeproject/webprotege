@@ -161,8 +161,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     }
 
     public void reset() {
-        hierarchyFieldPresenter.clearEntity();
-        view.setRetrievalModeEnabled(false);
+        hierarchyFieldPresenter.setEntity(DataFactory.getOWLThingData());
         updateList();
     }
 
