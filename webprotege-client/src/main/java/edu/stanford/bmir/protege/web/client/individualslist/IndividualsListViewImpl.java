@@ -197,6 +197,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @Override
     public void setRetrievalMode(@Nonnull InstanceRetrievalMode retrievalType) {
         directRadioButton.setValue(retrievalType == InstanceRetrievalMode.DIRECT_INSTANCES);
+        indirectRadioButton.setValue(retrievalType == InstanceRetrievalMode.ALL_INSTANCES);
     }
 
     @Override
