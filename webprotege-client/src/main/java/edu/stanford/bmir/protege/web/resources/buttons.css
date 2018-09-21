@@ -244,10 +244,8 @@
 
 
 .wp-btn-down {
-    /*background-color: #aaaaaa;*/
-    /*background-image: downArrowIconUrl;*/
-    background-color: rebeccapurple;
-    -webkit-mask:  moveToParentIconUrl no-repeat;
+    background-color: #aaaaaa;
+    background-image: downArrowIconUrl;
     mask: moveToParentIconUrl no-repeat;
     background-repeat: no-repeat;
     color: white;

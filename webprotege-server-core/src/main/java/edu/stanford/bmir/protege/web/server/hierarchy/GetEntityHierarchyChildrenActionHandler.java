@@ -88,7 +88,7 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
                          .filter(child -> isNotDeprecatedTopLevelEntity(parent, child))
                          .sorted(comparing(dictionaryManager::getShortForm))
                          .collect(PageCollector.toPage(action.getPageRequest().getPageNumber(),
-                                                       action.getPageRequest().getPageSize()))
+                                                       2000))
                          .map(pg ->
                              pg.transform(child -> nodeRenderer.toGraphNode(child, hierarchyProvider.get()))
                          ).orElse(Page.emptyPage());
