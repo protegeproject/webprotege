@@ -1,10 +1,15 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
+import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -18,6 +23,8 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.semanticweb.owlapi.model.EntityType.CLASS;
+import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 @Portlet(id = "portlets.IndividualsList", title = "Individuals by Class")
 public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPresenter {
@@ -32,6 +39,12 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     @Nonnull
     private final TagVisibilityPresenter tagVisibilityPresenter;
 
+    @Nonnull
+    private final Messages messages;
+
+    @Nonnull
+    private final SearchDialogController searchDialogController;
+
     @Inject
     public IndividualsListPortletPresenter(@Nonnull IndividualsListPresenter presenter,
                                            @Nonnull SelectionModel selectionModel,
@@ -39,12 +52,16 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
                                            @Nonnull DisplayNameRenderer displayNameRenderer,
                                            @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                            @Nonnull FilterView filterView,
-                                           @Nonnull TagVisibilityPresenter tagVisibilityPresenter) {
+                                           @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
+                                           @Nonnull SearchDialogController searchDialogController,
+                                           @Nonnull Messages messages) {
         super(selectionModel, projectId, displayNameRenderer);
         this.presenter = checkNotNull(presenter);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
+        this.searchDialogController = checkNotNull(searchDialogController);
+        this.messages = checkNotNull(messages);
     }
 
     @Override
@@ -52,6 +69,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         portletUi.setFilterView(filterView);
         tagVisibilityPresenter.start(filterView, portletUi);
         presenter.installActions(portletUi);
+        portletUi.addAction(new PortletAction(messages.search(), this::handleSearch));
         presenter.start(portletUi, eventBus);
         presenter.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
         handleAfterSetEntity(getSelectedEntity());
@@ -62,5 +80,10 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         Optional<OWLNamedIndividual> sel = entity.filter(OWLEntity::isOWLNamedIndividual)
                 .map(e -> (OWLNamedIndividual) e);
         sel.ifPresent(presenter::setDisplayedIndividual);
+    }
+
+    private void handleSearch() {
+        searchDialogController.setEntityTypes(NAMED_INDIVIDUAL);
+        WebProtegeDialog.showDialog(searchDialogController);
     }
 }
