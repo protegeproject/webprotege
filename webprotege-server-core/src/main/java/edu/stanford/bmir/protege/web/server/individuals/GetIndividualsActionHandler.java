@@ -96,16 +96,10 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
         IndividualsQueryResult result;
         String filterString = action.getFilterString();
         PageRequest pageRequest = action.getPageRequest().orElse(PageRequest.requestSinglePage());
-        if(action.getType().isPresent()) {
-            result = individualsIndex.getIndividuals(type,
-                                                     action.getInstanceRetrievalMode(),
-                                                     filterString,
-                                                     pageRequest);
-        }
-        else {
-            result = individualsIndex.getIndividuals(filterString,
-                                                     pageRequest);
-        }
+        result = individualsIndex.getIndividuals(type,
+                                                 action.getInstanceRetrievalMode(),
+                                                 filterString,
+                                                 pageRequest);
         OWLClassData typeData = renderingManager.getRendering(type);
         logger.info(BROWSING,
                     "{} {} retrieved instances of {} ({})",

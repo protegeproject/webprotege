@@ -98,7 +98,6 @@ public class IndividualsIndexImpl implements IndividualsIndex {
         Optional<Page<OWLNamedIndividual>> page = getIndividualsMatching(type, mode)
                 .peek(ind -> counter.increment())
                 .filter(ind -> matchesSearchStrings(ind, searchStrings))
-                .distinct()
                 .map(this::toIndividualRendering)
                 .sorted()
                 .map(IndividualRendering::getIndividual)
@@ -194,11 +193,22 @@ public class IndividualsIndexImpl implements IndividualsIndex {
                                           actualMode);
     }
 
+    /**
+     * Returns a stream of distinct individuals that match the specified parameters.
+     */
     private Stream<OWLNamedIndividual> getIndividualsMatching(@Nonnull OWLClass type,
                                                               @Nonnull InstanceRetrievalMode mode) {
-        if(type.isOWLThing() && mode == ALL_INSTANCES) {
-            // Signature
-            return rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
+        if(type.isOWLThing()) {
+            if (mode == ALL_INSTANCES) {
+                // Signature
+                return getIndividualsInSignature()
+                        .distinct();
+            }
+            else {
+                return getIndividualsInSignature()
+                        .filter(this::isDirectInstanceOfOWLThing)
+                        .distinct();
+            }
         }
         Stream<OWLClass> direct = Stream.of(type);
         Stream<OWLClass> ancestors;
@@ -222,6 +232,15 @@ public class IndividualsIndexImpl implements IndividualsIndex {
                 .map(this::toIndividualRendering)
                 .sorted()
                 .map(IndividualRendering::getIndividual);
+    }
+
+    private boolean isDirectInstanceOfOWLThing(OWLNamedIndividual i) {
+        Collection<OWLClassExpression> types = EntitySearcher.getTypes(i, rootOntology.getImportsClosure());
+        return types.isEmpty() || types.contains(dataFactory.getOWLThing());
+    }
+
+    private Stream<OWLNamedIndividual> getIndividualsInSignature() {
+        return rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
     }
 
     private static boolean isNamed(@Nonnull OWLClassExpression ce) {
