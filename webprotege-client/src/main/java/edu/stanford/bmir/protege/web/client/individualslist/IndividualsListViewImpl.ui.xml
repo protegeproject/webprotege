@@ -57,10 +57,10 @@
         }
         .levelField {
             display: flex;
+            flex-wrap: wrap;
             flex-direction: row;
-            flex-grow: 0;
-            flex-shrink: 0;
-            margin: 1px;
+        }
+        .levelField > span {
             padding: 5px;
         }
         .levelRadio {

@@ -295,16 +295,6 @@ select:disabled {
     margin-left: 5px;
 }
 
-.gwt-RadioButton {
-    display: block;
-    height: 100%;
-    vertical-align: middle;
-}
-
-.gwt-RadioButton label > div {
-    padding-top: 5px;
-}
-
 .gwt-RadioButton > label {
     padding-left: 5px;
     white-space: nowrap;
@@ -593,6 +583,17 @@ td {
     overflow: hidden;
     align-items: center;
     align-self: baseline;
+    flex-wrap: nowrap;
+}
+
+.gwt-RadioButton {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    align-self: baseline;
+    flex-wrap: nowrap;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .gwt-CheckBox > label {
