@@ -178,7 +178,7 @@ public class HierarchyFieldPresenter {
                     .ifPresent(entity -> getPathsToRootAndMoveToParent(id, entity, target));
         });
     }
-    
+
     private void getPathsToRootAndMoveToParent(HierarchyId id, OWLEntity entity, UIObject target) {
         EntityNodeListPopupPresenter popup =
                 popupPresenterFactory.create((pageRequest, consumer) -> {
@@ -188,7 +188,7 @@ public class HierarchyFieldPresenter {
                                      result -> {
                                          List<EntityNode> data = result.getPaths()
                                                  .stream()
-                                                 .map(Path::getFirst)
+                                                 .map(Path::getLastPredecessor)
                                                  .filter(Optional::isPresent)
                                                  .map(Optional::get)
                                                  .map(GraphNode::getUserObject)
