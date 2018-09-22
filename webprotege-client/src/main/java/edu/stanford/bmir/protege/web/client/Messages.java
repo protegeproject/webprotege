@@ -1224,4 +1224,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Children")
     @Key("hierarchy.children")
     String hierarchy_children();
+
+    @DefaultMessage("Parents")
+    @Key("hierarchy.parents")
+    String hierarchy_parents();
 }

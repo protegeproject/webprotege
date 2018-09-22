@@ -18,14 +18,18 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -167,27 +171,33 @@ public class HierarchyFieldPresenter {
     }
 
 
-    private void handleMoveToParent() {
+    private void handleMoveToParent(UIObject target) {
         hierarchyId.ifPresent(id -> {
             view.getEntity()
                     .map(OWLEntityData::getEntity)
-                    .ifPresent(entity -> getPathsToRootAndMoveToParent(id, entity));
+                    .ifPresent(entity -> getPathsToRootAndMoveToParent(id, entity, target));
         });
     }
-
-    private void getPathsToRootAndMoveToParent(HierarchyId id, OWLEntity entity) {
-        dispatch.execute(new GetHierarchyPathsToRootAction(projectId,
-                                                           entity,
-                                                           id),
-                         this::handlePathsToRoot);
-    }
-
-    private void handlePathsToRoot(GetHierarchyPathsToRootResult result) {
-        result.getPaths().stream()
-                .findFirst()
-                .ifPresent(path -> path.getLastPredecessor()
-                        .map(last -> last.getUserObject().getEntityData())
-                        .ifPresent(this::setEntityAndFireEvents));
+    
+    private void getPathsToRootAndMoveToParent(HierarchyId id, OWLEntity entity, UIObject target) {
+        EntityNodeListPopupPresenter popup =
+                popupPresenterFactory.create((pageRequest, consumer) -> {
+                    dispatch.execute(new GetHierarchyPathsToRootAction(projectId,
+                                                                       entity,
+                                                                       id),
+                                     result -> {
+                                         List<EntityNode> data = result.getPaths()
+                                                 .stream()
+                                                 .map(Path::getFirst)
+                                                 .filter(Optional::isPresent)
+                                                 .map(Optional::get)
+                                                 .map(GraphNode::getUserObject)
+                                                 .collect(toList());
+                                         Page<EntityNode> page = new Page<>(1, 1, data, data.size());
+                                         consumer.consumeListData(page);
+                                     });
+                });
+        popup.showRelativeTo(target, (sel) -> handlePopupClose(popup), messages.hierarchy_parents());
     }
 
     private void handleMoveToSibling(UIObject target) {

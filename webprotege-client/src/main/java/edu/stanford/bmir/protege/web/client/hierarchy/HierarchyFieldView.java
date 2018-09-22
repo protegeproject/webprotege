@@ -20,7 +20,7 @@ public interface HierarchyFieldView extends IsWidget {
     }
 
     interface MoveToParentHandler {
-        void handleMoveToParent();
+        void handleMoveToParent(UIObject target);
     }
 
     interface MoveToChildHandler {
