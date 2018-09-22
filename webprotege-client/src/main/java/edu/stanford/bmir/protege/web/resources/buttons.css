@@ -42,8 +42,7 @@
 }
 
 .wp-btn--page-small:hover {
-    background-color: #505050;
-    color: #fff;
+    color: literal("var(--btn--hover--color)");
 }
 
 
@@ -273,7 +272,7 @@
     transition: background-color 0.15s ease-in-out;
     -moz-transition: background-color 0.15s ease-in-out;
     -webkit-transition: background-color 0.15s ease-in-out;
-    
+
     background-color: #505050;
     width: 20px;
     height: 20px;
