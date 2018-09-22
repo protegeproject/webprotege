@@ -36,6 +36,8 @@
 
     --input--line-height: 16px;
     --lang-field--width: 45px;
+
+    --property-value-editor-property-column--width: 130px;
 }
 
 body, input, textarea, keygen, select, button {
