@@ -69,22 +69,25 @@ public class GetHierarchySiblingsActionHandler extends AbstractProjectActionHand
     public GetHierarchySiblingsResult execute(@Nonnull GetHierarchySiblingsAction action, @Nonnull ExecutionContext executionContext) {
         Page<GraphNode<EntityNode>> siblings =
                 hierarchyProviderMapper.getHierarchyProvider(action.getHierarchyId())
-                                       .map(hp -> {
-                                           int pageNumber = action.getPageRequest().getPageNumber();
-                                           int pageSize = action.getPageRequest().getPageSize();
-                                           // Parents to get children that are siblings
-                                           return hp.getParents(action.getEntity())
-                                                    .stream()
-                                                    // Siblings
-                                                    .flatMap(par -> hp.getChildren(par).stream())
-                                                    .sorted(Comparator.comparing(dictionaryManager::getShortForm))
-                                                    // Paginate and transform
-                                                    .collect(PageCollector.toPage(pageNumber, pageSize))
-                                                    .orElse(Page.emptyPage())
-                                                    .transform(e -> nodeRenderer.toGraphNode(e, hp));
-                                            }
-                                       )
-                                       .orElse(Page.emptyPage());
+                        .map(hp -> {
+                                 int pageNumber = action.getPageRequest().getPageNumber();
+                                 int pageSize = action.getPageRequest().getPageSize();
+                                 // Parents to get children that are siblings
+                                 return hp.getParents(action.getEntity())
+                                         .stream()
+                                         // Siblings
+                                         .flatMap(par -> hp.getChildren(par).stream())
+                                         // Remove self
+                                         .filter(sib -> !sib.equals(action.getEntity()))
+                                         .distinct()
+                                         .sorted(Comparator.comparing(dictionaryManager::getShortForm))
+                                         // Paginate and transform
+                                         .collect(PageCollector.toPage(pageNumber, pageSize))
+                                         .orElse(Page.emptyPage())
+                                         .transform(e -> nodeRenderer.toGraphNode(e, hp));
+                             }
+                        )
+                        .orElse(Page.emptyPage());
         return new GetHierarchySiblingsResult(siblings);
     }
 }
