@@ -31,9 +31,6 @@ public class GetHierarchySiblingsActionHandler extends AbstractProjectActionHand
     private final HierarchyProviderMapper hierarchyProviderMapper;
 
     @Nonnull
-    private final DeprecatedEntityChecker deprecatedEntityChecker;
-
-    @Nonnull
     private final GraphNodeRenderer nodeRenderer;
 
     @Nonnull
@@ -42,12 +39,10 @@ public class GetHierarchySiblingsActionHandler extends AbstractProjectActionHand
     @Inject
     public GetHierarchySiblingsActionHandler(@Nonnull AccessManager accessManager,
                                              @Nonnull HierarchyProviderMapper hierarchyProviderMapper,
-                                             @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
                                              @Nonnull GraphNodeRenderer nodeRenderer,
                                              @Nonnull DictionaryManager dictionaryManager) {
         super(accessManager);
         this.hierarchyProviderMapper = checkNotNull(hierarchyProviderMapper);
-        this.deprecatedEntityChecker = checkNotNull(deprecatedEntityChecker);
         this.nodeRenderer = checkNotNull(nodeRenderer);
         this.dictionaryManager = checkNotNull(dictionaryManager);
     }
