@@ -201,7 +201,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>graphtree</artifactId>
-            <version>1.0.0</version>
+            <version>${graphtree.version}</version>
         </dependency>
 
         <dependency>
