@@ -101,6 +101,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
                 processed.add(par);
                 paths.addAll(append(obj, setOfPaths(par, processed)));
             }
+            processed.remove(par);
         }
         return paths;
     }

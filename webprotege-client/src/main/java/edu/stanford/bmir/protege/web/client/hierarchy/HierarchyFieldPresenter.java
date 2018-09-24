@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -191,6 +192,7 @@ public class HierarchyFieldPresenter {
                                                  .map(Path::getLastPredecessor)
                                                  .filter(Optional::isPresent)
                                                  .map(Optional::get)
+                                                 .distinct()
                                                  .map(GraphNode::getUserObject)
                                                  .collect(toList());
                                          Page<EntityNode> page = new Page<>(1, 1, data, data.size());
