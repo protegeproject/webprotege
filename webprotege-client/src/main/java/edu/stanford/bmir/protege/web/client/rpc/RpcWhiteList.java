@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchType;
 import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 
 /**
@@ -85,6 +86,8 @@ public class RpcWhiteList implements Action, Result {
     EntityNameMatchResult entityNameMatchResult;
 
     InstanceRetrievalMode instanceRetrievalMode;
+
+    Tag tag;
 
     public RpcWhiteList() {
     }
@@ -279,5 +282,13 @@ public class RpcWhiteList implements Action, Result {
 
     public void setInstanceRetrievalMode(InstanceRetrievalMode instanceRetrievalMode) {
         this.instanceRetrievalMode = instanceRetrievalMode;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 }
