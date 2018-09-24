@@ -173,7 +173,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
                                                       node -> node.getEntity()));
-
         treeWidget.setDropHandler(this.dropHandler);
         dropHandler.start(CLASS_HIERARCHY);
         contextMenuPresenterFactory.create(hierarchyModel,
