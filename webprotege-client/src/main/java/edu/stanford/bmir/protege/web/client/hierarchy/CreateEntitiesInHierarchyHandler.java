@@ -38,6 +38,7 @@ public class CreateEntitiesInHierarchyHandler<E extends OWLEntity> implements En
                     treeWidget.getSelectedKeyPaths().stream()
                               .findFirst()
                               .ifPresent(parentPath -> {
+                                  treeWidget.clearSelection();
                                   treeWidget.setSelected(parentPath.pathByAppending(e),
                                                          true, () -> {});
                                   treeWidget.revealTreeNodesForKey(e, RevealMode.REVEAL_FIRST);
