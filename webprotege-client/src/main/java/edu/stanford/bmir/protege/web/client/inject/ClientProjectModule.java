@@ -354,6 +354,11 @@ public class ClientProjectModule {
     ReplaceAnnotationValuesView provideReplaceAnnotationValuesView(ReplaceAnnotationsValueViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    MoveToParentView provideMoveToParentView(MoveToParentViewImpl impl) {
+        return impl;
+    }
 }
 
 

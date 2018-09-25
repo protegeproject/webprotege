@@ -56,6 +56,11 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
         this.hierarchyNodeUpdater = checkNotNull(hierarchyNodeUpdater);
     }
 
+    @Nonnull
+    public HierarchyId getHierarchyId() {
+        return hierarchyId;
+    }
+
     public void start(@Nonnull WebProtegeEventBus eventBus, @Nonnull HierarchyId hierarchyId) {
         this.hierarchyId = checkNotNull(hierarchyId);
         hierarchyNodeUpdater.start(eventBus, this);

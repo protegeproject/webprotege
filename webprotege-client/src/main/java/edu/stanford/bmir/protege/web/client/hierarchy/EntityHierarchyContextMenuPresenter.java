@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.ReplaceAnnotationValuesUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
@@ -57,6 +59,9 @@ public class EntityHierarchyContextMenuPresenter {
     private final SetAnnotationValueUiAction setAnnotationValueUiAction;
 
     @Nonnull
+    private final MoveToParentUiAction moveToParentUiAction;
+
+    @Nonnull
     private final MergeEntitiesUiAction mergeEntitiesAction;
 
     @Nonnull
@@ -74,12 +79,13 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
                                                @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
-                                               @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Provided @Nonnull MoveToParentUiAction moveToParentUiAction, @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull ReplaceAnnotationValuesUiAction replaceAnnotationValuesUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
+        this.moveToParentUiAction = checkNotNull(moveToParentUiAction);
         this.replaceAnnotationValuesUiAction = checkNotNull(replaceAnnotationValuesUiAction);
         this.messages = checkNotNull(messages);
         this.treeWidget = checkNotNull(treeWidget);
@@ -117,6 +123,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(replaceAnnotationValuesUiAction);
+        contextMenu.addItem(moveToParentUiAction);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
         contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
@@ -132,8 +139,11 @@ public class EntityHierarchyContextMenuPresenter {
         permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
         editEntityTagsAction.setEnabled(false);
         permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
-        setAnnotationValueUiAction.setSelectionSupplier(() -> ImmutableSet.copyOf(treeWidget.getSelectedKeys()));
-        replaceAnnotationValuesUiAction.setSelectionSupplier(() -> ImmutableSet.copyOf(treeWidget.getSelectedKeys()));
+        Supplier<ImmutableSet<OWLEntity>> selectionSupplier = () -> ImmutableSet.copyOf(treeWidget.getSelectedKeys());
+        setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
+        replaceAnnotationValuesUiAction.setSelectionSupplier(selectionSupplier);
+        moveToParentUiAction.setSelectionSupplier(selectionSupplier);
+        moveToParentUiAction.setHierarchyId(model.getHierarchyId());
     }
 
 

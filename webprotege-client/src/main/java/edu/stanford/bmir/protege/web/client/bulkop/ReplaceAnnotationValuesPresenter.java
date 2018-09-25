@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.ReplaceAnnotationValuesAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -60,7 +59,7 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
 
     @Nonnull
     @Override
-    public Optional<? extends Action> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
+    public Optional<ReplaceAnnotationValuesAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
         return view.getAnnotationProperty().map(prop -> new ReplaceAnnotationValuesAction(projectId,
                                                                                           entities,
                                                                                           prop.getEntity(),

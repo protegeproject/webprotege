@@ -27,7 +27,7 @@ public interface BulkEditOperationPresenter {
     boolean isDataWellFormed();
 
     @Nonnull
-    Optional<? extends Action> createAction(@Nonnull ImmutableSet<OWLEntity> entities);
+    Optional<? extends Action<?>> createAction(@Nonnull ImmutableSet<OWLEntity> entities);
 
     void displayErrorMessage();
 }
