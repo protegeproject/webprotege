@@ -4,10 +4,7 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.view.client.MultiSelectionModel;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationViewContainer;
-import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationViewContainerImpl;
-import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueView;
-import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueViewImpl;
+import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
@@ -350,6 +347,11 @@ public class ClientProjectModule {
 
     @Provides
     SetAnnotationValueView provideSetAnnotationValueView(SetAnnotationValueViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ReplaceAnnotationValuesView provideReplaceAnnotationValuesView(ReplaceAnnotationsValueViewImpl impl) {
         return impl;
     }
 }

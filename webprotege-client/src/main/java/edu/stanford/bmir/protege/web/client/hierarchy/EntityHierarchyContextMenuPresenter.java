@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.bulkop.ReplaceAnnotationValuesUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
@@ -33,6 +34,9 @@ import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_F
  */
 @AutoFactory
 public class EntityHierarchyContextMenuPresenter {
+
+    @Nonnull
+    private final ReplaceAnnotationValuesUiAction replaceAnnotationValuesUiAction;
 
     @Nonnull
     private final Messages messages;
@@ -71,10 +75,12 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull UIAction deleteEntityAction,
                                                @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
                                                @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Provided @Nonnull ReplaceAnnotationValuesUiAction replaceAnnotationValuesUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
+        this.replaceAnnotationValuesUiAction = checkNotNull(replaceAnnotationValuesUiAction);
         this.messages = checkNotNull(messages);
         this.treeWidget = checkNotNull(treeWidget);
         this.model = checkNotNull(model);
@@ -110,6 +116,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addSeparator();
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addItem(setAnnotationValueUiAction);
+        contextMenu.addItem(replaceAnnotationValuesUiAction);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
         contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
@@ -126,7 +133,7 @@ public class EntityHierarchyContextMenuPresenter {
         editEntityTagsAction.setEnabled(false);
         permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
         setAnnotationValueUiAction.setSelectionSupplier(() -> ImmutableSet.copyOf(treeWidget.getSelectedKeys()));
-
+        replaceAnnotationValuesUiAction.setSelectionSupplier(() -> ImmutableSet.copyOf(treeWidget.getSelectedKeys()));
     }
 
 

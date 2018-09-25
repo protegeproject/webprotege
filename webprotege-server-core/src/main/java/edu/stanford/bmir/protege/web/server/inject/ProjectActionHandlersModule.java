@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import edu.stanford.bmir.protege.web.server.bulkop.ReplaceAnnotationValuesActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.SetAnnotationValueActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
@@ -573,6 +574,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideSetAnnotationValueActionHandler(SetAnnotationValueActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideReplaceAnnotationValuesActionHandler(ReplaceAnnotationValuesActionHandler handler) {
         return handler;
     }
 }

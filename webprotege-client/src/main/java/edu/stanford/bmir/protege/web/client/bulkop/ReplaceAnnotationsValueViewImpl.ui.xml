@@ -1,6 +1,19 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
-
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Annotation property" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:PrimitiveDataEditorImpl ui:field="propertyField" annotationPropertiesAllowed="true"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Replace" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextBox ui:field="matchExpressionField"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="With" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextBox ui:field="replaceField"/>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>
