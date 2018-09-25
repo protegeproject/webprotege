@@ -19,6 +19,8 @@ public interface ReplaceAnnotationValuesView extends IsWidget {
     @Nonnull
     String getMatch();
 
+    boolean isRegEx();
+
     @Nonnull
     String getReplacement();
 }

@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
@@ -45,7 +44,8 @@ public class ReplaceAnnotationValuesActionHandler extends AbstractProjectChangeH
     protected ChangeListGenerator<Boolean> getChangeListGenerator(ReplaceAnnotationValuesAction action, ExecutionContext executionContext) {
         return factory.create(action.getEntities(),
                               action.getProperty(),
-                              action.getMatchExpression(),
+                              action.getMatchString(),
+                              action.isRegex(),
                               action.getReplacement());
     }
 

@@ -65,6 +65,7 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
                                                                                           entities,
                                                                                           prop.getEntity(),
                                                                                           view.getMatch(),
+                                                                                          view.isRegEx(),
                                                                                           view.getReplacement()));
     }
 

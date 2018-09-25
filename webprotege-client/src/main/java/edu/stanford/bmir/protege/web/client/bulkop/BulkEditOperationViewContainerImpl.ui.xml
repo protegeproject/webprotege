@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
-        <g:Label ui:field="helpTextField" addStyleNames="{wp.style.formHelpText}"/>
+        <g:Label ui:field="helpTextField"/>
         <g:SimplePanel ui:field="container"/>
     </g:HTMLPanel>
 </ui:UiBinder>

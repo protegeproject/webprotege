@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -37,6 +38,9 @@ public class ReplaceAnnotationsValueViewImpl extends Composite implements Replac
     @UiField
     TextBox matchExpressionField;
 
+    @UiField
+    CheckBox regExCheckBox;
+
     @Inject
     public ReplaceAnnotationsValueViewImpl(@Nonnull PrimitiveDataEditorImpl annotationPropertyField) {
         this.propertyField = checkNotNull(annotationPropertyField);
@@ -55,6 +59,11 @@ public class ReplaceAnnotationsValueViewImpl extends Composite implements Replac
     @Override
     public String getMatch() {
         return matchExpressionField.getValue().trim();
+    }
+
+    @Override
+    public boolean isRegEx() {
+        return regExCheckBox.getValue();
     }
 
     @Nonnull

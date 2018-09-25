@@ -59,8 +59,6 @@
 .wp-form-checkbox {
     padding-left: 0.5rem;
     margin-top: 0.3rem;
-    display: flex;
-    align-items: baseline;
 }
 
 .wp-form-checkbox input {

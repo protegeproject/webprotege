@@ -8,11 +8,9 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +39,8 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
     @Nonnull
     private final String matchExpression;
 
+    private final boolean regEx;
+
     @Nonnull
     private final String replacement;
 
@@ -50,19 +50,28 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
                                                       @Provided @Nonnull OWLOntology rootOntology,
                                                       @Nonnull OWLAnnotationProperty property,
                                                       @Nonnull String matchExpression,
+                                                      boolean regEx,
                                                       @Nonnull String replacement) {
         this.dataFactory = checkNotNull(dataFactory);
         this.entities = checkNotNull(entities);
         this.rootOntology = checkNotNull(rootOntology);
         this.property = checkNotNull(property);
         this.matchExpression = checkNotNull(matchExpression);
+        this.regEx = regEx;
         this.replacement = checkNotNull(replacement);
     }
 
     @Override
     public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<Boolean> builder = OntologyChangeList.builder();
-        Pattern pattern = Pattern.compile(matchExpression, Pattern.DOTALL);
+        String p;
+        if(!regEx) {
+            p = Pattern.quote(matchExpression);
+        }
+        else {
+            p = matchExpression;
+        }
+        Pattern pattern = Pattern.compile(p, Pattern.DOTALL);
         for(OWLOntology ontology : rootOntology.getImportsClosure()) {
             for(OWLEntity entity : entities) {
                 for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI())) {
@@ -72,7 +81,13 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
                             Matcher matcher = pattern.matcher(value.getLiteral());
                             if(matcher.matches()) {
                                MatchResult matchResult = matcher.toMatchResult();
-                               String replacementLexicalValue = matcher.replaceAll(replacement);
+                               String replacementLexicalValue;
+                               if(regEx) {
+                                   replacementLexicalValue = matcher.replaceAll(replacement);
+                               }
+                               else {
+                                   replacementLexicalValue = replacement;
+                               }
                                OWLLiteral replacement;
                                if(value.hasLang()) {
                                    replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getLang());

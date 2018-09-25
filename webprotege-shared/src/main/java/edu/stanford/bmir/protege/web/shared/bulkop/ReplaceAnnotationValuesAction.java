@@ -24,19 +24,23 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
 
     private OWLAnnotationProperty property;
 
-    private String matchExpression;
+    private String matchString;
+
+    private boolean regex;
 
     private String replacement;
 
     public ReplaceAnnotationValuesAction(@Nonnull ProjectId projectId,
                                          @Nonnull ImmutableSet<OWLEntity> entities,
                                          @Nonnull OWLAnnotationProperty property,
-                                         @Nonnull String matchExpression,
+                                         @Nonnull String matchString,
+                                         boolean regex,
                                          @Nonnull String replacement) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property);
-        this.matchExpression = checkNotNull(matchExpression);
+        this.matchString = checkNotNull(matchString);
+        this.regex = regex;
         this.replacement = checkNotNull(replacement);
     }
 
@@ -61,8 +65,12 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
     }
 
     @Nonnull
-    public String getMatchExpression() {
-        return matchExpression;
+    public String getMatchString() {
+        return matchString;
+    }
+
+    public boolean isRegex() {
+        return regex;
     }
 
     @Nonnull
