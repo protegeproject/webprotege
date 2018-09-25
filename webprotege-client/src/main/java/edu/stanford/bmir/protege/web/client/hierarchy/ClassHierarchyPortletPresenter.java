@@ -250,6 +250,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         if (transmittingSelectionFromTree) {
             return;
         }
+        treeWidget.clearSelection();
         selection.ifPresent(sel -> {
             if (sel.isOWLClass()) {
                 treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST);

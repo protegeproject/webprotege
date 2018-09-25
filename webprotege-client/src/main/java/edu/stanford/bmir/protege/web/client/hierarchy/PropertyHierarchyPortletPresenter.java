@@ -296,6 +296,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         try {
             GWT.log("[PropertyHierarchyPortletPresenter] Setting selection in hierarchy: " + entity);
             settingSelectionInHierarchy = true;
+            objectPropertyTree.clearSelection();
+            dataPropertyTree.clearSelection();
+            annotationPropertyTree.clearSelection();
             entity.ifPresent(sel -> {
                 if (sel.isOWLObjectProperty()) {
                     view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);

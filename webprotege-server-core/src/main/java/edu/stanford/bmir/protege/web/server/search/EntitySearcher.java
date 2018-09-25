@@ -333,7 +333,7 @@ public class EntitySearcher {
             String word = sortedSearchWords.get(i);
             int length = word.length();
             int wordEnd = wordIndex + length;
-            if (wordIndex > -1) {
+            if (wordIndex > -1 && wordEnd <= rendering.length()) {
                 if (cur != wordIndex) {
                     highlighted.append("<span style='white-space: pre;'>");
                     highlighted.append(rendering.substring(cur, wordIndex));
