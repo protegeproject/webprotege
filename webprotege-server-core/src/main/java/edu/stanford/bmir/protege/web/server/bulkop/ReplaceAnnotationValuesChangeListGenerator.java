@@ -62,7 +62,7 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
     @Override
     public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<Boolean> builder = OntologyChangeList.builder();
-        Pattern pattern = Pattern.compile(matchExpression);
+        Pattern pattern = Pattern.compile(matchExpression, Pattern.DOTALL);
         for(OWLOntology ontology : rootOntology.getImportsClosure()) {
             for(OWLEntity entity : entities) {
                 for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI())) {

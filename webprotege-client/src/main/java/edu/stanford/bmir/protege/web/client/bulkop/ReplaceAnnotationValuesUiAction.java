@@ -29,7 +29,7 @@ public class ReplaceAnnotationValuesUiAction extends AbstractUiAction {
     @Inject
     public ReplaceAnnotationValuesUiAction(@Nonnull ReplaceAnnotationValuesPresenter presenter,
                                            @Nonnull BulkEditOperationWorkflowFactory workflowFactory) {
-        super(presenter.getTitle());
+        super(presenter.getTitle() + "...");
         this.presenter = checkNotNull(presenter);
         this.workflowFactory = checkNotNull(workflowFactory);
     }

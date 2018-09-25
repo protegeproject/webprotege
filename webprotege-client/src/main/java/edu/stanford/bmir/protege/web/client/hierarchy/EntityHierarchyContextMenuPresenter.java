@@ -168,12 +168,4 @@ public class EntityHierarchyContextMenuPresenter {
         firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
     }
 
-    private void setAnnotationValues() {
-        ImmutableSet<OWLEntity> sel = ImmutableSet.copyOf(treeWidget.getSelectedKeys());
-        if(sel.isEmpty()) {
-            return;
-        }
-
-    }
-
 }
