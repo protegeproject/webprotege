@@ -65,51 +65,59 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
     public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<Boolean> builder = OntologyChangeList.builder();
         String p;
-        if(!regEx) {
-            p = Pattern.quote(matchExpression);
+        if (regEx) {
+            p = matchExpression;
         }
         else {
-            p = matchExpression;
+            p = Pattern.quote(matchExpression);
         }
         Pattern pattern = Pattern.compile(p, Pattern.DOTALL);
         for(OWLOntology ontology : rootOntology.getImportsClosure()) {
             for(OWLEntity entity : entities) {
                 for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI())) {
-                    if (ax.getValue().isLiteral()) {
-                        OWLLiteral value = (OWLLiteral) ax.getValue();
-                        if(ax.getProperty().equals(property)) {
-                            Matcher matcher = pattern.matcher(value.getLiteral());
-                            if(matcher.matches()) {
-                               MatchResult matchResult = matcher.toMatchResult();
-                               String replacementLexicalValue;
-                               if(regEx) {
-                                   replacementLexicalValue = matcher.replaceAll(replacement);
-                               }
-                               else {
-                                   replacementLexicalValue = replacement;
-                               }
-                               OWLLiteral replacement;
-                               if(value.hasLang()) {
-                                   replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getLang());
-                               }
-                               else {
-                                   replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getDatatype());
-                               }
-                               OWLAxiom replacementAx = dataFactory.getOWLAnnotationAssertionAxiom(property,
-                                                                                                   entity.getIRI(),
-                                                                                                   replacement,
-                                                                                                   ax.getAnnotations());
-                                if (!replacementAx.equals(ax)) {
-                                    builder.removeAxiom(ontology, ax);
-                                    builder.addAxiom(ontology, replacementAx);
-                                }
-                            }
-                        }
-                    }
+                    processAnnotationAssertion(ontology, entity, ax, pattern, builder);
                 }
             }
         }
         return builder.build(true);
+    }
+
+    private void processAnnotationAssertion(OWLOntology ontology, OWLEntity entity, OWLAnnotationAssertionAxiom ax, Pattern pattern, OntologyChangeList.Builder<Boolean> builder) {
+        if (!ax.getValue().isLiteral()) {
+            return;
+        }
+        OWLLiteral value = (OWLLiteral) ax.getValue();
+        if (!ax.getProperty().equals(property)) {
+            return;
+        }
+        Matcher matcher = pattern.matcher(value.getLiteral());
+        if (!matcher.matches()) {
+            return;
+        }
+        MatchResult matchResult = matcher.toMatchResult();
+        String replacementLexicalValue;
+        if(regEx) {
+            replacementLexicalValue = matcher.replaceAll(replacement);
+        }
+        else {
+            replacementLexicalValue = replacement;
+        }
+        OWLLiteral replacement;
+        if(value.hasLang()) {
+            replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getLang());
+        }
+        else {
+            replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getDatatype());
+        }
+        OWLAxiom replacementAx = dataFactory.getOWLAnnotationAssertionAxiom(property,
+                                                                            entity.getIRI(),
+                                                                            replacement,
+                                                                            ax.getAnnotations());
+        if (replacementAx.equals(ax)) {
+            return;
+        }
+        builder.removeAxiom(ontology, ax);
+        builder.addAxiom(ontology, replacementAx);
     }
 
     @Override
