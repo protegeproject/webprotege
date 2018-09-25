@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MERGE_ENTITIES;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
@@ -141,8 +142,11 @@ public class EntityHierarchyContextMenuPresenter {
         permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
         Supplier<ImmutableSet<OWLEntity>> selectionSupplier = () -> ImmutableSet.copyOf(treeWidget.getSelectedKeys());
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
         replaceAnnotationValuesUiAction.setSelectionSupplier(selectionSupplier);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, replaceAnnotationValuesUiAction::setEnabled);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
         moveToParentUiAction.setHierarchyId(model.getHierarchyId());
     }
 
