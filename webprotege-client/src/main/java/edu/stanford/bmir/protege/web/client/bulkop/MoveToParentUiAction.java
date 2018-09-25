@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class MoveToParentUiAction extends AbstractUiAction {
 
     @Nonnull
-    private final MoveToParentPresenter parentPresenter;
+    private final MoveEntitiesToParentPresenter parentPresenter;
 
     @Nonnull
     private final BulkEditOperationWorkflowFactory workflowFactory;
@@ -29,7 +29,7 @@ public class MoveToParentUiAction extends AbstractUiAction {
     private Supplier<ImmutableSet<OWLEntity>> selectionSupplier = ImmutableSet::of;
 
     @Inject
-    public MoveToParentUiAction(@Nonnull MoveToParentPresenter presenter,
+    public MoveToParentUiAction(@Nonnull MoveEntitiesToParentPresenter presenter,
                                 @Nonnull BulkEditOperationWorkflowFactory workflowFactory) {
         super(presenter.getTitle() + "...");
         this.parentPresenter = checkNotNull(presenter);

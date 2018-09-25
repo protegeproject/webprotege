@@ -25,7 +25,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 25 Sep 2018
  */
-public class MoveToParentPresenter implements BulkEditOperationPresenter {
+public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter {
 
     @Nonnull
     private final ProjectId projectId;
@@ -40,8 +40,8 @@ public class MoveToParentPresenter implements BulkEditOperationPresenter {
     private EntityType<?> entityType = EntityType.CLASS;
 
     @Inject
-    public MoveToParentPresenter(@Nonnull ProjectId projectId, @Nonnull MoveToParentView view,
-                                 @Nonnull HierarchyFieldPresenter presenter) {
+    public MoveEntitiesToParentPresenter(@Nonnull ProjectId projectId, @Nonnull MoveToParentView view,
+                                         @Nonnull HierarchyFieldPresenter presenter) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.hierarchyFieldPresenter = checkNotNull(presenter);
@@ -53,7 +53,7 @@ public class MoveToParentPresenter implements BulkEditOperationPresenter {
 
     @Override
     public String getTitle() {
-        return "Move to parent";
+        return "Move";
     }
 
     @Override
