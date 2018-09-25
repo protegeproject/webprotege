@@ -4,6 +4,10 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.view.client.MultiSelectionModel;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationViewContainer;
+import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationViewContainerImpl;
+import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueView;
+import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
@@ -47,14 +51,12 @@ import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorView;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -338,6 +340,16 @@ public class ClientProjectModule {
 
     @Provides
     HierarchyPopupView provideHierarchyPopupView(HierarchyPopupViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    BulkEditOperationViewContainer provideBulkEditOperationViewContainer(BulkEditOperationViewContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SetAnnotationValueView provideSetAnnotationValueView(SetAnnotationValueViewImpl impl) {
         return impl;
     }
 }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import edu.stanford.bmir.protege.web.server.bulkop.SetAnnotationValueActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
@@ -51,6 +52,8 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
+import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueResult;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
@@ -565,6 +568,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideGetIndividualsPageContainingIndividualActionHandler(GetIndividualsPageContainingIndividualActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideSetAnnotationValueActionHandler(SetAnnotationValueActionHandler handler) {
         return handler;
     }
 }

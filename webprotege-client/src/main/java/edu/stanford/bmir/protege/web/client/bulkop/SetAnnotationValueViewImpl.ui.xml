@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Annotation property" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:PrimitiveDataEditorImpl ui:field="propertyField" annotationPropertiesAllowed="true"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Value" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:PrimitiveDataEditorImpl ui:field="valueField" literalAllowed="true" iRIAllowed="true"/>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -2,10 +2,12 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
@@ -48,6 +50,9 @@ public class EntityHierarchyContextMenuPresenter {
     private final UIAction deleteEntityAction;
 
     @Nonnull
+    private final SetAnnotationValueUiAction setAnnotationValueUiAction;
+
+    @Nonnull
     private final MergeEntitiesUiAction mergeEntitiesAction;
 
     @Nonnull
@@ -64,10 +69,12 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
+                                               @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
                                                @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
+        this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
         this.messages = checkNotNull(messages);
         this.treeWidget = checkNotNull(treeWidget);
         this.model = checkNotNull(model);
@@ -102,6 +109,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(editEntityTagsAction);
         contextMenu.addSeparator();
         contextMenu.addItem(mergeEntitiesAction);
+        contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
         contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
@@ -117,6 +125,7 @@ public class EntityHierarchyContextMenuPresenter {
         permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
         editEntityTagsAction.setEnabled(false);
         permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
+        setAnnotationValueUiAction.setSelectionSupplier(() -> ImmutableSet.copyOf(treeWidget.getSelectedKeys()));
 
     }
 
@@ -150,6 +159,14 @@ public class EntityHierarchyContextMenuPresenter {
         Optional<OWLEntity> firstSelectedKey = treeWidget.getFirstSelectedKey();
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
         firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
+    }
+
+    private void setAnnotationValues() {
+        ImmutableSet<OWLEntity> sel = ImmutableSet.copyOf(treeWidget.getSelectedKeys());
+        if(sel.isEmpty()) {
+            return;
+        }
+
     }
 
 }
