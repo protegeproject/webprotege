@@ -51,6 +51,6 @@ public class ReplaceAnnotationValuesActionHandler extends AbstractProjectChangeH
 
     @Override
     protected ReplaceAnnotationValuesResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult, ReplaceAnnotationValuesAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        return new ReplaceAnnotationValuesResult();
+        return ReplaceAnnotationValuesResult.get(eventList);
     }
 }

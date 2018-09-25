@@ -59,6 +59,6 @@ public class SetAnnotationValueActionHandler extends AbstractProjectChangeHandle
 
     @Override
     protected SetAnnotationValueResult createActionResult(ChangeApplicationResult<Set<OWLEntity>> changeApplicationResult, SetAnnotationValueAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        return new SetAnnotationValueResult();
+        return SetAnnotationValueResult.get(eventList);
     }
 }

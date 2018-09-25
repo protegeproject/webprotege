@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 25 Sep 2018
  */
-public class MoveToParentAction implements ProjectAction<MoveToParentResult> {
+public class MoveEntitiesToParentAction implements ProjectAction<MoveEntitiesToParentResult> {
 
     private ProjectId projectId;
 
@@ -23,15 +23,15 @@ public class MoveToParentAction implements ProjectAction<MoveToParentResult> {
 
     private OWLEntity entity;
 
-    public MoveToParentAction(@Nonnull ProjectId projectId,
-                              @Nonnull ImmutableSet<OWLClass> entities,
-                              @Nonnull OWLClass entity) {
+    public MoveEntitiesToParentAction(@Nonnull ProjectId projectId,
+                                      @Nonnull ImmutableSet<OWLClass> entities,
+                                      @Nonnull OWLClass entity) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.entity = checkNotNull(entity);
     }
 
-    private MoveToParentAction() {
+    private MoveEntitiesToParentAction() {
     }
 
     @Nonnull

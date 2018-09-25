@@ -8,8 +8,8 @@ import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.shared.bulkop.MoveToParentAction;
-import edu.stanford.bmir.protege.web.shared.bulkop.MoveToParentResult;
+import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
+import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentResult;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -17,7 +17,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -26,7 +25,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 25 Sep 2018
  */
-public class MoveToParentActionHandler extends AbstractProjectChangeHandler<Boolean, MoveToParentAction, MoveToParentResult> {
+public class MoveToParentActionHandler extends AbstractProjectChangeHandler<Boolean, MoveEntitiesToParentAction, MoveEntitiesToParentResult> {
 
     @Nonnull
     private MoveClassesChangeListGeneratorFactory factory;
@@ -39,12 +38,12 @@ public class MoveToParentActionHandler extends AbstractProjectChangeHandler<Bool
 
     @Nonnull
     @Override
-    public Class<MoveToParentAction> getActionClass() {
-        return MoveToParentAction.class;
+    public Class<MoveEntitiesToParentAction> getActionClass() {
+        return MoveEntitiesToParentAction.class;
     }
 
     @Override
-    protected ChangeListGenerator<Boolean> getChangeListGenerator(MoveToParentAction action, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Boolean> getChangeListGenerator(MoveEntitiesToParentAction action, ExecutionContext executionContext) {
         if(action.getEntity().isOWLClass()) {
             ImmutableSet<OWLClass> clses = action.getEntities().stream().map(OWLEntity::asOWLClass).collect(toImmutableSet());
             return factory.create(clses, action.getEntity().asOWLClass());
@@ -53,7 +52,10 @@ public class MoveToParentActionHandler extends AbstractProjectChangeHandler<Bool
     }
 
     @Override
-    protected MoveToParentResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult, MoveToParentAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        return new MoveToParentResult();
+    protected MoveEntitiesToParentResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult,
+                                                            MoveEntitiesToParentAction action,
+                                                            ExecutionContext executionContext,
+                                                            EventList<ProjectEvent<?>> eventList) {
+        return MoveEntitiesToParentResult.get(eventList);
     }
 }

@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
-import edu.stanford.bmir.protege.web.shared.bulkop.MoveToParentAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -17,7 +16,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -83,16 +81,16 @@ public class MoveToParentPresenter implements BulkEditOperationPresenter {
 
     @Nonnull
     @Override
-    public Optional<MoveToParentAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
+    public Optional<MoveEntitiesToParentAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
         ImmutableSet<OWLClass> clses = entities.stream()
                 .filter(OWLEntity::isOWLClass)
                 .map(OWLEntity::asOWLClass)
                 .collect(toImmutableSet());
         return hierarchyFieldPresenter.getEntity()
                 .map(OWLEntityData::getEntity)
-                .map(entity -> new MoveToParentAction(projectId,
-                                                      clses,
-                                                      entity.asOWLClass()));
+                .map(entity -> new MoveEntitiesToParentAction(projectId,
+                                                              clses,
+                                                              entity.asOWLClass()));
     }
 
     @Override

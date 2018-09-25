@@ -58,18 +58,26 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
         for (OWLClass entity : entities) {
             for(OWLOntology ontology : rootOntology.getImportsClosure()) {
                 for(OWLSubClassOfAxiom ax : ontology.getSubClassAxiomsForSubClass(entity)) {
-                    OWLClassExpression superClass = ax.getSuperClass();
-                    if(!superClass.isAnonymous() && !superClass.equals(parent)) {
-                        changeList.removeAxiom(ontology, ax);
-                        OWLSubClassOfAxiom replacementAx = dataFactory.getOWLSubClassOfAxiom(entity,
-                                                                                                  parent,
-                                                                                                  ax.getAnnotations());
-                        changeList.addAxiom(ontology, replacementAx);
-                    }
+                    processAxiom(ax, entity, ontology, changeList);
                 }
             }
         }
         return changeList.build(true);
+    }
+
+    private void processAxiom(OWLSubClassOfAxiom ax, OWLClass parentClass, OWLOntology ontology, OntologyChangeList.Builder<Boolean> changeList) {
+        OWLClassExpression superClass = ax.getSuperClass();
+        if (superClass.isAnonymous()) {
+            return;
+        }
+        if (superClass.equals(parent)) {
+            return;
+        }
+        changeList.removeAxiom(ontology, ax);
+        OWLSubClassOfAxiom replacementAx = dataFactory.getOWLSubClassOfAxiom(parentClass,
+                                                                             parent,
+                                                                             ax.getAnnotations());
+        changeList.addAxiom(ontology, replacementAx);
     }
 
     @Override

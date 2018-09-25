@@ -120,10 +120,10 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addSeparator();
         contextMenu.addItem(editEntityTagsAction);
         contextMenu.addSeparator();
+        contextMenu.addItem(moveToParentUiAction);
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(replaceAnnotationValuesUiAction);
-        contextMenu.addItem(moveToParentUiAction);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
         contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
