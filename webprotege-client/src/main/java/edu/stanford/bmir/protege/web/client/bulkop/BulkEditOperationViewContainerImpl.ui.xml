@@ -3,7 +3,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
-            width: 450px;
+            width: 600px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
