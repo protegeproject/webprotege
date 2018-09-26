@@ -6,6 +6,7 @@
         <div class="{wp.style.formGroup}">
             <g:Label text="Annotation property" addStyleNames="{wp.style.formLabel}"/>
             <primitive:PrimitiveDataEditorImpl ui:field="propertyField" annotationPropertiesAllowed="true"/>
+            <g:Label text="Specify the annotation property whose value will be set" addStyleNames="{wp.style.formHelpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="Value" addStyleNames="{wp.style.formLabel}"/>
