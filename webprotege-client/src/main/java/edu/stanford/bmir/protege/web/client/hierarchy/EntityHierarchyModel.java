@@ -130,7 +130,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
         result.getChildren().getPageElements().stream()
               .map(GraphNode::getUserObject)
               .forEach(node -> {
-                  nodeCache.put(parent, node);
+                  nodeCache.put(node.getEntity(), node);
                   parent2ChildMap.put(parent, node.getEntity());
               });
     }
