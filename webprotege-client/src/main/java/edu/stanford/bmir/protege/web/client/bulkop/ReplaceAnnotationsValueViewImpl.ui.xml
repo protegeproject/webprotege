@@ -2,19 +2,22 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel addStyleNames="{wp.style.form}">
+    <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
             <g:Label text="Annotation property" addStyleNames="{wp.style.formLabel}"/>
             <primitive:PrimitiveDataEditorImpl ui:field="propertyField" annotationPropertiesAllowed="true"/>
+            <g:Label text="Specify an annotation property to match.  Leave blank to match any annotation property." addStyleNames="{wp.style.formHelpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="Replace" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="matchExpressionField"/>
             <g:CheckBox ui:field="regExCheckBox" text="Regular expression" addStyleNames="{wp.style.formCheckBox}"/>
+            <g:Label text="Specify the value to be replaced.  This is case sensitive and an exact match will be performed" addStyleNames="{wp.style.formHelpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="With" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="replaceField"/>
+            <g:Label text="Specify the replacement value.  If a regular expression is specified above then regular expression groups can be used to include regular expression matches in the replacement value" addStyleNames="{wp.style.formHelpText}"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

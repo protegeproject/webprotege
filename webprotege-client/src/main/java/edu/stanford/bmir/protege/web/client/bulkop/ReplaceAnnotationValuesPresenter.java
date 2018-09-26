@@ -45,7 +45,7 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
 
     @Override
     public String getHelpMessage() {
-        return "Replaces annotation values that match a regular expression";
+        return "Replaces annotation values that match the specified property and string value";
     }
 
     @Override
