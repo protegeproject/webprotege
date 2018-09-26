@@ -207,6 +207,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void transmitSelectionFromTree(SelectionChangeEvent event) {
+        actionStatePresenter.setSelectionPresent(!treeWidget.getSelectedKeys().isEmpty());
         if(!treeWidget.isAttached()) {
             return;
         }

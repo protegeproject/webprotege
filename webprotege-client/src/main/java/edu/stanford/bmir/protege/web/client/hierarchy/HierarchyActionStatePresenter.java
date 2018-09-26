@@ -31,6 +31,8 @@ public class HierarchyActionStatePresenter {
 
     private final Map<ActionId, UIAction> actionMap = new HashMap<>();
 
+    private boolean selectionPresent = false;
+
     @Inject
     public HierarchyActionStatePresenter(@Nonnull ProjectId projectId,
                                          @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
@@ -60,19 +62,23 @@ public class HierarchyActionStatePresenter {
         updateActionStates();
     }
 
+    public void setSelectionPresent(boolean selectionPresent) {
+        if (selectionPresent != this.selectionPresent) {
+            this.selectionPresent = selectionPresent;
+            updateActionStates();
+        }
+
+    }
+
     private void updateActionStates() {
         actionMap.forEach(this::updateState);
     }
 
-
-    @SuppressWarnings("Convert2MethodRef")
     private void updateState(@Nonnull ActionId actionId,
                              @Nonnull UIAction action) {
         action.setEnabled(false);
-        // Note that the following action handlers cause GWT compile problems if method references
-        // are used for some reason
         permissionChecker.hasPermission(actionId,
-                                        enabled -> action.setEnabled(enabled));
+                                        enabled -> action.setEnabled(selectionPresent && enabled));
 
     }
 }

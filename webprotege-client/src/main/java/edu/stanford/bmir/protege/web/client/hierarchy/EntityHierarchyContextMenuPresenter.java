@@ -23,6 +23,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -74,6 +76,15 @@ public class EntityHierarchyContextMenuPresenter {
     @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+    private UIAction pruneBranchToRootAction;
+
+    private UIAction pruneAllBranchesToRootAction;
+
+    private UIAction clearPruningAction;
+
+    private UIAction showIriAction;
+
+    private UIAction showDirectLinkAction;
 
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
                                                @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
@@ -109,6 +120,7 @@ public class EntityHierarchyContextMenuPresenter {
         if(contextMenu == null) {
             createContextMenu();
         }
+        updateActionStates();
         int x = event.getNativeEvent().getClientX();
         int y = event.getNativeEvent().getClientY();
         contextMenu.show(x, y);
@@ -126,28 +138,47 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(replaceAnnotationValuesUiAction);
         contextMenu.addSeparator();
-        contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
-        contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
-        contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
+        pruneBranchToRootAction = contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
+        pruneAllBranchesToRootAction = contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
+        clearPruningAction = contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
         contextMenu.addSeparator();
-        contextMenu.addItem(messages.showIri(), this::showIriForSelection);
-        contextMenu.addItem(messages.showDirectLink(), this::showUrlForSelection);
+        showIriAction = contextMenu.addItem(messages.showIri(), this::showIriForSelection);
+        showDirectLinkAction = contextMenu.addItem(messages.showDirectLink(), this::showUrlForSelection);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
 
         // This needs tidying somehow.  We don't do this for other actions.
-        mergeEntitiesAction.setEnabled(false);
-        permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
-        editEntityTagsAction.setEnabled(false);
-        permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
+        moveToParentUiAction.setHierarchyId(model.getHierarchyId());
+
         Supplier<ImmutableSet<OWLEntity>> selectionSupplier = () -> ImmutableSet.copyOf(treeWidget.getSelectedKeys());
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
-        replaceAnnotationValuesUiAction.setSelectionSupplier(selectionSupplier);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, replaceAnnotationValuesUiAction::setEnabled);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
-        moveToParentUiAction.setHierarchyId(model.getHierarchyId());
+        replaceAnnotationValuesUiAction.setSelectionSupplier(selectionSupplier);
+        updateActionStates();
+    }
+
+    private void updateActionStates() {
+        mergeEntitiesAction.setEnabled(false);
+        editEntityTagsAction.setEnabled(false);
+        setAnnotationValueUiAction.setEnabled(false);
+        replaceAnnotationValuesUiAction.setEnabled(false);
+        moveToParentUiAction.setEnabled(false);
+
+        boolean selIsNonEmpty = !treeWidget.getSelectedKeys().isEmpty();
+        pruneBranchToRootAction.setEnabled(selIsNonEmpty);
+        pruneAllBranchesToRootAction.setEnabled(selIsNonEmpty);
+        clearPruningAction.setEnabled(selIsNonEmpty);
+        showIriAction.setEnabled(selIsNonEmpty);
+        showDirectLinkAction.setEnabled(selIsNonEmpty);
+
+
+        if(selIsNonEmpty) {
+            permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
+            permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
+            permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
+            permissionChecker.hasPermission(EDIT_ONTOLOGY, replaceAnnotationValuesUiAction::setEnabled);
+            permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
+        }
     }
 
 

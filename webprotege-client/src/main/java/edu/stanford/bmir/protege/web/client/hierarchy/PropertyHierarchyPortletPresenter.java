@@ -196,14 +196,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                   messages.hierarchy_annotationproperties(),
                   eventBus,
                   annotationPropertyHierarchyModel, annotationPropertyTree);
-
-        actionStatePresenter.start(eventBus);
-
         view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
         view.setHierarchyIdSelectedHandler(this::handleHierarchySwitched);
-
         tagVisibilityPresenter.start(filterView, view);
-
+        actionStatePresenter.start(eventBus);
         portletUi.setWidget(view);
         setSelectionInTree(getSelectedEntity());
     }
@@ -262,6 +258,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void transmitSelectionFromTree() {
+        boolean selPresent = view.getSelectedHierarchy().map(h -> !h.getSelectedKeys().isEmpty()).orElse(false);
+        actionStatePresenter.setSelectionPresent(selPresent);
         if (settingSelectionInHierarchy) {
             return;
         }
@@ -276,10 +274,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
                     });
                 }
-//                if (!sel.isPresent()) {
-//                    GWT.log("[PropertyHierarchyPortletPresenter] Transmitting empty selection from tree");
-//                    getSelectionModel().clearSelection();
-//                }
+                if (!sel.isPresent()) {
+                    GWT.log("[PropertyHierarchyPortletPresenter] Transmitting empty selection from tree");
+                    getSelectionModel().clearSelection();
+                }
             });
         } finally {
             transmittingSelectionFromHierarchy = false;
