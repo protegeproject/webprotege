@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
@@ -45,7 +46,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
 
     private OWLDataFactory dataFactory;
 
-    private OWLClass sourceEntity;
+    private ImmutableSet<OWLEntity> sourceEntities;
 
     private OWLClass targetEntity;
 
@@ -67,6 +68,8 @@ public class MergeEntitiesChangeListGenerator_TestCase {
 
     private OWLOntologyManager manager;
 
+    private OWLClass sourceEntity;
+
     @Before
     public void setUp() throws Exception {
         manager = OWLManager.createOWLOntologyManager();
@@ -75,6 +78,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
         IRI iriB = IRI.create("http://ontology.org/B");
         IRI iriC = IRI.create("http://ontology.org/C");
         sourceEntity = Class(iriA);
+        sourceEntities = ImmutableSet.of(sourceEntity);
         targetEntity = Class(iriB);
         clsC = Class(iriC);
         rdfsLabel = dataFactory.getRDFSLabel();
@@ -98,7 +102,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                                     rootOntology,
                                                     dataFactory,
                                                     msgFormatter,
-                                                    sourceEntity,
+                                                    sourceEntities,
                                                     targetEntity,
                                                     treatment,
                                                     discussionThreadRepo);

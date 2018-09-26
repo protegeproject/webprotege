@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
@@ -66,12 +67,11 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
         return "Move the selected " + entityType.getPluralPrintName().toLowerCase() + " from their current location to another location in the " + entityType.getPrintName().toLowerCase() + " hierarchy";
     }
 
-    @Nonnull
     @Override
-    public IsWidget getView() {
+    public void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus) {
         hierarchyFieldPresenter.start(view.getHierarchyFieldContainer(),
-                                      new WebProtegeEventBus(new SimpleEventBus()));
-        return view;
+                                      eventBus);
+        container.setWidget(view);
     }
 
     @Override

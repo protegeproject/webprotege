@@ -38,9 +38,10 @@ public class BulkEditOperationViewContainerImpl extends Composite implements Bul
         helpTextField.setText(helpText);
     }
 
+    @Nonnull
     @Override
-    public void setWidget(@Nonnull IsWidget widget) {
-        container.setWidget(widget);
+    public AcceptsOneWidget getContainer() {
+        return container;
     }
 
     @Override

@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
@@ -34,10 +36,9 @@ public class SetAnnotationValuePresenter implements BulkEditOperationPresenter {
         this.view = checkNotNull(view);
     }
 
-    @Nonnull
     @Override
-    public IsWidget getView() {
-        return view;
+    public void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus) {
+        container.setWidget(view);
     }
 
     @Override

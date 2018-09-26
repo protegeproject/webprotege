@@ -3,11 +3,13 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -50,13 +52,14 @@ public class BulkEditOperationWorkflow {
     }
 
     public void start() {
+        WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
         List<DialogButton> dialogButtons = new ArrayList<>();
         DialogButton escapeButton = DialogButton.CANCEL;
         dialogButtons.add(escapeButton);
         DialogButton executeButton = DialogButton.get(presenter.getExecuteButtonText());
         dialogButtons.add(executeButton);
         viewContainer.setHelpText(presenter.getHelpMessage());
-        viewContainer.setWidget(presenter.getView());
+        presenter.start(viewContainer.getContainer(), eventBus);
         BulkEditingOperationDialogController controller = new BulkEditingOperationDialogController(
                 presenter.getTitle(),
                 dialogButtons,

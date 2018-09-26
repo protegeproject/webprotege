@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -21,8 +22,7 @@ public interface BulkEditOperationPresenter {
 
     String getHelpMessage();
 
-    @Nonnull
-    IsWidget getView();
+    void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus);
 
     boolean isDataWellFormed();
 

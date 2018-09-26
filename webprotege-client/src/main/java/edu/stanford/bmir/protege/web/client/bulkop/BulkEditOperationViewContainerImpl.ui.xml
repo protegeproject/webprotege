@@ -1,8 +1,17 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel>
-        <g:Label ui:field="helpTextField"/>
-        <g:SimplePanel ui:field="container"/>
+    <ui:style>
+        .main {
+            width: 450px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <div class="{wp.style.formGroup}">
+            <g:Label ui:field="helpTextField"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:SimplePanel ui:field="container"/>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>

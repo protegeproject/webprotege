@@ -153,6 +153,7 @@ public class EntityHierarchyContextMenuPresenter {
         Supplier<ImmutableSet<OWLEntity>> selectionSupplier = () -> ImmutableSet.copyOf(treeWidget.getSelectedKeys());
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
+        mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
         replaceAnnotationValuesUiAction.setSelectionSupplier(selectionSupplier);
         updateActionStates();
     }

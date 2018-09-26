@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
@@ -14,5 +15,6 @@ public interface BulkEditOperationViewContainer extends IsWidget, HasRequestFocu
 
     void setHelpText(@Nonnull String helpText);
 
-    void setWidget(@Nonnull IsWidget widget);
+    @Nonnull
+    AcceptsOneWidget getContainer();
 }

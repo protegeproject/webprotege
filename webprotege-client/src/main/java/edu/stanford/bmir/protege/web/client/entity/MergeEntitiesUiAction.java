@@ -1,11 +1,18 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflow;
+import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflowFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,17 +24,34 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class MergeEntitiesUiAction extends AbstractUiAction {
 
     @Nonnull
-    private final MergeEntitiesWorkflow workflow;
+    private final MergeEntitiesPresenter presenter;
+
+    @Nonnull
+    private final BulkEditOperationWorkflowFactory workflowFactory;
+
+    @Nullable
+    private Supplier<ImmutableSet<OWLEntity>> selectionSupplier = null;
 
     @Inject
-    public MergeEntitiesUiAction(@Nonnull MergeEntitiesWorkflow workflow,
-                                 @Nonnull Messages messages) {
+    public MergeEntitiesUiAction(@Nonnull Messages messages,
+                                 @Nonnull MergeEntitiesPresenter presenter,
+                                 @Nonnull BulkEditOperationWorkflowFactory workflowFactory) {
         super(messages.merge_mergeInto());
-        this.workflow = checkNotNull(workflow);
+        this.presenter = checkNotNull(presenter);
+        this.workflowFactory = checkNotNull(workflowFactory);
+    }
+
+    public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntity>> selectionSupplier) {
+        this.selectionSupplier = checkNotNull(selectionSupplier);
     }
 
     @Override
     public void execute() {
+        if(selectionSupplier == null) {
+            throw new RuntimeException("Selection supplier not set");
+        }
+        ImmutableSet<OWLEntity> entityData = selectionSupplier.get();
+        BulkEditOperationWorkflow workflow = workflowFactory.create(presenter, entityData);
         workflow.start();
     }
 }

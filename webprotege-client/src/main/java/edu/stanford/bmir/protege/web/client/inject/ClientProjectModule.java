@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
+import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesView;
+import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.form.FormView;
 import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
@@ -356,6 +358,11 @@ public class ClientProjectModule {
 
     @Provides
     MoveToParentView provideMoveToParentView(MoveToParentViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    MergeEntitiesView provideMergeEntitiesView(MergeEntitiesViewImpl impl) {
         return impl;
     }
 }

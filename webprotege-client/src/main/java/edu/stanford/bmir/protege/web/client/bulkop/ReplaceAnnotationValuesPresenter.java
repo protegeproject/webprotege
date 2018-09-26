@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.ReplaceAnnotationValuesAction;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -46,10 +48,9 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
         return "Replaces annotation values that match a regular expression";
     }
 
-    @Nonnull
     @Override
-    public IsWidget getView() {
-        return view;
+    public void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus) {
+        container.setWidget(view);
     }
 
     @Override
