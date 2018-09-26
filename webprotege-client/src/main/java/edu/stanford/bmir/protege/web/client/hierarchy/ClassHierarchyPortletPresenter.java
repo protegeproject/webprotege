@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
@@ -22,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
@@ -31,6 +31,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -95,6 +96,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
     private TreeWidgetUpdater updater;
+
+    private boolean settingSelectionInTree = false;
 
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
@@ -204,10 +207,16 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void transmitSelectionFromTree(SelectionChangeEvent event) {
+        if(!treeWidget.isAttached()) {
+            return;
+        }
+        if(settingSelectionInTree) {
+            return;
+        }
         try {
             transmittingSelectionFromTree = true;
             treeWidget.getFirstSelectedKey()
-                      .ifPresent(sel -> getSelectionModel().setSelection(sel));
+                    .ifPresent(sel -> getSelectionModel().setSelection(sel));
             if (!treeWidget.getFirstSelectedKey().isPresent()) {
                 getSelectionModel().clearSelection();
             }
@@ -250,11 +259,18 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         if (transmittingSelectionFromTree) {
             return;
         }
-        treeWidget.clearSelection();
-        selection.ifPresent(sel -> {
-            if (sel.isOWLClass()) {
-                treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST);
-            }
-        });
+        if(treeWidget.getSelectedKeys().contains(selection.orElse(null))) {
+            return;
+        }
+        try {
+            settingSelectionInTree = true;
+            selection.ifPresent(sel -> {
+                if (sel.isOWLClass()) {
+                    treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST);
+                }
+            });
+        } finally {
+            settingSelectionInTree = false;
+        }
     }
 }

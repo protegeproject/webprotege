@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
@@ -24,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -232,7 +232,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                         });
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
-        treeWidget.addSelectionChangeHandler(this::handleSelectionChanged);
+        treeWidget.addSelectionChangeHandler(event -> handleSelectionChanged(event, treeWidget));
         contextMenuPresenterFactory.create(model,
                                            treeWidget,
                                            createAction,
@@ -248,19 +248,21 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         updater.start(eventBus);
     }
 
-    private void handleSelectionChanged(SelectionChangeEvent selectionChangeEvent) {
-        GWT.log("[PropertyHierarchyPortletPresenter] handling selection changed in tree");
-        transmitSelection();
+    private void handleSelectionChanged(SelectionChangeEvent selectionChangeEvent, TreeWidget<EntityNode, OWLEntity> treeWidget) {
+        if(!treeWidget.isAttached()) {
+            return;
+        }
+        GWT.log("[PropertyHierarchyPortletPresenter] handling selection changed in tree ");
+        transmitSelectionFromTree();
     }
 
     private void handleHierarchySwitched(@Nonnull HierarchyId hierarchyId) {
         GWT.log("[PropertyHierarchyPortletPresenter] handling hierarchy switched");
-        transmitSelection();
+        transmitSelectionFromTree();
     }
 
-    private void transmitSelection() {
+    private void transmitSelectionFromTree() {
         if (settingSelectionInHierarchy) {
-            GWT.log("[PropertyHierarchyPortletPresenter] Setting selection in hierarchy, returning");
             return;
         }
         try {
@@ -269,15 +271,15 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                 Optional<OWLEntity> sel = tree.getFirstSelectedKey();
                 if (!sel.equals(getSelectedEntity())) {
                     sel.ifPresent(entity -> {
-                        GWT.log("[PropertyHierarchyPortletPresenter] Transmitting selection " + entity);
+                        GWT.log("[PropertyHierarchyPortletPresenter] Transmitting selection from tree " + entity);
                         getSelectionModel().setSelection(entity);
 
                     });
                 }
-                if (!sel.isPresent()) {
-                    GWT.log("[PropertyHierarchyPortletPresenter] Transmitting empty selection");
-                    getSelectionModel().clearSelection();
-                }
+//                if (!sel.isPresent()) {
+//                    GWT.log("[PropertyHierarchyPortletPresenter] Transmitting empty selection from tree");
+//                    getSelectionModel().clearSelection();
+//                }
             });
         } finally {
             transmittingSelectionFromHierarchy = false;
@@ -294,27 +296,32 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
             return;
         }
         try {
-            GWT.log("[PropertyHierarchyPortletPresenter] Setting selection in hierarchy: " + entity);
+            GWT.log("[PropertyHierarchyPortletPresenter] Setting selection in tree for " + entity);
             settingSelectionInHierarchy = true;
-            objectPropertyTree.clearSelection();
-            dataPropertyTree.clearSelection();
-            annotationPropertyTree.clearSelection();
-            entity.ifPresent(sel -> {
-                if (sel.isOWLObjectProperty()) {
-                    view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
-                    objectPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
-                }
-                else if (sel.isOWLDataProperty()) {
-                    view.setSelectedHierarchy(DATA_PROPERTY_HIERARCHY);
-                    dataPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
-                }
-                else if (sel.isOWLAnnotationProperty()) {
-                    view.setSelectedHierarchy(ANNOTATION_PROPERTY_HIERARCHY);
-                    annotationPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
-                }
-            });
+            entity.ifPresent(sel -> setSelectionInTree(sel));
         } finally {
             settingSelectionInHierarchy = false;
+        }
+    }
+
+    private void setSelectionInTree(@Nonnull OWLEntity sel) {
+        if (sel.isOWLObjectProperty()) {
+            view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
+            if(!objectPropertyTree.getSelectedKeys().contains(sel)) {
+                objectPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
+            }
+        }
+        else if (sel.isOWLDataProperty()) {
+            view.setSelectedHierarchy(DATA_PROPERTY_HIERARCHY);
+            if (!dataPropertyTree.getSelectedKeys().contains(sel)) {
+                dataPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
+            }
+        }
+        else if (sel.isOWLAnnotationProperty()) {
+            view.setSelectedHierarchy(ANNOTATION_PROPERTY_HIERARCHY);
+            if (!annotationPropertyTree.getSelectedKeys().contains(sel)) {
+                annotationPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.view.client.MultiSelectionModel;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
@@ -49,8 +48,8 @@ import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
-import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -156,7 +155,7 @@ public class ClientProjectModule {
 
     @Provides
     TreeWidget<EntityNode, OWLEntity> providesEntityHierarchyTree() {
-        MultiSelectionModel<TreeNode<EntityNode>> selectionModel = new MultiSelectionModel<>(TreeNode::getId);
+        MultiSelectionModel selectionModel = new MultiSelectionModel();
         return new TreeWidget<>(selectionModel);
     }
 

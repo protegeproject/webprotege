@@ -14,7 +14,7 @@
         <dagger.version>2.16</dagger.version>
         <owlapi.version>4.5.2</owlapi.version>
         <widgetmap.version>2.1.1</widgetmap.version>
-        <graphtree.version>1.1.0</graphtree.version>
+        <graphtree.version>1.1.1-SNAPSHOT</graphtree.version>
         <!-- WebProtege Specific Properties -->
         <mail.smtp.host/>
         <mail.smtp.auth/>

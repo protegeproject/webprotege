@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.selection;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -11,6 +12,8 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -41,6 +44,14 @@ public class SelectionModel {
 
     private ItemSelection selection = ItemSelection.empty();
 
+    private final Timer selectionTransmitDelayTimer = new Timer() {
+        @Override
+        public void run() {
+            processPendingSelection();
+        }
+    };
+
+    private final List<OWLEntity> pendingSelection = new ArrayList<>();
 
     @Inject
     public SelectionModel(EventBus eventBus,
@@ -66,6 +77,17 @@ public class SelectionModel {
                 updateSelectionFromPlace(projectViewPlace);
             }
         });
+    }
+
+    private void processPendingSelection() {
+        if(pendingSelection.isEmpty()) {
+            clearSelectionNow();
+        }
+        else {
+            OWLEntity entity = pendingSelection.get(0);
+            pendingSelection.clear();
+            setSelectionNow(entity);
+        }
     }
 
     private void updateSelectionFromPlace(ProjectViewPlace place) {
@@ -144,6 +166,16 @@ public class SelectionModel {
     }
 
     public void clearSelection() {
+        pendingSelection.clear();
+        restartSelectionTimer();
+    }
+
+    private void restartSelectionTimer() {
+        selectionTransmitDelayTimer.cancel();
+        selectionTransmitDelayTimer.schedule(100);
+    }
+
+    private void clearSelectionNow() {
         Place place = placeController.getWhere();
         if(!(place instanceof ProjectViewPlace)) {
             return;
@@ -157,6 +189,11 @@ public class SelectionModel {
     }
 
     public void setSelection(OWLEntity entity) {
+        pendingSelection.add(0, entity);
+        restartSelectionTimer();
+    }
+
+    private void setSelectionNow(OWLEntity entity) {
         Place place = placeController.getWhere();
         if(!(place instanceof ProjectViewPlace)) {
             return;

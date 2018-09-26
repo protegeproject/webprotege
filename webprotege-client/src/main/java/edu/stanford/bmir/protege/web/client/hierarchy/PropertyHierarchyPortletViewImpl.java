@@ -40,9 +40,7 @@ public class PropertyHierarchyPortletViewImpl extends Composite implements Prope
     @Inject
     public PropertyHierarchyPortletViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        switcher.addSelectionHandler(selectionEvent -> {
-            handleTabSelectionChanged();
-        });
+        switcher.addSelectionHandler(selectionEvent -> handleTabSelectionChanged());
     }
 
     private void handleTabSelectionChanged() {
@@ -70,6 +68,10 @@ public class PropertyHierarchyPortletViewImpl extends Composite implements Prope
     @Override
     public void setSelectedHierarchy(@Nonnull HierarchyId hierarchyId) {
         int selection = hierarchyIds.indexOf(hierarchyId);
+        if(switcher.getSelectedTab() == selection) {
+            return;
+        }
+        GWT.log("[PropertyHierarchyPortletViewImpl] Switching tab to " + hierarchyId);
         switcher.selectTab(selection);
         IsWidget view = views.get(selection);
         hierarchyContainer.setWidget(view);
