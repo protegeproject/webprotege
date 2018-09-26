@@ -15,6 +15,7 @@ import java.util.Optional;
  */
 public interface HierarchyFieldView extends IsWidget {
 
+
     interface SyncClassWithLastSelectedClassHandler {
         void handleSyncWithLastSelectedClass();
     }
@@ -67,4 +68,6 @@ public interface HierarchyFieldView extends IsWidget {
     void setMoveToSiblingButtonEnabled(boolean enabled);
 
     void setEntityType(@Nonnull PrimitiveType entityType);
+
+    void setSyncWithCurrentSelectionVisible(boolean visible);
 }

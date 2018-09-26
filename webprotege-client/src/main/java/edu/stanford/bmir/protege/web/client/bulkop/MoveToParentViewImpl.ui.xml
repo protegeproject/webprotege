@@ -3,7 +3,7 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel addStyleNames="{wp.style.form}">
+        <g:Label text="New parent" addStyleNames="{wp.style.formLabel}"/>
         <g:SimplePanel ui:field="hierarchyFieldContainer"/>
-        <g:Label text="Specify the new parent class" addStyleNames="{wp.style.formHelpText}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

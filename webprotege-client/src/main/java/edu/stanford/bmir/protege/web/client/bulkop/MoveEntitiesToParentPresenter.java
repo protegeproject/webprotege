@@ -64,11 +64,12 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
 
     @Override
     public String getHelpMessage() {
-        return "Move the selected " + entityType.getPluralPrintName().toLowerCase() + " from their current location to another location in the " + entityType.getPrintName().toLowerCase() + " hierarchy";
+        return "Moves the selected " + entityType.getPluralPrintName().toLowerCase() + " from their current location to another location in the " + entityType.getPrintName().toLowerCase() + " hierarchy.";
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus) {
+        hierarchyFieldPresenter.setSyncWithCurrentSelectionVisible(false);
         hierarchyFieldPresenter.start(view.getHierarchyFieldContainer(),
                                       eventBus);
         container.setWidget(view);

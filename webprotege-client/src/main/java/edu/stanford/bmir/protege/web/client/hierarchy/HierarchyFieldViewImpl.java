@@ -188,4 +188,9 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     public void setEntityType(@Nonnull PrimitiveType entityType) {
         entityField.setAllowedTypes(Collections.singleton(entityType));
     }
+
+    @Override
+    public void setSyncWithCurrentSelectionVisible(boolean visible) {
+        syncSelectionButton.setVisible(visible);
+    }
 }

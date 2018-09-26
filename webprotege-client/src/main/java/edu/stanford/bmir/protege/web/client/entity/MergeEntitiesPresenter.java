@@ -71,6 +71,7 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus) {
+        hierarchyFieldPresenter.setSyncWithCurrentSelectionVisible(false);
         hierarchyFieldPresenter.start(view.getHierarchyFieldContainer(), eventBus);
         container.setWidget(view);
     }
