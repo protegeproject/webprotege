@@ -42,6 +42,8 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     @Nonnull
     private final MessageFormatter messageFormatter;
 
+    private OWLLiteral litTrue;
+
     @AutoFactory
     public SetAnnotationValueActionChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                                        @Provided @Nonnull OWLOntology rootOntology,
@@ -50,6 +52,7 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
                                                        @Nonnull OWLAnnotationProperty property,
                                                        @Nonnull OWLAnnotationValue value) {
         this.dataFactory = checkNotNull(dataFactory);
+        this.litTrue = dataFactory.getOWLLiteral(true);
         this.rootOntology = checkNotNull(rootOntology);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property);
@@ -87,6 +90,16 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<Set<OWLEntity>> result) {
-        return messageFormatter.format("Set {0} to {1} on selected entities", property, value);
+        if(property.isDeprecated()) {
+            if(value.equals(litTrue)) {
+                return messageFormatter.format("Deprecated {0} entities", entities.size());
+            }
+            else {
+                return messageFormatter.format("Undeprecated {0} entities", entities.size());
+            }
+        }
+        else {
+            return messageFormatter.format("Set {0} to {1} on {2} entities", property, value, entities.size());
+        }
     }
 }
