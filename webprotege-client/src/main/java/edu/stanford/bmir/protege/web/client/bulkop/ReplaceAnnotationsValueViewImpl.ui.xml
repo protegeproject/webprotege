@@ -9,13 +9,13 @@
             <g:Label text="Specify an annotation property to match.  Leave blank to match any annotation property." addStyleNames="{wp.style.formHelpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Replace" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="Replace value" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="matchExpressionField"/>
             <g:CheckBox ui:field="regExCheckBox" text="Regular expression" addStyleNames="{wp.style.formCheckBox}"/>
             <g:Label text="Specify the value to be replaced.  This is case sensitive and an exact match will be performed" addStyleNames="{wp.style.formHelpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="With" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="Replacement value" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="replaceField"/>
             <g:Label text="Specify the replacement value.  If a regular expression is specified above then regular expression groups can be used to include regular expression matches in the replacement value" addStyleNames="{wp.style.formHelpText}"/>
         </div>
