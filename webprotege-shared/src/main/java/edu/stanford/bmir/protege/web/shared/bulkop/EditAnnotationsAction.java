@@ -33,20 +33,20 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
 
     private boolean regex;
 
-    private ImmutableSet<PropertyAnnotationValue> replacementValues;
+    private NewAnnotationData newAnnotationData;
 
     public ReplaceAnnotationValuesAction(@Nonnull ProjectId projectId,
                                          @Nonnull ImmutableSet<OWLEntity> entities,
                                          @Nonnull Optional<OWLAnnotationProperty> property,
                                          @Nonnull String matchString,
                                          boolean regex,
-                                         @Nonnull ImmutableSet<PropertyAnnotationValue> replacementValues) {
+                                         @Nonnull NewAnnotationData newAnnotationData) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property).orElse(null);
         this.matchString = checkNotNull(matchString);
         this.regex = regex;
-        this.replacementValues = checkNotNull(replacementValues);
+        this.newAnnotationData = checkNotNull(newAnnotationData);
     }
 
     @GwtSerializationConstructor
@@ -79,7 +79,7 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
     }
 
     @Nonnull
-    public ImmutableSet<PropertyAnnotationValue> getReplacementValues() {
-        return replacementValues;
+    public NewAnnotationData getNewAnnotationData() {
+        return newAnnotationData;
     }
 }
