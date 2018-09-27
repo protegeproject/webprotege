@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -20,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ReplaceAnnotationValuesUiAction extends AbstractUiAction {
 
     @Nonnull
-    private final ReplaceAnnotationValuesPresenter presenter;
+    private final EditAnnotationsPresenter presenter;
 
     @Nonnull
     private final BulkEditOperationWorkflowFactory workflowFactory;
@@ -29,7 +27,7 @@ public class ReplaceAnnotationValuesUiAction extends AbstractUiAction {
     private Supplier<ImmutableSet<OWLEntity>> selectionSupplier = ImmutableSet::of;
 
     @Inject
-    public ReplaceAnnotationValuesUiAction(@Nonnull ReplaceAnnotationValuesPresenter presenter,
+    public ReplaceAnnotationValuesUiAction(@Nonnull EditAnnotationsPresenter presenter,
                                            @Nonnull BulkEditOperationWorkflowFactory workflowFactory) {
         super(presenter.getTitle() + "...");
         this.presenter = checkNotNull(presenter);

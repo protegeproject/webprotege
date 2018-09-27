@@ -26,7 +26,7 @@ import static javaemul.internal.InternalPreconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24 Sep 2018
  */
-public class ReplaceAnnotationsValueViewImpl extends Composite implements ReplaceAnnotationValuesView {
+public class ReplaceAnnotationsValueViewImpl extends Composite implements EditAnnotationsView {
 
     interface ReplaceAnnotationsValueViewImplUiBinder extends UiBinder<HTMLPanel, ReplaceAnnotationsValueViewImpl> {
 
