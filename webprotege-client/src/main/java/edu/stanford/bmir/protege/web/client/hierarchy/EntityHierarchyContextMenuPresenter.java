@@ -7,8 +7,8 @@ import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.bulkop.EditAnnotationsUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.MoveToParentUiAction;
-import edu.stanford.bmir.protege.web.client.bulkop.ReplaceAnnotationValuesUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.SetAnnotationValueUiAction;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
@@ -23,8 +23,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -41,7 +39,7 @@ import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_F
 public class EntityHierarchyContextMenuPresenter {
 
     @Nonnull
-    private final ReplaceAnnotationValuesUiAction replaceAnnotationValuesUiAction;
+    private final EditAnnotationsUiAction editAnnotationsUiAction;
 
     @Nonnull
     private final Messages messages;
@@ -92,13 +90,13 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull UIAction deleteEntityAction,
                                                @Provided @Nonnull SetAnnotationValueUiAction setAnnotationValueUiAction,
                                                @Provided @Nonnull MoveToParentUiAction moveToParentUiAction, @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
-                                               @Provided @Nonnull ReplaceAnnotationValuesUiAction replaceAnnotationValuesUiAction,
+                                               @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
         this.moveToParentUiAction = checkNotNull(moveToParentUiAction);
-        this.replaceAnnotationValuesUiAction = checkNotNull(replaceAnnotationValuesUiAction);
+        this.editAnnotationsUiAction = checkNotNull(editAnnotationsUiAction);
         this.messages = checkNotNull(messages);
         this.treeWidget = checkNotNull(treeWidget);
         this.model = checkNotNull(model);
@@ -136,7 +134,7 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(moveToParentUiAction);
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addItem(setAnnotationValueUiAction);
-        contextMenu.addItem(replaceAnnotationValuesUiAction);
+        contextMenu.addItem(editAnnotationsUiAction);
         contextMenu.addSeparator();
         pruneBranchToRootAction = contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
         pruneAllBranchesToRootAction = contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
@@ -154,7 +152,7 @@ public class EntityHierarchyContextMenuPresenter {
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
-        replaceAnnotationValuesUiAction.setSelectionSupplier(selectionSupplier);
+        editAnnotationsUiAction.setSelectionSupplier(selectionSupplier);
         updateActionStates();
     }
 
@@ -162,7 +160,7 @@ public class EntityHierarchyContextMenuPresenter {
         mergeEntitiesAction.setEnabled(false);
         editEntityTagsAction.setEnabled(false);
         setAnnotationValueUiAction.setEnabled(false);
-        replaceAnnotationValuesUiAction.setEnabled(false);
+        editAnnotationsUiAction.setEnabled(false);
         moveToParentUiAction.setEnabled(false);
 
         boolean selIsNonEmpty = !treeWidget.getSelectedKeys().isEmpty();
@@ -177,7 +175,7 @@ public class EntityHierarchyContextMenuPresenter {
             permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ONTOLOGY, replaceAnnotationValuesUiAction::setEnabled);
+            permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
         }
     }

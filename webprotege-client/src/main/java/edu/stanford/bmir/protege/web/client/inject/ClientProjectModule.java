@@ -352,7 +352,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ReplaceAnnotationValuesView provideReplaceAnnotationValuesView(ReplaceAnnotationsValueViewImpl impl) {
+    EditAnnotationsView provideReplaceAnnotationValuesView(EditAnnotationsViewImpl impl) {
         return impl;
     }
 

@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24 Sep 2018
  */
-public class ReplaceAnnotationValuesUiAction extends AbstractUiAction {
+public class EditAnnotationsUiAction extends AbstractUiAction {
 
     @Nonnull
     private final EditAnnotationsPresenter presenter;
@@ -27,8 +27,8 @@ public class ReplaceAnnotationValuesUiAction extends AbstractUiAction {
     private Supplier<ImmutableSet<OWLEntity>> selectionSupplier = ImmutableSet::of;
 
     @Inject
-    public ReplaceAnnotationValuesUiAction(@Nonnull EditAnnotationsPresenter presenter,
-                                           @Nonnull BulkEditOperationWorkflowFactory workflowFactory) {
+    public EditAnnotationsUiAction(@Nonnull EditAnnotationsPresenter presenter,
+                                   @Nonnull BulkEditOperationWorkflowFactory workflowFactory) {
         super(presenter.getTitle() + "...");
         this.presenter = checkNotNull(presenter);
         this.workflowFactory = checkNotNull(workflowFactory);

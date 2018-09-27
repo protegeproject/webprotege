@@ -16,7 +16,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 24 Sep 2018
  */
-public interface ReplaceAnnotationValuesView extends IsWidget {
+public interface EditAnnotationsView extends IsWidget {
 
     @Nonnull
     Operation getOperation();

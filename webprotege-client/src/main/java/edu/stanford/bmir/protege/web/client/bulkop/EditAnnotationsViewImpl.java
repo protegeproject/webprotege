@@ -26,9 +26,9 @@ import static javaemul.internal.InternalPreconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24 Sep 2018
  */
-public class ReplaceAnnotationsValueViewImpl extends Composite implements EditAnnotationsView {
+public class EditAnnotationsViewImpl extends Composite implements EditAnnotationsView {
 
-    interface ReplaceAnnotationsValueViewImplUiBinder extends UiBinder<HTMLPanel, ReplaceAnnotationsValueViewImpl> {
+    interface ReplaceAnnotationsValueViewImplUiBinder extends UiBinder<HTMLPanel, EditAnnotationsViewImpl> {
 
     }
 
@@ -81,9 +81,9 @@ public class ReplaceAnnotationsValueViewImpl extends Composite implements EditAn
     HTMLPanel langTagGroup;
 
     @Inject
-    public ReplaceAnnotationsValueViewImpl(AnnotationSimpleMatchingCriteriaViewImpl view,
-                                           PrimitiveDataEditorImpl newPropertyField,
-                                           DefaultLanguageEditor newLangField) {
+    public EditAnnotationsViewImpl(AnnotationSimpleMatchingCriteriaViewImpl view,
+                                   PrimitiveDataEditorImpl newPropertyField,
+                                   DefaultLanguageEditor newLangField) {
         this.criteriaView = Preconditions.checkNotNull(view);
         this.newPropertyField = newPropertyField;
         this.newLangField = newLangField;

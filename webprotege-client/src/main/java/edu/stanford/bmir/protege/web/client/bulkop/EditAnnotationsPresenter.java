@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.ReplaceAnnotationValuesAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -20,16 +19,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24 Sep 2018
  */
-public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresenter {
+public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
 
     @Nonnull
-    private final ReplaceAnnotationValuesView view;
+    private final EditAnnotationsView view;
 
     @Nonnull
     private final ProjectId projectId;
 
     @Inject
-    public ReplaceAnnotationValuesPresenter(@Nonnull ReplaceAnnotationValuesView view, @Nonnull ProjectId projectId) {
+    public EditAnnotationsPresenter(@Nonnull EditAnnotationsView view, @Nonnull ProjectId projectId) {
         this.view = checkNotNull(view);
         this.projectId = checkNotNull(projectId);
     }
