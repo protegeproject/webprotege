@@ -8,6 +8,9 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,6 +25,7 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
 
     private ImmutableSet<OWLEntity> entities;
 
+    @Nullable
     private OWLAnnotationProperty property;
 
     private String matchString;
@@ -32,13 +36,13 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
 
     public ReplaceAnnotationValuesAction(@Nonnull ProjectId projectId,
                                          @Nonnull ImmutableSet<OWLEntity> entities,
-                                         @Nonnull OWLAnnotationProperty property,
+                                         @Nonnull Optional<OWLAnnotationProperty> property,
                                          @Nonnull String matchString,
                                          boolean regex,
                                          @Nonnull String replacement) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
-        this.property = checkNotNull(property);
+        this.property = checkNotNull(property).orElse(null);
         this.matchString = checkNotNull(matchString);
         this.regex = regex;
         this.replacement = checkNotNull(replacement);
@@ -60,8 +64,8 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
     }
 
     @Nonnull
-    public OWLAnnotationProperty getProperty() {
-        return property;
+    public Optional<OWLAnnotationProperty> getProperty() {
+        return Optional.ofNullable(property);
     }
 
     @Nonnull

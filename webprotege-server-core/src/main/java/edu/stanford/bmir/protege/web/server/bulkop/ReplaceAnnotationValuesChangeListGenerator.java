@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +35,7 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
     private final OWLOntology rootOntology;
 
     @Nonnull
-    private final OWLAnnotationProperty property;
+    private final Optional<OWLAnnotationProperty> property;
 
     @Nonnull
     private final String matchExpression;
@@ -48,7 +49,7 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
     public ReplaceAnnotationValuesChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                                       @Nonnull ImmutableSet<OWLEntity> entities,
                                                       @Provided @Nonnull OWLOntology rootOntology,
-                                                      @Nonnull OWLAnnotationProperty property,
+                                                      @Nonnull Optional<OWLAnnotationProperty> property,
                                                       @Nonnull String matchExpression,
                                                       boolean regEx,
                                                       @Nonnull String replacement) {
@@ -87,7 +88,7 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
             return;
         }
         OWLLiteral value = (OWLLiteral) ax.getValue();
-        if (!ax.getProperty().equals(property)) {
+        if (property.isPresent() && !ax.getProperty().equals(property.get())) {
             return;
         }
         Matcher matcher = pattern.matcher(value.getLiteral());
@@ -109,7 +110,8 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
         else {
             replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getDatatype());
         }
-        OWLAxiom replacementAx = dataFactory.getOWLAnnotationAssertionAxiom(property,
+        OWLAnnotationProperty prop = property.orElse(ax.getProperty());
+        OWLAxiom replacementAx = dataFactory.getOWLAnnotationAssertionAxiom(prop,
                                                                             entity.getIRI(),
                                                                             replacement,
                                                                             ax.getAnnotations());

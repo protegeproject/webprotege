@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.ReplaceAnnotationValuesAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -45,7 +46,7 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
 
     @Override
     public String getHelpMessage() {
-        return "Replaces annotation values that match the specified property and string value";
+        return "Replaces annotation values that match the specified property and value";
     }
 
     @Override
@@ -55,18 +56,18 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
 
     @Override
     public boolean isDataWellFormed() {
-        return view.getAnnotationProperty().isPresent();
+        return true;
     }
 
     @Nonnull
     @Override
     public Optional<ReplaceAnnotationValuesAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
-        return view.getAnnotationProperty().map(prop -> new ReplaceAnnotationValuesAction(projectId,
-                                                                                          entities,
-                                                                                          prop.getEntity(),
-                                                                                          view.getMatch(),
-                                                                                          view.isRegEx(),
-                                                                                          view.getReplacement()));
+        return Optional.of(new ReplaceAnnotationValuesAction(projectId,
+                                                             entities,
+                                                             view.getAnnotationProperty().map(OWLAnnotationPropertyData::getEntity),
+                                                             view.getMatch(),
+                                                             view.isRegEx(),
+                                                             view.getReplacement()));
     }
 
     @Override
