@@ -1,23 +1,59 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
+             xmlns:bulkop="urn:import:edu.stanford.bmir.protege.web.client.bulkop"
+             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.frame">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:import field="edu.stanford.bmir.protege.web.shared.bulkop.Operation.*"/>
     <g:HTMLPanel>
+        <bulkop:AnnotationSimpleMatchingCriteriaViewImpl ui:field="criteriaView"/>
+        <hr/>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Annotation property" addStyleNames="{wp.style.formLabel}"/>
-            <primitive:PrimitiveDataEditorImpl ui:field="propertyField" annotationPropertiesAllowed="true"/>
-            <g:Label text="Specify an annotation property to match.  Leave blank to match any annotation property." addStyleNames="{wp.style.formHelpText}"/>
+            <g:Label text="Edit Operation" addStyleNames="{wp.style.formLabel}"/>
+            <g:ListBox ui:field="operationCombo">
+                <g:item value="REPLACE">Replace matched annotations</g:item>
+                <g:item value="DELETE">Delete matched annotations</g:item>
+                <g:item value="AUGMENT">Augment matched annotations</g:item>
+            </g:ListBox>
         </div>
-        <div class="{wp.style.formGroup}">
-            <g:Label text="Replace value" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="matchExpressionField"/>
-            <g:CheckBox ui:field="regExCheckBox" text="Regular expression" addStyleNames="{wp.style.formCheckBox}"/>
-            <g:Label text="Specify the value to be replaced.  This is case sensitive and an exact match will be performed" addStyleNames="{wp.style.formHelpText}"/>
-        </div>
-        <div class="{wp.style.formGroup}">
-            <g:Label text="Replacement value" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="replaceField"/>
-            <g:Label text="Specify the replacement value.  If a regular expression is specified above then regular expression groups can be used to include regular expression matches in the replacement value" addStyleNames="{wp.style.formHelpText}"/>
-        </div>
+        <g:HTMLPanel ui:field="newAnnotationsSection">
+            <div class="{wp.style.formGroup}">
+                <g:Label text="New property" addStyleNames="{wp.style.formLabel}"/>
+                <div class="{wp.style.formHorizontalRadioButtonGroup}">
+                    <g:RadioButton name="newPropertyType" value="true" text="Matched property" ui:field="matchedPropertyRadio"/>
+                    <g:RadioButton name="newPropertyType" value="false" text="Other property" ui:field="otherPropertyRadio"/>
+                </div>
+                <g:HTMLPanel ui:field="propertyGroup" addStyleNames="{wp.style.formStretch}" visible="false">
+                    <primitive:PrimitiveDataEditorImpl ui:field="newPropertyField" annotationPropertiesAllowed="true"/>
+                    <g:Label text="Specify the property for the new annotation."
+                             addStyleNames="{wp.style.formHelpText}"/>
+                </g:HTMLPanel>
+            </div>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="New value" addStyleNames="{wp.style.formLabel}"/>
+                <div class="{wp.style.formHorizontalRadioButtonGroup}">
+                    <g:RadioButton name="newValueType" value="false" text="Matched value" ui:field="matchedValueRadio"/>
+                    <g:RadioButton name="newValueType" value="true" text="Other value" ui:field="otherValueRadio"/>
+                </div>
+                <g:HTMLPanel ui:field="valueGroup" addStyleNames="{wp.style.formStretch}">
+                    <g:TextBox ui:field="newValue"/>
+                    <g:Label
+                            text="Specify the value for the new annotation.  Regular expression group identifiers may be used if a regular expression is specified above."
+                            addStyleNames="{wp.style.formHelpText}"/>
+                </g:HTMLPanel>
+            </div>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="New language tag" addStyleNames="{wp.style.formLabel}"/>
+                <div class="{wp.style.formHorizontalRadioButtonGroup}">
+                    <g:RadioButton name="newLangTagType" value="true" text="Matched language tag" ui:field="matchedLangTagRadio"/>
+                    <g:RadioButton name="newLangTagType" value="false" text="Other language tag" ui:field="otherLangTagRadio"/>
+                </div>
+                <g:HTMLPanel ui:field="langTagGroup" addStyleNames="{wp.style.formStretch}" visible="false">
+                    <primitive:DefaultLanguageEditor ui:field="newLangField"/>
+                    <g:Label text="Specify a language tag for the new annotation."
+                             addStyleNames="{wp.style.formHelpText}"/>
+                </g:HTMLPanel>
+            </div>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

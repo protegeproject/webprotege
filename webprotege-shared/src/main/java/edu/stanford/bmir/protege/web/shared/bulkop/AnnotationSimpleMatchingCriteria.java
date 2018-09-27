@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.bulkop;
+package edu.stanford.bmir.protege.web.shared.bulkop;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;

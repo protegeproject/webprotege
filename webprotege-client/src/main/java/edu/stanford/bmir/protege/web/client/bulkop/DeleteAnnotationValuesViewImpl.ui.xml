@@ -1,6 +1,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
+             xmlns:bulkop="urn:import:edu.stanford.bmir.protege.web.client.bulkop">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
-
+        <bulkop:AnnotationSimpleMatchingCriteriaViewImpl ui:field="matchingCriteriaView"/>
     </g:HTMLPanel>
 </ui:UiBinder>

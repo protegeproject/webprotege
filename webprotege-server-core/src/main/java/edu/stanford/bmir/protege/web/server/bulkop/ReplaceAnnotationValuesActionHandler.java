@@ -46,7 +46,7 @@ public class ReplaceAnnotationValuesActionHandler extends AbstractProjectChangeH
                               action.getProperty(),
                               action.getMatchString(),
                               action.isRegex(),
-                              action.getReplacement());
+                              action.getReplacementValues());
     }
 
     @Override

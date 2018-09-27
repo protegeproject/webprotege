@@ -49,6 +49,13 @@
     align-items: stretch;
 }
 
+
+.wp-form-stretch {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
 .wp-form-label {
     font-weight: bold;
     padding-bottom: 5px;
@@ -332,4 +339,21 @@
 .wp-form-before-input > .wp-btn--input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.wp-form_section-checkbox {
+    margin-top: 5px;
+    margin-bottom: 7px;
+}
+
+.wp-form__horizontal-radio-button-group {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding-bottom: 5px;
+}
+
+.wp-form__horizontal-radio-button-group > span+span {
+    margin-left: 15px;
 }

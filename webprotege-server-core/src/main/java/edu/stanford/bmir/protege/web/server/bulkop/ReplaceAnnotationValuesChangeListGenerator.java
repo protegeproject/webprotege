@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -43,7 +44,7 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
     private final boolean regEx;
 
     @Nonnull
-    private final String replacement;
+    private final ImmutableSet<PropertyAnnotationValue> replacement;
 
     @AutoFactory
     public ReplaceAnnotationValuesChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
@@ -52,14 +53,14 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
                                                       @Nonnull Optional<OWLAnnotationProperty> property,
                                                       @Nonnull String matchExpression,
                                                       boolean regEx,
-                                                      @Nonnull String replacement) {
+                                                      @Nonnull ImmutableSet<PropertyAnnotationValue> replacementValues) {
         this.dataFactory = checkNotNull(dataFactory);
         this.entities = checkNotNull(entities);
         this.rootOntology = checkNotNull(rootOntology);
         this.property = checkNotNull(property);
         this.matchExpression = checkNotNull(matchExpression);
         this.regEx = regEx;
-        this.replacement = checkNotNull(replacement);
+        this.replacement = checkNotNull(replacementValues);
     }
 
     @Override
@@ -95,31 +96,32 @@ public class ReplaceAnnotationValuesChangeListGenerator implements ChangeListGen
         if (!matcher.matches()) {
             return;
         }
-        MatchResult matchResult = matcher.toMatchResult();
-        String replacementLexicalValue;
-        if(regEx) {
-            replacementLexicalValue = matcher.replaceAll(replacement);
-        }
-        else {
-            replacementLexicalValue = replacement;
-        }
-        OWLLiteral replacement;
-        if(value.hasLang()) {
-            replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getLang());
-        }
-        else {
-            replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getDatatype());
-        }
-        OWLAnnotationProperty prop = property.orElse(ax.getProperty());
-        OWLAxiom replacementAx = dataFactory.getOWLAnnotationAssertionAxiom(prop,
-                                                                            entity.getIRI(),
-                                                                            replacement,
-                                                                            ax.getAnnotations());
-        if (replacementAx.equals(ax)) {
-            return;
-        }
-        builder.removeAxiom(ontology, ax);
-        builder.addAxiom(ontology, replacementAx);
+        return;
+//        MatchResult matchResult = matcher.toMatchResult();
+//        String replacementLexicalValue;
+//        if(regEx) {
+//            replacementLexicalValue = matcher.replaceAll(replacement);
+//        }
+//        else {
+//            replacementLexicalValue = replacement;
+//        }
+//        OWLLiteral replacement;
+//        if(value.hasLang()) {
+//            replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getLang());
+//        }
+//        else {
+//            replacement = dataFactory.getOWLLiteral(replacementLexicalValue, value.getDatatype());
+//        }
+//        OWLAnnotationProperty prop = property.orElse(ax.getProperty());
+//        OWLAxiom replacementAx = dataFactory.getOWLAnnotationAssertionAxiom(prop,
+//                                                                            entity.getIRI(),
+//                                                                            replacement,
+//                                                                            ax.getAnnotations());
+//        if (replacementAx.equals(ax)) {
+//            return;
+//        }
+//        builder.removeAxiom(ontology, ax);
+//        builder.addAxiom(ontology, replacementAx);
     }
 
     @Override

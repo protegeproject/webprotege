@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.bulkop;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -32,20 +33,20 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
 
     private boolean regex;
 
-    private String replacement;
+    private ImmutableSet<PropertyAnnotationValue> replacementValues;
 
     public ReplaceAnnotationValuesAction(@Nonnull ProjectId projectId,
                                          @Nonnull ImmutableSet<OWLEntity> entities,
                                          @Nonnull Optional<OWLAnnotationProperty> property,
                                          @Nonnull String matchString,
                                          boolean regex,
-                                         @Nonnull String replacement) {
+                                         @Nonnull ImmutableSet<PropertyAnnotationValue> replacementValues) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property).orElse(null);
         this.matchString = checkNotNull(matchString);
         this.regex = regex;
-        this.replacement = checkNotNull(replacement);
+        this.replacementValues = checkNotNull(replacementValues);
     }
 
     @GwtSerializationConstructor
@@ -78,7 +79,7 @@ public class ReplaceAnnotationValuesAction implements ProjectAction<ReplaceAnnot
     }
 
     @Nonnull
-    public String getReplacement() {
-        return replacement;
+    public ImmutableSet<PropertyAnnotationValue> getReplacementValues() {
+        return replacementValues;
     }
 }

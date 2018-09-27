@@ -222,6 +222,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-group")
         String formGroup();
 
+        @ClassName("wp-form-stretch")
+        String formStretch();
+
         @ClassName("wp-form-label")
         String formLabel();
 
@@ -298,6 +301,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-panel-neutral")
         String panelNeutral();
+
+        @ClassName("wp-form_section-checkbox")
+        String formSectionCheckBox();
+
+        @ClassName("wp-form__horizontal-radio-button-group")
+        String formHorizontalRadioButtonGroup();
     }
 
     interface DateTimePicker extends CssResource {

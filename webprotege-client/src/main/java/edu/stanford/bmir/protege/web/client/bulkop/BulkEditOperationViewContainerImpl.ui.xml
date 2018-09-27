@@ -7,9 +7,7 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <div class="{wp.style.formGroup}">
-            <g:Label ui:field="helpTextField"/>
-        </div>
+        <g:Label ui:field="helpTextField" visible="false"/>
         <div class="{wp.style.formGroup}">
             <g:SimplePanel ui:field="container"/>
         </div>

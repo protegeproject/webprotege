@@ -49,6 +49,21 @@ body, input, textarea, keygen, select, button {
     padding: 0;
 }
 
+input:matches([type="radio"], [type="checkbox"]) {
+    margin-top: 3px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 3px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #9171d2;
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 h1 {
     font-size: 2em;
     margin-bottom: 0.67em;
@@ -275,6 +290,10 @@ select:disabled {
 
 .gwt-DialogBox .gwt-SuggestBox {
     border: var(--inlay-panel--border);
+}
+
+.web-protege-form-layout-editor-input pre {
+    min-height: 22px;
 }
 
 .gwt-PopupPanelGlass {

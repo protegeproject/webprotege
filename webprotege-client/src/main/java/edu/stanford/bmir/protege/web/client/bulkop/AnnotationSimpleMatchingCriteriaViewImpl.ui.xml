@@ -1,6 +1,48 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
 
+    </ui:style>
+    <g:HTMLPanel>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Property to match" addStyleNames="{wp.style.formLabel}"/>
+            <div class="{wp.style.formHorizontalRadioButtonGroup}">
+                <g:RadioButton name="propertyMatchType" value="true" text="Specific property" ui:field="specificPropertyRadio"/>
+                <g:RadioButton name="propertyMatchType" value="false" text="Any property" ui:field="anyPropertyRadio"/>
+            </div>
+            <g:HTMLPanel addStyleNames="{wp.style.formStretch}" ui:field="propertyGroup">
+                <primitive:PrimitiveDataEditorImpl placeholder="Enter annotation property name" ui:field="propertyField"
+                                                   annotationPropertiesAllowed="true"/>
+            </g:HTMLPanel>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Value to match" addStyleNames="{wp.style.formLabel}"/>
+            <div class="{wp.style.formHorizontalRadioButtonGroup}">
+                <g:RadioButton name="valueMatchType" value="true" text="Specific value" ui:field="specificValueRadio"/>
+                <g:RadioButton name="valueMatchType" text="Any value" ui:field="anyValueRadio"/>
+            </div>
+            <g:HTMLPanel addStyleNames="{wp.style.formStretch}" ui:field="valueGroup">
+                    <g:TextBox ui:field="valueField"/>
+                    <g:CheckBox ui:field="regExCheckBox" text="Regular expression"
+                                addStyleNames="{wp.style.formCheckBox}"/>
+                    <g:Label
+                    text="Specify the value to be matched.  This is case sensitive, it can be a regular expression, and an exact match will be performed."
+                    addStyleNames="{wp.style.formHelpText}"/>
+            </g:HTMLPanel>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Language tag to match" addStyleNames="{wp.style.formLabel}"/>
+            <div class="{wp.style.formHorizontalRadioButtonGroup}">
+                <g:RadioButton name="langTagMatchType" text="Specific language tag" ui:field="specificLangTagRadio"/>
+                <g:RadioButton name="langTagMatchType" value="true" text="Any language tag" ui:field="anyLangTagRadio"/>
+            </div>
+            <g:HTMLPanel addStyleNames="{wp.style.formStretch}" ui:field="langTagGroup" visible="false">
+                <primitive:DefaultLanguageEditor ui:field="langField" placeholder="Enter language tag"/>
+                <g:Label text="Specify a language tag to match.  Leave empty to match the empty language tag."
+                         addStyleNames="{wp.style.formHelpText}"/>
+            </g:HTMLPanel>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -36,7 +36,7 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
 
     @Override
     public String getTitle() {
-        return "Replace annotation values";
+        return "Edit annotations";
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ReplaceAnnotationValuesPresenter implements BulkEditOperationPresen
 
     @Override
     public String getHelpMessage() {
-        return "Replaces annotation values that match the specified property and value";
+        return "Replaces, adds or deletes annotation values that match a given property, value and language tag";
     }
 
     @Override

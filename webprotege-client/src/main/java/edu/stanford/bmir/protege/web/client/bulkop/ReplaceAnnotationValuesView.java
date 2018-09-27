@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,6 +19,9 @@ import java.util.Optional;
 public interface ReplaceAnnotationValuesView extends IsWidget {
 
     @Nonnull
+    Operation getOperation();
+
+    @Nonnull
     Optional<OWLAnnotationPropertyData> getAnnotationProperty();
 
     @Nonnull
@@ -22,5 +30,5 @@ public interface ReplaceAnnotationValuesView extends IsWidget {
     boolean isRegEx();
 
     @Nonnull
-    String getReplacement();
+    ImmutableSet<PropertyAnnotationValue> getReplacement();
 }

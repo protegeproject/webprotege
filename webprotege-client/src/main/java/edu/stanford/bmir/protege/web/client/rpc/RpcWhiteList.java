@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
+import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -86,6 +87,16 @@ public class RpcWhiteList implements Action, Result {
     EntityNameMatchResult entityNameMatchResult;
 
     InstanceRetrievalMode instanceRetrievalMode;
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    Operation operation;
 
     Tag tag;
 

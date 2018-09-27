@@ -365,6 +365,16 @@ public class ClientProjectModule {
     MergeEntitiesView provideMergeEntitiesView(MergeEntitiesViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    DeleteAnnotationValuesView provideDeleteAnnotationValuesView(DeleteAnnotationValuesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationSimpleMatchingCriteriaView provideAnnotationSimpleMatchingCriteriaView(AnnotationSimpleMatchingCriteriaViewImpl impl) {
+        return impl;
+    }
 }
 
 
