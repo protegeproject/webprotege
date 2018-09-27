@@ -367,11 +367,6 @@ public class ClientProjectModule {
     }
 
     @Provides
-    DeleteAnnotationValuesView provideDeleteAnnotationValuesView(DeleteAnnotationValuesViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
     AnnotationSimpleMatchingCriteriaView provideAnnotationSimpleMatchingCriteriaView(AnnotationSimpleMatchingCriteriaViewImpl impl) {
         return impl;
     }

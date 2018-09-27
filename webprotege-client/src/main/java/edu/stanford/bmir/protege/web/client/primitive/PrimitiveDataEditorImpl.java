@@ -33,6 +33,7 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -174,6 +175,14 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     public void setWrap(boolean wrap) {
         this.wrap = wrap;
         view.setWrap(wrap);
+    }
+
+    @Nonnull
+    @Override
+    public Optional<OWLAnnotationPropertyData> getValueAsAnnotationPropertyData() {
+        return getValue()
+                .filter(prop -> prop instanceof OWLAnnotationPropertyData)
+                .map(prop -> (OWLAnnotationPropertyData) prop);
     }
 
     @Override

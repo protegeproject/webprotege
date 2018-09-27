@@ -13,19 +13,20 @@ import java.util.Optional;
  */
 public interface AnnotationSimpleMatchingCriteriaView extends IsWidget {
 
+    boolean isMatchProperty();
+
     @Nonnull
     Optional<OWLAnnotationPropertyData> getProperty();
 
-
-    boolean isMatchValue();
-
-    @Nonnull
-    String getValue();
-
-    boolean isValueRegularExpression();
-
-    boolean isMatchLang();
+    boolean isMatchLexicalValue();
 
     @Nonnull
-    String getLang();
+    String getLexicalValueExpression();
+
+    boolean isLexicalValueRegEx();
+
+    boolean isMatchLangTag();
+
+    @Nonnull
+    String getLangTag();
 }

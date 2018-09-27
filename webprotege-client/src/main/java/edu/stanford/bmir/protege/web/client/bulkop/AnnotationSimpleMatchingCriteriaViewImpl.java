@@ -114,29 +114,34 @@ public class AnnotationSimpleMatchingCriteriaViewImpl extends Composite implemen
     }
 
     @Override
-    public boolean isMatchValue() {
-        return true;
+    public boolean isMatchLexicalValue() {
+        return specificValueRadio.getValue();
     }
 
     @Nonnull
     @Override
-    public String getValue() {
+    public String getLexicalValueExpression() {
         return valueField.getValue();
     }
 
     @Override
-    public boolean isValueRegularExpression() {
+    public boolean isLexicalValueRegEx() {
         return regExCheckBox.getValue();
     }
 
     @Override
-    public boolean isMatchLang() {
-        return true;
+    public boolean isMatchLangTag() {
+        return specificLangTagRadio.getValue();
     }
 
     @Nonnull
     @Override
-    public String getLang() {
+    public String getLangTag() {
         return langField.getValue().orElse("");
+    }
+
+    @Override
+    public boolean isMatchProperty() {
+        return specificPropertyRadio.getValue();
     }
 }

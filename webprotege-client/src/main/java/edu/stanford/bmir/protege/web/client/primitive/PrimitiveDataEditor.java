@@ -9,9 +9,11 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.common.HasTextRendering;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -236,5 +238,8 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
      *             should not wrap text.
      */
     void setWrap(boolean wrap);
+
+    @Nonnull
+    Optional<OWLAnnotationPropertyData> getValueAsAnnotationPropertyData();
     
 }

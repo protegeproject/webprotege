@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.bulkop.ReplaceAnnotationValuesAction;
+import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -60,13 +60,14 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
 
     @Nonnull
     @Override
-    public Optional<ReplaceAnnotationValuesAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
-        return Optional.of(new ReplaceAnnotationValuesAction(projectId,
-                                                             entities,
-                                                             view.getAnnotationProperty().map(OWLAnnotationPropertyData::getEntity),
-                                                             view.getMatch(),
-                                                             view.isRegEx(),
-                                                             view.getReplacement()));
+    public Optional<EditAnnotationsAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
+        return Optional.of(new EditAnnotationsAction(projectId,
+                                                     entities,
+                                                     view.getAnnotationProperty(),
+                                                     view.getLexcialValueExpression(),
+                                                     view.isLexicalValueExpressionRegEx(),
+                                                     view.getLangTagExpression(),
+                                                     view.getNewAnnotationData()));
     }
 
     @Override

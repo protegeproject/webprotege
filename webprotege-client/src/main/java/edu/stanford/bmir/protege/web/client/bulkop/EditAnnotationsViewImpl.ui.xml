@@ -36,7 +36,7 @@
                     <g:RadioButton name="newValueType" value="true" text="Other value" ui:field="otherValueRadio"/>
                 </div>
                 <g:HTMLPanel ui:field="valueGroup" addStyleNames="{wp.style.formStretch}">
-                    <g:TextBox ui:field="newValue"/>
+                    <g:TextBox ui:field="newLexicalValueField"/>
                     <g:Label
                             text="Specify the value for the new annotation.  Regular expression group identifiers may be used if a regular expression is specified above."
                             addStyleNames="{wp.style.formHelpText}"/>
@@ -49,7 +49,7 @@
                     <g:RadioButton name="newLangTagType" value="false" text="Other language tag" ui:field="otherLangTagRadio"/>
                 </div>
                 <g:HTMLPanel ui:field="langTagGroup" addStyleNames="{wp.style.formStretch}" visible="false">
-                    <primitive:DefaultLanguageEditor ui:field="newLangField"/>
+                    <primitive:DefaultLanguageEditor ui:field="newLangTagField"/>
                     <g:Label text="Specify a language tag for the new annotation."
                              addStyleNames="{wp.style.formHelpText}"/>
                 </g:HTMLPanel>

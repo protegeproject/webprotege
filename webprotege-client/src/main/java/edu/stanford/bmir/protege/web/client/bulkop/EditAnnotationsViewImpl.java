@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -11,9 +10,10 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
+import edu.stanford.bmir.protege.web.shared.bulkop.NewAnnotationData;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -45,10 +45,10 @@ public class EditAnnotationsViewImpl extends Composite implements EditAnnotation
     HTMLPanel newAnnotationsSection;
 
     @UiField(provided = true)
-    DefaultLanguageEditor newLangField;
+    DefaultLanguageEditor newLangTagField;
 
     @UiField
-    TextBox newValue;
+    TextBox newLexicalValueField;
 
     @UiField(provided = true)
     PrimitiveDataEditorImpl newPropertyField;
@@ -83,10 +83,10 @@ public class EditAnnotationsViewImpl extends Composite implements EditAnnotation
     @Inject
     public EditAnnotationsViewImpl(AnnotationSimpleMatchingCriteriaViewImpl view,
                                    PrimitiveDataEditorImpl newPropertyField,
-                                   DefaultLanguageEditor newLangField) {
+                                   DefaultLanguageEditor newLangTagField) {
         this.criteriaView = Preconditions.checkNotNull(view);
         this.newPropertyField = newPropertyField;
-        this.newLangField = newLangField;
+        this.newLangTagField = newLangTagField;
         initWidget(ourUiBinder.createAndBindUi(this));
         updateOperationSection();
     }
@@ -132,25 +132,72 @@ public class EditAnnotationsViewImpl extends Composite implements EditAnnotation
 
     @Nonnull
     @Override
-    public Optional<OWLAnnotationPropertyData> getAnnotationProperty() {
-        return criteriaView.getProperty();
+    public Optional<OWLAnnotationProperty> getAnnotationProperty() {
+        if (criteriaView.isMatchProperty()) {
+            return criteriaView.getProperty().map(OWLAnnotationPropertyData::getEntity);
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     @Nonnull
     @Override
-    public String getMatch() {
-        return criteriaView.getValue();
+    public Optional<String> getLexcialValueExpression() {
+        if(criteriaView.isMatchLexicalValue()) {
+            return Optional.of(criteriaView.getLexicalValueExpression());
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
-    @Override
-    public boolean isRegEx() {
-        return criteriaView.isValueRegularExpression();
+    private Optional<OWLAnnotationProperty> getNewAnnotationProperty() {
+        if(otherPropertyRadio.getValue()) {
+            return newPropertyField.getValueAsAnnotationPropertyData()
+                    .map(OWLAnnotationPropertyData::getEntity);
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<String> getNewLexicalValueExpression() {
+        if(otherValueRadio.getValue()) {
+            return Optional.of(newLexicalValueField.getValue());
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<String> getNewLangTag() {
+        if(otherLangTagRadio.getValue()) {
+            return newLangTagField.getValue();
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     @Nonnull
     @Override
-    public ImmutableSet<PropertyAnnotationValue> getReplacement() {
-        return ImmutableSet.of();
+    public NewAnnotationData getNewAnnotationData() {
+        return NewAnnotationData.get(
+                getNewAnnotationProperty(),
+                getNewLexicalValueExpression(),
+                getNewLangTag()
+        );
+    }
+
+    @Override
+    public Optional<String> getLangTagExpression() {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean isLexicalValueExpressionRegEx() {
+        return criteriaView.isLexicalValueRegEx();
     }
 
     @UiHandler("operationCombo")
