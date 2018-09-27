@@ -28,5 +28,5 @@ public interface AnnotationSimpleMatchingCriteriaView extends IsWidget {
     boolean isMatchLangTag();
 
     @Nonnull
-    String getLangTag();
+    Optional<String> getLangTag();
 }

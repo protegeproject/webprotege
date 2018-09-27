@@ -136,8 +136,13 @@ public class AnnotationSimpleMatchingCriteriaViewImpl extends Composite implemen
 
     @Nonnull
     @Override
-    public String getLangTag() {
-        return langField.getValue().orElse("");
+    public Optional<String> getLangTag() {
+        if (specificLangTagRadio.getValue()) {
+            return Optional.of(langField.getValue().orElse(""));
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     @Override

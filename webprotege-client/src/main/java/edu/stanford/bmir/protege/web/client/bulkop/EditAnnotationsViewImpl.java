@@ -192,7 +192,7 @@ public class EditAnnotationsViewImpl extends Composite implements EditAnnotation
 
     @Override
     public Optional<String> getLangTagExpression() {
-        return Optional.empty();
+        return criteriaView.getLangTag();
     }
 
     @Override

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -63,6 +62,7 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
     public Optional<EditAnnotationsAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
         return Optional.of(new EditAnnotationsAction(projectId,
                                                      entities,
+                                                     view.getOperation(),
                                                      view.getAnnotationProperty(),
                                                      view.getLexcialValueExpression(),
                                                      view.isLexicalValueExpressionRegEx(),

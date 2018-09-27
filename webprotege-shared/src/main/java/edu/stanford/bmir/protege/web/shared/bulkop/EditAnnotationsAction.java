@@ -25,6 +25,8 @@ public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResul
 
     private ImmutableSet<OWLEntity> entities;
 
+    private Operation operation;
+
     @Nullable
     private OWLAnnotationProperty property;
 
@@ -40,13 +42,14 @@ public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResul
 
     public EditAnnotationsAction(@Nonnull ProjectId projectId,
                                  @Nonnull ImmutableSet<OWLEntity> entities,
-                                 @Nonnull Optional<OWLAnnotationProperty> property,
+                                 Operation operation, @Nonnull Optional<OWLAnnotationProperty> property,
                                  @Nonnull Optional<String> lexicalValueExpression,
                                  boolean lexicalValueExpressionIsRegEx,
                                  @Nonnull Optional<String> langTagExpression,
                                  @Nonnull NewAnnotationData newAnnotationData) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
+        this.operation = checkNotNull(operation);
         this.property = checkNotNull(property).orElse(null);
         this.lexicalValueExpression = checkNotNull(lexicalValueExpression).orElse(null);
         this.langTagExpression = checkNotNull(langTagExpression).orElse(null);
@@ -67,6 +70,11 @@ public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResul
     @Nonnull
     public ImmutableSet<OWLEntity> getEntities() {
         return entities;
+    }
+
+    @Nonnull
+    public Operation getOperation() {
+        return operation;
     }
 
     @Nonnull

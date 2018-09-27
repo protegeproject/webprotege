@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.bulkop.NewAnnotationData;
+import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,9 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
     private final ImmutableSet<OWLEntity> entities;
 
     @Nonnull
+    private final Operation operation;
+
+    @Nonnull
     private final OWLOntology rootOntology;
 
     @Nonnull
@@ -51,6 +55,7 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
     @AutoFactory
     public EditAnnotationsChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                               @Nonnull ImmutableSet<OWLEntity> entities,
+                                              @Nonnull Operation operation,
                                               @Provided @Nonnull OWLOntology rootOntology,
                                               @Nonnull Optional<OWLAnnotationProperty> matchProperty,
                                               @Nonnull Optional<String> matchLexicalValue,
@@ -58,6 +63,7 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
                                               @Nonnull NewAnnotationData newAnnotationData) {
         this.dataFactory = checkNotNull(dataFactory);
         this.entities = checkNotNull(entities);
+        this.operation = checkNotNull(operation);
         this.rootOntology = checkNotNull(rootOntology);
         this.property = checkNotNull(matchProperty);
         this.valueExpression = checkNotNull(matchLexicalValue);
@@ -124,8 +130,12 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
         if (newAnnotationData.equals(ax)) {
             return;
         }
-        builder.removeAxiom(ontology, ax);
-        builder.addAxiom(ontology, newAx);
+        if (operation == Operation.REPLACE || operation == Operation.DELETE) {
+            builder.removeAxiom(ontology, ax);
+        }
+        if (operation == Operation.REPLACE || operation == Operation.AUGMENT) {
+            builder.addAxiom(ontology, newAx);
+        }
     }
 
     private String getNewLangTag(OWLLiteral literal) {
