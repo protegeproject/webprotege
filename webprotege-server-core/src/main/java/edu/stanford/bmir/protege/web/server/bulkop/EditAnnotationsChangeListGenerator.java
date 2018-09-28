@@ -81,7 +81,7 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
                 p = valueExpression.get();
             }
             else {
-                p = Pattern.quote("^" + valueExpression.get() + "$");
+                p = "^" + Pattern.quote(valueExpression.get()) + "$";
             }
         }
         else {
