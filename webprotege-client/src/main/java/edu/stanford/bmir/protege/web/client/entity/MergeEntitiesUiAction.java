@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflow;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationWorkflowFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -43,6 +44,10 @@ public class MergeEntitiesUiAction extends AbstractUiAction {
 
     public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntity>> selectionSupplier) {
         this.selectionSupplier = checkNotNull(selectionSupplier);
+    }
+
+    public void setHierarchyId(@Nonnull HierarchyId hierarchyId) {
+        presenter.setHierarchyId(hierarchyId);
     }
 
     @Override

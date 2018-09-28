@@ -147,7 +147,7 @@ public class EntityHierarchyContextMenuPresenter {
 
         // This needs tidying somehow.  We don't do this for other actions.
         moveToParentUiAction.setHierarchyId(model.getHierarchyId());
-
+        mergeEntitiesAction.setHierarchyId(model.getHierarchyId());
         Supplier<ImmutableSet<OWLEntity>> selectionSupplier = () -> ImmutableSet.copyOf(treeWidget.getSelectedKeys());
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
