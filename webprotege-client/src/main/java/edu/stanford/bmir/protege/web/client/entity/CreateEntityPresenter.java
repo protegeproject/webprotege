@@ -59,7 +59,6 @@ public class CreateEntityPresenter {
                                  @Nonnull ProjectId projectId,
                                  @Nonnull CreateEntityDialogView view,
                                  @Nonnull ModalPresenter modalPresenter,
-                                 @Nonnull CreateEntitiesDialogController dialogController,
                                  @Nonnull ActiveProjectManager activeProjectManager,
                                  @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                  @Nonnull Messages messages) {
