@@ -25,7 +25,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_P
  */
 public class CreateNewProjectPresenter {
 
-    interface ProjectCreatedHandler {
+    public interface ProjectCreatedHandler {
         void handleProjectCreated();
     }
 
@@ -67,7 +67,7 @@ public class CreateNewProjectPresenter {
         }
     }
 
-    public boolean validate() {
+    private boolean validate() {
         if (view.getProjectName().isEmpty()) {
             view.showProjectNameMissingMessage();
             return false;
@@ -75,8 +75,14 @@ public class CreateNewProjectPresenter {
         return true;
     }
 
+    public void validateAndCreateProject(ProjectCreatedHandler handler) {
+        if (validate()) {
+            submitCreateProjectRequest(handler);
+        }
+    }
 
-    public void submitCreateProjectRequest(ProjectCreatedHandler handler) {
+
+    private void submitCreateProjectRequest(ProjectCreatedHandler handler) {
         if (view.isFileUploadSpecified()) {
             uploadSourcesAndCreateProject(handler);
         }

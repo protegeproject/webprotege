@@ -8,7 +8,6 @@
 
         }
         .formField {
-            max-width: 500px;
         }
         .uploadContainer {
             padding-top: 10px;
