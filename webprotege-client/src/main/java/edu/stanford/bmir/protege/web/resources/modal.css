@@ -1,0 +1,51 @@
+@external .wp-*;
+
+.wp-modal {
+    background-color: white;
+    max-width: 600px;
+    margin: 20px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.wp-modal__caption {
+    background-color: #f0f0f0;
+    background-image: url(../images/protege-blender.svg);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    background-position-y: 2px;
+    background-position-x: 1px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-left: 35px;
+    color: #505050;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-right: 10px;
+    cursor: default;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+    min-width: 400px;
+    min-height: 1.4em;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.wp-modal__content {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.wp-modal__button-bar {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.wp-modal__button-bar button+button {
+    margin-left: 5px;
+}

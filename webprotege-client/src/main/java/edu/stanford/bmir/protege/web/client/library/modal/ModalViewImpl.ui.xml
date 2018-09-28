@@ -1,0 +1,57 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+
+        @keyframes slideInFromTop {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                background-color: rgba(0, 0, 0, 0.0);
+            }
+            100% {
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        .glass {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow-y: auto;
+            animation: 0.3s ease-in 0s 1 fadeIn;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal {
+            animation: 0.5s ease-out 0s 1 slideInFromTop;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .buttonContainer {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+            flex-shrink: 1;
+            justify-content: flex-end;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.glass}">
+        <g:HTMLPanel addStyleNames="{style.modal} {wp.modal.modal}">
+            <g:Label ui:field="titleField" addStyleNames="{wp.modal.caption}"/>
+            <g:SimplePanel ui:field="contentContainer" addStyleNames="{wp.modal.content}"/>
+            <g:HTMLPanel ui:field="buttonContainer" addStyleNames="{style.buttonContainer} {wp.modal.buttonBar}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

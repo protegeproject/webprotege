@@ -31,6 +31,8 @@ import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
 import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
@@ -81,6 +83,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -487,5 +490,9 @@ public class ClientApplicationModule {
         return provider.get();
     }
 
+    @Provides
+    ModalView provideModalView(@Nonnull ModalViewImpl view) {
+        return view;
+    }
 
 }

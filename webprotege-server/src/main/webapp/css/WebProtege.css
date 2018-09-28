@@ -292,6 +292,26 @@ select:disabled {
     border: var(--inlay-panel--border);
 }
 
+.wp-modal .dialogMiddleCenter {
+    padding: 20px;
+}
+
+.wp-modal .gwt-TextBox {
+    border: var(--inlay-panel--border);
+}
+
+.wp-modal .gwt-PasswordTextBox {
+    border: var(--inlay-panel--border);
+}
+
+.wp-modal .gwt-TextArea {
+    border: var(--inlay-panel--border);
+}
+
+.wp-modal .gwt-SuggestBox {
+    border: var(--inlay-panel--border);
+}
+
 .web-protege-form-layout-editor-input pre {
     min-height: 22px;
 }

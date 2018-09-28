@@ -175,6 +175,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("topbar.css")
     TopBar laf();
 
+    @Source("modal.css")
+    ModalCss modal();
+
     @Source("toolbar.css")
     ToolbarCss toolbar();
 
@@ -416,6 +419,22 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-toolbar__btn--highlighted")
         String highlightedToolbarButton();
+    }
+
+    interface ModalCss extends CssResource {
+
+        @ClassName("wp-modal")
+        String modal();
+
+        @ClassName("wp-modal__caption")
+        String caption();
+
+        @ClassName("wp-modal__content")
+        String content();
+
+        @ClassName("wp-modal__button-bar")
+        String buttonBar();
+
     }
 
     interface ButtonsCss extends CssResource {
