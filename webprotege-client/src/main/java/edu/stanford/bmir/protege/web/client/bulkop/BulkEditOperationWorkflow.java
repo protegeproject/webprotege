@@ -66,8 +66,9 @@ public class BulkEditOperationWorkflow {
 
         modalPresenter.setTitle(presenter.getTitle());
         modalPresenter.addEscapeButton(DialogButton.CANCEL);
-        modalPresenter.addPrimaryButton(DialogButton.get(presenter.getExecuteButtonText()),
-                                        this::handleExecute);
+        DialogButton execButton = DialogButton.get(presenter.getExecuteButtonText());
+        modalPresenter.addPrimaryButton(execButton);
+        modalPresenter.setButtonHandler(execButton, this::handleExecute);
         modalPresenter.show(container -> presenter.start(container, eventBus));
 
 //        DialogButton escapeButton = DialogButton.CANCEL;

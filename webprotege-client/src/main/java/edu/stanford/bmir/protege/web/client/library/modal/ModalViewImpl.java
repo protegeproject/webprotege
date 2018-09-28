@@ -43,8 +43,6 @@ public class ModalViewImpl extends Composite implements ModalView {
     @Nonnull
     private final WebProtegeClientBundle clientBundle;
 
-    private final Map<DialogButton, ModalButtonHandler> handlerMap = new HashMap<>();
-
     @Inject
     public ModalViewImpl(@Nonnull WebProtegeClientBundle clientBundle) {
         this.clientBundle = checkNotNull(clientBundle);
@@ -65,6 +63,7 @@ public class ModalViewImpl extends Composite implements ModalView {
                 getElement().getStyle().setOpacity(1 - progress);
                 if(progress == 1.0) {
                     removeFromParent();
+                    getElement().getStyle().setOpacity(1);
                 }
             }
         };
@@ -79,7 +78,6 @@ public class ModalViewImpl extends Composite implements ModalView {
 
     private void installButton(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler, Button btn) {
         buttonContainer.add(btn);
-        handlerMap.put(button, handler);
         btn.addClickHandler(event -> handler.handleModalButton(closer));
     }
 

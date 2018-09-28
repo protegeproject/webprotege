@@ -17,7 +17,7 @@
                 background-color: rgba(0, 0, 0, 0.0);
             }
             100% {
-                background-color: rgba(0, 0, 0, 0.7);
+                background-color: rgba(0, 0, 0, 0.6);
             }
         }
 
@@ -28,12 +28,16 @@
             left: 0;
             right: 0;
             overflow-y: auto;
-            animation: 0.3s ease-in 0s 1 fadeIn;
-            background-color: rgba(0, 0, 0, 0.7);
+            animation-name: fadeIn;
+            animation-duration: 0.3s;
+            animation-delay: 0s;
+            animation-timing-function: ease-in;
+            animation-iteration-count: 1;
+            background-color: rgba(0, 0, 0, 0.6);
         }
 
         .modal {
-            animation: 0.5s ease-out 0s 1 slideInFromTop;
+            animation: 0.3s ease-out 0s 1 slideInFromTop;
             display: flex;
             flex-direction: column;
             justify-content: center;

@@ -1,14 +1,14 @@
 package edu.stanford.bmir.protege.web.client.library.modal;
 
-import com.google.gwt.dom.client.BodyElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,9 +17,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27 Sep 2018
  */
-public class ModalPresenter implements HasModalButtons {
+public class ModalPresenter {
 
     private final ModalView view;
+
+    private final Map<DialogButton, ModalButtonHandler> handlerMap = new HashMap<>();
 
     @Inject
     public ModalPresenter(ModalView view) {
@@ -31,19 +33,25 @@ public class ModalPresenter implements HasModalButtons {
         this.view.setModalTitle(title);
     }
 
-    @Override
     public void addEscapeButton(DialogButton button) {
         view.addEscapeButton(button);
     }
 
-    @Override
-    public void addButton(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler) {
-        view.addButton(button, handler);
+    public void addButton(@Nonnull DialogButton button) {
+        view.addButton(button, createHandler(button));
     }
 
-    @Override
-    public void addPrimaryButton(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler) {
-        view.addPrimaryButton(button, handler);
+    private ModalButtonHandler createHandler(@Nonnull DialogButton button) {
+        return closer -> Optional.ofNullable(handlerMap.get(button))
+                .ifPresent(h -> h.handleModalButton(closer));
+    }
+
+    public void addPrimaryButton(@Nonnull DialogButton button) {
+        view.addPrimaryButton(button, createHandler(button));
+    }
+
+    public void setButtonHandler(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler) {
+        handlerMap.put(button, handler);
     }
 
     public void show(@Nonnull ModalCallback callback) {
