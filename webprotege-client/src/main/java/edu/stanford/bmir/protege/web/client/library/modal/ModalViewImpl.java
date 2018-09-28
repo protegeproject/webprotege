@@ -87,10 +87,10 @@ public class ModalViewImpl extends Composite implements ModalView {
     }
 
     @Override
-    public void addEscapeButton(DialogButton button) {
+    public void addEscapeButton(DialogButton button,  @Nonnull ModalButtonHandler handler) {
         Button btn = createBasicButton(button);
         btn.addStyleName(clientBundle.buttons().escapeButton());
-        installButton(button, ModalCloser::closeModal, btn);
+        installButton(button, handler, btn);
     }
 
     @Override

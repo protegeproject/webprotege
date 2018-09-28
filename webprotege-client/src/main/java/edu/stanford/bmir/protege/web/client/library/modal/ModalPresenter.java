@@ -34,7 +34,8 @@ public class ModalPresenter {
     }
 
     public void addEscapeButton(DialogButton button) {
-        view.addEscapeButton(button);
+        view.addEscapeButton(button, createHandler(button));
+        setButtonHandler(button, ModalCloser::closeModal);
     }
 
     public void addButton(@Nonnull DialogButton button) {

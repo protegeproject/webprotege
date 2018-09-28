@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  */
 public interface HasModalButtons {
 
-    void addEscapeButton(DialogButton button);
+    void addEscapeButton(DialogButton button, @Nonnull ModalButtonHandler handler);
 
     void addButton(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler);
 
