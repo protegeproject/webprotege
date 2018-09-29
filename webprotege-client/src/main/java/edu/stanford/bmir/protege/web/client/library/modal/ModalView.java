@@ -26,4 +26,6 @@ public interface ModalView extends IsWidget, HasModalButtons {
     void setCloser(@Nonnull ModalCloser closer);
 
     void hide();
+
+    void setPrimaryButtonFocusedOnAttach(boolean focused);
 }

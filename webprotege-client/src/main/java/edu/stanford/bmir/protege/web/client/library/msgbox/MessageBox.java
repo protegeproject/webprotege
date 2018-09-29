@@ -197,6 +197,7 @@ public class MessageBox {
         presenter.setTitle(DLG_TITLE);
         presenter.setPrimaryButton(escapeButton);
         presenter.addEscapeButton(acceptButton);
+        presenter.setPrimaryButtonFocusedOnShow(true);
         presenter.setButtonHandler(escapeButton, closer -> {
             closer.closeModal();
             escapeHandler.run();

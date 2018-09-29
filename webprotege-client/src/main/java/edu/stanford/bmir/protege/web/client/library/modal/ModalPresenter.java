@@ -102,4 +102,8 @@ public class ModalPresenter {
     public void hide() {
         view.hide();
     }
+
+    public void setPrimaryButtonFocusedOnShow(boolean primaryButtonFocusedOnShow) {
+        view.setPrimaryButtonFocusedOnAttach(primaryButtonFocusedOnShow);
+    }
 }
