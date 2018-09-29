@@ -9,7 +9,6 @@
         .main {
             display: flex;
             flex-direction: column;
-            color: #606060;
         }
 
         .topBar {
@@ -64,8 +63,6 @@
         .checkBox {
             display: block;
             padding-bottom: 5px;
-            color: #525252;
-
         }
 
         .checkBox input {
