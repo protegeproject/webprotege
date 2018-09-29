@@ -34,7 +34,6 @@
             cursor: pointer;
             margin-left: 10px;
             margin-right: 10px;
-            color: #464646;
             border-bottom: solid transparent 2px;
             outline-style: none;
             outline-width: 0;
