@@ -35,6 +35,7 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
         presenter.start(eventBus);
         portletUi.setWidget(presenter.getView());
         handleAfterSetEntity(getSelectedEntity());
+        setDisplaySelectedEntityNameAsSubtitle(true);
     }
 
     @Override
