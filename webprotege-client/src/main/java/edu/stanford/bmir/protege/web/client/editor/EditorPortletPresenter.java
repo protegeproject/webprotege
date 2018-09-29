@@ -79,6 +79,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         editorPresenter.setEntityDisplay(this);
         tagListPresenter.start(view.getTagListViewContainer(), eventBus);
         handleAfterSetEntity(getSelectedEntity());
+        setDisplaySelectedEntityNameAsSubtitle(true);
     }
 
     @Override
