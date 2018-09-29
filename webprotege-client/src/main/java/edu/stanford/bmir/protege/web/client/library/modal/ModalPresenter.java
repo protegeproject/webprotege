@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.client.library.modal;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -80,7 +83,20 @@ public class ModalPresenter {
     public void show(@Nonnull ModalCallback callback) {
         RootPanel rootPanel = RootPanel.get();
         rootPanel.add(view);
-        callback.start(view.getModalContainer());
+        callback.start(getContentContainer());
+    }
+
+    /**
+     * Gets the content container, wrapping it so that it's possible
+     * to request focus after it is shown
+     */
+    private AcceptsOneWidget getContentContainer() {
+        return content -> {
+            view.getModalContainer().setWidget(content);
+            if(view instanceof HasRequestFocus) {
+                ((HasRequestFocus) view).requestFocus();
+            }
+        };
     }
 
     public void hide() {

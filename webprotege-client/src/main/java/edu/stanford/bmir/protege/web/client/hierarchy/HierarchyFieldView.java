@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.UIObject;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 12 Sep 2018
  */
-public interface HierarchyFieldView extends IsWidget {
+public interface HierarchyFieldView extends IsWidget, HasRequestFocus {
 
 
     interface SyncClassWithLastSelectedClassHandler {

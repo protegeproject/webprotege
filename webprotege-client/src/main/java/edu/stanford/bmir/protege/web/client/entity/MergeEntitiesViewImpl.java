@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,5 +37,13 @@ public class MergeEntitiesViewImpl extends Composite implements MergeEntitiesVie
     @Override
     public AcceptsOneWidget getHierarchyFieldContainer() {
         return container;
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        if(container.getWidget() instanceof HasRequestFocus) {
+            ((HasRequestFocus) container.getWidget()).requestFocus();
+        }
     }
 }

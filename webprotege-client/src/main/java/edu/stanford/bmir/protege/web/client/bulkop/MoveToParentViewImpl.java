@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -45,5 +46,17 @@ public class MoveToParentViewImpl extends Composite implements MoveToParentView 
     @Override
     public AcceptsOneWidget getHierarchyFieldContainer() {
         return hierarchyFieldContainer;
+    }
+
+    public void requestFocus() {
+        if(hierarchyFieldContainer.getWidget() instanceof HasRequestFocus) {
+            ((HasRequestFocus) hierarchyFieldContainer.getWidget()).requestFocus();
+        }
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        requestFocus();
     }
 }

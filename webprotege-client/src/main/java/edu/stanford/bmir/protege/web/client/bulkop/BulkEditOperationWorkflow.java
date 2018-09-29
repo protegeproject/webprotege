@@ -66,22 +66,6 @@ public class BulkEditOperationWorkflow {
         modalPresenter.setPrimaryButton(execButton);
         modalPresenter.setButtonHandler(execButton, this::handleExecute);
         modalPresenter.show(container -> presenter.start(container, eventBus));
-
-//        DialogButton escapeButton = DialogButton.CANCEL;
-//        dialogButtons.add(escapeButton);
-//        DialogButton executeButton = DialogButton.get(presenter.getExecuteButtonText());
-//        dialogButtons.add(executeButton);
-//        viewContainer.setHelpText(presenter.getHelpMessage());
-//        presenter.start(viewContainer.getContainer(), eventBus);
-//        BulkEditingOperationDialogController controller = new BulkEditingOperationDialogController(
-//                presenter.getTitle(),
-//                dialogButtons,
-//                executeButton,
-//                escapeButton,
-//                viewContainer
-//        );
-//        controller.setDialogButtonHandler(executeButton, this::handleExecute);
-//        WebProtegeDialog.showDialog(controller);
     }
 
     private void handleExecute(ModalCloser closer) {

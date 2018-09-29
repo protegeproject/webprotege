@@ -193,4 +193,9 @@ public class HierarchyFieldViewImpl extends Composite implements HierarchyFieldV
     public void setSyncWithCurrentSelectionVisible(boolean visible) {
         syncSelectionButton.setVisible(visible);
     }
+
+    @Override
+    public void requestFocus() {
+        entityField.requestFocus();
+    }
 }

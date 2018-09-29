@@ -74,6 +74,11 @@ public class AnnotationSimpleMatchingCriteriaViewImpl extends Composite implemen
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
+    @Override
+    public void requestFocus() {
+        propertyField.requestFocus();
+    }
+
     @UiHandler("anyPropertyRadio")
     protected void handlePropertyMatchTypeChangedAny(ValueChangeEvent<Boolean> event) {
         propertyGroup.setVisible(!event.getValue());

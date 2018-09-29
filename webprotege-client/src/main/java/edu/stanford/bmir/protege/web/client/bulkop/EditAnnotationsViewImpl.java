@@ -91,7 +91,11 @@ public class EditAnnotationsViewImpl extends Composite implements EditAnnotation
         updateOperationSection();
     }
 
-
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        criteriaView.requestFocus();
+    }
 
     @UiHandler("matchedPropertyRadio")
     protected void handleMatchedPropertyRadioChanged(ValueChangeEvent<Boolean> event) {
