@@ -29,7 +29,7 @@
             right: 0;
             overflow-y: auto;
             animation-name: fadeIn;
-            animation-duration: 0.5s;
+            animation-duration: 0.2s;
             animation-delay: 0s;
             animation-timing-function: ease-in;
             animation-iteration-count: 1;
@@ -37,7 +37,7 @@
         }
 
         .modal {
-            animation: 0.3s ease-out 0s 1 slideInFromTop;
+            animation: 0.2s ease-out 0s 1 slideInFromTop;
             display: flex;
             flex-direction: column;
             justify-content: center;
