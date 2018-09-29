@@ -33,6 +33,7 @@
             animation-delay: 0s;
             animation-timing-function: ease-in;
             animation-iteration-count: 1;
+            animation-fill-mode: forwards;
             background-color: rgba(0, 0, 0, 0.6);
             /* Ensures the glass if above the CodeMirror stuff */
             z-index: 10;
@@ -40,7 +41,13 @@
 
 
         .modal {
-            animation: 0.2s ease-out 0s 1 slideInFromTop;
+            transform: translateY(-100%);
+            animation-name: slideInFromTop;
+            animation-duration: 0.2s;
+            animation-delay: 0s;
+            animation-timing-function: ease-in;
+            animation-iteration-count: 1;
+            animation-fill-mode: both;
             display: flex;
             flex-direction: column;
             justify-content: center;
