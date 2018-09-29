@@ -1,4 +1,15 @@
 :root {
+    --primary--color: #505050;
+
+    --primary--background-color: #ffffff;
+
+    --secondary--background-color: #f0f0f0;
+
+    --primary-hairline--border-color: #f0f0f0;
+
+    --secondary-hairline--border-color: #e0e0e0;
+
+
     --selected-item--background-color:          #d5e1fa; /* #116cd6; */
     --selected-item--color:                     inherit;
 
@@ -9,17 +20,17 @@
 
     --btn--hover--color:                      #116cd6;
 
-    --topbar--background-color:                 #f0f0f0;
+    --topbar--background-color:                 var(--secondary--background-color);
 
     --inlay-panel--background-color:            #f0f0f0;
 
-    --inlay-panel--border:                      1px solid #e0e0e0;
+    --inlay-panel--border:                      1px solid var(--secondary-hairline--border-color);
 
     --inlay-panel--border-radius:               3px;
 
     --inlay-panel--alternate-background-color:  #fafaff;
 
-    --view-toolbar--background-color:           #f0f0f0;
+    --view-toolbar--background-color:           var(--secondary--background-color);
 
     --error--color:                             #af0002;
 
@@ -43,7 +54,8 @@
 body, input, textarea, keygen, select, button {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400;
-    color: #505050;
+    color: var(--primary--color);
+    background-color: var(--primary--background-color);
     font-size: 12px;
     margin: 0;
     padding: 0;
@@ -58,7 +70,7 @@ input:matches([type="radio"], [type="checkbox"]) {
 
 hr {
     border: none;
-    border-top: 1px solid #9171d2;
+    border-top: 1px solid var(--hairline--border-color);
     margin: 0;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -131,7 +143,7 @@ pre {
 
 .gwt-TextBox, textarea, .gwt-PasswordTextBox {
     line-height: var(--input--line-height);
-    background-color: #ffffff;
+    background-color: var(--primary--background-color);
     padding: 2px;
 }
 
@@ -154,7 +166,6 @@ pre {
 
 .gwt-SuggestBoxPopup .item {
     background: white;
-    color: #000000;
 }
 
 .gwt-SuggestBoxPopup .item-selected {
@@ -164,7 +175,7 @@ pre {
 
 .gwt-SuggestBoxPopup .item .new-keyword {
     color: #0669eb;
-    background: #ffffff;
+    background: var(--primary--background-color);
     font-weight: bold;
 }
 
@@ -250,7 +261,7 @@ select:disabled {
     background-size: 30px;
     background-position-y: 2px;
     background-position-x: 1px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--secondary-hairline--border-color);
 }
 
 .gwt-DialogBox .Caption {
