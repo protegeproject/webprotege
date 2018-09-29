@@ -144,10 +144,6 @@ pre {
     box-sizing: border-box;
 }
 
-.gwt-SuggestBox:focus {
-    z-index: 5;
-}
-
 .gwt-SuggestBoxPopup {
     font-size: 12px;
     background: white;
