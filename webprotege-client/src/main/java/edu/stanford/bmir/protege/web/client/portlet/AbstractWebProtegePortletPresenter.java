@@ -34,6 +34,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private boolean trackSelection = true;
 
+    private boolean displaySelectedEntityNameAsSubtitle = false;
+
     private Optional<OWLEntityData> displayedEntityData = Optional.empty();
 
 
@@ -58,6 +60,13 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
      */
     public void setTrackSelection(boolean trackSelection) {
         this.trackSelection = trackSelection;
+    }
+
+    public void setDisplaySelectedEntityNameAsSubtitle(boolean displaySelectedEntityNameAsSubtitle) {
+        if (displaySelectedEntityNameAsSubtitle != this.displaySelectedEntityNameAsSubtitle) {
+            this.displaySelectedEntityNameAsSubtitle = displaySelectedEntityNameAsSubtitle;
+            updateViewTitle();
+        }
     }
 
     @Override
@@ -106,7 +115,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private void updateViewTitle() {
         portletUi.ifPresent(ui -> {
-            if (displayedEntityData.isPresent()) {
+            if (displaySelectedEntityNameAsSubtitle && displayedEntityData.isPresent()) {
                 displayedEntityData.ifPresent(entityData -> {
                     String subTitle = displayNameRenderer.getBrowserText(entityData);
                     ui.setSubtitle(subTitle);
