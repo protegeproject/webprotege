@@ -7,7 +7,7 @@
 .wp-project-list__header {
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid literal("var(--primary-hairline--border-color)");
     flex-grow: 0;
     flex-shrink: 0;
     align-items: baseline;
@@ -67,7 +67,7 @@
     display: flex;
     flex-direction: row;
     flex-flow: nowrap;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid literal("var(--primary-hairline--border-color)");
     align-items: baseline;
     padding-top: 3px;
     padding-bottom: 3px;
@@ -81,5 +81,5 @@
 }
 
 .wp-project-list__rows__row:hover {
-    background-color: #f0f0f0;
+    background-color: literal("var(--secondary--background-color)");
 }
