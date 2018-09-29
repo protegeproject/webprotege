@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import java.util.HashMap;
@@ -23,10 +24,17 @@ public class ModalPresenter {
 
     private final Map<DialogButton, ModalButtonHandler> handlerMap = new HashMap<>();
 
+    private final ModalCloser modalCloser = this::hide;
+
+    @Nullable
+    private DialogButton primaryButton = null;
+
     @Inject
     public ModalPresenter(ModalView view) {
         this.view = checkNotNull(view);
-        view.setCloser(this::hide);
+        this.view.setCloser(modalCloser);
+        this.view.setAcceptKeyHandler(this::handleAcceptKey);
+        this.view.setEscapeKeyHandler(this::handleEscapeKey);
     }
 
     public void setTitle(@Nonnull String title) {
@@ -47,12 +55,26 @@ public class ModalPresenter {
                 .ifPresent(h -> h.handleModalButton(closer));
     }
 
-    public void addPrimaryButton(@Nonnull DialogButton button) {
+    public void setPrimaryButton(@Nonnull DialogButton button) {
+        this.primaryButton = button;
         view.addPrimaryButton(button, createHandler(button));
     }
 
     public void setButtonHandler(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler) {
         handlerMap.put(button, handler);
+    }
+
+    private void handleAcceptKey() {
+        if(primaryButton != null) {
+            ModalButtonHandler modalButtonHandler = handlerMap.get(primaryButton);
+            if(modalButtonHandler != null) {
+                modalButtonHandler.handleModalButton(modalCloser);
+            }
+        }
+    }
+
+    private void handleEscapeKey() {
+        hide();
     }
 
     public void show(@Nonnull ModalCallback callback) {

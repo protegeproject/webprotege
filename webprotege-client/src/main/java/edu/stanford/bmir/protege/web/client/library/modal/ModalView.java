@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.library.modal;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 
 import javax.annotation.Nonnull;
@@ -12,6 +13,10 @@ import javax.annotation.Nonnull;
  * 27 Sep 2018
  */
 public interface ModalView extends IsWidget, HasModalButtons {
+
+    void setAcceptKeyHandler(@Nonnull Runnable runnable);
+
+    void setEscapeKeyHandler(@Nonnull Runnable runnable);
 
     @Nonnull
     AcceptsOneWidget getModalContainer();

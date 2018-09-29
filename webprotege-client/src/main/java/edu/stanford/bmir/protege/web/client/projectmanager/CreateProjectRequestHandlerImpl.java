@@ -40,7 +40,7 @@ public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHand
         modalPresenter.setTitle(messages.createProject());
         modalPresenter.addEscapeButton(DialogButton.CANCEL);
         createProjectButton = DialogButton.get(messages.createProject());
-        modalPresenter.addPrimaryButton(createProjectButton);
+        modalPresenter.setPrimaryButton(createProjectButton);
     }
 
     @Override

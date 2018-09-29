@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntitiesAction;
@@ -70,7 +69,7 @@ public class CreateEntityPresenter {
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
         this.messages = checkNotNull(messages);
         this.modalPresenter.addEscapeButton(DialogButton.CANCEL);
-        this.modalPresenter.addPrimaryButton(DialogButton.CREATE);
+        this.modalPresenter.setPrimaryButton(DialogButton.CREATE);
 
     }
 

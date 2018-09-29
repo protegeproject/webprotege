@@ -3,21 +3,17 @@ package edu.stanford.bmir.protege.web.client.library.msgbox;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalCallback;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.YES;
-import static java.util.Arrays.asList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -145,7 +141,7 @@ public class MessageBox {
         ModalPresenter presenter = new ModalPresenter(new ModalViewImpl(WebProtegeClientBundle.BUNDLE));
         presenter.setTitle("");
         presenter.addEscapeButton(YES);
-        presenter.addPrimaryButton(NO);
+        presenter.setPrimaryButton(NO);
         presenter.setButtonHandler(YES, closer -> {
             closer.closeModal();
             handler.handleYes();
@@ -199,7 +195,7 @@ public class MessageBox {
         final MessageBoxView messageBoxView = createMessageBox(messageStyle, mainMessage, subMessage);
         ModalPresenter presenter = new ModalPresenter(new ModalViewImpl(WebProtegeClientBundle.BUNDLE));
         presenter.setTitle(DLG_TITLE);
-        presenter.addPrimaryButton(escapeButton);
+        presenter.setPrimaryButton(escapeButton);
         presenter.addEscapeButton(acceptButton);
         presenter.setButtonHandler(escapeButton, closer -> {
             closer.closeModal();

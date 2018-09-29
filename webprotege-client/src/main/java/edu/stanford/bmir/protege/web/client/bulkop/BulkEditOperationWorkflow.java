@@ -4,12 +4,8 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalCallback;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -67,7 +63,7 @@ public class BulkEditOperationWorkflow {
         modalPresenter.setTitle(presenter.getTitle());
         modalPresenter.addEscapeButton(DialogButton.CANCEL);
         DialogButton execButton = DialogButton.get(presenter.getExecuteButtonText());
-        modalPresenter.addPrimaryButton(execButton);
+        modalPresenter.setPrimaryButton(execButton);
         modalPresenter.setButtonHandler(execButton, this::handleExecute);
         modalPresenter.show(container -> presenter.start(container, eventBus));
 

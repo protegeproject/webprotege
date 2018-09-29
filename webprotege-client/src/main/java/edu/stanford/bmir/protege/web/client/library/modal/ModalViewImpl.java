@@ -2,8 +2,13 @@ package edu.stanford.bmir.protege.web.client.library.modal;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -43,12 +48,44 @@ public class ModalViewImpl extends Composite implements ModalView {
     @Nonnull
     private final WebProtegeClientBundle clientBundle;
 
+    private Runnable acceptKeyHandler = () -> {};
+
+    private Runnable escapeKeyHandler = () -> {};
+
     @Inject
     public ModalViewImpl(@Nonnull WebProtegeClientBundle clientBundle) {
         this.clientBundle = checkNotNull(clientBundle);
         initWidget(ourUiBinder.createAndBindUi(this));
+        sinkEvents(Event.ONKEYUP);
+        addHandler(this::handleKeyUp, KeyUpEvent.getType());
     }
 
+    private void handleKeyUp(@Nonnull KeyUpEvent event) {
+        if(isAcceptKey(event)) {
+            acceptKeyHandler.run();
+        }
+        else if(isEscapeKey(event)) {
+            escapeKeyHandler.run();
+        }
+    }
+
+    private boolean isAcceptKey(@Nonnull KeyUpEvent event) {
+        return event.isControlKeyDown() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER;
+    }
+
+    private boolean isEscapeKey(@Nonnull KeyUpEvent event) {
+        return event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE;
+    }
+
+    @Override
+    public void setAcceptKeyHandler(@Nonnull Runnable runnable) {
+        this.acceptKeyHandler = checkNotNull(runnable);
+    }
+
+    @Override
+    public void setEscapeKeyHandler(@Nonnull Runnable runnable) {
+        this.escapeKeyHandler = checkNotNull(runnable);
+    }
 
     @Override
     public void setCloser(@Nonnull ModalCloser closer) {
