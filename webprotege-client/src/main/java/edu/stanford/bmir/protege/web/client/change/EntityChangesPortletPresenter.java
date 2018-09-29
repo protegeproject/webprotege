@@ -49,6 +49,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
         portletUi.setWidget(presenter.getView().asWidget());
         portletUi.setForbiddenMessage(FORBIDDEN_MESSAGE);
+        setDisplaySelectedEntityNameAsSubtitle(true);
         updateDisplayForSelectedEntity();
     }
 

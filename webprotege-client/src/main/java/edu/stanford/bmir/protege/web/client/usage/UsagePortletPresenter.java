@@ -85,6 +85,7 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(usageView.asWidget());
         portletUi.setFilterView(filterView);
+        setDisplaySelectedEntityNameAsSubtitle(true);
     }
 
     private void applyFilter(FilterSet filterSet) {
@@ -141,6 +142,7 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
 
             @Override
             protected String getErrorMessage(Throwable throwable) {
+                setDisplayedEntity(Optional.empty());
                 return "There was a problem retrieving the usage for the selected entity";
             }
 
@@ -151,6 +153,7 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
                 final int totalReferences = result.getTotalUsageCount();
 //                setTitle("Usage (definition and references) [showing " + visibleReferences + " references of " + totalReferences + "]");
                 usageView.setData(entity, references);
+                setDisplayedEntity(Optional.of(result.getEntityNode().getEntityData()));
             }
         });
     }

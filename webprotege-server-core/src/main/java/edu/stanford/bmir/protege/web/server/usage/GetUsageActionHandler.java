@@ -6,8 +6,10 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.usage.*;
 import org.semanticweb.owlapi.model.*;
@@ -36,15 +38,20 @@ public class GetUsageActionHandler extends AbstractProjectActionHandler<GetUsage
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final EntityNodeRenderer entityNodeRenderer;
+
     @Inject
     public GetUsageActionHandler(@Nonnull AccessManager accessManager,
                                  @Nonnull ProjectId projectId,
                                  @Nonnull @RootOntology OWLOntology rootOntology,
-                                 @Nonnull RenderingManager renderingManager) {
+                                 @Nonnull RenderingManager renderingManager,
+                                 @Nonnull EntityNodeRenderer entityNodeRenderer) {
         super(accessManager);
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
+        this.entityNodeRenderer = entityNodeRenderer;
     }
 
     @Nonnull
@@ -121,7 +128,8 @@ public class GetUsageActionHandler extends AbstractProjectActionHandler<GetUsage
 
 
         usage.sort(new UsageReferenceComparator(subject));
-        return new GetUsageResult(projectId, usage, totalReferenceCount);
+        EntityNode entityNode = entityNodeRenderer.render(subject);
+        return new GetUsageResult(projectId, entityNode, usage, totalReferenceCount);
     }
 
     private int processAxiom(OWLAxiom reference, UsageFilter usageFilter, GetUsageAction action, List<UsageReference> result, ReferencingAxiomVisitor visitor, int counter) {
