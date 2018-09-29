@@ -89,6 +89,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         presenter.start(eventBus);
         presenter.setEntityDisplay(this);
         handleSetEntity(getSelectedEntity());
+        setDisplaySelectedEntityNameAsSubtitle(true);
     }
 
     private void handleFilterSettingChanged() {
