@@ -139,7 +139,6 @@ pre {
     font-size: 12px;
     padding: 2px;
     line-height: var(--input--line-height);
-    color: #000000;
     background: transparent;
     box-sizing: border-box;
 }
