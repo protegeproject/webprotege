@@ -38,14 +38,14 @@
             flex-shrink: 1;
             overflow: auto;
             background-color: white;
-            border: 1px solid #e0e0e0;
+            border: 1px solid literal("var(--alternate--separator--color)");
             margin: 1px;
         }
         .bottomBar {
             background-color: literal("var(--inlay-panel--background-color)");
         }
         .typeGroup {
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid literal("var(--alternate--separator--color)");
             flex-grow: 0;
             flex-shrink: 0;
         }
