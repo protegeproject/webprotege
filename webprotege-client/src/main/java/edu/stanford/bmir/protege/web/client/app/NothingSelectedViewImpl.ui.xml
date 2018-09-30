@@ -13,11 +13,11 @@
             bottom: 0;
             right: 0;
             margin: 20px;
-            border: 8px dashed literal("var(--primary--placeholder)");
+            border: 8px dashed literal("var(--placeholder--color)");
             border-radius: 30px;
         }
         .label {
-            color: literal("var(--primary--placeholder)");
+            color: literal("var(--placeholder--color)");
             font-size: 20px;
             text-align: center;
             top: 45%;
