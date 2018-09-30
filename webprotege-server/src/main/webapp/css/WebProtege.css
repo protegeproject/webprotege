@@ -1,12 +1,18 @@
 :root {
 
-    /* Text color */
+    /* Used for text color */
     --primary--color: #505050;
-    /*Used for items of lesser importance*/
+
+    /* Used for window background color */
+    --primary--background-color: #ffffff;
+
+    /*Used for text color for items of lesser importance*/
     --secondary--color: #707070;
 
-    --primary--background-color: #ffffff;
-    --primary--border-color: #f0f0f0;
+    /* Used for the color of separator lines and borders */
+    --separator--color: #f0f0f0;
+
+    /* Used for the color of placeholder text */
     --placeholder--color: rgba(200, 200, 200, 1.0);
 
 

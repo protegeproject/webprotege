@@ -29,7 +29,7 @@
             flex-grow: 1;
             flex-shrink: 1;
             overflow-y: scroll;
-            border-top: 1px solid literal("var(--primary--border-color)");
+            border-top: 1px solid literal("var(--separator--color)");
         }
         .queryPanel {
             padding: 10px;
