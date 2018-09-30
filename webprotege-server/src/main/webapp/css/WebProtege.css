@@ -1,13 +1,11 @@
 :root {
     --primary--color: #505050;
-
     --primary--background-color: #ffffff;
+    --primary--border-color: #f0f0f0;
+    --primary--placeholder: rgba(200, 200, 200, 1.0);
 
     --secondary--background-color: #f0f0f0;
 
-    --primary-hairline--border-color: #f0f0f0;
-
-    --primary--placeholder: rgba(200, 200, 200, 1.0);
 
     --secondary-hairline--border-color: #e0e0e0;
 
