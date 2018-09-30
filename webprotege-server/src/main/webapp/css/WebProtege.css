@@ -179,7 +179,7 @@ pre {
 
 .gwt-SuggestBoxPopup {
     font-size: 12px;
-    background: white;
+    background: var(--primary--background-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
     line-height: 15px;
@@ -187,7 +187,7 @@ pre {
 }
 
 .gwt-SuggestBoxPopup .item {
-    background: white;
+    background: var(--primary--background-color);
 }
 
 .gwt-SuggestBoxPopup .item-selected {
@@ -231,7 +231,7 @@ select:disabled {
 
 
 .gwt-MenuBar-vertical {
-    background: white;
+    background: var(--primary--background-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
     padding: 20px;
@@ -243,7 +243,7 @@ select:disabled {
 }
 
 .gwt-PopupPanel {
-    background: white;
+    background: var(--primary--background-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
     /** This z-index is needed because our dialogs appear below the text in the codemirror text area without it **/
@@ -269,7 +269,7 @@ select:disabled {
 }
 
 .gwt-DialogBox {
-    background: white;
+    background: var(--primary--background-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
     border: 1px solid #acacac;
     /** This z-index is needed because our dialogs appear below the text in the codemirror text area without it **/

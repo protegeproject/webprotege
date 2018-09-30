@@ -1,7 +1,6 @@
 @external .wp-*;
 
 .wp-popup-menu {
-    background: white;
     box-shadow: 0 4px 5px rgba(0, 0, 0, .2);
     border: 1px solid #e0e0e0;
     margin-top: 5px;
@@ -13,13 +12,12 @@
 }
 
 .wp-popup-menu__inner {
-    background-color: #ffffff;
     box-sizing: border-box;
     outline: none;
 }
 
 .wp-popup-menu__item {
-    background: none repeat scroll 0 0 #ffffff;
+    background: none repeat scroll 0 0;
     cursor: pointer;
     font-size: 14px;
     padding: 5px 15px;
@@ -32,12 +30,10 @@
 }
 
 .wp-popup-menu__item--disabled {
-    background-color: #ffffff;
     color: #e0e0e0;
 }
 
 .wp-popup-menu__item--disabled:hover {
-    background-color: #ffffff;
     color: #e0e0e0;
 }
 

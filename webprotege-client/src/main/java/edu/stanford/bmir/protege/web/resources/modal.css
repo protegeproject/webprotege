@@ -1,7 +1,7 @@
 @external .wp-*;
 
 .wp-modal {
-    background-color: white;
+    background-color: literal("var(--primary--background-color)");
     max-width: 600px;
     margin: 20px;
     border-radius: 5px;
@@ -11,15 +11,15 @@
 }
 
 .wp-modal__caption {
-    background-color: #f0f0f0;
+    background-color: literal("var(--alternate--background-color)");
     background-image: url(../images/protege-blender.svg);
     background-repeat: no-repeat;
     background-size: 30px;
     background-position-y: 2px;
     background-position-x: 1px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid literal("var(--alternate--separator--color)");
     padding-left: 35px;
-    color: #505050;
+    color: literal("var(--primary--color)");
     padding-bottom: 5px;
     padding-top: 5px;
     padding-right: 10px;

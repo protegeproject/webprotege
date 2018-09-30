@@ -273,22 +273,22 @@
 
 .wp-panel-filled .gwt-TextBox {
     border: literal("var(--inlay-panel--border)");
-    background-color: white;
+    background-color: literal("var(--primary--background-color)");
 }
 
 .wp-panel-filled .gwt-PasswordTextBox {
     border: literal("var(--inlay-panel--border)");
-    background-color: white;
+    background-color: literal("var(--primary--background-color)");
 }
 
 .wp-panel-filled .gwt-TextArea {
     border: literal("var(--inlay-panel--border)");
-    background-color: white;
+    background-color: literal("var(--primary--background-color)");
 }
 
 .wp-panel-filled .gwt-SuggestBox {
     border: literal("var(--inlay-panel--border)");
-    background-color: white;
+    background-color: literal("var(--primary--background-color)");
 }
 
 .wp-panel-neutral {
