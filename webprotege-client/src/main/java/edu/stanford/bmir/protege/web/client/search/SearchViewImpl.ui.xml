@@ -20,7 +20,7 @@
         .foucusPanel {
             box-sizing: border-box;
             width: 600px;
-            border: 1px solid #f0f0f0;
+            border: 1px solid literal("var(--primary-hairline--border-color)");
         }
 
         .results {

@@ -14,7 +14,7 @@
         }
         .editor {
             display: block;
-            border: 1px solid #f0f0f0;
+            border: 1px solid literal("var(--primary-hairline--border-color)");
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

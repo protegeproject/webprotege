@@ -7,7 +7,11 @@
 
     --primary-hairline--border-color: #f0f0f0;
 
+    --primary--placeholder: rgba(200, 200, 200, 1.0);
+
     --secondary-hairline--border-color: #e0e0e0;
+
+
 
 
     --selected-item--background-color:          #d5e1fa; /* #116cd6; */
@@ -121,15 +125,15 @@ pre {
 }
 
 ::-webkit-input-placeholder {
-    color: rgba(200, 200, 200, 1.0);
+    color: var(--primary--placeholder);
 }
 
 ::-moz-placeholder {
-    color: rgba(200, 200, 200, 1.0);
+    color: var(--primary--placeholder);
 }
 
 :-moz-placeholder {
-    color: rgba(200, 200, 200, 1.0);
+    color: var(--primary--placeholder);
 }
 
 :focus {

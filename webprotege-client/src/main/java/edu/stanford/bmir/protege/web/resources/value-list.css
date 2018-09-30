@@ -8,7 +8,7 @@
 }
 
 .wp-value-list__row {
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid literal("var(--primary-hairline--border-color)");
 }
 
 .wp-value-list__editor {
