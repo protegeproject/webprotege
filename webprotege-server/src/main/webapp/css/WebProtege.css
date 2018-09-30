@@ -129,6 +129,10 @@ a {
     text-decoration: underline;
 }
 
+.widget-holder {
+    border-color: var(--separator--color);
+}
+
 .widget-holder-label {
     font-size: 14px !important;
 }
