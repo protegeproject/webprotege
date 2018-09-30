@@ -7,7 +7,7 @@
         }
 
         .browser-text-style {
-            color: #0000ff;
+            color: literal("var(--link--color)");
             text-decoration: underline;
             cursor: pointer;
         }

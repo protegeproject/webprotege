@@ -68,6 +68,8 @@
     --lang-field--width: 45px;
 
     --property-value-editor-property-column--width: 130px;
+
+    --link--color:                              blue;
 }
 
 body, input, textarea, keygen, select, button {
@@ -125,7 +127,7 @@ button {
 }
 
 a {
-    color: blue;
+    color: var(--link--color);
     cursor: pointer;
     text-decoration: underline;
 }
