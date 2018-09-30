@@ -22,7 +22,7 @@
 
     --topbar--background-color:                 var(--alternate--background-color);
 
-    --inlay-panel--background-color:            #f0f0f0;
+    --inlay-panel--background-color:            var(--alternate--background-color);
 
     --inlay-panel--border:                      1px solid var(--alternate--border-color);
 
