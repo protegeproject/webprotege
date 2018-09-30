@@ -273,7 +273,7 @@
     -moz-transition: background-color 0.15s ease-in-out;
     -webkit-transition: background-color 0.15s ease-in-out;
 
-    background-color: #505050;
+    background-color: literal("var(--primary--color)");
     width: 20px;
     height: 20px;
     margin: 0;
