@@ -22,7 +22,7 @@
 }
 
 .wp-toolbar__btn:hover:enabled {
-    background-color: #707070;
+    background-color: literal("var(--accent--color)");
     color: #ffffff;
 }
 

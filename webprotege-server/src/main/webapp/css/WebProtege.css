@@ -24,18 +24,18 @@
     --alternate--background-color: #f0f0f0;
     --alternate--separator--color: #e0e0e0;
 
-
+    --accent--color: #116cd6;
 
 
     --selected-item--background-color:          #d5e1fa; /* #116cd6; */
     --selected-item--color:                     inherit;
 
-    --selected-menu-item--background-color:     #116cd6;
+    --selected-menu-item--background-color:     var(--accent--color);
     --selected-menu-item--color:                white;
 
-    --selected-tab--color:                      #116cd6;
+    --selected-tab--color:                      var(--accent--color);
 
-    --btn--hover--color:                      #116cd6;
+    --btn--hover--color:                        var(--accent--color);
 
     --wp-topbar--color:                         var(--primary--color);
     --topbar--background-color:                 var(--alternate--background-color);
