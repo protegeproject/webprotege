@@ -9,6 +9,9 @@
     /*Used for text color for items of lesser importance*/
     --secondary--color: #707070;
 
+    /*Used for text color for items of lesser importance*/
+    --tertiary--color: #9a9a9a;
+
     /* Used for the color of separator lines and borders */
     --separator--color: #f0f0f0;
 
@@ -625,7 +628,7 @@ td {
 }
 
 .ms-annotations {
-    border-left: solid 4px #f1f1f1;
+    border-left: solid 4px literal("var(--separator--color)");
     margin-bottom: 4px;
     margin-left: 22px;
     padding-left: 5px;

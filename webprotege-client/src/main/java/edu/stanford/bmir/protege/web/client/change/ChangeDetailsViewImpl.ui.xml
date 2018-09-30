@@ -11,12 +11,12 @@
             margin-left: 10px;
             padding-left: 20px;
             padding-bottom: 10px;
-            border-left: 1px solid #ededed;
+            border-left: 1px solid literal("var(--separator--color)");
         }
 
         .subjectsField {
             font-size: 12px;
-            color: darkgray;
+            color: literal("var(--secondary--color)");
             padding-bottom: 2px;
             padding-left: 24px;
         }
@@ -47,12 +47,12 @@
         .highLevelDescription {
             font-size: 12px;
             font-weight: bold;
-            color: gray;
+            color: literal("var(--secondary--color)");
         }
 
         .author {
             font-size: 12px;
-            color: darkgray;
+            color: literal("var(--tertiary--color)");
             padding-top: 2px;
             padding-left: 1px;
             padding-bottom: 3px;
@@ -69,7 +69,7 @@
 
         .tooManyChangesMessage {
             font-size: 12px;
-            color: darkgray;
+            color: literal("var(--tertiary--color)");
             background-color: rgb(255, 250, 230);
             padding: 4px;
         }

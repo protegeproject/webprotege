@@ -61,12 +61,12 @@
 
 .wp-comment__date {
     font-size: 10px;
-    color:     #b3b3b3;
+    color:     literal("var(--tertiary--color)");
 }
 
 .wp-comment__body {
     margin-top:  0.3em;
-    color:       #676767;
+    color:       literal("var(--secondary--color)");
     border:      none;
     line-height: 1.4em;
     overflow:    hidden;
@@ -84,7 +84,7 @@
 /* Add some spacing an a line between comments */
 .wp-comment+.wp-comment {
     margin-top: 3px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid literal("var(--separator--color)");
     padding-top: 10px;
 }
 

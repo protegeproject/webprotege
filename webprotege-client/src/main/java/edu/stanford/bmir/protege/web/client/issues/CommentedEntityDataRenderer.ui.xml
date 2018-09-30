@@ -5,7 +5,7 @@
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid literal("var(--separator--color)");
             padding: 2px 2px 5px;
             vertical-align: middle;
             background-position: 0 6px;

@@ -9,7 +9,7 @@
         }
         .separatorText {
             font-size: 12px;
-            color: darkgray;
+            color: literal("var(--tertiary--color)");
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
