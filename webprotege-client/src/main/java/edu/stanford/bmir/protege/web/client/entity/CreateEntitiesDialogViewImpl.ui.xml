@@ -19,8 +19,7 @@
             flex-direction: row;
         }
         .warningField {
-            margin-top: 5px;
-            max-width: 450px;
+            margin-top: 20px;
         }
     </ui:style>
     <g:HTMLPanel>

@@ -2,7 +2,7 @@
 
 .wp-popup-menu {
     box-shadow: 0 4px 5px rgba(0, 0, 0, .2);
-    border: 1px solid #e0e0e0;
+    border: 1px solid literal("var(--alternate--separator--color)");
     margin-top: 5px;
     margin-left: 2px;
     margin-right: 2px;
@@ -21,7 +21,7 @@
     cursor: pointer;
     font-size: 14px;
     padding: 5px 15px;
-    color: #555555;
+    color: literal("var(--primary--color)");
     vertical-align: middle;
     line-height: 20px;
     border-radius: 3px;
@@ -39,7 +39,7 @@
 
 .wp-popup-menu__separator {
     width: 100%;
-    border-bottom: 1px solid #e9e9e9;
+    border-bottom: 1px solid literal("var(--alternate--separator--color)");
 }
 
 .wp-popup-menu__item--selected {

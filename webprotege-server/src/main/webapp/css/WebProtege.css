@@ -60,6 +60,7 @@
 
     --gt-tree__row--selected--background-color: var(--selected-item--background-color);
     --gt-tree__row--selected--color:            var(--selected-item--color);
+    --gt-tree__row--hover--background-color:    var(--item--hover--background-color);
 
     -webkit-font-smoothing:                     subpixel-antialiased;
     text-rendering:                             optimizeLegibility;
@@ -70,6 +71,9 @@
     --property-value-editor-property-column--width: 130px;
 
     --link--color:                              blue;
+    --warning--color:                           var(--primary--color);
+    --warning--background-color:                #faf6c3;
+    --warning--border-color:                    #ffe884;
 }
 
 body, input, textarea, keygen, select, button {
@@ -536,11 +540,11 @@ td {
     line-height: 1.3em;
     padding-bottom: 3px;
     padding-top: 3px;
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid var(--separator--color);
 }
 
 .ms-section-item:hover {
-    background: #ededed;
+    background: var(--item--hover--background-color);
 }
 
 .ms-section-kw {
@@ -671,6 +675,20 @@ td {
 .gwt-CheckBox > label {
     padding-left: 3px;
     white-space: nowrap;
+}
+
+
+.CodeMirror {
+    background: var(--primary--background-color) !important;
+    color: var(--primary--color) !important;
+}
+
+div.CodeMirror-linenumber.CodeMirror-gutter-elt {
+    background-color: var(--alternate--background-color) !important;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+    border-left: 1px solid var(--primary--color) !important;
 }
 
 /** Animation of Busy Indicator **/

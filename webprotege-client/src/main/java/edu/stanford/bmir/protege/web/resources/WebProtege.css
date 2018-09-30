@@ -92,8 +92,9 @@
 }
 
 .warningLabel {
-    border: solid 1px #ffe884;
-    background-color: #faf6c3;
+    color: literal("var(--warning--color)");
+    border: solid 1px literal("var(--warning--border-color)");
+    background-color: literal("var(--warning--background-color)");
     width: auto;
     height: auto;
     vertical-align: top;
