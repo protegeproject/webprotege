@@ -310,6 +310,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-form__horizontal-radio-button-group")
         String formHorizontalRadioButtonGroup();
+
+        @ClassName("home-icon")
+        String homeIcon();
     }
 
     interface DateTimePicker extends CssResource {
@@ -347,6 +350,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-topbar__separator")
         String topBarSeparator();
+
+        @ClassName("wp-topbar__home-icon")
+        String topBarHomeIcon();
+
+
     }
 
     interface LoginCss extends CssResource {

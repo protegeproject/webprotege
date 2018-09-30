@@ -20,6 +20,7 @@
 
     --btn--hover--color:                      #116cd6;
 
+    --wp-topbar--color:                         var(--primary--color);
     --topbar--background-color:                 var(--alternate--background-color);
 
     --inlay-panel--background-color:            var(--alternate--background-color);

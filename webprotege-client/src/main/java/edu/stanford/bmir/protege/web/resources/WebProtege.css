@@ -17,6 +17,7 @@
 @url commentIconUrl svgCommentSmallFilledIcon;
 @url eyeIconUrl eyeIcon;
 @url datetimeIconUrl dateTimeIcon;
+@url homeIconUrl homeIcon;
 
 .gwt-TabLayoutPanelTab {
     background-color: #c0c0c0;
@@ -356,4 +357,12 @@
 
 .wp-form__horizontal-radio-button-group > span+span {
     margin-left: 15px;
+}
+
+.home-icon {
+    mask: homeIconUrl no-repeat;
+    -webkit-mask: homeIconUrl no-repeat;
+    background-color: literal("var(--primary--color)");
+    width: 16px;
+    height: 15px;
 }
