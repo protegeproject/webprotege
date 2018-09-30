@@ -16,27 +16,35 @@
             <g:HTMLPanel addStyleNames="{wp.settings.content}">
                 <g:Label text="Create Account" addStyleNames="{wp.settings.title}"/>
 
-                <g:Label text="User name"/>
-                <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Jane Doe"/>
-                <g:Label ui:field="userNameErrorLabel" text="Please specify a user name"
-                         addStyleNames="{wp.style.errorLabel}"/>
+                <div class="{wp.style.formGroup}">
+                    <g:Label text="User name" addStyleNames="{wp.style.formLabel}"/>
+                    <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Jane Doe"/>
+                    <g:Label ui:field="userNameErrorLabel" text="Please specify a user name"
+                             addStyleNames="{wp.style.errorLabel}"/>
+                </div>
 
-                <g:Label text="Email address"/>
-                <g:TextBox ui:field="emailAddressField"/>
-                <g:Label ui:field="emailAddressErrorLabel" text="Please enter a valid email address"
-                         addStyleNames="{wp.style.errorLabel}"/>
+                <div class="{wp.style.formGroup}">
+                    <g:Label text="Email address" addStyleNames="{wp.style.formLabel}"/>
+                    <g:TextBox ui:field="emailAddressField"/>
+                    <g:Label ui:field="emailAddressErrorLabel" text="Please enter a valid email address"
+                             addStyleNames="{wp.style.errorLabel}"/>
+                </div>
 
                 <g:HTMLPanel addStyleNames="{wp.settings.group}">
 
-                    <g:Label text="Password"/>
-                    <g:PasswordTextBox ui:field="passwordField"/>
-                    <g:Label ui:field="passwordErrorLabel" text="Please enter a password"
-                             addStyleNames="{wp.style.errorLabel}"/>
+                    <div class="{wp.style.formGroup}">
+                        <g:Label text="Password" addStyleNames="{wp.style.formLabel}"/>
+                        <g:PasswordTextBox ui:field="passwordField"/>
+                        <g:Label ui:field="passwordErrorLabel" text="Please enter a password"
+                                 addStyleNames="{wp.style.errorLabel}"/>
+                    </div>
 
-                    <g:Label text="Confirm Password"/>
-                    <g:PasswordTextBox ui:field="confirmPasswordField"/>
-                    <g:Label ui:field="confirmPasswordErrorLabel" text="Passwords do not match"
-                             addStyleNames="{wp.style.errorLabel}"/>
+                    <div class="{wp.style.formGroup}">
+                        <g:Label text="Confirm Password" addStyleNames="{wp.style.formLabel}"/>
+                        <g:PasswordTextBox ui:field="confirmPasswordField"/>
+                        <g:Label ui:field="confirmPasswordErrorLabel" text="Passwords do not match"
+                                 addStyleNames="{wp.style.errorLabel}"/>
+                    </div>
 
                 </g:HTMLPanel>
             </g:HTMLPanel>
