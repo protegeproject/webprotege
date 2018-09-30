@@ -366,3 +366,11 @@
     width: 16px;
     height: 15px;
 }
+
+.wp-comment-small-filled-icon {
+    mask: commentIconUrl no-repeat;
+    -webkit-mask: commentIconUrl no-repeat;
+    background-color: literal("var(--primary--color)");
+    width: 16px;
+    height: 16px;
+}

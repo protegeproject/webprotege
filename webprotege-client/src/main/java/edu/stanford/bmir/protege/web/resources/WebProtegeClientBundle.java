@@ -284,6 +284,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String commentIconInset();
 
+        @ClassName("wp-comment-small-filled-icon")
+        String commentSmallFilledIcon();
+
         String derivedInformation();
 
         String errorBorder();
