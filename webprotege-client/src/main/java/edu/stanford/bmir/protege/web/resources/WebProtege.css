@@ -256,7 +256,7 @@
     background-color: inherit;
 }
 .noSelection:hover {
-    background-color: #f0f0f0;
+    background-color: literal("var(--item--hover--background-color)");
 }
 
 .errorLabel {

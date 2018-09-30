@@ -16,7 +16,6 @@
             overflow-x: hidden;
         }
         .main .gwt-SuggestBox {
-            background-color: white;
         }
         .buttonContainer {
             display: flex;

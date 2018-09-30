@@ -19,7 +19,7 @@
             flex-grow:     0;
             flex-shrink:   0;
             box-shadow:    0 0 10px 0 #e0e0e0;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid literal("var(--alternate--separator--color)");
             z-index: 1;
         }
 
@@ -39,8 +39,8 @@
         }
 
         .buttonBar {
-            background-color: #f0f0f0;
-            border-top:       1px solid #e0e0e0;
+            background-color: literal("var(--alternate--background-color)");
+            border-top:       1px solid literal("var(--alternate--separator--color)");
             padding:          5px;
             display:          flex;
             flex-direction:   row;

@@ -9,7 +9,7 @@
             margin-bottom: 20px;
             padding: 2px;
             box-shadow: 0 2px 5px #909090;
-            background-color: white;
+            background-color: literal("var(--primary--background-color)");
             display: flex;
             flex-direction: column;
             align-items: stretch;

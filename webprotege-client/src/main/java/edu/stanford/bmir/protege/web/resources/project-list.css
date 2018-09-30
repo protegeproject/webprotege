@@ -81,5 +81,5 @@
 }
 
 .wp-project-list__rows__row:hover {
-    background-color: literal("var(--alternate--background-color)");
+    background-color: literal("var(--item--hover--background-color)");
 }

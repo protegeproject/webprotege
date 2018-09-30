@@ -7,7 +7,7 @@
             white-space: nowrap;
         }
         .main:hover {
-            background-color: #f0f0f0;
+            background-color: literal("var(--item--hover--background-color)");
         }
         .checkBox {
             padding: 4px;

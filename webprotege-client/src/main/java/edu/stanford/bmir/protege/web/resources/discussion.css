@@ -10,7 +10,7 @@
 }
 
 .wp-disc-thread__outer {
-    border: 5px solid #f0f0f0;
+    border: 5px solid literal("var(--separator--color)");
 }
 
 .wp-disc-thread__inner {

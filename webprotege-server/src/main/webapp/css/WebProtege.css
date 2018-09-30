@@ -26,6 +26,7 @@
 
     --accent--color: #116cd6;
 
+    --item--hover--background-color:                  #f0f0f0;
 
     --selected-item--background-color:          #d5e1fa; /* #116cd6; */
     --selected-item--color:                     inherit;
@@ -130,7 +131,7 @@ a {
 }
 
 .widget-holder {
-    border-color: var(--separator--color);
+    border-color: var(--separator--color) !important;
 }
 
 .widget-holder-label {

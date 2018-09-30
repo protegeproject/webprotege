@@ -7,7 +7,7 @@
             vertical-align: middle;
         }
         .main:hover {
-            background-color: #f0f0f0;
+            background-color: literal("var(--item--hover--background-color)");
         }
         .label {
             display: flex;
