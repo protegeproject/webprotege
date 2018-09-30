@@ -4,10 +4,8 @@
     --primary--border-color: #f0f0f0;
     --primary--placeholder: rgba(200, 200, 200, 1.0);
 
-    --secondary--background-color: #f0f0f0;
-
-
-    --secondary-hairline--border-color: #e0e0e0;
+    --alternate--background-color: #f0f0f0;
+    --alternate--border-color: #e0e0e0;
 
 
 
@@ -22,17 +20,17 @@
 
     --btn--hover--color:                      #116cd6;
 
-    --topbar--background-color:                 var(--secondary--background-color);
+    --topbar--background-color:                 var(--alternate--background-color);
 
     --inlay-panel--background-color:            #f0f0f0;
 
-    --inlay-panel--border:                      1px solid var(--secondary-hairline--border-color);
+    --inlay-panel--border:                      1px solid var(--alternate--border-color);
 
     --inlay-panel--border-radius:               3px;
 
     --inlay-panel--alternate-background-color:  #fafaff;
 
-    --view-toolbar--background-color:           var(--secondary--background-color);
+    --view-toolbar--background-color:           var(--alternate--background-color);
 
     --error--color:                             #af0002;
 
@@ -263,7 +261,7 @@ select:disabled {
     background-size: 30px;
     background-position-y: 2px;
     background-position-x: 1px;
-    border-bottom: 1px solid var(--secondary-hairline--border-color);
+    border-bottom: 1px solid var(--alternate--border-color);
 }
 
 .gwt-DialogBox .Caption {
