@@ -26,7 +26,7 @@
             flex-grow: 1;
         }
         .main .searchedIri {
-            color: #707070 !important;
+            color: literal("var(--secondary--color)") !important;
             padding-bottom: 5px;
         }
     </ui:style>

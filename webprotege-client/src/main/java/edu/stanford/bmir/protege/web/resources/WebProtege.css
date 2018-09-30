@@ -79,7 +79,7 @@
 
 .wp-form-help-text {
     font-size: 11px;
-    color: #707070;
+    color: literal("var(--secondary--color)");
     font-weight: 400;
     padding-left: 0.25rem;
     padding-top: 0.25rem;

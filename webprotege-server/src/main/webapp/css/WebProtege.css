@@ -1,5 +1,11 @@
 :root {
+
+    /* Text color */
     --primary--color: #505050;
+    /*Used for items of lesser importance*/
+    --secondary--color: #707070;
+
+
     --primary--background-color: #ffffff;
     --primary--border-color: #f0f0f0;
     --primary--placeholder: rgba(200, 200, 200, 1.0);
