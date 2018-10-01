@@ -44,6 +44,17 @@ public class SetAnnotationValueViewImpl extends Composite implements SetAnnotati
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        requestFocus();
+    }
+
+    @Override
+    public void requestFocus() {
+        propertyField.requestFocus();
+    }
+
     @Nonnull
     @Override
     public Optional<OWLAnnotationPropertyData> getProperty() {
