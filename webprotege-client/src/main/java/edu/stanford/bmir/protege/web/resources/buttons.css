@@ -215,7 +215,7 @@
 }
 
 .wp-topbar__btn:hover {
-    color: #101010;
+    color: literal("var(--btn--hover--color)");
 }
 
 .wp-btn-up {
