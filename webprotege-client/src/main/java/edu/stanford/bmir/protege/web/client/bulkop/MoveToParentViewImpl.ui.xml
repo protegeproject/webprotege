@@ -5,5 +5,7 @@
     <g:HTMLPanel addStyleNames="{wp.style.form}">
         <g:Label text="New parent" addStyleNames="{wp.style.formLabel}"/>
         <g:SimplePanel ui:field="hierarchyFieldContainer"/>
+        <g:Label text="Specify the class that should be the new parent.  The selected classes will be move from
+        their current parent to this new parent." addStyleNames="{wp.style.formHelpText}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
