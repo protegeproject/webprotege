@@ -48,6 +48,8 @@
 
     --view-toolbar--background-color:               var(--alternate--background-color);
 
+    --card--box-shadow:                1px 2px 3px #c0c0c0;
+
     --error--color:                                 #af0002;
 
     --outline:                                      #94c0ed solid 2px;
@@ -113,7 +115,7 @@
         --view-toolbar--background-color:               var(--alternate--background-color);
         --error--color:                                 #af0002;
         --outline:                                      #94c0ed solid 2px;
-
+        --card--box-shadow:                none;
 
         --widgetmap-view-border-color:                  #454545;
         --widgetmap-view-header-background-color:       #454545;

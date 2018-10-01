@@ -19,7 +19,7 @@
     padding-left:   5px;
     padding-bottom: 10px;
 
-    box-shadow:     1px 2px 3px #c0c0c0;
+    box-shadow:     literal("var(--card--box-shadow)");
 
     overflow:       hidden;
 }
