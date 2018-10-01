@@ -23,6 +23,8 @@
 
     --accent--color:                                #116cd6;
 
+    --header-footer--box-shadow:                    0 0 10px 0 #e0e0e0;
+
     --item--hover--background-color:                #f0f0f0;
 
     --selected-item--background-color:              #d5e1fa; /* #116cd6; */
@@ -99,6 +101,10 @@
         --alternate--separator--color:                  #707070;
         --item--hover--background-color:                #707070;
         --accent--color:                                #3699ff;
+
+
+        --header-footer--box-shadow:                    none;
+
         --selected-item--background-color:              #0572e7;
         /* #116cd6; */
         --selected-item--color:                         inherit;

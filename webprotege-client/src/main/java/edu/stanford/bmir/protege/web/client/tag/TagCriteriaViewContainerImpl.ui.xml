@@ -8,7 +8,7 @@
             margin-right: 5px;
             margin-bottom: 20px;
             padding: 2px;
-            box-shadow: 0 2px 5px #909090;
+            box-shadow: literal("var(--card--box-shadow)");
             background-color: literal("var(--primary--background-color)");
             display: flex;
             flex-direction: column;
