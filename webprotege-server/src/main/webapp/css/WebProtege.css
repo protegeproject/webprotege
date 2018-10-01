@@ -80,9 +80,13 @@
 }
 
 
-/* Dark Mode */
-/*@media (prefers-dark-interface OR prefers-color-scheme: dark) {*/
-@media (max-width: 1000px) {
+/*
+DARK MODE
+
+This is an apple specific media query that works if Dark Mode is enabled in macOS Mojave.
+There's going to be something in Media Queries Level 5, but that is some way off.
+*/
+@media (prefers-dark-interface) {
     :root {
         /* Used for text color */
         --primary--color:                               #d0d0d0;
@@ -95,6 +99,7 @@
         /* Used for the color of separator lines and borders */
 
         --separator--color:                             #707070;
+
         /* Used for the color of placeholder text */
         --placeholder--color:                           rgba(70, 70, 70, 1.0);
         --alternate--background-color:                  #505050;
