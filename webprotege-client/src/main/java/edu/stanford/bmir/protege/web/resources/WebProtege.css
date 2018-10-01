@@ -375,3 +375,7 @@
     width: 16px;
     height: 16px;
 }
+
+.wp-form__text-block {
+    margin-bottom: 1.2rem;
+}

@@ -2,6 +2,8 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
+        <g:Label text="This action will merges the selected entities into a target entity.  This will replace usages of the selected entities with the target entity and will transfer annotations and relationships from the merged entities to the target entity.
+        To continue, specify the entity that you want to merge into." addStyleNames="{wp.style.formTextBlock}"/>
         <g:Label text="Target" addStyleNames="{wp.style.formLabel}"/>
         <g:SimplePanel ui:field="container"/>
     </g:HTMLPanel>

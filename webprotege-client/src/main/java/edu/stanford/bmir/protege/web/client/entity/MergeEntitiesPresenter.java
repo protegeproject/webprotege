@@ -66,8 +66,7 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
 
     @Override
     public String getHelpMessage() {
-        return "Merges the selected entities into a target entity.  This will replace usages of the selected entities with the target entity and will transfer annotations and relationships from the merged entities to the target entity.  To continue, specify the entity that you want to " +
-                "merge into.";
+        return "";
     }
 
     @Override

@@ -1042,7 +1042,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
 
 
     @DefaultMessage("This operation will merge the selected {0} into another {0}.<br><br>" +
-            "In the next step you should select another {0}. The currently selected {0} will be merged into this {0}.")
+            "Specify a class name in the field below.  The currently selected {0} will be merged into this {0}.")
     @Key("merge.description")
     String merge_description(String lowerCaseTypeName);
 

@@ -316,6 +316,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("home-icon")
         String homeIcon();
+
+        @ClassName("wp-form__text-block")
+        String formTextBlock();
     }
 
     interface DateTimePicker extends CssResource {
