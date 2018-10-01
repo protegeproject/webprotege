@@ -1,3 +1,4 @@
+@external wp-panel-filled;
 @external wp-value-list;
 @external wp-value-list__row;
 @external wp-value-list__editor;
@@ -9,6 +10,10 @@
 
 .wp-value-list__row {
     border-bottom: 1px solid literal("var(--separator--color)");
+}
+
+.wp-panel-filled .wp-value-list__row {
+    border-bottom: 1px solid transparent;
 }
 
 .wp-value-list__editor {
