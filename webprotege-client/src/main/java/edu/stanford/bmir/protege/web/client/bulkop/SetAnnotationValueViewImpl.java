@@ -5,6 +5,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
+import edu.stanford.bmir.protege.web.client.primitive.LanguageEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
@@ -36,11 +38,15 @@ public class SetAnnotationValueViewImpl extends Composite implements SetAnnotati
     @UiField(provided = true)
     PrimitiveDataEditorImpl valueField;
 
+    @UiField(provided = true)
+    DefaultLanguageEditor langEditor;
+
     @Inject
     public SetAnnotationValueViewImpl(@Nonnull PrimitiveDataEditorImpl propertyField,
                                       @Nonnull PrimitiveDataEditorImpl valueField) {
         this.propertyField = checkNotNull(propertyField);
         this.valueField = checkNotNull(valueField);
+        this.langEditor = (DefaultLanguageEditor) valueField.getLanguageEditor();
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

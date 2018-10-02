@@ -29,7 +29,11 @@ public class SetAnnotationValueAction implements ProjectAction<SetAnnotationValu
 
     private String commitMessage;
 
-    public SetAnnotationValueAction(ProjectId projectId, ImmutableSet<OWLEntity> entities, OWLAnnotationProperty property, OWLAnnotationValue value, String commitMessage) {
+    public SetAnnotationValueAction(@Nonnull ProjectId projectId,
+                                    @Nonnull ImmutableSet<OWLEntity> entities,
+                                    @Nonnull OWLAnnotationProperty property,
+                                    @Nonnull OWLAnnotationValue value,
+                                    @Nonnull String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property);
