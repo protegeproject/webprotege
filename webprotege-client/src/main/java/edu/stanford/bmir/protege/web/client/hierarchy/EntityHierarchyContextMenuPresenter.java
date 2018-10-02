@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.builder;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
@@ -167,17 +168,19 @@ public class EntityHierarchyContextMenuPresenter {
         editAnnotationsUiAction.setEnabled(false);
         moveToParentUiAction.setEnabled(false);
 
-        boolean selIsNonEmpty = !treeWidget.getSelectedKeys().isEmpty();
-        pruneBranchToRootAction.setEnabled(selIsNonEmpty);
-        pruneAllBranchesToRootAction.setEnabled(selIsNonEmpty);
-        clearPruningAction.setEnabled(selIsNonEmpty);
-        showIriAction.setEnabled(selIsNonEmpty);
-        showDirectLinkAction.setEnabled(selIsNonEmpty);
+        int selSize = treeWidget.getSelectedKeys().size();
+        boolean selIsNonEmpty = selSize > 0;
+        boolean selIsSingleton = selSize == 1;
+        pruneBranchToRootAction.setEnabled(selIsSingleton);
+        pruneAllBranchesToRootAction.setEnabled(selIsSingleton);
+        clearPruningAction.setEnabled(selIsSingleton);
+        showIriAction.setEnabled(selIsSingleton);
+        showDirectLinkAction.setEnabled(selIsSingleton);
 
 
         if (selIsNonEmpty) {
             permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
-            permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
+            permissionChecker.hasPermission(EDIT_ENTITY_TAGS, enabled -> editEntityTagsAction.setEnabled(selIsSingleton && enabled));
             permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, editAnnotationsUiAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, moveToParentUiAction::setEnabled);
