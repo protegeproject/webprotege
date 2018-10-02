@@ -58,7 +58,8 @@ public class MergeEntitiesActionHandler extends AbstractProjectChangeHandler<OWL
     protected ChangeListGenerator<OWLEntity> getChangeListGenerator(MergeEntitiesAction action, ExecutionContext executionContext) {
         return factory.create(action.getSourceEntity(),
                               action.getTargetEntity(),
-                              action.getTreatment());
+                              action.getTreatment(),
+                              action.getCommitMessage());
     }
 
     @Override

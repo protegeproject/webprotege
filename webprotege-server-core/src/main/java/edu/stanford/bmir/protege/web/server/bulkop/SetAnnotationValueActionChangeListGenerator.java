@@ -42,6 +42,9 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     @Nonnull
     private final MessageFormatter messageFormatter;
 
+    @Nonnull
+    private final String commitMessage;
+
     private OWLLiteral litTrue;
 
     @AutoFactory
@@ -50,7 +53,8 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
                                                        @Provided @Nonnull MessageFormatter messageFormatter,
                                                        @Nonnull ImmutableSet<OWLEntity> entities,
                                                        @Nonnull OWLAnnotationProperty property,
-                                                       @Nonnull OWLAnnotationValue value) {
+                                                       @Nonnull OWLAnnotationValue value,
+                                                       @Nonnull String commitMessage) {
         this.dataFactory = checkNotNull(dataFactory);
         this.litTrue = dataFactory.getOWLLiteral(true);
         this.rootOntology = checkNotNull(rootOntology);
@@ -58,6 +62,7 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
         this.property = checkNotNull(property);
         this.value = checkNotNull(value);
         this.messageFormatter = checkNotNull(messageFormatter);
+        this.commitMessage = checkNotNull(commitMessage);
     }
 
     @Override
@@ -90,16 +95,6 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<Set<OWLEntity>> result) {
-        if(property.isDeprecated()) {
-            if(value.equals(litTrue)) {
-                return messageFormatter.format("Deprecated {0} entities", entities.size());
-            }
-            else {
-                return messageFormatter.format("Undeprecated {0} entities", entities.size());
-            }
-        }
-        else {
-            return messageFormatter.format("Set {0} to {1} on {2} entities", property, value, entities.size());
-        }
+        return commitMessage;
     }
 }

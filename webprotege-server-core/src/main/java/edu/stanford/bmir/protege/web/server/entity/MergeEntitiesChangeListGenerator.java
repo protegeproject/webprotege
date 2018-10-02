@@ -70,8 +70,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     private final EntityDiscussionThreadRepository discussionThreadRepository;
 
     @Nonnull
-    private String changeMessage = "Merged entities";
-
+    private final String commitMessage;
 
     public MergeEntitiesChangeListGenerator(@Provided @Nonnull ProjectId projectId,
                                             @Provided @Nonnull OWLOntology rootOntology,
@@ -80,7 +79,8 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
                                             @Nonnull ImmutableSet<OWLEntity> sourceEntities,
                                             @Nonnull OWLEntity targetEntity,
                                             @Nonnull MergedEntityTreatment treatment,
-                                            @Provided @Nonnull EntityDiscussionThreadRepository discussionThreadRepository) {
+                                            @Provided @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
+                                            @Nonnull String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.rootOntology = checkNotNull(rootOntology);
         this.dataFactory = checkNotNull(dataFactory);
@@ -89,12 +89,11 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
         this.treatment = checkNotNull(treatment);
         this.msgFormatter = checkNotNull(msgFormatter);
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
+        this.commitMessage = checkNotNull(commitMessage);
     }
 
     @Override
     public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
-
-        changeMessage = msgFormatter.format("Merged {0} into {1}", sourceEntities, targetEntity);
 
         // Generate changes to perform a merge.  The order of the generation of these changes
         // is important.  Usage changes must be generated first.
@@ -223,6 +222,6 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<OWLEntity> result) {
-        return changeMessage;
+        return commitMessage;
     }
 }

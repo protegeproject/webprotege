@@ -105,7 +105,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                                     sourceEntities,
                                                     targetEntity,
                                                     treatment,
-                                                    discussionThreadRepo);
+                                                    discussionThreadRepo, "The commit message");
         OntologyChangeList<?> changeList = gen.generateChanges(new ChangeGenerationContext(UserId.getUserId("Bob")));
         manager.applyChanges(changeList.getChanges());
     }

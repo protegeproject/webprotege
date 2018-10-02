@@ -52,6 +52,9 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
     @Nonnull
     private final NewAnnotationData newAnnotationData;
 
+    @Nonnull
+    private final String commitMessage;
+
     @AutoFactory
     public EditAnnotationsChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                               @Nonnull ImmutableSet<OWLEntity> entities,
@@ -60,7 +63,8 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
                                               @Nonnull Optional<OWLAnnotationProperty> matchProperty,
                                               @Nonnull Optional<String> matchLexicalValue,
                                               boolean regEx, @Nonnull Optional<String> matchLangTag,
-                                              @Nonnull NewAnnotationData newAnnotationData) {
+                                              @Nonnull NewAnnotationData newAnnotationData,
+                                              @Nonnull String commitMessage) {
         this.dataFactory = checkNotNull(dataFactory);
         this.entities = checkNotNull(entities);
         this.operation = checkNotNull(operation);
@@ -70,6 +74,7 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
         this.matchLang = checkNotNull(matchLangTag);
         this.regEx = regEx;
         this.newAnnotationData = checkNotNull(newAnnotationData);
+        this.commitMessage = checkNotNull(commitMessage);
     }
 
     @Override
@@ -167,6 +172,6 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<Boolean> result) {
-        return "Replaced annotation values";
+        return commitMessage;
     }
 }

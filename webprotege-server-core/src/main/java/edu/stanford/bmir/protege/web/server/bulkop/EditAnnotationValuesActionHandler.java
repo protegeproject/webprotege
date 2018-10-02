@@ -51,7 +51,8 @@ public class EditAnnotationValuesActionHandler extends AbstractProjectChangeHand
                               action.getLexicalValueExpression(),
                               action.isLexicalValueExpressionIsRegEx(),
                               action.getLangTagExpression(),
-                              action.getNewAnnotationData());
+                              action.getNewAnnotationData(),
+                              action.getCommitMessage());
     }
 
     @Override

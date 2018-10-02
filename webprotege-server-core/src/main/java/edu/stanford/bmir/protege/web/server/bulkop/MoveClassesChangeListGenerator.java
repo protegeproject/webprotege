@@ -38,18 +38,23 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
     @Nonnull
     private final MessageFormatter messageFormatter;
 
+    @Nonnull
+    private final String commitMessage;
+
     @Inject
     @AutoFactory
     public MoveClassesChangeListGenerator(@Nonnull ImmutableSet<OWLClass> clses,
                                           @Nonnull OWLClass parent,
                                           @Provided @Nonnull OWLOntology rootOntology,
                                           @Provided @Nonnull OWLDataFactory dataFactory,
-                                          @Provided @Nonnull MessageFormatter messageFormatter) {
+                                          @Provided @Nonnull MessageFormatter messageFormatter,
+                                          @Nonnull String commitMessage) {
         this.entities = checkNotNull(clses);
         this.parent = checkNotNull(parent);
         this.rootOntology = checkNotNull(rootOntology);
         this.dataFactory = checkNotNull(dataFactory);
         this.messageFormatter = checkNotNull(messageFormatter);
+        this.commitMessage = checkNotNull(commitMessage);
     }
 
     @Override
@@ -88,6 +93,6 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<Boolean> result) {
-        return messageFormatter.format("Moved classes to {0}", parent);
+        return commitMessage;
     }
 }
