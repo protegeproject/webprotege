@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -22,7 +23,7 @@ public class CreateClassesAction extends CreateEntitiesInHierarchyAction<CreateC
     public CreateClassesAction(@Nonnull ProjectId projectId,
                                @Nonnull String sourceText,
                                @Nonnull String langTag,
-                               @Nonnull Optional<OWLClass> superClass) {
-        super(projectId, sourceText, langTag, superClass);
+                               @Nonnull ImmutableSet<OWLClass> parents) {
+        super(projectId, sourceText, langTag, parents);
     }
 }

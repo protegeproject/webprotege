@@ -2,19 +2,19 @@ package edu.stanford.bmir.protege.web.server.individuals;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.AbstractCreateEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 /**
@@ -33,20 +33,20 @@ public class CreateIndividualsChangeListGenerator extends AbstractCreateEntities
     public CreateIndividualsChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                                 @Provided @Nonnull MessageFormatter msg,
                                                 @Provided @Nonnull OWLOntology rootOntology,
-                                                @Nonnull Optional<OWLClass> parent,
+                                                @Nonnull ImmutableSet<OWLClass> parents,
                                                 @Nonnull String sourceText,
                                                 @Nonnull String langTag) {
-        super(NAMED_INDIVIDUAL, sourceText, langTag, parent, rootOntology, dataFactory, msg);
+        super(NAMED_INDIVIDUAL, sourceText, langTag, parents, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
     @Override
     protected Set<? extends OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity,
                                                                   ChangeGenerationContext context,
-                                                                  Optional<OWLClass> parent) {
-        return parent.filter(par -> !par.isOWLThing())
-                     .map(par -> dataFactory.getOWLClassAssertionAxiom(par, freshEntity))
-                     .map(Collections::singleton)
-                     .orElse(emptySet());
+                                                                  ImmutableSet<OWLClass> parents) {
+        return parents.stream()
+                .filter(ClassExpression::isNotOwlThing)
+                .map(parent -> dataFactory.getOWLClassAssertionAxiom(parent, freshEntity))
+                .collect(toSet());
     }
 }

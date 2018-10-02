@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -16,6 +17,7 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.DATA_PROPERTY;
 
 /**
@@ -36,21 +38,17 @@ public class CreateDataPropertiesChangeGenerator extends AbstractCreateEntitiesC
                                                @Provided @Nonnull OWLOntology rootOntology,
                                                @Nonnull String sourceText,
                                                @Nonnull String langTag,
-                                               @Nonnull Optional<OWLDataProperty> parent) {
-        super(DATA_PROPERTY, sourceText, langTag, parent, rootOntology, dataFactory, msg);
+                                               @Nonnull ImmutableSet<OWLDataProperty> parents) {
+        super(DATA_PROPERTY, sourceText, langTag, parents, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
     @Override
     protected Set<? extends OWLAxiom> createParentPlacementAxioms(OWLDataProperty freshEntity,
                                                                   ChangeGenerationContext context,
-                                                                  Optional<OWLDataProperty> parent) {
-        if (parent.isPresent()) {
-            OWLAxiom ax = dataFactory.getOWLSubDataPropertyOfAxiom(freshEntity, parent.get());
-            return singleton(ax);
-        }
-        else {
-            return emptySet();
-        }
+                                                                  ImmutableSet<OWLDataProperty> parents) {
+        return parents.stream()
+                .map(parent -> dataFactory.getOWLSubDataPropertyOfAxiom(freshEntity, parent))
+                .collect(toSet());
     }
 }

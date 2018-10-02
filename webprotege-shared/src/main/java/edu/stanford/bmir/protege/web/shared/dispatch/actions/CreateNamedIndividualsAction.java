@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -18,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CreateNamedIndividualsAction extends AbstractCreateEntitiesAction<CreateNamedIndividualsResult, OWLNamedIndividual> {
 
-    private OWLClass type;
+    private ImmutableSet<OWLClass> types;
 
     private CreateNamedIndividualsAction() {
     }
@@ -31,26 +32,26 @@ public class CreateNamedIndividualsAction extends AbstractCreateEntitiesAction<C
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
-                                        @Nonnull OWLClass type,
+                                        @Nonnull ImmutableSet<OWLClass> type,
                                         @Nonnull String sourceText,
                                         @Nonnull String langTag) {
         super(projectId, sourceText, langTag);
-        this.type = checkNotNull(type);
+        this.types = checkNotNull(type);
     }
 
     /**
      * Gets the type for the individuals.
      * @return The type. Not {@code null}.
      */
-    public Optional<OWLClass> getType() {
-        return Optional.ofNullable(type);
+    public ImmutableSet<OWLClass> getTypes() {
+        return types;
     }
 
 
     @Override
     public String toString() {
         return toStringHelper("CreateNamedIndividualsAction")
-                .add("type", type)
+                .add("types", types)
                 .add("sourceText", getSourceText())
                 .add("langTag", getLangTag())
                 .toString();

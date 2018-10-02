@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
@@ -35,10 +36,12 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
+import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
 
@@ -233,8 +236,12 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                                      new CreateClassesAction(projectId,
                                                                              browserText,
                                                                              langTag,
-                                                                             getFirstSelectedClass())
+                                                                             getSelectedOwlClasses())
         );
+    }
+
+    private ImmutableSet<OWLClass> getSelectedOwlClasses() {
+        return treeWidget.getSelectedKeys().stream().map(k -> k.asOWLClass()).collect(toImmutableSet());
     }
 
     private void handleDelete() {

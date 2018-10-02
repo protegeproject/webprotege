@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -39,7 +40,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     private final String langTag;
 
     @Nonnull
-    private final Optional<P> parent;
+    private final ImmutableSet<P> parents;
 
     @Nonnull
     private final OWLOntology rootOntology;
@@ -68,21 +69,21 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @param entityType The type of entities that are created by this change generator.  Not {@code null}.
      * @param sourceText The set of browser text strings that correspond to short names of the fresh entities that will
      * be created.  Not {@code null}.  May be empty.
-     * @param parent The parent entity.  Not {@code null}.
+     * @param parents The parent entities.  Not {@code null}.
      * @param msg
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public AbstractCreateEntitiesChangeListGenerator(@Nonnull EntityType<E> entityType,
                                                      @Nonnull String sourceText,
                                                      @Nonnull String langTag,
-                                                     @Nonnull Optional<P> parent,
+                                                     @Nonnull ImmutableSet<P> parents,
                                                      @Nonnull OWLOntology rootOntology,
                                                      @Nonnull OWLDataFactory dataFactory,
                                                      @Nonnull MessageFormatter msg) {
         this.entityType = entityType;
         this.sourceText = sourceText;
         this.langTag = langTag;
-        this.parent = parent;
+        this.parents = parents;
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
         this.msg = msg;
@@ -106,7 +107,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
                 freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText, Optional.of(langTag.trim()));
                 builder.addAxiom(rootOntology, dataFactory.getOWLDeclarationAxiom(freshEntity));
             }
-            for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, context, parent)) {
+            for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, context, parents)) {
                 builder.addAxiom(rootOntology, axiom);
             }
             freshEntities.add(freshEntity);
@@ -147,13 +148,13 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * Creates any extra axioms that are necessary to set up the "parent" association with the specified fresh entity.
      * @param freshEntity The fresh entity that was created. Not {@code null}.
      * @param context The change generation context. Not {@code null}.
-     * @param parent The optional parent. Not {@code null}.
+     * @param parents The optional parents. Not {@code null}.
      * @return A possibly empty set of axioms representing axioms that need to be added to the project ontologies to
      * associate the specified fresh entity with its optional parent.  Not {@code null}.
      */
     protected abstract Set<? extends OWLAxiom> createParentPlacementAxioms(E freshEntity,
                                                                            ChangeGenerationContext context,
-                                                                           Optional<P> parent);
+                                                                           ImmutableSet<P> parents);
 
     @Nonnull
     @Override
@@ -165,13 +166,17 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
             mainMsg = msg.format("Created {0} {1}",
                                        entityType.getPrintName().toLowerCase(),
                                        entities);
-            mainMsg += parent.map(p -> msg.format(" {0} {1}", getSingularRelationship(), p)).orElse("");
+            if (!parents.isEmpty()) {
+                mainMsg += msg.format(" {0} {1}", getSingularRelationship(), parents);
+            }
         }
         else {
             mainMsg = msg.format("Created {0} {1}",
                               entityType.getPluralPrintName().toLowerCase(),
                               entities);
-            mainMsg += parent.map(p -> msg.format(" {0} {1}", getPluralRelationship(), p)).orElse("");
+            if (!parents.isEmpty()) {
+                mainMsg += msg.format(" {0} {1}", getPluralRelationship(), parents);
+            }
         }
         return mainMsg;
     }

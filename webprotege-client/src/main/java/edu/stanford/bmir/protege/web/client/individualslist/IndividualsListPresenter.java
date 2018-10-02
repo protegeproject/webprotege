@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.Timer;
@@ -246,7 +247,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                              this::handleIndividualsCreated,
                                              (projectId, createFromText, langTag)
                                                      -> new CreateNamedIndividualsAction(projectId,
-                                                                                         currentType.orElse(DataFactory.getOWLThing()),
+                                                                                         ImmutableSet.of(currentType.orElse(DataFactory.getOWLThing())),
                                                                                          createFromText,
                                                                                          langTag));
     }

@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -10,11 +12,10 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
 /**
@@ -35,7 +36,7 @@ public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeLi
                                         @Provided @Nonnull OWLOntology rootOntology,
                                         @Nonnull String sourceText,
                                         @Nonnull String langTag,
-                                        @Nonnull Optional<OWLClass> parent) {
+                                        @Nonnull ImmutableSet<OWLClass> parent) {
         super(CLASS, sourceText, langTag, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
@@ -43,13 +44,10 @@ public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeLi
     @Override
     protected Set<? extends OWLAxiom> createParentPlacementAxioms(OWLClass freshEntity,
                                                                   ChangeGenerationContext context,
-                                                                  Optional<OWLClass> parent) {
-        if (parent.isPresent()) {
-            OWLAxiom ax = dataFactory.getOWLSubClassOfAxiom(freshEntity, parent.get());
-            return Collections.singleton(ax);
-        }
-        else {
-            return Collections.emptySet();
-        }
+                                                                  ImmutableSet<OWLClass> parents) {
+        return parents.stream()
+                .filter(ClassExpression::isNotOwlThing)
+                .map(parent -> dataFactory.getOWLSubClassOfAxiom(freshEntity, parent))
+                .collect(toSet());
     }
 }

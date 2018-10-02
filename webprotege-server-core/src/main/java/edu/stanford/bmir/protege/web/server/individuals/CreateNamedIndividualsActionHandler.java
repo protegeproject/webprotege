@@ -75,7 +75,7 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
                                                 @Nonnull ExecutionContext executionContext) {
         EventTag eventTag = eventManager.getCurrentTag();
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
-                                                                                                factory.create(action.getType(),
+                                                                                                factory.create(action.getTypes(),
                                                                                                                action.getSourceText(),
                                                                                                                action.getLangTag()));
         EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(eventTag);

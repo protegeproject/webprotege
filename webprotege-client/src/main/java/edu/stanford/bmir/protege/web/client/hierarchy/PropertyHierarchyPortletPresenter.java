@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -27,16 +28,15 @@ import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
@@ -233,7 +233,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                            treeWidget,
                                            createAction,
                                            deleteAction)
-                                   .install();
+                .install();
         EntityHierarchyDropHandler entityHierarchyDropHandler = entityHierarchyDropHandlerProvider.get();
         treeWidget.setDropHandler(entityHierarchyDropHandler);
         entityHierarchyDropHandler.start(hierarchyId);
@@ -245,7 +245,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleSelectionChanged(SelectionChangeEvent selectionChangeEvent, TreeWidget<EntityNode, OWLEntity> treeWidget) {
-        if(!treeWidget.isAttached()) {
+        if (!treeWidget.isAttached()) {
             return;
         }
         GWT.log("[PropertyHierarchyPortletPresenter] handling selection changed in tree ");
@@ -305,7 +305,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private void setSelectionInTree(@Nonnull OWLEntity sel) {
         if (sel.isOWLObjectProperty()) {
             view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
-            if(!objectPropertyTree.getSelectedKeys().contains(sel)) {
+            if (!objectPropertyTree.getSelectedKeys().contains(sel)) {
                 objectPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
             }
         }
@@ -344,7 +344,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                                      new CreateAnnotationPropertiesAction(projectId,
                                                                                           browserText,
                                                                                           langTag,
-                                                                                          getSelectedAnnotationProperty())
+                                                                                          getSelectedAnnotationProperties())
         );
     }
 
@@ -355,7 +355,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                                      new CreateDataPropertiesAction(projectId,
                                                                                     browserText,
                                                                                     langTag,
-                                                                                    getSelectedDataProperty())
+                                                                                    getSelectedDataProperties())
         );
     }
 
@@ -366,28 +366,34 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                                      new CreateObjectPropertiesAction(projectId,
                                                                                       browserText,
                                                                                       langTag,
-                                                                                      getSelectedObjectProperty())
+                                                                                      getSelectedObjectProperties())
         );
     }
 
-    private Optional<OWLObjectProperty> getSelectedObjectProperty() {
-        return objectPropertyTree.getFirstSelectedKey()
-                                 .filter(sel -> sel instanceof OWLObjectProperty)
-                                 .map(sel -> (OWLObjectProperty) sel);
+    private ImmutableSet<OWLObjectProperty> getSelectedObjectProperties() {
+        return objectPropertyTree.getSelectedKeys()
+                .stream()
+                .filter(sel -> sel instanceof OWLObjectProperty)
+                .map(sel -> (OWLObjectProperty) sel)
+                .collect(toImmutableSet());
     }
 
 
-    private Optional<OWLDataProperty> getSelectedDataProperty() {
-        return dataPropertyTree.getFirstSelectedKey()
-                               .filter(sel -> sel instanceof OWLDataProperty)
-                               .map(sel -> (OWLDataProperty) sel);
+    private ImmutableSet<OWLDataProperty> getSelectedDataProperties() {
+        return dataPropertyTree.getSelectedKeys()
+                .stream()
+                .filter(sel -> sel instanceof OWLDataProperty)
+                .map(sel -> (OWLDataProperty) sel)
+                .collect(toImmutableSet());
     }
 
 
-    private Optional<OWLAnnotationProperty> getSelectedAnnotationProperty() {
-        return annotationPropertyTree.getFirstSelectedKey()
-                                     .filter(sel -> sel instanceof OWLAnnotationProperty)
-                                     .map(sel -> (OWLAnnotationProperty) sel);
+    private ImmutableSet<OWLAnnotationProperty> getSelectedAnnotationProperties() {
+        return annotationPropertyTree.getSelectedKeys()
+                .stream()
+                .filter(sel -> sel instanceof OWLAnnotationProperty)
+                .map(sel -> (OWLAnnotationProperty) sel)
+                .collect(toImmutableSet());
     }
 
     private void handleDelete() {

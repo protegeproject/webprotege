@@ -20,4 +20,8 @@ public class ClassExpression {
     public static OWLClass asOWLClass(@Nonnull OWLClassExpression classExpression) {
         return classExpression.asOWLClass();
     }
+
+    public static Boolean isNotOwlThing(@Nonnull OWLClassExpression classExpression) {
+        return !classExpression.isOWLThing();
+    }
 }

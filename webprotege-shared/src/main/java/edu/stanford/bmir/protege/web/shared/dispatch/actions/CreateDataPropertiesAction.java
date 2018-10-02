@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -18,8 +19,8 @@ public class CreateDataPropertiesAction extends CreateEntitiesInHierarchyAction<
     public CreateDataPropertiesAction(@Nonnull ProjectId projectId,
                                       @Nonnull String sourceText,
                                       @Nonnull String langTag,
-                                      @Nonnull Optional<OWLDataProperty> parent) {
-        super(projectId, sourceText, langTag, parent);
+                                      @Nonnull ImmutableSet<OWLDataProperty> parents) {
+        super(projectId, sourceText, langTag, parents);
     }
 
     @GwtSerializationConstructor
