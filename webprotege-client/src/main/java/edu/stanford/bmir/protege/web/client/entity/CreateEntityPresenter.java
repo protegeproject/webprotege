@@ -48,9 +48,6 @@ public class CreateEntityPresenter {
     @Nonnull
     private final Messages messages;
 
-//    @Nonnull
-//    private CreateEntitiesDialogController dialogController;
-
     private Optional<String> currentLangTag = Optional.empty();
 
     @Inject
