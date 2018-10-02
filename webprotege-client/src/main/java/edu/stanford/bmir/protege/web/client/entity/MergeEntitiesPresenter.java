@@ -5,7 +5,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.bulkop.BulkEditOperationPresenter;
+import edu.stanford.bmir.protege.web.client.bulkop.BulkOpMessageFormatter;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
+import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.entity.MergeEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -35,13 +37,14 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
     private final Messages messages;
 
     @Nonnull
-    private HandlerRegistration selectionHandlerRegistration = () -> {};
-
-    @Nonnull
     private final MergeEntitiesView view;
 
     @Nonnull
     private final HierarchyFieldPresenter hierarchyFieldPresenter;
+
+    @Nonnull
+    private HandlerRegistration selectionHandlerRegistration = () -> {
+    };
 
     @Inject
     public MergeEntitiesPresenter(@Nonnull MergeEntitiesView view,
@@ -83,10 +86,21 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
 
     @Nonnull
     @Override
-    public Optional<? extends Action<?>> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
+    public Optional<? extends Action<?>> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
         return hierarchyFieldPresenter
                 .getEntity()
                 .map(target -> createMergeAction(entities, target));
+    }
+
+    @Nonnull
+    @Override
+    public String getDefaultCommitMessage(ImmutableSet<? extends OWLEntityData> entities) {
+        return "Merged "
+                + BulkOpMessageFormatter.sortAndFormat(entities)
+                + " into "
+                + hierarchyFieldPresenter.getEntity()
+                .map(HasBrowserText::getBrowserText)
+                .orElse("other entity");
     }
 
     private MergeEntitiesAction createMergeAction(@Nonnull ImmutableSet<OWLEntity> entities, OWLEntityData target) {
@@ -94,16 +108,16 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
     }
 
     private void displayConfirmationMessage() {
-//                String typePluralName = sourceEntity.map(e -> e.getEntityType().getPluralPrintName()).orElse("Entities");
-//                String mergeEntitiesMsg = messages.merge_mergeEntities(typePluralName);
-//                MessageBox.showConfirmBox(QUESTION,
-//                                          mergeEntitiesMsg,
-//                                          messages.merge_confirmMergeMessage(),
-//                                          NO,
-//                                          this::end,
-//                                          DialogButton.get(mergeEntitiesMsg),
-//                                          this::performMerge,
-//                                                                            NO);
+        //                String typePluralName = sourceEntity.map(e -> e.getEntityType().getPluralPrintName()).orElse("Entities");
+        //                String mergeEntitiesMsg = messages.merge_mergeEntities(typePluralName);
+        //                MessageBox.showConfirmBox(QUESTION,
+        //                                          mergeEntitiesMsg,
+        //                                          messages.merge_confirmMergeMessage(),
+        //                                          NO,
+        //                                          this::end,
+        //                                          DialogButton.get(mergeEntitiesMsg),
+        //                                          this::performMerge,
+        //                                                                            NO);
     }
 
     @Override

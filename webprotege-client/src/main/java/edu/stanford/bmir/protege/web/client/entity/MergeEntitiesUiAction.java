@@ -31,7 +31,7 @@ public class MergeEntitiesUiAction extends AbstractUiAction {
     private final BulkEditOperationWorkflowFactory workflowFactory;
 
     @Nullable
-    private Supplier<ImmutableSet<OWLEntity>> selectionSupplier = null;
+    private Supplier<ImmutableSet<OWLEntityData>> selectionSupplier = null;
 
     @Inject
     public MergeEntitiesUiAction(@Nonnull Messages messages,
@@ -42,7 +42,7 @@ public class MergeEntitiesUiAction extends AbstractUiAction {
         this.workflowFactory = checkNotNull(workflowFactory);
     }
 
-    public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntity>> selectionSupplier) {
+    public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntityData>> selectionSupplier) {
         this.selectionSupplier = checkNotNull(selectionSupplier);
     }
 
@@ -55,7 +55,7 @@ public class MergeEntitiesUiAction extends AbstractUiAction {
         if(selectionSupplier == null) {
             throw new RuntimeException("Selection supplier not set");
         }
-        ImmutableSet<OWLEntity> entityData = selectionSupplier.get();
+        ImmutableSet<OWLEntityData> entityData = selectionSupplier.get();
         BulkEditOperationWorkflow workflow = workflowFactory.create(presenter, entityData);
         workflow.start();
     }

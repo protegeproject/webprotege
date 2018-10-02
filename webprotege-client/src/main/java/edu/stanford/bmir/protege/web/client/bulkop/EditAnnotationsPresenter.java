@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.bulkop.EditAnnotationsAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -42,6 +43,14 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
         return getTitle();
     }
 
+    @Nonnull
+    @Override
+    public String getDefaultCommitMessage(@Nonnull ImmutableSet<? extends OWLEntityData> entities) {
+        return view.getOperation().getPrintName()
+                + " annotations on "
+                + BulkOpMessageFormatter.sortAndFormat(entities);
+    }
+
     @Override
     public String getHelpMessage() {
         return "Replaces, adds or deletes annotation values that match a given property, value and language tag";
@@ -59,7 +68,7 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
 
     @Nonnull
     @Override
-    public Optional<EditAnnotationsAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
+    public Optional<EditAnnotationsAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
         return Optional.of(new EditAnnotationsAction(projectId,
                                                      entities,
                                                      view.getOperation(),

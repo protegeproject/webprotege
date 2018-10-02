@@ -7,9 +7,19 @@ package edu.stanford.bmir.protege.web.shared.bulkop;
  */
 public enum Operation {
 
-    REPLACE,
+    REPLACE("Replaced"),
 
-    DELETE,
+    DELETE("Deleted"),
 
-    AUGMENT
+    AUGMENT("Added");
+
+    private String printName;
+
+    Operation(String printName) {
+        this.printName = printName;
+    }
+
+    public String getPrintName() {
+        return printName;
+    }
 }

@@ -8,7 +8,10 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -17,8 +20,11 @@ import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -37,7 +43,7 @@ public class BulkEditOperationWorkflow {
     private final BulkEditOperationViewContainer viewContainer;
 
     @Nonnull
-    private final ImmutableSet<OWLEntity> entities;
+    private final ImmutableSet<OWLEntityData> entities;
 
     @Nonnull
     private final ModalPresenter modalPresenter;
@@ -47,7 +53,7 @@ public class BulkEditOperationWorkflow {
     public BulkEditOperationWorkflow(@Provided @Nonnull DispatchServiceManager dispatch,
                                      @Provided @Nonnull BulkEditOperationViewContainer viewContainer,
                                      @Nonnull BulkEditOperationPresenter presenter,
-                                     @Nonnull ImmutableSet<OWLEntity> entities,
+                                     @Nonnull ImmutableSet<OWLEntityData> entities,
                                      @Provided @Nonnull ModalPresenter modalPresenter) {
         this.dispatch = checkNotNull(dispatch);
         this.presenter = checkNotNull(presenter);
@@ -73,8 +79,18 @@ public class BulkEditOperationWorkflow {
             presenter.displayErrorMessage();
         }
         else {
-            presenter.createAction(entities).ifPresent(this::executeAction);
-            closer.closeModal();
+            ImmutableSet<OWLEntity> rawEntities = entities.stream()
+                    .map(OWLEntityData::getEntity)
+                    .collect(toImmutableSet());
+            InputBox.showDialog(presenter.getTitle() + " Commit Message",
+                                true,
+                                presenter.getDefaultCommitMessage(entities),
+                                input -> {
+                                    presenter.createAction(rawEntities, input)
+                                            .ifPresent(this::executeAction);
+                                    closer.closeModal();
+                                });
+
         }
     }
 

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -26,7 +27,7 @@ public class MoveToParentUiAction extends AbstractUiAction {
     private final BulkEditOperationWorkflowFactory workflowFactory;
 
     @Nonnull
-    private Supplier<ImmutableSet<OWLEntity>> selectionSupplier = ImmutableSet::of;
+    private Supplier<ImmutableSet<OWLEntityData>> selectionSupplier = ImmutableSet::of;
 
     @Inject
     public MoveToParentUiAction(@Nonnull MoveEntitiesToParentPresenter presenter,
@@ -40,13 +41,13 @@ public class MoveToParentUiAction extends AbstractUiAction {
         parentPresenter.setEntityType(entityType);
     }
 
-    public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntity>> selectionSupplier) {
+    public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntityData>> selectionSupplier) {
         this.selectionSupplier = checkNotNull(selectionSupplier);
     }
 
     @Override
     public void execute() {
-        ImmutableSet<OWLEntity> entities = selectionSupplier.get();
+        ImmutableSet<OWLEntityData> entities = selectionSupplier.get();
         if(entities.isEmpty()) {
             return;
         }

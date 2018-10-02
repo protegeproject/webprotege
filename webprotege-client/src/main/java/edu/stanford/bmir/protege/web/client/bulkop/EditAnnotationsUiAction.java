@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ public class EditAnnotationsUiAction extends AbstractUiAction {
     private final BulkEditOperationWorkflowFactory workflowFactory;
 
     @Nonnull
-    private Supplier<ImmutableSet<OWLEntity>> selectionSupplier = ImmutableSet::of;
+    private Supplier<ImmutableSet<OWLEntityData>> selectionSupplier = ImmutableSet::of;
 
     @Inject
     public EditAnnotationsUiAction(@Nonnull EditAnnotationsPresenter presenter,
@@ -36,7 +37,7 @@ public class EditAnnotationsUiAction extends AbstractUiAction {
 
     @Override
     public void execute() {
-        ImmutableSet<OWLEntity> entities = selectionSupplier.get();
+        ImmutableSet<OWLEntityData> entities = selectionSupplier.get();
         if(entities.isEmpty()) {
             return;
         }
@@ -44,7 +45,7 @@ public class EditAnnotationsUiAction extends AbstractUiAction {
         workflow.start();
     }
 
-    public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntity>> selectionSupplier) {
+    public void setSelectionSupplier(@Nonnull Supplier<ImmutableSet<OWLEntityData>> selectionSupplier) {
         this.selectionSupplier = checkNotNull(selectionSupplier);
     }
 }

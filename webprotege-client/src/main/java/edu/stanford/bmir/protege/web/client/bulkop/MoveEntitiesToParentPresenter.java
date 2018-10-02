@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyFieldPresenter;
+import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.bulkop.MoveEntitiesToParentAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -67,6 +66,18 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
         return "Moves the selected " + entityType.getPluralPrintName().toLowerCase() + " from their current location to another location in the " + entityType.getPrintName().toLowerCase() + " hierarchy.";
     }
 
+    @Nonnull
+    @Override
+    public String getDefaultCommitMessage(ImmutableSet<? extends OWLEntityData> entities) {
+        return "Moved "
+                + BulkOpMessageFormatter.sortAndFormat(entities)
+                + " to "
+                + hierarchyFieldPresenter
+                .getEntity()
+                .map(HasBrowserText::getBrowserText)
+                .orElse("new parent");
+    }
+
     @Override
     public void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus) {
         hierarchyFieldPresenter.setSyncWithCurrentSelectionVisible(false);
@@ -82,7 +93,7 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
 
     @Nonnull
     @Override
-    public Optional<MoveEntitiesToParentAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
+    public Optional<MoveEntitiesToParentAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
         ImmutableSet<OWLClass> clses = entities.stream()
                 .filter(OWLEntity::isOWLClass)
                 .map(OWLEntity::asOWLClass)

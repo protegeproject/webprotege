@@ -2,9 +2,10 @@ package edu.stanford.bmir.protege.web.client.bulkop;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.bulkop.SetAnnotationValueAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -56,6 +57,17 @@ public class SetAnnotationValuePresenter implements BulkEditOperationPresenter {
         return "Set annotation value";
     }
 
+    @Nonnull
+    @Override
+    public String getDefaultCommitMessage(@Nonnull ImmutableSet<? extends OWLEntityData> entities) {
+        return "Set "
+                + view.getProperty().map(HasBrowserText::getBrowserText).orElse("property")
+                + " value to "
+                + view.getValue().map(HasBrowserText::getBrowserText).orElse("")
+                + " on "
+                + BulkOpMessageFormatter.sortAndFormat(entities);
+    }
+
     @Override
     public String getHelpMessage() {
         return "Sets the value for a specific annotation property to a specific value for the selected entities";
@@ -86,7 +98,7 @@ public class SetAnnotationValuePresenter implements BulkEditOperationPresenter {
 
     @Nonnull
     @Override
-    public Optional<SetAnnotationValueAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities) {
+    public Optional<SetAnnotationValueAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
         return getProperty().flatMap(prop -> getValue().map(val -> createAction(entities, prop, val)));
     }
 

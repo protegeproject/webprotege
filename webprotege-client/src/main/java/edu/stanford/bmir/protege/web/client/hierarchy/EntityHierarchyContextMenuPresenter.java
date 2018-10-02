@@ -16,20 +16,20 @@ import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MERGE_ENTITIES;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
 /**
@@ -68,11 +68,11 @@ public class EntityHierarchyContextMenuPresenter {
     @Nonnull
     private final EditEntityTagsUiAction editEntityTagsAction;
 
-    @Nullable
-    private PopupMenu contextMenu;
-
     @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    @Nullable
+    private PopupMenu contextMenu;
 
     private UIAction pruneBranchToRootAction;
 
@@ -115,7 +115,7 @@ public class EntityHierarchyContextMenuPresenter {
     }
 
     private void showContextMenu(ContextMenuEvent event) {
-        if(contextMenu == null) {
+        if (contextMenu == null) {
             createContextMenu();
         }
         updateActionStates();
@@ -148,7 +148,11 @@ public class EntityHierarchyContextMenuPresenter {
         // This needs tidying somehow.  We don't do this for other actions.
         moveToParentUiAction.setHierarchyId(model.getHierarchyId());
         mergeEntitiesAction.setHierarchyId(model.getHierarchyId());
-        Supplier<ImmutableSet<OWLEntity>> selectionSupplier = () -> ImmutableSet.copyOf(treeWidget.getSelectedKeys());
+        Supplier<ImmutableSet<OWLEntityData>> selectionSupplier = () ->
+                treeWidget.getSelectedNodes().stream()
+                        .map(TreeNode::getUserObject)
+                        .map(EntityNode::getEntityData)
+                        .collect(toImmutableSet());
         setAnnotationValueUiAction.setSelectionSupplier(selectionSupplier);
         moveToParentUiAction.setSelectionSupplier(selectionSupplier);
         mergeEntitiesAction.setSelectionSupplier(selectionSupplier);
@@ -171,7 +175,7 @@ public class EntityHierarchyContextMenuPresenter {
         showDirectLinkAction.setEnabled(selIsNonEmpty);
 
 
-        if(selIsNonEmpty) {
+        if (selIsNonEmpty) {
             permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
@@ -186,7 +190,8 @@ public class EntityHierarchyContextMenuPresenter {
     }
 
     private void pruneToKey() {
-        treeWidget.getFirstSelectedKey().ifPresent(sel -> treeWidget.pruneToNodesContainingKey(sel, () -> {}));
+        treeWidget.getFirstSelectedKey().ifPresent(sel -> treeWidget.pruneToNodesContainingKey(sel, () -> {
+        }));
     }
 
     private void clearPruning() {
@@ -197,13 +202,15 @@ public class EntityHierarchyContextMenuPresenter {
     private void showIriForSelection() {
         treeWidget.getFirstSelectedKey().ifPresent(sel -> {
             String iri = sel.getIRI().toString();
-            InputBox.showOkDialog(messages.classIri(), true, iri, input -> {});
+            InputBox.showOkDialog(messages.classIri(), true, iri, input -> {
+            });
         });
     }
 
     private void showUrlForSelection() {
         String location = Window.Location.getHref();
-        InputBox.showOkDialog(messages.directLink(), true, location, input -> {});
+        InputBox.showOkDialog(messages.directLink(), true, location, input -> {
+        });
     }
 
     private void handleRefresh() {
