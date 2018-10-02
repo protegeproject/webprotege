@@ -1,4 +1,5 @@
 @external .wp-*;
+@url protegeBlenderUrl protegeBlender;
 
 .wp-modal {
     background-color: literal("var(--primary--background-color)");
@@ -12,7 +13,7 @@
 
 .wp-modal__caption {
     background-color: literal("var(--alternate--background-color)");
-    background-image: url(../images/protege-blender.svg);
+    background-image: protegeBlenderUrl;
     background-repeat: no-repeat;
     background-size: 30px;
     background-position-y: 2px;
