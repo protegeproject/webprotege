@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.auto.factory.Provided;
 import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
@@ -368,6 +369,11 @@ public class ClientProjectModule {
 
     @Provides
     AnnotationSimpleMatchingCriteriaView provideAnnotationSimpleMatchingCriteriaView(AnnotationSimpleMatchingCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CommitMessageInputView provideCommitMessageInputView(CommitMessageInputViewImpl impl) {
         return impl;
     }
 }

@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+        <g:Label text="Enter a message that will be used to log the applied changes in the project history."
+                 addStyleNames="{wp.style.formTextBlock}"/>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Commit Message" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextArea ui:field="textArea" visibleLines="5"/>
+        </div>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -8,8 +8,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -17,11 +15,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -46,7 +43,10 @@ public class BulkEditOperationWorkflow {
     private final ImmutableSet<OWLEntityData> entities;
 
     @Nonnull
-    private final ModalPresenter modalPresenter;
+    private final CommitMessageInputView commitMessageInputView;
+
+    @Nonnull
+    private final Provider<ModalPresenter> modalPresenterProvider;
 
     @AutoFactory
     @Inject
@@ -54,18 +54,21 @@ public class BulkEditOperationWorkflow {
                                      @Provided @Nonnull BulkEditOperationViewContainer viewContainer,
                                      @Nonnull BulkEditOperationPresenter presenter,
                                      @Nonnull ImmutableSet<OWLEntityData> entities,
-                                     @Provided @Nonnull ModalPresenter modalPresenter) {
+                                     @Provided @Nonnull CommitMessageInputView commitMessageInputView,
+                                     @Provided @Nonnull Provider<ModalPresenter> modalPresenterProvider) {
         this.dispatch = checkNotNull(dispatch);
         this.presenter = checkNotNull(presenter);
         this.viewContainer = checkNotNull(viewContainer);
         this.entities = checkNotNull(entities);
-        this.modalPresenter = checkNotNull(modalPresenter);
+        this.commitMessageInputView = checkNotNull(commitMessageInputView);
+        this.modalPresenterProvider = checkNotNull(modalPresenterProvider);
     }
 
     public void start() {
         WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
         List<DialogButton> dialogButtons = new ArrayList<>();
 
+        ModalPresenter modalPresenter = modalPresenterProvider.get();
         modalPresenter.setTitle(presenter.getTitle());
         modalPresenter.addEscapeButton(DialogButton.CANCEL);
         DialogButton execButton = DialogButton.get(presenter.getExecuteButtonText());
@@ -75,28 +78,36 @@ public class BulkEditOperationWorkflow {
     }
 
     private void handleExecute(ModalCloser closer) {
-        if(!presenter.isDataWellFormed()) {
+        if (!presenter.isDataWellFormed()) {
             presenter.displayErrorMessage();
         }
         else {
-            ImmutableSet<OWLEntity> rawEntities = entities.stream()
-                    .map(OWLEntityData::getEntity)
-                    .collect(toImmutableSet());
-            InputBox.showDialog(presenter.getTitle() + " Commit Message",
-                                true,
-                                presenter.getDefaultCommitMessage(entities),
-                                input -> {
-                                    presenter.createAction(rawEntities, input)
-                                            .ifPresent(this::executeAction);
-                                    closer.closeModal();
-                                });
-
+            ModalPresenter commitMsgPresenter = getCommitMessagePresenter(closer, entities);
+            commitMsgPresenter.show(container -> container.setWidget(commitMessageInputView));
         }
+    }
+
+    private ModalPresenter getCommitMessagePresenter(ModalCloser mainCloser, ImmutableSet<OWLEntityData> entities) {
+        ModalPresenter commitMsgPresenter = modalPresenterProvider.get();
+        commitMsgPresenter.setTitle(presenter.getTitle() + " Commit Message");
+        commitMsgPresenter.addEscapeButton(DialogButton.CANCEL);
+        DialogButton continueButton = DialogButton.get("Continue");
+        commitMsgPresenter.setPrimaryButton(continueButton);
+        commitMsgPresenter.setButtonHandler(continueButton, msgCloser -> {
+            ImmutableSet<OWLEntity> rawEntities = entities.stream().map(OWLEntityData::getEntity).collect(toImmutableSet());
+            presenter.createAction(rawEntities, commitMessageInputView.getCommitMessage())
+                    .ifPresent(this::executeAction);
+            msgCloser.closeModal();
+            mainCloser.closeModal();
+        });
+        commitMessageInputView.setDefaultCommitMessage(presenter.getDefaultCommitMessage(entities));
+        return commitMsgPresenter;
     }
 
     private void executeAction(@Nonnull Action<?> action) {
         dispatch.execute(action,
-                         result -> {});
+                         result -> {
+                         });
     }
 
 }
