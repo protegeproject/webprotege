@@ -76,7 +76,8 @@ public class EditAnnotationsPresenter implements BulkEditOperationPresenter {
                                                      view.getLexcialValueExpression(),
                                                      view.isLexicalValueExpressionRegEx(),
                                                      view.getLangTagExpression(),
-                                                     view.getNewAnnotationData()));
+                                                     view.getNewAnnotationData(),
+                                                     commitMessage));
     }
 
     @Override

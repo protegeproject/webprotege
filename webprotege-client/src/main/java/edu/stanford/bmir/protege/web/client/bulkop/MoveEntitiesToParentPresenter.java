@@ -93,7 +93,8 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
 
     @Nonnull
     @Override
-    public Optional<MoveEntitiesToParentAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
+    public Optional<MoveEntitiesToParentAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities,
+                                                             @Nonnull String commitMessage) {
         ImmutableSet<OWLClass> clses = entities.stream()
                 .filter(OWLEntity::isOWLClass)
                 .map(OWLEntity::asOWLClass)
@@ -102,7 +103,8 @@ public class MoveEntitiesToParentPresenter implements BulkEditOperationPresenter
                 .map(OWLEntityData::getEntity)
                 .map(entity -> new MoveEntitiesToParentAction(projectId,
                                                               clses,
-                                                              entity.asOWLClass()));
+                                                              entity.asOWLClass(),
+                                                              commitMessage));
     }
 
     @Override

@@ -98,16 +98,18 @@ public class SetAnnotationValuePresenter implements BulkEditOperationPresenter {
 
     @Nonnull
     @Override
-    public Optional<SetAnnotationValueAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
-        return getProperty().flatMap(prop -> getValue().map(val -> createAction(entities, prop, val)));
+    public Optional<SetAnnotationValueAction> createAction(@Nonnull ImmutableSet<OWLEntity> entities, @Nonnull String commitMessage) {
+        return getProperty().flatMap(prop -> getValue().map(val -> createAction(entities, prop, val, commitMessage)));
     }
 
     private SetAnnotationValueAction createAction(@Nonnull ImmutableSet<OWLEntity> entities,
                                                   @Nonnull OWLAnnotationProperty prop,
-                                                  @Nonnull OWLAnnotationValue val) {
+                                                  @Nonnull OWLAnnotationValue val,
+                                                  @Nonnull String commitMessage) {
         return new SetAnnotationValueAction(projectId,
                                             entities,
                                             prop,
-                                            val);
+                                            val,
+                                            commitMessage);
     }
 }

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.bulkop.HasCommitMessage;
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 9 Mar 2018
  */
-public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesResult> {
+public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesResult> implements HasCommitMessage {
 
     private ImmutableSet<OWLEntity> sourceEntities;
 
@@ -26,20 +26,25 @@ public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesR
 
     private MergedEntityTreatment treatment;
 
+    private String commitMessage;
+
     /**
      * @param projectId    The project id
      * @param sourceEntities The set of entities being merged into another entity
      * @param targetEntity The entity that the source class is being merged into.
      * @param treatment    The treatment.
+     * @param commitMessage
      */
     public MergeEntitiesAction(@Nonnull ProjectId projectId,
                                @Nonnull ImmutableSet<OWLEntity> sourceEntities,
                                @Nonnull OWLEntity targetEntity,
-                               @Nonnull MergedEntityTreatment treatment) {
+                               @Nonnull MergedEntityTreatment treatment,
+                               @Nonnull String commitMessage) {
         super(projectId);
         this.sourceEntities = checkNotNull(sourceEntities);
         this.targetEntity = checkNotNull(targetEntity);
         this.treatment = checkNotNull(treatment);
+        this.commitMessage = commitMessage;
     }
 
     @GwtSerializationConstructor
@@ -59,8 +64,9 @@ public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesR
     public static MergeEntitiesAction mergeEntities(@Nonnull ProjectId projectId,
                                                     @Nonnull ImmutableSet<OWLEntity> sourceEntities,
                                                     @Nonnull OWLEntity targetEntity,
-                                                    @Nonnull MergedEntityTreatment treatment) {
-        return new MergeEntitiesAction(projectId, sourceEntities, targetEntity, treatment);
+                                                    @Nonnull MergedEntityTreatment treatment,
+                                                    @Nonnull String commitMessage) {
+        return new MergeEntitiesAction(projectId, sourceEntities, targetEntity, treatment, commitMessage);
     }
 
     /**
@@ -89,7 +95,7 @@ public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesR
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getProjectId(), sourceEntities, targetEntity, treatment);
+        return Objects.hashCode(getProjectId(), sourceEntities, targetEntity, treatment, commitMessage);
     }
 
     @Override
@@ -104,7 +110,8 @@ public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesR
         return this.getProjectId().equals(other.getProjectId())
                 && this.sourceEntities.equals(other.sourceEntities)
                 && this.targetEntity.equals(other.targetEntity)
-                && this.treatment.equals(other.treatment);
+                && this.treatment.equals(other.treatment)
+                && this.commitMessage.equals(other.commitMessage);
     }
 
 
@@ -115,6 +122,13 @@ public class MergeEntitiesAction extends AbstractHasProjectAction<MergeEntitiesR
                 .add("sourceEntities", sourceEntities)
                 .add("target", targetEntity)
                 .add("treatment", treatment)
+                .add("commitMessage", commitMessage)
                 .toString();
+    }
+
+    @Nonnull
+    @Override
+    public String getCommitMessage() {
+        return commitMessage;
     }
 }

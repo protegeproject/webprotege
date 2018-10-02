@@ -89,12 +89,12 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
     public Optional<? extends Action<?>> createAction(@Nonnull ImmutableSet<OWLEntity> entities, String commitMessage) {
         return hierarchyFieldPresenter
                 .getEntity()
-                .map(target -> createMergeAction(entities, target));
+                .map(target -> createMergeAction(entities, target, commitMessage));
     }
 
     @Nonnull
     @Override
-    public String getDefaultCommitMessage(ImmutableSet<? extends OWLEntityData> entities) {
+    public String getDefaultCommitMessage(@Nonnull ImmutableSet<? extends OWLEntityData> entities) {
         return "Merged "
                 + BulkOpMessageFormatter.sortAndFormat(entities)
                 + " into "
@@ -103,8 +103,10 @@ public class MergeEntitiesPresenter implements BulkEditOperationPresenter {
                 .orElse("other entity");
     }
 
-    private MergeEntitiesAction createMergeAction(@Nonnull ImmutableSet<OWLEntity> entities, OWLEntityData target) {
-        return new MergeEntitiesAction(projectId, entities, target.getEntity(), DELETE_MERGED_ENTITY);
+    private MergeEntitiesAction createMergeAction(@Nonnull ImmutableSet<OWLEntity> entities,
+                                                  @Nonnull OWLEntityData target,
+                                                  @Nonnull String commitMessage) {
+        return new MergeEntitiesAction(projectId, entities, target.getEntity(), DELETE_MERGED_ENTITY, commitMessage);
     }
 
     private void displayConfirmationMessage() {

@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24 Sep 2018
  */
-public class SetAnnotationValueAction implements ProjectAction<SetAnnotationValueResult> {
+public class SetAnnotationValueAction implements ProjectAction<SetAnnotationValueResult>, HasCommitMessage {
 
     private ProjectId projectId;
 
@@ -27,11 +27,14 @@ public class SetAnnotationValueAction implements ProjectAction<SetAnnotationValu
 
     private OWLAnnotationValue value;
 
-    public SetAnnotationValueAction(ProjectId projectId, ImmutableSet<OWLEntity> entities, OWLAnnotationProperty property, OWLAnnotationValue value) {
+    private String commitMessage;
+
+    public SetAnnotationValueAction(ProjectId projectId, ImmutableSet<OWLEntity> entities, OWLAnnotationProperty property, OWLAnnotationValue value, String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property);
         this.value = checkNotNull(value);
+        this.commitMessage = checkNotNull(commitMessage);
     }
 
     @GwtSerializationConstructor
@@ -57,5 +60,11 @@ public class SetAnnotationValueAction implements ProjectAction<SetAnnotationValu
     @Nonnull
     public OWLAnnotationValue getValue() {
         return value;
+    }
+
+    @Nonnull
+    @Override
+    public String getCommitMessage() {
+        return commitMessage;
     }
 }

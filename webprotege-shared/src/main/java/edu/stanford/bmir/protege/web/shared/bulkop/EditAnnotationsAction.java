@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24 Sep 2018
  */
-public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResult> {
+public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResult>, HasCommitMessage {
 
     private ProjectId projectId;
 
@@ -40,13 +40,16 @@ public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResul
 
     private NewAnnotationData newAnnotationData;
 
+    private String commitMessage;
+
     public EditAnnotationsAction(@Nonnull ProjectId projectId,
                                  @Nonnull ImmutableSet<OWLEntity> entities,
                                  Operation operation, @Nonnull Optional<OWLAnnotationProperty> property,
                                  @Nonnull Optional<String> lexicalValueExpression,
                                  boolean lexicalValueExpressionIsRegEx,
                                  @Nonnull Optional<String> langTagExpression,
-                                 @Nonnull NewAnnotationData newAnnotationData) {
+                                 @Nonnull NewAnnotationData newAnnotationData,
+                                 @Nonnull String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
         this.operation = checkNotNull(operation);
@@ -55,6 +58,7 @@ public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResul
         this.langTagExpression = checkNotNull(langTagExpression).orElse(null);
         this.lexicalValueExpressionIsRegEx = lexicalValueExpressionIsRegEx;
         this.newAnnotationData = checkNotNull(newAnnotationData);
+        this.commitMessage = checkNotNull(commitMessage);
     }
 
     @GwtSerializationConstructor
@@ -99,5 +103,10 @@ public class EditAnnotationsAction implements ProjectAction<EditAnnotationsResul
     @Nonnull
     public NewAnnotationData getNewAnnotationData() {
         return newAnnotationData;
+    }
+
+    @Nonnull
+    public String getCommitMessage() {
+        return commitMessage;
     }
 }
