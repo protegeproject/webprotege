@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -18,18 +19,20 @@ public class ChangeListMinimiser {
 
     public List<OWLOntologyChange> getMinimisedChanges(List<? extends OWLOntologyChange> changes) {
 
-        final Set<OWLAxiom> axiomsToAdd = new HashSet<>();
-        final Set<OWLAxiom> axiomsToRemove = new HashSet<>();
+        final Set<OntologyAxiomPair> additions = new HashSet<>();
+        final Set<OntologyAxiomPair> removals = new HashSet<>();
 
         for (OWLOntologyChange change : changes) {
             if (change.isAddAxiom()) {
-                if(!axiomsToRemove.remove(change.getAxiom())) {
-                    axiomsToAdd.add(change.getAxiom());
+                OntologyAxiomPair pair = OntologyAxiomPair.get(change.getOntology(), change.getAxiom());
+                if(!removals.remove(pair)) {
+                    additions.add(pair);
                 }
             }
             else if (change.isRemoveAxiom()) {
-                if (!axiomsToAdd.remove(change.getAxiom())) {
-                    axiomsToRemove.add(change.getAxiom());
+                OntologyAxiomPair pair = OntologyAxiomPair.get(change.getOntology(), change.getAxiom());
+                if (!additions.remove(pair)) {
+                    removals.add(pair);
                 }
 
             }
@@ -39,15 +42,17 @@ public class ChangeListMinimiser {
         final List<OWLOntologyChange> minimisedChanges = new ArrayList<>();
         for (OWLOntologyChange change : changes) {
             if (change.isAddAxiom()) {
-                if (axiomsToAdd.contains(change.getAxiom())) {
+                OntologyAxiomPair pair = OntologyAxiomPair.get(change.getOntology(), change.getAxiom());
+                if (additions.contains(pair)) {
                     minimisedChanges.add(change);
-                    axiomsToAdd.remove(change.getAxiom());
+                    additions.remove(pair);
                 }
             }
             else if (change.isRemoveAxiom()) {
-                if (axiomsToRemove.contains(change.getAxiom())) {
+                OntologyAxiomPair pair = OntologyAxiomPair.get(change.getOntology(), change.getAxiom());
+                if (removals.contains(pair)) {
                     minimisedChanges.add(change);
-                    axiomsToRemove.remove(change.getAxiom());
+                    removals.remove(pair);
                 }
             }
             else {
@@ -56,5 +61,4 @@ public class ChangeListMinimiser {
         }
         return minimisedChanges;
     }
-
 }

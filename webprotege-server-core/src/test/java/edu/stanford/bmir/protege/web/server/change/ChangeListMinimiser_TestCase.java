@@ -31,36 +31,35 @@ public class ChangeListMinimiser_TestCase {
     private List<OWLOntologyChange> changes;
 
     @Mock
-    private OWLAxiom axiomA, axiomB;
+    private OWLAxiom axiomA;
 
     @Mock
-    private AddAxiom addAxiom;
+    private OWLOntology ontology, otherOntology;
 
-    @Mock
-    private RemoveAxiom removeAxiom;
+    private AddAxiom addAxiomA;
+
+    private RemoveAxiom removeAxiomA;
 
     @Before
     public void setUp() throws Exception {
         minimizer = new ChangeListMinimiser();
         changes = new ArrayList<>();
-        when(addAxiom.isAddAxiom()).thenReturn(true);
-        when(removeAxiom.isRemoveAxiom()).thenReturn(true);
+        addAxiomA = new AddAxiom(ontology, axiomA);
+        removeAxiomA = new RemoveAxiom(ontology, axiomA);
     }
 
     @Test
     public void shouldPreserveSingleAddAxiom() {
-        when(addAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(addAxiom);
+        changes.add(addAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
-        assertThat(minimizedChanges, contains(addAxiom));
+        assertThat(minimizedChanges, contains(addAxiomA));
     }
 
     @Test
     public void shouldPreserveSingleRemoveAxiom() {
-        when(removeAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(removeAxiom);
+        changes.add(removeAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
-        assertThat(minimizedChanges, contains(removeAxiom));
+        assertThat(minimizedChanges, contains(removeAxiomA));
     }
 
     @Test
@@ -73,63 +72,93 @@ public class ChangeListMinimiser_TestCase {
 
     @Test
     public void shouldCancelAdditionFollowedByRemoval() {
-        when(addAxiom.getAxiom()).thenReturn(axiomA);
-        when(removeAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(addAxiom);
-        changes.add(removeAxiom);
+        changes.add(addAxiomA);
+        changes.add(removeAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
         assertThat(minimizedChanges, is(empty()));
     }
 
     @Test
     public void shouldCancelFirstAdditionFollowedByRemoval() {
-        when(addAxiom.getAxiom()).thenReturn(axiomA);
-        when(removeAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(addAxiom);
-        changes.add(removeAxiom);
-        changes.add(addAxiom);
+        changes.add(addAxiomA);
+        changes.add(removeAxiomA);
+        changes.add(addAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
-        assertThat(minimizedChanges, contains(addAxiom));
+        assertThat(minimizedChanges, contains(addAxiomA));
     }
 
     @Test
     public void shouldCancelFirstAndSecondAdditionFollowedByRemoval() {
-        when(addAxiom.getAxiom()).thenReturn(axiomA);
-        when(removeAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(addAxiom);
-        changes.add(removeAxiom);
-        changes.add(addAxiom);
-        changes.add(removeAxiom);
+        changes.add(addAxiomA);
+        changes.add(removeAxiomA);
+        changes.add(addAxiomA);
+        changes.add(removeAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
         assertThat(minimizedChanges, is(empty()));
     }
 
     @Test
     public void shouldCollapseMultipleAdds() {
-        when(addAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(addAxiom);
-        changes.add(addAxiom);
+        changes.add(addAxiomA);
+        changes.add(addAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
-        assertThat(minimizedChanges, contains(addAxiom));
+        assertThat(minimizedChanges, contains(addAxiomA));
     }
 
     @Test
     public void shouldCancelRemovalFollowedByAddition() {
-        when(removeAxiom.getAxiom()).thenReturn(axiomA);
-        when(addAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(removeAxiom);
-        changes.add(addAxiom);
+        changes.add(removeAxiomA);
+        changes.add(addAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
         assertThat(minimizedChanges, is(empty()));
     }
 
     @Test
     public void shouldCollapseMultipleRemoves() {
-        when(removeAxiom.getAxiom()).thenReturn(axiomA);
-        changes.add(removeAxiom);
-        changes.add(removeAxiom);
+        changes.add(removeAxiomA);
+        changes.add(removeAxiomA);
         List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
-        assertThat(minimizedChanges, contains(removeAxiom));
+        assertThat(minimizedChanges, contains(removeAxiomA));
+    }
+
+    @Test
+    public void shouldBeSensitiveToOntologyForRemoveThenAdd() {
+        RemoveAxiom rem = new RemoveAxiom(ontology, axiomA);
+        changes.add(rem);
+        AddAxiom add = new AddAxiom(otherOntology, axiomA);
+        changes.add(add);
+        List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
+        assertThat(minimizedChanges, contains(rem, add));
+    }
+
+    @Test
+    public void shouldBeSensitiveToOntologyForAddThenRemove() {
+        RemoveAxiom rem = new RemoveAxiom(ontology, axiomA);
+        AddAxiom add = new AddAxiom(otherOntology, axiomA);
+        changes.add(add);
+        changes.add(rem);
+        List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
+        assertThat(minimizedChanges, contains(add, rem));
+    }
+
+    @Test
+    public void shouldBeSensitiveToOntologyForAddThenAdd() {
+        AddAxiom add = new AddAxiom(ontology, axiomA);
+        AddAxiom otherAdd = new AddAxiom(otherOntology, axiomA);
+        changes.add(add);
+        changes.add(otherAdd);
+        List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
+        assertThat(minimizedChanges, contains(add, otherAdd));
+    }
+
+    @Test
+    public void shouldBeSensitiveToOntologyForRemoveThenRemove() {
+        RemoveAxiom rem = new RemoveAxiom(ontology, axiomA);
+        RemoveAxiom otherRem = new RemoveAxiom(otherOntology, axiomA);
+        changes.add(rem);
+        changes.add(otherRem);
+        List<OWLOntologyChange> minimizedChanges = minimizer.getMinimisedChanges(changes);
+        assertThat(minimizedChanges, contains(rem, otherRem));
     }
 
 }
