@@ -34,7 +34,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
@@ -91,7 +90,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final CreateEntityPresenter createEntityPresenter;
 
     @Nonnull
-    private final DeleteEntityPresenter deleteEntityPresenter;
+    private final DeleteEntitiesPresenter deleteEntitiesPresenter;
 
     @Nonnull
     private final EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory;
@@ -134,7 +133,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityNode, OWLEntity> annotationPropertyTree,
                                              @Nonnull EntityNodeHtmlRenderer renderer,
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
-                                             @Nonnull DeleteEntityPresenter deleteEntityPresenter,
+                                             @Nonnull DeleteEntitiesPresenter deleteEntitiesPresenter,
                                              @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
                                              @Nonnull WatchPresenter watchPresenter,
                                              @Nonnull SearchDialogController searchDialogController,
@@ -159,7 +158,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.annotationPropertyTree = annotationPropertyTree;
         this.renderer = renderer;
         this.createEntityPresenter = createEntityPresenter;
-        this.deleteEntityPresenter = deleteEntityPresenter;
+        this.deleteEntitiesPresenter = deleteEntitiesPresenter;
         this.contextMenuPresenterFactory = contextMenuPresenterFactory;
         this.watchPresenter = watchPresenter;
         this.searchDialogController = searchDialogController;
@@ -397,7 +396,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleDelete() {
-        view.getSelectedHierarchy().ifPresent(treeWidget -> deleteEntityPresenter.start(treeWidget));
+        view.getSelectedHierarchy().ifPresent(treeWidget -> deleteEntitiesPresenter.start(treeWidget));
     }
 
     private void handleWatch() {

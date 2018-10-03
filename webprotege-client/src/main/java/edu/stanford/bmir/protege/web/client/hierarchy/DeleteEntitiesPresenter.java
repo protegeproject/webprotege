@@ -31,7 +31,7 @@ import static java.util.stream.Collectors.joining;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 6 Dec 2017
  */
-public class DeleteEntityPresenter {
+public class DeleteEntitiesPresenter {
 
     @Nonnull
     private final Messages messages;
@@ -43,9 +43,9 @@ public class DeleteEntityPresenter {
     private final ProjectId projectId;
 
     @Inject
-    public DeleteEntityPresenter(@Nonnull Messages messages,
-                                 @Nonnull DispatchServiceManager dispatchServiceManager,
-                                 @Nonnull ProjectId projectId) {
+    public DeleteEntitiesPresenter(@Nonnull Messages messages,
+                                   @Nonnull DispatchServiceManager dispatchServiceManager,
+                                   @Nonnull ProjectId projectId) {
         this.messages = checkNotNull(messages);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);

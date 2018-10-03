@@ -32,7 +32,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -41,7 +40,6 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
-import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
 
@@ -73,7 +71,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private final CreateEntityPresenter createEntityPresenter;
 
     @Nonnull
-    private final DeleteEntityPresenter deleteEntityPresenter;
+    private final DeleteEntitiesPresenter deleteEntitiesPresenter;
 
     @Nonnull
     private final EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory;
@@ -113,7 +111,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                                           @Nonnull EntityNodeHtmlRenderer renderer,
                                           @Nonnull CreateEntityPresenter createEntityPresenter,
-                                          @Nonnull DeleteEntityPresenter deleteEntityPresenter,
+                                          @Nonnull DeleteEntitiesPresenter deleteEntitiesPresenter,
                                           @Nonnull HierarchyActionStatePresenter actionStatePresenter,
                                           @Nonnull EntityHierarchyDropHandler dropHandler,
                                           @Nonnull FilterView filterView,
@@ -142,7 +140,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         this.searchAction = new PortletAction(messages.search(),
                                               this::handleSearch);
-        this.deleteEntityPresenter = deleteEntityPresenter;
+        this.deleteEntitiesPresenter = deleteEntitiesPresenter;
         this.actionStatePresenter = actionStatePresenter;
         this.dropHandler = dropHandler;
         this.filterView = checkNotNull(filterView);
@@ -245,7 +243,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void handleDelete() {
-        deleteEntityPresenter.start(treeWidget);
+        deleteEntitiesPresenter.start(treeWidget);
     }
 
     private void handleSearch() {
