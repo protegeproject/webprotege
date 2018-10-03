@@ -118,4 +118,10 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     public Optional<HasRequestFocus> getInitialFocusable() {
         return Optional.of(() -> projectNameField.setFocus(true));
     }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        projectNameField.setFocus(true);
+    }
 }
