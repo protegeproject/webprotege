@@ -1228,4 +1228,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Parents")
     @Key("hierarchy.parents")
     String hierarchy_parents();
+
+    @DefaultMessage("Watches")
+    @Key("watch.watches")
+    String watch_watches();
 }

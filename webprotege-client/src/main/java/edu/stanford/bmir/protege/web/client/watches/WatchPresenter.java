@@ -2,20 +2,23 @@ package edu.stanford.bmir.protege.web.client.watches;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -24,7 +27,14 @@ import java.util.Set;
  */
 public class WatchPresenter {
 
-    private final WatchTypeDialogController controller;
+    @Nonnull
+    private final WatchView view;
+
+    @Nonnull
+    private final Messages messages;
+
+    @Nonnull
+    private final ModalPresenter modalPresenter;
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -32,60 +42,62 @@ public class WatchPresenter {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private OWLEntity currentEntity;
+
     @Inject
-    public WatchPresenter(ProjectId projectId, WatchTypeDialogController controller, LoggedInUserProvider loggedInUserProvider, DispatchServiceManager dispatchServiceManager) {
-        this.controller = controller;
-        this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.loggedInUserProvider = loggedInUserProvider;
+    public WatchPresenter(@Nonnull ProjectId projectId,
+                          @Nonnull WatchView view,
+                          @Nonnull Messages messages,
+                          @Nonnull ModalPresenter modalPresenter,
+                          @Nonnull LoggedInUserProvider loggedInUserProvider,
+                          @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.view = checkNotNull(view);
+        this.messages = checkNotNull(messages);
+        this.modalPresenter = checkNotNull(modalPresenter);
+        this.projectId = checkNotNull(projectId);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
+        modalPresenter.setTitle(messages.watch_watches());
+        modalPresenter.addEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setPrimaryButton(DialogButton.OK);
+        modalPresenter.setButtonHandler(DialogButton.OK, this::handleApplyChanges);
     }
 
-    public void start(final OWLEntity forEntity) {
+    public void start(@Nonnull OWLEntity forEntity) {
+        this.currentEntity = checkNotNull(forEntity);
+        UserId userId = loggedInUserProvider.getCurrentUserId();
+        dispatchServiceManager.execute(new GetWatchesAction(projectId, userId, forEntity),
+                                       this::handleRetrivedWatches);
+    }
+
+    private void handleApplyChanges(@Nonnull ModalCloser modalCloser) {
+        WatchTypeSelection type = view.getSelectedType();
         final UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(new GetWatchesAction(projectId, userId, forEntity), new DispatchServiceCallback<GetWatchesResult>() {
-            @Override
-            public void handleSuccess(GetWatchesResult result) {
-                Set<Watch> watches = result.getWatches();
-                updateDialog(watches);
-                WebProtegeDialog<WatchTypeSelection> dlg = new WebProtegeDialog<>(controller);
-                dlg.show();
-                controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
-                    closer.hide();
-                    handleWatchTypeForEntity(data, forEntity);
-                });
-            }
-        });
-
+        Optional<Watch> watch = getWatchFromType(type, currentEntity);
+        ImmutableSet<Watch> watches = watch.map(ImmutableSet::of).orElse(ImmutableSet.of());
+        dispatchServiceManager.execute(new SetEntityWatchesAction(projectId, userId, currentEntity, watches),
+                                       result -> modalCloser.closeModal());
     }
 
-    private void updateDialog(Set<Watch> watches) {
+    private void handleRetrivedWatches(@Nonnull GetWatchesResult result) {
+        Set<Watch> watches = result.getWatches();
+        setWatchesInView(watches);
+        modalPresenter.show(container -> container.setWidget(view));
+    }
+
+    private void setWatchesInView(@Nonnull Set<Watch> watches) {
         GWT.log("[WatchPresenter] Updating settings for watches: " + watches);
-        controller.setSelectedType(WatchTypeSelection.NONE_SELECTED);
+        view.setSelectedType(WatchTypeSelection.NONE_SELECTED);
         for(Watch watch : watches) {
             if(watch.getType() == WatchType.ENTITY) {
-                controller.setSelectedType(WatchTypeSelection.ENTITY_SELECTED);
+                view.setSelectedType(WatchTypeSelection.ENTITY_SELECTED);
                 break;
             }
             else if(watch.getType() == WatchType.BRANCH) {
-                controller.setSelectedType(WatchTypeSelection.BRANCH_SELECTED);
+                view.setSelectedType(WatchTypeSelection.BRANCH_SELECTED);
                 break;
             }
         }
-    }
-
-    private void handleWatchTypeForEntity(final WatchTypeSelection type, final OWLEntity entity) {
-        final UserId userId = loggedInUserProvider.getCurrentUserId();
-        Optional<Watch> watch = getWatchFromType(type, entity);
-        ImmutableSet<Watch> watches = ImmutableSet.copyOf(watch.isPresent() ? Collections.singleton(watch.get()) : Collections
-                .emptySet());
-            dispatchServiceManager.execute(new SetEntityWatchesAction(projectId, userId, entity, watches), new DispatchServiceCallback<SetEntityWatchesResult>() {
-                @Override
-                public void handleSuccess(SetEntityWatchesResult setEntityWatchesResult) {
-
-                }
-            });
-
-
     }
 
     private Optional<Watch> getWatchFromType(final WatchTypeSelection type, final OWLEntity entity) {

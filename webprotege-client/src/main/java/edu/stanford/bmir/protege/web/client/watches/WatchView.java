@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 28/02/16
  */
-public interface WatchTypeSelectorView extends IsWidget {
+public interface WatchView extends IsWidget {
 
     WatchTypeSelection getSelectedType();
 

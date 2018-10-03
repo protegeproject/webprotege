@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
-import com.google.auto.factory.Provided;
 import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
@@ -46,8 +45,8 @@ import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
-import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorView;
-import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
+import edu.stanford.bmir.protege.web.client.watches.WatchView;
+import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -124,7 +123,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    WatchTypeSelectorView provideWatchTypeSelectorView(WatchTypeSelectorViewImpl view) {
+    WatchView provideWatchTypeSelectorView(WatchViewImpl view) {
         return view;
     }
 

@@ -14,16 +14,16 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 28/02/16
  */
-public class WatchTypeSelectorViewImpl extends Composite implements WatchTypeSelectorView {
+public class WatchViewImpl extends Composite implements WatchView {
 
-    interface WatchTypeSelectorViewImplUiBinder extends UiBinder<HTMLPanel, WatchTypeSelectorViewImpl> {
+    interface WatchTypeSelectorViewImplUiBinder extends UiBinder<HTMLPanel, WatchViewImpl> {
 
     }
 
     private static WatchTypeSelectorViewImplUiBinder ourUiBinder = GWT.create(WatchTypeSelectorViewImplUiBinder.class);
 
     @Inject
-    public WatchTypeSelectorViewImpl() {
+    public WatchViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -70,5 +70,11 @@ public class WatchTypeSelectorViewImpl extends Composite implements WatchTypeSel
                 break;
         }
 
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        none.setFocus(true);
     }
 }
