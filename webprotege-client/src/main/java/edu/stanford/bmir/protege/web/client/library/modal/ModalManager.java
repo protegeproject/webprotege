@@ -61,7 +61,7 @@ public class ModalManager {
         if(modalStack.isEmpty()) {
             return;
         }
-        ModalPresenter presenter = modalStack.pop();
+        ModalPresenter presenter = modalStack.peek();
         presenter.accept();
     }
 
@@ -69,7 +69,7 @@ public class ModalManager {
         if(modalStack.isEmpty()) {
             return;
         }
-        ModalPresenter presenter = modalStack.pop();
+        ModalPresenter presenter = modalStack.peek();
         presenter.escape();
     }
 

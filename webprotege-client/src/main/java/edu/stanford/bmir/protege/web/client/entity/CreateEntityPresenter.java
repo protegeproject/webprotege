@@ -80,12 +80,9 @@ public class CreateEntityPresenter {
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            handleCreateEntities(view.getText(),
-                                 actionFactory,
-                                 entitiesCreatedHandler);
+            handleCreateEntities(view.getText(), actionFactory, entitiesCreatedHandler);
             closer.closeModal();
         });
-
         modalManager.showModal(modalPresenter);
         displayCurrentLangTagOrProjectDefaultLangTag();
 

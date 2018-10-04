@@ -120,4 +120,10 @@ public class CreateEntitiesDialogViewImpl extends Composite implements  CreateEn
     public void resetButtonClick(ClickEvent event) {
         resetLangTagHandler.handleResetLangTag();
     }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        textBox.setFocus(true);
+    }
 }
