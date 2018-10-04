@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.chgpwd;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
@@ -11,6 +12,9 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.auth.*;
@@ -42,6 +46,12 @@ public class ChangePasswordPresenter {
 
     private final ProgressDisplay progressDisplay;
 
+    private final ModalPresenter modalPresenter;
+
+    private final ModalManager modalManager;
+
+    private final Messages messages;
+
     @AutoFactory
     @Inject
     public ChangePasswordPresenter(@Provided ChangePasswordView changePasswordView,
@@ -49,13 +59,19 @@ public class ChangePasswordPresenter {
                                    @Provided DispatchServiceManager dispatchServiceManager,
                                    @Provided MessageBox messageBox,
                                    @Provided DispatchErrorMessageDisplay errorDisplay,
-                                   @Provided ProgressDisplay progressDisplay) {
+                                   @Provided ProgressDisplay progressDisplay,
+                                   @Provided ModalPresenter modalPresenter,
+                                   @Provided ModalManager modalManager,
+                                   @Provided Messages messages) {
         this.changePasswordView = changePasswordView;
         this.userId = checkNotNull(userId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.messageBox = checkNotNull(messageBox);
         this.errorDisplay = errorDisplay;
         this.progressDisplay = progressDisplay;
+        this.modalPresenter = modalPresenter;
+        this.modalManager = modalManager;
+        this.messages = messages;
     }
 
     public void changePassword() {
@@ -67,23 +83,25 @@ public class ChangePasswordPresenter {
     }
 
     private void showDialog() {
-        ChangePasswordDialogController controller = new ChangePasswordDialogController(changePasswordView);
-        controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
-            if (data.getNewPassword().isEmpty()) {
+        modalPresenter.setTitle(messages.changePassword());
+        modalPresenter.setContent(changePasswordView);
+        modalPresenter.setEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setPrimaryButton(DialogButton.OK);
+        modalPresenter.setButtonHandler(DialogButton.OK, closer -> {
+            if (changePasswordView.getNewPassword().isEmpty()) {
                 messageBox.showAlert("Please specify a new password");
-            } else if (!isPasswordConfirmationCorrect(data)) {
+            } else if (!isPasswordConfirmationCorrect()) {
                 handleIncorrectPasswordConfirmation();
             } else {
-                executeChangePassword(data, closer);
+                executeChangePassword(closer);
             }
         });
-        WebProtegeDialog<ChangePasswordData> dlg = new WebProtegeDialog<ChangePasswordData>(controller);
-        dlg.setVisible(true);
+        modalManager.showModal(modalPresenter);
     }
 
-    private static boolean isPasswordConfirmationCorrect(ChangePasswordData data) {
-        String newPassword = data.getNewPassword();
-        String newPasswordConfirmation = data.getNewPasswordConfirmation();
+    private boolean isPasswordConfirmationCorrect() {
+        String newPassword = changePasswordView.getNewPassword();
+        String newPasswordConfirmation = changePasswordView.getNewPasswordConfirmation();
         return newPassword.equals(newPasswordConfirmation);
     }
 
@@ -97,10 +115,10 @@ public class ChangePasswordPresenter {
     }
 
 
-    private void executeChangePassword(final ChangePasswordData data, final WebProtegeDialogCloser closer) {
+    private void executeChangePassword(final ModalCloser closer) {
         AuthenticatedActionExecutor executor = new AuthenticatedActionExecutor(dispatchServiceManager, new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider()), new ChapResponseDigestAlgorithm(new Md5DigestAlgorithmProvider()), errorDisplay);
-        String currentPassword = data.getOldPassword();
-        String newPassword = data.getNewPassword();
+        String currentPassword = changePasswordView.getOldPassword();
+        String newPassword = changePasswordView.getNewPassword();
         ChangePasswordActionFactory actionFactory = new ChangePasswordActionFactory(newPassword, new SaltProvider());
         executor.execute(userId, currentPassword, actionFactory, new AuthenticatedDispatchServiceCallback<ChangePasswordResult>(errorDisplay, progressDisplay) {
 
@@ -108,7 +126,7 @@ public class ChangePasswordPresenter {
             public void handleAuthenticationResponse(@Nonnull AuthenticationResponse response) {
                 if(response == AuthenticationResponse.SUCCESS) {
                     messageBox.showMessage("Your password has been changed");
-                    closer.hide();
+                    closer.closeModal();
                 }
                 else {
                     handleIncorrectCurrentPassword();

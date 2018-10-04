@@ -28,7 +28,7 @@ public class ModalManager {
 
     @Inject
     public ModalManager() {
-        
+
     }
 
     public void showModal(@Nonnull ModalPresenter presenter) {
@@ -39,7 +39,6 @@ public class ModalManager {
         RootPanel rootPanel = RootPanel.get();
         rootPanel.add(presenter.getView());
         presenter.setModalCloser(() -> {
-            Window.alert("Modal closer");
             modalStack.pop();
             presenter.hide();
         });
