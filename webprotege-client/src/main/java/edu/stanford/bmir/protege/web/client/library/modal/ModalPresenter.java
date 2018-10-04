@@ -46,7 +46,7 @@ public class ModalPresenter {
         this.view.setCaption(title);
     }
 
-    public void setContent(@Nonnull IsWidget content) {
+    public void setView(@Nonnull IsWidget content) {
         view.setContent(checkNotNull(content));
     }
 
@@ -100,5 +100,9 @@ public class ModalPresenter {
                 modalButtonHandler.handleModalButton(modalCloser);
             }
         }
+    }
+
+    public void escape() {
+        hide();
     }
 }

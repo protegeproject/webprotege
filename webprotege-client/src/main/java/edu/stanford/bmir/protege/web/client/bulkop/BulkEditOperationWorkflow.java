@@ -4,8 +4,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -19,7 +17,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +75,7 @@ public class BulkEditOperationWorkflow {
         modalPresenter.setPrimaryButton(execButton);
         modalPresenter.setButtonHandler(execButton, this::handleExecute);
         SimplePanel content = new SimplePanel();
-        modalPresenter.setContent(content);
+        modalPresenter.setView(content);
         presenter.start(content, eventBus);
         modalManager.showModal(modalPresenter);
     }
@@ -96,7 +93,7 @@ public class BulkEditOperationWorkflow {
     private ModalPresenter getCommitMessagePresenter(ModalCloser mainCloser, ImmutableSet<OWLEntityData> entities) {
         ModalPresenter commitMsgPresenter =  modalManager.createPresenter();
         commitMsgPresenter.setTitle(presenter.getTitle() + " Commit Message");
-        commitMsgPresenter.setContent(commitMessageInputView);
+        commitMsgPresenter.setView(commitMessageInputView);
         commitMsgPresenter.setEscapeButton(DialogButton.CANCEL);
         DialogButton continueButton = DialogButton.get("Continue");
         commitMsgPresenter.setPrimaryButton(continueButton);

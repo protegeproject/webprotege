@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
@@ -77,7 +76,7 @@ public class CreateEntityPresenter {
         view.setLangTagChangedHandler(this::handleLangTagChanged);
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
-        modalPresenter.setContent(view);
+        modalPresenter.setView(view);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {

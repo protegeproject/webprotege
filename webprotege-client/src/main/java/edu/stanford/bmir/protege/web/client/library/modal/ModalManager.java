@@ -1,5 +1,12 @@
 package edu.stanford.bmir.protege.web.client.library.modal;
 
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
@@ -24,9 +31,46 @@ public class ModalManager {
     @Nonnull
     private final Provider<ModalPresenter> modalPresenterProvider;
 
+    private HandlerRegistration keyUpReg = null;
+
     @Inject
     public ModalManager(@Nonnull Provider<ModalPresenter> modalPresenterProvider) {
         this.modalPresenterProvider = checkNotNull(modalPresenterProvider);
+        attachHandlers();
+    }
+
+    private void attachHandlers() {
+        if(keyUpReg != null) {
+            return;
+        }
+        RootPanel widgets = RootPanel.get();
+        widgets.sinkEvents(Event.ONKEYUP);
+        keyUpReg = widgets.addHandler(this::handleKeyUp, KeyUpEvent.getType());
+    }
+
+    private void handleKeyUp(@Nonnull KeyUpEvent event) {
+        if(isAcceptAccelerator(event)) {
+            handleAcceptAccelerator();
+        }
+        else if(isEscapeAccelerator(event)) {
+            handleEscapeAccelerator();
+        }
+    }
+
+    private void handleAcceptAccelerator() {
+        if(modalStack.isEmpty()) {
+            return;
+        }
+        ModalPresenter presenter = modalStack.pop();
+        presenter.accept();
+    }
+
+    private void handleEscapeAccelerator() {
+        if(modalStack.isEmpty()) {
+            return;
+        }
+        ModalPresenter presenter = modalStack.pop();
+        presenter.escape();
     }
 
     @Nonnull
@@ -45,8 +89,6 @@ public class ModalManager {
             modalStack.pop();
             presenter.hide();
         });
-//
-//        callback.start(getContentContainer());
     }
 
     private void handleEscape() {
@@ -61,5 +103,15 @@ public class ModalManager {
         ModalPresenter presenter = modalStack.pop();
         presenter.accept();
         presenter.hide();
+    }
+
+
+    private static boolean isAcceptAccelerator(@Nonnull KeyUpEvent event) {
+        return event.getNativeKeyCode() == KeyCodes.KEY_ENTER && event.isControlKeyDown();
+    }
+
+
+    private static boolean isEscapeAccelerator(@Nonnull KeyUpEvent event) {
+        return event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE;
     }
 }

@@ -47,7 +47,7 @@ public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHand
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         DialogButton createProjectButton = DialogButton.get(messages.createProject());
         modalPresenter.setPrimaryButton(createProjectButton);
-        modalPresenter.setContent(presenter.getView());
+        modalPresenter.setView(presenter.getView());
         modalPresenter.setButtonHandler(createProjectButton, closer -> {
             presenter.validateAndCreateProject(closer::closeModal);
         });

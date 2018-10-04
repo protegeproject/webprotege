@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
@@ -10,7 +9,6 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.*;
@@ -127,7 +125,7 @@ public class MessageBox {
     public void showOKCancelConfirmBox(String mainMessage, String subMessage, final OKCancelHandler handler) {
         final MessageBoxView messageBoxView = createMessageBox(MessageStyle.QUESTION, mainMessage, subMessage);
         ModalPresenter presenter = modalManager.createPresenter();
-        presenter.setContent(messageBoxView);
+        presenter.setView(messageBoxView);
         presenter.setButtonHandler(OK, closer -> {
             closer.closeModal();
             handler.handleOK();
@@ -152,7 +150,7 @@ public class MessageBox {
             closer.closeModal();
             handler.handleNo();
         });
-        presenter.setContent(messageBoxView);
+        presenter.setView(messageBoxView);
         modalManager.showModal(presenter);
     }
 
@@ -184,7 +182,7 @@ public class MessageBox {
             closer.closeModal();
             acceptHandler.run();
         });
-        presenter.setContent(messageBoxView);
+        presenter.setView(messageBoxView);
         modalManager.showModal(presenter);
     }
 
@@ -205,7 +203,7 @@ public class MessageBox {
     private void showMessageBox(MessageStyle messageStyle, String mainMessage, String subMessage, Runnable callback) {
         final MessageBoxView messageBoxView = createMessageBox(messageStyle, mainMessage, subMessage);
         ModalPresenter presenter = modalManager.createPresenter();
-        presenter.setContent(messageBoxView);
+        presenter.setView(messageBoxView);
         presenter.setPrimaryButton(OK);
         presenter.setButtonHandler(OK, closer -> {
             closer.closeModal();

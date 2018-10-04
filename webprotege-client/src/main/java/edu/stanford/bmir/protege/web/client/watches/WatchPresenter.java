@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
@@ -83,7 +82,7 @@ public class WatchPresenter {
         setWatchesInView(watches);
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.watch_watches());
-        modalPresenter.setContent(view);
+        modalPresenter.setView(view);
         modalPresenter.setEscapeButton(CANCEL);
         modalPresenter.setPrimaryButton(OK);
         modalPresenter.setButtonHandler(OK, this::handleApplyChanges);

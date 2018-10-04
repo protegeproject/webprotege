@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -16,7 +15,6 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCode;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
@@ -64,7 +62,7 @@ public class ResetPasswordPresenter {
         view.clearValue();
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.password_resetPassword());
-        modalPresenter.setContent(view);
+        modalPresenter.setView(view);
         DialogButton resetPwdBtn = DialogButton.get(messages.password_resetPassword());
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(resetPwdBtn);

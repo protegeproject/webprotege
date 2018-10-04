@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.mail;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
@@ -75,7 +74,7 @@ public class ChangeEmailAddressPresenter {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         ModalPresenter presenter = modalManager.createPresenter();
         presenter.setTitle(messages.changeEmailAddress());
-        presenter.setContent(view);
+        presenter.setView(view);
         presenter.setEscapeButton(DialogButton.CANCEL);
         presenter.setPrimaryButton(DialogButton.OK);
         presenter.setButtonHandler(DialogButton.OK, closer -> {
