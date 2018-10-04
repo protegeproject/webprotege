@@ -38,9 +38,6 @@ public class CreateEntityPresenter {
     private final CreateEntityDialogView view;
 
     @Nonnull
-    private final ModalPresenter modalPresenter;
-
-    @Nonnull
     private final ModalManager modalManager;
 
     @Nonnull
@@ -58,7 +55,6 @@ public class CreateEntityPresenter {
     public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
                                  @Nonnull ProjectId projectId,
                                  @Nonnull CreateEntityDialogView view,
-                                 @Nonnull ModalPresenter modalPresenter,
                                  @Nonnull ModalManager modalManager,
                                  @Nonnull ActiveProjectManager activeProjectManager,
                                  @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
@@ -66,14 +62,10 @@ public class CreateEntityPresenter {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
         this.view = view;
-        this.modalPresenter = modalPresenter;
         this.modalManager = modalManager;
         this.activeProjectManager = checkNotNull(activeProjectManager);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
         this.messages = checkNotNull(messages);
-        this.modalPresenter.setEscapeButton(DialogButton.CANCEL);
-        this.modalPresenter.setPrimaryButton(DialogButton.CREATE);
-
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
@@ -83,14 +75,18 @@ public class CreateEntityPresenter {
         view.setEntityType(entityType);
         view.setResetLangTagHandler(this::resetLangTag);
         view.setLangTagChangedHandler(this::handleLangTagChanged);
+        ModalPresenter modalPresenter = modalManager.createPresenter();
+        modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
+        modalPresenter.setContent(view);
+        modalPresenter.setEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
             handleCreateEntities(view.getText(),
                                  actionFactory,
                                  entitiesCreatedHandler);
             closer.closeModal();
         });
-        modalPresenter.setContent(view);
-        modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
+
         modalManager.showModal(modalPresenter);
         displayCurrentLangTagOrProjectDefaultLangTag();
 

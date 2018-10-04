@@ -49,9 +49,6 @@ public class BulkEditOperationWorkflow {
     private final CommitMessageInputView commitMessageInputView;
 
     @Nonnull
-    private final Provider<ModalPresenter> modalPresenterProvider;
-
-    @Nonnull
     private final ModalManager modalManager;
 
     @AutoFactory
@@ -61,14 +58,12 @@ public class BulkEditOperationWorkflow {
                                      @Nonnull BulkEditOperationPresenter presenter,
                                      @Nonnull ImmutableSet<OWLEntityData> entities,
                                      @Provided @Nonnull CommitMessageInputView commitMessageInputView,
-                                     @Provided @Nonnull Provider<ModalPresenter> modalPresenterProvider,
                                      @Provided @Nonnull ModalManager modalManager) {
         this.dispatch = checkNotNull(dispatch);
         this.presenter = checkNotNull(presenter);
         this.viewContainer = checkNotNull(viewContainer);
         this.entities = checkNotNull(entities);
         this.commitMessageInputView = checkNotNull(commitMessageInputView);
-        this.modalPresenterProvider = checkNotNull(modalPresenterProvider);
         this.modalManager = checkNotNull(modalManager);
     }
 
@@ -76,7 +71,7 @@ public class BulkEditOperationWorkflow {
         WebProtegeEventBus eventBus = new WebProtegeEventBus(new SimpleEventBus());
         List<DialogButton> dialogButtons = new ArrayList<>();
 
-        ModalPresenter modalPresenter = modalPresenterProvider.get();
+        ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(presenter.getTitle());
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         DialogButton execButton = DialogButton.get(presenter.getExecuteButtonText());
@@ -99,7 +94,7 @@ public class BulkEditOperationWorkflow {
     }
 
     private ModalPresenter getCommitMessagePresenter(ModalCloser mainCloser, ImmutableSet<OWLEntityData> entities) {
-        ModalPresenter commitMsgPresenter = modalPresenterProvider.get();
+        ModalPresenter commitMsgPresenter =  modalManager.createPresenter();
         commitMsgPresenter.setTitle(presenter.getTitle() + " Commit Message");
         commitMsgPresenter.setContent(commitMessageInputView);
         commitMsgPresenter.setEscapeButton(DialogButton.CANCEL);

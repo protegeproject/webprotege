@@ -46,8 +46,6 @@ public class ChangePasswordPresenter {
 
     private final ProgressDisplay progressDisplay;
 
-    private final ModalPresenter modalPresenter;
-
     private final ModalManager modalManager;
 
     private final Messages messages;
@@ -60,7 +58,6 @@ public class ChangePasswordPresenter {
                                    @Provided MessageBox messageBox,
                                    @Provided DispatchErrorMessageDisplay errorDisplay,
                                    @Provided ProgressDisplay progressDisplay,
-                                   @Provided ModalPresenter modalPresenter,
                                    @Provided ModalManager modalManager,
                                    @Provided Messages messages) {
         this.changePasswordView = changePasswordView;
@@ -69,7 +66,6 @@ public class ChangePasswordPresenter {
         this.messageBox = checkNotNull(messageBox);
         this.errorDisplay = errorDisplay;
         this.progressDisplay = progressDisplay;
-        this.modalPresenter = modalPresenter;
         this.modalManager = modalManager;
         this.messages = messages;
     }
@@ -83,6 +79,7 @@ public class ChangePasswordPresenter {
     }
 
     private void showDialog() {
+        ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(messages.changePassword());
         modalPresenter.setContent(changePasswordView);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);

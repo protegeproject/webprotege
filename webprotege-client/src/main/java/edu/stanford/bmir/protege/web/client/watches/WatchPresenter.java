@@ -20,6 +20,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.OK;
 
 /**
  * Matthew Horridge
@@ -33,9 +35,6 @@ public class WatchPresenter {
 
     @Nonnull
     private final Messages messages;
-
-    @Nonnull
-    private final ModalPresenter modalPresenter;
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -52,22 +51,15 @@ public class WatchPresenter {
     public WatchPresenter(@Nonnull ProjectId projectId,
                           @Nonnull WatchView view,
                           @Nonnull Messages messages,
-                          @Nonnull ModalPresenter modalPresenter,
                           @Nonnull LoggedInUserProvider loggedInUserProvider,
                           @Nonnull DispatchServiceManager dispatchServiceManager,
                           @Nonnull ModalManager modalManager) {
         this.view = checkNotNull(view);
         this.messages = checkNotNull(messages);
-        this.modalPresenter = checkNotNull(modalPresenter);
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
         this.modalManager = modalManager;
-        modalPresenter.setTitle(messages.watch_watches());
-        modalPresenter.setContent(view);
-        modalPresenter.setEscapeButton(DialogButton.CANCEL);
-        modalPresenter.setPrimaryButton(DialogButton.OK);
-        modalPresenter.setButtonHandler(DialogButton.OK, this::handleApplyChanges);
     }
 
     public void start(@Nonnull OWLEntity forEntity) {
@@ -89,6 +81,12 @@ public class WatchPresenter {
     private void handleRetrivedWatches(@Nonnull GetWatchesResult result) {
         Set<Watch> watches = result.getWatches();
         setWatchesInView(watches);
+        ModalPresenter modalPresenter = modalManager.createPresenter();
+        modalPresenter.setTitle(messages.watch_watches());
+        modalPresenter.setContent(view);
+        modalPresenter.setEscapeButton(CANCEL);
+        modalPresenter.setPrimaryButton(OK);
+        modalPresenter.setButtonHandler(OK, this::handleApplyChanges);
         modalManager.showModal(modalPresenter);
     }
 

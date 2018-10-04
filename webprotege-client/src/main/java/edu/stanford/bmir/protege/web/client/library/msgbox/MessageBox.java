@@ -32,14 +32,9 @@ public class MessageBox {
     @Nonnull
     private final ModalManager modalManager;
 
-    @Nonnull
-    private final Provider<ModalPresenter> presenterProvider;
-
     @Inject
-    public MessageBox(@Nonnull ModalManager modalManager,
-                      @Nonnull Provider<ModalPresenter> presenterProvider) {
+    public MessageBox(@Nonnull ModalManager modalManager) {
         this.modalManager = checkNotNull(modalManager);
-        this.presenterProvider = checkNotNull(presenterProvider);
     }
 
     private static MessageBoxView createMessageBox(MessageStyle messageStyle, String mainMessage, String subMessage) {
@@ -131,7 +126,7 @@ public class MessageBox {
 
     public void showOKCancelConfirmBox(String mainMessage, String subMessage, final OKCancelHandler handler) {
         final MessageBoxView messageBoxView = createMessageBox(MessageStyle.QUESTION, mainMessage, subMessage);
-        ModalPresenter presenter = presenterProvider.get();
+        ModalPresenter presenter = modalManager.createPresenter();
         presenter.setContent(messageBoxView);
         presenter.setButtonHandler(OK, closer -> {
             closer.closeModal();
@@ -176,7 +171,7 @@ public class MessageBox {
                                DialogButton escapeButton, Runnable escapeHandler, DialogButton acceptButton,
                                Runnable acceptHandler, DialogButton defaultButton) {
         final MessageBoxView messageBoxView = createMessageBox(messageStyle, mainMessage, subMessage);
-        ModalPresenter presenter = new ModalPresenter(new ModalViewImpl(WebProtegeClientBundle.BUNDLE));
+        ModalPresenter presenter = modalManager.createPresenter();
         presenter.setTitle(DLG_TITLE);
         presenter.setPrimaryButton(escapeButton);
         presenter.setEscapeButton(acceptButton);
@@ -209,7 +204,7 @@ public class MessageBox {
 
     private void showMessageBox(MessageStyle messageStyle, String mainMessage, String subMessage, Runnable callback) {
         final MessageBoxView messageBoxView = createMessageBox(messageStyle, mainMessage, subMessage);
-        ModalPresenter presenter = presenterProvider.get();
+        ModalPresenter presenter = modalManager.createPresenter();
         presenter.setContent(messageBoxView);
         presenter.setPrimaryButton(OK);
         presenter.setButtonHandler(OK, closer -> {
