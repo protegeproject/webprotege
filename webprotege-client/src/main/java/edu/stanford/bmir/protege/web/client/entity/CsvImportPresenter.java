@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
+import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogControllerFactory;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -21,19 +22,18 @@ import javax.inject.Provider;
  */
 public class CsvImportPresenter {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private final ProjectId projectId;
-
     private final OWLClass baseClass;
 
-    private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
+    private final MessageBox messageBox;
 
-    public CsvImportPresenter(DispatchServiceManager dispatchServiceManager, ProjectId projectId, OWLClass baseClass, Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.projectId = projectId;
+    private final CSVImportDialogControllerFactory dialogControllerFactory;
+
+    public CsvImportPresenter(OWLClass baseClass,
+                              MessageBox messageBox,
+                              CSVImportDialogControllerFactory dialogControllerFactory) {
         this.baseClass = baseClass;
-        this.primitiveDataEditorProvider = primitiveDataEditorProvider;
+        this.messageBox = messageBox;
+        this.dialogControllerFactory = dialogControllerFactory;
     }
 
     public void startImport() {
@@ -41,22 +41,15 @@ public class CsvImportPresenter {
             @Override
             public void handleFileUploaded(final DocumentId fileDocumentId) {
                 WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
-                        new CSVImportDialogController(
-                                projectId,
-                                fileDocumentId,
-                                baseClass,
-                                dispatchServiceManager,
-                                new CSVImportViewImpl(
-                                        primitiveDataEditorProvider)));
+                        dialogControllerFactory.create(fileDocumentId, baseClass));
                 csvImportDialog.setVisible(true);
-
             }
 
             @Override
             public void handleFileUploadFailed(
                     String errorMessage) {
                 ProgressMonitor.get().hideProgressMonitor();
-                MessageBox.showAlert("Error uploading CSV file", errorMessage);
+                messageBox.showAlert("Error uploading CSV file", errorMessage);
             }
         };
         UploadFileDialogController controller = new UploadFileDialogController("Upload CSV",

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.auth;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.auth.*;
@@ -25,17 +26,20 @@ public class AuthenticatedActionExecutor {
 
     private final ChapResponseDigestAlgorithm responseDigestAlgorithm;
 
+    private final DispatchErrorMessageDisplay errorDisplay;
+
     @Inject
     public AuthenticatedActionExecutor(DispatchServiceManager dispatchServiceManager,
                                        PasswordDigestAlgorithm passwordDigestAlgorithm,
-                                       ChapResponseDigestAlgorithm responseDigestAlgorithm) {
+                                       ChapResponseDigestAlgorithm responseDigestAlgorithm, DispatchErrorMessageDisplay errorDisplay) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.passwordDigestAlgorithm = checkNotNull(passwordDigestAlgorithm);
         this.responseDigestAlgorithm = checkNotNull(responseDigestAlgorithm);
+        this.errorDisplay = errorDisplay;
     }
 
     public <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void execute(final UserId userId, final String clearTextPassword, final AuthenticationActionFactory<A, R> actionFactory, final AuthenticatedDispatchServiceCallback<R> callback) {
-        dispatchServiceManager.execute(new GetChapSessionAction(userId), new DispatchServiceCallback<GetChapSessionResult>() {
+        dispatchServiceManager.execute(new GetChapSessionAction(userId), new DispatchServiceCallback<GetChapSessionResult>(errorDisplay) {
             @Override
             public void handleSuccess(GetChapSessionResult result) {
                 Optional<ChapSession> chapSession = result.getChapSession();
@@ -64,7 +68,7 @@ public class AuthenticatedActionExecutor {
         ChapSessionId chapSessionId = chapSession.getId();
         A action = actionFactory.createAction(chapSessionId, userId, chapResponse);
         dispatchServiceManager.execute(action,
-                new DispatchServiceCallback<R>() {
+                new DispatchServiceCallback<R>(errorDisplay) {
                     @Override
                     public void handleSuccess(R loginResult) {
                         callback.handleAuthenticationResponse(loginResult.getResponse());

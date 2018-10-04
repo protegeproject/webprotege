@@ -167,7 +167,6 @@ public final class WebProtegeDialog<D> extends DialogBox {
     }
 
     private void displayContentsInvalidMessage(String message) {
-        MessageBox.showAlert(message);
     }
 
     private void hideWithDefaultButton() {

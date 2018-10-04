@@ -32,37 +32,34 @@ public class UserIdSuggestOracle extends SuggestOracle {
 
     @Override
     public void requestSuggestions(final Request request, final Callback callback) {
-        dispatchServiceManager.execute(new GetUserIdCompletionsAction(request.getQuery()), new DispatchServiceCallback<GetPossibleItemCompletionsResult<UserId>>() {
-            @Override
-            public void handleSuccess(GetPossibleItemCompletionsResult<UserId> result) {
-                Collection<Suggestion> suggestions = new ArrayList<>();
-                for(final UserId userId : result.getPossibleItemCompletions()) {
-                    suggestions.add(new Suggestion() {
-                        @Override
-                        public String getDisplayString() {
-                            String userName = userId.getUserName();
-                            String query = request.getQuery();
-                            int queryIndex = userName.toLowerCase().indexOf(query.toLowerCase());
-                            if(queryIndex != -1) {
-                                return "<span>" + userName.substring(0, queryIndex)
-                                        + "<span style='font-weight: bold;'>"
-                                        + userName.substring(queryIndex, queryIndex + query.length())
-                                        + "</span>"
-                                        + userName.substring(queryIndex + query.length()) + "<span>";
-                            }
-                            else {
-                                return userName;
-                            }
+        dispatchServiceManager.execute(new GetUserIdCompletionsAction(request.getQuery()), result -> {
+            Collection<Suggestion> suggestions = new ArrayList<>();
+            for(final UserId userId : result.getPossibleItemCompletions()) {
+                suggestions.add(new Suggestion() {
+                    @Override
+                    public String getDisplayString() {
+                        String userName = userId.getUserName();
+                        String query = request.getQuery();
+                        int queryIndex = userName.toLowerCase().indexOf(query.toLowerCase());
+                        if(queryIndex != -1) {
+                            return "<span>" + userName.substring(0, queryIndex)
+                                    + "<span style='font-weight: bold;'>"
+                                    + userName.substring(queryIndex, queryIndex + query.length())
+                                    + "</span>"
+                                    + userName.substring(queryIndex + query.length()) + "<span>";
                         }
+                        else {
+                            return userName;
+                        }
+                    }
 
-                        @Override
-                        public String getReplacementString() {
-                            return userId.getUserName();
-                        }
-                    });
-                }
-                callback.onSuggestionsReady(request, new Response(suggestions));
+                    @Override
+                    public String getReplacementString() {
+                        return userId.getUserName();
+                    }
+                });
             }
+            callback.onSuggestionsReady(request, new Response(suggestions));
         });
     }
 }

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -28,31 +29,29 @@ public class ChangeEmailAddressPresenter {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     @Inject
-    public ChangeEmailAddressPresenter(DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
+    public ChangeEmailAddressPresenter(@Nonnull DispatchServiceManager dispatchServiceManager, 
+                                       @Nonnull LoggedInUserProvider loggedInUserProvider,
+                                       @Nonnull MessageBox messageBox) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
+        this.messageBox = messageBox;
     }
 
     public void changeEmail() {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         if (userId.isGuest()) {
-            MessageBox.showAlert("You must be logged in to change your email address");
+            messageBox.showAlert("You must be logged in to change your email address");
             return;
         }
         ProgressMonitor.get().showProgressMonitor("Retrieving email address", "Please wait.");
 
-        dispatchServiceManager.execute(new GetEmailAddressAction(userId), new DispatchServiceCallback<GetEmailAddressResult>() {
-            @Override
-            public void handleSuccess(GetEmailAddressResult result) {
-                showDialog(result.getEmailAddress());
-                ProgressMonitor.get().hideProgressMonitor();
-            }
-
-            @Override
-            public void handleFinally() {
-                ProgressMonitor.get().hideProgressMonitor();
-            }
+        dispatchServiceManager.execute(new GetEmailAddressAction(userId), result -> {
+            showDialog(result.getEmailAddress());
+            ProgressMonitor.get().hideProgressMonitor();
         });
     }
 
@@ -65,7 +64,7 @@ public class ChangeEmailAddressPresenter {
                 dispatchServiceManager.execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()),
                                                result -> {
                                                    if (result.getResult() == ADDRESS_ALREADY_EXISTS) {
-                                                       MessageBox.showMessage("Address already taken",
+                                                       messageBox.showMessage("Address already taken",
                                                                               "The email address that you have specified is taken by another user.  " +
                                                                                       "Please specify a different email address.");
                                                    }
@@ -75,7 +74,7 @@ public class ChangeEmailAddressPresenter {
                                                });
             }
             else {
-                MessageBox.showAlert("The specified email addresses do not match.");
+                messageBox.showAlert("The specified email addresses do not match.");
             }
         });
         WebProtegeDialog<Optional<EmailAddress>> dlg = new WebProtegeDialog<Optional<EmailAddress>>(controller);

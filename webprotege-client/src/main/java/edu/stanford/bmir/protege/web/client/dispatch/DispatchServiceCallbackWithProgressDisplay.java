@@ -9,9 +9,6 @@ public abstract class DispatchServiceCallbackWithProgressDisplay<T> extends Disp
 
     private ProgressDisplay progressDisplay;
 
-    public DispatchServiceCallbackWithProgressDisplay() {
-        progressDisplay = new ProgressDisplayImpl();
-    }
 
     public DispatchServiceCallbackWithProgressDisplay(DispatchErrorMessageDisplay errorMessageDisplay, ProgressDisplay progressDisplay) {
         super(errorMessageDisplay);

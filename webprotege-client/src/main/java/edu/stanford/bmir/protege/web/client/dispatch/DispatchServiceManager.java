@@ -56,13 +56,21 @@ public class DispatchServiceManager {
     @Nonnull
     private final PlaceController placeController;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    private DispatchErrorMessageDisplay errorDisplay;
+
     @Inject
     public DispatchServiceManager(@Nonnull EventBus eventBus,
                                   @Nonnull SignInRequiredHandler signInRequiredHandler,
                                   @Nonnull LoggedInUser loggedInUser,
-                                  @Nonnull PlaceController placeController) {
+                                  @Nonnull PlaceController placeController,
+                                  @Nonnull MessageBox messageBox, DispatchErrorMessageDisplay errorDisplay) {
         this.loggedInUser = checkNotNull(loggedInUser);
         this.placeController = placeController;
+        this.messageBox = messageBox;
+        this.errorDisplay = errorDisplay;
         async = GWT.create(DispatchService.class);
         this.eventBus = checkNotNull(eventBus);
         this.signInRequiredHandler = checkNotNull(signInRequiredHandler);
@@ -102,7 +110,7 @@ public class DispatchServiceManager {
 
 
     public <A extends Action<R>, R extends Result> void execute(A action, final Consumer<R> successConsumer) {
-        execute(action, new DispatchServiceCallback<R>() {
+        execute(action, new DispatchServiceCallback<R>(errorDisplay) {
             @Override
             public void handleSuccess(R r) {
                 successConsumer.accept(r);
@@ -111,7 +119,7 @@ public class DispatchServiceManager {
     }
 
     public <A extends Action<R>, R extends Result> void execute(A action, HasBusy hasBusy, final Consumer<R> successConsumer) {
-        execute(action, new DispatchServiceCallback<R>() {
+        execute(action, new DispatchServiceCallback<R>(errorDisplay) {
 
             private Timer timer = new Timer() {
                 @Override
@@ -214,6 +222,6 @@ public class DispatchServiceManager {
     }
 
     private void displayAlert(String alert) {
-        MessageBox.showAlert(alert);
+        messageBox.showAlert(alert);
     }
 }

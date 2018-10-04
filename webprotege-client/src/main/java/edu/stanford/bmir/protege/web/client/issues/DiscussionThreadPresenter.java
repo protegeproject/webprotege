@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.issues;
 
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -17,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
@@ -61,6 +61,9 @@ public class DiscussionThreadPresenter implements HasDispose {
     @Nonnull
     private final Provider<CommentEditorDialog> commentEditorDialogProvider;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     private final Map<CommentId, CommentView> commentViewMap = new HashMap<>();
 
     private Optional<ThreadId> currentThreadId = Optional.empty();
@@ -75,7 +78,8 @@ public class DiscussionThreadPresenter implements HasDispose {
                                      @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                      @Nonnull LoggedInUserProvider loggedInUserProvider,
                                      @Nonnull CommentViewFactory commentViewFactory,
-                                     @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider) {
+                                     @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider,
+                                     @Nonnull MessageBox messageBox) {
         this.view = checkNotNull(view);
         this.messages = checkNotNull(messages);
         this.projectId = checkNotNull(projectId);
@@ -85,6 +89,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         this.loggedInUserProvider = loggedInUserProvider;
         this.commentViewFactory = checkNotNull(commentViewFactory);
         this.commentEditorDialogProvider = checkNotNull(commentEditorDialogProvider);
+        this.messageBox = checkNotNull(messageBox);
     }
 
     @Nonnull
@@ -109,7 +114,9 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void updateCommentView(CommentView commentView) {
-        final boolean userIsCommentCreator = commentView.getCreatedBy().equals(Optional.of(loggedInUserProvider.getCurrentUserId()));
+        final boolean userIsCommentCreator = commentView
+                .getCreatedBy()
+                .equals(Optional.of(loggedInUserProvider.getCurrentUserId()));
         if (userIsCommentCreator) {
             permissionChecker.hasPermission(EDIT_OWN_OBJECT_COMMENT, commentView::setEditButtonVisible);
         }
@@ -128,6 +135,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     /**
      * Sets the discussion thread to be presented
+     *
      * @param thread The thread.
      */
     public void setDiscussionThread(@Nonnull EntityDiscussionThread thread) {
@@ -193,13 +201,13 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void handleDeleteComment(Comment comment) {
-        showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
-                            messages.deleteCommentConfirmationBoxText(),
-                            () -> dispatch.execute(deleteComment(projectId, comment.getId()), result -> {}));
+        messageBox.showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
+                                       messages.deleteCommentConfirmationBoxText(),
+                                       () -> dispatch.execute(deleteComment(projectId, comment.getId()), result -> {}));
     }
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {
-        if(!threadId.equals(currentThreadId.orElse(null))) {
+        if (!threadId.equals(currentThreadId.orElse(null))) {
             return;
         }
         if (commentViewMap.containsKey(comment.getId())) {

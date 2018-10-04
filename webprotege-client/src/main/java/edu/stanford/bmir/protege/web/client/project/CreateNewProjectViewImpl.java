@@ -45,12 +45,17 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     @UiField(provided = true)
     DefaultLanguageEditor projectLanguageField;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     private HandlerRegistration submitCompleteHandlerRegistraion = () -> {};
 
 
     @Inject
-    public CreateNewProjectViewImpl(@Nonnull DefaultLanguageEditor languageEditor) {
+    public CreateNewProjectViewImpl(@Nonnull DefaultLanguageEditor languageEditor,
+                                    @Nonnull MessageBox messageBox) {
         this.projectLanguageField = checkNotNull(languageEditor);
+        this.messageBox = messageBox;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -105,7 +110,7 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
 
     @Override
     public void showProjectNameMissingMessage() {
-        MessageBox.showAlert("Project name missing", "Please enter a project name");
+        messageBox.showAlert("Project name missing", "Please enter a project name");
     }
 
     @Override

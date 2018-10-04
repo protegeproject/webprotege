@@ -40,12 +40,9 @@ public class LoadProjectInNewWindowRequestHandlerImpl implements LoadProjectInNe
     @Override
     public void handleLoadProjectInNewWindow(final ProjectId projectId) {
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), new DispatchServiceCallback<GetPerspectivesResult>() {
-            @Override
-            public void handleSuccess(GetPerspectivesResult result) {
-                ImmutableList<PerspectiveId> perspectives = result.getPerspectives();
-                handleOpenInNewWindow(perspectives, projectId);
-            }
+        dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
+            ImmutableList<PerspectiveId> perspectives = result.getPerspectives();
+            handleOpenInNewWindow(perspectives, projectId);
         });
     }
 

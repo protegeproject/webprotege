@@ -6,18 +6,16 @@ import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 20/02/15
  */
-public abstract class DispatchServiceCallback<T> {
+public class DispatchServiceCallback<T> {
 
     private DispatchErrorMessageDisplay errorMessageDisplay;
-
-    public DispatchServiceCallback() {
-        errorMessageDisplay = new MessageBoxErrorDisplay();
-    }
 
     public DispatchServiceCallback(DispatchErrorMessageDisplay errorMessageDisplay) {
         this.errorMessageDisplay = errorMessageDisplay;

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -29,13 +30,22 @@ public class ResetPasswordPresenter {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    @Nonnull
+    private final DispatchErrorMessageDisplay errorDisplay;
+
     @Inject
     public ResetPasswordPresenter(@Nonnull DispatchServiceManager dispatchService,
                                   @Nonnull Provider<ResetPasswordDialogController> resetPasswordDialogController,
-                                  @Nonnull Messages messages) {
+                                  @Nonnull Messages messages,
+                                  @Nonnull MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay) {
         this.dispatchService = dispatchService;
         this.resetPasswordDialogController = resetPasswordDialogController;
         this.messages = messages;
+        this.messageBox = messageBox;
+        this.errorDisplay = errorDisplay;
     }
 
     public void resetPassword() {
@@ -53,20 +63,20 @@ public class ResetPasswordPresenter {
     }
 
     private void resetPassword(ResetPasswordData data) {
-        dispatchService.execute(new ResetPasswordAction(data), new DispatchServiceCallback<ResetPasswordResult>() {
+        dispatchService.execute(new ResetPasswordAction(data), new DispatchServiceCallback<ResetPasswordResult>(errorDisplay) {
 
             @Override
             public void handleSuccess(ResetPasswordResult result) {
                 if (result.getResultCode() == ResetPasswordResultCode.SUCCESS) {
-                    MessageBox.showMessage(messages.password_reset_success_msg(),
+                    messageBox.showMessage(messages.password_reset_success_msg(),
                                            messages.password_reset_success_submsg());
                 }
                 else if(result.getResultCode() == ResetPasswordResultCode.INVALID_EMAIL_ADDRESS) {
-                    MessageBox.showAlert(messages.password_reset_error_invalidemail_msg(),
+                    messageBox.showAlert(messages.password_reset_error_invalidemail_msg(),
                                          messages.password_reset_error_invalidemail_submsg());
                 }
                 else {
-                    MessageBox.showAlert(messages.password_reset_error_generic_msg(),
+                    messageBox.showAlert(messages.password_reset_error_generic_msg(),
                                          messages.password_reset_error_generic_submsg());
                 }
             }

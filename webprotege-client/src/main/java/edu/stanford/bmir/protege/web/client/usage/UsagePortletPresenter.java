@@ -138,23 +138,13 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private void showUsageForEntity(final OWLEntity entity) {
         final GetUsageAction action = new GetUsageAction(entity, getProjectId(), filter);
-        dispatchServiceManager.execute(action, new DispatchServiceCallback<GetUsageResult>() {
-
-            @Override
-            protected String getErrorMessage(Throwable throwable) {
-                setDisplayedEntity(Optional.empty());
-                return "There was a problem retrieving the usage for the selected entity";
-            }
-
-            @Override
-            public void handleSuccess(GetUsageResult result) {
-                final Collection<UsageReference> references = result.getUsageReferences();
-                final int visibleReferences = references.size();
-                final int totalReferences = result.getTotalUsageCount();
-//                setTitle("Usage (definition and references) [showing " + visibleReferences + " references of " + totalReferences + "]");
-                usageView.setData(entity, references);
-                setDisplayedEntity(Optional.of(result.getEntityNode().getEntityData()));
-            }
+        dispatchServiceManager.execute(action, result -> {
+            final Collection<UsageReference> references = result.getUsageReferences();
+            final int visibleReferences = references.size();
+            final int totalReferences = result.getTotalUsageCount();
+            //                setTitle("Usage (definition and references) [showing " + visibleReferences + " references of " + totalReferences + "]");
+            usageView.setData(entity, references);
+            setDisplayedEntity(Optional.of(result.getEntityNode().getEntityData()));
         });
     }
 }

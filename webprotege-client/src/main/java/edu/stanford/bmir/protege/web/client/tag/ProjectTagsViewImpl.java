@@ -50,14 +50,19 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     private TagListChangedHandler tagListChangedHandler = () -> {};
 
     @Inject
     public ProjectTagsViewImpl(@Nonnull Provider<ColorSwatchPresenter> colorSwatchPresenter,
                                @Nonnull Messages messages,
-                               @Nonnull DeleteProjectTagConfirmationPrompt deletePrompt) {
+                               @Nonnull DeleteProjectTagConfirmationPrompt deletePrompt,
+                               @Nonnull MessageBox messageBox) {
         tagsEditor = new ValueListFlexEditorImpl<>(() -> new TagEditor(colorSwatchPresenter.get()));
         this.messages = checkNotNull(messages);
+        this.messageBox = messageBox;
         tagsEditor.setDeleteConfirmationPrompt(deletePrompt);
         tagsEditor.addValueChangeHandler(event -> tagListChangedHandler.handleTagListChanged());
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -97,7 +102,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
 
     @Override
     public void showDuplicateTagAlert(@Nonnull String label) {
-        MessageBox.showAlert(messages.tags_duplicateTag_Title(),
+        messageBox.showAlert(messages.tags_duplicateTag_Title(),
                              messages.tags_duplicateTag_Message(label));
     }
 }

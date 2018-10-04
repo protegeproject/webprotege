@@ -4,9 +4,13 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -18,7 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -48,6 +51,9 @@ public class BulkEditOperationWorkflow {
     @Nonnull
     private final Provider<ModalPresenter> modalPresenterProvider;
 
+    @Nonnull
+    private final ModalManager modalManager;
+
     @AutoFactory
     @Inject
     public BulkEditOperationWorkflow(@Provided @Nonnull DispatchServiceManager dispatch,
@@ -55,13 +61,15 @@ public class BulkEditOperationWorkflow {
                                      @Nonnull BulkEditOperationPresenter presenter,
                                      @Nonnull ImmutableSet<OWLEntityData> entities,
                                      @Provided @Nonnull CommitMessageInputView commitMessageInputView,
-                                     @Provided @Nonnull Provider<ModalPresenter> modalPresenterProvider) {
+                                     @Provided @Nonnull Provider<ModalPresenter> modalPresenterProvider,
+                                     @Provided @Nonnull ModalManager modalManager) {
         this.dispatch = checkNotNull(dispatch);
         this.presenter = checkNotNull(presenter);
         this.viewContainer = checkNotNull(viewContainer);
         this.entities = checkNotNull(entities);
         this.commitMessageInputView = checkNotNull(commitMessageInputView);
         this.modalPresenterProvider = checkNotNull(modalPresenterProvider);
+        this.modalManager = checkNotNull(modalManager);
     }
 
     public void start() {
@@ -70,11 +78,14 @@ public class BulkEditOperationWorkflow {
 
         ModalPresenter modalPresenter = modalPresenterProvider.get();
         modalPresenter.setTitle(presenter.getTitle());
-        modalPresenter.addEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setEscapeButton(DialogButton.CANCEL);
         DialogButton execButton = DialogButton.get(presenter.getExecuteButtonText());
         modalPresenter.setPrimaryButton(execButton);
         modalPresenter.setButtonHandler(execButton, this::handleExecute);
-        modalPresenter.show(container -> presenter.start(container, eventBus));
+        SimplePanel content = new SimplePanel();
+        modalPresenter.setContent(content);
+        presenter.start(content, eventBus);
+        modalManager.showModal(modalPresenter);
     }
 
     private void handleExecute(ModalCloser closer) {
@@ -83,14 +94,15 @@ public class BulkEditOperationWorkflow {
         }
         else {
             ModalPresenter commitMsgPresenter = getCommitMessagePresenter(closer, entities);
-            commitMsgPresenter.show(container -> container.setWidget(commitMessageInputView));
+            modalManager.showModal(commitMsgPresenter);
         }
     }
 
     private ModalPresenter getCommitMessagePresenter(ModalCloser mainCloser, ImmutableSet<OWLEntityData> entities) {
         ModalPresenter commitMsgPresenter = modalPresenterProvider.get();
         commitMsgPresenter.setTitle(presenter.getTitle() + " Commit Message");
-        commitMsgPresenter.addEscapeButton(DialogButton.CANCEL);
+        commitMsgPresenter.setContent(commitMessageInputView);
+        commitMsgPresenter.setEscapeButton(DialogButton.CANCEL);
         DialogButton continueButton = DialogButton.get("Continue");
         commitMsgPresenter.setPrimaryButton(continueButton);
         commitMsgPresenter.setButtonHandler(continueButton, msgCloser -> {

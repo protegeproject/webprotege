@@ -13,11 +13,12 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.*;
+import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordView;
+import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.collection.*;
-import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
-import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletView;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
@@ -495,4 +496,18 @@ public class ClientApplicationModule {
         return view;
     }
 
+    @Provides
+    ChangePasswordView provideChangePasswordView(@Nonnull ChangePasswordViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DispatchErrorMessageDisplay provideDispatchErrorMessageDisplay(@Nonnull MessageBoxErrorDisplay display) {
+        return display;
+    }
+
+    @Provides
+    ProgressDisplay provideProgressDisplay(ProgressDisplayImpl impl) {
+        return impl;
+    }
 }

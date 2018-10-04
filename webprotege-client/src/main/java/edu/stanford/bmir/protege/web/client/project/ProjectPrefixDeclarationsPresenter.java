@@ -7,8 +7,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.place.ProjectPrefixDeclarationsPlace;
@@ -57,6 +59,15 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    @Nonnull
+    private final DispatchErrorMessageDisplay errorDisplay;
+
+    @Nonnull
+    private final ProgressDisplay progressDisplay;
+
     @Inject
     public ProjectPrefixDeclarationsPresenter(@Nonnull ProjectId projectId,
                                               @Nonnull ProjectPrefixDeclarationsView view,
@@ -64,7 +75,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
                                               @Nonnull DispatchServiceManager dispatchServiceManager,
                                               @Nonnull PlaceController placeController,
                                               @Nonnull SettingsPresenter settingsPresenter,
-                                              @Nonnull Messages messages) {
+                                              @Nonnull Messages messages, MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.permissionScreener = checkNotNull(permissionScreener);
@@ -72,6 +83,9 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
         this.placeController = checkNotNull(placeController);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.messages = checkNotNull(messages);
+        this.messageBox = checkNotNull(messageBox);
+        this.errorDisplay = checkNotNull(errorDisplay);
+        this.progressDisplay = checkNotNull(progressDisplay);
     }
 
     @Override
@@ -91,7 +105,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
         settingsPresenter.setCancelSettingsHandler(this::cancelChanges);
         settingsPresenter.setNextPlace(getNextPlace());
         dispatchServiceManager.execute(new GetProjectPrefixDeclarationsAction(projectId),
-                                       new DispatchServiceCallbackWithProgressDisplay<GetProjectPrefixDeclarationsResult>() {
+                                       new DispatchServiceCallbackWithProgressDisplay<GetProjectPrefixDeclarationsResult>(errorDisplay, progressDisplay) {
                                            @Override
                                            public String getProgressDisplayTitle() {
                                                return "Retrieving prefixes";
@@ -125,7 +139,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
                                                     .collect(joining("<br>"));
             msg += prefixes;
             msg += "<br><br>Do you want to apply the changes and save these prefixes?";
-            MessageBox.showConfirmBox("Suspicious prefix declarations.  Apply changes?",
+            messageBox.showConfirmBox("Suspicious prefix declarations.  Apply changes?",
                                       msg,
                                       NO, YES,
                                       this::applyChanges,
@@ -160,7 +174,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
         for (PrefixDeclaration decl : view.getPrefixDeclarations()) {
             PrefixDeclaration existing = prefixDeclarations.put(decl.getPrefixName(), decl);
             if (existing != null) {
-                MessageBox.showAlert("Duplicate prefix name bindings",
+                messageBox.showAlert("Duplicate prefix name bindings",
                                      "Prefix name " + existing.getPrefixName() + " is bound to more than one prefix.");
                 return true;
             }
@@ -193,7 +207,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
         Optional<Place> nextPlace = getNextPlace();
         nextPlace.ifPresent(placeController::goTo);
         if(!nextPlace.isPresent()) {
-            MessageBox.showMessage("Changes Applied", "Your changes have been applied.");
+            messageBox.showMessage("Changes Applied", "Your changes have been applied.");
         }
     }
 

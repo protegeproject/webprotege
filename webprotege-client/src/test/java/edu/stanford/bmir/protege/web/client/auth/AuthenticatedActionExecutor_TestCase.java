@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.auth;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.auth.*;
@@ -77,10 +78,13 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
     @Mock
     private R result;
 
+    @Mock
+    private DispatchErrorMessageDisplay errorDisplay;
+
 
     @Before
     public void setUp() throws Exception {
-        protocol = new AuthenticatedActionExecutor(dispatchServiceManager, passwordDigestAlgorithm, chapResponseDigestAlgorithm);
+        protocol = new AuthenticatedActionExecutor(dispatchServiceManager, passwordDigestAlgorithm, chapResponseDigestAlgorithm, errorDisplay);
 
         when(passwordDigestAlgorithm
                 .getDigestOfSaltedPassword(anyString(), any(Salt.class)))

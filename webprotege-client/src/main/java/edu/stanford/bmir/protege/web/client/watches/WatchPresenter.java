@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -42,6 +43,9 @@ public class WatchPresenter {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    @Nonnull
+    private final ModalManager modalManager;
+
     private OWLEntity currentEntity;
 
     @Inject
@@ -50,15 +54,18 @@ public class WatchPresenter {
                           @Nonnull Messages messages,
                           @Nonnull ModalPresenter modalPresenter,
                           @Nonnull LoggedInUserProvider loggedInUserProvider,
-                          @Nonnull DispatchServiceManager dispatchServiceManager) {
+                          @Nonnull DispatchServiceManager dispatchServiceManager,
+                          @Nonnull ModalManager modalManager) {
         this.view = checkNotNull(view);
         this.messages = checkNotNull(messages);
         this.modalPresenter = checkNotNull(modalPresenter);
         this.projectId = checkNotNull(projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
+        this.modalManager = modalManager;
         modalPresenter.setTitle(messages.watch_watches());
-        modalPresenter.addEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setContent(view);
+        modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.OK);
         modalPresenter.setButtonHandler(DialogButton.OK, this::handleApplyChanges);
     }
@@ -82,7 +89,7 @@ public class WatchPresenter {
     private void handleRetrivedWatches(@Nonnull GetWatchesResult result) {
         Set<Watch> watches = result.getWatches();
         setWatchesInView(watches);
-        modalPresenter.show(container -> container.setWidget(view));
+        modalManager.showModal(modalPresenter);
     }
 
     private void setWatchesInView(@Nonnull Set<Watch> watches) {

@@ -24,6 +24,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LoginViewImpl extends Composite implements LoginView {
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     interface LoginViewImplUiBinder extends UiBinder<HTMLPanel, LoginViewImpl> {
 
     }
@@ -55,7 +58,8 @@ public class LoginViewImpl extends Composite implements LoginView {
     private static final Messages MESSAGES = GWT.create(Messages.class);
 
     @Inject
-    public LoginViewImpl() {
+    public LoginViewImpl(@Nonnull MessageBox messageBox) {
+        this.messageBox = checkNotNull(messageBox);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -126,17 +130,17 @@ public class LoginViewImpl extends Composite implements LoginView {
 
     @Override
     public void showLoginFailedErrorMessage() {
-        MessageBox.showAlert(MESSAGES.login_error());
+        messageBox.showAlert(MESSAGES.login_error());
     }
 
     @Override
     public void showUserNameRequiredErrorMessage() {
-        MessageBox.showAlert(MESSAGES.login_enterUserName());
+        messageBox.showAlert(MESSAGES.login_enterUserName());
     }
 
     @Override
     public void showPasswordRequiredErrorMessage() {
-        MessageBox.showAlert(MESSAGES.login_enterPassword());
+        messageBox.showAlert(MESSAGES.login_enterPassword());
     }
 
     @Override

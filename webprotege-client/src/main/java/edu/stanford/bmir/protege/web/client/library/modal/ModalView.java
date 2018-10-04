@@ -12,20 +12,36 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 27 Sep 2018
  */
-public interface ModalView extends IsWidget, HasModalButtons {
+public interface ModalView extends IsWidget {
 
-    void setAcceptKeyHandler(@Nonnull Runnable runnable);
 
-    void setEscapeKeyHandler(@Nonnull Runnable runnable);
+    void setCaption(@Nonnull String caption);
 
-    @Nonnull
-    AcceptsOneWidget getModalContainer();
+    /**
+     * Sets the primary dialog button
+     * @param button The button.
+     * @param handler A handler that is run when the button is pressed.
+     */
+    void setPrimaryButton(@Nonnull DialogButton button, @Nonnull Runnable handler);
 
-    void setModalTitle(@Nonnull String title);
+    /**
+     * Sets the escape button.
+     * @param button The button.
+     * @param handler A handler that is run when the button is pressed.
+     */
+    void setEscapeButton(DialogButton button, @Nonnull Runnable handler);
 
-    void setCloser(@Nonnull ModalCloser closer);
+    /**
+     * Adds a button.
+     * @param button The button.  The button will be styled as a regular dialog button, that is,
+     *               neither an escape button nor an accept button.
+     * @param handler A handler that is run when the button is pressed.
+     */
+    void addButton(@Nonnull DialogButton button, @Nonnull Runnable handler);
 
-    void hide();
+    void setContent(@Nonnull IsWidget content);
 
     void setPrimaryButtonFocusedOnAttach(boolean focused);
+
+    void hide();
 }

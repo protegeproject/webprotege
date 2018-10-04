@@ -54,6 +54,8 @@ public class PerspectivePresenter implements HasDispose {
 
     private final PortletChooserPresenter portletChooserPresenter;
 
+    private final MessageBox messageBox;
+
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private java.util.Optional<PerspectiveId> currentPerspective = java.util.Optional.empty();
@@ -67,7 +69,8 @@ public class PerspectivePresenter implements HasDispose {
                                 DispatchServiceManager dispatchServiceManager,
                                 PerspectiveFactory perspectiveFactory,
                                 EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
-                                PortletChooserPresenter portletChooserPresenter) {
+                                PortletChooserPresenter portletChooserPresenter,
+                                MessageBox messageBox) {
         this.perspectiveView = perspectiveView;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;
@@ -76,6 +79,7 @@ public class PerspectivePresenter implements HasDispose {
         this.perspectiveFactory = perspectiveFactory;
         this.emptyPerspectivePresenterFactory = emptyPerspectivePresenterFactory;
         this.portletChooserPresenter = portletChooserPresenter;
+        this.messageBox = messageBox;
     }
 
     public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
@@ -93,7 +97,7 @@ public class PerspectivePresenter implements HasDispose {
 
     private void handleResetPerspective(ResetPerspectiveEvent event) {
         PerspectiveId perspectiveId = event.getPerspectiveId();
-        MessageBox.showYesNoConfirmBox("Reset tab?",
+        messageBox.showYesNoConfirmBox("Reset tab?",
                                        "Are you sure you want to reset the <em>" +
                                                perspectiveId.getId() + "</em> tab to the default state?",
                                        () -> executeResetPerspective(perspectiveId));
@@ -236,9 +240,7 @@ public class PerspectivePresenter implements HasDispose {
                 return;
             }
             PerspectiveLayout layout = new PerspectiveLayout(perspectiveId, node);
-            dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), new DispatchServiceCallback<SetPerspectiveLayoutResult>() {
-
-            });
+            dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), result -> {});
         }
     }
 }

@@ -37,6 +37,9 @@ public class DeleteEntitiesPresenter {
     private final Messages messages;
 
     @Nonnull
+    private final MessageBox messageBox;
+
+    @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
     @Nonnull
@@ -44,9 +47,11 @@ public class DeleteEntitiesPresenter {
 
     @Inject
     public DeleteEntitiesPresenter(@Nonnull Messages messages,
+                                   @Nonnull MessageBox messageBox,
                                    @Nonnull DispatchServiceManager dispatchServiceManager,
                                    @Nonnull ProjectId projectId) {
         this.messages = checkNotNull(messages);
+        this.messageBox = checkNotNull(messageBox);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
     }
@@ -64,7 +69,7 @@ public class DeleteEntitiesPresenter {
                 .map(TreeNode::getUserObject)
                 .map(EntityNode::getEntityData)
                 .collect(toImmutableSet());
-        MessageBox.showConfirmBox(getDeleteConfirmationTitle(entities),
+        messageBox.showConfirmBox(getDeleteConfirmationTitle(entities),
                                   getDeleteConfirmationMessage(entities),
                                   CANCEL, DELETE,
                                   () -> deleteEntity(entities, treeWidget),

@@ -34,12 +34,7 @@ public class MetricsPresenter {
     }
 
     private void processRequestRefresh() {
-        dispatchServiceManager.execute(new GetMetricsAction(projectId), new DispatchServiceCallback<GetMetricsResult>() {
-            @Override
-            public void handleSuccess(GetMetricsResult result) {
-                view.setMetrics(result.getMetricValues());
-            }
-        });
+        dispatchServiceManager.execute(new GetMetricsAction(projectId), result -> view.setMetrics(result.getMetricValues()));
     }
 
 }

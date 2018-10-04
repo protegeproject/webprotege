@@ -1,18 +1,15 @@
 package edu.stanford.bmir.protege.web.client.library.modal;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,11 +20,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ModalPresenter {
 
+    @Nonnull
     private final ModalView view;
 
+    @Nonnull
     private final Map<DialogButton, ModalButtonHandler> handlerMap = new HashMap<>();
 
-    private final ModalCloser modalCloser = this::hide;
+    @Nonnull
+    private ModalCloser modalCloser = () -> {};
 
     @Nullable
     private DialogButton primaryButton = null;
@@ -35,75 +35,70 @@ public class ModalPresenter {
     @Inject
     public ModalPresenter(ModalView view) {
         this.view = checkNotNull(view);
-        this.view.setCloser(modalCloser);
-        this.view.setAcceptKeyHandler(this::handleAcceptKey);
-        this.view.setEscapeKeyHandler(this::handleEscapeKey);
+    }
+
+    @Nonnull
+    public ModalView getView() {
+        return view;
     }
 
     public void setTitle(@Nonnull String title) {
-        this.view.setModalTitle(title);
+        this.view.setCaption(title);
     }
 
-    public void addEscapeButton(DialogButton button) {
-        view.addEscapeButton(button, createHandler(button));
+    public void setContent(@Nonnull IsWidget content) {
+        view.setContent(checkNotNull(content));
+    }
+
+    public void setEscapeButton(@Nonnull DialogButton button) {
+        view.setEscapeButton(button, () -> runHandler(button));
         setButtonHandler(button, ModalCloser::closeModal);
-    }
-
-    public void addButton(@Nonnull DialogButton button) {
-        view.addButton(button, createHandler(button));
-    }
-
-    private ModalButtonHandler createHandler(@Nonnull DialogButton button) {
-        return closer -> Optional.ofNullable(handlerMap.get(button))
-                .ifPresent(h -> h.handleModalButton(closer));
     }
 
     public void setPrimaryButton(@Nonnull DialogButton button) {
         this.primaryButton = button;
-        view.addPrimaryButton(button, createHandler(button));
+        view.setPrimaryButton(button, () -> runHandler(button));
+    }
+
+    public void addButton(@Nonnull DialogButton button) {
+        view.addButton(button, () -> runHandler(button));
+    }
+
+    protected void setModalCloser(@Nonnull ModalCloser modalCloser) {
+        this.modalCloser = checkNotNull(modalCloser);
+    }
+
+    private void runHandler(@Nonnull DialogButton button) {
+        handlerMap.getOrDefault(button, (closer) -> {}).handleModalButton(modalCloser);
     }
 
     public void setButtonHandler(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler) {
-        handlerMap.put(button, handler);
-    }
-
-    private void handleAcceptKey() {
-        if(primaryButton != null) {
-            ModalButtonHandler modalButtonHandler = handlerMap.get(primaryButton);
-            if(modalButtonHandler != null) {
-                modalButtonHandler.handleModalButton(modalCloser);
-            }
-        }
+        handlerMap.put(checkNotNull(button), checkNotNull(handler));
     }
 
     private void handleEscapeKey() {
-        hide();
+        modalCloser.closeModal();
     }
 
-    public void show(@Nonnull ModalCallback callback) {
+    protected void show() {
         RootPanel rootPanel = RootPanel.get();
         rootPanel.add(view);
-        callback.start(getContentContainer());
     }
 
-    /**
-     * Gets the content container, wrapping it so that it's possible
-     * to request focus after it is shown
-     */
-    private AcceptsOneWidget getContentContainer() {
-        return content -> {
-            view.getModalContainer().setWidget(content);
-            if(view instanceof HasRequestFocus) {
-                ((HasRequestFocus) view).requestFocus();
-            }
-        };
-    }
-
-    public void hide() {
+    protected void hide() {
         view.hide();
     }
 
     public void setPrimaryButtonFocusedOnShow(boolean primaryButtonFocusedOnShow) {
         view.setPrimaryButtonFocusedOnAttach(primaryButtonFocusedOnShow);
+    }
+
+    protected void accept() {
+        if (primaryButton != null) {
+            ModalButtonHandler modalButtonHandler = handlerMap.get(primaryButton);
+            if (modalButtonHandler != null) {
+                modalButtonHandler.handleModalButton(modalCloser);
+            }
+        }
     }
 }

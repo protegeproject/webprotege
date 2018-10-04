@@ -173,12 +173,7 @@ public class EditorPresenter implements HasDispose {
         EditorManager<C, O, A, R> editorManager = editorState.getEditorManager();
         UpdateObjectAction<O> updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx);
         setEditorState(editedValue, editorCtx, editorManager);
-        dispatchServiceManager.execute(updateAction, new DispatchServiceCallback<Result>() {
-            @Override
-            public void handleSuccess(Result result) {
-
-            }
-        });
+        dispatchServiceManager.execute(updateAction, result -> {});
     }
 
     private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void bindNext(final C editorCtx) {

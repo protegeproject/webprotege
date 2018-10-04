@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntitiesAction;
@@ -40,6 +41,9 @@ public class CreateEntityPresenter {
     private final ModalPresenter modalPresenter;
 
     @Nonnull
+    private final ModalManager modalManager;
+
+    @Nonnull
     private final ActiveProjectManager activeProjectManager;
 
     @Nonnull
@@ -55,6 +59,7 @@ public class CreateEntityPresenter {
                                  @Nonnull ProjectId projectId,
                                  @Nonnull CreateEntityDialogView view,
                                  @Nonnull ModalPresenter modalPresenter,
+                                 @Nonnull ModalManager modalManager,
                                  @Nonnull ActiveProjectManager activeProjectManager,
                                  @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                  @Nonnull Messages messages) {
@@ -62,10 +67,11 @@ public class CreateEntityPresenter {
         this.projectId = checkNotNull(projectId);
         this.view = view;
         this.modalPresenter = modalPresenter;
+        this.modalManager = modalManager;
         this.activeProjectManager = checkNotNull(activeProjectManager);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
         this.messages = checkNotNull(messages);
-        this.modalPresenter.addEscapeButton(DialogButton.CANCEL);
+        this.modalPresenter.setEscapeButton(DialogButton.CANCEL);
         this.modalPresenter.setPrimaryButton(DialogButton.CREATE);
 
     }
@@ -83,12 +89,11 @@ public class CreateEntityPresenter {
                                  entitiesCreatedHandler);
             closer.closeModal();
         });
-        modalPresenter.show(container -> {
-            container.setWidget(view);
-            view.getInitialFocusable().ifPresent(HasRequestFocus::requestFocus);
-        });
+        modalPresenter.setContent(view);
         modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
+        modalManager.showModal(modalPresenter);
         displayCurrentLangTagOrProjectDefaultLangTag();
+
     }
 
     private void resetLangTag() {

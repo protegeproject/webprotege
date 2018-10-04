@@ -22,9 +22,14 @@ public class DeleteProjectTagConfirmationPrompt implements DeleteConfirmationPro
 
     private final Messages messages;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     @Inject
-    public DeleteProjectTagConfirmationPrompt(@Nonnull Messages messages) {
+    public DeleteProjectTagConfirmationPrompt(@Nonnull Messages messages,
+                                              @Nonnull MessageBox messageBox) {
         this.messages = checkNotNull(messages);
+        this.messageBox = checkNotNull(messageBox);
     }
 
     /**
@@ -41,7 +46,7 @@ public class DeleteProjectTagConfirmationPrompt implements DeleteConfirmationPro
             return;
         }
         // The tag is used so display a confirmantion box
-        MessageBox.showConfirmBox(QUESTION,
+        messageBox.showConfirmBox(QUESTION,
                                   messages.tags_deleteTag(),
                                   messages.tags_deleteConfirmationMessage(value.getLabel(), value.getUsageCount()),
                                   CANCEL,

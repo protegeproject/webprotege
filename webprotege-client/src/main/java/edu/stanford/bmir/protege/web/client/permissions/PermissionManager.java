@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
@@ -46,14 +47,17 @@ public class PermissionManager implements HasDispose {
 
     private final Multimap<UserIdProjectIdKey, ActionId> permittedActionCache = HashMultimap.create();
 
+    private final DispatchErrorMessageDisplay errorDisplay;
+
     @Inject
-    public PermissionManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, LoggedInUserProvider loggedInUserProvider) {
+    public PermissionManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay) {
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
         this.activeProjectManager = activeProjectManager;
         this.loggedInUserProvider = loggedInUserProvider;
         loggedInHandler = eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> firePermissionsChanged());
         loggedOutHandler = eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> firePermissionsChanged());
+        this.errorDisplay = errorDisplay;
     }
 
     /**
@@ -96,7 +100,7 @@ public class PermissionManager implements HasDispose {
             return;
         }
         dispatchServiceManager.execute(new GetProjectPermissionsAction(projectId, userId),
-                                       new DispatchServiceCallback<GetProjectPermissionsResult>() {
+                                       new DispatchServiceCallback<GetProjectPermissionsResult>(errorDisplay) {
                                            @Override
                                            public void handleSuccess(GetProjectPermissionsResult result) {
                                                permittedActionCache.putAll(key, result.getAllowedActions());

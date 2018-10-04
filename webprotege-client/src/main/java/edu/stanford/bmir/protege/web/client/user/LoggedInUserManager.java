@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.user;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionAction;
@@ -37,11 +38,15 @@ public class LoggedInUserManager {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final DispatchErrorMessageDisplay errorDisplay;
+
     @Inject
     public LoggedInUserManager(@Nonnull LoggedInUser loggedInUser,
-                               @Nonnull DispatchServiceManager dispatchServiceManager) {
+                               @Nonnull DispatchServiceManager dispatchServiceManager, @Nonnull DispatchErrorMessageDisplay errorDisplay) {
         this.loggedInUser = loggedInUser;
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.errorDisplay = checkNotNull(errorDisplay);
     }
 
     /**
@@ -97,7 +102,7 @@ public class LoggedInUserManager {
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        dispatchServiceManager.execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
+        dispatchServiceManager.execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>(errorDisplay) {
             @Override
             public void handleExecutionException(Throwable cause) {
                 callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onFailure(cause));

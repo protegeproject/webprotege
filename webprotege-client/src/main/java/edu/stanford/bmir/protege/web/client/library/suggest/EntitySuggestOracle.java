@@ -71,20 +71,17 @@ public class EntitySuggestOracle extends SuggestOracle {
             callback.onSuggestionsReady(request, new Response(Collections.emptyList()));
             return;
         }
-        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new DispatchServiceCallback<LookupEntitiesResult>() {
-            @Override
-            public void handleSuccess(LookupEntitiesResult result) {
-                List<EntitySuggestion> suggestions = new ArrayList<>();
-                for (final EntityLookupResult entity : result.getEntityLookupResults()) {
-                    GWT.log("EntitySuggestOracle] " + entity);
-                    renderer.setPrimaryDisplayLanguage(entity.getLanguage());
-                    renderer.setHighlight(entity.getMatchResult().getStart(),
-                                          entity.getMatchResult().getEnd());
-                    suggestions.add(new EntitySuggestion(entity.getOWLEntityData(),
-                                                         renderer.getHtmlRendering(entity.getEntityNode())));
-                }
-                callback.onSuggestionsReady(request, new Response(suggestions));
+        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), result -> {
+            List<EntitySuggestion> suggestions = new ArrayList<>();
+            for (final EntityLookupResult entity : result.getEntityLookupResults()) {
+                GWT.log("EntitySuggestOracle] " + entity);
+                renderer.setPrimaryDisplayLanguage(entity.getLanguage());
+                renderer.setHighlight(entity.getMatchResult().getStart(),
+                                      entity.getMatchResult().getEnd());
+                suggestions.add(new EntitySuggestion(entity.getOWLEntityData(),
+                                                     renderer.getHtmlRendering(entity.getEntityNode())));
             }
+            callback.onSuggestionsReady(request, new Response(suggestions));
         });
     }
 

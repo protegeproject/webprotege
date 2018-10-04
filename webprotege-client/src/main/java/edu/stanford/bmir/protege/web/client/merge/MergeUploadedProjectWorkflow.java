@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.merge;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -26,9 +28,21 @@ public class MergeUploadedProjectWorkflow {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    @Nonnull
+    private final DispatchErrorMessageDisplay errorDisplay;
+
+    @Nonnull
+    private final ProgressDisplay progressDisplay;
+
     @Inject
-    public MergeUploadedProjectWorkflow(@Nonnull DispatchServiceManager dispatchServiceManager) {
+    public MergeUploadedProjectWorkflow(@Nonnull DispatchServiceManager dispatchServiceManager, MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.messageBox = checkNotNull(messageBox);
+        this.errorDisplay = checkNotNull(errorDisplay);
+        this.progressDisplay = checkNotNull(progressDisplay);
     }
 
     public void start(ProjectId projectId, DocumentId documentId) {
@@ -37,7 +51,7 @@ public class MergeUploadedProjectWorkflow {
 
 
     private void computeMerge(final ProjectId projectId, final DocumentId uploadedProjectDocumentId) {
-        dispatchServiceManager.execute(new ComputeProjectMergeAction(projectId, uploadedProjectDocumentId), new DispatchServiceCallbackWithProgressDisplay<ComputeProjectMergeResult>() {
+        dispatchServiceManager.execute(new ComputeProjectMergeAction(projectId, uploadedProjectDocumentId), new DispatchServiceCallbackWithProgressDisplay<ComputeProjectMergeResult>(errorDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return "Uploading and merging ontologies";
@@ -72,7 +86,7 @@ public class MergeUploadedProjectWorkflow {
 
     private void performMerge(ProjectId projectId, DocumentId uploadedProjectDocumentId, String commitMessage) {
 
-        dispatchServiceManager.execute(new MergeUploadedProjectAction(projectId, uploadedProjectDocumentId, commitMessage), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>() {
+        dispatchServiceManager.execute(new MergeUploadedProjectAction(projectId, uploadedProjectDocumentId, commitMessage), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>(errorDisplay, progressDisplay) {
 
             @Override
             public String getProgressDisplayTitle() {
@@ -86,7 +100,7 @@ public class MergeUploadedProjectWorkflow {
 
             @Override
             public void handleSuccess(MergeUploadedProjectResult mergeUploadedProjectResult) {
-                MessageBox.showMessage("The uploaded ontologies were successfully merged into the project");
+                messageBox.showMessage("The uploaded ontologies were successfully merged into the project");
             }
         });
     }

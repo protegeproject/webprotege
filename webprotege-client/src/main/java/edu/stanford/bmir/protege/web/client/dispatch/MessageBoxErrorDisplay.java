@@ -7,6 +7,11 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.app.StatusCodes;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -16,14 +21,17 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
 
     private static boolean displayingError = false;
 
-    private static Messages messages;
+    private final Messages messages;
 
-    private static Messages getMessages() {
-        if(messages == null) {
-            messages = GWT.create(Messages.class);
-        }
-        return messages;
+    private final MessageBox messageBox;
+
+    @Inject
+    public MessageBoxErrorDisplay(@Nonnull Messages messages,
+                                  @Nonnull MessageBox messageBox) {
+        this.messages = checkNotNull(messages);
+        this.messageBox = checkNotNull(messageBox);
     }
+
 
     private void displayMessageBox(String mainMessage, String subMessage) {
         GWT.log("[MessageBoxErrorDisplay] Display error. Disp: " + displayingError + " Msg: " + mainMessage);
@@ -34,17 +42,17 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
             return;
         }
         displayingError = true;
-        MessageBox.showAlert(mainMessage, subMessage, () -> displayingError = false);
+        messageBox.showAlert(mainMessage, subMessage, () -> displayingError = false);
     }
 
     @Override
     public void displayPermissionDeniedErrorMessage() {
-        displayPermissionDeniedErrorMessage(getMessages().error_permissionError_msg());
+        displayPermissionDeniedErrorMessage(messages.error_permissionError_msg());
     }
 
     @Override
     public void displayPermissionDeniedErrorMessage(String specificMessage) {
-        displayMessageBox(getMessages().error_permissionError_title() , specificMessage);
+        displayMessageBox(messages.error_permissionError_title() , specificMessage);
     }
 
     @Override
@@ -59,8 +67,8 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
 
     private void displayReloadBrowserMessage() {
         displayMessageBox(
-                getMessages().error_refreshBrowser() ,
-                getMessages().error_upgraded());
+                messages.error_refreshBrowser() ,
+                messages.error_upgraded());
     }
 
     @Override
@@ -73,20 +81,20 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
             }
             else if (statusCodeException.getStatusCode() != 0) {
                 displayMessageBox(statusCodeException.getStatusText(),
-                                  getMessages().error_webProtegeHasEncounteredAnErrorPleaseTryAgain() + "<br>" +
-                                  getMessages().error_statusCode() + ": " + statusCodeException.getStatusCode() + " (" + statusCodeException
+                                  messages.error_webProtegeHasEncounteredAnErrorPleaseTryAgain() + "<br>" +
+                                  messages.error_statusCode() + ": " + statusCodeException.getStatusCode() + " (" + statusCodeException
                                           .getStatusText() + ")"
                 );
             }
             else {
-                displayMessageBox(getMessages().error_connectionError_title() ,
-                                  getMessages().error_connectionError_msg());
+                displayMessageBox(messages.error_connectionError_title() ,
+                                  messages.error_connectionError_msg());
             }
         }
         else {
             displayMessageBox(
-                    getMessages().error() ,
-                    getMessages().error_general() );
+                    messages.error() ,
+                    messages.error_general() );
         }
 
     }

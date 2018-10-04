@@ -9,5 +9,10 @@ import javax.annotation.Nonnull;
  */
 public interface ModalButtonHandler {
 
+    /**
+     * Handle the activaton of the button.
+     * @param closer The closer that should be used to dismiss the modal.  The modal is not dismissed
+     *               automatically.
+     */
     void handleModalButton(@Nonnull ModalCloser closer);
 }

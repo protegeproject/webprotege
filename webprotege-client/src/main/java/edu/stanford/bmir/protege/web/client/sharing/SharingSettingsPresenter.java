@@ -6,8 +6,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
@@ -55,6 +57,12 @@ public class SharingSettingsPresenter implements Presenter {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final DispatchErrorMessageDisplay errorDisplay;
+
+    @Nonnull
+    private final ProgressDisplay progressDisplay;
+
     @Inject
     public SharingSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull SharingSettingsView view,
@@ -63,7 +71,7 @@ public class SharingSettingsPresenter implements Presenter {
                                     @Nonnull PermissionManager permissionManager,
                                     @Nonnull PermissionScreener permissionScreener,
                                     @Nonnull SettingsPresenter settingsPresenter,
-                                    @Nonnull Messages messages) {
+                                    @Nonnull Messages messages, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.busyView = checkNotNull(busyView);
@@ -72,6 +80,8 @@ public class SharingSettingsPresenter implements Presenter {
         this.permissionScreener = checkNotNull(permissionScreener);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.messages = checkNotNull(messages);
+        this.errorDisplay = checkNotNull(errorDisplay);
+        this.progressDisplay = checkNotNull(progressDisplay);
     }
 
     @Override
@@ -103,7 +113,7 @@ public class SharingSettingsPresenter implements Presenter {
     private void applyChangesAndGoToNextPlace() {
         settingsPresenter.goToNextPlace();
         ProjectSharingSettings settings = new ProjectSharingSettings(projectId, view.getLinkSharingPermission(), view.getSharingSettings());
-        dispatchServiceManager.execute(new SetProjectSharingSettingsAction(settings), new DispatchServiceCallbackWithProgressDisplay<SetProjectSharingSettingsResult>() {
+        dispatchServiceManager.execute(new SetProjectSharingSettingsAction(settings), new DispatchServiceCallbackWithProgressDisplay<SetProjectSharingSettingsResult>(errorDisplay, progressDisplay) {
             @Override
             public void handleSuccess(SetProjectSharingSettingsResult result) {
                 permissionManager.firePermissionsChanged();

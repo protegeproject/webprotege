@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
@@ -13,6 +14,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.function.Consumer;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -27,13 +30,17 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
 
     private final PermissionManager permissionManager;
 
+    @Nonnull
+    private final DispatchErrorMessageDisplay errorDisplay;
+
     @Inject
     public LoggedInUserProjectPermissionCheckerImpl(@Nonnull LoggedInUserProvider loggedInUserProvider,
                                                     @Nonnull ActiveProjectManager activeProjectManager,
-                                                    @Nonnull PermissionManager permissionManager) {
-        this.loggedInUserProvider = loggedInUserProvider;
-        this.activeProjectManager = activeProjectManager;
-        this.permissionManager = permissionManager;
+                                                    @Nonnull PermissionManager permissionManager, @Nonnull DispatchErrorMessageDisplay errorDisplay) {
+        this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
+        this.activeProjectManager = checkNotNull(activeProjectManager);
+        this.permissionManager = checkNotNull(permissionManager);
+        this.errorDisplay = checkNotNull(errorDisplay);
     }
 
     @Override
@@ -52,7 +59,7 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     @Override
     public void hasPermission(@Nonnull ActionId action,
                               @Nonnull Consumer<Boolean> callback) {
-        hasPermission(action, new DispatchServiceCallback<Boolean>() {
+        hasPermission(action, new DispatchServiceCallback<Boolean>(errorDisplay) {
             @Override
             public void handleSuccess(Boolean hasPermission) {
                 callback.accept(hasPermission);
@@ -63,7 +70,7 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     @Override
     public void hasPermission(@Nonnull BuiltInAction action,
                               @Nonnull Consumer<Boolean> callback) {
-        hasPermission(action.getActionId(), new DispatchServiceCallback<Boolean>() {
+        hasPermission(action.getActionId(), new DispatchServiceCallback<Boolean>(errorDisplay) {
             @Override
             public void handleSuccess(Boolean hasPermission) {
                 callback.accept(hasPermission);

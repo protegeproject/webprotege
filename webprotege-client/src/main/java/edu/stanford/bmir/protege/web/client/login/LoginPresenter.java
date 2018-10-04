@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.client.auth.AuthenticatedDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.shared.place.SignUpPlace;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
@@ -43,7 +45,9 @@ public class LoginPresenter implements Presenter {
 
     private Optional<Place> nextPlace = Optional.empty();
 
+    private final DispatchErrorMessageDisplay errorDisplay;
 
+    private final ProgressDisplay progressDisplay;
 
 
     @Inject
@@ -51,12 +55,14 @@ public class LoginPresenter implements Presenter {
                           @Nonnull AuthenticatedActionExecutor loginExecutor,
                           @Nonnull LoggedInUserManager loggedInUserManager,
                           @Nonnull PlaceController placeController,
-                          @Nonnull ResetPasswordPresenter resetPasswordPresenter) {
+                          @Nonnull ResetPasswordPresenter resetPasswordPresenter, DispatchErrorMessageDisplay errorDisplay, ProgressDisplay progressDisplay) {
         this.view = checkNotNull(view);
         this.loginExecutor = checkNotNull(loginExecutor);
         this.loggedInUserManager = checkNotNull(loggedInUserManager);
         this.placeController = checkNotNull(placeController);
         this.resetPasswordPresenter = checkNotNull(resetPasswordPresenter);
+        this.errorDisplay = errorDisplay;
+        this.progressDisplay = progressDisplay;
         view.setSignInHandler(this::handleSignIn);
         view.setForgotPasswordHandler(this::handleResetPassword);
         view.setSignUpForAccountHandler(this::handleSignUpForAccout);
@@ -103,7 +109,7 @@ public class LoginPresenter implements Presenter {
         final UserId userId = UserId.getUserId(signInDetails.getUserName());
         loginExecutor.execute(userId, signInDetails.getClearTextPassword(),
                 new PerformLoginActionFactory(),
-                new AuthenticatedDispatchServiceCallback<PerformLoginResult>() {
+                new AuthenticatedDispatchServiceCallback<PerformLoginResult>(errorDisplay, progressDisplay) {
                     @Override
                     public void handleAuthenticationResponse(@Nonnull AuthenticationResponse authenticationResponse) {
                         if(authenticationResponse == AuthenticationResponse.FAIL) {

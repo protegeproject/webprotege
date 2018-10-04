@@ -4,8 +4,10 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
@@ -74,6 +76,15 @@ public class ApplicationSettingsPresenter implements Presenter {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
+    @Nonnull
+    private final DispatchErrorMessageDisplay errorDisplay;
+
+    @Nonnull
+    private final ProgressDisplay progressDisplay;
+
     @Inject
     public ApplicationSettingsPresenter(@Nonnull SystemDetailsView systemDetailsView,
                                         @Nonnull ApplicationUrlView applicationUrlView,
@@ -83,7 +94,8 @@ public class ApplicationSettingsPresenter implements Presenter {
                                         @Nonnull ForbiddenView forbiddenView,
                                         @Nonnull DispatchServiceManager dispatchServiceManager,
                                         @Nonnull SettingsPresenter settingsPresenter,
-                                        @Nonnull Messages messages) {
+                                        @Nonnull Messages messages,
+                                        @Nonnull MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay, @Nonnull ProgressDisplay progressDisplay) {
         this.systemDetailsView = checkNotNull(systemDetailsView);
         this.applicationUrlView = checkNotNull(applicationUrlView);
         this.permissionsView = checkNotNull(permissionsView);
@@ -93,6 +105,9 @@ public class ApplicationSettingsPresenter implements Presenter {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.messages = checkNotNull(messages);
+        this.messageBox = messageBox;
+        this.errorDisplay = errorDisplay;
+        this.progressDisplay = progressDisplay;
     }
 
     @Override
@@ -164,7 +179,7 @@ public class ApplicationSettingsPresenter implements Presenter {
                 parseMaxUploadSize()
         );
         dispatchServiceManager.execute(new SetApplicationSettingsAction(applicationSettings),
-                                       result -> MessageBox.showMessage("Settings applied",
+                                       result -> messageBox.showMessage("Settings applied",
                                                                         "The application settings have successfully been applied",
                                                                         settingsPresenter::goToNextPlace));
     }
@@ -187,7 +202,7 @@ public class ApplicationSettingsPresenter implements Presenter {
 
     private void rebuildPermissions() {
         dispatchServiceManager.execute(new RebuildPermissionsAction(),
-                                       new DispatchServiceCallbackWithProgressDisplay<RebuildPermissionsResult>() {
+                                       new DispatchServiceCallbackWithProgressDisplay<RebuildPermissionsResult>(errorDisplay, progressDisplay) {
                                            @Override
                                            public String getProgressDisplayTitle() {
                                                return "Rebuilding permissions";

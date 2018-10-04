@@ -217,12 +217,9 @@ public class ProjectSettingsPresenter {
                 slackIntegrationSettings,
                 webhookSettings
         );
-        dispatchServiceManager.execute(new SetProjectSettingsAction(projectSettings), new DispatchServiceCallback<SetProjectSettingsResult>() {
-            @Override
-            public void handleSuccess(SetProjectSettingsResult setProjectSettingsResult) {
-                eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
-                settingsPresenter.goToNextPlace();
-            }
+        dispatchServiceManager.execute(new SetProjectSettingsAction(projectSettings), result -> {
+            eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
+            settingsPresenter.goToNextPlace();
         });
         entityCrudKitSettingsEditor.getValue().ifPresent(settings -> {
             dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId,

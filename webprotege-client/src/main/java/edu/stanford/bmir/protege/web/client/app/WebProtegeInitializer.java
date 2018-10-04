@@ -32,11 +32,16 @@ public class WebProtegeInitializer {
 
     private final EntityCrudKitManagerInitializationTask entityCrudKitManagerInitializationTask;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     @Inject
     protected WebProtegeInitializer(@Nonnull ReadLoggedInUserInitializationTask readLoggedInUserInitializationTask,
-                                    @Nonnull EntityCrudKitManagerInitializationTask entityCrudKitManagerInitializationTask) {
+                                    @Nonnull EntityCrudKitManagerInitializationTask entityCrudKitManagerInitializationTask,
+                                    @Nonnull MessageBox messageBox) {
         this.readLoggedInUserInitializationTask = readLoggedInUserInitializationTask;
         this.entityCrudKitManagerInitializationTask = entityCrudKitManagerInitializationTask;
+        this.messageBox = messageBox;
     }
 
 
@@ -56,7 +61,7 @@ public class WebProtegeInitializer {
             // Consider logging and posting to server.
             GWT.log("Uncaught exception", e);
             if (e instanceof SerializationException) {
-                MessageBox.showMessage("WebProtege has been upgraded.  Please clear your browser caches and refresh your browser.");
+                messageBox.showMessage("WebProtege has been upgraded.  Please clear your browser caches and refresh your browser.");
             }
         });
         runInitTasks(initCompleteCallback);

@@ -30,8 +30,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ModalViewImpl extends Composite implements ModalView {
 
-    private ModalCloser closer = () -> {};
-
     @Nonnull
     private Optional<Button> primaryButton = Optional.empty();
 
@@ -55,16 +53,10 @@ public class ModalViewImpl extends Composite implements ModalView {
     @Nonnull
     private final WebProtegeClientBundle clientBundle;
 
-    private Runnable acceptKeyHandler = () -> {};
-
-    private Runnable escapeKeyHandler = () -> {};
-
     @Inject
     public ModalViewImpl(@Nonnull WebProtegeClientBundle clientBundle) {
         this.clientBundle = checkNotNull(clientBundle);
         initWidget(ourUiBinder.createAndBindUi(this));
-        sinkEvents(Event.ONKEYUP);
-        addHandler(this::handleKeyUp, KeyUpEvent.getType());
     }
 
     @Override
@@ -73,38 +65,6 @@ public class ModalViewImpl extends Composite implements ModalView {
         if(primaryButtonFocusedOnAttach) {
             primaryButton.ifPresent(btn -> btn.setFocus(true));
         }
-    }
-
-    private void handleKeyUp(@Nonnull KeyUpEvent event) {
-        if(isAcceptKey(event)) {
-            acceptKeyHandler.run();
-        }
-        else if(isEscapeKey(event)) {
-            escapeKeyHandler.run();
-        }
-    }
-
-    private boolean isAcceptKey(@Nonnull KeyUpEvent event) {
-        return event.isControlKeyDown() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER;
-    }
-
-    private boolean isEscapeKey(@Nonnull KeyUpEvent event) {
-        return event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE;
-    }
-
-    @Override
-    public void setAcceptKeyHandler(@Nonnull Runnable runnable) {
-        this.acceptKeyHandler = checkNotNull(runnable);
-    }
-
-    @Override
-    public void setEscapeKeyHandler(@Nonnull Runnable runnable) {
-        this.escapeKeyHandler = checkNotNull(runnable);
-    }
-
-    @Override
-    public void setCloser(@Nonnull ModalCloser closer) {
-        this.closer = checkNotNull(closer);
     }
 
     @Override
@@ -136,43 +96,40 @@ public class ModalViewImpl extends Composite implements ModalView {
         return btn;
     }
 
-    private void installButton(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler, Button btn) {
+    private void installButton(@Nonnull DialogButton button, @Nonnull Runnable handler, Button btn) {
         buttonContainer.add(btn);
-        btn.addClickHandler(event -> handler.handleModalButton(closer));
+        btn.addClickHandler(event -> handler.run());
     }
 
     @Override
-    public void setModalTitle(@Nonnull String title) {
+    public void setCaption(@Nonnull String title) {
         titleField.setText(title);
     }
 
     @Override
-    public void addEscapeButton(DialogButton button,  @Nonnull ModalButtonHandler handler) {
+    public void setEscapeButton(DialogButton button,  @Nonnull Runnable handler) {
         Button btn = createBasicButton(button);
         btn.addStyleName(clientBundle.buttons().escapeButton());
         installButton(button, handler, btn);
     }
 
     @Override
-    public void addButton(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler) {
+    public void addButton(@Nonnull DialogButton button, @Nonnull Runnable handler) {
         Button btn = new Button(button.getButtonName());
         btn.addStyleName(clientBundle.buttons().dialogButton());
         installButton(button, handler, btn);
     }
 
     @Override
-    public void addPrimaryButton(@Nonnull DialogButton button, @Nonnull ModalButtonHandler handler) {
+    public void setPrimaryButton(@Nonnull DialogButton button, @Nonnull Runnable handler) {
         Button btn = createBasicButton(button);
         btn.addStyleName(clientBundle.buttons().primaryButton());
         installButton(button, handler, btn);
         this.primaryButton = Optional.of(btn);
     }
 
-    @Nonnull
     @Override
-    public AcceptsOneWidget getModalContainer() {
-        return contentContainer;
+    public void setContent(@Nonnull IsWidget content) {
+        contentContainer.setWidget(checkNotNull(content));
     }
-
-
 }

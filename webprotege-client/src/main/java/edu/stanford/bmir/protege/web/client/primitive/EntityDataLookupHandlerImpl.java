@@ -55,19 +55,10 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             }
         }
         final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
-        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), new DispatchServiceCallback<LookupEntitiesResult>() {
-
-            @Override
-            public void handleExecutionException(Throwable cause) {
-                callback.onFailure(cause);
-            }
-
-            @Override
-            public void handleSuccess(LookupEntitiesResult result) {
-                List<EntityLookupResult> results = result.getEntityLookupResults();
-                Optional<OWLEntityData> entityData = getMatchingEntity(results, trimmedContent, projectId, allowedEntityTypes);
-                callback.onSuccess(entityData);
-            }
+        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), result -> {
+            List<EntityLookupResult> results = result.getEntityLookupResults();
+            Optional<OWLEntityData> entityData = getMatchingEntity(results, trimmedContent, projectId, allowedEntityTypes);
+            callback.onSuccess(entityData);
         });
     }
 

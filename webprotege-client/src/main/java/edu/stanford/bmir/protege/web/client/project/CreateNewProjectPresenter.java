@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.project;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -25,6 +27,10 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_P
  */
 public class CreateNewProjectPresenter {
 
+    private final DispatchErrorMessageDisplay errorDisplay;
+
+    private final ProgressDisplay progressDisplay;
+
     public interface ProjectCreatedHandler {
         void handleProjectCreated();
     }
@@ -41,15 +47,22 @@ public class CreateNewProjectPresenter {
     @Nonnull
     private final EventBus eventBus;
 
+    @Nonnull
+    private final MessageBox messageBox;
+
     @Inject
-    public CreateNewProjectPresenter(@Nonnull CreateNewProjectView view,
+    public CreateNewProjectPresenter(DispatchErrorMessageDisplay errorDisplay, ProgressDisplay progressDisplay, @Nonnull CreateNewProjectView view,
                                      @Nonnull LoggedInUserManager loggedInUserManager,
                                      @Nonnull DispatchServiceManager dispatchServiceManager,
-                                     @Nonnull EventBus eventBus) {
+                                     @Nonnull EventBus eventBus,
+                                     @Nonnull MessageBox messageBox) {
+        this.errorDisplay = errorDisplay;
+        this.progressDisplay = progressDisplay;
         this.view = checkNotNull(view);
         this.loggedInUserManager = checkNotNull(loggedInUserManager);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.eventBus = checkNotNull(eventBus);
+        this.messageBox = messageBox;
     }
 
     @Nonnull
@@ -128,14 +141,15 @@ public class CreateNewProjectPresenter {
             submitCreateNewProjectRequest(newProjectSettings, projectCreatedHandler);
         }
         else {
-            MessageBox.showAlert("Upload Failed", response.getUploadRejectedMessage());
+            messageBox.showAlert("Upload Failed", response.getUploadRejectedMessage());
         }
     }
 
     private void submitCreateNewProjectRequest(@Nonnull NewProjectSettings newProjectSettings,
                                                @Nonnull ProjectCreatedHandler projectCreatedHandler) {
         dispatchServiceManager.execute(new CreateNewProjectAction(newProjectSettings),
-                new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
+                new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>(errorDisplay,
+                                                                                       progressDisplay) {
                     @Override
                     public String getProgressDisplayTitle() {
                         return "Creating project";
@@ -155,20 +169,20 @@ public class CreateNewProjectPresenter {
                     @Override
                     public void handleExecutionException(Throwable cause) {
                         if (cause instanceof PermissionDeniedException) {
-                            MessageBox.showMessage("You do not have permission to create new projects");
+                            messageBox.showMessage("You do not have permission to create new projects");
                         }
                         else if (cause instanceof ProjectAlreadyRegisteredException) {
                             ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) cause;
                             String projectName = ex.getProjectId().getId();
-                            MessageBox.showMessage("The project name " + projectName + " is already registered.  Please try a different name.");
+                            messageBox.showMessage("The project name " + projectName + " is already registered.  Please try a different name.");
                         }
                         else if (cause instanceof ProjectDocumentExistsException) {
                             ProjectDocumentExistsException ex = (ProjectDocumentExistsException) cause;
                             String projectName = ex.getProjectId().getId();
-                            MessageBox.showMessage("There is already a non-empty project on the server with the id " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
+                            messageBox.showMessage("There is already a non-empty project on the server with the id " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
                         }
                         else {
-                            MessageBox.showMessage(cause.getMessage());
+                            messageBox.showMessage(cause.getMessage());
                         }
                     }
                 });

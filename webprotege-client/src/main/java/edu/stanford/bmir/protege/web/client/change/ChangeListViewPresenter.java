@@ -60,15 +60,18 @@ public class ChangeListViewPresenter {
 
     private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {};
 
+    private MessageBox messageBox;
+
     @Inject
     public ChangeListViewPresenter(ChangeListView view,
                                    DispatchServiceManager dispatchServiceManager,
                                    LoggedInUserProjectPermissionChecker permissionChecker,
-                                   Messages messages) {
+                                   Messages messages, MessageBox messageBox) {
         this.view = view;
         this.permissionChecker = permissionChecker;
         this.dispatchServiceManager = dispatchServiceManager;
         this.messages = messages;
+        this.messageBox = messageBox;
         this.view.setPageNumberChangedHandler(pageNumber -> pageNumberChangedHandler.handlePageNumberChanged(pageNumber));
     }
 
@@ -208,7 +211,7 @@ public class ChangeListViewPresenter {
 
     private void startRevertChangesWorkflow(final ProjectChange projectChange) {
         String subMessage = messages.change_revertChangesInRevisionQuestion();
-        MessageBox.showConfirmBox(
+        messageBox.showConfirmBox(
                 messages.change_revertChangesQuestion(),
                 subMessage,
                 CANCEL,
@@ -222,12 +225,9 @@ public class ChangeListViewPresenter {
         projectId.ifPresent(theProjectId -> {
             final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
             dispatchServiceManager.execute(new RevertRevisionAction(theProjectId, revisionNumber),
-                                           new DispatchServiceCallback<RevertRevisionResult>() {
-                                               @Override
-                                               public void handleSuccess(RevertRevisionResult revertRevisionResult) {
-                                                   MessageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
-                                                   lastAction.ifPresent(action -> setChangesForProject(action.getProjectId()));
-                                               }
+                                           result -> {
+                                               messageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
+                                               lastAction.ifPresent(action -> setChangesForProject(action.getProjectId()));
                                            });
         });
     }

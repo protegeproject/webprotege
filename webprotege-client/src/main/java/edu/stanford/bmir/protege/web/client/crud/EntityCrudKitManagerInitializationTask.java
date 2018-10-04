@@ -31,12 +31,9 @@ public class EntityCrudKitManagerInitializationTask implements ApplicationInitMa
 
     @Override
     public void run(final ApplicationInitManager.ApplicationInitTaskCallback callback) {
-        dispatchServiceManager.execute(new GetEntityCrudKitsAction(), new DispatchServiceCallback<GetEntityCrudKitsResult>() {
-            @Override
-            public void handleSuccess(GetEntityCrudKitsResult result) {
-                EntityCrudKitManager.get().init(result.getKits());
-                callback.taskComplete();
-            }
+        dispatchServiceManager.execute(new GetEntityCrudKitsAction(), result -> {
+            EntityCrudKitManager.get().init(result.getKits());
+            callback.taskComplete();
         });
     }
 

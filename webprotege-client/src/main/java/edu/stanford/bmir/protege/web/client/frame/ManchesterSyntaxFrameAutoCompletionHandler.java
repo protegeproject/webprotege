@@ -4,6 +4,7 @@ import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionCallback;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionHandler;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionResult;
 import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
@@ -12,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameComple
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import javax.inject.Inject;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
@@ -26,11 +29,15 @@ public class ManchesterSyntaxFrameAutoCompletionHandler implements AutoCompletio
 
     private HasSubject<OWLEntity> hasSubject;
 
-    public ManchesterSyntaxFrameAutoCompletionHandler(DispatchServiceManager dispatchServiceManager, ProjectId projectId, HasFreshEntities hasFreshEntities, HasSubject<OWLEntity> hasSubject) {
+    private DispatchErrorMessageDisplay errorDisplay;
+
+    @Inject
+    public ManchesterSyntaxFrameAutoCompletionHandler(DispatchServiceManager dispatchServiceManager, ProjectId projectId, HasFreshEntities hasFreshEntities, HasSubject<OWLEntity> hasSubject, DispatchErrorMessageDisplay errorDisplay) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectId = projectId;
         this.hasFreshEntities = hasFreshEntities;
         this.hasSubject = hasSubject;
+        this.errorDisplay = errorDisplay;
     }
 
     @Override
@@ -38,7 +45,7 @@ public class ManchesterSyntaxFrameAutoCompletionHandler implements AutoCompletio
         dispatchServiceManager.execute(
                 new GetManchesterSyntaxFrameCompletionsAction(
                         projectId, hasSubject.getSubject(), editorPosition, text, editorIndex, hasFreshEntities.getFreshEntities(), 25),
-                new DispatchServiceCallback<GetManchesterSyntaxFrameCompletionsResult>() {
+                new DispatchServiceCallback<GetManchesterSyntaxFrameCompletionsResult>(errorDisplay) {
 
                     @Override
                     public void handleSuccess(GetManchesterSyntaxFrameCompletionsResult result) {
