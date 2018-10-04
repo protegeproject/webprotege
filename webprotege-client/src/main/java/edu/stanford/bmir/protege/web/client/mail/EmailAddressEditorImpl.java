@@ -107,4 +107,10 @@ public class EmailAddressEditorImpl extends Composite implements EmailAddressEdi
     public boolean isWellFormed() {
         return emailAddressField.getText().trim().equals(confirmEmailAddressField.getText().trim());
     }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        emailAddressField.setFocus(true);
+    }
 }
