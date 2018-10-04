@@ -1,19 +1,14 @@
 package edu.stanford.bmir.protege.web.client.library.modal;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import elemental.dom.Document;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.Stack;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -26,9 +21,17 @@ public class ModalManager {
     @Nonnull
     private final Stack<ModalPresenter> modalStack = new Stack<>();
 
-    @Inject
-    public ModalManager() {
+    @Nonnull
+    private final Provider<ModalPresenter> modalPresenterProvider;
 
+    @Inject
+    public ModalManager(@Nonnull Provider<ModalPresenter> modalPresenterProvider) {
+        this.modalPresenterProvider = checkNotNull(modalPresenterProvider);
+    }
+
+    @Nonnull
+    public ModalPresenter createPresenter() {
+        return modalPresenterProvider.get();
     }
 
     public void showModal(@Nonnull ModalPresenter presenter) {

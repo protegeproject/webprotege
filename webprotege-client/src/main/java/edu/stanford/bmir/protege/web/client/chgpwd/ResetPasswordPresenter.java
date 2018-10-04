@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
@@ -22,10 +24,13 @@ import javax.inject.Provider;
 public class ResetPasswordPresenter {
 
     @Nonnull
+    private final ResetPasswordView view;
+
+    @Nonnull
     private final DispatchServiceManager dispatchService;
 
     @Nonnull
-    private final Provider<ResetPasswordDialogController> resetPasswordDialogController;
+    private final ModalManager modalManager;
 
     @Nonnull
     private final Messages messages;
@@ -37,12 +42,15 @@ public class ResetPasswordPresenter {
     private final DispatchErrorMessageDisplay errorDisplay;
 
     @Inject
-    public ResetPasswordPresenter(@Nonnull DispatchServiceManager dispatchService,
-                                  @Nonnull Provider<ResetPasswordDialogController> resetPasswordDialogController,
+    public ResetPasswordPresenter(@Nonnull ResetPasswordView view,
+                                  @Nonnull DispatchServiceManager dispatchService,
                                   @Nonnull Messages messages,
-                                  @Nonnull MessageBox messageBox, @Nonnull DispatchErrorMessageDisplay errorDisplay) {
+                                  @Nonnull MessageBox messageBox,
+                                  @Nonnull DispatchErrorMessageDisplay errorDisplay,
+                                  @Nonnull ModalManager modalManager) {
+        this.view = view;
         this.dispatchService = dispatchService;
-        this.resetPasswordDialogController = resetPasswordDialogController;
+        this.modalManager = modalManager;
         this.messages = messages;
         this.messageBox = messageBox;
         this.errorDisplay = errorDisplay;
@@ -53,13 +61,20 @@ public class ResetPasswordPresenter {
     }
 
     private void showDialog() {
-        ResetPasswordDialogController controller = resetPasswordDialogController.get();
-        controller.setDialogButtonHandler(DialogButton.get(messages.password_resetPassword()), (data, closer) -> {
-            closer.hide();
-            resetPassword(data);
+        view.clearValue();
+        ModalPresenter modalPresenter = modalManager.createPresenter();
+        modalPresenter.setTitle(messages.password_resetPassword());
+        modalPresenter.setContent(view);
+        DialogButton resetPwdBtn = DialogButton.get(messages.password_resetPassword());
+        modalPresenter.setEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setPrimaryButton(resetPwdBtn);
+        modalPresenter.setButtonHandler(resetPwdBtn, closer -> {
+            view.getValue().ifPresent(data -> {
+                closer.closeModal();
+                resetPassword(data);
+            });
         });
-        WebProtegeDialog<ResetPasswordData> dlg = new WebProtegeDialog<>(controller);
-        dlg.setVisible(true);
+        modalManager.showModal(modalPresenter);
     }
 
     private void resetPassword(ResetPasswordData data) {
