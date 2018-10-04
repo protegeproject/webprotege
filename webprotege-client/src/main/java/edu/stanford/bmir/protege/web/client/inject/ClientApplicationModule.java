@@ -40,6 +40,8 @@ import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
+import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditor;
+import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditorImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
@@ -508,6 +510,11 @@ public class ClientApplicationModule {
 
     @Provides
     ProgressDisplay provideProgressDisplay(ProgressDisplayImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EmailAddressEditor provideEmailAddressEditor(@Nonnull EmailAddressEditorImpl impl) {
         return impl;
     }
 }
