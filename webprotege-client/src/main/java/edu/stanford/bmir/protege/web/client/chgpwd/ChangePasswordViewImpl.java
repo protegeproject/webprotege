@@ -69,4 +69,10 @@ public class ChangePasswordViewImpl extends Composite implements ChangePasswordV
         newPasswordField.setText("");
         confirmNewPasswordField.setText("");
     }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        oldPasswordField.setFocus(true);
+    }
 }
