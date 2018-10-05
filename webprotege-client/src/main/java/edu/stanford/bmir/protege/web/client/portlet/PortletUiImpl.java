@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -162,6 +163,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
         final Button button = new Button(action.getLabel());
         button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarButton());
         toolbar.add(button);
+        button.addMouseDownHandler(DomEvent::preventDefault);
         button.addClickHandler(event -> action.execute());
         action.setStateChangedHandler(value -> {
             button.setEnabled(value.isEnabled());
