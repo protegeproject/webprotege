@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.library.richtext;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -15,9 +17,13 @@ public class RichTextEditorPresenter {
 
     private RichTextEditorView editorView;
 
-    public RichTextEditorPresenter(final RichTextToolbar toolbar, final RichTextEditorView editorView) {
+    @Nonnull
+    private final InputBox inputBox;
+
+    public RichTextEditorPresenter(final RichTextToolbar toolbar, final RichTextEditorView editorView, @Nonnull InputBox inputBox) {
         this.toolbar = toolbar;
         this.editorView = editorView;
+        this.inputBox = inputBox;
 
         editorView.setFormattingChangedHandler(new FormattingChangedHandler() {
             @Override
@@ -54,7 +60,7 @@ public class RichTextEditorPresenter {
 
             @Override
             public void handleCreateLink() {
-                InputBox.showDialog("Enter link URL", new InputBoxHandler() {
+                RichTextEditorPresenter.this.inputBox.showDialog("Enter link URL", new InputBoxHandler() {
                     @Override
                     public void handleAcceptInput(String input) {
                         editorView.createLink(input);

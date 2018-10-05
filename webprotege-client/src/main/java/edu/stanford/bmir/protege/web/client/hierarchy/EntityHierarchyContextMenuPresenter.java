@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableSet.builder;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
@@ -85,6 +84,8 @@ public class EntityHierarchyContextMenuPresenter {
 
     private UIAction showDirectLinkAction;
 
+    private final InputBox inputBox;
+
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
                                                @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                                                @Nonnull UIAction createEntityAction,
@@ -94,7 +95,8 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
-                                               @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
+                                               @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                               @Provided @Nonnull InputBox inputBox) {
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
         this.moveToParentUiAction = checkNotNull(moveToParentUiAction);
         this.editAnnotationsUiAction = checkNotNull(editAnnotationsUiAction);
@@ -106,6 +108,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
         this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
         this.permissionChecker = checkNotNull(permissionChecker);
+        this.inputBox = checkNotNull(inputBox);
     }
 
     /**
@@ -205,15 +208,13 @@ public class EntityHierarchyContextMenuPresenter {
     private void showIriForSelection() {
         treeWidget.getFirstSelectedKey().ifPresent(sel -> {
             String iri = sel.getIRI().toString();
-            InputBox.showOkDialog(messages.classIri(), true, iri, input -> {
-            });
+            inputBox.showOkDialog(messages.classIri(), true, iri, input -> {});
         });
     }
 
     private void showUrlForSelection() {
         String location = Window.Location.getHref();
-        InputBox.showOkDialog(messages.directLink(), true, location, input -> {
-        });
+        inputBox.showOkDialog(messages.directLink(), true, location, input -> {});
     }
 
     private void handleRefresh() {

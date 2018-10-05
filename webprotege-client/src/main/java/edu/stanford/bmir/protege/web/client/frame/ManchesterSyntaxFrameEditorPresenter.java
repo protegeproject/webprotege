@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
@@ -83,15 +84,19 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     private DispatchErrorMessageDisplay errorDisplay;
 
+    @Nonnull
+    private final InputBox inputBox;
+
 
     @Inject
-    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay) {
+    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay, @Nonnull InputBox inputBox) {
         this.editor = editor;
         this.permissionChecker = permissionChecker;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.errorDisplay = errorDisplay;
+        this.inputBox = inputBox;
     }
 
     public ManchesterSyntaxFrameEditor getView() {
@@ -209,7 +214,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     }
 
     private void applyChangesWithCommitMessage() {
-        InputBox.showDialog("Enter commit message", new InputBoxHandler() {
+        inputBox.showDialog("Enter commit message", new InputBoxHandler() {
             @Override
             public void handleAcceptInput(String input) {
                 applyChangesWithCommitMessage(input);

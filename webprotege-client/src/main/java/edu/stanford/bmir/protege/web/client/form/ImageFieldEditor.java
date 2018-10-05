@@ -20,8 +20,11 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import org.semanticweb.owlapi.model.IRI;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -29,6 +32,9 @@ import java.util.Optional;
  * 09/04/16
  */
 public class ImageFieldEditor extends Composite implements ValueEditor<FormDataValue> {
+
+    @Nonnull
+    private final InputBox inputBox;
 
     interface ImageFieldEditorUiBinder extends UiBinder<HTMLPanel, ImageFieldEditor> {
 
@@ -53,7 +59,8 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
     private boolean dirty = false;
 
     @Inject
-    public ImageFieldEditor() {
+    public ImageFieldEditor(@Nonnull InputBox inputBox) {
+        this.inputBox = checkNotNull(inputBox);
         initWidget(ourUiBinder.createAndBindUi(this));
         updateUi();
         // The drag over handler is required in order to enable drop support
@@ -106,7 +113,7 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
     }
 
     private void showEditingDialog() {
-        InputBox.showDialog(
+        inputBox.showDialog(
                 "Image URL",
                 false,
                 theIRI.map(IRI::toString).orElse(""),

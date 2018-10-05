@@ -3,6 +3,6 @@
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
     <g:HTMLPanel>
         <g:Label ui:field="messageLabel"/>
-        <text:ExpandingTextBox ui:field="inputArea" width="50em" multiline="true" anchorVisible="false"/>
+        <text:ExpandingTextBox ui:field="inputArea" multiline="true" anchorVisible="false"/>
     </g:HTMLPanel>
 </ui:UiBinder>

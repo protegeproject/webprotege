@@ -36,6 +36,9 @@ import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
 import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
@@ -517,6 +520,11 @@ public class ClientApplicationModule {
 
     @Provides
     EmailAddressEditor provideEmailAddressEditor(@Nonnull EmailAddressEditorImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    InputBoxView providesInputBoxView(InputBoxViewImpl impl) {
         return impl;
     }
 }

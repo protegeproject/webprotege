@@ -6,6 +6,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.function.Consumer;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -13,13 +15,17 @@ import java.util.function.Consumer;
  */
 public class AddCollectionItemPromptImpl implements AddCollectionItemPrompt {
 
+    @Nonnull
+    private final InputBox inputBox;
+
     @Inject
-    public AddCollectionItemPromptImpl() {
+    public AddCollectionItemPromptImpl(@Nonnull InputBox inputBox) {
+        this.inputBox = checkNotNull(inputBox);
     }
 
     @Override
     public void showPrompt(@Nonnull Consumer<String> callback) {
-        InputBox.showDialog("Add element",
+        inputBox.showDialog("Add element",
                             callback::accept);
     }
 }

@@ -2,10 +2,16 @@ package edu.stanford.bmir.protege.web.client.library.msgbox;
 
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,59 +21,49 @@ import java.util.List;
  */
 public class InputBox {
 
-    public static void showDialog(String title, InputBoxHandler handler) {
+    @Nonnull
+    private final ModalManager modalManager;
+
+    @Nonnull
+    private final Provider<InputBoxView> viewProvider;
+
+    @Inject
+    public InputBox(@Nonnull ModalManager modalManager, @Nonnull Provider<InputBoxView> viewProvider) {
+        this.modalManager = checkNotNull(modalManager);
+        this.viewProvider = checkNotNull(viewProvider);
+    }
+
+    public void showDialog(String title, InputBoxHandler handler) {
         showDialog(title, true, "", handler);
     }
 
-    public static void showDialog(String title, boolean multiline, String initialInput, InputBoxHandler handler) {
-        InputBoxController controller = new InputBoxController(title, initialInput, handler, Arrays.asList(DialogButton.OK, DialogButton.CANCEL));
-        controller.setMultiline(multiline);
-        WebProtegeDialog.showDialog(controller);
+    public void showDialog(String title, boolean multiline, String initialInput, InputBoxHandler handler) {
+        showModal(title, multiline, initialInput, handler, true);
     }
 
-    public static void showOkDialog(String title, boolean multiline, String initialInput, InputBoxHandler handler) {
-        InputBoxController controller = new InputBoxController(title, initialInput, handler, Arrays.asList(DialogButton.OK));
-        controller.setMultiline(multiline);
-        WebProtegeDialog.showDialog(controller);
+    public void showOkDialog(String title, boolean multiline, String initialInput, InputBoxHandler handler) {
+        showModal(title, multiline, initialInput, handler, false);
     }
 
-    private static class InputBoxController extends WebProtegeDialogController<String> {
-
-        private InputBoxView view = new InputBoxViewImpl();
-
-        private InputBoxHandler inputBoxHandler;
-
-        private InputBoxController(String title, String initialInput, InputBoxHandler handler, List<DialogButton> buttonList) {
-            super(title, buttonList, buttonList.get(0), DialogButton.CANCEL);
-            this.inputBoxHandler = handler;
-            view.setInitialInput(initialInput);
-            setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<String>() {
-                @Override
-                public void handleHide(String data, WebProtegeDialogCloser closer) {
-                    inputBoxHandler.handleAcceptInput(data);
-                    closer.hide();
-                }
-            });
+    private void showModal(@Nonnull String title,
+                           boolean multiline,
+                           @Nonnull String initialInput,
+                           InputBoxHandler handler,
+                           boolean showCancelButton) {
+        ModalPresenter modalPresenter = modalManager.createPresenter();
+        modalPresenter.setTitle(title);
+        InputBoxView view = viewProvider.get();
+        view.setMultiline(multiline);
+        view.setInitialInput(initialInput);
+        modalPresenter.setView(view);
+        if(showCancelButton) {
+            modalPresenter.setEscapeButton(DialogButton.CANCEL);
         }
-
-        public void setMultiline(boolean multiline) {
-            view.setMultiline(multiline);
-        }
-
-        @Override
-        public Widget getWidget() {
-            return view.getWidget();
-        }
-
-        @Nonnull
-        @Override
-        public java.util.Optional<HasRequestFocus> getInitialFocusable() {
-            return view.getInitialFocusable();
-        }
-
-        @Override
-        public String getData() {
-            return view.getInputValue();
-        }
+        modalPresenter.setPrimaryButton(DialogButton.OK);
+        modalPresenter.setButtonHandler(DialogButton.OK, closer -> {
+            closer.closeModal();
+            handler.handleAcceptInput(view.getInputValue());
+        });
+        modalManager.showModal(modalPresenter);
     }
 }

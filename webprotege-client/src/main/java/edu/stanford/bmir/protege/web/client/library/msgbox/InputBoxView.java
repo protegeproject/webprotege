@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 
@@ -9,7 +10,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/04/2013
  */
-public interface InputBoxView extends HasInitialFocusable {
+public interface InputBoxView extends HasInitialFocusable, IsWidget {
 
     void setMessage(String msg);
 

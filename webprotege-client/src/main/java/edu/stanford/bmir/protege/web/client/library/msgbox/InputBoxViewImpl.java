@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -31,6 +33,7 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
 
     private static InputBoxViewImplUiBinder ourUiBinder = GWT.create(InputBoxViewImplUiBinder.class);
 
+    @Inject
     public InputBoxViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

@@ -3,7 +3,10 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -12,13 +15,17 @@ import javax.inject.Inject;
  */
 public class CreateFreshPerspectiveRequestHandlerImpl implements CreateFreshPerspectiveRequestHandler {
 
+    @Nonnull
+    private final InputBox inputBox;
+
     @Inject
-    public CreateFreshPerspectiveRequestHandlerImpl() {
+    public CreateFreshPerspectiveRequestHandlerImpl(@Nonnull InputBox inputBox) {
+        this.inputBox = checkNotNull(inputBox);
     }
 
     @Override
     public void createFreshPerspective(final Callback callback) {
-        InputBox.showDialog("Enter tab name", false, "", input -> {
+        inputBox.showDialog("Enter tab name", false, "", input -> {
             String trimmedInput = input.trim();
             if(trimmedInput.isEmpty()) {
                 return;
