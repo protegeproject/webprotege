@@ -4,9 +4,11 @@ import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import elemental.client.Browser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,11 +35,12 @@ public class ModalManager {
 
     private boolean handlersAttached = false;
 
+    private Optional<elemental.dom.Element> focusedElement = Optional.empty();
+
     @Inject
     public ModalManager(@Nonnull Provider<ModalPresenter> modalPresenterProvider) {
         this.modalPresenterProvider = checkNotNull(modalPresenterProvider);
         attachHandlers();
-
     }
 
     private static boolean isAcceptAccelerator(@Nonnull NativeEvent event) {
@@ -238,6 +241,9 @@ public class ModalManager {
         if (alreadyShowing) {
             throw new RuntimeException("Already showing modal for presenter");
         }
+        if(modalStack.isEmpty()) {
+            focusedElement = Optional.ofNullable(Browser.getDocument().getActiveElement());
+        }
         modalStack.push(new ModalPresenterData(presenter));
         RootPanel rootPanel = RootPanel.get();
         rootPanel.add(presenter.getView());
@@ -252,6 +258,9 @@ public class ModalManager {
         currentModal.presenter.hide();
         if(!modalStack.isEmpty()) {
             modalStack.peek().focusLastElement();
+        }
+        else {
+            focusedElement.ifPresent(elemental.dom.Element::focus);
         }
     }
 
