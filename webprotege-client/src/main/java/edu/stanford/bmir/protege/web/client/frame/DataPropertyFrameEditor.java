@@ -52,7 +52,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Dat
     private static DataPropertyFrameEditorUiBinder ourUiBinder = GWT.create(DataPropertyFrameEditorUiBinder.class);
 
     @UiField
-    protected TextBox iriField;
+    protected HasText iriField;
 
     @UiField(provided = true)
     protected final PropertyValueListEditor annotations;
@@ -82,7 +82,6 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Dat
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        iriField.setEnabled(false);
         setEnabled(false);
     }
 
@@ -132,7 +131,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Dat
         dirty = false;
         lastDataPropertyFrame = Optional.of(frame);
         String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
-        iriField.setValue(decodedIri);
+        iriField.setText(decodedIri);
         annotations.setValue(frame.getPropertyValueList());
         domains.setValue(new ArrayList<>(frame.getDomains()));
         ranges.setValue(new ArrayList<>(frame.getRanges()));

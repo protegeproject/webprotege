@@ -379,3 +379,10 @@
 .wp-form__text-block {
     margin-bottom: 1.2rem;
 }
+
+.wp-form__iri-field {
+    -ms-user-select: text;
+    user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+}

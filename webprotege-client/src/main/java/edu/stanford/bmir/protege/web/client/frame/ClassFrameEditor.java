@@ -9,10 +9,7 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
@@ -43,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFrame>, ClassFrameEditorPresenter, EditorView<ClassFrame> {
 
     @UiField
-    protected TextBox iriField;
+    protected HasText iriField;
 
     @UiField(provided = true)
     protected final PropertyValueListEditor annotations;
@@ -94,7 +91,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFr
         currentSubject = frame.getSubject();
         entityDisplay.setDisplayedEntity(Optional.of(currentSubject));
         String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
-        iriField.setValue(decodedIri);
+        iriField.setText(decodedIri);
         ArrayList<PropertyAnnotationValue> annotationPropertyValues = new ArrayList<>(frame.getAnnotationPropertyValues());
         annotations.setValue(new PropertyValueList(annotationPropertyValues));
         ArrayList<PropertyValue> logicalPropertyValues = new ArrayList<>(frame.getLogicalPropertyValues());
@@ -125,7 +122,6 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFr
 
     private void setEnabledInternal(boolean enabled) {
         this.enabled = enabled;
-        iriField.setEnabled(false);
         annotations.setEnabled(enabled);
         properties.setEnabled(enabled);
         classes.setEnabled(enabled);

@@ -12,10 +12,7 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
@@ -62,7 +59,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     final PrimitiveDataListEditor ranges;
 
     @UiField
-    protected TextBox iriField;
+    protected HasText iriField;
 
     private boolean dirty = false;
 
@@ -132,7 +129,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        iriField.setEnabled(false);
         annotations.setEnabled(enabled);
         domains.setEnabled(enabled);
         ranges.setEnabled(enabled);
@@ -150,7 +146,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     @Override
     public void clearValue() {
         dirty = false;
-        iriField.setValue("");
+        iriField.setText("");
         annotations.clearValue();
         previouslySetValue = Optional.empty();
         entityDisplay.setDisplayedEntity(Optional.empty());
@@ -185,7 +181,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     public void setValue(ObjectPropertyFrame frame) {
         dirty = false;
         String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
-        iriField.setValue(decodedIri);
+        iriField.setText(decodedIri);
         annotations.setValue(new PropertyValueList(frame.getAnnotationPropertyValues()));
         characteristics.clear();
         characteristics.addAll(frame.getCharacteristics());

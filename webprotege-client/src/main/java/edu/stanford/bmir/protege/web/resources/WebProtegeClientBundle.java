@@ -319,6 +319,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-form__text-block")
         String formTextBlock();
+
+        @ClassName("wp-form__iri-field")
+        String formIriField();
     }
 
     interface DateTimePicker extends CssResource {

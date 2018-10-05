@@ -10,13 +10,13 @@
 
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="iriField"/>
+            <g:Label ui:field="iriField"/>
         </div>
 
 
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
-            <frame:PropertyValueListEditor ui:field="annotations"/>
+            <frame:PropertyValueListEditor ui:field="annotations" addStyleNames="{wp.style.formIriField}"/>
         </div>
 
 

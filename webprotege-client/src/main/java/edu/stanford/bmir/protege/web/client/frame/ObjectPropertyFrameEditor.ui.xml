@@ -10,7 +10,7 @@
 
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="iriField" width="100%"/>
+            <g:Label ui:field="iriField" width="100%" addStyleNames="{wp.style.formIriField}"/>
         </div>
 
         <div class="{wp.style.formGroup}">

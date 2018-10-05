@@ -57,7 +57,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     private static NamedIndividualFrameEditorUiBinder ourUiBinder = GWT.create(NamedIndividualFrameEditorUiBinder.class);
 
     @UiField
-    protected TextBox iriField;
+    protected HasText iriField;
 
     @UiField(provided = true)
     PropertyValueListEditor annotations;
@@ -95,7 +95,6 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
-        iriField.setEnabled(false);
     }
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
@@ -123,7 +122,6 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        iriField.setEnabled(false);
         types.setEnabled(enabled);
         annotations.setEnabled(enabled);
         assertions.setEnabled(enabled);
@@ -152,7 +150,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     public void setValue(final NamedIndividualFrame frame) {
         editedFrame = Optional.of(frame);
         String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
-        iriField.setValue(decodedIri);
+        iriField.setText(decodedIri);
         annotations.setValue(new PropertyValueList(frame.getAnnotationPropertyValues()));
         assertions.setValue(new PropertyValueList(frame.getLogicalPropertyValues()));
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);

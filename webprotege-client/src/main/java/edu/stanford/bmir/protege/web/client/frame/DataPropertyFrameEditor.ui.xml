@@ -15,7 +15,7 @@
 
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="iriField"/>
+            <g:TextBox ui:field="iriField" addStyleNames="{wp.style.formIriField}"/>
         </div>
 
         <div class="{wp.style.formGroup}">
