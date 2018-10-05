@@ -238,6 +238,7 @@
 "yi","Yiddish"
 "yo","Yoruba"
 "za","Zhuang; Chuang"
+"zh","Chinese"
 "zh-CN","Chinese; PRC"
 "zh-HK","Chinese; Hong Kong"
 "zh-SG","Chinese; Singapore"
