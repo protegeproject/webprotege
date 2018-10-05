@@ -7,24 +7,22 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
-
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
 
         .searchField {
             box-sizing: border-box;
-            width: 600px;
         }
         .helpText {
-            width: 600px;
         }
         .foucusPanel {
             box-sizing: border-box;
-            width: 600px;
             border: 1px solid literal("var(--separator--color)");
         }
 
         .results {
-            width: 100%;
             height: 300px;
             box-sizing: border-box;
         }
@@ -47,7 +45,7 @@
         }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
         <g:Label ui:field="searchSummaryField" addStyleNames="{style.searchSummaryLabel}"/>

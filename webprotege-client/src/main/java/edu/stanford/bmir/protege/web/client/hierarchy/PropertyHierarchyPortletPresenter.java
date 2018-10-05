@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
+import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
@@ -99,9 +99,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final WatchPresenter watchPresenter;
 
     @Nonnull
-    private final SearchDialogController searchDialogController;
-
-    @Nonnull
     private final HierarchyActionStatePresenter actionStatePresenter;
 
     @Nonnull
@@ -112,6 +109,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     @Nonnull
     private final TagVisibilityPresenter tagVisibilityPresenter;
+
+    @Nonnull
+    private final SearchModal searchModal;
 
     @Nonnull
     private final TreeWidgetUpdaterFactory updaterFactory;
@@ -136,13 +136,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull DeleteEntitiesPresenter deleteEntitiesPresenter,
                                              @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
                                              @Nonnull WatchPresenter watchPresenter,
-                                             @Nonnull SearchDialogController searchDialogController,
                                              @Nonnull HierarchyActionStatePresenter actionStatePresenter,
                                              @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider,
                                              @Nonnull FilterView filterView,
                                              @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
                                              @Nonnull DisplayNameRenderer displayNameRenderer,
-                                             @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
+                                             @Nonnull SearchModal searchModal, @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = view;
         this.messages = messages;
@@ -161,11 +160,11 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.deleteEntitiesPresenter = deleteEntitiesPresenter;
         this.contextMenuPresenterFactory = contextMenuPresenterFactory;
         this.watchPresenter = watchPresenter;
-        this.searchDialogController = searchDialogController;
         this.actionStatePresenter = actionStatePresenter;
         this.entityHierarchyDropHandlerProvider = entityHierarchyDropHandlerProvider;
         this.filterView = filterView;
         this.tagVisibilityPresenter = tagVisibilityPresenter;
+        this.searchModal = searchModal;
         this.updaterFactory = updaterFactory;
     }
 
@@ -408,7 +407,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleSearch() {
-        searchDialogController.setEntityTypes(OBJECT_PROPERTY, DATA_PROPERTY, ANNOTATION_PROPERTY);
-        WebProtegeDialog.showDialog(searchDialogController);
+        searchModal.setEntityTypes(OBJECT_PROPERTY, DATA_PROPERTY, ANNOTATION_PROPERTY);
+        searchModal.showModal();
     }
 }

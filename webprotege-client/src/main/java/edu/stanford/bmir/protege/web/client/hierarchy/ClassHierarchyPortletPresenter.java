@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
+import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
@@ -51,7 +51,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final WatchPresenter watchPresenter;
 
-    private final SearchDialogController searchDialogController;
+    @Nonnull
+    private final SearchModal searchModal;
 
     private final Messages messages;
 
@@ -104,7 +105,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
                                           @Nonnull WatchPresenter watchPresenter,
-                                          @Nonnull SearchDialogController searchDialogController,
+                                          @Nonnull SearchModal searchModal,
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
@@ -121,7 +122,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
         super(selectionModel, projectId, displayNameRenderer);
         this.watchPresenter = checkNotNull(watchPresenter);
-        this.searchDialogController = checkNotNull(searchDialogController);
+        this.searchModal = searchModal;
         this.messages = checkNotNull(messages);
         this.hierarchyModel = checkNotNull(hierarchyModel);
         this.contextMenuPresenterFactory = checkNotNull(contextMenuPresenterFactory);
@@ -247,8 +248,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void handleSearch() {
-        searchDialogController.setEntityTypes(CLASS);
-        WebProtegeDialog.showDialog(searchDialogController);
+        searchModal.setEntityTypes(CLASS);
+        searchModal.showModal();
     }
 
     private void selectAndExpandPath(Path<OWLEntity> entityPath) {

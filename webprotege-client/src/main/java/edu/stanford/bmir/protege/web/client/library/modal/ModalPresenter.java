@@ -93,7 +93,7 @@ public class ModalPresenter {
         view.setPrimaryButtonFocusedOnAttach(primaryButtonFocusedOnShow);
     }
 
-    protected void accept() {
+    public void accept() {
         if (primaryButton != null) {
             ModalButtonHandler modalButtonHandler = handlerMap.get(primaryButton);
             if (modalButtonHandler != null) {
@@ -102,7 +102,7 @@ public class ModalPresenter {
         }
     }
 
-    public void escape() {
-        hide();
+    protected void escape() {
+        modalCloser.closeModal();
     }
 }

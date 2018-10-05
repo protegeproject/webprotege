@@ -279,4 +279,10 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     public void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler) {
         paginatorPresenter.setPageNumberChangedHandler(handler);
     }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        searchStringField.setFocus(true);
+    }
 }

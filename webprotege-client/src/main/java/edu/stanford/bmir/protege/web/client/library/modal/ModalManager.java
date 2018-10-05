@@ -224,11 +224,7 @@ public class ModalManager {
         if (modalStack.isEmpty()) {
             return;
         }
-        ModalPresenterData presenter = modalStack.pop();
-        presenter.handleEscape();
-        if(!modalStack.isEmpty()) {
-            modalStack.peek().focusLastElement();
-        }
+        hideCurrentModal();
     }
 
     @Nonnull
@@ -237,7 +233,7 @@ public class ModalManager {
     }
 
     public void showModal(@Nonnull ModalPresenter presenter) {
-        boolean alreadyShowing = modalStack.stream().anyMatch(pd -> pd.presenter.equals(presenter));
+        boolean alreadyShowing = isShowing(presenter);
         if (alreadyShowing) {
             throw new RuntimeException("Already showing modal for presenter");
         }
@@ -248,6 +244,10 @@ public class ModalManager {
         RootPanel rootPanel = RootPanel.get();
         rootPanel.add(presenter.getView());
         presenter.setModalCloser(this::hideCurrentModal);
+    }
+
+    private boolean isShowing(@Nonnull ModalPresenter presenter) {
+        return modalStack.stream().anyMatch(pd -> pd.presenter.equals(presenter));
     }
 
     private void hideCurrentModal() {

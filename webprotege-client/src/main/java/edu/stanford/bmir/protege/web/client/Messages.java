@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Optional;
 
@@ -1236,4 +1237,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Edit Comment")
     @Key("comments.editComment")
     String comments_editComment();
+
+    @DefaultMessage("Search for {0}")
+    @Key("search.searchFor")
+    String searchFor(String entityType);
 }
