@@ -2,13 +2,11 @@ package edu.stanford.bmir.protege.web.client.library.modal;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -133,7 +131,7 @@ public class ModalManager {
                 if (!isElementInCurrentModal(element)) {
                     event.cancel();
                 }
-                else if (element.getTabIndex() != 0) {
+                else if (!isInFocusableElement(element)) {
                     event.cancel();
                 }
                 break;
@@ -160,6 +158,17 @@ public class ModalManager {
                 }
                 break;
         }
+    }
+
+    private boolean isInFocusableElement(@Nonnull Element element) {
+        Element parent = element;
+        while (parent != null) {
+            if(parent.getTabIndex() == 0) {
+                return true;
+            }
+            parent = parent.getParentElement();
+        }
+        return false;
     }
 
     private void handleFocus(@Nonnull elemental.events.Event event) {
