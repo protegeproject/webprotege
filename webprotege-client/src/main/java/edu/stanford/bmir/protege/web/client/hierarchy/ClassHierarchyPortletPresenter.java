@@ -167,8 +167,11 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.setWidget(treeWidget);
         portletUi.setFilterView(filterView);
 
+        createClassAction.setRequiresSelection(false);
         actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
+        deleteClassAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
+        watchClassAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(WATCH_CHANGES, watchClassAction);
 
         actionStatePresenter.start(eventBus);

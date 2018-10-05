@@ -78,7 +78,9 @@ public class HierarchyActionStatePresenter {
                              @Nonnull UIAction action) {
         action.setEnabled(false);
         permissionChecker.hasPermission(actionId,
-                                        enabled -> action.setEnabled(selectionPresent && enabled));
+                                        perm -> {
+                                            action.setEnabled(perm && (!action.requiresSelection() || selectionPresent));
+                                        });
 
     }
 }

@@ -24,9 +24,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EditEntityTagsUiAction extends AbstractUiAction {
 
     @Nonnull
-    private final Provider<EntityTagsDialogController> controllerProvider;
-
-    @Nonnull
     private final SelectionModel selectionModel;
 
     @Nonnull
@@ -39,13 +36,11 @@ public class EditEntityTagsUiAction extends AbstractUiAction {
     private final EntityTagsSelectorPresenter presenter;
 
     @Inject
-    public EditEntityTagsUiAction(@Nonnull Provider<EntityTagsDialogController> controllerProvider,
-                                  @Nonnull SelectionModel selectionModel,
+    public EditEntityTagsUiAction(@Nonnull SelectionModel selectionModel,
                                   @Nonnull Messages messages,
                                   @Nonnull ModalManager modalManager,
                                   @Nonnull EntityTagsSelectorPresenter presenter) {
         super(messages.tags_edit());
-        this.controllerProvider = checkNotNull(controllerProvider);
         this.selectionModel = selectionModel;
         this.messages = messages;
         this.modalManager = modalManager;

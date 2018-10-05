@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.HasEnabled;
  */
 public interface UIAction extends HasEnabled {
 
-
     interface LabelChangedHandler {
         void handleLabelChanged(UIAction action);
     }
@@ -27,4 +26,8 @@ public interface UIAction extends HasEnabled {
     boolean isVisible();
 
     void execute();
+
+    boolean requiresSelection();
+
+    void setRequiresSelection(boolean b);
 }

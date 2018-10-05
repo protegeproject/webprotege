@@ -176,8 +176,11 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         portletUi.addAction(searchAction);
         portletUi.setFilterView(filterView);
 
+        createAction.setRequiresSelection(false);
         actionStatePresenter.registerAction(CREATE_PROPERTY, createAction);
+        deleteAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(DELETE_PROPERTY, deleteAction);
+        watchAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(WATCH_CHANGES, watchAction);
 
         startTree(OBJECT_PROPERTY_HIERARCHY,

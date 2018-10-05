@@ -20,6 +20,8 @@ public abstract class AbstractUiAction implements UIAction {
 
     private boolean visible = VISIBLE_BY_DEFAULT;
 
+    private boolean requiresSelection = false;
+
     private LabelChangedHandler labelChangedHandler = action -> {};
 
     private StateChangedHandler stateChangedHandler = action -> {};
@@ -34,6 +36,18 @@ public abstract class AbstractUiAction implements UIAction {
 
     public final boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public boolean requiresSelection() {
+        return requiresSelection;
+    }
+
+    public void setRequiresSelection(boolean requiresSelection) {
+        if(this.requiresSelection != requiresSelection) {
+            this.requiresSelection = requiresSelection;
+            stateChangedHandler.handleStateChanged(this);
+        }
     }
 
     public void setLabel(String label) {
