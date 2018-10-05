@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.client.library.modal;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -34,7 +31,7 @@ public class ModalManager {
     @Nonnull
     private final Provider<ModalPresenter> modalPresenterProvider;
 
-    private HandlerRegistration keyUpReg = null;
+    private boolean handlersAttached = false;
 
     @Inject
     public ModalManager(@Nonnull Provider<ModalPresenter> modalPresenterProvider) {
@@ -43,12 +40,12 @@ public class ModalManager {
 
     }
 
-    private static boolean isAcceptAccelerator(@Nonnull KeyUpEvent event) {
-        return event.getNativeKeyCode() == KeyCodes.KEY_ENTER && event.isControlKeyDown();
+    private static boolean isAcceptAccelerator(@Nonnull NativeEvent event) {
+        return event.getKeyCode() == KeyCodes.KEY_ENTER && event.getCtrlKey();
     }
 
-    private static boolean isEscapeAccelerator(@Nonnull KeyUpEvent event) {
-        return event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE;
+    private static boolean isEscapeAccelerator(@Nonnull NativeEvent event) {
+        return event.getKeyCode() == KeyCodes.KEY_ESCAPE;
     }
 
     @Nonnull
@@ -103,13 +100,13 @@ public class ModalManager {
     }
 
     private void attachHandlers() {
-        if (keyUpReg != null) {
+        if(handlersAttached) {
             return;
         }
+        handlersAttached = true;
         Event.addNativePreviewHandler(this::handleNativePreviewEvent);
         RootPanel widgets = RootPanel.get();
         widgets.sinkEvents(Event.ONKEYUP);
-        keyUpReg = widgets.addHandler(this::handleKeyUp, KeyUpEvent.getType());
         BodyElement element = Document.get().getBody();
         elemental.dom.Element e = (elemental.dom.Element) element;
         e.addEventListener(BrowserEvents.FOCUSIN, this::handleFocus);
@@ -156,6 +153,19 @@ public class ModalManager {
                         });
                     }
                 }
+                else if(isAcceptAccelerator(nativeEvent)) {
+                    event.cancel();
+                }
+                break;
+            case Event.ONKEYUP:
+                if(isEscapeAccelerator(nativeEvent)) {
+                    event.cancel();
+                    handleEscapeAccelerator();
+                }
+                else if(isAcceptAccelerator(nativeEvent)) {
+                    event.cancel();
+                    handleAcceptAccelerator();
+                }
                 break;
         }
     }
@@ -172,7 +182,6 @@ public class ModalManager {
     }
 
     private void handleFocus(@Nonnull elemental.events.Event event) {
-        GWT.log("[ModalManager] Handling focus");
         elemental.events.EventTarget sourceElement = event.getSrcElement();
         Element element = (Element) sourceElement;
         if(isElementInCurrentModal(element)) {
@@ -200,15 +209,6 @@ public class ModalManager {
         return false;
     }
 
-    private void handleKeyUp(@Nonnull KeyUpEvent event) {
-        if (isAcceptAccelerator(event)) {
-            handleAcceptAccelerator();
-        }
-        else if (isEscapeAccelerator(event)) {
-            handleEscapeAccelerator();
-        }
-    }
-
     private void handleAcceptAccelerator() {
         if (modalStack.isEmpty()) {
             return;
@@ -234,7 +234,8 @@ public class ModalManager {
     }
 
     public void showModal(@Nonnull ModalPresenter presenter) {
-        if (modalStack.contains(presenter)) {
+        boolean alreadyShowing = modalStack.stream().anyMatch(pd -> pd.presenter.equals(presenter));
+        if (alreadyShowing) {
             throw new RuntimeException("Already showing modal for presenter");
         }
         modalStack.push(new ModalPresenterData(presenter));
