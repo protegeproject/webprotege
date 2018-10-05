@@ -261,6 +261,7 @@ public class HierarchyFieldPresenter {
         popup.getFirstSelectedElement()
                 .map(EntityNode::getEntityData)
                 .ifPresent(this::setEntityAndFireEvents);
+        view.requestFocus();
     }
 
     public Optional<OWLEntityData> getEntity() {
