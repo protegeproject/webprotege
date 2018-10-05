@@ -1232,4 +1232,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Watches")
     @Key("watch.watches")
     String watch_watches();
+
+    @DefaultMessage("Edit Comment")
+    @Key("comments.editComment")
+    String comments_editComment();
 }

@@ -28,6 +28,8 @@ import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.form.FormElementView;
 import edu.stanford.bmir.protege.web.client.form.FormElementViewImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
+import edu.stanford.bmir.protege.web.client.issues.CommentEditorView;
+import edu.stanford.bmir.protege.web.client.issues.CommentEditorViewImpl;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;

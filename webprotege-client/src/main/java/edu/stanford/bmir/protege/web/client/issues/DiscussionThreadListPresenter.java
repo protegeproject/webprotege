@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -18,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
@@ -49,9 +54,6 @@ public class DiscussionThreadListPresenter implements HasDispose {
     private final ProjectId projectId;
 
     @Nonnull
-    private final Provider<CommentEditorDialog> commentEditorDialogProvider;
-
-    @Nonnull
     private final Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider;
 
     @Nonnull
@@ -69,20 +71,23 @@ public class DiscussionThreadListPresenter implements HasDispose {
     @Nonnull
     private EntityDisplay entityDisplay = entity -> {};
 
+    @Nonnull
+    private final CommentEditorModal commentEditorModal;
+
     @Inject
     public DiscussionThreadListPresenter(
             @Nonnull DiscussionThreadListView view,
             @Nonnull DispatchServiceManager dispatch,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull ProjectId projectId,
-            @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider,
-            @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider) {
+            @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider,
+            @Nonnull CommentEditorModal commentEditorModal) {
         this.view = view;
         this.dispatch = dispatch;
         this.permissionChecker = permissionChecker;
         this.projectId = projectId;
-        this.commentEditorDialogProvider = commentEditorDialogProvider;
         this.discussionThreadPresenterProvider = discussionThreadPresenterProvider;
+        this.commentEditorModal = commentEditorModal;
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -177,11 +182,10 @@ public class DiscussionThreadListPresenter implements HasDispose {
      */
     public void createThread() {
         displayedEntity.ifPresent(targetEntity -> {
-            CommentEditorDialog dlg = commentEditorDialogProvider.get();
-            dlg.show((body) -> dispatch.execute(
+            Consumer<String> handler = body -> dispatch.execute(
                     createEntityDiscussionThread(projectId, targetEntity, body),
-                    result -> displayThreads(result.getThreads())
-            ));
+                    result -> displayThreads(result.getThreads()));
+            commentEditorModal.showModal("", handler);
         });
     }
 

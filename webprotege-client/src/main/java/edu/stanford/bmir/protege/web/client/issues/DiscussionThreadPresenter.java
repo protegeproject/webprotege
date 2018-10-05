@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.issues;
 
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
@@ -12,10 +13,10 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
@@ -59,12 +60,13 @@ public class DiscussionThreadPresenter implements HasDispose {
     private final CommentViewFactory commentViewFactory;
 
     @Nonnull
-    private final Provider<CommentEditorDialog> commentEditorDialogProvider;
+    private final CommentEditorModal commentEditorModal;
 
     @Nonnull
     private final MessageBox messageBox;
 
     private final Map<CommentId, CommentView> commentViewMap = new HashMap<>();
+
 
     private Optional<ThreadId> currentThreadId = Optional.empty();
 
@@ -78,8 +80,8 @@ public class DiscussionThreadPresenter implements HasDispose {
                                      @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                      @Nonnull LoggedInUserProvider loggedInUserProvider,
                                      @Nonnull CommentViewFactory commentViewFactory,
-                                     @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider,
-                                     @Nonnull MessageBox messageBox) {
+                                     @Nonnull MessageBox messageBox,
+                                     @Nonnull CommentEditorModal commentEditorModal) {
         this.view = checkNotNull(view);
         this.messages = checkNotNull(messages);
         this.projectId = checkNotNull(projectId);
@@ -88,7 +90,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         this.permissionChecker = permissionChecker;
         this.loggedInUserProvider = loggedInUserProvider;
         this.commentViewFactory = checkNotNull(commentViewFactory);
-        this.commentEditorDialogProvider = checkNotNull(commentEditorDialogProvider);
+        this.commentEditorModal = commentEditorModal;
         this.messageBox = checkNotNull(messageBox);
     }
 
@@ -178,18 +180,20 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void handleReplyToComment(ThreadId threadId) {
-        CommentEditorDialog dlg = commentEditorDialogProvider.get();
-        dlg.show((body) -> dispatch.execute(
-                addComment(projectId, threadId, body),
-                result -> handleCommentAdded(threadId, result.getComment()))
-        );
+        Consumer<String> handler = body -> {
+            dispatch.execute(
+                    addComment(projectId, threadId, body),
+                    result -> handleCommentAdded(threadId, result.getComment()));
+        };
+        commentEditorModal.showModal("", handler);
     }
 
     private void handleEditComment(ThreadId threadId, Comment comment) {
-        CommentEditorDialog dlg = commentEditorDialogProvider.get();
-        dlg.setCommentBody(comment.getBody());
-        dlg.show((body) -> dispatch.execute(editComment(projectId, threadId, comment.getId(), body),
-                                            result -> result.getEditedComment().ifPresent(this::updateComment)));
+        Consumer<String> handler = body -> dispatch.execute(editComment(projectId, threadId, comment.getId(), body),
+                                                            result -> result
+                                                                    .getEditedComment()
+                                                                    .ifPresent(this::updateComment));
+        commentEditorModal.showModal(comment.getBody(), handler);
     }
 
     private void updateComment(Comment comment) {
@@ -203,7 +207,8 @@ public class DiscussionThreadPresenter implements HasDispose {
     private void handleDeleteComment(Comment comment) {
         messageBox.showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
                                        messages.deleteCommentConfirmationBoxText(),
-                                       () -> dispatch.execute(deleteComment(projectId, comment.getId()), result -> {}));
+                                       () -> dispatch.execute(deleteComment(projectId, comment.getId()), result -> {
+                                       }));
     }
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {
