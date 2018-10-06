@@ -142,7 +142,23 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     }
 
     public List<E> getSelection() {
-        return getFirstSelectedElement().map(Collections::singletonList).orElse(Collections.emptyList());
+        List<E> sel = new ArrayList<>();
+        int from, to;
+        if(selectionInterval.getStartIndex() <= selectionInterval.getEndIndex()) {
+            from = selectionInterval.getStartIndex();
+            to = selectionInterval.getEndIndex();
+        }
+        else {
+            from = selectionInterval.getEndIndex();
+            to = selectionInterval.getStartIndex();
+        }
+        for(int i = from; i < to + 1; i++) {
+            if (i < elements.size()) {
+                E element = elements.get(i);
+                sel.add(element);
+            }
+        }
+        return sel;
     }
 
     public void setKeyExtractor(@Nonnull Function<E, K> keyExtractor) {
