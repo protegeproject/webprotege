@@ -246,7 +246,6 @@
 .wp-btn-down {
     background-color: #aaaaaa;
     background-image: downArrowIconUrl;
-    mask: moveToParentIconUrl no-repeat;
     background-repeat: no-repeat;
     color: white;
     width: 20px;
