@@ -36,10 +36,11 @@
 }
 
 .wp-login__footnote {
-    width:        800px;
     text-align:   center;
     font-size:    10px;
     color: #c0c0c0;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .wp-login__message {
