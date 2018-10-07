@@ -142,6 +142,9 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     }
 
     public List<E> getSelection() {
+        if(selectionInterval.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<E> sel = new ArrayList<>();
         int from, to;
         if(selectionInterval.getStartIndex() <= selectionInterval.getEndIndex()) {
@@ -280,6 +283,10 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
         public SelectionInterval(int startIndex, int endIndex) {
             this.startIndex = startIndex;
             this.endIndex = endIndex;
+        }
+
+        public boolean isEmpty() {
+            return startIndex == -1;
         }
 
         public int getStartIndex() {
