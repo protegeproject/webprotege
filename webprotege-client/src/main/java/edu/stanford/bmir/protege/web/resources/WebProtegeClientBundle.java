@@ -213,6 +213,13 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource protegeBlender();
 
+
+    @Source("protege-cloud.png")
+    @DataResource.MimeType("image/png")
+    DataResource protegeCloud();
+
+
+
     interface WebProtegeCss extends CssResource {
 
         String focusBorder();

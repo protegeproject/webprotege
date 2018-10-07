@@ -2,15 +2,16 @@
 @external .gwt-*;
 
 @url protegeBlenderUrl protegeBlender;
+@url protegeCloudUrl protegeCloud;
 
 .wp-login {
 
 }
 
 .wp-login__logo {
-    width: 200px;
-    height: 160px;
-    background-image: protegeBlenderUrl;
+    width: 200px; /* 349 */
+    height: 160px; /* 267 */
+    background-image: protegeCloudUrl;
     background-repeat: no-repeat;
     background-size: contain;
 }
