@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -76,6 +77,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         eventBus.addProjectEventHandler(getProjectId(),
                                         ClassFrameChangedEvent.CLASS_FRAME_CHANGED,
                                         this::handleClassFrameChangedEvent);
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED,
+                                        this::handleIndividualFrameChangedEvent);
         editorPresenter.setEntityDisplay(this);
         tagListPresenter.start(view.getTagListViewContainer(), eventBus);
         handleAfterSetEntity(getSelectedEntity());
@@ -99,6 +103,12 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private void handleClassFrameChangedEvent(ClassFrameChangedEvent event) {
         if(displayedTypes.contains(CLASS) && getSelectedEntity().equals(Optional.of(event.getEntity()))) {
+            reloadEditorIfNotActive();
+        }
+    }
+
+    private void handleIndividualFrameChangedEvent(NamedIndividualFrameChangedEvent event) {
+        if(displayedTypes.contains(NAMED_INDIVIDUAL) && getSelectedEntity().equals(Optional.of(event.getEntity()))) {
             reloadEditorIfNotActive();
         }
     }

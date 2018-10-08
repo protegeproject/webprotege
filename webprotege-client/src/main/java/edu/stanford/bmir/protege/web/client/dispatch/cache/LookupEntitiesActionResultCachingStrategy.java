@@ -70,7 +70,7 @@ public class LookupEntitiesActionResultCachingStrategy extends AbstractResultCac
                 fireResultsInvalidatedEvent(event.getEntity());
             }
         });
-        registerProjectEventHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
+        registerProjectEventHandler(NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED, new NamedIndividualFrameChangedEventHandler() {
             @Override
             public void namedIndividualFrameChanged(NamedIndividualFrameChangedEvent event) {
                 fireResultsInvalidatedEvent(event.getEntity());

@@ -13,7 +13,7 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  */
 public class NamedIndividualFrameChangedEvent extends EntityFrameChangedEvent<OWLNamedIndividual, NamedIndividualFrameChangedEventHandler> {
 
-    public static final transient Event.Type<NamedIndividualFrameChangedEventHandler> TYPE = new Event.Type<NamedIndividualFrameChangedEventHandler>();
+    public static final transient Event.Type<NamedIndividualFrameChangedEventHandler> NAMED_INDIVIDUAL_CHANGED = new Event.Type<NamedIndividualFrameChangedEventHandler>();
 
     public NamedIndividualFrameChangedEvent(OWLNamedIndividual entity, ProjectId projectId, UserId userId) {
         super(entity, projectId, userId);
@@ -29,7 +29,7 @@ public class NamedIndividualFrameChangedEvent extends EntityFrameChangedEvent<OW
      */
     @Override
     public Event.Type<NamedIndividualFrameChangedEventHandler> getAssociatedType() {
-        return TYPE;
+        return NAMED_INDIVIDUAL_CHANGED;
     }
 
     /**

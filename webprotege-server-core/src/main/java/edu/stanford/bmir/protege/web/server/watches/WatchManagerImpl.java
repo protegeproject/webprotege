@@ -79,7 +79,7 @@ public class WatchManagerImpl implements WatchManager {
         eventManager.addHandler(AnnotationPropertyFrameChangedEvent.TYPE,
                                 event -> handleEntityFrameChanged(event.getEntity(), event.getUserId()));
 
-        eventManager.addHandler(NamedIndividualFrameChangedEvent.TYPE,
+        eventManager.addHandler(NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED,
                                 event -> handleEntityFrameChanged(event.getEntity(), event.getUserId()));
     }
 

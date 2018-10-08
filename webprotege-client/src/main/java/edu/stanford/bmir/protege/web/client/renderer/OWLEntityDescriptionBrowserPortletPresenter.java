@@ -54,7 +54,7 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
                                         AnnotationPropertyFrameChangedEvent.TYPE,
                                         event -> handleEntityChange(event.getEntity()));
         eventBus.addProjectEventHandler(getProjectId(),
-                                        NamedIndividualFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+                                        NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED, event -> handleEntityChange(event.getEntity()));
         eventBus.addProjectEventHandler(getProjectId(),
                                         AnnotationPropertyFrameChangedEvent.TYPE,
                                         event -> handleEntityChange(event.getEntity()));
