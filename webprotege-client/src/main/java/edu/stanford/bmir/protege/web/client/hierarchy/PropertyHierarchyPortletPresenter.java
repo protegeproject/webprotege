@@ -8,13 +8,11 @@ import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
-import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
@@ -52,9 +50,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     @Nonnull
     private final UIAction deleteAction;
-
-    @Nonnull
-    private final UIAction watchAction;
 
     @Nonnull
     private final UIAction searchAction;
@@ -96,9 +91,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory;
 
     @Nonnull
-    private final WatchPresenter watchPresenter;
-
-    @Nonnull
     private final HierarchyActionStatePresenter actionStatePresenter;
 
     @Nonnull
@@ -135,7 +127,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntitiesPresenter deleteEntitiesPresenter,
                                              @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
-                                             @Nonnull WatchPresenter watchPresenter,
                                              @Nonnull HierarchyActionStatePresenter actionStatePresenter,
                                              @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider,
                                              @Nonnull FilterView filterView,
@@ -147,7 +138,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.messages = messages;
         this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-property", this::handleCreate);
         this.deleteAction = new PortletAction(messages.delete(), "wp-btn-g--delete-property", this::handleDelete);
-        this.watchAction = new PortletAction(messages.watch(), this::handleWatch);
         this.searchAction = new PortletAction(messages.search(), "wp-btn-g--search", this::handleSearch);
         this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
         this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
@@ -159,7 +149,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.createEntityPresenter = createEntityPresenter;
         this.deleteEntitiesPresenter = deleteEntitiesPresenter;
         this.contextMenuPresenterFactory = contextMenuPresenterFactory;
-        this.watchPresenter = watchPresenter;
         this.actionStatePresenter = actionStatePresenter;
         this.entityHierarchyDropHandlerProvider = entityHierarchyDropHandlerProvider;
         this.filterView = filterView;
@@ -172,7 +161,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addAction(createAction);
         portletUi.addAction(deleteAction);
-//        portletUi.addAction(watchAction);
         portletUi.addAction(searchAction);
         portletUi.setFilterView(filterView);
 
@@ -180,8 +168,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         actionStatePresenter.registerAction(CREATE_PROPERTY, createAction);
         deleteAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(DELETE_PROPERTY, deleteAction);
-        watchAction.setRequiresSelection(true);
-        actionStatePresenter.registerAction(WATCH_CHANGES, watchAction);
 
         startTree(OBJECT_PROPERTY_HIERARCHY,
                   messages.hierarchy_objectproperties(),
@@ -399,14 +385,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleDelete() {
         view.getSelectedHierarchy().ifPresent(treeWidget -> deleteEntitiesPresenter.start(treeWidget));
-    }
-
-    private void handleWatch() {
-        view.getSelectedHierarchy().ifPresent(treeWidget -> {
-            treeWidget.getFirstSelectedKey().ifPresent(selection -> {
-                watchPresenter.start(selection);
-            });
-        });
     }
 
     private void handleSearch() {
