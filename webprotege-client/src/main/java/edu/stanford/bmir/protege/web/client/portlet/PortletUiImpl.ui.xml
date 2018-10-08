@@ -14,7 +14,6 @@
             flex-shrink: 1;
         }
         .toolbar {
-            padding: 1px;
             display: flex;
             flex-direction: row;
             align-items: center;
