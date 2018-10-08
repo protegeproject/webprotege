@@ -63,7 +63,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         filterView.addValueChangeHandler(event -> changeListView.setDetailsVisible(event.getValue()
                                                                                         .hasSetting(SHOW_DETAILS_FILTER,
                                                                                                     FilterSetting.ON)));
-        refreshAction = new PortletAction(messages.refresh(), () -> reload());
+        refreshAction = new PortletAction(messages.refresh(), "wp-btn-g--refresh", () -> reload());
     }
 
     @Override

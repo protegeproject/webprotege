@@ -242,6 +242,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/png")
     DataResource protegeCloud();
 
+    @Source("refresh-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgRefreshIcon();
+
 
 
     interface WebProtegeCss extends CssResource {
@@ -603,6 +607,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--search")
         String search();
+
+        @ClassName("wp-btn-g--refresh")
+        String refresh();
     }
 
     interface SettingsPageCss extends CssResource {

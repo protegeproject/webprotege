@@ -16,6 +16,7 @@
 @url deleteIndividualIconUrl svgDeleteIndividualIcon;
 @url createPropertyIconUrl svgCreatePropertyIcon;
 @url deletePropertyIconUrl svgDeletePropertyIcon;
+@url refreshIconUrl svgRefreshIcon;
 
 .wp-btn {
     border: none;
@@ -353,4 +354,9 @@
 .wp-btn-g--delete-property {
     mask: deletePropertyIconUrl no-repeat;
     -webkit-mask: deletePropertyIconUrl no-repeat;
+}
+
+.wp-btn-g--refresh {
+    mask: refreshIconUrl no-repeat;
+    -webkit-mask: refreshIconUrl no-repeat;
 }
