@@ -17,6 +17,7 @@
 @url createPropertyIconUrl svgCreatePropertyIcon;
 @url deletePropertyIconUrl svgDeletePropertyIcon;
 @url refreshIconUrl svgRefreshIcon;
+@url createThreadIconUrl svgCreateThread;
 
 .wp-btn {
     border: none;
@@ -359,4 +360,9 @@
 .wp-btn-g--refresh {
     mask: refreshIconUrl no-repeat;
     -webkit-mask: refreshIconUrl no-repeat;
+}
+
+.wp-btn-g--create-thread {
+    mask: createThreadIconUrl no-repeat;
+    -webkit-mask: createThreadIconUrl no-repeat;
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+    <rect x="1" y="7" width="12" height="3" rx="1" ry="1" stroke="#000000" stroke-width="2" fill="none"/>
+    <path d="M2,10 l0,3.5 l4,-3.5 z" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="5" y="13" width="12" height="3" rx="1" ry="1" stroke="#000000" stroke-width="2" fill="none"/>
+    <path d="M7,16 l0,3.5 l4,-3.5 z" stroke-linecap="round" stroke-linejoin="round"/>
+
+
+    <line x1="13" y1="4" x2="19" y2="4" style="stroke:#000000" stroke-width="2" stroke-linecap="round"/>
+    <line x1="16" y1="1" x2="16" y2="7" style="stroke:#000000" stroke-width="2" stroke-linecap="round"/>
+
+</svg>

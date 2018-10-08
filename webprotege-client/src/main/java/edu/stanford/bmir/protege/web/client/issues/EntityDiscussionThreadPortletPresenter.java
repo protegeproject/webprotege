@@ -71,6 +71,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
+                                                  "wp-btn-g--create-thread",
                                                   presenter::createThread);
     }
 

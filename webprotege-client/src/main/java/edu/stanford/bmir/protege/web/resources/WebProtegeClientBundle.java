@@ -246,6 +246,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgRefreshIcon();
 
+    @Source("create-thread.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgCreateThread();
+
 
 
     interface WebProtegeCss extends CssResource {
@@ -610,6 +614,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--refresh")
         String refresh();
+
+        @ClassName("wp-btn-g--create-thread")
+        String createThread();
     }
 
     interface SettingsPageCss extends CssResource {
