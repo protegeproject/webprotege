@@ -131,7 +131,7 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --widgetmap-view-border-color:                  #454545;
         --widgetmap-view-header-background-color:       #454545;
         --widgetmap-view-header-font-weight:            400;
-        --widgetmap-view-header-padding-left:           3px;
+        --widgetmap-view-header-padding-left:           5px;
         --gt-tree__row--selected--background-color:     var(--selected-item--background-color);
         --gt-tree__row--selected--color:                var(--selected-item--color);
         --gt-tree__row--hover--background-color:        var(--item--hover--background-color);
@@ -218,6 +218,7 @@ a {
 }
 
 .widget-holder-header {
+    padding-left: 4px !important;
     background-color: var(--widgetmap-view-header-background-color) !important;
 }
 
