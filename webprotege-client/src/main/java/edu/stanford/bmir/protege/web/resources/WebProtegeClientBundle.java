@@ -79,7 +79,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgPlusIcon();
 
-    @Source("create.svg")
+    @Source("create-class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgCreateIcon();
 
@@ -99,7 +99,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgDeletePropertyIcon();
 
-    @Source("delete.svg")
+    @Source("delete-class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgDeleteIcon();
 
