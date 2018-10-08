@@ -84,18 +84,9 @@ public class DeleteEntitiesPresenter {
                     .orElse("");
         }
         else {
-            return entities.stream()
-                    .findFirst()
-                    .map(OWLEntityData::getEntity)
-                    .map(OWLEntity::getEntityType)
-                    .map(this::getDeleteConfirmationTitle)
-                    .orElse("");
+            return getMultiDeleteConfirmationTitle(entities);
         }
 
-    }
-
-    private String getDeleteConfirmationTitle(@Nonnull OWLEntityData entity) {
-        return messages.delete_entity_title(entity.getEntity().getEntityType().getPrintName().toLowerCase());
     }
 
     @Nonnull
@@ -116,8 +107,17 @@ public class DeleteEntitiesPresenter {
     }
 
     @Nonnull
-    private String getDeleteConfirmationTitle(@Nonnull EntityType<?> entityType) {
-        return messages.delete_entity_title(entityType.getPluralPrintName().toLowerCase());
+    private String getDeleteConfirmationTitle(@Nonnull OWLEntityData entity) {
+        return messages.delete_entity_title(entity.getBrowserText());
+    }
+    @Nonnull
+    private String getMultiDeleteConfirmationTitle(@Nonnull Set<OWLEntityData> entities) {
+        String type = entities.stream()
+                .findFirst()
+                .map(e -> e.getEntity().getEntityType())
+                .map(EntityType::getPluralPrintName)
+                .orElse("Entities");
+        return messages.delete_entity_title(type);
     }
 
     private void deleteEntity(@Nonnull Set<OWLEntityData> entities,

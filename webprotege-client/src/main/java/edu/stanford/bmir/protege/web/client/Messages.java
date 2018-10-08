@@ -161,14 +161,14 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String delete();
 
     
-    @DefaultMessage("Are you sure you want to delete the {0} \"{1}\"?")
+    @DefaultMessage("Are you sure you want to delete the {0} <strong>{1}</strong>?")
     @Key("delete.entity.msg")
     String delete_entity_msg(String arg0,  String arg1);
 
     
     @DefaultMessage("Delete {0}")
     @Key("delete.entity.title")
-    String delete_entity_title(String arg0);
+    String delete_entity_title(String broswerText);
 
     
     @DefaultMessage("Delete")
