@@ -14,11 +14,26 @@
             flex-shrink: 1;
         }
         .toolbar {
+            padding: 1px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             box-sizing: border-box;
             overflow: hidden;
             flex-grow: 0;
             flex-shrink: 0;
             flex-wrap: wrap;
+        }
+        .buttonRun {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .buttonRun button+button {
+            margin-left: 10px;
         }
         .contentHolder {
             display: flex;
@@ -28,13 +43,14 @@
             position: relative;
         }
         .menuButton {
-            float: right;
+            justify-self: flex-end;
             padding-top: 2px;
         }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.parent}">
         <g:FlowPanel ui:field="toolbar" addStyleNames="{style.toolbar} {wp.toolbar.toolbar}">
+            <g:HTMLPanel ui:field="toolbarButtonRun" addStyleNames="{style.buttonRun}"/>
             <filter:FilterButtonImpl ui:field="filterButton" addStyleNames="{style.menuButton}" visible="false"/>
         </g:FlowPanel>
         <portlet:PortletContentHolder ui:field="contentHolder" addStyleNames="{style.contentHolder}"/>

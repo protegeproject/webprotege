@@ -145,10 +145,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         super(selectionModel, projectId, displayNameRenderer);
         this.view = view;
         this.messages = messages;
-        this.createAction = new PortletAction(messages.create(), this::handleCreate);
-        this.deleteAction = new PortletAction(messages.delete(), this::handleDelete);
+        this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-property", this::handleCreate);
+        this.deleteAction = new PortletAction(messages.delete(), "wp-btn-g--delete-property", this::handleDelete);
         this.watchAction = new PortletAction(messages.watch(), this::handleWatch);
-        this.searchAction = new PortletAction(messages.search(), this::handleSearch);
+        this.searchAction = new PortletAction(messages.search(), "wp-btn-g--search", this::handleSearch);
         this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
         this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
         this.annotationPropertyHierarchyModel = annotationPropertyHierarchyModel;
@@ -172,7 +172,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addAction(createAction);
         portletUi.addAction(deleteAction);
-        portletUi.addAction(watchAction);
+//        portletUi.addAction(watchAction);
         portletUi.addAction(searchAction);
         portletUi.setFilterView(filterView);
 

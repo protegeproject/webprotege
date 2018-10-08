@@ -10,6 +10,12 @@
 @url syncSelectionIconUrl syncSelectionIcon;
 @url hierarchyIconUrl hierarchyIcon;
 @url searchIconUrl searchIcon;
+@url createIconUrl svgCreateIcon;
+@url deleteIconUrl svgDeleteIcon;
+@url createIndividualIconUrl svgCreateIndividualIcon;
+@url deleteIndividualIconUrl svgDeleteIndividualIcon;
+@url createPropertyIconUrl svgCreatePropertyIcon;
+@url deletePropertyIconUrl svgDeletePropertyIcon;
 
 .wp-btn {
     border: none;
@@ -317,4 +323,34 @@
 .wp-btn-g--search {
     mask:  searchIconUrl no-repeat;
     -webkit-mask:  searchIconUrl no-repeat;
+}
+
+.wp-btn-g--create {
+    mask: createIconUrl no-repeat;
+    -webkit-mask: createIconUrl no-repeat;
+}
+
+.wp-btn-g--delete {
+    mask: deleteIconUrl no-repeat;
+    -webkit-mask: deleteIconUrl no-repeat;
+}
+
+.wp-btn-g--create-individual {
+    mask: createIndividualIconUrl no-repeat;
+    -webkit-mask: createIndividualIconUrl no-repeat;
+}
+
+.wp-btn-g--delete-individual {
+    mask: deleteIndividualIconUrl no-repeat;
+    -webkit-mask: deleteIndividualIconUrl no-repeat;
+}
+
+.wp-btn-g--create-property {
+    mask: createPropertyIconUrl no-repeat;
+    -webkit-mask: createPropertyIconUrl no-repeat;
+}
+
+.wp-btn-g--delete-property {
+    mask: deletePropertyIconUrl no-repeat;
+    -webkit-mask: deletePropertyIconUrl no-repeat;
 }

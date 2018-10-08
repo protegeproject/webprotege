@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.action;
 
 import com.google.gwt.user.client.ui.HasEnabled;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 13/06/2014
  */
@@ -30,4 +32,13 @@ public interface UIAction extends HasEnabled {
     boolean requiresSelection();
 
     void setRequiresSelection(boolean b);
+
+    default boolean hasIcon() {
+        return false;
+    }
+
+    @Nonnull
+    default String getStyle() {
+        return "";
+    }
 }

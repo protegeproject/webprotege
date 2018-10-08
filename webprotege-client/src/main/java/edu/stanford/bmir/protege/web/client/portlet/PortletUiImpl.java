@@ -53,6 +53,9 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @UiField
     protected BusyView busyView;
 
+    @UiField
+    HTMLPanel toolbarButtonRun;
+
     @Nonnull
     private final NothingSelectedView nothingSelectedView;
 
@@ -160,14 +163,30 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     @Override
     public void addAction(final UIAction action) {
-        final Button button = new Button(action.getLabel());
-        button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarButton());
-        toolbar.add(button);
+        final Button button = new Button();
+        button.setTitle(action.getLabel());
+        if(action.hasIcon()) {
+            button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btnGlyph());
+            button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarGlyphButton());
+            button.addStyleName(action.getStyle());
+            button.setText("");
+        }
+        else {
+            button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarButton());
+            button.setText(action.getLabel());
+        }
+        toolbarButtonRun.add(button);
         button.addMouseDownHandler(DomEvent::preventDefault);
         button.addClickHandler(event -> action.execute());
         action.setStateChangedHandler(value -> {
             button.setEnabled(value.isEnabled());
-            button.setText(value.getLabel());
+            button.setTitle(value.getLabel());
+            if (!action.hasIcon()) {
+                button.setText(value.getLabel());
+            }
+            else {
+                button.setText("");
+            }
         });
         setToolbarVisible(true);
     }

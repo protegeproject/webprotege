@@ -116,8 +116,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         this.view.addSelectionHandler(this::handleSelectionChangedInView);
         this.view.setSearchStringChangedHandler(this::handleSearchStringChangedInView);
         this.view.setPageNumberChangedHandler(pageNumber -> updateList());
-        this.createAction = new PortletAction(messages.create(), this::handleCreateIndividuals);
-        this.deleteAction = new PortletAction(messages.delete(), this::handleDeleteIndividuals);
+        this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-individual", this::handleCreateIndividuals);
+        this.deleteAction = new PortletAction(messages.delete(), "wp-btn-g--delete-individual", this::handleDeleteIndividuals);
     }
 
 

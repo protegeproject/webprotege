@@ -131,15 +131,18 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.createEntityPresenter = checkNotNull(createEntityPresenter);
 
         this.createClassAction = new PortletAction(messages.create(),
+                                                   "wp-btn-g--create",
                                                    this::handleCreateSubClasses);
 
         this.deleteClassAction = new PortletAction(messages.delete(),
+                                                   "wp-btn-g--delete",
                                                    this::handleDelete);
 
         this.watchClassAction = new PortletAction(messages.watch(),
                                                   this::handleEditWatches);
 
         this.searchAction = new PortletAction(messages.search(),
+                                              "wp-btn-g--search",
                                               this::handleSearch);
         this.deleteEntitiesPresenter = deleteEntitiesPresenter;
         this.actionStatePresenter = actionStatePresenter;
@@ -162,7 +165,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                              @Nonnull WebProtegeEventBus eventBus) {
         portletUi.addAction(createClassAction);
         portletUi.addAction(deleteClassAction);
-        portletUi.addAction(watchClassAction);
+//        portletUi.addAction(watchClassAction);
         portletUi.addAction(searchAction);
         portletUi.setWidget(treeWidget);
         portletUi.setFilterView(filterView);

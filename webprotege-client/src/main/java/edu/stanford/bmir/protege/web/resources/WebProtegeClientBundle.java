@@ -79,6 +79,30 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgPlusIcon();
 
+    @Source("create.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgCreateIcon();
+
+    @Source("create-individual.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgCreateIndividualIcon();
+
+    @Source("delete-individual.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDeleteIndividualIcon();
+
+    @Source("create-property.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgCreatePropertyIcon();
+
+    @Source("delete-property.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDeletePropertyIcon();
+
+    @Source("delete.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDeleteIcon();
+
     @Source("cross.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgCrossIcon();
@@ -441,6 +465,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-toolbar__btn")
         String toolbarButton();
 
+        @ClassName("wp-toolbar__g-btn")
+        String toolbarGlyphButton();
+
         @ClassName("wp-toolbar__btn--highlighted")
         String highlightedToolbarButton();
     }
@@ -555,6 +582,24 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--show-hierarchy")
         String showHierarchy();
+
+        @ClassName("wp-btn-g--create")
+        String create();
+
+        @ClassName("wp-btn-g--create-individual")
+        String createIndividual();
+
+        @ClassName("wp-btn-g--delete-individual")
+        String deleteIndividual();
+
+        @ClassName("wp-btn-g--create-property")
+        String createProperty();
+
+        @ClassName("wp-btn-g--delete-property")
+        String deleteProperty();
+
+        @ClassName("wp-btn-g--delete")
+        String delete();
 
         @ClassName("wp-btn-g--search")
         String search();

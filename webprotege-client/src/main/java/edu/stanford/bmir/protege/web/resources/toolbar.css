@@ -17,6 +17,18 @@
     border-radius: 2px;
 }
 
+.wp-toolbar__g-btn {
+    margin: 1px;
+    border: none;
+    height: 20px;
+    background: literal("var(--primary--background-color)");
+    cursor: pointer;
+    font-weight: 400;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 2px;
+}
+
 .wp-toolbar__btn--highlighted {
     color: dodgerblue;
 }

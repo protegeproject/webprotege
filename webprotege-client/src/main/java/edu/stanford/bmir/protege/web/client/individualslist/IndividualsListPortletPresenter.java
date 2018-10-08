@@ -66,7 +66,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         portletUi.setFilterView(filterView);
         tagVisibilityPresenter.start(filterView, portletUi);
         presenter.installActions(portletUi);
-        portletUi.addAction(new PortletAction(messages.search(), this::handleSearch));
+        portletUi.addAction(new PortletAction(messages.search(), "wp-btn-g--search", this::handleSearch));
         presenter.start(portletUi, eventBus);
         presenter.setDisplayLanguage(displayNameSettingsManager.getLocalDisplayNameSettings());
         handleAfterSetEntity(getSelectedEntity());
