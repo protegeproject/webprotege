@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
+import edu.stanford.bmir.protege.web.client.watches.WatchUiAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
@@ -69,6 +70,9 @@ public class EntityHierarchyContextMenuPresenter {
     private final EditEntityTagsUiAction editEntityTagsAction;
 
     @Nonnull
+    private final WatchUiAction watchUiAction;
+
+    @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Nullable
@@ -95,6 +99,7 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Provided @Nonnull EditAnnotationsUiAction editAnnotationsUiAction,
                                                @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
+                                               @Provided @Nonnull WatchUiAction watchUiAction,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                                @Provided @Nonnull InputBox inputBox) {
         this.setAnnotationValueUiAction = checkNotNull(setAnnotationValueUiAction);
@@ -107,6 +112,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
         this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
         this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
+        this.watchUiAction = checkNotNull(watchUiAction);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.inputBox = checkNotNull(inputBox);
     }
@@ -140,6 +146,8 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(setAnnotationValueUiAction);
         contextMenu.addItem(editAnnotationsUiAction);
         contextMenu.addSeparator();
+        contextMenu.addItem(watchUiAction);
+        contextMenu.addSeparator();
         pruneBranchToRootAction = contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
         pruneAllBranchesToRootAction = contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
         clearPruningAction = contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
@@ -170,6 +178,7 @@ public class EntityHierarchyContextMenuPresenter {
         setAnnotationValueUiAction.setEnabled(false);
         editAnnotationsUiAction.setEnabled(false);
         moveToParentUiAction.setEnabled(false);
+        watchUiAction.setEnabled(false);
 
         int selSize = treeWidget.getSelectedKeys().size();
         boolean selIsNonEmpty = selSize > 0;
@@ -182,6 +191,7 @@ public class EntityHierarchyContextMenuPresenter {
 
 
         if (selIsNonEmpty) {
+            permissionChecker.hasPermission(WATCH_CHANGES, watchUiAction::setEnabled);
             permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
             permissionChecker.hasPermission(EDIT_ENTITY_TAGS, enabled -> editEntityTagsAction.setEnabled(selIsSingleton && enabled));
             permissionChecker.hasPermission(EDIT_ONTOLOGY, setAnnotationValueUiAction::setEnabled);
