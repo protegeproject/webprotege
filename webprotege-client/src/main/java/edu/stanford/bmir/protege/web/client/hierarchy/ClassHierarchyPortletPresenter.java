@@ -7,13 +7,11 @@ import edu.stanford.bmir.protege.web.client.entity.CreateEntityPresenter;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
-import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -49,8 +47,6 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-    private final WatchPresenter watchPresenter;
-
     @Nonnull
     private final SearchModal searchModal;
 
@@ -61,8 +57,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private final EntityNodeHtmlRenderer renderer;
 
     private final UIAction createClassAction;
-
-    private final UIAction watchClassAction;
 
     private final UIAction deleteClassAction;
 
@@ -104,7 +98,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
-                                          @Nonnull WatchPresenter watchPresenter,
                                           @Nonnull SearchModal searchModal,
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
@@ -121,7 +114,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
                                           @Nonnull TreeWidgetUpdaterFactory updaterFactory) {
         super(selectionModel, projectId, displayNameRenderer);
-        this.watchPresenter = checkNotNull(watchPresenter);
         this.searchModal = searchModal;
         this.messages = checkNotNull(messages);
         this.hierarchyModel = checkNotNull(hierarchyModel);
@@ -137,9 +129,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.deleteClassAction = new PortletAction(messages.delete(),
                                                    "wp-btn-g--delete",
                                                    this::handleDelete);
-
-        this.watchClassAction = new PortletAction(messages.watch(),
-                                                  this::handleEditWatches);
 
         this.searchAction = new PortletAction(messages.search(),
                                               "wp-btn-g--search",
@@ -165,7 +154,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                              @Nonnull WebProtegeEventBus eventBus) {
         portletUi.addAction(createClassAction);
         portletUi.addAction(deleteClassAction);
-//        portletUi.addAction(watchClassAction);
         portletUi.addAction(searchAction);
         portletUi.setWidget(treeWidget);
         portletUi.setFilterView(filterView);
@@ -174,8 +162,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
         deleteClassAction.setRequiresSelection(true);
         actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
-        watchClassAction.setRequiresSelection(true);
-        actionStatePresenter.registerAction(WATCH_CHANGES, watchClassAction);
 
         actionStatePresenter.start(eventBus);
 
@@ -260,12 +246,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private void selectAndExpandPath(Path<OWLEntity> entityPath) {
         treeWidget.setSelected(entityPath, true, () -> treeWidget.setExpanded(entityPath));
-    }
-
-
-    protected void handleEditWatches() {
-        final Optional<OWLEntity> sel = treeWidget.getFirstSelectedKey();
-        sel.ifPresent(watchPresenter::start);
     }
 
     private void setSelectionInTree(Optional<OWLEntity> selection) {
