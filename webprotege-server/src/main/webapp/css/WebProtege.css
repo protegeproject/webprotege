@@ -57,7 +57,7 @@
     --outline:                                      #94c0ed solid 2px;
 
     --widgetmap-view-border-color:                  var(--separator--color);
-    --widgetmap-view-header-background-color:       #6f6d6d;
+    --widgetmap-view-header-background-color:       #808080;
     --widgetmap-view-header-font-weight:            400;
     --widgetmap-view-header-padding-left:           3px;
 
@@ -214,10 +214,14 @@ a {
 }
 
 .widget-holder-label {
-    font-size: 14px !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 500;
 }
 
 .widget-holder-header {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
     padding-left: 4px !important;
     background-color: var(--widgetmap-view-header-background-color) !important;
 }
