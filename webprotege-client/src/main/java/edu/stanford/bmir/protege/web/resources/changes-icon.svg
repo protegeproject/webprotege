@@ -42,14 +42,14 @@
           stroke-linejoin="round"/>
 
 
-    <path d="M18,10
-            l0,-8
-            l-16,0
-            l0,16
-            l7,0"
-          fill="none"
-          stroke="#000000"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
+    <!--<path d="M18,10-->
+            <!--l0,-8-->
+            <!--l-16,0-->
+            <!--l0,16-->
+            <!--l7,0"-->
+          <!--fill="none"-->
+          <!--stroke="#000000"-->
+          <!--stroke-width="1.5"-->
+          <!--stroke-linecap="round"-->
+          <!--stroke-linejoin="round"/>-->
 </svg>

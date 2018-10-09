@@ -38,15 +38,15 @@
           transform="rotate(135, 10, 10)"
           />
 
-    <path d="M10,2
-            l-8,0
-            l0,16
-            l16,0
-            l0,-7"
-          fill="none"
-          stroke="#000000"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
+    <!--<path d="M10,2-->
+            <!--l-8,0-->
+            <!--l0,16-->
+            <!--l16,0-->
+            <!--l0,-7"-->
+          <!--fill="none"-->
+          <!--stroke="#000000"-->
+          <!--stroke-width="1.5"-->
+          <!--stroke-linecap="round"-->
+          <!--stroke-linejoin="round"/>-->
 
 </svg>
