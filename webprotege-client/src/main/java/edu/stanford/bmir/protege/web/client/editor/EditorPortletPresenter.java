@@ -105,7 +105,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             if(permission) {
                 panePresenter.setHasBusy(portletUi);
                 panePresenter.setEntityDisplay(this);
-                AcceptsOneWidget container = view.addPane(panePresenter.getCaption());
+                AcceptsOneWidget container = view.addPane(panePresenter.getCaption(),
+                                                          panePresenter.getAdditionalStyles());
                 panePresenter.start(container, eventBus);
             }
         });

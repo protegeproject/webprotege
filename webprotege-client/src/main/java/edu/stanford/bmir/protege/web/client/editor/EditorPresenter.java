@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
@@ -87,6 +88,7 @@ public class EditorPresenter implements HasDispose {
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
         container.setWidget(editorHolder);
+        editorHolder.getElement().getStyle().setOverflowY(Style.Overflow.AUTO);
         eventBus.addProjectEventHandler(projectId,
                                         ON_PERMISSIONS_CHANGED,
                                         event -> updatePermissionBasedItems());

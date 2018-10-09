@@ -18,6 +18,8 @@
 @url deletePropertyIconUrl svgDeletePropertyIcon;
 @url refreshIconUrl svgRefreshIcon;
 @url createThreadIconUrl svgCreateThread;
+@url editorIconUrl svgEditorIcon;
+@url changesIconUrl svgChangesIcon;
 
 .wp-btn {
     border: none;
@@ -365,4 +367,14 @@
 .wp-btn-g--create-thread {
     mask: createThreadIconUrl no-repeat;
     -webkit-mask: createThreadIconUrl no-repeat;
+}
+
+.wp-btn-g--editor {
+    mask: editorIconUrl no-repeat;
+    -webkit-mask: editorIconUrl no-repeat;
+}
+
+.wp-btn-g--changes {
+    mask: changesIconUrl no-repeat;
+    -webkit-mask: changesIconUrl no-repeat;
 }

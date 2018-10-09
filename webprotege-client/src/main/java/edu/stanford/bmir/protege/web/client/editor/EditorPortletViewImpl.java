@@ -55,8 +55,14 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
 
     @Nonnull
     @Override
-    public AcceptsOneWidget addPane(@Nonnull String displayName) {
-        tabBar.addTab(displayName);
+    public AcceptsOneWidget addPane(@Nonnull String displayName,
+                                    @Nonnull String additionalStyles) {
+        EditorPaneTabSelector widget = new EditorPaneTabSelector();
+        if (!additionalStyles.isEmpty()) {
+            widget.addStyleName(additionalStyles);
+            widget.setTitle(displayName);
+        }
+        tabBar.addTab(widget);
         SimplePanel simplePanel = new SimplePanel();
         containerMap.put(displayName, simplePanel);
         tabs.add(displayName);

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -28,17 +29,28 @@ public class EditorPaneSimpleEditorPresenter implements EditorPanePresenter {
     @Nonnull
     private final EditorPresenter editorPresenter;
 
+    @Nonnull
+    private final WebProtegeClientBundle clientBundle;
 
     @Inject
-    public EditorPaneSimpleEditorPresenter(@Nonnull ProjectId projectId, @Nonnull EditorPresenter editorPresenter) {
+    public EditorPaneSimpleEditorPresenter(@Nonnull ProjectId projectId,
+                                           @Nonnull EditorPresenter editorPresenter,
+                                           @Nonnull WebProtegeClientBundle clientBundle) {
         this.projectId = checkNotNull(projectId);
         this.editorPresenter = checkNotNull(editorPresenter);
+        this.clientBundle = checkNotNull(clientBundle);
     }
 
     @Nonnull
     @Override
     public String getCaption() {
         return "Details";
+    }
+
+    @Nonnull
+    @Override
+    public String getAdditionalStyles() {
+        return clientBundle.buttons().editor();
     }
 
     @Nonnull

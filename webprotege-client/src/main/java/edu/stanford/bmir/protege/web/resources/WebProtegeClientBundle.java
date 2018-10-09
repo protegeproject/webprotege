@@ -250,6 +250,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgCreateThread();
 
+    @Source("editor-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgEditorIcon();
+
+    @Source("changes-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgChangesIcon();
+
 
 
     interface WebProtegeCss extends CssResource {
@@ -617,6 +625,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--create-thread")
         String createThread();
+
+        @ClassName("wp-btn-g--editor")
+        String editor();
+
+        @ClassName("wp-btn-g--changes")
+        String changes();
     }
 
     interface SettingsPageCss extends CssResource {

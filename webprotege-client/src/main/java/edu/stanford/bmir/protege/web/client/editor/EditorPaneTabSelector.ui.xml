@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            width: 20px;
+            height: 20px;
+            box-sizing: border-box;
+            background-color: literal("var(--primary--color)");
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.buttons.btnGlyph}">
+
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -17,6 +17,7 @@ public interface EditorPortletView extends IsWidget {
     SimplePanel getTagListViewContainer();
 
     @Nonnull
-    AcceptsOneWidget addPane(@Nonnull String displayName);
+    AcceptsOneWidget addPane(@Nonnull String displayName,
+                             @Nonnull String additionalStyles);
 
 }

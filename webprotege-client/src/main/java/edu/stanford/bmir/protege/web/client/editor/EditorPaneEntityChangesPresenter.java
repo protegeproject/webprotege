@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -27,16 +28,28 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
     @Nonnull
     private final ChangeListViewPresenter changesPresenter;
 
+    @Nonnull
+    private WebProtegeClientBundle clientBundle;
+
     @Inject
-    public EditorPaneEntityChangesPresenter(@Nonnull ProjectId projectId, @Nonnull ChangeListViewPresenter changesPresenter) {
+    public EditorPaneEntityChangesPresenter(@Nonnull ProjectId projectId,
+                                            @Nonnull ChangeListViewPresenter changesPresenter,
+                                            @Nonnull WebProtegeClientBundle clientBundle) {
         this.projectId = projectId;
         this.changesPresenter = checkNotNull(changesPresenter);
+        this.clientBundle = checkNotNull(clientBundle);
     }
 
     @Nonnull
     @Override
     public String getCaption() {
         return "Changes";
+    }
+
+    @Nonnull
+    @Override
+    public String getAdditionalStyles() {
+        return clientBundle.buttons().changes();
     }
 
     @Override

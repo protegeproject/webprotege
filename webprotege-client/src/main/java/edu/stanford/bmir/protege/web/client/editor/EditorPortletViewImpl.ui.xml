@@ -11,9 +11,8 @@
         }
         .tabBar {
             background-color: literal("var(--alternate--background-color)");
-            padding-top: 4px;
-            padding-bottom: 4px;
-            border-top: 1px solid var(--alternate--separator--color);
+            padding-bottom: 3px;
+            padding-top: 1px;
         }
         .tagListContainer {
             padding-top: 2px;
@@ -23,11 +22,6 @@
             flex-shrink: 0;
         }
         .container {
-            position: relative;
-            flex-grow: 1;
-            flex-shrink: 1;
-        }
-        .content {
             position: relative;
             flex-grow: 1;
             flex-shrink: 1;
@@ -53,8 +47,6 @@
         }
         .main .gwt-TabBarItem {
             font-weight: 400;
-            padding-top: 2px;
-            padding-bottom: 2px;
             cursor: pointer;
             text-align: center;
             border-bottom: 2px solid transparent;
@@ -63,9 +55,10 @@
 
         }
         .main .gwt-TabBarItem-selected {
-            color: literal("var(--selected-tab--color)");
             border-bottom: 2px solid literal("var(--selected-tab--color)");
-
+        }
+        .main .gwt-TabBarItem-selected div {
+            background-color: literal("var(--selected-tab--color)");
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

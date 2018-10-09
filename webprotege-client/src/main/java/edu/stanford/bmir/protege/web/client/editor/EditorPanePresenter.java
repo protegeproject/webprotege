@@ -22,6 +22,9 @@ public interface EditorPanePresenter extends HasDispose {
     String getCaption();
 
     @Nonnull
+    String getAdditionalStyles();
+
+    @Nonnull
     BuiltInAction getRequiredAction();
 
     void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus);
