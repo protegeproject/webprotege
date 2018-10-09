@@ -44,7 +44,7 @@ public class EditorPaneSimpleEditorPresenter implements EditorPanePresenter {
     @Nonnull
     @Override
     public BuiltInAction getRequiredAction() {
-        return BuiltInAction.EDIT_ONTOLOGY;
+        return BuiltInAction.VIEW_PROJECT;
     }
 
     @Override
