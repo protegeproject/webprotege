@@ -599,7 +599,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn-g--show-hierarchy")
         String showHierarchy();
 
-        @ClassName("wp-btn-g--create")
+        @ClassName("wp-btn-g--create-class")
         String create();
 
         @ClassName("wp-btn-g--create-individual")
@@ -614,7 +614,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn-g--delete-property")
         String deleteProperty();
 
-        @ClassName("wp-btn-g--delete")
+        @ClassName("wp-btn-g--delete-class")
         String delete();
 
         @ClassName("wp-btn-g--search")

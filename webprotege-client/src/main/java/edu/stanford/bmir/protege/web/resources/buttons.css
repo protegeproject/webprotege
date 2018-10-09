@@ -294,6 +294,14 @@
     background-color: literal("var(--btn--hover--color)");
 }
 
+.wp-btn-g--create:hover {
+    background-color: literal("var(--create--color)");
+}
+
+.wp-btn-g--delete:hover {
+    background-color: literal("var(--delete--color)");
+}
+
 .wp-btn-g:disabled {
     background-color: #a0a0a0;
     opacity: 0.3;
@@ -329,12 +337,12 @@
     -webkit-mask:  searchIconUrl no-repeat;
 }
 
-.wp-btn-g--create {
+.wp-btn-g--create-class {
     mask: createIconUrl no-repeat;
     -webkit-mask: createIconUrl no-repeat;
 }
 
-.wp-btn-g--delete {
+.wp-btn-g--delete-class {
     mask: deleteIconUrl no-repeat;
     -webkit-mask: deleteIconUrl no-repeat;
 }

@@ -77,7 +77,11 @@
     --warning--color:                               var(--primary--color);
     --warning--background-color:                    #faf6c3;
     --warning--border-color:                        #ffe884;
+
+    --create--color:                           #029f1c;
+    --delete--color:                           #d10c00;
 }
+
 
 
 /*

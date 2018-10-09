@@ -123,11 +123,11 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.createEntityPresenter = checkNotNull(createEntityPresenter);
 
         this.createClassAction = new PortletAction(messages.create(),
-                                                   "wp-btn-g--create",
+                                                   "wp-btn-g--create-class wp-btn-g--create",
                                                    this::handleCreateSubClasses);
 
         this.deleteClassAction = new PortletAction(messages.delete(),
-                                                   "wp-btn-g--delete",
+                                                   "wp-btn-g--delete-class wp-btn-g--delete",
                                                    this::handleDelete);
 
         this.searchAction = new PortletAction(messages.search(),

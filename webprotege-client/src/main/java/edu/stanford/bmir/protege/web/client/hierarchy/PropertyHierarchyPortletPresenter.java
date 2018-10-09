@@ -136,8 +136,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         super(selectionModel, projectId, displayNameRenderer);
         this.view = view;
         this.messages = messages;
-        this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-property", this::handleCreate);
-        this.deleteAction = new PortletAction(messages.delete(), "wp-btn-g--delete-property", this::handleDelete);
+        this.createAction = new PortletAction(messages.create(), "wp-btn-g--create-property wp-btn-g--create", this::handleCreate);
+        this.deleteAction = new PortletAction(messages.delete(), "wp-btn-g--delete-property wp-btn-g--delete", this::handleDelete);
         this.searchAction = new PortletAction(messages.search(), "wp-btn-g--search", this::handleSearch);
         this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
         this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
