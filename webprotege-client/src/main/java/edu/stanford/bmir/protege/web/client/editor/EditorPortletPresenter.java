@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
-import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
@@ -22,6 +20,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -44,6 +43,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final ImmutableList<EditorPanePresenter> panePresenters;
 
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     private final Set<EntityType<?>> displayedTypes = new HashSet<>();
 
     @Inject
@@ -54,10 +55,11 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull TagListPresenter tagListPresenter,
             @Nonnull EditorPaneSimpleEditorPresenter editorPresenter,
             DisplayNameRenderer displayNameRenderer,
-            @Nonnull EditorPaneEntityChangesPresenter changesPresenter) {
+            @Nonnull EditorPaneEntityChangesPresenter changesPresenter, LoggedInUserProjectPermissionChecker permissionChecker, Provider<ForbiddenView> forbiddenViewProvider) {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
+        this.permissionChecker = permissionChecker;
         panePresenters = ImmutableList.of(
                 checkNotNull(editorPresenter),
                 checkNotNull(changesPresenter)
@@ -80,12 +82,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(view);
-        for(EditorPanePresenter panePresenter : panePresenters) {
-            panePresenter.setHasBusy(portletUi);
-            panePresenter.setEntityDisplay(this);
-            AcceptsOneWidget container = view.addPane(panePresenter.getCaption());
-            panePresenter.start(container, eventBus);
-        }
+        startPanePresenters(portletUi, eventBus);
         eventBus.addProjectEventHandler(getProjectId(),
                                         ClassFrameChangedEvent.CLASS_FRAME_CHANGED,
                                         this::handleClassFrameChangedEvent);
@@ -95,6 +92,24 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         tagListPresenter.start(view.getTagListViewContainer(), eventBus);
         handleAfterSetEntity(getSelectedEntity());
         setDisplaySelectedEntityNameAsSubtitle(true);
+    }
+
+    private void startPanePresenters(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        for(EditorPanePresenter panePresenter : panePresenters) {
+            startPanePresenter(portletUi, eventBus, panePresenter);
+        }
+    }
+
+    private void startPanePresenter(PortletUi portletUi, WebProtegeEventBus eventBus, EditorPanePresenter panePresenter) {
+        permissionChecker.hasPermission(panePresenter.getRequiredAction(), permission -> {
+            if(permission) {
+                panePresenter.setHasBusy(portletUi);
+                panePresenter.setEntityDisplay(this);
+                AcceptsOneWidget container = view.addPane(panePresenter.getCaption());
+                panePresenter.start(container, eventBus);
+            }
+        });
+
     }
 
     @Override
