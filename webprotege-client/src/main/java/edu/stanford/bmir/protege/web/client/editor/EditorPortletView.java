@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 import javax.annotation.Nonnull;
 
@@ -13,8 +14,9 @@ import javax.annotation.Nonnull;
 public interface EditorPortletView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget getTagListViewContainer();
+    SimplePanel getTagListViewContainer();
 
     @Nonnull
-    AcceptsOneWidget getEditorViewContainer();
+    AcceptsOneWidget addPane(@Nonnull String displayName);
+
 }

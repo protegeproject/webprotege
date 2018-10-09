@@ -105,14 +105,6 @@ public class EditorPresenter implements HasDispose {
         return editorHolder;
     }
 
-    /**
-     * Determines if the editor is active (has the focus).
-     * @return true if the editor is active, otherwise false.
-     */
-    public boolean isActive() {
-        return isWidgetOrDescendantWidgetActive(getView());
-    }
-
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
         this.hasBusy = checkNotNull(hasBusy);
     }

@@ -1,9 +1,15 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
+import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -15,10 +21,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.semanticweb.owlapi.model.EntityType.*;
@@ -38,7 +41,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final TagListPresenter tagListPresenter;
 
-    private final EditorPresenter editorPresenter;
+    private final EditorPaneSimpleEditorPresenter editorPresenter;
+
+    private final EditorPaneEntityChangesPresenter changesPresenter;
 
     private final Set<EntityType<?>> displayedTypes = new HashSet<>();
 
@@ -48,11 +53,14 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull SelectionModel selectionModel,
             @Nonnull EditorPortletView view,
             @Nonnull TagListPresenter tagListPresenter,
-            @Nonnull EditorPresenter editorPresenter, DisplayNameRenderer displayNameRenderer) {
+            @Nonnull EditorPaneSimpleEditorPresenter editorPresenter,
+            DisplayNameRenderer displayNameRenderer,
+            @Nonnull EditorPaneEntityChangesPresenter changesPresenter) {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
         this.editorPresenter = checkNotNull(editorPresenter);
+        this.changesPresenter = checkNotNull(changesPresenter);
         displayedTypes.addAll(Arrays.asList(
                 CLASS,
                 OBJECT_PROPERTY,
@@ -71,17 +79,22 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(view);
-        editorPresenter.updatePermissionBasedItems();
         editorPresenter.setHasBusy(portletUi);
-        editorPresenter.start(view.getEditorViewContainer(), eventBus);
+        editorPresenter.setEntityDisplay(this);
+        AcceptsOneWidget editorContainer = view.addPane("Details");
+        editorPresenter.start(editorContainer, eventBus);
+
+
         eventBus.addProjectEventHandler(getProjectId(),
                                         ClassFrameChangedEvent.CLASS_FRAME_CHANGED,
                                         this::handleClassFrameChangedEvent);
         eventBus.addProjectEventHandler(getProjectId(),
                                         NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED,
                                         this::handleIndividualFrameChangedEvent);
-        editorPresenter.setEntityDisplay(this);
         tagListPresenter.start(view.getTagListViewContainer(), eventBus);
+
+        AcceptsOneWidget changeListContainer = view.addPane("Changes");
+        changesPresenter.start(changeListContainer, eventBus);
         handleAfterSetEntity(getSelectedEntity());
         setDisplaySelectedEntityNameAsSubtitle(true);
     }
@@ -95,9 +108,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
         else {
             setNothingSelectedVisible(false);
-            final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
-            editorPresenter.setEditorContext(editorContext);
+            entity.ifPresent(editorPresenter::setEntity);
             tagListPresenter.setEntity(entity.get());
+            changesPresenter.setEntity(entity.get());
         }
     }
 
@@ -114,7 +127,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void reloadEditorIfNotActive() {
-        if(!editorPresenter.isActive()) {
+        if(!isActive()) {
             handleAfterSetEntity(getSelectedEntity());
         }
     }
@@ -124,13 +137,13 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         return entity.map(e -> displayedTypes.contains(e.getEntityType())).orElse(false);
     }
 
-    public static Optional<OWLEntityContext> getEditorContext(Optional<OWLEntity> sel, ProjectId projectId) {
-        return sel.map(owlEntity -> new OWLEntityContext(projectId, owlEntity));
-    }
-
     @Override
     public void dispose() {
         editorPresenter.dispose();
         super.dispose();
+    }
+
+    private boolean isActive() {
+        return ElementalUtil.isWidgetOrDescendantWidgetActive(view);
     }
 }
