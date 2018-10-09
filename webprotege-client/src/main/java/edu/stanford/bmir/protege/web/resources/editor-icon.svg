@@ -2,46 +2,42 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-    <path d="M1,4
-             l12,0
+    <path d="M2,7
+             l13,0
              l3,3
              l-3,3
-             l-12,0 z"
+             l-13,0 z"
           fill="none"
           stroke="#000000"
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
-          transform="rotate(135, 9, 9)"/>
-    <path d="M1,4
-             m12,0
+          transform="rotate(135, 10, 10)"
+    />
+    <path d="M2,7
+             m13,0
              l3,3
              l-3,3
              z"
-          fill="none"
+          fill="#000000"
           stroke="#000000"
           stroke-width="1.0"
           stroke-linecap="round"
           stroke-linejoin="round"
-          transform="rotate(135, 9, 9)"/>
-    <path d="M1,4
-             m0,2
-             l12,0"
-          fill="none"
-          stroke="#000000"
-          stroke-width="0.8"
+          transform="rotate(135, 10, 10)"
+          />
+    <path d="M2,7
+             l2.5,0
+             l0,6
+             l-2.5,0
+             z"
+          fill="#000000"
+          stroke-width="1.0"
           stroke-linecap="round"
           stroke-linejoin="round"
-          transform="rotate(135, 9, 9)"/>
-    <path d="M1,4
-             m0,4
-             l12,0"
-          fill="none"
-          stroke="#000000"
-          stroke-width="0.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          transform="rotate(135, 9, 9)"/>
+          transform="rotate(135, 10, 10)"
+          />
+
     <path d="M10,2
             l-8,0
             l0,16
