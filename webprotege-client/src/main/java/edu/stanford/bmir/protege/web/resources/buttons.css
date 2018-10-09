@@ -172,11 +172,11 @@
     font-size: 18px;
 }
 .wp-btn-add:hover {
-    background-color: #00A60E;
+    background-color: literal("var(--create--color)");
 }
 
 .wp-btn-add:focus {
-    background-color: #00A60E;
+    background-color: literal("var(--create--color)");
     outline-offset: 0;
 }
 
@@ -197,11 +197,11 @@
 }
 
 .wp-btn-delete:hover {
-    background-color: #e00000;
+    background-color: literal("var(--delete--color)");
 }
 
 .wp-btn-delete:focus {
-    background-color: #e00000;
+    background-color: literal("var(--delete-color)");
     outline-offset: 0;
 }
 
