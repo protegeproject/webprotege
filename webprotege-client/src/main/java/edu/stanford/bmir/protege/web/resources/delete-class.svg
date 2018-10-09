@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-
     <circle cx="8" cy="12" r="5" stroke="#000000" stroke-width="3" fill="none"/>
-    <line x1="13" y1="4" x2="19" y2="4" style="stroke:#000000" stroke-width="2" stroke-linecap="round"/>
+    <line x1="13" y1="4" x2="19" y2="4" style="stroke:#000000" stroke-width="2" stroke-linecap="round" transform="rotate(-45 16 4)"/>
+    <line x1="16" y1="1" x2="16" y2="7" style="stroke:#000000" stroke-width="2" stroke-linecap="round" transform="rotate(-45 16 4)"/>
 </svg>
