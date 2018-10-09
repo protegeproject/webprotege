@@ -1,6 +1,8 @@
 .line {
     border-bottom: 1px solid literal("var(--separator--color)");
-    white-space: nowrap;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 }
 
 .add {
@@ -14,6 +16,8 @@
     padding-right: 10px;
     min-width: 10px;
     display: inline-block;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .remove {
@@ -27,12 +31,16 @@
     padding-right: 10px;
     min-width: 10px;
     display: inline-block;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .source {
     color: literal("var(--secondary--color)");
     padding-right: 10px;
     min-width: 50px;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .lineElement {
@@ -40,5 +48,7 @@
     width: 500px;
     vertical-align: top;
     white-space: normal;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 

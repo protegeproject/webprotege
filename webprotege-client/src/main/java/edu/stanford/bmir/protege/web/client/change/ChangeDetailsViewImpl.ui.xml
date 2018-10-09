@@ -80,7 +80,9 @@
             padding-left: 2px;
         }
         .container {
-            display: inline-block; width: 100%
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
         .main:hover {
             background-color: literal("var(--item--hover--background-color)");
