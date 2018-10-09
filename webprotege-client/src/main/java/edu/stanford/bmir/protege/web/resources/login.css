@@ -18,13 +18,13 @@
 
 .wp-login__form {
     background-color: literal("var(--inlay-panel--background-color)");
-    border: literal("var(--inlay-panel--border)");
+    border: 5px solid literal("var(--alternate--separator--color)");
     width: 230px;
     padding-left: 40px;
     padding-right: 40px;
     padding-top: 30px;
     padding-bottom: 20px;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 .wp-login__form .gwt-TextBox {
