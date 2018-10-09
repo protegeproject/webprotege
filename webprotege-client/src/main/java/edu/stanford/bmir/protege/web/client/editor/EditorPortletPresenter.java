@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -41,9 +42,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final TagListPresenter tagListPresenter;
 
-    private final EditorPaneSimpleEditorPresenter editorPresenter;
-
-    private final EditorPaneEntityChangesPresenter changesPresenter;
+    private final ImmutableList<EditorPanePresenter> panePresenters;
 
     private final Set<EntityType<?>> displayedTypes = new HashSet<>();
 
@@ -59,8 +58,10 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
-        this.editorPresenter = checkNotNull(editorPresenter);
-        this.changesPresenter = checkNotNull(changesPresenter);
+        panePresenters = ImmutableList.of(
+                checkNotNull(editorPresenter),
+                checkNotNull(changesPresenter)
+        );
         displayedTypes.addAll(Arrays.asList(
                 CLASS,
                 OBJECT_PROPERTY,
@@ -79,12 +80,12 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(view);
-        editorPresenter.setHasBusy(portletUi);
-        editorPresenter.setEntityDisplay(this);
-        AcceptsOneWidget editorContainer = view.addPane("Details");
-        editorPresenter.start(editorContainer, eventBus);
-
-
+        for(EditorPanePresenter panePresenter : panePresenters) {
+            panePresenter.setHasBusy(portletUi);
+            panePresenter.setEntityDisplay(this);
+            AcceptsOneWidget container = view.addPane(panePresenter.getCaption());
+            panePresenter.start(container, eventBus);
+        }
         eventBus.addProjectEventHandler(getProjectId(),
                                         ClassFrameChangedEvent.CLASS_FRAME_CHANGED,
                                         this::handleClassFrameChangedEvent);
@@ -92,9 +93,6 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                                         NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED,
                                         this::handleIndividualFrameChangedEvent);
         tagListPresenter.start(view.getTagListViewContainer(), eventBus);
-
-        AcceptsOneWidget changeListContainer = view.addPane("Changes");
-        changesPresenter.start(changeListContainer, eventBus);
         handleAfterSetEntity(getSelectedEntity());
         setDisplaySelectedEntityNameAsSubtitle(true);
     }
@@ -108,9 +106,12 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
         else {
             setNothingSelectedVisible(false);
-            entity.ifPresent(editorPresenter::setEntity);
+            entity.ifPresent(e -> {
+                for(EditorPanePresenter panePresenter : panePresenters) {
+                    panePresenter.setEntity(e);
+                }
+            });
             tagListPresenter.setEntity(entity.get());
-            changesPresenter.setEntity(entity.get());
         }
     }
 
@@ -139,7 +140,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     public void dispose() {
-        editorPresenter.dispose();
+        for(EditorPanePresenter panePresenter : panePresenters) {
+            panePresenter.dispose();
+        }
         super.dispose();
     }
 
