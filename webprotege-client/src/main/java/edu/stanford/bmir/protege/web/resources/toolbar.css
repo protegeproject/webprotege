@@ -2,8 +2,7 @@
 
 .wp-toolbar {
     background-color: literal("var(--view-toolbar--background-color)");
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding-bottom: 1px;
 }
 
 .wp-toolbar__btn {
