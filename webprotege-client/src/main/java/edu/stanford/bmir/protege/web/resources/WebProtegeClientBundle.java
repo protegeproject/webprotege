@@ -631,6 +631,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--changes")
         String changes();
+
+        @ClassName("wp-btn-g--container")
+        String btnGlyphContainer();
     }
 
     interface SettingsPageCss extends CssResource {

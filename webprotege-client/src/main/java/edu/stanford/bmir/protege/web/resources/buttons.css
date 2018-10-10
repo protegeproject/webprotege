@@ -283,8 +283,13 @@
     -webkit-transition: background-color 0.15s ease-in-out;
 
     background-color: literal("var(--primary--color)");
-    width: 20px;
-    height: 20px;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-origin: border-box;
+    width: 40px;
+    height: 24px;
     margin: 0;
     padding: 0;
     cursor: pointer;
@@ -292,6 +297,7 @@
 
 .wp-btn-g:hover {
     background-color: literal("var(--btn--hover--color)");
+    outline: 1px solid #505050 !important;
 }
 
 .wp-btn-g--create:hover {
@@ -308,81 +314,90 @@
 }
 
 .wp-btn-g--sync-selection {
-    mask:  syncSelectionIconUrl no-repeat;
-    -webkit-mask:  syncSelectionIconUrl no-repeat;
+    mask-image:  syncSelectionIconUrl;
+    -webkit-mask-image:  syncSelectionIconUrl;
 }
 
 .wp-btn-g--move-to-parent {
-    mask: moveToParentIconUrl no-repeat;
-    -webkit-mask:  moveToParentIconUrl no-repeat;
+    mask-image: moveToParentIconUrl;
+    -webkit-mask-image:  moveToParentIconUrl;
 }
 
 .wp-btn-g--move-to-sibling {
-    mask:      moveToSiblingIconUrl no-repeat;
-    -webkit-mask:      moveToSiblingIconUrl no-repeat;
+    mask-image:      moveToSiblingIconUrl;
+    -webkit-mask-image:      moveToSiblingIconUrl;
 }
 
 .wp-btn-g--move-to-child {
-    mask:  moveToChildIconUrl no-repeat;
-    -webkit-mask:  moveToChildIconUrl no-repeat;
+    mask-image:  moveToChildIconUrl;
+    -webkit-mask-image:  moveToChildIconUrl;
 }
 
 .wp-btn-g--show-hierarchy {
-    mask:  hierarchyIconUrl no-repeat;
-    -webkit-mask:  hierarchyIconUrl no-repeat;
+    mask-image:  hierarchyIconUrl;
+    -webkit-mask-image:  hierarchyIconUrl;
 }
 
 .wp-btn-g--search {
-    mask:  searchIconUrl no-repeat;
-    -webkit-mask:  searchIconUrl no-repeat;
+    mask-image:  searchIconUrl;
+    -webkit-mask-image:  searchIconUrl;
 }
 
 .wp-btn-g--create-class {
-    mask: createIconUrl no-repeat;
-    -webkit-mask: createIconUrl no-repeat;
+    mask-image: createIconUrl;
+    -webkit-mask-image: createIconUrl;
 }
 
 .wp-btn-g--delete-class {
-    mask: deleteIconUrl no-repeat;
-    -webkit-mask: deleteIconUrl no-repeat;
+    mask-image: deleteIconUrl;
+    -webkit-mask-image: deleteIconUrl;
 }
 
 .wp-btn-g--create-individual {
-    mask: createIndividualIconUrl no-repeat;
-    -webkit-mask: createIndividualIconUrl no-repeat;
+    mask-image: createIndividualIconUrl;
+    -webkit-mask-image: createIndividualIconUrl;
 }
 
 .wp-btn-g--delete-individual {
-    mask: deleteIndividualIconUrl no-repeat;
-    -webkit-mask: deleteIndividualIconUrl no-repeat;
+    mask-image: deleteIndividualIconUrl;
+    -webkit-mask-image: deleteIndividualIconUrl;
 }
 
 .wp-btn-g--create-property {
-    mask: createPropertyIconUrl no-repeat;
-    -webkit-mask: createPropertyIconUrl no-repeat;
+    mask-image: createPropertyIconUrl;
+    -webkit-mask-image: createPropertyIconUrl;
 }
 
 .wp-btn-g--delete-property {
-    mask: deletePropertyIconUrl no-repeat;
-    -webkit-mask: deletePropertyIconUrl no-repeat;
+    mask-image: deletePropertyIconUrl;
+    -webkit-mask-image: deletePropertyIconUrl;
 }
 
 .wp-btn-g--refresh {
-    mask: refreshIconUrl no-repeat;
-    -webkit-mask: refreshIconUrl no-repeat;
+    mask-image: refreshIconUrl;
+    -webkit-mask-image: refreshIconUrl;
 }
 
 .wp-btn-g--create-thread {
-    mask: createThreadIconUrl no-repeat;
-    -webkit-mask: createThreadIconUrl no-repeat;
+    mask-image: createThreadIconUrl;
+    -webkit-mask-image: createThreadIconUrl;
 }
 
 .wp-btn-g--editor {
-    mask: editorIconUrl no-repeat;
-    -webkit-mask: editorIconUrl no-repeat;
+    mask-image: editorIconUrl;
+    -webkit-mask-image: editorIconUrl;
 }
 
 .wp-btn-g--changes {
-    mask: changesIconUrl no-repeat;
-    -webkit-mask: changesIconUrl no-repeat;
+    mask-image: changesIconUrl;
+    -webkit-mask-image: changesIconUrl;
+}
+
+.wp-btn-g--container {
+    display: flex;
+    border-radius: 2px;
+}
+
+.wp-btn-g--container:hover {
+    background-color: literal("var(--view-toolbar--hover--background-color)");
 }

@@ -31,9 +31,6 @@
             flex-wrap: wrap;
             align-items: center;
         }
-        .buttonRun button+button {
-            margin-left: 10px;
-        }
         .contentHolder {
             display: flex;
             flex-grow: 1;

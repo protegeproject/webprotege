@@ -163,6 +163,8 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     @Override
     public void addAction(final UIAction action) {
+        SimplePanel simplePanel = new SimplePanel();
+        simplePanel.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btnGlyphContainer());
         final Button button = new Button();
         button.setTitle(action.getLabel());
         if(action.hasIcon()) {
@@ -175,7 +177,8 @@ public class PortletUiImpl extends Composite implements PortletUi {
             button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarButton());
             button.setText(action.getLabel());
         }
-        toolbarButtonRun.add(button);
+        simplePanel.setWidget(button);
+        toolbarButtonRun.add(simplePanel);
         button.addMouseDownHandler(DomEvent::preventDefault);
         button.addClickHandler(event -> action.execute());
         action.setStateChangedHandler(value -> {
