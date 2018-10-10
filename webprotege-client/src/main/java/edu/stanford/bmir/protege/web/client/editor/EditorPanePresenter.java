@@ -37,4 +37,6 @@ public interface EditorPanePresenter extends HasDispose {
 
     @Override
     void dispose();
+
+    boolean isActive();
 }

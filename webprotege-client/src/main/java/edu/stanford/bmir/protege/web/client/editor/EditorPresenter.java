@@ -103,7 +103,7 @@ public class EditorPresenter implements HasDispose {
         return handlerManager.addHandler(EditorContextChangedEvent.TYPE, handler);
     }
 
-    private Widget getView() {
+    public Widget getView() {
         return editorHolder;
     }
 

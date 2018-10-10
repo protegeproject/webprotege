@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
@@ -81,5 +82,10 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
     @Override
     public void dispose() {
         // Nothing to do
+    }
+
+    @Override
+    public boolean isActive() {
+        return ElementalUtil.isWidgetOrDescendantWidgetActive(changesPresenter.getView());
     }
 }

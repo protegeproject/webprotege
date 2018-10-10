@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -144,8 +145,10 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void reloadEditorIfNotActive() {
-        if(!isActive()) {
-            handleAfterSetEntity(getSelectedEntity());
+        for(EditorPanePresenter presenter : panePresenters) {
+            if(!presenter.isActive()) {
+                getSelectedEntity().ifPresent(presenter::setEntity);
+            }
         }
     }
 
@@ -162,7 +165,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         super.dispose();
     }
 
-    private boolean isActive() {
-        return ElementalUtil.isWidgetOrDescendantWidgetActive(view);
+    private boolean isActive(IsWidget widget) {
+        return ElementalUtil.isWidgetOrDescendantWidgetActive(widget);
     }
 }
