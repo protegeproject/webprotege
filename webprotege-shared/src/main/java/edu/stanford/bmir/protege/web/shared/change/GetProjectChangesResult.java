@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,46 +17,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24/02/15
  */
-public class GetProjectChangesResult implements Result {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class GetProjectChangesResult implements Result {
 
-    private Page<ProjectChange> changes;
-
-    /**
-     * For serialization purposes only
-     */
-    private GetProjectChangesResult() {
+    @Nonnull
+    public static GetProjectChangesResult get(Page<ProjectChange> changes) {
+        return new AutoValue_GetProjectChangesResult(changes);
     }
 
-    public GetProjectChangesResult(Page<ProjectChange> changes) {
-        this.changes = checkNotNull(changes);
-    }
-
-    public Page<ProjectChange> getChanges() {
-        return changes;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(changes);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof GetProjectChangesResult)) {
-            return false;
-        }
-        GetProjectChangesResult other = (GetProjectChangesResult) obj;
-        return this.changes.equals(other.changes);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("GetProjectChangesResult")
-                .addValue(changes)
-                .toString();
-    }
+    @Nonnull
+    public abstract Page<ProjectChange> getChanges();
 }

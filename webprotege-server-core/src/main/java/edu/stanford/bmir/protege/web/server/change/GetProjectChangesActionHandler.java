@@ -52,6 +52,6 @@ public class GetProjectChangesActionHandler extends AbstractProjectActionHandler
     public GetProjectChangesResult execute(@Nonnull final GetProjectChangesAction action, @Nonnull ExecutionContext executionContext) {
         Page<ProjectChange> changeList = changesManager.getProjectChanges(action.getSubject(),
                                                                           action.getPageRequest());
-        return new GetProjectChangesResult(changeList);
+        return GetProjectChangesResult.get(changeList);
     }
 }

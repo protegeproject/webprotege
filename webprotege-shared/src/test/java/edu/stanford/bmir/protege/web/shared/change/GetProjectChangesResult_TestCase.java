@@ -33,13 +33,13 @@ public class GetProjectChangesResult_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        result = new GetProjectChangesResult(projectChanges);
-        otherResult = new GetProjectChangesResult(projectChanges);
+        result = GetProjectChangesResult.get(projectChanges);
+        otherResult = GetProjectChangesResult.get(projectChanges);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new GetProjectChangesResult(null);
+        GetProjectChangesResult.get(null);
     }
 
     @Test
