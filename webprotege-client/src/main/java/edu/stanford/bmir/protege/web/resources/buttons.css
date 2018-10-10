@@ -201,7 +201,7 @@
 }
 
 .wp-btn-delete:focus {
-    background-color: literal("var(--delete-color)");
+    background-color: literal("var(--delete--color)");
     outline-offset: 0;
 }
 
