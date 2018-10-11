@@ -36,6 +36,9 @@
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
 
+    <script src="js/viz/viz.js"></script>
+    <script src="js/viz/full.render.js"></script>
+
     <script>
         <%
             writeUserInSession(session, out);
