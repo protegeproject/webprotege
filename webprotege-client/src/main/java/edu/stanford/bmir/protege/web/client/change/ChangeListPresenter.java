@@ -43,7 +43,7 @@ public class ChangeListPresenter {
     private final ChangeListView view;
 
     @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
+    private final DispatchServiceManager dispatch;
 
     @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
@@ -55,24 +55,26 @@ public class ChangeListPresenter {
 
     private boolean downloadVisible = false;
 
-    private HasBusy hasBusy = busy -> {};
+    private HasBusy hasBusy = busy -> {
+    };
 
     private Optional<GetProjectChangesAction> lastAction = Optional.empty();
 
-    private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {};
+    private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {
+    };
 
     @Nonnull
     private MessageBox messageBox;
 
     @Inject
     public ChangeListPresenter(@Nonnull ProjectId projectId, @Nonnull ChangeListView view,
-                               @Nonnull DispatchServiceManager dispatchServiceManager,
+                               @Nonnull DispatchServiceManager dispatch,
                                @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                @Nonnull Messages messages, @Nonnull MessageBox messageBox) {
         this.projectId = projectId;
         this.view = view;
         this.permissionChecker = permissionChecker;
-        this.dispatchServiceManager = dispatchServiceManager;
+        this.dispatch = dispatch;
         this.messages = messages;
         this.messageBox = messageBox;
         this.view.setPageNumberChangedHandler(pageNumber -> pageNumberChangedHandler.handlePageNumberChanged(pageNumber));
@@ -101,9 +103,9 @@ public class ChangeListPresenter {
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.empty(), pageRequest);
         lastAction = Optional.of(action);
-        dispatchServiceManager.execute(action,
-                                       hasBusy,
-                                       this::fillView);
+        dispatch.execute(action,
+                         hasBusy,
+                         this::fillView);
     }
 
     public void displayChangesForEntity(@Nonnull OWLEntity entity) {
@@ -113,9 +115,9 @@ public class ChangeListPresenter {
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.of(entity), pageRequest);
         SubjectDisplay doNotDisplaySubject = SubjectDisplay.DO_NOT_DISPLAY_SUBJECT;
-        dispatchServiceManager.execute(action,
-                                       hasBusy,
-                                       this::fillView);
+        dispatch.execute(action,
+                         hasBusy,
+                         this::fillView);
     }
 
     public void displayChangesForWatches(@Nonnull UserId userId) {
@@ -124,9 +126,9 @@ public class ChangeListPresenter {
         view.clear();
         GetWatchedEntityChangesAction action = new GetWatchedEntityChangesAction(projectId, userId);
         SubjectDisplay displaySubject = SubjectDisplay.DISPLAY_SUBJECT;
-        dispatchServiceManager.execute(action,
-                                       hasBusy,
-                                       this::fillView);
+        dispatch.execute(action,
+                         hasBusy,
+                         this::fillView);
     }
 
     public void clear() {
@@ -206,8 +208,8 @@ public class ChangeListPresenter {
 
     private void revertChanges(ProjectChange projectChange) {
         final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
-        dispatchServiceManager.execute(new RevertRevisionAction(projectId, revisionNumber),
-                                       this::handleChangedReverted);
+        dispatch.execute(new RevertRevisionAction(projectId, revisionNumber),
+                         this::handleChangedReverted);
     }
 
     private void handleChangedReverted(@Nonnull RevertRevisionResult result) {
