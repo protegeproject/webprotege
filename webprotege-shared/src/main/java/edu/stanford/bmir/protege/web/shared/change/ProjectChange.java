@@ -41,7 +41,7 @@ public class ProjectChange implements IsSerializable, Serializable {
     public ProjectChange(RevisionNumber revisionNumber, UserId author, long timestamp, String summary, int changeCount, Page<DiffElement<String, SafeHtml>> diff) {
         this.revisionNumber = checkNotNull(revisionNumber);
         this.author = checkNotNull(author);
-        this.timestamp = checkNotNull(timestamp);
+        this.timestamp = timestamp;
         this.summary = checkNotNull(summary);
         this.diff = checkNotNull(diff);
         this.changeCount = changeCount;
