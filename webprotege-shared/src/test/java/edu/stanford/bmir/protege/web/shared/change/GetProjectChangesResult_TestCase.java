@@ -69,6 +69,6 @@ public class GetProjectChangesResult_TestCase {
 
     @Test
     public void shouldReturnSuppliedList() {
-        assertThat(result.getChanges(), is(projectChanges));
+        assertThat(result.getProjectChanges(), is(projectChanges));
     }
 }

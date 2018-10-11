@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -13,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27/02/15
  */
-public class GetWatchedEntityChangesResult implements Result {
+public class GetWatchedEntityChangesResult implements Result, HasProjectChanges {
 
     private Page<ProjectChange> changes;
 
@@ -24,7 +26,8 @@ public class GetWatchedEntityChangesResult implements Result {
         this.changes = checkNotNull(changes);
     }
 
-    public Page<ProjectChange> getChanges() {
+    @Nonnull
+    public Page<ProjectChange> getProjectChanges() {
         return changes;
     }
 

@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.common.collect.Ordering;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -58,7 +56,8 @@ public class ChangeListViewPresenter {
 
     private Optional<GetProjectChangesAction> lastAction = Optional.empty();
 
-    private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {};
+    private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {
+    };
 
     private MessageBox messageBox;
 
@@ -100,7 +99,7 @@ public class ChangeListViewPresenter {
         lastAction = Optional.of(action);
         dispatchServiceManager.execute(action,
                                        hasBusy,
-                                       result -> fillView(result.getChanges()));
+                                       this::fillView);
     }
 
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
@@ -112,7 +111,7 @@ public class ChangeListViewPresenter {
         SubjectDisplay doNotDisplaySubject = SubjectDisplay.DO_NOT_DISPLAY_SUBJECT;
         dispatchServiceManager.execute(action,
                                        hasBusy,
-                                       result -> fillView(result.getChanges()));
+                                       this::fillView);
     }
 
     public void setChangesForWatches(ProjectId projectId, UserId userId) {
@@ -122,14 +121,16 @@ public class ChangeListViewPresenter {
         GetWatchedEntityChangesAction action = new GetWatchedEntityChangesAction(projectId, userId);
         SubjectDisplay displaySubject = SubjectDisplay.DISPLAY_SUBJECT;
         dispatchServiceManager.execute(action,
-                                       result -> fillView(result.getChanges()));
+                                       hasBusy,
+                                       this::fillView);
     }
 
     public void clear() {
         view.clear();
     }
 
-    private void fillView(Page<ProjectChange> changes) {
+    private void fillView(HasProjectChanges result) {
+        Page<ProjectChange> changes = result.getProjectChanges();
         view.clear();
         permissionChecker.hasPermission(VIEW_CHANGES,
                                         viewChanges -> {
@@ -151,7 +152,9 @@ public class ChangeListViewPresenter {
             if (!TimeUtil.isSameCalendarDay(previousTimeStamp, changeTimeStamp)) {
                 previousTimeStamp = changeTimeStamp;
                 Date date = new Date(changeTimeStamp);
-                view.addSeparator("\u25C9   " + messages.change_changesOn() + " " + DateTimeFormat.getFormat("EEE, d MMM yyyy").format(date));
+                view.addSeparator("\u25C9   " + messages.change_changesOn() + " " + DateTimeFormat
+                        .getFormat("EEE, d MMM yyyy")
+                        .format(date));
             }
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();

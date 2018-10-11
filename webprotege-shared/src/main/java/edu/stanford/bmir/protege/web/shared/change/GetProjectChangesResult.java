@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GetProjectChangesResult implements Result {
+public abstract class GetProjectChangesResult implements Result, HasProjectChanges {
 
     @Nonnull
     public static GetProjectChangesResult get(Page<ProjectChange> changes) {
@@ -27,5 +27,5 @@ public abstract class GetProjectChangesResult implements Result {
     }
 
     @Nonnull
-    public abstract Page<ProjectChange> getChanges();
+    public abstract Page<ProjectChange> getProjectChanges();
 }

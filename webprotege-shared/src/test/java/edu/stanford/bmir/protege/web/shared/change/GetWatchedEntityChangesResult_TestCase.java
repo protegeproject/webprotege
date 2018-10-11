@@ -69,6 +69,6 @@ public class GetWatchedEntityChangesResult_TestCase {
 
     @Test
     public void shouldReturnSuppliedChanges() {
-        assertThat(result.getChanges(), is(changes));
+        assertThat(result.getProjectChanges(), is(changes));
     }
 }
