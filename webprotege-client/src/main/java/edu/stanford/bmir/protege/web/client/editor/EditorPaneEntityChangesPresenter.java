@@ -24,19 +24,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
 
     @Nonnull
-    private final ProjectId projectId;
-
-    @Nonnull
     private final ChangeListViewPresenter changesPresenter;
 
     @Nonnull
     private WebProtegeClientBundle clientBundle;
 
     @Inject
-    public EditorPaneEntityChangesPresenter(@Nonnull ProjectId projectId,
-                                            @Nonnull ChangeListViewPresenter changesPresenter,
+    public EditorPaneEntityChangesPresenter(@Nonnull ChangeListViewPresenter changesPresenter,
                                             @Nonnull WebProtegeClientBundle clientBundle) {
-        this.projectId = projectId;
         this.changesPresenter = checkNotNull(changesPresenter);
         this.clientBundle = checkNotNull(clientBundle);
     }
@@ -66,7 +61,7 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
 
     @Override
     public void setEntity(@Nonnull OWLEntity entity) {
-        changesPresenter.setChangesForEntity(projectId, entity);
+        changesPresenter.displayChangesForEntity(entity);
     }
 
     @Override

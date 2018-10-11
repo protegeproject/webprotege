@@ -67,7 +67,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
     }
 
     @Override
-    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         updateDisplayForSelectedEntity();
     }
 
@@ -76,7 +76,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
             if (canViewChanges) {
                 setForbiddenVisible(false);
                 ProjectId projectId = getProjectId();
-                getSelectedEntity().ifPresent(entity -> presenter.setChangesForEntity(projectId, entity));
+                getSelectedEntity().ifPresent(presenter::displayChangesForEntity);
             }
             else {
                 setForbiddenVisible(true);

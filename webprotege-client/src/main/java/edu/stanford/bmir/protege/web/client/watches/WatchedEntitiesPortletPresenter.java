@@ -20,6 +20,9 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent.ON_WATCH_ADDED;
+import static edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent.ON_WATCH_REMOVED;
 
 @Portlet(id = "portlets.WatchedEntities", title = "Watched Entities")
 public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPresenter {
@@ -62,11 +65,13 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
         portletUi.addAction(new PortletAction("Refresh", this::onRefresh));
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        WatchAddedEvent.ON_WATCH_ADDED, event -> refreshDelayed());
+                                        ON_WATCH_ADDED,
+                                        event -> refreshDelayed());
         eventBus.addProjectEventHandler(getProjectId(),
-                                        WatchAddedEvent.ON_WATCH_ADDED, event -> refreshDelayed());
+                                        ON_WATCH_REMOVED,
+                                        event -> refreshDelayed());
         eventBus.addProjectEventHandler(getProjectId(),
-                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                                        ON_PERMISSIONS_CHANGED,
                                         event -> onRefresh());
         portletUi.setForbiddenMessage("You do not have permission to watch changes in this project");
 
@@ -86,8 +91,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
             permissionChecker.hasPermission(WATCH_CHANGES,
                                             canWatch -> {
                                                 if (canWatch) {
-                                                    presenter.setChangesForWatches(getProjectId(),
-                                                                                   loggedInUserProvider.getCurrentUserId());
+                                                    presenter.displayChangesForWatches(loggedInUserProvider.getCurrentUserId());
                                                     portletUi.setForbiddenVisible(false);
                                                 }
                                                 else {

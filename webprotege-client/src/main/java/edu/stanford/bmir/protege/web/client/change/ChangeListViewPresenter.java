@@ -36,36 +36,40 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  */
 public class ChangeListViewPresenter {
 
+    @Nonnull
+    private final ProjectId projectId;
 
+    @Nonnull
     private final ChangeListView view;
 
+    @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+    @Nonnull
     private final Messages messages;
 
     private boolean revertChangesVisible = false;
 
     private boolean downloadVisible = false;
 
-    private Optional<ProjectId> projectId = Optional.empty();
-
-    private HasBusy hasBusy = busy -> {
-    };
+    private HasBusy hasBusy = busy -> {};
 
     private Optional<GetProjectChangesAction> lastAction = Optional.empty();
 
-    private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {
-    };
+    private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = pageNumber -> {};
 
+    @Nonnull
     private MessageBox messageBox;
 
     @Inject
-    public ChangeListViewPresenter(ChangeListView view,
-                                   DispatchServiceManager dispatchServiceManager,
-                                   LoggedInUserProjectPermissionChecker permissionChecker,
-                                   Messages messages, MessageBox messageBox) {
+    public ChangeListViewPresenter(@Nonnull ProjectId projectId, @Nonnull ChangeListView view,
+                                   @Nonnull DispatchServiceManager dispatchServiceManager,
+                                   @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                   @Nonnull Messages messages, @Nonnull MessageBox messageBox) {
+        this.projectId = projectId;
         this.view = view;
         this.permissionChecker = permissionChecker;
         this.dispatchServiceManager = dispatchServiceManager;
@@ -82,6 +86,7 @@ public class ChangeListViewPresenter {
         this.downloadVisible = downloadVisible;
     }
 
+    @Nonnull
     public ChangeListView getView() {
         return view;
     }
@@ -90,9 +95,8 @@ public class ChangeListViewPresenter {
         this.hasBusy = checkNotNull(hasBusy);
     }
 
-    public void setChangesForProject(ProjectId projectId) {
-        this.projectId = Optional.of(projectId);
-        this.pageNumberChangedHandler = pageNumber -> setChangesForProject(projectId);
+    public void displayChangesForProject() {
+        this.pageNumberChangedHandler = pageNumber -> displayChangesForProject();
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.empty(), pageRequest);
@@ -102,9 +106,9 @@ public class ChangeListViewPresenter {
                                        this::fillView);
     }
 
-    public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
-        this.projectId = Optional.of(projectId);
-        this.pageNumberChangedHandler = pageNumber -> setChangesForEntity(projectId, entity);
+    public void displayChangesForEntity(@Nonnull OWLEntity entity) {
+        checkNotNull(entity);
+        this.pageNumberChangedHandler = pageNumber -> displayChangesForEntity(entity);
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.of(entity), pageRequest);
@@ -114,9 +118,9 @@ public class ChangeListViewPresenter {
                                        this::fillView);
     }
 
-    public void setChangesForWatches(ProjectId projectId, UserId userId) {
-        this.projectId = Optional.of(projectId);
-        this.pageNumberChangedHandler = pageNumber -> setChangesForWatches(projectId, userId);
+    public void displayChangesForWatches(@Nonnull UserId userId) {
+        checkNotNull(userId);
+        this.pageNumberChangedHandler = pageNumber -> displayChangesForWatches(userId);
         view.clear();
         GetWatchedEntityChangesAction action = new GetWatchedEntityChangesAction(projectId, userId);
         SubjectDisplay displaySubject = SubjectDisplay.DISPLAY_SUBJECT;
@@ -170,7 +174,7 @@ public class ChangeListViewPresenter {
                     projectChange));
             view.setDownloadRevisionHandler(revisionNumber -> {
                 ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
-                        projectId.get(),
+                        projectId,
                         revisionNumber,
                         DownloadFormatExtension.owl);
                 downloader.download();
@@ -201,14 +205,15 @@ public class ChangeListViewPresenter {
     }
 
     private void revertChanges(ProjectChange projectChange) {
-        projectId.ifPresent(theProjectId -> {
-            final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
-            dispatchServiceManager.execute(new RevertRevisionAction(theProjectId, revisionNumber),
-                                           result -> {
-                                               messageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
-                                               lastAction.ifPresent(action -> setChangesForProject(action.getProjectId()));
-                                           });
-        });
+        final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
+        dispatchServiceManager.execute(new RevertRevisionAction(projectId, revisionNumber),
+                                       this::handleChangedReverted);
+    }
+
+    private void handleChangedReverted(@Nonnull RevertRevisionResult result) {
+        RevisionNumber revisionNumber = result.getRevisionNumber();
+        messageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
+        lastAction.ifPresent(action -> displayChangesForProject());
     }
 
 }
