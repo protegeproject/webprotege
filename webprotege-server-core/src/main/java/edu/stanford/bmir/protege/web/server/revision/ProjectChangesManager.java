@@ -5,7 +5,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
-import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
@@ -25,6 +24,8 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Matthew Horridge
@@ -59,8 +60,30 @@ public class ProjectChangesManager {
         this.changeRecordComparator = changeRecordComparator;
     }
 
+    private static Map<Optional<IRI>, List<OWLOntologyChangeRecord>> getChangeRecordsBySubject(Revision revision) {
+        return revision.getChanges()
+                .stream()
+                .collect(groupingBy(ProjectChangesManager::getAxiom));
+    }
+
+    private static Optional<IRI> getAxiom(OWLOntologyChangeRecord rec) {
+        OWLOntologyChangeData data = rec.getData();
+        if (data instanceof AxiomChangeData) {
+            OWLAxiom axiom = ((AxiomChangeData) data).getAxiom();
+            return getSubject(axiom);
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<IRI> getSubject(OWLAxiom axiom) {
+        AxiomIRISubjectProvider subjectProvider = new AxiomIRISubjectProvider(IRI::compareTo);
+        return subjectProvider.getSubject(axiom);
+    }
+
     public Page<ProjectChange> getProjectChanges(Optional<OWLEntity> subject,
-                                                          PageRequest pageRequest) {
+                                                 PageRequest pageRequest) {
         ImmutableList<Revision> revisions = revisionManager.getRevisions();
         if (subject.isPresent()) {
             // We need to scan revisions to find the ones containing a particular subject
@@ -78,9 +101,9 @@ public class ProjectChangesManager {
             // Pages are in reverse order
             ImmutableList.Builder<ProjectChange> changes = ImmutableList.builder();
             revisions.reverse().stream()
-                     .skip(pageRequest.getSkip())
-                     .limit(pageRequest.getPageSize())
-                     .forEach(revision -> getProjectChangesForRevision(revision, subject, changes));
+                    .skip(pageRequest.getSkip())
+                    .limit(pageRequest.getPageSize())
+                    .forEach(revision -> getProjectChangesForRevision(revision, subject, changes));
             ImmutableList<ProjectChange> changeList = changes.build();
             int pageCount = (revisions.size() / pageRequest.getPageSize()) + 1;
             return new Page<>(pageRequest.getPageNumber(),
@@ -108,7 +131,7 @@ public class ProjectChangesManager {
         final int totalChanges;
         if (subject.isPresent()) {
             List<OWLOntologyChangeRecord> records = recordsBySubject.get(subject.map(OWLEntity::getIRI));
-            if(records ==  null) {
+            if (records == null) {
                 // Nothing in this revision that changes the subject
                 return;
             }
@@ -133,7 +156,7 @@ public class ProjectChangesManager {
         List<DiffElement<String, SafeHtml>> renderedDiffElements = renderDiffElements(axiomDiffElements);
         int pageElements = renderedDiffElements.size();
         int pageCount;
-        if(pageElements == 0) {
+        if (pageElements == 0) {
             pageCount = 1;
         }
         else {
@@ -153,27 +176,6 @@ public class ProjectChangesManager {
                 totalChanges,
                 page);
         changesBuilder.add(projectChange);
-    }
-
-    private static Map<Optional<IRI>, List<OWLOntologyChangeRecord>> getChangeRecordsBySubject(Revision revision) {
-        return revision.getChanges().stream()
-                .collect(Collectors.groupingBy(ProjectChangesManager::getAxiom));
-    }
-
-    private static Optional<IRI> getAxiom(OWLOntologyChangeRecord rec) {
-        OWLOntologyChangeData data = rec.getData();
-        if (data instanceof AxiomChangeData) {
-            OWLAxiom axiom = ((AxiomChangeData) data).getAxiom();
-            return getSubject(axiom);
-        }
-        else {
-            return Optional.empty();
-        }
-    }
-
-    private static Optional<IRI> getSubject(OWLAxiom axiom) {
-        AxiomIRISubjectProvider subjectProvider = new AxiomIRISubjectProvider(IRI::compareTo);
-        return subjectProvider.getSubject(axiom);
     }
 
     private List<DiffElement<String, SafeHtml>> renderDiffElements(List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements) {
