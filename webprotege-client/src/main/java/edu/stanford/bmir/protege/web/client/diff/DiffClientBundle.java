@@ -18,11 +18,11 @@ public interface DiffClientBundle extends ClientBundle {
     DiffCssResource style();
 
 
-    @Source("change-added-icon.svg")
+    @Source("change-op-add-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource changeAddedIcon();
 
-    @Source("change-removed-icon.svg")
+    @Source("change-op-remove-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource changeRemovedIcon();
 
