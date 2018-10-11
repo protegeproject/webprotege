@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
+import edu.stanford.bmir.protege.web.client.change.ChangeListPresenter;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -24,13 +23,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
 
     @Nonnull
-    private final ChangeListViewPresenter changesPresenter;
+    private final ChangeListPresenter changesPresenter;
 
     @Nonnull
     private WebProtegeClientBundle clientBundle;
 
     @Inject
-    public EditorPaneEntityChangesPresenter(@Nonnull ChangeListViewPresenter changesPresenter,
+    public EditorPaneEntityChangesPresenter(@Nonnull ChangeListPresenter changesPresenter,
                                             @Nonnull WebProtegeClientBundle clientBundle) {
         this.changesPresenter = checkNotNull(changesPresenter);
         this.clientBundle = checkNotNull(clientBundle);

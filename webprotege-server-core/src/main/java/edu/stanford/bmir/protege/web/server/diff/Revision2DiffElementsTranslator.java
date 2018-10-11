@@ -77,7 +77,7 @@ public class Revision2DiffElementsTranslator {
             // still need to support this.
             return new DiffElement<>(
                     getDiffOperation(changeRecord),
-                    "Root Ontology" ,
+                    "Root Ontology",
                     changeRecord
             );
         }

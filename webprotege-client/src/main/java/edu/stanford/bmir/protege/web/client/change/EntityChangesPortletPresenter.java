@@ -28,7 +28,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
-    private final ChangeListViewPresenter presenter;
+    private final ChangeListPresenter presenter;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
@@ -36,7 +36,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 	public EntityChangesPortletPresenter(SelectionModel selectionModel,
                                          LoggedInUserProjectPermissionChecker permissionChecker,
                                          ProjectId projectId,
-                                         ChangeListViewPresenter presenter, DisplayNameRenderer displayNameRenderer) {
+                                         ChangeListPresenter presenter, DisplayNameRenderer displayNameRenderer) {
 		super(selectionModel, projectId, displayNameRenderer);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;

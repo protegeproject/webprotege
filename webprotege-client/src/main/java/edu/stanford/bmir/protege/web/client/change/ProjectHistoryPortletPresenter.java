@@ -29,7 +29,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
 
     public static final FilterId SHOW_DETAILS_FILTER = new FilterId("Show details");
 
-    private final ChangeListViewPresenter presenter;
+    private final ChangeListPresenter presenter;
 
     private final UIAction refreshAction;
 
@@ -44,7 +44,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
     private final ChangeListView changeListView;
 
     @Inject
-    public ProjectHistoryPortletPresenter(ChangeListViewPresenter presenter,
+    public ProjectHistoryPortletPresenter(ChangeListPresenter presenter,
                                           LoggedInUserProjectPermissionChecker permissionChecker,
                                           FilterView filterView,
                                           SelectionModel selectionModel,

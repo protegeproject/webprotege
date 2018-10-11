@@ -34,7 +34,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 26/02/15
  */
-public class ChangeListViewPresenter {
+public class ChangeListPresenter {
 
     @Nonnull
     private final ProjectId projectId;
@@ -65,10 +65,10 @@ public class ChangeListViewPresenter {
     private MessageBox messageBox;
 
     @Inject
-    public ChangeListViewPresenter(@Nonnull ProjectId projectId, @Nonnull ChangeListView view,
-                                   @Nonnull DispatchServiceManager dispatchServiceManager,
-                                   @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-                                   @Nonnull Messages messages, @Nonnull MessageBox messageBox) {
+    public ChangeListPresenter(@Nonnull ProjectId projectId, @Nonnull ChangeListView view,
+                               @Nonnull DispatchServiceManager dispatchServiceManager,
+                               @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                               @Nonnull Messages messages, @Nonnull MessageBox messageBox) {
         this.projectId = projectId;
         this.view = view;
         this.permissionChecker = permissionChecker;
@@ -170,7 +170,7 @@ public class ChangeListViewPresenter {
                 permissionChecker.hasPermission(REVERT_CHANGES,
                                                 view::setRevertRevisionVisible);
             }
-            view.setRevertRevisionHandler(revisionNumber -> ChangeListViewPresenter.this.handleRevertRevision(
+            view.setRevertRevisionHandler(revisionNumber -> ChangeListPresenter.this.handleRevertRevision(
                     projectChange));
             view.setDownloadRevisionHandler(revisionNumber -> {
                 ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(

@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.watches;
 
 import com.google.gwt.user.client.Timer;
+import edu.stanford.bmir.protege.web.client.change.ChangeListPresenter;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
-import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -10,10 +10,8 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
@@ -29,7 +27,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private final ChangeListViewPresenter presenter;
+    private final ChangeListPresenter presenter;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
@@ -45,7 +43,7 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
     private Optional<PortletUi> ui = Optional.empty();
 
     @Inject
-    public WatchedEntitiesPortletPresenter(ChangeListViewPresenter presenter,
+    public WatchedEntitiesPortletPresenter(ChangeListPresenter presenter,
                                            LoggedInUserProjectPermissionChecker permissionChecker,
                                            SelectionModel selectionModel,
                                            ProjectId projectId,
