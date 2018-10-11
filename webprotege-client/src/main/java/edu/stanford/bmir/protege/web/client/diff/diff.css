@@ -1,5 +1,5 @@
-@url changeAddedUrl changeAddedIcon;
-@url changeRemovedUrl changeRemovedIcon;
+@url changeOpAddIconUrl changeOpAddIcon;
+@url changeOpRemoveIconUrl changeOpRemoveIcon;
 
 .line {
     border-bottom: 1px solid literal("var(--separator--color)");
@@ -14,14 +14,14 @@
 }
 
 .addBullet {
-    mask-image: changeAddedUrl;
-    -webkit-mask-image: changeAddedUrl;
+    mask-image: changeOpAddIconUrl;
+    -webkit-mask-image: changeOpAddIconUrl;
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     width: 16px;
     height: 16px;
     margin-right: 4px;
-    background-color: #00ba00;
+    background-color: literal("var(--create--color)");
     flex-grow: 0;
     flex-shrink: 0;
 }
@@ -32,14 +32,14 @@
 }
 
 .removeBullet {
-    mask-image: changeRemovedUrl;
-    -webkit-mask-image: changeRemovedUrl;
+    mask-image: changeOpRemoveIconUrl;
+    -webkit-mask-image: changeOpRemoveIconUrl;
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     width: 16px;
     height: 16px;
     margin-right: 4px;
-    background-color: #d70000;
+    background-color: literal("var(--delete--color)");
     flex-grow: 0;
     flex-shrink: 0;
 }
