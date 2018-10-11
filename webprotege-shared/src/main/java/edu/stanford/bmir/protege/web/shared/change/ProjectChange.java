@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -8,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -18,92 +21,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 24/02/15
  */
-public class ProjectChange implements IsSerializable, Serializable {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class ProjectChange implements IsSerializable, Serializable {
 
-    private RevisionNumber revisionNumber;
-
-    private UserId author;
-
-    private long timestamp;
-
-    private String summary;
-
-    private Page<DiffElement<String, SafeHtml>> diff;
-
-    private int changeCount;
-
-    /**
-     * For serialization purposes only.
-     */
-    private ProjectChange() {
+    @Nonnull
+    public static ProjectChange get(@Nonnull RevisionNumber revisionNumber, UserId author, long timestamp, String summary, int changeCount, Page<DiffElement<String, SafeHtml>> diff) {
+        return new AutoValue_ProjectChange(changeCount,
+                                           revisionNumber,
+                                           author,
+                                           summary,
+                                           timestamp,
+                                           diff);
     }
 
-    public ProjectChange(RevisionNumber revisionNumber, UserId author, long timestamp, String summary, int changeCount, Page<DiffElement<String, SafeHtml>> diff) {
-        this.revisionNumber = checkNotNull(revisionNumber);
-        this.author = checkNotNull(author);
-        this.timestamp = timestamp;
-        this.summary = checkNotNull(summary);
-        this.diff = checkNotNull(diff);
-        this.changeCount = changeCount;
-    }
+    public abstract int getChangeCount();
 
-    public int getChangeCount() {
-        return changeCount;
-    }
+    public abstract RevisionNumber getRevisionNumber();
 
-    public RevisionNumber getRevisionNumber() {
-        return revisionNumber;
-    }
+    public abstract UserId getAuthor();
+    
+    public abstract String getSummary();
 
-    public UserId getAuthor() {
-        return author;
-    }
+    public abstract long getTimestamp();
 
-    public String getSummary() {
-        return summary;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public Page<DiffElement<String, SafeHtml>> getDiff() {
-        return diff;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(revisionNumber, author, timestamp, summary, changeCount, diff);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ProjectChange)) {
-            return false;
-        }
-        ProjectChange other = (ProjectChange) obj;
-        return this.revisionNumber.equals(other.revisionNumber)
-                && this.author.equals(other.author)
-                && this.summary.equals(other.summary)
-                && this.timestamp == other.timestamp
-                && this.diff.equals(other.diff)
-                && this.changeCount == other.changeCount;
-    }
-
-    @Override
-    public String toString() {
-        return toStringHelper("ProjectChange")
-                .addValue(revisionNumber)
-                .add("author", author)
-                .add("timestamp", timestamp)
-                .add("summary", summary)
-                .add("changeCount", changeCount)
-                .add("diff", diff)
-                .toString();
-    }
-
-
+    public abstract Page<DiffElement<String, SafeHtml>> getDiff();
 }

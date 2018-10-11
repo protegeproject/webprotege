@@ -168,7 +168,7 @@ public class ProjectChangesManager {
                 renderedDiffElements,
                 totalChanges
         );
-        ProjectChange projectChange = new ProjectChange(
+        ProjectChange projectChange = ProjectChange.get(
                 revision.getRevisionNumber(),
                 revision.getUserId(),
                 revision.getTimestamp(),

@@ -52,28 +52,28 @@ public class ProjectChange_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        projectChange = new ProjectChange(revisionNumber, userId, timestamp, summary, changeCount, diff);
-        otherProjectChange = new ProjectChange(revisionNumber, userId, timestamp, summary, changeCount, diff);
+        projectChange = ProjectChange.get(revisionNumber, userId, timestamp, summary, changeCount, diff);
+        otherProjectChange = ProjectChange.get(revisionNumber, userId, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_RevisionNumber_IsNull() {
-        new ProjectChange(null, userId, timestamp, summary, changeCount, diff);
+        ProjectChange.get(null, userId, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_UserId_IsNull() {
-        new ProjectChange(revisionNumber, null, timestamp, summary, changeCount, diff);
+        ProjectChange.get(revisionNumber, null, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Summary_IsNull() {
-        new ProjectChange(revisionNumber, userId, timestamp, null, changeCount, diff);
+        ProjectChange.get(revisionNumber, userId, timestamp, null, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Diff_IsNull() {
-        new ProjectChange(revisionNumber, userId, timestamp, summary, changeCount, null);
+        ProjectChange.get(revisionNumber, userId, timestamp, summary, changeCount, null);
     }
 
     @Test
