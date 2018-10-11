@@ -77,7 +77,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("change.revertChangesQuestion")
     String change_revertChangesQuestion();
 
-    
+    @DefaultMessage("Changes in revision {0} have been reverted")
+    @Key("change.revertSuccess")
+    String change_revertChangesInRevisionSuccessful(long value);
+
     @DefaultMessage("Change Email Address")
     @Key("changeEmailAddress")
     String changeEmailAddress();

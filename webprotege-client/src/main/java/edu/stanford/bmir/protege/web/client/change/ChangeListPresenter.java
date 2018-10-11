@@ -67,16 +67,18 @@ public class ChangeListPresenter {
     private MessageBox messageBox;
 
     @Inject
-    public ChangeListPresenter(@Nonnull ProjectId projectId, @Nonnull ChangeListView view,
+    public ChangeListPresenter(@Nonnull ProjectId projectId,
+                               @Nonnull ChangeListView view,
                                @Nonnull DispatchServiceManager dispatch,
                                @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-                               @Nonnull Messages messages, @Nonnull MessageBox messageBox) {
-        this.projectId = projectId;
-        this.view = view;
-        this.permissionChecker = permissionChecker;
-        this.dispatch = dispatch;
-        this.messages = messages;
-        this.messageBox = messageBox;
+                               @Nonnull Messages messages,
+                               @Nonnull MessageBox messageBox) {
+        this.projectId = checkNotNull(projectId);
+        this.view = checkNotNull(view);
+        this.permissionChecker = checkNotNull(permissionChecker);
+        this.dispatch = checkNotNull(dispatch);
+        this.messages = checkNotNull(messages);
+        this.messageBox = checkNotNull(messageBox);
         this.view.setPageNumberChangedHandler(pageNumber -> pageNumberChangedHandler.handlePageNumberChanged(pageNumber));
     }
 
@@ -114,7 +116,6 @@ public class ChangeListPresenter {
         view.clear();
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.of(entity), pageRequest);
-        SubjectDisplay doNotDisplaySubject = SubjectDisplay.DO_NOT_DISPLAY_SUBJECT;
         dispatch.execute(action,
                          hasBusy,
                          this::fillView);
@@ -125,7 +126,6 @@ public class ChangeListPresenter {
         this.pageNumberChangedHandler = pageNumber -> displayChangesForWatches(userId);
         view.clear();
         GetWatchedEntityChangesAction action = new GetWatchedEntityChangesAction(projectId, userId);
-        SubjectDisplay displaySubject = SubjectDisplay.DISPLAY_SUBJECT;
         dispatch.execute(action,
                          hasBusy,
                          this::fillView);
@@ -214,7 +214,7 @@ public class ChangeListPresenter {
 
     private void handleChangedReverted(@Nonnull RevertRevisionResult result) {
         RevisionNumber revisionNumber = result.getRevisionNumber();
-        messageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
+        messageBox.showMessage(messages.change_revertChangesInRevisionSuccessful(revisionNumber.getValue()));
         lastAction.ifPresent(action -> displayChangesForProject());
     }
 
