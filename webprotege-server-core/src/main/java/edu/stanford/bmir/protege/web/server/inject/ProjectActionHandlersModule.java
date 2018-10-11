@@ -49,12 +49,14 @@ import edu.stanford.bmir.protege.web.server.tag.GetProjectTagsActionHandler;
 import edu.stanford.bmir.protege.web.server.tag.SetProjectTagsActionHandler;
 import edu.stanford.bmir.protege.web.server.tag.UpdateEntityTagsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
+import edu.stanford.bmir.protege.web.server.viz.GetEntityDotRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 
 /**
  * Matthew Horridge
@@ -581,6 +583,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideMoveToParentActionHandler(MoveToParentActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityDotRenderingActionHandler(GetEntityDotRenderingActionHandler handler) {
         return handler;
     }
 }

@@ -161,7 +161,4 @@ public class ActionHandlersModule {
     public ApplicationActionHandler providesGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
         return handler;
     }
-
-
-
 }
