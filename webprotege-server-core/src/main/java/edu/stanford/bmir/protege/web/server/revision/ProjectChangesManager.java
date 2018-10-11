@@ -21,9 +21,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -45,19 +45,19 @@ public class ProjectChangesManager {
 
     private final Comparator<OWLOntologyChangeRecord> changeRecordComparator;
 
-    private final WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+    private final Provider<Revision2DiffElementsTranslator> revision2DiffElementsTranslatorProvider;
 
     @Inject
     public ProjectChangesManager(@Nonnull RevisionManager revisionManager,
                                  @Nonnull EntitiesByRevisionCache entitiesByRevisionCache,
                                  @Nonnull RenderingManager browserTextProvider,
                                  @Nonnull Comparator<OWLOntologyChangeRecord> changeRecordComparator,
-                                 @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider) {
+                                 @Nonnull Provider<Revision2DiffElementsTranslator> revision2DiffElementsTranslatorProvider) {
         this.revisionManager = revisionManager;
         this.entitiesByRevisionCache = entitiesByRevisionCache;
-        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
         this.browserTextProvider = browserTextProvider;
         this.changeRecordComparator = changeRecordComparator;
+        this.revision2DiffElementsTranslatorProvider = revision2DiffElementsTranslatorProvider;
     }
 
     private static Map<Optional<IRI>, List<OWLOntologyChangeRecord>> getChangeRecordsBySubject(Revision revision) {
@@ -148,8 +148,8 @@ public class ProjectChangesManager {
             }
         }
 
-        Revision2DiffElementsTranslator translator = new Revision2DiffElementsTranslator(ontologyIRIShortFormProvider);
 
+        Revision2DiffElementsTranslator translator = revision2DiffElementsTranslatorProvider.get();
         List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements = translator.getDiffElementsFromRevision(
                 limitedRecords);
         sortDiff(axiomDiffElements);

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
+import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -143,8 +144,7 @@ public class ProjectChangesManager_IT {
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
-                ontologyIRIShortFormProvider
-        );
+                () -> new Revision2DiffElementsTranslator(ontologyIRIShortFormProvider, rootOntology));
 
 
         createChanges(manager, rootOntology, dataFactory, revisionManager);

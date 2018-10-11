@@ -61,6 +61,10 @@ public class DiffViewImpl extends Composite implements DiffView {
 
     private <S extends Serializable, E extends Serializable> void renderSourceDocumentSpan(StringBuilder sb, S sourceDocument, DiffSourceDocumentRenderer<S> sourceDocumentRenderer) {
         DiffClientBundle.DiffCssResource style = DiffClientBundle.INSTANCE.style();
-        sb.append("<span class=\"" + style.source() + "\">[").append(sourceDocumentRenderer.renderSourceDocument(sourceDocument).asString()).append("]</span>");
+        String str = sourceDocumentRenderer.renderSourceDocument(sourceDocument).asString();
+        if(!str.isEmpty()) {
+            sb.append("<span class=\"").append(style.source()).append("\">[").append(str).append("]</span>");
+        }
+
     }
 }
