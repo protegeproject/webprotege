@@ -51,24 +51,24 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
                     OWLLiteral removedLiteral = (OWLLiteral) removeValue;
                     if (addedLiteral.getLiteral().equals(removedLiteral.getLiteral())) {
                         if (addedLiteral.getLang().isEmpty()) {
-                            return formatter.format("Removed language tag '%s' from %s on %s",
+                            return formatter.format("Removed language tag %s from %s %s annotation",
                                                     LanguageTagFormatter.format(removedLiteral.getLang()),
-                                    added.getProperty(),
-                                    removed.getSubject());
+                                                    removed.getSubject(),
+                                                    added.getProperty());
                         }
                         else {
                             if (removedLiteral.getLang().isEmpty()) {
-                                return formatter.format("Added language tag '%s' to %s on %s",
-                                        LanguageTagFormatter.format(addedLiteral.getLang()),
-                                        added.getProperty(),
-                                        removed.getSubject());
+                                return formatter.format("Added language tag %s to %s %s annotation",
+                                                        LanguageTagFormatter.format(addedLiteral.getLang()),
+                                                        removed.getSubject(),
+                                                        added.getProperty());
                             }
                             else {
-                                return formatter.format("Changed language tag (from '%s' to '%s') in %s to %s",
-                                        LanguageTagFormatter.format(removedLiteral.getLang()),
-                                        LanguageTagFormatter.format(addedLiteral.getLang()),
-                                        added.getProperty(),
-                                        removed.getSubject());
+                                return formatter.format("Changed language tag from %s to %s on %s %s annotation",
+                                                        LanguageTagFormatter.format(removedLiteral.getLang()),
+                                                        LanguageTagFormatter.format(addedLiteral.getLang()),
+                                                        removed.getSubject(),
+                                                        added.getProperty());
                             }
                         }
                     }
@@ -88,7 +88,7 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
 
     private Optional<String> getValueChangedDescription(OWLAnnotationAssertionAxiom added) {
         return formatter.format("Edited %s annotation on %s",
-                added.getProperty(),
-                added.getSubject());
+                                added.getProperty(),
+                                added.getSubject());
     }
 }
