@@ -98,13 +98,9 @@ public class ChangeListViewPresenter {
         PageRequest pageRequest = PageRequest.requestPage(view.getPageNumber());
         GetProjectChangesAction action = new GetProjectChangesAction(projectId, Optional.empty(), pageRequest);
         lastAction = Optional.of(action);
-        SubjectDisplay displaySubject = SubjectDisplay.DISPLAY_SUBJECT;
         dispatchServiceManager.execute(action,
                                        hasBusy,
-                                       result -> fillView(result.getChanges(),
-                                                          displaySubject,
-                                                          revertChangesVisible,
-                                                          downloadVisible));
+                                       result -> fillView(result.getChanges()));
     }
 
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
@@ -116,10 +112,7 @@ public class ChangeListViewPresenter {
         SubjectDisplay doNotDisplaySubject = SubjectDisplay.DO_NOT_DISPLAY_SUBJECT;
         dispatchServiceManager.execute(action,
                                        hasBusy,
-                                       result -> fillView(result.getChanges(),
-                                                          doNotDisplaySubject,
-                                                          revertChangesVisible,
-                                                          downloadVisible));
+                                       result -> fillView(result.getChanges()));
     }
 
     public void setChangesForWatches(ProjectId projectId, UserId userId) {
@@ -129,35 +122,24 @@ public class ChangeListViewPresenter {
         GetWatchedEntityChangesAction action = new GetWatchedEntityChangesAction(projectId, userId);
         SubjectDisplay displaySubject = SubjectDisplay.DISPLAY_SUBJECT;
         dispatchServiceManager.execute(action,
-                                       result -> fillView(result.getChanges(),
-                                                          displaySubject,
-                                                          revertChangesVisible,
-                                                          downloadVisible));
+                                       result -> fillView(result.getChanges()));
     }
 
     public void clear() {
         view.clear();
     }
 
-    private void fillView(Page<ProjectChange> changes,
-                          SubjectDisplay subjectDisplay,
-                          boolean revertChangesVisible,
-                          boolean downloadVisible) {
+    private void fillView(Page<ProjectChange> changes) {
         view.clear();
         permissionChecker.hasPermission(VIEW_CHANGES,
                                         viewChanges -> {
                                             if (viewChanges) {
-                                                insertChangesIntoView(changes,
-                                                                      subjectDisplay,
-                                                                      revertChangesVisible,
-                                                                      downloadVisible);
+                                                insertChangesIntoView(changes);
                                             }
                                         });
     }
 
-    private void insertChangesIntoView(Page<ProjectChange> changes,
-                                       SubjectDisplay subjectDisplay,
-                                       boolean revertChangesVisible, boolean downloadVisible) {
+    private void insertChangesIntoView(Page<ProjectChange> changes) {
         List<ProjectChange> projectChanges = new ArrayList<>(changes.getPageElements());
         Collections.sort(projectChanges, Ordering.compound(Collections.singletonList(
                 Ordering.from(new ProjectChangeTimestampComparator()).reverse())));
@@ -173,11 +155,6 @@ public class ChangeListViewPresenter {
             }
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();
-            if (subjectDisplay == SubjectDisplay.DISPLAY_SUBJECT) {
-//                List<OWLEntityData> subjects = new ArrayList<>(projectChange.getSubjects());
-//                Collections.sort(subjects, OWLEntityData::compareToIgnoreCase);
-//                view.setSubjects(subjects);
-            }
             view.setRevision(projectChange.getRevisionNumber());
             view.setAuthor(projectChange.getAuthor());
             view.setHighLevelDescription(projectChange.getSummary());
@@ -221,7 +198,6 @@ public class ChangeListViewPresenter {
     }
 
     private void revertChanges(ProjectChange projectChange) {
-        GWT.log("Reverting revision " + projectChange.getRevisionNumber().getValue());
         projectId.ifPresent(theProjectId -> {
             final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
             dispatchServiceManager.execute(new RevertRevisionAction(theProjectId, revisionNumber),
