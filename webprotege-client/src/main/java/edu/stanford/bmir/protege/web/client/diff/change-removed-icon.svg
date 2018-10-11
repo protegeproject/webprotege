@@ -1,0 +1,7 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+    <circle cx="8" cy="8" r="6" fill="none" stroke="#000000" stroke-width="1.5"/>
+    <line x1="5" y1="8" x2="11" y2="8" stroke="#000000" stroke-linecap="round" stroke-width="1.5"/>
+</svg>

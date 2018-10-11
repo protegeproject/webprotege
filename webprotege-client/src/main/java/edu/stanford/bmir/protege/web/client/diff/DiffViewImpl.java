@@ -7,6 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.WebProtege;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
 
@@ -56,7 +58,7 @@ public class DiffViewImpl extends Composite implements DiffView {
     private void renderBulletSpan(StringBuilder sb, DiffOperation op) {
         DiffClientBundle.DiffCssResource style = DiffClientBundle.INSTANCE.style();
         String bulletStyle = op == DiffOperation.ADD ? style.addBullet() : style.removeBullet();
-        sb.append("<span class=\"").append(bulletStyle).append(" \">").append(op.getSymbol()).append("</span>");
+        sb.append("<div class=\"").append(bulletStyle).append(" \">").append("</div>");
     }
 
     private <S extends Serializable, E extends Serializable> void renderSourceDocumentSpan(StringBuilder sb, S sourceDocument, DiffSourceDocumentRenderer<S> sourceDocumentRenderer) {

@@ -1,8 +1,11 @@
+@url changeAddedUrl changeAddedIcon;
+@url changeRemovedUrl changeRemovedIcon;
+
 .line {
     border-bottom: 1px solid literal("var(--separator--color)");
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .add {
@@ -11,11 +14,14 @@
 }
 
 .addBullet {
-    color: #00ba00;
-    font-weight: bold;
-    padding-right: 10px;
-    min-width: 10px;
-    display: inline-block;
+    mask-image: changeAddedUrl;
+    -webkit-mask-image: changeAddedUrl;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    background-color: #00ba00;
     flex-grow: 0;
     flex-shrink: 0;
 }
@@ -26,11 +32,14 @@
 }
 
 .removeBullet {
-    color: #d70000;
-    font-weight: bold;
-    padding-right: 10px;
-    min-width: 10px;
-    display: inline-block;
+    mask-image: changeRemovedUrl;
+    -webkit-mask-image: changeRemovedUrl;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    background-color: #d70000;
     flex-grow: 0;
     flex-shrink: 0;
 }

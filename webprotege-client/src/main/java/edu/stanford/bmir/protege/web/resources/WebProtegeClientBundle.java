@@ -258,6 +258,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgChangesIcon();
 
+    @Source("glyphs.css")
+    Glyphs glyphs();
 
 
     interface WebProtegeCss extends CssResource {
@@ -739,5 +741,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-entity-node__display-name__secondary-language")
         String wpEntityNode__secondaryLanguage();
+    }
+
+    interface Glyphs extends CssResource {
+
     }
 }
