@@ -142,8 +142,9 @@ public class DotRenderer {
         Multimap<String, Edge> edgesByDescriptor = graph.getEdgesByDescriptor();
         PrintWriter pw = new PrintWriter(writer);
         pw.println("digraph {");
-        pw.println("rankdir=BT; concentrate=true;");
-        pw.println("node [shape=rect; fontsize=10; shape=box margin=0 width=0 height=0]; edge [fontsize=9;]");
+        pw.println("layout=${layout}; rankdir=${rankdir}; ranksep=${ranksep} nodesep=${nodesep}; concentrate=${concentrate}; splines=${splines};");
+        pw.println("node [style=${node.style} shape=${node.shape}; fontsize=9; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
+        pw.println("edge [fontsize=9; arrowsize=${edge.arrowsize};];");
         descriptorsByTailNode.forEach((tail, descriptor) -> {
             String block = edgesByDescriptor.get(descriptor)
                     .stream()
@@ -161,12 +162,12 @@ public class DotRenderer {
         String l = edge.getLabel();
         int outDegree = graph.getEdgesByTailNode().size();
         if(edge.isIsA()) {
-            return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"#a0a0a0\";]",
+            return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"${edge.isa.color}\";]",
                                  edge.getTail().getBrowserText(),
                                  edge.getHead().getBrowserText());
         }
         else {
-            return String.format("\"%s\" -> \"%s\" [color=\"#4784d1\"; label=\"%s\" fontcolor=\"#4784d1\";]",
+            return String.format("\"%s\" -> \"%s\" [color=\"${edge.rel.color}\"; label=\"%s\" fontcolor=\"${edge.rel.color}\";]",
                                  edge.getTail().getBrowserText(),
                                  edge.getHead().getBrowserText(),
                                  l);

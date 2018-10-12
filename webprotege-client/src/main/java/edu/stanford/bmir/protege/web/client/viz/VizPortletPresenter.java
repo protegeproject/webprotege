@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -54,10 +55,31 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
         entityData.ifPresent(entity -> {
             dispatch.execute(new GetEntityDotRenderingAction(getProjectId(), entity),
                              busy -> portletUi.ifPresent(ui -> ui.setBusy(busy)),
-                             result -> {
-                Viz viz = new Viz();
-                viz.render(result.getRendering(), view::setRendering);
-            });
+                             this::handleRendering);
         });
+    }
+
+    private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
+        Viz viz = new Viz();
+        String rendering = replaceVariables(result.getRendering());
+        viz.render(rendering, view::setRendering);
+    }
+
+    private String replaceVariables(@Nonnull String rendering) {
+        return rendering
+                .replace("${layout}", "dot")
+                .replace("${rankdir}", "BT")
+                .replace("${concentrate}", "true")
+                .replace("${splines}", "true")
+                .replace("${ranksep}", "0.75")
+                .replace("${nodesep}", "0.3")
+                .replace("${node.style}", "rounded")
+                .replace("${node.shape}", "box")
+                .replace("${node.color}", "#d0d0d0")
+                .replace("${node.margin}", "0.03")
+                .replace("${node.fontcolor}", "#505050")
+                .replace("${edge.rel.color}", "#4784d1")
+                .replace("${edge.isa.color}", "#c0c0c0")
+                .replace("${edge.arrowsize}", "0.8");
     }
 }

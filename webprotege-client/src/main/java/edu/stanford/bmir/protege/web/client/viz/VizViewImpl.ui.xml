@@ -9,19 +9,17 @@
             font-size: 8px;
         }
         .edge text {
-            /*transform: translateX(-10px);*/
         }
         .edge path {
-            /*stroke: literal("var(--primary--color)");*/
+            stroke-width: 0.5;
         }
         .edge polygon {
-            /*stroke: literal("var(--primary--color)");*/
             stroke-linejoin: round;
             stroke-linecap: round;
-            /*fill: none;*/
+            stroke-width: 1;
         }
         .node polygon {
-            stroke: #a0a0a0;
+            stroke-width: 0.6;
             stroke-linejoin: round;
         }
         .container {
