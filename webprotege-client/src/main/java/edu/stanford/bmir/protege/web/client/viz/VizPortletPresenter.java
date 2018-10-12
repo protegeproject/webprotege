@@ -67,6 +67,7 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private String replaceVariables(@Nonnull String rendering) {
         return rendering
+                .replace("${title}", "Entity Graph")
                 .replace("${layout}", "dot")
                 .replace("${rankdir}", "BT")
                 .replace("${concentrate}", "true")

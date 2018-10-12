@@ -36,7 +36,7 @@ public class VizViewImpl extends Composite implements VizView {
     public VizViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
-    
+
     @Override
     public void setRendering(@Nonnull String rendering) {
         imageContainer.getElement().setInnerHTML(checkNotNull(rendering));

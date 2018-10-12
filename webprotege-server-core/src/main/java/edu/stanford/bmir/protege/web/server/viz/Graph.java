@@ -7,8 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
-import javax.annotation.Nonnull;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -22,13 +21,18 @@ public abstract class Graph {
         ImmutableSetMultimap.Builder<OWLEntityData, String> byTail = ImmutableSetMultimap.builder();
         ImmutableSetMultimap.Builder<OWLEntityData, Edge> byTailEdge = ImmutableSetMultimap.builder();
         ImmutableMultimap.Builder<String, Edge> byDescriptor = ImmutableMultimap.builder();
+        ImmutableSet.Builder<OWLEntityData> nodes = ImmutableSet.builder();
         for(Edge edge : edges) {
+            nodes.add(edge.getTail());
+            nodes.add(edge.getHead());
             byTailEdge.put(edge.getTail(), edge);
             byTail.put(edge.getTail(), edge.getRelationshipDescriptor());
             byDescriptor.put(edge.getRelationshipDescriptor(), edge);
         }
-         return new AutoValue_Graph(edges, byTailEdge.build(), byTail.build(), byDescriptor.build());
+         return new AutoValue_Graph(nodes.build(), edges, byTailEdge.build(), byTail.build(), byDescriptor.build());
     }
+
+    public abstract ImmutableSet<OWLEntityData> getNodes();
 
     public abstract ImmutableSet<Edge> getEdges();
 
@@ -37,4 +41,5 @@ public abstract class Graph {
     public abstract ImmutableMultimap<OWLEntityData, String> getDescriptorsByTailNode();
 
     public abstract ImmutableMultimap<String, Edge> getEdgesByDescriptor();
+
 }

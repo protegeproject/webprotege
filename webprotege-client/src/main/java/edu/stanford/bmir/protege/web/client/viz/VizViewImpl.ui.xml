@@ -19,6 +19,9 @@
             font-family: inherit;
             font-size: 8px;
         }
+        .node a {
+            text-decoration: none;
+        }
         .edge text {
         }
         .edge path {

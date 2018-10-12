@@ -5,12 +5,11 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
-import com.google.common.graph.EndpointPair;
-import com.google.common.graph.MutableValueGraph;
+import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.protege.gwt.graphtree.shared.graph.GraphEdge;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
@@ -19,9 +18,7 @@ import javax.inject.Inject;
 import java.io.*;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -34,6 +31,10 @@ import static java.util.stream.Collectors.joining;
  */
 public class DotRenderer {
 
+
+    @Nonnull
+    private final ProjectId projectId;
+
     @Nonnull
     private final OWLOntology ontology;
 
@@ -43,14 +44,19 @@ public class DotRenderer {
     @Nonnull
     private final OWLEntity root;
 
+    @Nonnull
+    private final PlaceUrl placeUrl;
+
     @AutoFactory
     @Inject
-    public DotRenderer(@Provided @Nonnull OWLOntology ontology,
+    public DotRenderer(@Provided @Nonnull ProjectId projectId, @Provided @Nonnull OWLOntology ontology,
                        @Provided @Nonnull RenderingManager renderingManager,
-                       @Nonnull OWLEntity root) {
+                       @Nonnull OWLEntity root, @Provided @Nonnull PlaceUrl placeUrl) {
+        this.projectId = checkNotNull(projectId);
         this.ontology = checkNotNull(ontology);
         this.renderingManager = checkNotNull(renderingManager);
         this.root = checkNotNull(root);
+        this.placeUrl = checkNotNull(placeUrl);
     }
 
     private Graph createGraph() {
@@ -141,10 +147,15 @@ public class DotRenderer {
         Multimap<OWLEntityData, String> descriptorsByTailNode = graph.getDescriptorsByTailNode();
         Multimap<String, Edge> edgesByDescriptor = graph.getEdgesByDescriptor();
         PrintWriter pw = new PrintWriter(writer);
-        pw.println("digraph {");
+        pw.println("digraph \"${title}\" {");
         pw.println("layout=${layout}; rankdir=${rankdir}; ranksep=${ranksep} nodesep=${nodesep}; concentrate=${concentrate}; splines=${splines};");
         pw.println("node [style=${node.style} shape=${node.shape}; fontsize=9; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
         pw.println("edge [fontsize=9; arrowsize=${edge.arrowsize};];");
+        graph.getNodes().forEach(node -> {
+            pw.printf("\"%s\" [href=\"%s\"]\n",
+                      node.getBrowserText(),
+                      placeUrl.getEntityUrl(projectId, node.getEntity()));
+        });
         descriptorsByTailNode.forEach((tail, descriptor) -> {
             String block = edgesByDescriptor.get(descriptor)
                     .stream()
