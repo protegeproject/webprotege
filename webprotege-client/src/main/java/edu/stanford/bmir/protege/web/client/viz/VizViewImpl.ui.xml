@@ -4,6 +4,17 @@
     <ui:style>
         @external .node;
         @external .edge;
+        .main {
+            position: relative;
+        }
+        .focusPanel {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+        }
         .node text, .edge text {
             font-family: inherit;
             font-size: 8px;
@@ -23,10 +34,11 @@
             stroke-linejoin: round;
         }
         .container {
-            touch-action: pinch-zoom;
         }
     </ui:style>
-    <g:HTMLPanel>
-        <g:HTML ui:field="imageContainer" addStyleNames="{style.container}"/>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
+            <g:HTML ui:field="imageContainer" addStyleNames="{style.container}"/>
+        </g:FocusPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
