@@ -2,12 +2,15 @@ package edu.stanford.bmir.protege.web.server.viz;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.MutableValueGraph;
-import com.google.common.graph.ValueGraphBuilder;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphEdge;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
@@ -15,12 +18,14 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.*;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.joining;
 
 /**
  * Matthew Horridge
@@ -48,17 +53,13 @@ public class DotRenderer {
         this.root = checkNotNull(root);
     }
 
-    private MutableValueGraph<OWLEntityData, String> createGraph() {
-        MutableValueGraph<OWLEntityData, String> g = ValueGraphBuilder
-                .directed()
-                .allowsSelfLoops(true)
-                .build();
-
-        createGraph(root, g, new HashSet<>());
-        return g;
+    private Graph createGraph() {
+        LinkedHashSet<Edge> edges = new LinkedHashSet<>();
+        createGraph(root, edges, new HashSet<>());
+        return Graph.create(ImmutableSet.copyOf(edges));
     }
 
-    private void createGraph(@Nonnull OWLEntity entity, MutableValueGraph<OWLEntityData, String> g, Set<OWLEntity> processed) {
+    private void createGraph(@Nonnull OWLEntity entity, Set<Edge> g, Set<OWLEntity> processed) {
         if(processed.contains(entity)) {
             return;
         }
@@ -74,19 +75,21 @@ public class DotRenderer {
                         .flatMap(ax -> ax.asOWLSubClassOfAxioms().stream());
         Streams.concat(subClsAx, defs)
                 .filter(ax -> !ax.getSubClass().isAnonymous())
-                .forEach(ax -> addEdge(g, processed, cls, ax));
+                .forEach(ax -> addEdge(cls, g, processed, ax));
     }
 
-    private void addEdge(MutableValueGraph<OWLEntityData, String> g, Set<OWLEntity> processed, OWLClass cls, OWLSubClassOfAxiom ax) {
+    private void addEdge(OWLClass subCls, Set<Edge> edges, Set<OWLEntity> processed, OWLSubClassOfAxiom ax) {
+        OWLEntityData subClsData = renderingManager.getRendering(subCls);
         ax.getSuperClass().asConjunctSet()
                 .stream()
                 .filter(c -> !c.isOWLThing())
                 .forEach(superClass -> {
                     if(!superClass.isAnonymous()) {
                         OWLClass superCls = superClass.asOWLClass();
-                        g.putEdgeValue(toEntity(cls), toEntity(superCls), "SubClassOf");
-
-                        createGraph(superCls, g, processed);
+                        OWLEntityData superClsData = renderingManager.getRendering(superCls);
+                        Edge edge = IsAEdge.get(subClsData, superClsData);
+                        edges.add(edge);
+                        createGraph(superCls, edges, processed);
                     }
                     else {
                         if(superClass instanceof OWLObjectSomeValuesFrom) {
@@ -94,9 +97,12 @@ public class DotRenderer {
                             OWLClassExpression filler = svf.getFiller();
                             if(!filler.isAnonymous()) {
                                 OWLClass fillerCls = filler.asOWLClass();
+                                OWLClassData fillerClsData = renderingManager.getRendering(fillerCls);
                                 OWLObjectProperty prop = svf.getProperty().asOWLObjectProperty();
-                                g.putEdgeValue(toEntity(cls), toEntity(fillerCls), getRendering(prop));
-                                createGraph(fillerCls, g, processed);
+                                OWLEntityData propData = renderingManager.getRendering(prop);
+                                Edge edge = RelationshipEdge.get(subClsData, fillerClsData, propData);
+                                edges.add(edge);
+                                createGraph(fillerCls, edges, processed);
                             }
                         }
                     }
@@ -131,37 +137,38 @@ public class DotRenderer {
     }
 
     public void render(Writer writer) {
-        MutableValueGraph<OWLEntityData, String> g = createGraph();
+        Graph graph = createGraph();
+        Multimap<OWLEntityData, String> descriptorsByTailNode = graph.getDescriptorsByTailNode();
+        Multimap<String, Edge> edgesByDescriptor = graph.getEdgesByDescriptor();
         PrintWriter pw = new PrintWriter(writer);
         pw.println("digraph {");
         pw.println("rankdir=BT; concentrate=true;");
         pw.println("node [shape=rect; fontsize=11; shape=box margin=0 width=0 height=0]; edge [fontsize=9;]");
-        String edges = g.edges().stream()
-                .map(p -> toEdgeRendering(g, p))
-                .collect(Collectors.joining(";\n")) + ";";
-        pw.println(edges);
+        descriptorsByTailNode.forEach((tail, descriptor) -> {
+            String block = edgesByDescriptor.get(descriptor)
+                    .stream()
+                    .filter(e -> e.getTail().equals(tail))
+                    .map(e -> toEdgeRendering(graph, e))
+                    .collect(joining(";\n"));
+            pw.print(block);
+            pw.println(";");
+        });
         pw.print("}");
         pw.flush();
     }
 
-    private String toEdgeRendering(MutableValueGraph<OWLEntityData, String> g,
-                                   EndpointPair<OWLEntityData> p) {
-
-        Optional<String> label = g.edgeValue(p.source(), p.target());
-        if(label.isPresent()) {
-            String l = label.get();
-            String edge = "\"" + p.source().getBrowserText() + "\" -> \"" + p.target().getBrowserText() + "\"";
-            int count = g.incidentEdges(p.source()).size();
-            double minLen = count > 3 ? 1 + count * 0.3 : 1;
-            if(l.equals("SubClassOf")) {
-                return String.format("%s [fillcolor=none; color=\"#a0a0a0\"; minlen=%.3f]", edge, minLen);
-            }
-            else {
-                return String.format("%s [color=\"#4784d1\"; label=\"%s\" labeldistance=2 fontcolor=\"#4784d1\"; minlen=%.3f]", edge, l, minLen);
-            }
+    private String toEdgeRendering(Graph graph, Edge edge) {
+        String l = edge.getLabel();
+        if(edge.isIsA()) {
+            return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"#a0a0a0\";]",
+                                 edge.getTail().getBrowserText(),
+                                 edge.getHead().getBrowserText());
         }
         else {
-            return "";
+            return String.format("\"%s\" -> \"%s\" [color=\"#4784d1\"; label=\"%s\" labeldistance=2 fontcolor=\"#4784d1\";]",
+                                 edge.getTail().getBrowserText(),
+                                 edge.getHead().getBrowserText(),
+                                 l);
         }
     }
 }

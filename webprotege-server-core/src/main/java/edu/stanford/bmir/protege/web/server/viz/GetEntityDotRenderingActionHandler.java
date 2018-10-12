@@ -43,6 +43,8 @@ public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHan
         DotRenderer dotRenderer = rendererFactory.create(action.getEntity());
         StringWriter writer = new StringWriter();
         dotRenderer.render(writer);
+        System.out.println("Graph------------------------");
+        System.out.println(writer.toString());
         return GetEntityDotRenderingResult.get(writer.toString());
     }
 }
