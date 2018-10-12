@@ -34,6 +34,8 @@ public class VizPresenter {
     @Nonnull
     private HasBusy hasBusy = busy -> {};
 
+    private String currentRendering = "";
+
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
                         @Nonnull DispatchServiceManager dispatch,
@@ -49,6 +51,11 @@ public class VizPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
         container.setWidget(view);
+        view.setSettingsChangedHandler(this::handleSettingsChanged);
+    }
+
+    private void handleSettingsChanged() {
+        displayCurrentRendering();
     }
 
     protected void displayEntity(@Nonnull OWLEntity entity) {
@@ -60,8 +67,16 @@ public class VizPresenter {
     }
 
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
+        this.currentRendering = result.getRendering();
+        displayCurrentRendering();
+    }
+
+    private void displayCurrentRendering() {
+        if(currentRendering.isEmpty()) {
+            return;
+        }
         Viz viz = new Viz();
-        String rendering = replaceVariables(result.getRendering());
+        String rendering = replaceVariables(currentRendering);
         viz.render(rendering, view::setRendering);
     }
 
@@ -72,7 +87,7 @@ public class VizPresenter {
                 .replace("${rankdir}", "BT")
                 .replace("${concentrate}", "true")
                 .replace("${splines}", "true")
-                .replace("${ranksep}", "0.75")
+                .replace("${ranksep}", Double.toString(view.getRankSpacing()))
                 .replace("${nodesep}", "0.3")
                 .replace("${node.style}", "rounded")
                 .replace("${node.shape}", "box")

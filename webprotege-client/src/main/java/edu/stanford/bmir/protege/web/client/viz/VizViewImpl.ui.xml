@@ -1,47 +1,90 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         @external .node;
         @external .edge;
         .main {
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
+
         .focusPanel {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
             overflow: auto;
         }
+
         .node text, .edge text {
             font-family: inherit;
-            font-size: 8px;
+            font-size:   8px;
         }
+
         .node a {
             text-decoration: none;
         }
+
         .edge text {
         }
+
         .edge path {
             stroke-width: 0.5;
         }
+
         .edge polygon {
             stroke-linejoin: round;
-            stroke-linecap: round;
-            stroke-width: 0.5;
+            stroke-linecap:  round;
+            stroke-width:    0.5;
         }
+
         .node polygon {
-            stroke-width: 0.6;
+            stroke-width:    0.6;
             stroke-linejoin: round;
         }
+
         .container {
+
+        }
+
+        .settingsBar {
+            flex-grow: 0;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: row;
+            padding: 2px;
+            margin-top: 5px;
+        }
+        .settingsBarLabel {
+            margin-right: 5px;
+        }
+        .settingsBarFormGroup {
+            display: flex;
+            flex-direction: row;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
+
         <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
             <g:HTML ui:field="imageContainer" addStyleNames="{style.container}"/>
         </g:FocusPanel>
+
+        <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
+            <g:HTMLPanel addStyleNames="{style.settingsBarFormGroup}">
+                <g:Label text="Spacing" addStyleNames="{wp.style.formLabel} {style.settingsBarLabel}"/>
+                <g:ListBox ui:field="ranksepListBox">
+                    <g:item value="0.25">0.25x</g:item>
+                    <g:item value="0.50">0.5x</g:item>
+                    <g:item value="0.75">0.75x</g:item>
+                    <g:item value="1.00">1x</g:item>
+                    <g:item value="1.25">1.25x</g:item>
+                    <g:item value="1.50">1.5x</g:item>
+                    <g:item value="1.75">1.75x</g:item>
+                    <g:item value="2.00">2x</g:item>
+                </g:ListBox>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>
