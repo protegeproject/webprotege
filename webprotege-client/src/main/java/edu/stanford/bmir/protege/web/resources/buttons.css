@@ -20,6 +20,7 @@
 @url createThreadIconUrl svgCreateThread;
 @url editorIconUrl svgEditorIcon;
 @url changesIconUrl svgChangesIcon;
+@url vizIconUrl vizIcon;
 
 .wp-btn {
     border: none;
@@ -400,4 +401,9 @@
 
 .wp-btn-g--container:hover {
     background-color: literal("var(--view-toolbar--hover--background-color)");
+}
+
+.wp-btn-g--viz {
+    mask-image: vizIconUrl;
+    -webkit-mask-image: vizIconUrl;
 }

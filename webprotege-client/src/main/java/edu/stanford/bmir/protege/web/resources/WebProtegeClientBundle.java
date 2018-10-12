@@ -258,6 +258,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgChangesIcon();
 
+    @Source("viz-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource vizIcon();
+
     @Source("glyphs.css")
     Glyphs glyphs();
 
@@ -633,6 +637,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--changes")
         String changes();
+
+        @ClassName("wp-btn-g--viz")
+        String viz();
 
         @ClassName("wp-btn-g--container")
         String btnGlyphContainer();

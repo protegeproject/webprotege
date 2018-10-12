@@ -45,6 +45,8 @@ import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
+import edu.stanford.bmir.protege.web.client.viz.VizView;
+import edu.stanford.bmir.protege.web.client.viz.VizViewImpl;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -374,6 +376,11 @@ public class ClientProjectModule {
     @Provides
     CommitMessageInputView provideCommitMessageInputView(CommitMessageInputViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    VizView provideVizView(VizViewImpl view) {
+        return view;
     }
 }
 

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,6 +34,7 @@ public class VizViewImpl extends Composite implements VizView {
     @UiField
     FocusPanel focusPanel;
 
+    @Inject
     public VizViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
@@ -40,7 +42,5 @@ public class VizViewImpl extends Composite implements VizView {
     @Override
     public void setRendering(@Nonnull String rendering) {
         imageContainer.getElement().setInnerHTML(checkNotNull(rendering));
-
-
     }
 }

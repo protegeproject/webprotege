@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
+import edu.stanford.bmir.protege.web.client.viz.VizPanePresenter;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -55,14 +56,18 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull EditorPortletView view,
             @Nonnull TagListPresenter tagListPresenter,
             @Nonnull EditorPaneSimpleEditorPresenter editorPresenter,
-            DisplayNameRenderer displayNameRenderer,
-            @Nonnull EditorPaneEntityChangesPresenter changesPresenter, LoggedInUserProjectPermissionChecker permissionChecker, Provider<ForbiddenView> forbiddenViewProvider) {
+            @Nonnull DisplayNameRenderer displayNameRenderer,
+            @Nonnull EditorPaneEntityChangesPresenter changesPresenter,
+            @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+            @Nonnull VizPanePresenter vizPresenter,
+            @Nonnull Provider<ForbiddenView> forbiddenViewProvider) {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
         this.permissionChecker = permissionChecker;
         panePresenters = ImmutableList.of(
                 checkNotNull(editorPresenter),
+                checkNotNull(vizPresenter),
                 checkNotNull(changesPresenter)
         );
         displayedTypes.addAll(Arrays.asList(
