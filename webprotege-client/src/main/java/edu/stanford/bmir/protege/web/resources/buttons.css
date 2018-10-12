@@ -21,6 +21,7 @@
 @url editorIconUrl svgEditorIcon;
 @url changesIconUrl svgChangesIcon;
 @url vizIconUrl vizIcon;
+@url downloadIconUrl downloadIcon;
 
 .wp-btn {
     border: none;
@@ -406,4 +407,10 @@
 .wp-btn-g--viz {
     mask-image: vizIconUrl;
     -webkit-mask-image: vizIconUrl;
+}
+
+.wp-btn-g--download {
+    mask-image: downloadIconUrl;
+    -webkit-mask-image: downloadIconUrl;
+
 }

@@ -262,6 +262,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource vizIcon();
 
+    @Source("download.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource downloadIcon();
+
     @Source("glyphs.css")
     Glyphs glyphs();
 
@@ -643,6 +647,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--container")
         String btnGlyphContainer();
+
+        @ClassName("wp-btn-g--download")
+        String download();
     }
 
     interface SettingsPageCss extends CssResource {
