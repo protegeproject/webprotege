@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -70,10 +72,43 @@ public class DotRenderer {
             return;
         }
         processed.add(entity);
-        if(!entity.isOWLClass()) {
-            return;
+        if(entity.isOWLClass()) {
+            OWLClass cls = entity.asOWLClass();
+            renderClass(g, processed, cls);
         }
-        OWLClass cls = entity.asOWLClass();
+        else if(entity.isOWLNamedIndividual()) {
+            OWLNamedIndividual ind = entity.asOWLNamedIndividual();
+            renderIndividual(g, processed, ind);
+        }
+    }
+
+    private void renderIndividual(Set<Edge> g, Set<OWLEntity> processed, OWLNamedIndividual individual) {
+        OWLNamedIndividualData indvidualData = renderingManager.getRendering(individual);
+        ontology.getClassAssertionAxioms(individual)
+                .stream()
+                .filter(ax -> !ax.getClassExpression().isOWLThing())
+                .filter(ax -> !ax.getClassExpression().isAnonymous())
+                .forEach(ax -> {
+                    OWLClass cls = ax.getClassExpression().asOWLClass();
+                    OWLClassData clsData = renderingManager.getRendering(cls);
+                    g.add(IsAEdge.get(indvidualData, clsData));
+                    renderClass(g, processed, cls);
+                });
+        ontology.getObjectPropertyAssertionAxioms(individual)
+                .stream()
+                .filter(ax -> ax.getObject().isNamed())
+                .filter(ax -> !ax.getProperty().isAnonymous())
+                .forEach(ax -> {
+                    OWLNamedIndividual object = ax.getObject().asOWLNamedIndividual();
+                    OWLNamedIndividualData objectData = renderingManager.getRendering(object);
+                    OWLObjectPropertyData propertyData = renderingManager.getRendering(ax.getProperty().asOWLObjectProperty());
+                    g.add(RelationshipEdge.get(indvidualData, objectData, propertyData));
+                    renderIndividual(g, processed, object);
+                });
+
+    }
+
+    private void renderClass(Set<Edge> g, Set<OWLEntity> processed, OWLClass cls) {
         Stream<OWLSubClassOfAxiom> subClsAx = ontology.getSubClassAxiomsForSubClass(cls).stream();
         Stream<OWLSubClassOfAxiom> defs =
                 ontology.getEquivalentClassesAxioms(cls)
@@ -152,9 +187,11 @@ public class DotRenderer {
         pw.println("node [style=${node.style} shape=${node.shape}; fontsize=9; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
         pw.println("edge [fontsize=9; arrowsize=${edge.arrowsize};];");
         graph.getNodes().forEach(node -> {
-            pw.printf("\"%s\" [href=\"%s\"]\n",
+            String entityUrl = placeUrl.getEntityUrl(projectId, node.getEntity());
+            pw.printf("\"%s\" [href=\"%s\"; color=\"%s\"]\n",
                       node.getBrowserText(),
-                      placeUrl.getEntityUrl(projectId, node.getEntity()));
+                      entityUrl,
+                      node.getEntity().isOWLClass() ? "${node.color}" : "${node.ind.color}");
         });
         descriptorsByTailNode.forEach((tail, descriptor) -> {
             String block = edgesByDescriptor.get(descriptor)

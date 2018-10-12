@@ -77,6 +77,7 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
                 .replace("${node.style}", "rounded")
                 .replace("${node.shape}", "box")
                 .replace("${node.color}", "#d0d0d0")
+                .replace("${node.ind.color}", "#e0b0ff")
                 .replace("${node.margin}", "0.03")
                 .replace("${node.fontcolor}", "#505050")
                 .replace("${edge.rel.color}", "#4784d1")
