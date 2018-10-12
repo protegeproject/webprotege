@@ -143,7 +143,7 @@ public class DotRenderer {
         PrintWriter pw = new PrintWriter(writer);
         pw.println("digraph {");
         pw.println("rankdir=BT; concentrate=true;");
-        pw.println("node [shape=rect; fontsize=11; shape=box margin=0 width=0 height=0]; edge [fontsize=9;]");
+        pw.println("node [shape=rect; fontsize=10; shape=box margin=0 width=0 height=0]; edge [fontsize=9;]");
         descriptorsByTailNode.forEach((tail, descriptor) -> {
             String block = edgesByDescriptor.get(descriptor)
                     .stream()
@@ -159,13 +159,14 @@ public class DotRenderer {
 
     private String toEdgeRendering(Graph graph, Edge edge) {
         String l = edge.getLabel();
+        int outDegree = graph.getEdgesByTailNode().size();
         if(edge.isIsA()) {
             return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"#a0a0a0\";]",
                                  edge.getTail().getBrowserText(),
                                  edge.getHead().getBrowserText());
         }
         else {
-            return String.format("\"%s\" -> \"%s\" [color=\"#4784d1\"; label=\"%s\" labeldistance=2 fontcolor=\"#4784d1\";]",
+            return String.format("\"%s\" -> \"%s\" [color=\"#4784d1\"; label=\"%s\" fontcolor=\"#4784d1\";]",
                                  edge.getTail().getBrowserText(),
                                  edge.getHead().getBrowserText(),
                                  l);

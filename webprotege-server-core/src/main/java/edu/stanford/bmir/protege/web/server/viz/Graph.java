@@ -20,15 +20,19 @@ public abstract class Graph {
 
     public static Graph create(ImmutableSet<Edge> edges) {
         ImmutableSetMultimap.Builder<OWLEntityData, String> byTail = ImmutableSetMultimap.builder();
+        ImmutableSetMultimap.Builder<OWLEntityData, Edge> byTailEdge = ImmutableSetMultimap.builder();
         ImmutableMultimap.Builder<String, Edge> byDescriptor = ImmutableMultimap.builder();
         for(Edge edge : edges) {
+            byTailEdge.put(edge.getTail(), edge);
             byTail.put(edge.getTail(), edge.getRelationshipDescriptor());
             byDescriptor.put(edge.getRelationshipDescriptor(), edge);
         }
-         return new AutoValue_Graph(edges, byTail.build(), byDescriptor.build());
+         return new AutoValue_Graph(edges, byTailEdge.build(), byTail.build(), byDescriptor.build());
     }
 
     public abstract ImmutableSet<Edge> getEdges();
+
+    public abstract ImmutableMultimap<OWLEntityData, Edge> getEdgesByTailNode();
 
     public abstract ImmutableMultimap<OWLEntityData, String> getDescriptorsByTailNode();
 
