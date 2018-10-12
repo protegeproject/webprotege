@@ -183,9 +183,10 @@ public class DotRenderer {
         Multimap<String, Edge> edgesByDescriptor = graph.getEdgesByDescriptor();
         PrintWriter pw = new PrintWriter(writer);
         pw.println("digraph \"${title}\" {");
+        pw.println("graph [fontname =\"${fontname}\"];");
         pw.println("layout=${layout}; rankdir=${rankdir}; ranksep=${ranksep} nodesep=${nodesep}; concentrate=${concentrate}; splines=${splines};");
-        pw.println("node [style=${node.style} shape=${node.shape}; fontsize=9; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
-        pw.println("edge [fontsize=9; arrowsize=${edge.arrowsize};];");
+        pw.println("node [style=${node.style} fontname=\"${fontname}\" shape=${node.shape}; fontsize=9; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
+        pw.println("edge [fontsize=9; fontname=\"${fontname}\" arrowsize=${edge.arrowsize};];");
         graph.getNodes().forEach(node -> {
             String entityUrl = placeUrl.getEntityUrl(projectId, node.getEntity());
             pw.printf("\"%s\" [href=\"%s\"; color=\"%s\"]\n",

@@ -75,6 +75,6 @@ public class VizViewImpl extends Composite implements VizView {
     public void downloadButtonClick(ClickEvent event) {
         GWT.log(imageContainer.getElement().getInnerHTML());
         DownloadSvg saver = new DownloadSvg();
-        saver.save(imageContainer.getElement(), "entity-graph.png");
+        saver.save(imageContainer.getElement(), "entity-graph");
     }
 }

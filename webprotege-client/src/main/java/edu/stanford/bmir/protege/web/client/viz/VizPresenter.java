@@ -89,6 +89,7 @@ public class VizPresenter {
                 .replace("${splines}", "true")
                 .replace("${ranksep}", Double.toString(view.getRankSpacing()))
                 .replace("${nodesep}", "0.3")
+                .replace("${fontname}", "Helvetica Neue")
                 .replace("${node.style}", "rounded")
                 .replace("${node.shape}", "box")
                 .replace("${node.color}", "#d0d0d0")

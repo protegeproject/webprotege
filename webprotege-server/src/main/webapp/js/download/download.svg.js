@@ -8,5 +8,7 @@ function downloadSvg(element, filename) {
     let a = document.createElement("a");
     a.setAttribute("href", dataIri);
     a.setAttribute("href-lang", "image/svg+xml");
+    a.setAttribute("target", "_blank");
+    a.setAttribute("download", filename);
     a.click();
 }
