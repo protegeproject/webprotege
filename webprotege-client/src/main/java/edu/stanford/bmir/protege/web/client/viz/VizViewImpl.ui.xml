@@ -30,7 +30,7 @@
         .edge polygon {
             stroke-linejoin: round;
             stroke-linecap: round;
-            stroke-width: 1;
+            stroke-width: 0.5;
         }
         .node polygon {
             stroke-width: 0.6;

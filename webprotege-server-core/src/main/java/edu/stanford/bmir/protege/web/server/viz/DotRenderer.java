@@ -210,12 +210,13 @@ public class DotRenderer {
         String l = edge.getLabel();
         int outDegree = graph.getEdgesByTailNode().size();
         if(edge.isIsA()) {
-            return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"${edge.isa.color}\";]",
+            return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"${edge.isa.color}\"; style=%s]",
                                  edge.getTail().getBrowserText(),
-                                 edge.getHead().getBrowserText());
+                                 edge.getHead().getBrowserText(),
+                                 edge.getTail().getEntity().isOWLNamedIndividual() ? "dashed" : "solid");
         }
         else {
-            return String.format("\"%s\" -> \"%s\" [color=\"${edge.rel.color}\"; label=\"%s\" fontcolor=\"${edge.rel.color}\";]",
+            return String.format("\"%s\" -> \"%s\" [color=\"${edge.rel.color}\"; label=\"%s\" fontcolor=\"${edge.rel.color}\"; arrowhead=vee;]",
                                  edge.getTail().getBrowserText(),
                                  edge.getHead().getBrowserText(),
                                  l);
