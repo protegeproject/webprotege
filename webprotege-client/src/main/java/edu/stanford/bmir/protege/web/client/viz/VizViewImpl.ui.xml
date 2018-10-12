@@ -84,6 +84,7 @@
                     <g:item value="2.00">2x</g:item>
                 </g:ListBox>
             </g:HTMLPanel>
+            <g:Button text="Download" ui:field="downloadButton"/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

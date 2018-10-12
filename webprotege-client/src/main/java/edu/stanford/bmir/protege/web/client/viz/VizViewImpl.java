@@ -4,9 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Event;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,6 +35,9 @@ public class VizViewImpl extends Composite implements VizView {
 
     @UiField
     ListBox ranksepListBox;
+
+    @UiField
+    Button downloadButton;
 
     private SettingsChangedHandler settingsChangedHandler = () -> {};
 
@@ -67,5 +69,12 @@ public class VizViewImpl extends Composite implements VizView {
     @Override
     public void setSettingsChangedHandler(@Nonnull SettingsChangedHandler handler) {
         this.settingsChangedHandler = checkNotNull(handler);
+    }
+
+    @UiHandler("downloadButton")
+    public void downloadButtonClick(ClickEvent event) {
+        GWT.log(imageContainer.getElement().getInnerHTML());
+        DownloadSvg saver = new DownloadSvg();
+        saver.save(imageContainer.getElement(), "entity-graph.png");
     }
 }
