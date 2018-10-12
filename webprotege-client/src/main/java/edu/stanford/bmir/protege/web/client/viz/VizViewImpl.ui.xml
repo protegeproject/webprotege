@@ -19,7 +19,6 @@
 
         .node text, .edge text {
             font-family: inherit;
-            font-size:   8px;
         }
 
         .node a {
@@ -30,17 +29,14 @@
         }
 
         .edge path {
-            stroke-width: 0.5;
         }
 
         .edge polygon {
             stroke-linejoin: round;
             stroke-linecap:  round;
-            stroke-width:    0.5;
         }
 
         .node polygon {
-            stroke-width:    0.6;
             stroke-linejoin: round;
         }
 
