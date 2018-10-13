@@ -43,9 +43,9 @@ public abstract class Graph {
 
     public abstract ImmutableMultimap<String, Edge> getEdgesByDescriptor();
 
-    public ImmutableMultimap<OWLEntityData, Edge> getEdgesByCluster(OWLEntity rootNode) {
+    public ImmutableSetMultimap<OWLEntityData, Edge> getEdgesByCluster(OWLEntity rootNode) {
         Set<OWLEntityData> processed = new HashSet<>();
-        ImmutableMultimap.Builder<OWLEntityData, Edge> resultBuilder = ImmutableMultimap.builder();
+        ImmutableSetMultimap.Builder<OWLEntityData, Edge> resultBuilder = ImmutableSetMultimap.builder();
         getEdges().forEach(e -> {
                                Set<OWLEntityData> tailClusters = new HashSet<>();
                                Set<OWLEntityData> headClusters = new HashSet<>();

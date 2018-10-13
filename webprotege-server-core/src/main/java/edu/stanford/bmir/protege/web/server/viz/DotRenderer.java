@@ -2,27 +2,24 @@ package edu.stanford.bmir.protege.web.server.viz;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.search.EntitySearcher;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.joining;
 
 /**
  * Matthew Horridge
@@ -53,24 +50,30 @@ public class DotRenderer {
     }
 
 
-
     public void render(Writer writer) {
-        Multimap<OWLEntityData, String> descriptorsByTailNode = graph.getDescriptorsByTailNode();
-        Multimap<String, Edge> edgesByDescriptor = graph.getEdgesByDescriptor();
         PrintWriter pw = new PrintWriter(writer);
         pw.println("digraph \"${title}\" {");
-        pw.println("graph [fontname =\"${fontname}\"];");
-        pw.println("layout=${layout}; rankdir=${rankdir}; ranksep=${ranksep} nodesep=${nodesep}; concentrate=${concentrate}; splines=${splines};");
-        pw.println("node [penwidth=0.5; style=${node.style} fontname=\"${fontname}\" shape=${node.shape}; fontsize=8; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
-        pw.println("edge [penwidth=0.5; fontsize=8; fontname=\"${fontname}\" arrowsize=${edge.arrowsize};];");
-        renderNodes(graph, pw);
-        renderEdgesWithoutClusters(graph, descriptorsByTailNode, edgesByDescriptor, pw);
-//        renderEdgesWithClustering(entity, graph, pw);
+        renderOptionsAndDefaults(pw);
+        renderNodes(pw);
+        renderEdgesWithoutClusters(pw);
+        //        renderEdgesWithClustering(entity, graph, pw);
         pw.print("}");
         pw.flush();
     }
 
-    private void renderNodes(Graph graph, PrintWriter pw) {
+    private void renderOptionsAndDefaults(PrintWriter pw) {
+        pw.println("graph [fontname =\"${fontname}\"];");
+        pw.println("layout=${layout};");
+        pw.println("rankdir=${rankdir};");
+        pw.println("ranksep=${ranksep};");
+        pw.println("nodesep=${nodesep};");
+        pw.println("concentrate=${concentrate};");
+        pw.println("splines=${splines};");
+        pw.println("node [penwidth=0.5; style=${node.style} fontname=\"${fontname}\" shape=${node.shape}; fontsize=8; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
+        pw.println("edge [penwidth=0.5; fontsize=8; fontname=\"${fontname}\" arrowsize=${edge.arrowsize};];");
+    }
+
+    private void renderNodes(PrintWriter pw) {
         graph.getNodes().forEach(node -> {
             String entityUrl = placeUrl.getEntityUrl(projectId, node.getEntity());
             pw.printf("\"%s\" [href=\"%s\"; color=\"%s\"]\n",
@@ -80,53 +83,68 @@ public class DotRenderer {
         });
     }
 
-    private void renderEdgesWithoutClusters(Graph graph, Multimap<OWLEntityData, String> descriptorsByTailNode, Multimap<String, Edge> edgesByDescriptor, PrintWriter pw) {
-        descriptorsByTailNode.forEach((tailNode, descriptor) -> {
-            edgesByDescriptor.get(descriptor)
-                    .stream()
-                    .filter(e -> e.getTail().equals(tailNode))
-                    .map(e -> toEdgeRendering(graph, e, true))
-                    .forEach(pw::println);
-        });
+    private Stream<Edge> getOrderedEdges(@Nonnull Set<Edge> include) {
+        // By Edge type
+        return graph.getDescriptorsByTailNode()
+                .entries()
+                .stream()
+                .flatMap(entry -> {
+                    OWLEntityData tailNode = entry.getKey();
+                    String descriptor = entry.getValue();
+                    return graph.getEdgesByDescriptor()
+                            .get(descriptor)
+                            .stream()
+                            .filter(include::contains)
+                            .filter(edge -> edge.getTail().equals(tailNode));
+                });
     }
 
-    private void renderEdgesWithClustering(OWLEntity entity, Graph graph, PrintWriter pw) {
-        Set<Edge> toRender = new HashSet<>(graph.getEdges());
-        ImmutableMultimap<OWLEntityData, Edge> clusters = graph.getEdgesByCluster(entity);
-        for(OWLEntityData cluster : clusters.keySet()) {
-            pw.printf("subgraph \"cluster_%s\"{style=filled; color=\"#f9f9f9\"", cluster.getBrowserText());
-            ImmutableCollection<Edge> edges = clusters.get(cluster);
-            graph.getDescriptorsByTailNode().forEach((tailNode, descriptor) -> {
-                graph.getEdgesByDescriptor().get(descriptor)
-                        .stream()
-                        .filter(edges::contains)
-                        .filter(e -> e.getTail().equals(tailNode))
-                        .peek(toRender::remove)
-                        .map(e -> toEdgeRendering(graph, e, true))
-                        .forEach(pw::println);
-            });
-            pw.println("}");
-        }
-        toRender.stream()
-                .map(e -> toEdgeRendering(graph, e, false))
+    private void renderEdgesWithoutClusters(PrintWriter pw) {
+        getOrderedEdges(graph.getEdges())
+                .map(e -> renderEdge(e, true))
                 .forEach(pw::println);
     }
 
-    private String toEdgeRendering(Graph graph, Edge edge, boolean constraint) {
+    private void renderEdgesWithClustering(OWLEntity entity, PrintWriter pw) {
+        Set<Edge> toRender = new HashSet<>(graph.getEdges());
+        ImmutableSetMultimap<OWLEntityData, Edge> clusters = graph.getEdgesByCluster(entity);
+        for (OWLEntityData cluster : clusters.keySet()) {
+            pw.printf("subgraph \"cluster_%s\"{style=filled; color=\"#f9f9f9\"", cluster.getBrowserText());
+            ImmutableSet<Edge> edges = clusters.get(cluster);
+            getOrderedEdges(edges)
+                    .peek(toRender::remove)
+                    .map(e -> renderEdge(e, true))
+                    .forEach(pw::println);
+            pw.println("}");
+        }
+        toRender.stream()
+                .map(e -> renderEdge(e, false))
+                .forEach(pw::println);
+    }
+
+    private String renderEdge(Edge edge, boolean constraint) {
         String l = edge.getLabel();
         int outDegree = graph.getEdgesByTailNode().size();
-        if(edge.isIsA()) {
-            return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"${edge.isa.color}\"; style=%s];",
-                                 edge.getTail().getBrowserText(),
-                                 edge.getHead().getBrowserText(),
-                                 edge.getTail().getEntity().isOWLNamedIndividual() ? "dashed" : "solid");
+        if (edge.isIsA()) {
+            return renderIsAEdge(edge);
         }
         else {
-            return String.format("\"%s\" -> \"%s\" [color=\"${edge.rel.color}\"; label=\"%s\" fontcolor=\"${edge.rel.color}\"; arrowhead=vee; constraint=%s];",
-                                 edge.getTail().getBrowserText(),
-                                 edge.getHead().getBrowserText(),
-                                 l,
-                                 constraint);
+            return renderRelEdge(edge, constraint, l);
         }
+    }
+
+    private String renderRelEdge(Edge edge, boolean constraint, String l) {
+        return String.format("\"%s\" -> \"%s\" [color=\"${edge.rel.color}\"; label=\"%s\" fontcolor=\"${edge.rel.color}\"; arrowhead=vee; constraint=%s];",
+                             edge.getTail().getBrowserText(),
+                             edge.getHead().getBrowserText(),
+                             l,
+                             constraint);
+    }
+
+    private String renderIsAEdge(Edge edge) {
+        return String.format("\"%s\" -> \"%s\" [fillcolor=none; color=\"${edge.isa.color}\"; style=%s];",
+                             edge.getTail().getBrowserText(),
+                             edge.getHead().getBrowserText(),
+                             edge.getTail().getEntity().isOWLNamedIndividual() ? "dashed" : "solid");
     }
 }
