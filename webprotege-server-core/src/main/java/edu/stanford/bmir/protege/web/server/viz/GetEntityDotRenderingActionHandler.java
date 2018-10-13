@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -24,11 +23,16 @@ public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHan
     @Nonnull
     private final DotRendererFactory rendererFactory;
 
+    @Nonnull
+    private final EntityGraphBuilder graphBuilder;
+
     @Inject
     public GetEntityDotRenderingActionHandler(@Nonnull AccessManager accessManager,
-                                              @Nonnull DotRendererFactory rendererFactory) {
+                                              @Nonnull DotRendererFactory rendererFactory,
+                                              @Nonnull EntityGraphBuilder graphBuilder) {
         super(accessManager);
         this.rendererFactory = checkNotNull(rendererFactory);
+        this.graphBuilder = checkNotNull(graphBuilder);
     }
 
     @Nonnull
@@ -40,7 +44,8 @@ public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHan
     @Nonnull
     @Override
     public GetEntityDotRenderingResult execute(@Nonnull GetEntityDotRenderingAction action, @Nonnull ExecutionContext executionContext) {
-        DotRenderer dotRenderer = rendererFactory.create(action.getEntity());
+        Graph graph = graphBuilder.createGraph(action.getEntity());
+        DotRenderer dotRenderer = rendererFactory.create(graph);
         StringWriter writer = new StringWriter();
         dotRenderer.render(writer);
         return GetEntityDotRenderingResult.get(writer.toString());
