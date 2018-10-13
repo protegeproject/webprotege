@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class VizViewImpl extends Composite implements VizView {
 
-    private static final double DEFAULT_RANK_SEP = 0.75;
+    private static final double DEFAULT_RANK_SEP = 0.4;
 
     interface VizViewImplUiBinder extends UiBinder<HTMLPanel, VizViewImpl> {
 
