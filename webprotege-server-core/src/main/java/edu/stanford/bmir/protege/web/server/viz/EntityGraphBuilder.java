@@ -93,13 +93,16 @@ public class EntityGraphBuilder {
 
     private void createEdgesForClass(Set<Edge> g, Set<OWLEntity> processed, OWLClass cls) {
         Stream<OWLSubClassOfAxiom> subClsAx = ontology.getSubClassAxiomsForSubClass(cls).stream();
-        Stream<OWLSubClassOfAxiom> defs =
-                ontology.getEquivalentClassesAxioms(cls)
-                        .stream()
-                        .flatMap(ax -> ax.asOWLSubClassOfAxioms().stream());
+        Stream<OWLSubClassOfAxiom> defs = getEquivalentClassAxiomsAsSubClassOfAxioms(cls);
         Streams.concat(subClsAx, defs)
                 .filter(ax -> !ax.getSubClass().isAnonymous())
                 .forEach(ax -> createEdgeForSubClassOfAxiom(cls, ax, g, processed));
+    }
+
+    private Stream<OWLSubClassOfAxiom> getEquivalentClassAxiomsAsSubClassOfAxioms(OWLClass cls) {
+        return ontology.getEquivalentClassesAxioms(cls)
+                .stream()
+                .flatMap(ax -> ax.asOWLSubClassOfAxioms().stream());
     }
 
     private void createEdgeForSubClassOfAxiom(OWLClass subCls, OWLSubClassOfAxiom ax, Set<Edge> edges, Set<OWLEntity> processed) {
@@ -116,21 +119,38 @@ public class EntityGraphBuilder {
                         createGraph(superCls, edges, processed);
                     }
                     else {
-                        if(superClass instanceof OWLObjectSomeValuesFrom) {
-                            OWLObjectSomeValuesFrom svf = (OWLObjectSomeValuesFrom) superClass;
-                            OWLClassExpression filler = svf.getFiller();
-                            if(!filler.isAnonymous()) {
-                                OWLClass fillerCls = filler.asOWLClass();
-                                OWLClassData fillerClsData = renderingManager.getRendering(fillerCls);
-                                OWLObjectProperty prop = svf.getProperty().asOWLObjectProperty();
-                                OWLEntityData propData = renderingManager.getRendering(prop);
-                                Edge edge = RelationshipEdge.get(subClsData, fillerClsData, propData);
-                                edges.add(edge);
-                                createGraph(fillerCls, edges, processed);
-                            }
-                        }
+                        addEdgeForComplexSuperClass(edges, processed, subClsData, superClass);
                     }
                 });
+    }
+
+    private void addEdgeForComplexSuperClass(Set<Edge> edges, Set<OWLEntity> processed, OWLEntityData subClsData, OWLClassExpression superClass) {
+        if(superClass instanceof OWLObjectSomeValuesFrom) {
+            OWLObjectSomeValuesFrom svf = (OWLObjectSomeValuesFrom) superClass;
+            OWLClassExpression filler = svf.getFiller();
+            if(!filler.isAnonymous()) {
+                OWLClass fillerCls = filler.asOWLClass();
+                OWLClassData fillerClsData = renderingManager.getRendering(fillerCls);
+                OWLObjectProperty prop = svf.getProperty().asOWLObjectProperty();
+                OWLEntityData propData = renderingManager.getRendering(prop);
+                Edge edge = RelationshipEdge.get(subClsData, fillerClsData, propData);
+                edges.add(edge);
+                createGraph(fillerCls, edges, processed);
+            }
+        }
+        else if(superClass instanceof OWLObjectHasValue) {
+            OWLObjectHasValue hv = (OWLObjectHasValue) superClass;
+            OWLIndividual filler = hv.getFiller();
+            if(filler.isNamed()) {
+                OWLNamedIndividual ind = filler.asOWLNamedIndividual();
+                OWLNamedIndividualData indData = renderingManager.getRendering(ind);
+                OWLObjectProperty prop = hv.getProperty().asOWLObjectProperty();
+                OWLEntityData propData = renderingManager.getRendering(prop);
+                Edge edge = RelationshipEdge.get(subClsData, indData, propData);
+                edges.add(edge);
+                createGraph(ind, edges, processed);
+            }
+        }
     }
 
     private OWLEntityData toEntity(@Nonnull OWLClass cls) {
