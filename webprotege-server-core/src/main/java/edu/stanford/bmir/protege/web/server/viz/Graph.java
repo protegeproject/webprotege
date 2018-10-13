@@ -18,7 +18,7 @@ import java.util.Set;
 @AutoValue
 public abstract class Graph {
 
-    public static Graph create(ImmutableSet<Edge> edges) {
+    public static Graph create(OWLEntityData root, ImmutableSet<Edge> edges) {
         ImmutableSetMultimap.Builder<OWLEntityData, String> byTail = ImmutableSetMultimap.builder();
         ImmutableSetMultimap.Builder<OWLEntityData, Edge> byTailEdge = ImmutableSetMultimap.builder();
         ImmutableMultimap.Builder<String, Edge> byDescriptor = ImmutableMultimap.builder();
@@ -30,7 +30,13 @@ public abstract class Graph {
             byTail.put(edge.getTail(), edge.getRelationshipDescriptor());
             byDescriptor.put(edge.getRelationshipDescriptor(), edge);
         }
-        return new AutoValue_Graph(nodes.build(), edges, byTailEdge.build(), byTail.build(), byDescriptor.build());
+        return new AutoValue_Graph(root, nodes.build(), edges, byTailEdge.build(), byTail.build(), byDescriptor.build());
+    }
+
+    public abstract OWLEntityData getRoot();
+
+    public OWLEntity getRootEntity() {
+        return getRoot().getEntity();
     }
 
     public abstract ImmutableSet<OWLEntityData> getNodes();

@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -109,7 +110,7 @@ public class DotRenderer {
         Set<Edge> toRender = new HashSet<>(graph.getEdges());
         ImmutableSetMultimap<OWLEntityData, Edge> clusters = graph.getEdgesByCluster(entity);
         for (OWLEntityData cluster : clusters.keySet()) {
-            pw.printf("subgraph \"cluster_%s\"{style=filled; color=\"#f9f9f9\"", cluster.getBrowserText());
+            pw.printf("subgraph \"cluster_%s\"{style=solid; color=\"#f9f9f9\"", cluster.getBrowserText());
             ImmutableSet<Edge> edges = clusters.get(cluster);
             getOrderedEdges(edges)
                     .peek(toRender::remove)

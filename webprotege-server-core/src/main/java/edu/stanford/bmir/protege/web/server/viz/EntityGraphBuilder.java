@@ -45,7 +45,8 @@ public class EntityGraphBuilder {
     public Graph createGraph(@Nonnull OWLEntity root) {
         LinkedHashSet<Edge> edges = new LinkedHashSet<>();
         createGraph(root, edges, new HashSet<>());
-        return Graph.create(ImmutableSet.copyOf(edges));
+        return Graph.create(renderingManager.getRendering(root),
+                            ImmutableSet.copyOf(edges));
     }
 
     private void createGraph(@Nonnull OWLEntity entity,
