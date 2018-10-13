@@ -175,7 +175,7 @@ public class DotRenderer {
                 .orElse(shortForm);
     }
 
-    public void render(Writer writer, OWLEntity entity) {
+    public void render(Writer writer) {
         Graph graph = createGraph();
         Multimap<OWLEntityData, String> descriptorsByTailNode = graph.getDescriptorsByTailNode();
         Multimap<String, Edge> edgesByDescriptor = graph.getEdgesByDescriptor();
