@@ -192,8 +192,8 @@ public class DotRenderer {
                       entityUrl,
                       node.getEntity().isOWLClass() ? "${node.color}" : "${node.ind.color}");
         });
-//        renderEdgesWithoutClusters(graph, descriptorsByTailNode, edgesByDescriptor, pw);
-        renderEdgesWithClustering(entity, graph, pw);
+        renderEdgesWithoutClusters(graph, descriptorsByTailNode, edgesByDescriptor, pw);
+//        renderEdgesWithClustering(entity, graph, pw);
         pw.print("}");
         pw.flush();
     }
