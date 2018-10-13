@@ -185,6 +185,14 @@ public class DotRenderer {
         pw.println("layout=${layout}; rankdir=${rankdir}; ranksep=${ranksep} nodesep=${nodesep}; concentrate=${concentrate}; splines=${splines};");
         pw.println("node [penwidth=0.5; style=${node.style} fontname=\"${fontname}\" shape=${node.shape}; fontsize=8; margin=${node.margin} width=0 height=0; color=\"${node.color}\" fontcolor=\"${node.fontcolor}\"];");
         pw.println("edge [penwidth=0.5; fontsize=8; fontname=\"${fontname}\" arrowsize=${edge.arrowsize};];");
+        renderNodes(graph, pw);
+        renderEdgesWithoutClusters(graph, descriptorsByTailNode, edgesByDescriptor, pw);
+//        renderEdgesWithClustering(entity, graph, pw);
+        pw.print("}");
+        pw.flush();
+    }
+
+    private void renderNodes(Graph graph, PrintWriter pw) {
         graph.getNodes().forEach(node -> {
             String entityUrl = placeUrl.getEntityUrl(projectId, node.getEntity());
             pw.printf("\"%s\" [href=\"%s\"; color=\"%s\"]\n",
@@ -192,10 +200,6 @@ public class DotRenderer {
                       entityUrl,
                       node.getEntity().isOWLClass() ? "${node.color}" : "${node.ind.color}");
         });
-        renderEdgesWithoutClusters(graph, descriptorsByTailNode, edgesByDescriptor, pw);
-//        renderEdgesWithClustering(entity, graph, pw);
-        pw.print("}");
-        pw.flush();
     }
 
     private void renderEdgesWithoutClusters(Graph graph, Multimap<OWLEntityData, String> descriptorsByTailNode, Multimap<String, Edge> edgesByDescriptor, PrintWriter pw) {
