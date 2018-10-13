@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -77,6 +78,7 @@ public class VizPresenter {
         }
         Viz viz = new Viz();
         String rendering = replaceVariables(currentRendering);
+        GWT.log("[Viz]" + rendering);
         viz.render(rendering, view::setRendering);
     }
 
