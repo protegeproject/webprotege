@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
-import com.google.gwt.dom.client.Node;
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.dagre.Dagre;
 import jsinterop.annotations.*;
@@ -54,18 +53,93 @@ public class Graph {
     public native void setGraphLabel(GraphDetails object);
 
     @JsMethod(name = "graph")
-    public native GraphDetails getGraphLabel();
+    public native GraphDetails getGraphDetails();
 
 
     @JsOverlay
     public final int getWidth() {
-        return getGraphLabel().getWidth();
+        return getGraphDetails().getWidth();
     }
 
     @JsOverlay
     public final int getHeight() {
-        return getGraphLabel().getHeight();
+        return getGraphDetails().getHeight();
     }
+
+    @JsOverlay
+    public final Graph setRankDirTopToBottom() {
+        getGraphDetails().setRankDirTopToBottom();
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setRankDirBottomToTop() {
+        getGraphDetails().setRankDirBottomToTop();
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setRankDirLeftToRight() {
+        getGraphDetails().setRankDirLeftToRight();
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setRankDirRightToLeft() {
+        getGraphDetails().setRankDirLeftToRight();
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setNodeSep(int nodesep) {
+        getGraphDetails().setNodeSep(nodesep);
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setRankSep(int ranksep) {
+        getGraphDetails().setRankSep(ranksep);
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setEdgeSep(int edgesep) {
+        getGraphDetails().setEdgeSep(edgesep);
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setMarginX(int marginX) {
+        getGraphDetails().setMarginX(marginX);
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setMarginY(int marginy) {
+        getGraphDetails().setMarginY(marginy);
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setRankerToNetworkSimplex() {
+        getGraphDetails().setRankerToNetworkSimplex();
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setRankerToTightTree() {
+        getGraphDetails().setRankerToTightTree();
+        return this;
+    }
+
+    @JsOverlay
+    public final Graph setRankerToLongestPath() {
+        getGraphDetails().setRankerToLongestPath();
+        return this;
+    }
+
+
+
 
     @JsOverlay
     public final void addNode(@Nonnull NodeDetails node) {

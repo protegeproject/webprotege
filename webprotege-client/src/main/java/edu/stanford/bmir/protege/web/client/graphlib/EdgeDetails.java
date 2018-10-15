@@ -31,6 +31,36 @@ public class EdgeDetails {
         return Stream.of(points());
     }
 
+    @JsProperty(name = "minlen")
+    public native void setMinLength(int minLength);
+
+    @JsProperty(name = "weight")
+    public native void setWeight(int weight);
+
+    @JsProperty(name = "labelpos")
+    private native void setLabelPos(String pos);
+
+    public final void setLabelPosLeft() {
+        setLabelPos("l");
+    }
+
+    public final void setLabelPosRight() {
+        setLabelPos("r");
+    }
+
+    public final void setLabelPosCenter() {
+        setLabelPos("c");
+    }
+
+    @JsProperty(name = "width")
+    public native void setLabelWidth(int labelWidth);
+
+    @JsProperty(name = "height")
+    public native void setLabelHeight(int labelHeight);
+
+    @JsProperty(name = "labeloffset")
+    public native void setLabelOffset(int offset);
+
     @JsMethod
     public String stringify() {
         return JSON.stringify(this);
