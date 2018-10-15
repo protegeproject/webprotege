@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .measuringElement {
+            visibility: hidden;
+            position: absolute;
+            width: auto;
+            height: auto;
+            white-space: nowrap;
+        }
+    </ui:style>
+    <g:HTMLPanel ui:field="measuringElement" addStyleNames="{style.measuringElement}">
+
+    </g:HTMLPanel>
+</ui:UiBinder>

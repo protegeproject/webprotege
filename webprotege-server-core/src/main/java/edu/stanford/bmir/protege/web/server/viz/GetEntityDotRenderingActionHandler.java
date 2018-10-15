@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -44,10 +45,11 @@ public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHan
     @Nonnull
     @Override
     public GetEntityDotRenderingResult execute(@Nonnull GetEntityDotRenderingAction action, @Nonnull ExecutionContext executionContext) {
-        Graph graph = graphBuilder.createGraph(action.getEntity());
+        EntityGraph graph = graphBuilder.createGraph(action.getEntity());
         DotRenderer dotRenderer = rendererFactory.create(graph);
         StringWriter writer = new StringWriter();
         dotRenderer.render(writer);
-        return GetEntityDotRenderingResult.get(writer.toString());
+        return GetEntityDotRenderingResult.get(writer.toString(),
+                                               graph);
     }
 }

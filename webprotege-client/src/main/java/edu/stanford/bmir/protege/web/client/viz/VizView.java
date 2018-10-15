@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent.SelectionChangeHandler;
 
@@ -13,6 +14,8 @@ import javax.annotation.Nonnull;
  */
 public interface VizView extends IsWidget {
 
+    void setGraph(Graph graph);
+
     interface SettingsChangedHandler {
         void handleSettingsChanged();
     }
@@ -22,4 +25,7 @@ public interface VizView extends IsWidget {
     double getRankSpacing();
 
     void setSettingsChangedHandler(@Nonnull SettingsChangedHandler handler);
+
+    @Nonnull
+    TextMeasurer getTextMeasurer();
 }

@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.server.viz;
+package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
@@ -11,6 +12,7 @@ import javax.annotation.Nonnull;
  * 11 Oct 2018
  */
 @AutoValue
+@GwtCompatible(serializable = true)
 public abstract class IsAEdge implements Edge {
 
     private static final String DESCRIPTOR = "ISA";

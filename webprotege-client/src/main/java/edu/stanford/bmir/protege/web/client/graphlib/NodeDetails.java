@@ -52,11 +52,25 @@ public class NodeDetails {
     @JsProperty
     public native void setHeight(int height);
 
+    public final double getTopLeftX() {
+        return getX() - (getWidth() / 2.0);
+    }
+
+    public final double getTopLeftY() {
+        return getY() - (getHeight() / 2.0);
+    }
+
     @JsProperty
     public native void setLabel(String label);
 
     @JsProperty
     public native String getLabel();
+
+    @JsProperty
+    public native String getStyleNames();
+
+    @JsProperty
+    public native void setStyleNames(String name);
 
     @JsMethod
     @Override

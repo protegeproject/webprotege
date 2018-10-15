@@ -7,6 +7,10 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import edu.stanford.bmir.protege.web.shared.viz.Edge;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
+import edu.stanford.bmir.protege.web.shared.viz.IsAEdge;
+import edu.stanford.bmir.protege.web.shared.viz.RelationshipEdge;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -42,11 +46,11 @@ public class EntityGraphBuilder {
     }
 
     @Nonnull
-    public Graph createGraph(@Nonnull OWLEntity root) {
+    public EntityGraph createGraph(@Nonnull OWLEntity root) {
         LinkedHashSet<Edge> edges = new LinkedHashSet<>();
         createGraph(root, edges, new HashSet<>());
-        return Graph.create(renderingManager.getRendering(root),
-                            ImmutableSet.copyOf(edges));
+        return EntityGraph.create(renderingManager.getRendering(root),
+                                  ImmutableSet.copyOf(edges));
     }
 
     private void createGraph(@Nonnull OWLEntity entity,

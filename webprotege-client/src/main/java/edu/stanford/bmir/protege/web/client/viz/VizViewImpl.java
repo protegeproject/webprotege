@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.graphlib.*;
+import elemental.dom.Element;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,6 +43,9 @@ public class VizViewImpl extends Composite implements VizView {
     @UiField
     Button downloadButton;
 
+    @UiField
+    TextMeasurerImpl textMeasurer;
+
     private SettingsChangedHandler settingsChangedHandler = () -> {};
 
     @Inject
@@ -49,55 +53,24 @@ public class VizViewImpl extends Composite implements VizView {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(3);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
+    }
 
-        Graph g = Graph.create();
-        NodeDetails a = new NodeDetails("NodeA", 333, 444, "Hello");
-        g.addNode(a);
-        NodeDetails b = new NodeDetails("NodeB", 343, 321, "World");
-        g.addNode(b);
-        g.addEdge(a, b, new EdgeDetails("Edge-A-B"));
-        NodeDetails c = new NodeDetails("NodeC", 300, 100, "!!!");
-        g.addNode(c);
-        g.addEdge(b, c, new EdgeDetails("Edge-B-C"));
+    @Nonnull
+    @Override
+    public TextMeasurer getTextMeasurer() {
+        return textMeasurer;
+    }
 
-        g.layout();
-
-
-        GWT.log("[VizDagre] Stringify: " + a.stringify());
-        g.getNodes().forEach(nd -> GWT.log("[VizDagre] Node: " + nd.stringify()));
-//        Stream.of(g.ed())
-//                .forEach(ek -> GWT.log("[VizDagre] EK: " + JSON.stringify(ek) + " --- " + g.edge(ek).stringify()));
-        g.getEdges().forEach(e ->
-                             {
-                                 GWT.log("[VizDagre] Edge: " + e.stringify());
-                                 String pts = e.getPoints().map(JSON::stringify).collect(joining("; "));
-                                 GWT.log("[VizDagre]     Points: " + pts);
-                             });
-
-        //        edge.getPointsList().forEach(p -> GWT.log("[VizDagre] " + p.getX() + ", " + p.getY()));
-
-        GWT.log("[VizDagre] G: " + JSON.stringify(g));
-        GWT.log("[VizDagre] G width: " + g.getWidth());
-        GWT.log("[VizDagre] G height: " + g.getHeight());
-        GWT.log("[VizDagre] G acyclic: " + g.isAcyclic());
-        GWT.log("[VizDagre] G node count: " + g.getNodeCount());
-        GWT.log("[VizDagre] G edge count: " + g.getEdgeCount());
-        GWT.log("[VizDagre] G sources: " + g.getSources().map(n -> n.stringify()).collect(joining(" ")));
-        GWT.log("[VizDagre] G sinks: " + g.getSinks().map(n -> n.stringify()).collect(joining(" ")));
-        GWT.log("[VizDagre] G successors: " + g.getSuccessors(a.getId()).map(n -> n.stringify()).collect(joining(" ")));
-        GWT.log("[VizDagre] G predecessors: " + g.getPredecessors(c.getId()).map(n -> n.stringify()).collect(joining(" ")));
-
-
-        GraphLibAlgorithm.getNodesInPreorder(g, a)
-                .forEach(nd -> GWT.log("[VizDagre] PO Node: " + nd.stringify()));
-
-        GWT.log("[VizDagre] G json: " + g.writeJson());
-
+    @Override
+    public void setGraph(Graph graph) {
+        Graph2Svg graph2Svg = new Graph2Svg();
+        Element svg = graph2Svg.convertToSvg(graph);
+        imageContainer.getElement().setInnerHTML(svg.getOuterHTML());
     }
 
     @Override
     public void setRendering(@Nonnull String rendering) {
-        imageContainer.getElement().setInnerHTML(checkNotNull(rendering));
+//        imageContainer.getElement().setInnerHTML(checkNotNull(rendering));
     }
 
     @Override

@@ -2,20 +2,19 @@ package edu.stanford.bmir.protege.web.server.viz;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.viz.Edge;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -38,13 +37,13 @@ public class DotRenderer {
     private final PlaceUrl placeUrl;
 
     @Nonnull
-    private final Graph graph;
+    private final EntityGraph graph;
 
     @AutoFactory
     @Inject
     public DotRenderer(@Provided @Nonnull ProjectId projectId,
                        @Provided @Nonnull PlaceUrl placeUrl,
-                       @Nonnull Graph graph) {
+                       @Nonnull EntityGraph graph) {
         this.projectId = checkNotNull(projectId);
         this.placeUrl = checkNotNull(placeUrl);
         this.graph = checkNotNull(graph);

@@ -27,6 +27,9 @@ import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
+import edu.stanford.bmir.protege.web.shared.viz.IsAEdge;
+import edu.stanford.bmir.protege.web.shared.viz.RelationshipEdge;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 
 /**
@@ -99,6 +102,36 @@ public class RpcWhiteList implements Action, Result {
     Operation operation;
 
     Tag tag;
+
+    public EntityGraph getEntityGraph() {
+        return entityGraph;
+    }
+
+    public void setEntityGraph(EntityGraph entityGraph) {
+        this.entityGraph = entityGraph;
+    }
+
+    public IsAEdge getIsAEdge() {
+        return isAEdge;
+    }
+
+    public void setIsAEdge(IsAEdge isAEdge) {
+        this.isAEdge = isAEdge;
+    }
+
+    public RelationshipEdge getRelationshipEdge() {
+        return relationshipEdge;
+    }
+
+    public void setRelationshipEdge(RelationshipEdge relationshipEdge) {
+        this.relationshipEdge = relationshipEdge;
+    }
+
+    EntityGraph entityGraph;
+
+    IsAEdge isAEdge;
+
+    RelationshipEdge relationshipEdge;
 
     public RpcWhiteList() {
     }

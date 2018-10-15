@@ -3,9 +3,12 @@ package edu.stanford.bmir.protege.web.client.viz;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
+import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -36,6 +39,10 @@ public class VizPresenter {
     private HasBusy hasBusy = busy -> {};
 
     private String currentRendering = "";
+
+    private Graph currentGraph;
+
+    private EntityGraph currentEntityGraph;
 
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
@@ -68,6 +75,8 @@ public class VizPresenter {
     }
 
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
+        currentEntityGraph = result.getEntityGraph();
+        currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
         this.currentRendering = result.getRendering();
         displayCurrentRendering();
     }
@@ -76,6 +85,8 @@ public class VizPresenter {
         if(currentRendering.isEmpty()) {
             return;
         }
+        currentGraph.layout();
+        view.setGraph(currentGraph);
         Viz viz = new Viz();
         String rendering = replaceVariables(currentRendering);
         GWT.log("[Viz]" + rendering);

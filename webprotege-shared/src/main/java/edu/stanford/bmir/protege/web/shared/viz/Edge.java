@@ -1,5 +1,7 @@
-package edu.stanford.bmir.protege.web.server.viz;
+package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
@@ -9,7 +11,8 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Oct 2018
  */
-public interface Edge {
+@GwtCompatible(serializable = true)
+public interface Edge extends IsSerializable {
 
     @Nonnull
     OWLEntityData getHead();

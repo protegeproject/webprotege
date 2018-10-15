@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.graphlib;
 import edu.stanford.bmir.protege.web.client.JSON;
 import jsinterop.annotations.*;
 
+import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
 /**
@@ -22,6 +23,12 @@ public class EdgeDetails {
 
     @JsProperty
     public native String getLabel();
+
+    @JsProperty
+    public native String getStyleNames();
+
+    @JsProperty
+    public native void setStyleNames(@Nonnull String styleNames);
 
     @JsProperty(name = "points")
     private native Point [] points();

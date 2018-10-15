@@ -1,9 +1,11 @@
-package edu.stanford.bmir.protege.web.server.viz;
+package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -16,21 +18,13 @@ import java.util.Set;
  * 11 Oct 2018
  */
 @AutoValue
-public abstract class Graph {
+@GwtCompatible(serializable = true)
+public abstract class EntityGraph {
 
-    public static Graph create(OWLEntityData root, ImmutableSet<Edge> edges) {
-        ImmutableSetMultimap.Builder<OWLEntityData, String> byTail = ImmutableSetMultimap.builder();
-        ImmutableSetMultimap.Builder<OWLEntityData, Edge> byTailEdge = ImmutableSetMultimap.builder();
-        ImmutableMultimap.Builder<String, Edge> byDescriptor = ImmutableMultimap.builder();
-        ImmutableSet.Builder<OWLEntityData> nodes = ImmutableSet.builder();
-        for (Edge edge : edges) {
-            nodes.add(edge.getTail());
-            nodes.add(edge.getHead());
-            byTailEdge.put(edge.getTail(), edge);
-            byTail.put(edge.getTail(), edge.getRelationshipDescriptor());
-            byDescriptor.put(edge.getRelationshipDescriptor(), edge);
-        }
-        return new AutoValue_Graph(root, nodes.build(), edges, byTailEdge.build(), byTail.build(), byDescriptor.build());
+
+
+    public static EntityGraph create(OWLEntityData root, ImmutableSet<Edge> edges) {
+        return new AutoValue_EntityGraph(root, edges);
     }
 
     public abstract OWLEntityData getRoot();
@@ -39,15 +33,40 @@ public abstract class Graph {
         return getRoot().getEntity();
     }
 
-    public abstract ImmutableSet<OWLEntityData> getNodes();
+    public ImmutableSet<OWLEntityData> getNodes() {
+        ImmutableSet.Builder<OWLEntityData> nodes = ImmutableSet.builder();
+        for (Edge edge : getEdges()) {
+            nodes.add(edge.getTail());
+            nodes.add(edge.getHead());
+        }
+        return nodes.build();
+    }
 
     public abstract ImmutableSet<Edge> getEdges();
 
-    public abstract ImmutableMultimap<OWLEntityData, Edge> getEdgesByTailNode();
+    public ImmutableMultimap<OWLEntityData, Edge> getEdgesByTailNode() {
+        ImmutableMultimap.Builder<OWLEntityData, Edge> result = ImmutableMultimap.builder();
+        for (Edge edge : getEdges()) {
+            result.put(edge.getTail(), edge);
+        }
+        return result.build();
+    }
 
-    public abstract ImmutableMultimap<OWLEntityData, String> getDescriptorsByTailNode();
+    public ImmutableMultimap<OWLEntityData, String> getDescriptorsByTailNode() {
+        ImmutableMultimap.Builder<OWLEntityData, String> result = ImmutableMultimap.builder();
+        for (Edge edge : getEdges()) {
+            result.put(edge.getTail(), edge.getRelationshipDescriptor());
+        }
+        return result.build();
+    }
 
-    public abstract ImmutableMultimap<String, Edge> getEdgesByDescriptor();
+    public ImmutableMultimap<String, Edge> getEdgesByDescriptor() {
+        ImmutableMultimap.Builder<String, Edge> result = ImmutableMultimap.builder();
+        for (Edge edge : getEdges()) {
+            result.put(edge.getRelationshipDescriptor(), edge);
+        }
+        return result.build();
+    }
 
     public ImmutableSetMultimap<OWLEntityData, Edge> getEdgesByCluster(OWLEntity rootNode) {
         Set<OWLEntityData> processed = new HashSet<>();

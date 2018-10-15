@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:viz="urn:import:edu.stanford.bmir.protege.web.client.viz">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
@@ -68,9 +69,16 @@
             flex-grow: 1;
             flex-shrink: 1;
         }
+        .textMeasurer {
+            position: absolute;
+            visibility: hidden;
+            width: auto;
+            height: auto;
+            white-space: nowrap;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-
+        <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
         <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
             <g:HTML ui:field="imageContainer" addStyleNames="{style.container}"/>
         </g:FocusPanel>

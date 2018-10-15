@@ -886,3 +886,28 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     -webkit-animation-delay: 0.41666666666666663s;
     animation-delay:         0.41666666666666663s;
 }
+
+.wp-graph__node {
+    fill: none;
+    stroke-width: 4px;
+    padding: 5px;
+}
+
+.wp-graph__node--class {
+    stroke: #d0d0d0;
+}
+
+.wp-graph__node--individual {
+    stroke: #c9b2ff;
+}
+
+.wp-graph__edge {
+    fill: none;
+    stroke-width: 2px;
+}
+.wp-graph__edge--is-a {
+    stroke: #d0d0d0;
+}
+.wp-graph__edge--rel {
+    stroke: #62aaff;
+}
