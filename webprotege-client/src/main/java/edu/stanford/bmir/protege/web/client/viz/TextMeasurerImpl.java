@@ -25,19 +25,17 @@ public class TextMeasurerImpl extends Composite implements TextMeasurer {
     @UiField
     HTMLPanel measuringElement;
 
-    private String styleNames = "";
+    private final String basicStyleName;
 
     public TextMeasurerImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        basicStyleName = measuringElement.getStyleName();
     }
 
     @Override
     public void setStyleNames(@Nonnull String styles) {
-        if(!this.styleNames.isEmpty()) {
-            measuringElement.removeStyleName(styles);
-        }
-        styleNames = styles;
-        measuringElement.addStyleName(styles);
+        measuringElement.setStyleName(styles);
+        measuringElement.addStyleName(basicStyleName);
     }
 
     @Nonnull

@@ -20,8 +20,6 @@ public interface VizView extends IsWidget {
         void handleSettingsChanged();
     }
 
-    void setRendering(@Nonnull String rendering);
-
     double getRankSpacing();
 
     void setSettingsChangedHandler(@Nonnull SettingsChangedHandler handler);

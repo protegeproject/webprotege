@@ -1,7 +1,7 @@
 function downloadSvg(element, filename) {
 
     // First convert the image to a data URI
-    const svg = element.innerHTML;
+    const svg = element.outerHTML;
     const dataIri = "data:image/svg+xml;base64," + window.btoa(svg);
 
     // Now create an anchor element and set it to download the image

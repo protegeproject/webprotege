@@ -85,12 +85,13 @@ public class VizPresenter {
         if(currentRendering.isEmpty()) {
             return;
         }
+        currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
         currentGraph.layout();
         view.setGraph(currentGraph);
-        Viz viz = new Viz();
-        String rendering = replaceVariables(currentRendering);
-        GWT.log("[Viz]" + rendering);
-        viz.render(rendering, view::setRendering);
+//        Viz viz = new Viz();
+//        String rendering = replaceVariables(currentRendering);
+//        GWT.log("[Viz]" + rendering);
+//        viz.render(rendering, view::setRendering);
     }
 
     private String replaceVariables(@Nonnull String rendering) {

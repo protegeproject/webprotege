@@ -36,18 +36,22 @@ public class EntityGraph2Graph {
                     String tailId = toNodeId(edge.getTail());
                     String headId = toNodeId(edge.getHead());
                     g.setEdge(tailId, headId, edgeDetails);
-                    if(edge.isIsA()) {
-                        edgeDetails.setStyleNames("wp-graph__edge wp-graph__edge--is-a");
-                    }
-                    else {
-                        edgeDetails.setStyleNames("wp-graph__edge wp-graph__edge--rel");
-                    }
+                    edgeDetails.setStyleNames(getEdgeStyleNames(edge));
                 });
         g.setRankDirBottomToTop();
         g.setNodeSep(10);
         g.setRankSep(30);
         g.setRankerToLongestPath();
         return g;
+    }
+
+    private String getEdgeStyleNames(Edge edge) {
+        if(edge.isIsA()) {
+            return "wp-graph__edge wp-graph__edge--is-a";
+        }
+        else {
+            return "wp-graph__edge wp-graph__edge--rel";
+        }
     }
 
     private String toNodeId(OWLEntityData entityData) {
@@ -83,6 +87,14 @@ public class EntityGraph2Graph {
     }
 
     private EdgeDetails toEdgeDetails(Edge edge) {
-        return new EdgeDetails(edge.getLabel());
+        EdgeDetails edgeDetails = new EdgeDetails(edge.getLabel());
+        if (!edge.isIsA()) {
+            textMeasurer.setStyleNames("wp-graph__edge__label");
+            TextDimensions dimensions = textMeasurer.getTextDimensions(edge.getLabel());
+            edgeDetails.setLabelWidth(dimensions.getWidth());
+            edgeDetails.setLabelHeight(dimensions.getHeight());
+            edgeDetails.setLabelPosCenter();
+        }
+        return edgeDetails;
     }
 }

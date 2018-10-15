@@ -911,3 +911,11 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 .wp-graph__edge--rel {
     stroke: #62aaff;
 }
+
+.wp-graph__edge__label {
+    fill: var(--primary--background-color);
+}
+
+.wp-graph__edge__label + text {
+    fill: #62aaff;
+}

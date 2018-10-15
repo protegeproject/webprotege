@@ -19,6 +19,12 @@ public class EdgeDetails {
     }
 
     @JsProperty
+    public native int getX();
+
+    @JsProperty
+    public native int getY();
+
+    @JsProperty
     private native void setLabel(String label);
 
     @JsProperty
@@ -65,6 +71,12 @@ public class EdgeDetails {
     @JsProperty(name = "height")
     public native void setLabelHeight(int labelHeight);
 
+    @JsProperty(name = "width")
+    public native int getLabelWidth();
+
+    @JsProperty(name = "height")
+    public native int getLabelHeight();
+
     @JsProperty(name = "labeloffset")
     public native void setLabelOffset(int offset);
 
@@ -72,4 +84,5 @@ public class EdgeDetails {
     public String stringify() {
         return JSON.stringify(this);
     }
+
 }
