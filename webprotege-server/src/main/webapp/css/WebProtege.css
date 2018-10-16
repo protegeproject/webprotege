@@ -894,11 +894,11 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__node--class {
-    stroke: #d0d0d0;
+    stroke: #8da9cc;
 }
 
 .wp-graph__node--individual {
-    stroke: #c9b2ff;
+    stroke: #cbb7e9;
 }
 
 .wp-graph__edge {
@@ -906,10 +906,10 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     stroke-width: 2px;
 }
 .wp-graph__edge--is-a {
-    stroke: #d0d0d0;
+    stroke: #a0a0a0;
 }
 .wp-graph__edge--rel {
-    stroke: #62aaff;
+    stroke: #8da9cc;
 }
 
 .wp-graph__edge__label {
@@ -917,5 +917,22 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__edge__label + text {
-    fill: #62aaff;
+    fill: #8da9cc;
+}
+
+.wp-graph__edge__arrow-head {
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.wp-graph__edge__arrow-head--is-a {
+    fill: var(--primary--background-color);
+    stroke: #a0a0a0;
+}
+
+.wp-graph__edge__arrow-head--rel {
+    stroke: #8da9cc;
+    stroke-width: 2;
+    fill: none;
 }

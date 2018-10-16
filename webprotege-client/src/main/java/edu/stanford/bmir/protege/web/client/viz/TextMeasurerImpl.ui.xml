@@ -7,6 +7,7 @@
             width: auto;
             height: auto;
             white-space: nowrap;
+            box-sizing: border-box;
         }
     </ui:style>
     <g:HTMLPanel ui:field="measuringElement" addStyleNames="{style.measuringElement}">

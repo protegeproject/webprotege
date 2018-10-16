@@ -85,4 +85,10 @@ public class EdgeDetails {
         return JSON.stringify(this);
     }
 
+    @JsProperty
+    public native String getArrowHeadStyle();
+
+    @JsProperty
+    public native void setArrowHeadStyle(String style);
+
 }

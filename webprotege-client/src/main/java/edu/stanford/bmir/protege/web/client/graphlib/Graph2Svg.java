@@ -8,7 +8,6 @@ import elemental.svg.*;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -19,6 +18,10 @@ import static java.util.stream.Collectors.toList;
  * 15 Oct 2018
  */
 public class Graph2Svg {
+
+    private static final String CLOSED_ARROW_HEAD_ID = "closedArrowHead";
+
+    private static final String OPEN_ARROW_HEAD_ID = "openArrowHead";
 
     public Graph2Svg() {
     }
@@ -35,18 +38,51 @@ public class Graph2Svg {
     public Element convertToSvg(@Nonnull Graph graph) {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
+
+        // Arrow head defs
+        SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--is-a", true);
+        SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--rel", false);
+        svg.appendChild(document.createElement("defs")).appendChild(openArrowHead);
+        svg.appendChild(document.createElement("defs")).appendChild(closedArrowHead);
+
+
         int w = graph.getWidth() + 10;
         svg.setAttribute("width", inPixels(w));
         int h = graph.getHeight() + 10;
         svg.setAttribute("height", inPixels(h));
         svg.setAttribute("viewbox", "-5 -5 " + w + " " + h);
-        graph.getEdges()
-                .flatMap(e -> toSvgElements(e).stream())
-                .forEach(svg::appendChild);
         graph.getNodes()
                 .map(this::toSvgElement)
                 .forEach(svg::appendChild);
+        graph.getEdges()
+                .flatMap(e -> toSvgElements(e).stream())
+                .forEach(svg::appendChild);
         return svg;
+    }
+
+    private SVGMarkerElement createArrowHeadMarker(@Nonnull Document document,
+                                                   @Nonnull String id,
+                                                   @Nonnull String styleNames,
+                                                   boolean closed) {
+        SVGMarkerElement marker = getDocument().createSVGMarkerElement();
+        marker.setId(id);
+        marker.setAttribute("viewBox", "0 0 10 10");
+        marker.setAttribute("markerWidth", "6");
+        marker.setAttribute("markerHeight", "6");
+        marker.setAttribute("refX", "9");
+        marker.setAttribute("refY", "5");
+        marker.setOrientToAuto();
+        marker.setAttribute("class", styleNames);
+        SVGPathElement markerPath = document.createSVGPathElement();
+        SVGPathSegList markerSegments = markerPath.getPathSegList();
+        markerSegments.appendItem(markerPath.createSVGPathSegMovetoAbs(1, 1));
+        markerSegments.appendItem(markerPath.createSVGPathSegLinetoAbs(9, 5));
+        markerSegments.appendItem(markerPath.createSVGPathSegLinetoAbs(1, 9));
+        if (closed) {
+            markerSegments.appendItem(markerPath.createSVGPathSegClosePath());
+        }
+        marker.appendChild(markerPath);
+        return marker;
     }
 
     @Nonnull
@@ -114,9 +150,12 @@ public class Graph2Svg {
                 pathElement.getPathSegList().appendItem(lineTo);
             }
         }
+        String arrowHeadId = "open".equalsIgnoreCase(edgeDetails.getArrowHeadStyle()) ? OPEN_ARROW_HEAD_ID : CLOSED_ARROW_HEAD_ID;
+        pathElement.setAttribute("marker-end", "url(#" + arrowHeadId + ")");
         List<Element> edgeElements = new ArrayList<>();
         edgeElements.add(pathElement);
 
+        // Edge label
         if (!edgeDetails.getLabel().isEmpty()) {
             int w = edgeDetails.getLabelWidth();
             int h = edgeDetails.getLabelHeight();

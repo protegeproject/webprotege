@@ -94,6 +94,10 @@ public class EntityGraph2Graph {
             edgeDetails.setLabelWidth(dimensions.getWidth());
             edgeDetails.setLabelHeight(dimensions.getHeight());
             edgeDetails.setLabelPosCenter();
+            edgeDetails.setArrowHeadStyle("open");
+        }
+        else {
+            edgeDetails.setArrowHeadStyle("closed");
         }
         return edgeDetails;
     }
