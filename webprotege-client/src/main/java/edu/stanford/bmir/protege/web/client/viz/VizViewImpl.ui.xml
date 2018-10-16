@@ -19,7 +19,6 @@
         }
 
         .viewPort {
-
         }
 
         .settingsBar {
@@ -55,8 +54,8 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
-        <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
-            <g:HTML ui:field="viewPort" addStyleNames="{style.viewPort}"/>
+        <g:FocusPanel ui:field="viewPort" addStyleNames="{style.focusPanel}">
+            <g:HTML ui:field="canvas" addStyleNames="{style.viewPort}"/>
         </g:FocusPanel>
 
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">

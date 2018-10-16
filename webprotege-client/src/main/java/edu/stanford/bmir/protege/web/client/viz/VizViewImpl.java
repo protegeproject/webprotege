@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.graphlib.*;
+import elemental.client.Browser;
 import elemental.dom.Element;
 
 import javax.annotation.Nonnull;
@@ -34,10 +35,10 @@ public class VizViewImpl extends Composite implements VizView {
     private static VizViewImplUiBinder ourUiBinder = GWT.create(VizViewImplUiBinder.class);
 
     @UiField
-    HTML viewPort;
+    HTML canvas;
 
     @UiField
-    FocusPanel focusPanel;
+    FocusPanel viewPort;
 
     @UiField
     ListBox ranksepListBox;
@@ -61,11 +62,10 @@ public class VizViewImpl extends Composite implements VizView {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
-        focusPanel.addKeyDownHandler(this::handleKeyDown);
+        viewPort.addKeyDownHandler(this::handleKeyDown);
     }
 
     private void handleKeyDown(KeyDownEvent event) {
-        GWT.log("[VizViewImpl] KeyDown " + event.getNativeKeyCode());
         if(event.getNativeKeyCode() == 187) {
             event.preventDefault();
             event.stopPropagation();
@@ -118,7 +118,7 @@ public class VizViewImpl extends Composite implements VizView {
         updateViewPortDimensions();
         Graph2Svg graph2Svg = new Graph2Svg(textMeasurer);
         Element svg = graph2Svg.convertToSvg(graph);
-        viewPort.getElement().setInnerHTML(svg.getOuterHTML());
+        canvas.getElement().setInnerHTML(svg.getOuterHTML());
     }
 
     @Override
@@ -135,8 +135,56 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     private void updateViewPortDimensions() {
-        viewPort.setWidth(viewportWidth * scaleFactor + "px");
-        viewPort.setHeight(viewportHeight * scaleFactor + "px");
+        double percentageX = getHorizontalScrollPercentage();
+        double percentageY = getVerticalScrollPercentage();
+
+        canvas.setWidth(viewportWidth * scaleFactor + "px");
+        canvas.setHeight(viewportHeight * scaleFactor + "px");
+
+        setHorizontalScrollPercentage(percentageX);
+        setVerticalScrollPercentage(percentageY);
+    }
+
+    private void setHorizontalScrollPercentage(double percentage) {
+        Element viewPortElement = (Element) viewPort.getElement();
+        viewPortElement.setScrollLeft((int) (percentage * getHorizontalScrollDistance()));
+    }
+
+    private void setVerticalScrollPercentage(double percentage) {
+        Element viewPortElement = (Element) viewPort.getElement();
+        viewPortElement.setScrollTop((int) (percentage * getVerticalScrollDistance()));
+    }
+
+    private double getHorizontalScrollPercentage() {
+        Element viewPortElement = (Element) viewPort.getElement();
+        Element canvasElement = (Element) canvas.getElement();
+        if(canvasElement.getClientWidth() < viewPortElement.getClientWidth()) {
+            return 0.5;
+        }
+        double scrollX = viewPortElement.getScrollLeft();
+        return scrollX / getHorizontalScrollDistance();
+    }
+
+    private double getVerticalScrollPercentage() {
+        Element viewPortElement = (Element) viewPort.getElement();
+        Element canvasElement = (Element) canvas.getElement();
+        if(canvasElement.getClientHeight() < viewPortElement.getClientHeight()) {
+            return 0.5;
+        }
+        double scrollY = viewPortElement.getScrollTop();
+        return scrollY / getVerticalScrollDistance();
+    }
+
+    private int getVerticalScrollDistance() {
+        Element viewPortElement = (Element) viewPort.getElement();
+        Element canvasElement = (Element) canvas.getElement();
+        return canvasElement.getScrollHeight() - viewPortElement.getClientHeight();
+    }
+
+    private int getHorizontalScrollDistance() {
+        Element viewPortElement = (Element) viewPort.getElement();
+        Element canvasElement = (Element) canvas.getElement();
+        return canvasElement.getScrollWidth() - viewPortElement.getClientWidth();
     }
 
     @Override
@@ -157,7 +205,7 @@ public class VizViewImpl extends Composite implements VizView {
     @UiHandler("downloadButton")
     public void downloadButtonClick(ClickEvent event) {
         DownloadSvg saver = new DownloadSvg();
-        Element e = (Element) viewPort.getElement();
+        Element e = (Element) canvas.getElement();
         saver.save(e, "entity-graph");
     }
 
