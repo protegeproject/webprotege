@@ -889,7 +889,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 
 .wp-graph__node {
     fill: none;
-    stroke-width: 4px;
+    stroke-width: 4;
     padding: 5px;
 }
 
@@ -904,6 +904,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 .wp-graph__edge {
     fill: none;
     stroke-width: 2px;
+    stroke-linecap: round;
 }
 .wp-graph__edge--is-a {
     stroke: #f0a05c;

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
 import elemental.dom.Document;
 import elemental.dom.Element;
@@ -10,6 +11,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -23,7 +25,11 @@ public class Graph2Svg {
 
     private static final String OPEN_ARROW_HEAD_ID = "openArrowHead";
 
-    public Graph2Svg() {
+    @Nonnull
+    private final TextMeasurer measurer;
+
+    public Graph2Svg(@Nonnull TextMeasurer measurer) {
+        this.measurer = checkNotNull(measurer);
     }
 
     private static String inPixels(double i) {
@@ -52,10 +58,10 @@ public class Graph2Svg {
         svg.setAttribute("height", inPixels(h));
         svg.setAttribute("viewbox", "0 0 " + w + " " + h);
         graph.getNodes()
-                .map(this::toSvgElement)
+                .map(this::toNodeSvgElement)
                 .forEach(svg::appendChild);
         graph.getEdges()
-                .flatMap(e -> toSvgElements(e).stream())
+                .flatMap(e -> toEdgeSvgElements(e).stream())
                 .forEach(svg::appendChild);
         return svg;
     }
@@ -86,7 +92,7 @@ public class Graph2Svg {
     }
 
     @Nonnull
-    private Element toSvgElement(@Nonnull NodeDetails nodeDetails) {
+    private Element toNodeSvgElement(@Nonnull NodeDetails nodeDetails) {
         Document document = getDocument();
         Element group = document.createElement("g");
         SVGRectElement rect = createRect(nodeDetails, document);
@@ -98,12 +104,14 @@ public class Graph2Svg {
 
     private SVGRectElement createRect(@Nonnull NodeDetails nodeDetails, Document document) {
         SVGRectElement rectElement = document.createSVGRectElement();
-        rectElement.setAttribute("x", inPixels(nodeDetails.getTopLeftX()));
-        rectElement.setAttribute("y", inPixels(nodeDetails.getTopLeftY()));
+        measurer.setStyleNames(nodeDetails.getStyleNames());
+        double strokeWidth = measurer.getStrokeWidth();
+        rectElement.setAttribute("x", inPixels(nodeDetails.getTopLeftX() + strokeWidth / 2));
+        rectElement.setAttribute("y", inPixels(nodeDetails.getTopLeftY() + strokeWidth / 2));
         rectElement.setAttribute("rx", "2");
         rectElement.setAttribute("ry", "2");
-        rectElement.setAttribute("width", inPixels(nodeDetails.getWidth()));
-        rectElement.setAttribute("height", inPixels(nodeDetails.getHeight()));
+        rectElement.setAttribute("width", inPixels(nodeDetails.getWidth() - strokeWidth));
+        rectElement.setAttribute("height", inPixels(nodeDetails.getHeight() - strokeWidth));
         rectElement.setAttribute("class", nodeDetails.getStyleNames());
         return rectElement;
     }
@@ -133,7 +141,7 @@ public class Graph2Svg {
     }
 
     @Nonnull
-    List<Element> toSvgElements(@Nonnull EdgeDetails edgeDetails) {
+    List<Element> toEdgeSvgElements(@Nonnull EdgeDetails edgeDetails) {
         GWT.log("[Graph2SVG] Converting Edge: " + edgeDetails.stringify());
         List<Point> points = edgeDetails.getPoints().collect(toList());
         SVGPathElement pathElement = getDocument().createSVGPathElement();

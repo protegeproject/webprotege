@@ -13,4 +13,6 @@ public interface TextMeasurer {
 
     @Nonnull
     TextDimensions getTextDimensions(@Nonnull String text);
+
+    double getStrokeWidth();
 }

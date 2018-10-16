@@ -6,6 +6,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import elemental.client.Browser;
+import elemental.css.CSSStyleDeclaration;
 
 import javax.annotation.Nonnull;
 
@@ -15,6 +17,8 @@ import javax.annotation.Nonnull;
  * 15 Oct 2018
  */
 public class TextMeasurerImpl extends Composite implements TextMeasurer {
+
+    private static final int DEFAULT_STROKE_WIDTH = 4;
 
     interface TextMeasurerImplUiBinder extends UiBinder<HTMLPanel, TextMeasurerImpl> {
 
@@ -44,5 +48,24 @@ public class TextMeasurerImpl extends Composite implements TextMeasurer {
         Element element = measuringElement.getElement();
         element.setInnerText(text);
         return TextDimensions.get(element.getClientWidth(), element.getClientHeight());
+    }
+
+    @Override
+    public double getStrokeWidth() {
+        elemental.dom.Element element = (elemental.dom.Element) measuringElement.getElement();
+        CSSStyleDeclaration computedStyle = Browser.getWindow().getComputedStyle(element, null);
+        String strokeWidth = computedStyle.getPropertyValue("stroke-width");
+        GWT.log("[TextMeasurerImpl] Stroke width: " + strokeWidth);
+        if(strokeWidth.isEmpty()) {
+            return DEFAULT_STROKE_WIDTH;
+        }
+        if(strokeWidth.endsWith("px")) {
+            strokeWidth = strokeWidth.substring(strokeWidth.length() - 2);
+        }
+        try {
+            return Double.parseDouble(strokeWidth);
+        } catch (NumberFormatException e) {
+            return DEFAULT_STROKE_WIDTH;
+        }
     }
 }
