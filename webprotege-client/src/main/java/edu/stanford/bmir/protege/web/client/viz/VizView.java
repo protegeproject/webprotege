@@ -16,6 +16,8 @@ public interface VizView extends IsWidget {
 
     void setGraph(Graph graph);
 
+    void setLoadHandler(Runnable handler);
+
     interface SettingsChangedHandler {
         void handleSettingsChanged();
     }

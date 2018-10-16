@@ -38,8 +38,6 @@ public class VizPresenter {
     @Nonnull
     private HasBusy hasBusy = busy -> {};
 
-    private String currentRendering = "";
-
     private Graph currentGraph;
 
     private EntityGraph currentEntityGraph;
@@ -60,6 +58,7 @@ public class VizPresenter {
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
         container.setWidget(view);
         view.setSettingsChangedHandler(this::handleSettingsChanged);
+        view.setLoadHandler(this::doLayout);
     }
 
     private void handleSettingsChanged() {
@@ -76,13 +75,20 @@ public class VizPresenter {
 
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
         currentEntityGraph = result.getEntityGraph();
+        doLayout();
+    }
+
+    private void doLayout() {
+        if(currentEntityGraph == null) {
+            return;
+        }
         currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
-        this.currentRendering = result.getRendering();
         displayCurrentRendering();
+
     }
 
     private void displayCurrentRendering() {
-        if(currentRendering.isEmpty()) {
+        if(currentGraph == null) {
             return;
         }
         currentGraph.setRankSep((int) (20 * view.getRankSpacing()));

@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.graphlib.*;
@@ -14,6 +15,8 @@ import elemental.dom.Element;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.joining;
@@ -24,6 +27,9 @@ import static java.util.stream.Collectors.joining;
  * 11 Oct 2018
  */
 public class VizViewImpl extends Composite implements VizView {
+
+    @Nonnull
+    private Runnable loadHandler = () -> {};
 
     interface VizViewImplUiBinder extends UiBinder<HTMLPanel, VizViewImpl> {
 
@@ -53,6 +59,11 @@ public class VizViewImpl extends Composite implements VizView {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
+    }
+
+    @Override
+    public void setLoadHandler(Runnable handler) {
+        this.loadHandler = checkNotNull(handler);
     }
 
     @Nonnull
@@ -88,5 +99,11 @@ public class VizViewImpl extends Composite implements VizView {
         DownloadSvg saver = new DownloadSvg();
         Element e = (Element) imageContainer.getElement();
         saver.save(e, "entity-graph");
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        loadHandler.run();
     }
 }
