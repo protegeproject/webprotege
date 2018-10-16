@@ -893,6 +893,11 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     padding: 5px;
 }
 
+.wp-graph__node + text {
+    user-select: none;
+    pointer-events: none;
+}
+
 .wp-graph__node--class {
     stroke: #6195cc;
 }

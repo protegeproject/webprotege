@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
 import elemental.dom.Document;
 import elemental.dom.Element;
+import elemental.dom.Text;
 import elemental.svg.*;
 
 import javax.annotation.Nonnull;
@@ -54,9 +55,7 @@ public class Graph2Svg {
 
 
         int w = graph.getWidth();
-//        svg.setAttribute("width", inPixels(w));
         int h = graph.getHeight();
-//        svg.setAttribute("height", inPixels(h));
         svg.setAttribute("viewbox", "0 0 " + w + " " + h);
         graph.getNodes()
                 .map(this::toNodeSvgElement)
@@ -98,8 +97,8 @@ public class Graph2Svg {
         Element group = document.createElement("g");
         SVGRectElement rect = createRect(nodeDetails, document);
         SVGTextElement text = createText(nodeDetails);
-        group.appendChild(rect);
         group.appendChild(text);
+        group.appendChild(rect);
         return group;
     }
 
@@ -118,26 +117,25 @@ public class Graph2Svg {
     }
 
     @Nonnull
-    private SVGTextElement createText(@Nonnull NodeDetails nodeDetails) {
-        SVGTextElement textElement = getDocument().createSVGTextElement();
-        textElement.appendChild(getDocument().createTextNode(nodeDetails.getLabel()));
-        textElement.setAttribute("text-anchor", "middle");
-        textElement.setAttribute("alignment-baseline", "middle");
-        textElement.setAttribute("fill", "var(--primary--color)");
-        textElement.setAttribute("x", inPixels(nodeDetails.getX()));
-        textElement.setAttribute("y", inPixels(nodeDetails.getY()));
-        return textElement;
+    private SVGTextElement createText(@Nonnull NodeDetails details) {
+        return createTextElement(details.getLabel(), details.getX(), details.getY());
     }
 
     @Nonnull
     private SVGTextElement createText(@Nonnull EdgeDetails details) {
+        return createTextElement(details.getLabel(), details.getX(), details.getY());
+    }
+
+    @Nonnull
+    private SVGTextElement createTextElement(@Nonnull String text, int x, int y) {
         SVGTextElement textElement = getDocument().createSVGTextElement();
-        textElement.appendChild(getDocument().createTextNode(details.getLabel()));
+        Text textNode = getDocument().createTextNode(text);
+        textElement.appendChild(textNode);
         textElement.setAttribute("text-anchor", "middle");
         textElement.setAttribute("alignment-baseline", "middle");
         textElement.setAttribute("fill", "var(--primary--color)");
-        textElement.setAttribute("x", inPixels(details.getX()));
-        textElement.setAttribute("y", inPixels(details.getY()));
+        textElement.setAttribute("x", inPixels(x));
+        textElement.setAttribute("y", inPixels(y));
         return textElement;
     }
 
