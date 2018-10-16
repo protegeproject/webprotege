@@ -44,6 +44,7 @@ public class Graph2Svg {
     public Element convertToSvg(@Nonnull Graph graph) {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
+        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 
         // Arrow head defs
         SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--is-a", true);
@@ -53,9 +54,9 @@ public class Graph2Svg {
 
 
         int w = graph.getWidth();
-        svg.setAttribute("width", inPixels(w));
+//        svg.setAttribute("width", inPixels(w));
         int h = graph.getHeight();
-        svg.setAttribute("height", inPixels(h));
+//        svg.setAttribute("height", inPixels(h));
         svg.setAttribute("viewbox", "0 0 " + w + " " + h);
         graph.getNodes()
                 .map(this::toNodeSvgElement)

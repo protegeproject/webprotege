@@ -18,9 +18,8 @@
             margin: 2px;
         }
 
-        .container {
-            width: auto;
-            height: auto;
+        .viewPort {
+
         }
 
         .settingsBar {
@@ -57,7 +56,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
         <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
-            <g:HTML ui:field="imageContainer" addStyleNames="{style.container}"/>
+            <g:HTML ui:field="viewPort" addStyleNames="{style.viewPort}"/>
         </g:FocusPanel>
 
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">

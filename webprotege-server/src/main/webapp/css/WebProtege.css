@@ -905,6 +905,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     fill: none;
     stroke-width: 2px;
     stroke-linecap: round;
+    stroke-linejoin: round;
 }
 .wp-graph__edge--is-a {
     stroke: #f0a05c;
@@ -930,11 +931,11 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 
 .wp-graph__edge__arrow-head--is-a {
     fill: var(--primary--background-color);
-    stroke: #E2925C;
+    stroke: #f0a05c;
 }
 
 .wp-graph__edge__arrow-head--rel {
-    stroke: ##6195cc;
+    stroke: #6195cc;
     stroke-width: 2;
     fill: none;
 }

@@ -28,4 +28,8 @@ public interface VizView extends IsWidget {
 
     @Nonnull
     TextMeasurer getTextMeasurer();
+
+    double getScaleFactor();
+
+    void setScaleFactor(double scaleFactor);
 }
