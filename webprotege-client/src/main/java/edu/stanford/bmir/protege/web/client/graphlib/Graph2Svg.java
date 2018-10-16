@@ -46,11 +46,11 @@ public class Graph2Svg {
         svg.appendChild(document.createElement("defs")).appendChild(closedArrowHead);
 
 
-        int w = graph.getWidth() + 10;
+        int w = graph.getWidth();
         svg.setAttribute("width", inPixels(w));
-        int h = graph.getHeight() + 10;
+        int h = graph.getHeight();
         svg.setAttribute("height", inPixels(h));
-        svg.setAttribute("viewbox", "-5 -5 " + w + " " + h);
+        svg.setAttribute("viewbox", "0 0 " + w + " " + h);
         graph.getNodes()
                 .map(this::toSvgElement)
                 .forEach(svg::appendChild);

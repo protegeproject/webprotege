@@ -26,6 +26,8 @@ public class EntityGraph2Graph {
     @Nonnull
     public Graph convertGraph(@Nonnull EntityGraph graph) {
         Graph g = Graph.create();
+        g.setMarginX(10);
+        g.setMarginY(10);
         graph.getNodes()
                 .stream()
                 .map(this::toNodeDetails)

@@ -76,6 +76,8 @@ public class VizViewImpl extends Composite implements VizView {
     public void setGraph(Graph graph) {
         Graph2Svg graph2Svg = new Graph2Svg();
         Element svg = graph2Svg.convertToSvg(graph);
+        imageContainer.setWidth(graph.getWidth() + "px");
+        imageContainer.setHeight(graph.getHeight() + "px");
         imageContainer.getElement().setInnerHTML(svg.getOuterHTML());
     }
 
