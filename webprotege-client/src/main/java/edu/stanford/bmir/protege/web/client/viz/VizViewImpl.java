@@ -51,7 +51,7 @@ public class VizViewImpl extends Composite implements VizView {
     @Inject
     public VizViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        ranksepListBox.setSelectedIndex(3);
+        ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
     }
 
@@ -72,9 +72,9 @@ public class VizViewImpl extends Composite implements VizView {
     public double getRankSpacing() {
         String value = ranksepListBox.getSelectedValue();
         try {
-            return Double.parseDouble(value);
+            return 2 * Double.parseDouble(value);
         } catch (NumberFormatException e){
-            return 1.0;
+            return 2.0;
         }
     }
 

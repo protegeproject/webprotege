@@ -87,18 +87,12 @@
             <g:HTMLPanel addStyleNames="{style.settingsBarFormGroup}">
                 <g:Label text="Spacing" addStyleNames="{wp.style.formLabel} {style.settingsBarLabel}"/>
                 <g:ListBox ui:field="ranksepListBox">
-                    <g:item value="0.25">x 0.25</g:item>
                     <g:item value="0.50">x 0.5</g:item>
-                    <g:item value="0.75">x 0.75</g:item>
                     <g:item value="1.00">x 1</g:item>
-                    <g:item value="1.25">x 1.25</g:item>
-                    <g:item value="1.50">x 1.5</g:item>
-                    <g:item value="1.75">x 1.75</g:item>
                     <g:item value="2.00">x 2</g:item>
-                    <g:item value="2.25">x 2.25</g:item>
-                    <g:item value="2.50">x 2.5</g:item>
-                    <g:item value="2.75">x 2.75</g:item>
                     <g:item value="3.00">x 3</g:item>
+                    <g:item value="3.00">x 4</g:item>
+                    <g:item value="3.00">x 5</g:item>
                 </g:ListBox>
             </g:HTMLPanel>
             <div class="{style.spacer}"/>
