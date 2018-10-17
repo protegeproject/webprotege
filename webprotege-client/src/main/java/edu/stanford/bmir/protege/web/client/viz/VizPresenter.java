@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
@@ -94,11 +95,21 @@ public class VizPresenter {
 
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
         currentEntityGraph = result.getEntityGraph();
+        GWT.log("[VizPresenter] handing entity graph rendering");
         layoutAndDisplayGraph();
     }
 
     private void layoutCurrentGraph() {
+        if(!view.isVisible()) {
+            return;
+        }
         if(currentEntityGraph == null) {
+            view.clearGraph();
+            return;
+        }
+        if(currentEntityGraph.getNodes().isEmpty()) {
+            view.clearGraph();
+            currentGraph = null;
             return;
         }
         currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
@@ -108,8 +119,10 @@ public class VizPresenter {
 
     private void displayGraph() {
         if(currentGraph == null) {
-            return;
+            view.clearGraph();
         }
-        view.setGraph(currentGraph);
+        else {
+            view.setGraph(currentGraph);
+        }
     }
 }

@@ -17,6 +17,8 @@ public interface VizView extends IsWidget {
 
     Element getSvgElement();
 
+    void clearGraph();
+
     interface DownloadHandler {
         void handleDownload();
     }

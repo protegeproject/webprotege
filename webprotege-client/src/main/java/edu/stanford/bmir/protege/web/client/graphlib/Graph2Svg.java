@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
 import elemental.dom.Document;
 import elemental.dom.Element;
 import elemental.dom.Text;
+import elemental.events.Event;
+import elemental.events.EventListener;
 import elemental.svg.*;
 
 import javax.annotation.Nonnull;
@@ -123,6 +126,12 @@ public class Graph2Svg {
         }
         rectElement.setAttribute("class", nodeDetails.getStyleNames());
         rectElement.setAttribute("pointer-events","visible");
+        rectElement.addEventListener(Event.CONTEXTMENU, new EventListener() {
+            @Override
+            public void handleEvent(Event evt) {
+                Window.alert("Clicked " + nodeDetails.getLabel());
+            }
+        });
         return rectElement;
     }
 

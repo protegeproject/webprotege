@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.graphlib.*;
 import elemental.dom.Element;
@@ -125,18 +126,31 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     @Override
+    public void clearGraph() {
+        GWT.log("[VizViewImpl] clear graph");
+        removeCanvasChildren();
+    }
+
+    @Override
     public void setGraph(Graph graph) {
+        GWT.log("[VizViewImpl] set graph");
+        removeCanvasChildren();
         Graph2Svg graph2Svg = new Graph2Svg(textMeasurer);
         Element svg = graph2Svg.createSvg(graph);
+        com.google.gwt.user.client.Element element = canvas.getElement();
+        element.appendChild((com.google.gwt.dom.client.Element) svg);
+        canvasWidth = graph.getWidth();
+        canvasHeight = graph.getHeight();
+        updateCanvasDimensions();
+    }
+
+    private void removeCanvasChildren() {
+        GWT.log("[VizViewImpl] remove canvas children");
         Element canvasElement = (Element) canvas.getElement();
         NodeList childNodes = canvasElement.getChildNodes();
         while(childNodes.getLength() > 0) {
             canvasElement.removeChild(childNodes.item(0));
         }
-        canvas.getElement().appendChild((com.google.gwt.dom.client.Element) svg);
-        canvasWidth = graph.getWidth();
-        canvasHeight = graph.getHeight();
-        updateCanvasDimensions();
     }
 
     @Override
