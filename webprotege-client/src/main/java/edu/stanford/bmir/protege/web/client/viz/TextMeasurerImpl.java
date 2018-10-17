@@ -47,7 +47,15 @@ public class TextMeasurerImpl extends Composite implements TextMeasurer {
     public TextDimensions getTextDimensions(@Nonnull String text) {
         Element element = measuringElement.getElement();
         element.setInnerText(text);
-        return TextDimensions.get(element.getClientWidth(), element.getClientHeight());
+        int clientWidth = element.getClientWidth();
+        int clientHeight = element.getClientHeight();
+        if(clientWidth < 0) {
+            clientWidth = 0;
+        }
+        if(clientHeight < 0) {
+            clientHeight = 0;
+        }
+        return TextDimensions.get(clientWidth, clientHeight);
     }
 
     @Override

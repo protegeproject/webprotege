@@ -7,8 +7,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.graphlib.*;
-import elemental.client.Browser;
 import elemental.dom.Element;
+import elemental.dom.Node;
+import elemental.dom.NodeList;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ public class VizViewImpl extends Composite implements VizView {
     private static VizViewImplUiBinder ourUiBinder = GWT.create(VizViewImplUiBinder.class);
 
     @UiField
-    HTML canvas;
+    HTMLPanel canvas;
 
     @UiField
     FocusPanel viewPort;
@@ -51,9 +52,9 @@ public class VizViewImpl extends Composite implements VizView {
 
     private double scaleFactor = 1.0;
 
-    private int viewportWidth = 0;
+    private int canvasWidth = 0;
 
-    private int viewportHeight = 0;
+    private int canvasHeight = 0;
 
     private SettingsChangedHandler settingsChangedHandler = () -> {};
 
@@ -113,12 +114,21 @@ public class VizViewImpl extends Composite implements VizView {
 
     @Override
     public void setGraph(Graph graph) {
-        viewportWidth = graph.getWidth();
-        viewportHeight = graph.getHeight();
-        updateViewPortDimensions();
         Graph2Svg graph2Svg = new Graph2Svg(textMeasurer);
-        Element svg = graph2Svg.convertToSvg(graph);
-        canvas.getElement().setInnerHTML(svg.getOuterHTML());
+        GWT.log("[VizViewImpl] Converting graph to SVG");
+        Element svg = graph2Svg.createSvg(graph);
+        GWT.log("[VizViewImpl] Created SVG element SVG");
+        GWT.log("[VizViewImpl] " + svg.getOuterHTML());
+        GWT.log("[VizViewImpl] Appending SVG:");
+        Element canvasElement = (Element) canvas.getElement();
+        NodeList childNodes = canvasElement.getChildNodes();
+        while(childNodes.getLength() > 0) {
+            canvasElement.removeChild(childNodes.item(0));
+        }
+        canvas.getElement().appendChild((com.google.gwt.dom.client.Element) svg);
+        canvasWidth = graph.getWidth();
+        canvasHeight = graph.getHeight();
+        updateCanvasDimensions();
     }
 
     @Override
@@ -130,16 +140,16 @@ public class VizViewImpl extends Composite implements VizView {
     public void setScaleFactor(double scaleFactor) {
         if (scaleFactor != this.scaleFactor) {
             this.scaleFactor = scaleFactor;
-            updateViewPortDimensions();
+            updateCanvasDimensions();
         }
     }
 
-    private void updateViewPortDimensions() {
+    private void updateCanvasDimensions() {
         double percentageX = getHorizontalScrollPercentage();
         double percentageY = getVerticalScrollPercentage();
 
-        canvas.setWidth(viewportWidth * scaleFactor + "px");
-        canvas.setHeight(viewportHeight * scaleFactor + "px");
+        canvas.setWidth(canvasWidth * scaleFactor + "px");
+        canvas.setHeight(canvasHeight * scaleFactor + "px");
 
         setHorizontalScrollPercentage(percentageX);
         setVerticalScrollPercentage(percentageY);
@@ -205,7 +215,7 @@ public class VizViewImpl extends Composite implements VizView {
     @UiHandler("downloadButton")
     public void downloadButtonClick(ClickEvent event) {
         DownloadSvg saver = new DownloadSvg();
-        Element e = (Element) canvas.getElement();
+        Element e = (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
         saver.save(e, "entity-graph");
     }
 

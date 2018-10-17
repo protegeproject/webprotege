@@ -38,7 +38,6 @@
 
     <script src="js/viz/viz.js"></script>
     <script src="js/viz/full.render.js"></script>
-    <script src="js/download/download.svg.js"></script>
     <script src="js/graphlib/graphlib.js"></script>
     <script src="js/dagre/dagre.js"></script>
 

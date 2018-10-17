@@ -18,9 +18,6 @@
             margin: 2px;
         }
 
-        .viewPort {
-        }
-
         .settingsBar {
             flex-grow: 0;
             flex-shrink: 0;
@@ -55,7 +52,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
         <g:FocusPanel ui:field="viewPort" addStyleNames="{style.focusPanel}">
-            <g:HTML ui:field="canvas" addStyleNames="{style.viewPort}"/>
+            <g:HTMLPanel ui:field="canvas"/>
         </g:FocusPanel>
 
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">

@@ -26,6 +26,8 @@ public class Graph2Svg {
 
     private static final String OPEN_ARROW_HEAD_ID = "openArrowHead";
 
+    private static final String SVG_NS = "http://www.w3.org/2000/svg";
+
     @Nonnull
     private final TextMeasurer measurer;
 
@@ -42,16 +44,20 @@ public class Graph2Svg {
     }
 
     @Nonnull
-    public Element convertToSvg(@Nonnull Graph graph) {
+    public Element createSvg(@Nonnull Graph graph) {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
         svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        svg.setAttribute("width", "100%");
+        svg.setAttribute("height", "100%");
 
         // Arrow head defs
         SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--is-a", true);
         SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--rel", false);
-        svg.appendChild(document.createElement("defs")).appendChild(openArrowHead);
-        svg.appendChild(document.createElement("defs")).appendChild(closedArrowHead);
+        Element defsElement = document.createElementNS(SVG_NS, "defs");
+        svg.appendChild(defsElement);
+        defsElement.appendChild(openArrowHead);
+        defsElement.appendChild(closedArrowHead);
 
 
         int w = graph.getWidth();
@@ -94,7 +100,7 @@ public class Graph2Svg {
     @Nonnull
     private Element toNodeSvgElement(@Nonnull NodeDetails nodeDetails) {
         Document document = getDocument();
-        Element group = document.createElement("g");
+        Element group = document.createElementNS(SVG_NS, "g");
         SVGRectElement rect = createRect(nodeDetails, document);
         SVGTextElement text = createText(nodeDetails);
         group.appendChild(text);
@@ -106,13 +112,17 @@ public class Graph2Svg {
         SVGRectElement rectElement = document.createSVGRectElement();
         measurer.setStyleNames(nodeDetails.getStyleNames());
         double strokeWidth = measurer.getStrokeWidth();
-        rectElement.setAttribute("x", inPixels(nodeDetails.getTopLeftX() + strokeWidth / 2));
-        rectElement.setAttribute("y", inPixels(nodeDetails.getTopLeftY() + strokeWidth / 2));
+        double halfStrokeWidth = strokeWidth / 2;
+        rectElement.setAttribute("x", inPixels(nodeDetails.getTopLeftX() + halfStrokeWidth));
+        rectElement.setAttribute("y", inPixels(nodeDetails.getTopLeftY() + halfStrokeWidth));
         rectElement.setAttribute("rx", "2");
         rectElement.setAttribute("ry", "2");
-        rectElement.setAttribute("width", inPixels(nodeDetails.getWidth() - strokeWidth));
-        rectElement.setAttribute("height", inPixels(nodeDetails.getHeight() - strokeWidth));
+        if (nodeDetails.getWidth() > strokeWidth && nodeDetails.getHeight() > strokeWidth) {
+            rectElement.setAttribute("width", inPixels(nodeDetails.getWidth() - strokeWidth));
+            rectElement.setAttribute("height", inPixels(nodeDetails.getHeight() - strokeWidth));
+        }
         rectElement.setAttribute("class", nodeDetails.getStyleNames());
+        rectElement.setAttribute("pointer-events","visible");
         return rectElement;
     }
 
@@ -174,7 +184,7 @@ public class Graph2Svg {
             textRect.setAttribute("class", "wp-graph__edge__label");
 
             SVGTextElement text = createText(edgeDetails);
-            Element labelGroup = getDocument().createElement("g");
+            Element labelGroup = getDocument().createElementNS(SVG_NS, "g");
             labelGroup.appendChild(textRect);
             labelGroup.appendChild(text);
             edgeElements.add(labelGroup);

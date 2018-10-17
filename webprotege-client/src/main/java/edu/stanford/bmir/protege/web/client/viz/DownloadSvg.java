@@ -1,17 +1,13 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.gwt.core.client.GWT;
+import com.google.common.io.BaseEncoding;
+import com.google.gwt.user.client.Window;
 import elemental.client.Browser;
-import elemental.css.CSSStyleDeclaration;
-import elemental.dom.DOMTokenList;
+import elemental.css.*;
 import elemental.dom.Element;
-import elemental.dom.Node;
-import elemental.html.HTMLCollection;
 import elemental.stylesheets.StyleSheet;
 import elemental.stylesheets.StyleSheetList;
-import jsinterop.annotations.JsMethod;
-import jsinterop.annotations.JsOverlay;
-import jsinterop.annotations.JsPackage;
+import elemental.svg.SVGStyleElement;
 
 import javax.annotation.Nonnull;
 
@@ -23,29 +19,58 @@ import javax.annotation.Nonnull;
 public class DownloadSvg {
 
     public void save(@Nonnull Element element, @Nonnull String fileName) {
-        process(element);
-        downloadSvg(element, fileName);
+        download(element, fileName);
     }
 
-    private void process(Element element) {
-        DOMTokenList classNames = element.getClassList();
+
+    private static void download(Element element, String fileName) {
+        // First convert the image to a data URI
+        Element svgCopy = (Element) element.cloneNode(true);
+        SVGStyleElement styleElement = Browser.getDocument().createSVGStyleElement();
+        StyleSheetList styleSheets = Browser.getDocument().getStyleSheets();
+        StringBuilder rules = new StringBuilder();
+        for(int styleSheetIndex = 0; styleSheetIndex < styleSheets.length(); styleSheetIndex++) {
+            CSSStyleSheet styleSheet = (CSSStyleSheet) styleSheets.item(styleSheetIndex);
+            CSSRuleList ruleList = styleSheet.getCssRules();
+            if (ruleList != null) {
+                for(int ruleIndex = 0; ruleIndex < ruleList.getLength(); ruleIndex++) {
+                    CSSRule rule = ruleList.item(ruleIndex);
+                    String ruleText = rule.getCssText();
+                    if(ruleText.startsWith(".wp-graph")) {
+                        rules.append(ruleText);
+                    }
+                }
+            }
+        }
         CSSStyleDeclaration computedStyle = Browser.getWindow().getComputedStyle(element, null);
+        rules.append("\n");
+        rules.append(":root {--primary--background-color: white;}\n");
+        rules.append("text {\n");
         for(int i = 0; i < computedStyle.getLength(); i++) {
-            String item = computedStyle.item(i);
-            if (!computedStyle.isPropertyImplicit(item)) {
-                GWT.log("[DownloadSvg] Item: " + item);
+            String property = computedStyle.item(i);
+            if (property.startsWith("font")) {
+                CSSValue value = computedStyle.getPropertyCSSValue(property);
+                rules.append(property);
+                rules.append(":");
+                rules.append(value.getCssText());
+                rules.append(";\n");
             }
         }
-//        GWT.log("[DownloadSvg]" + computedStyle.getCssText());
-        HTMLCollection children = element.getChildren();
-        for(int i = 0; i < children.getLength(); i++) {
-            Node node = children.item(i);
-            if(node instanceof Element) {
-                process((Element) node);
-            }
-        }
-    }
+        rules.append("}\n");
+        styleElement.setTextContent(rules.toString());
 
-    @JsMethod(namespace = JsPackage.GLOBAL)
-    private static native void downloadSvg(Element element, String fileName);
+        svgCopy.insertBefore(styleElement, svgCopy.getFirstChild());
+        svgCopy.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        String svgHtml = "<?xml version=\"1.0\" standalone=\"no\"?>" + svgCopy.getOuterHTML();
+        String base64Encoding = BaseEncoding.base64().encode(svgHtml.getBytes());
+        String dataIri = "data:image/svg+xml;base64," + base64Encoding;
+
+        // Now create an anchor element and set it to download the image
+        Element a = Browser.getDocument().createElement("a");
+        a.setAttribute("href", dataIri);
+        a.setAttribute("href-lang", "image/svg+xml");
+        a.setAttribute("target", "_blank");
+        a.setAttribute("download", fileName);
+        a.click();
+    }
 }

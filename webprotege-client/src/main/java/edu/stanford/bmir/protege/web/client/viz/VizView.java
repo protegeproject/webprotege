@@ -18,6 +18,8 @@ public interface VizView extends IsWidget {
 
     void setLoadHandler(Runnable handler);
 
+    boolean isVisible();
+
     interface SettingsChangedHandler {
         void handleSettingsChanged();
     }
