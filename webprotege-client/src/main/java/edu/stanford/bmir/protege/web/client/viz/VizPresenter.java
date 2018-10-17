@@ -113,6 +113,8 @@ public class VizPresenter {
             return;
         }
         currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
+        GWT.log("[VizPresenter] Laying out current graph)");
+        currentGraph.setRankDirBottomToTop();
         currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
         currentGraph.layout();
     }

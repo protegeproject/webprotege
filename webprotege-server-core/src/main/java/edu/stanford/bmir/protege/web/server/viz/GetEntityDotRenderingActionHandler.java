@@ -22,17 +22,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHandler<GetEntityDotRenderingAction, GetEntityDotRenderingResult> {
 
     @Nonnull
-    private final DotRendererFactory rendererFactory;
-
-    @Nonnull
     private final EntityGraphBuilder graphBuilder;
 
     @Inject
     public GetEntityDotRenderingActionHandler(@Nonnull AccessManager accessManager,
-                                              @Nonnull DotRendererFactory rendererFactory,
                                               @Nonnull EntityGraphBuilder graphBuilder) {
         super(accessManager);
-        this.rendererFactory = checkNotNull(rendererFactory);
         this.graphBuilder = checkNotNull(graphBuilder);
     }
 
@@ -46,10 +41,6 @@ public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHan
     @Override
     public GetEntityDotRenderingResult execute(@Nonnull GetEntityDotRenderingAction action, @Nonnull ExecutionContext executionContext) {
         EntityGraph graph = graphBuilder.createGraph(action.getEntity());
-        DotRenderer dotRenderer = rendererFactory.create(graph);
-        StringWriter writer = new StringWriter();
-        dotRenderer.render(writer);
-        return GetEntityDotRenderingResult.get(writer.toString(),
-                                               graph);
+        return GetEntityDotRenderingResult.get(graph);
     }
 }
