@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent.SelectionChangeHandler;
+import elemental.dom.Element;
 
 import javax.annotation.Nonnull;
 
@@ -14,9 +15,17 @@ import javax.annotation.Nonnull;
  */
 public interface VizView extends IsWidget {
 
+    Element getSvgElement();
+
+    interface DownloadHandler {
+        void handleDownload();
+    }
+
     void setGraph(Graph graph);
 
     void setLoadHandler(Runnable handler);
+
+    void setDownloadHandler(@Nonnull DownloadHandler handler);
 
     boolean isVisible();
 

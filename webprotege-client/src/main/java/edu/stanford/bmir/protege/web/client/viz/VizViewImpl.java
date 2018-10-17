@@ -29,6 +29,8 @@ public class VizViewImpl extends Composite implements VizView {
     @Nonnull
     private Runnable loadHandler = () -> {};
 
+    private DownloadHandler downloadHandler = () -> {};
+
     interface VizViewImplUiBinder extends UiBinder<HTMLPanel, VizViewImpl> {
 
     }
@@ -106,10 +108,20 @@ public class VizViewImpl extends Composite implements VizView {
         this.loadHandler = checkNotNull(handler);
     }
 
+    @Override
+    public void setDownloadHandler(@Nonnull DownloadHandler handler) {
+        this.downloadHandler = checkNotNull(handler);
+    }
+
     @Nonnull
     @Override
     public TextMeasurer getTextMeasurer() {
         return textMeasurer;
+    }
+
+    @Override
+    public Element getSvgElement() {
+        return (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
     }
 
     @Override
@@ -210,9 +222,8 @@ public class VizViewImpl extends Composite implements VizView {
 
     @UiHandler("downloadButton")
     public void downloadButtonClick(ClickEvent event) {
-        DownloadSvg saver = new DownloadSvg();
         Element e = (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
-        saver.save(e, canvasWidth, canvasHeight, "entity-graph");
+        downloadHandler.handleDownload();
     }
 
     @Override

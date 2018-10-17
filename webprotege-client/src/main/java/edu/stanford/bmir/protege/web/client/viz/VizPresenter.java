@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
@@ -11,11 +10,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
+import elemental.dom.Element;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -58,11 +57,31 @@ public class VizPresenter {
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
         container.setWidget(view);
         view.setSettingsChangedHandler(this::handleSettingsChanged);
-        view.setLoadHandler(this::doLayout);
+        view.setLoadHandler(this::handleLoad);
+        view.setDownloadHandler(this::handleDownload);
+    }
+
+    private void handleLoad() {
+        layoutAndDisplayGraph();
+    }
+
+    private void handleDownload() {
+        if(currentGraph == null) {
+            return;
+        }
+        layoutAndDisplayGraph();
+        DownloadSvg saver = new DownloadSvg();
+        Element element = view.getSvgElement();
+        saver.save(element, currentGraph.getWidth(), currentGraph.getHeight(), "entity-graph");
     }
 
     private void handleSettingsChanged() {
-        doLayout();
+        layoutAndDisplayGraph();
+    }
+
+    private void layoutAndDisplayGraph() {
+        layoutCurrentGraph();
+        displayGraph();
     }
 
     protected void displayEntity(@Nonnull OWLEntity entity) {
@@ -75,27 +94,22 @@ public class VizPresenter {
 
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
         currentEntityGraph = result.getEntityGraph();
-        doLayout();
+        layoutAndDisplayGraph();
     }
 
-    private void doLayout() {
-        if(!view.isVisible()) {
-            return;
-        }
+    private void layoutCurrentGraph() {
         if(currentEntityGraph == null) {
             return;
         }
         currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
-        displayCurrentRendering();
-
+        currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
+        currentGraph.layout();
     }
 
-    private void displayCurrentRendering() {
+    private void displayGraph() {
         if(currentGraph == null) {
             return;
         }
-        currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
-        currentGraph.layout();
         view.setGraph(currentGraph);
     }
 }

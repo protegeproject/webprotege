@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.io.BaseEncoding;
-import com.google.gwt.user.client.Window;
 import elemental.client.Browser;
 import elemental.css.*;
 import elemental.dom.Element;
-import elemental.stylesheets.StyleSheet;
 import elemental.stylesheets.StyleSheetList;
 import elemental.svg.SVGStyleElement;
 
