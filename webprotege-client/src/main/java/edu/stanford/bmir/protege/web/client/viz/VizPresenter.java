@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
@@ -18,6 +19,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -66,7 +69,28 @@ public class VizPresenter {
         view.setSettingsChangedHandler(this::handleSettingsChanged);
         view.setLoadHandler(this::handleLoad);
         view.setDownloadHandler(this::handleDownload);
+        view.setNodeClickHandler(this::handleNodeClicked);
         view.setNodeDoubleClickHandler(this::handleNodeDoubleClicked);
+        view.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
+        view.addContextMenuAction(new AbstractUiAction("Hide node") {
+            @Override
+            public void execute() {
+                view.getMostRecentTargetNode().ifPresent(n -> {
+                    if(currentGraph != null) {
+                        currentGraph.removeNode(n.getId());
+                        layoutAndDisplayGraph();
+                    }
+                });
+            }
+        });
+    }
+
+    private void handleNodeContextMenuClick(@Nonnull NodeDetails nodeDetails) {
+
+    }
+
+    private void handleNodeClicked(@Nonnull NodeDetails nodeDetails) {
+
     }
 
     private void handleNodeDoubleClicked(@Nonnull NodeDetails node) {

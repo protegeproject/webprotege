@@ -12,6 +12,7 @@ import elemental.svg.*;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,7 +41,7 @@ public class Graph2Svg {
 
     private Consumer<NodeDetails> nodeDoubleClickHandler = n -> {};
 
-    private Consumer<NodeDetails> nodeContextMenuClickHandler = n -> {};
+    private BiConsumer<NodeDetails, Event> nodeContextMenuClickHandler = (n, e) -> {};
 
     public Graph2Svg(@Nonnull TextMeasurer measurer, @Nonnull Graph graph) {
         this.measurer = checkNotNull(measurer);
@@ -60,11 +61,11 @@ public class Graph2Svg {
     }
 
     public void setNodeDoubleClickHandler(Consumer<NodeDetails> nodeDoubleClickHandler) {
-        this.nodeDoubleClickHandler = nodeDoubleClickHandler;
+        this.nodeDoubleClickHandler = checkNotNull(nodeDoubleClickHandler);
     }
 
-    public void setNodeContextMenuClickHandler(Consumer<NodeDetails> nodeContextMenuClickHandler) {
-        this.nodeContextMenuClickHandler = nodeContextMenuClickHandler;
+    public void setNodeContextMenuClickHandler(BiConsumer<NodeDetails, Event> nodeContextMenuClickHandler) {
+        this.nodeContextMenuClickHandler = checkNotNull(nodeContextMenuClickHandler);
     }
 
     @Nonnull
@@ -149,8 +150,7 @@ public class Graph2Svg {
         rectElement.setAttribute("pointer-events","visible");
         rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails));
         rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails));
-        rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails));
-
+        rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
         return rectElement;
     }
 

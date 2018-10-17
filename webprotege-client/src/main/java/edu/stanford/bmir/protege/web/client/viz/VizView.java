@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
@@ -9,6 +10,7 @@ import elemental.dom.Element;
 
 import javax.annotation.Nonnull;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,6 +25,8 @@ public interface VizView extends IsWidget {
     Element getSvgElement();
 
     void clearGraph();
+
+    Optional<NodeDetails> getMostRecentTargetNode();
 
     interface DownloadHandler {
         void handleDownload();
@@ -57,4 +61,5 @@ public interface VizView extends IsWidget {
 
     void setNodeContextMenuClickHandler(@Nonnull Consumer<NodeDetails> nodeContextMenuClickHandler);
 
+    void addContextMenuAction(@Nonnull UIAction uiAction);
 }
