@@ -115,11 +115,7 @@ public class VizViewImpl extends Composite implements VizView {
     @Override
     public void setGraph(Graph graph) {
         Graph2Svg graph2Svg = new Graph2Svg(textMeasurer);
-        GWT.log("[VizViewImpl] Converting graph to SVG");
         Element svg = graph2Svg.createSvg(graph);
-        GWT.log("[VizViewImpl] Created SVG element SVG");
-        GWT.log("[VizViewImpl] " + svg.getOuterHTML());
-        GWT.log("[VizViewImpl] Appending SVG:");
         Element canvasElement = (Element) canvas.getElement();
         NodeList childNodes = canvasElement.getChildNodes();
         while(childNodes.getLength() > 0) {
@@ -216,7 +212,7 @@ public class VizViewImpl extends Composite implements VizView {
     public void downloadButtonClick(ClickEvent event) {
         DownloadSvg saver = new DownloadSvg();
         Element e = (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
-        saver.save(e, "entity-graph");
+        saver.save(e, canvasWidth, canvasHeight, "entity-graph");
     }
 
     @Override

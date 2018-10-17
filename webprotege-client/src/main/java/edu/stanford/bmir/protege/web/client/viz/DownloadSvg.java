@@ -18,12 +18,12 @@ import javax.annotation.Nonnull;
  */
 public class DownloadSvg {
 
-    public void save(@Nonnull Element element, @Nonnull String fileName) {
-        download(element, fileName);
+    public void save(@Nonnull Element element, int width, int height, @Nonnull String fileName) {
+        download(element, width, height, fileName);
     }
 
 
-    private static void download(Element element, String fileName) {
+    private static void download(Element element, int width, int height, String fileName) {
         // First convert the image to a data URI
         Element svgCopy = (Element) element.cloneNode(true);
         SVGStyleElement styleElement = Browser.getDocument().createSVGStyleElement();
@@ -58,7 +58,8 @@ public class DownloadSvg {
         }
         rules.append("}\n");
         styleElement.setTextContent(rules.toString());
-
+        svgCopy.setAttribute("width", Integer.toString(width));
+        svgCopy.setAttribute("height", Integer.toString(height));
         svgCopy.insertBefore(styleElement, svgCopy.getFirstChild());
         svgCopy.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         String svgHtml = "<?xml version=\"1.0\" standalone=\"no\"?>" + svgCopy.getOuterHTML();

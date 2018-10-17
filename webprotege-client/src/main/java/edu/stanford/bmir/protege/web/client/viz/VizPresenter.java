@@ -62,7 +62,7 @@ public class VizPresenter {
     }
 
     private void handleSettingsChanged() {
-        displayCurrentRendering();
+        doLayout();
     }
 
     protected void displayEntity(@Nonnull OWLEntity entity) {
@@ -96,28 +96,6 @@ public class VizPresenter {
         }
         currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
         currentGraph.layout();
-        GWT.log("[VizPresenter] Setting graph");
         view.setGraph(currentGraph);
     }
-//
-//    private String replaceVariables(@Nonnull String rendering) {
-//        return rendering
-//                .replace("${title}", "Entity Graph")
-//                .replace("${layout}", "dot")
-//                .replace("${rankdir}", "BT")
-//                .replace("${concentrate}", "true")
-//                .replace("${splines}", "true")
-//                .replace("${ranksep}", Double.toString(view.getRankSpacing()))
-//                .replace("${nodesep}", "0.3")
-//                .replace("${fontname}", "Helvetica Neue")
-//                .replace("${node.style}", "rounded")
-//                .replace("${node.shape}", "box")
-//                .replace("${node.color}", "#d0d0d0")
-//                .replace("${node.ind.color}", "#e0b0ff")
-//                .replace("${node.margin}", "0.03")
-//                .replace("${node.fontcolor}", "#505050")
-//                .replace("${edge.rel.color}", "#4784d1")
-//                .replace("${edge.isa.color}", "#b0b0b0")
-//                .replace("${edge.arrowsize}", "0.8");
-//    }
 }
