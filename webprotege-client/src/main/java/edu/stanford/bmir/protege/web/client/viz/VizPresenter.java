@@ -183,6 +183,8 @@ public class VizPresenter {
             return;
         }
         GWT.log("[VizPresenter] Laying out current graph)");
+        currentGraph.setMarginX(10);
+        currentGraph.setMarginY(10);
         currentGraph.setRankDirBottomToTop();
         currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
         currentGraph.setNodeSep(10);
