@@ -185,6 +185,8 @@ public class VizPresenter {
         GWT.log("[VizPresenter] Laying out current graph)");
         currentGraph.setRankDirBottomToTop();
         currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
+        currentGraph.setNodeSep(10);
+        currentGraph.setRankerToLongestPath();
         currentGraph.layout();
     }
 

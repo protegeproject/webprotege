@@ -39,10 +39,6 @@ public class EntityGraph2Graph {
                     String headId = toNodeId(edge.getHead());
                     g.setEdge(tailId, headId, edgeDetails);
                 });
-        g.setRankDirBottomToTop();
-        g.setNodeSep(10);
-        g.setRankSep(30);
-        g.setRankerToLongestPath();
         return g;
     }
 
@@ -109,6 +105,8 @@ public class EntityGraph2Graph {
             edgeDetails.setArrowHeadStyle("open");
         }
         else {
+            edgeDetails.setLabelHeight(0);
+            edgeDetails.setLabelWidth(0);
             edgeDetails.setArrowHeadStyle("closed");
         }
         return edgeDetails;
