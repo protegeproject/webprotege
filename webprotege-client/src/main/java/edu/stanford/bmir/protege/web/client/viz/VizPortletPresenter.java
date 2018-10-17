@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,10 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Oct 2018
  */
-@Portlet(id = "portlets.viz", title = "Viz", tooltip = "Provides a visualisation")
+@Portlet(id = "portlets.viz", title = "Entity Graph", tooltip = "Provides a visualisation")
 public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
-
-    private final VizView view = new VizViewImpl();
 
     @Nonnull
     private final VizPresenter vizPresenter;
@@ -43,4 +42,8 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
         vizPresenter.setHasBusy(portletUi);
     }
 
+    @Override
+    protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+        entityData.ifPresent(vizPresenter::displayEntity);
+    }
 }

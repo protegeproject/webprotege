@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
@@ -15,12 +17,11 @@ import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
 import elemental.dom.Element;
+import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,11 +45,14 @@ public class VizPresenter {
     private final VizView view;
 
     @Nonnull
-    private HasBusy hasBusy = busy -> {};
+    private HasBusy hasBusy = busy -> {
+    };
 
     private Graph currentGraph;
 
     private EntityGraph currentEntityGraph;
+
+    private PopupPanel popupPanel = new PopupPanel();
 
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
@@ -72,11 +76,12 @@ public class VizPresenter {
         view.setNodeClickHandler(this::handleNodeClicked);
         view.setNodeDoubleClickHandler(this::handleNodeDoubleClicked);
         view.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
+        view.setNodeMouseOverHandler(this::handleNodeMouseOver);
         view.addContextMenuAction(new AbstractUiAction("Hide node") {
             @Override
             public void execute() {
                 view.getMostRecentTargetNode().ifPresent(n -> {
-                    if(currentGraph != null) {
+                    if (currentGraph != null) {
                         currentGraph.removeNode(n.getId());
                         layoutAndDisplayGraph();
                     }
@@ -89,6 +94,22 @@ public class VizPresenter {
                 view.getMostRecentTargetNode().ifPresent(n -> selectionModel.setSelection(n.getEntity()));
             }
         });
+    }
+
+    private void handleNodeMouseOver(NodeDetails nodeDetails, Event event) {
+//        if (currentGraph != null) {
+//            currentGraph.getNodes().filter(n -> n.getId().equals(nodeDetails.getId()))
+//                    .findFirst()
+//                    .ifPresent(n -> {
+//                        int xOff = view.asWidget().getAbsoluteLeft();
+//                        int yOff = view.asWidget().getAbsoluteTop();
+//                        popupPanel.setWidget(new Label(nodeDetails.getLabel()));
+//                        popupPanel.setPopupPositionAndShow(
+//                                (offsetWidth, offsetHeight)
+//                                        -> popupPanel.setPopupPosition(xOff + n.getX() + n.getWidth() / 2,
+//                                                                       yOff + n.getY() + n.getHeight() / 2));
+//                    });
+//        }
     }
 
     private void handleNodeContextMenuClick(@Nonnull NodeDetails nodeDetails) {
@@ -111,7 +132,7 @@ public class VizPresenter {
     }
 
     private void handleDownload() {
-        if(currentGraph == null) {
+        if (currentGraph == null) {
             return;
         }
         layoutAndDisplayGraph();
@@ -149,14 +170,14 @@ public class VizPresenter {
     }
 
     private void layoutCurrentGraph() {
-        if(!view.isVisible()) {
+        if (!view.isVisible()) {
             return;
         }
-        if(currentEntityGraph == null) {
+        if (currentEntityGraph == null) {
             view.clearGraph();
             return;
         }
-        if(currentEntityGraph.getNodes().isEmpty()) {
+        if (currentEntityGraph.getNodes().isEmpty()) {
             view.clearGraph();
             currentGraph = null;
             return;
@@ -168,7 +189,7 @@ public class VizPresenter {
     }
 
     private void displayGraph() {
-        if(currentGraph == null) {
+        if (currentGraph == null) {
             view.clearGraph();
         }
         else {

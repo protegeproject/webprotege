@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph2Svg;
@@ -20,6 +21,7 @@ import elemental.events.MouseEvent;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,6 +38,8 @@ public class VizViewImpl extends Composite implements VizView {
     private static VizViewImplUiBinder ourUiBinder = GWT.create(VizViewImplUiBinder.class);
 
     private final PopupMenu popupMenu;
+
+    private final PopupPanel popupPanel = new PopupPanel();
 
     @UiField
     HTMLPanel canvas;
@@ -78,6 +82,8 @@ public class VizViewImpl extends Composite implements VizView {
 
     private Optional<NodeDetails> mostRecentTargetNode = Optional.empty();
 
+    private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
+
     @Inject
     public VizViewImpl() {
         popupMenu = new PopupMenu();
@@ -100,6 +106,11 @@ public class VizViewImpl extends Composite implements VizView {
     @Override
     public void setNodeContextMenuClickHandler(@Nonnull Consumer<NodeDetails> nodeContextMenuClickHandler) {
         this.nodeContextClickHandler = checkNotNull(nodeContextMenuClickHandler);
+    }
+
+    @Override
+    public void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler) {
+        this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
     }
 
     @Override
@@ -179,27 +190,39 @@ public class VizViewImpl extends Composite implements VizView {
         GWT.log("[VizViewImpl] set graph");
         removeCanvasChildren();
         Graph2Svg graph2Svg = new Graph2Svg(textMeasurer, graph);
-        graph2Svg.setNodeClickHandler(n -> {
-            mostRecentTargetNode = Optional.of(n);
-            nodeClickHandler.accept(n);
-        });
-        graph2Svg.setNodeDoubleClickHandler(n -> {
-            mostRecentTargetNode = Optional.of(n);
-            nodeDoubleClickHandler.accept(n);
-        });
-        graph2Svg.setNodeContextMenuClickHandler((n, e) -> {
-            e.preventDefault();
-            e.stopPropagation();
-            mostRecentTargetNode = Optional.of(n);
-            handleContextMenu(n, e);
-            nodeContextClickHandler.accept(n);
-        });
+        graph2Svg.setNodeClickHandler(this::handleNodeClick);
+        graph2Svg.setNodeDoubleClickHandler(this::handleNodeDoubleClick);
+        graph2Svg.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
+        graph2Svg.setNodeMouseOverHandler(this::handleNodeMouseOver);
         Element svg = graph2Svg.createSvg();
-        com.google.gwt.user.client.Element element = canvas.getElement();
-        element.appendChild((com.google.gwt.dom.client.Element) svg);
+        Element element = (Element) canvas.getElement();
+        element.appendChild(svg);
         canvasWidth = graph.getWidth();
         canvasHeight = graph.getHeight();
         updateCanvasDimensions();
+    }
+
+    private void handleNodeClick(NodeDetails n, Event e) {
+        mostRecentTargetNode = Optional.of(n);
+        nodeClickHandler.accept(n);
+    }
+
+    private void handleNodeMouseOver(NodeDetails n, Event e) {
+        mostRecentTargetNode = Optional.of(n);
+        nodeMouseOverHandler.accept(n, e);
+    }
+
+    private void handleNodeContextMenuClick(NodeDetails n, Event e) {
+        e.preventDefault();
+        e.stopPropagation();
+        mostRecentTargetNode = Optional.of(n);
+        handleContextMenu(n, e);
+        nodeContextClickHandler.accept(n);
+    }
+
+    private void handleNodeDoubleClick(NodeDetails n, Event e) {
+        mostRecentTargetNode = Optional.of(n);
+        nodeDoubleClickHandler.accept(n);
     }
 
     private void handleContextMenu(@Nonnull NodeDetails nodeDetails, @Nonnull Event event) {

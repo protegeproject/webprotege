@@ -7,10 +7,12 @@ import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent.SelectionChangeHandler;
 import elemental.dom.Element;
+import elemental.events.Event;
 
 import javax.annotation.Nonnull;
 
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,6 +31,7 @@ public interface VizView extends IsWidget {
     Optional<NodeDetails> getMostRecentTargetNode();
 
     interface DownloadHandler {
+
         void handleDownload();
     }
 
@@ -41,6 +44,7 @@ public interface VizView extends IsWidget {
     boolean isVisible();
 
     interface SettingsChangedHandler {
+
         void handleSettingsChanged();
     }
 
@@ -62,4 +66,6 @@ public interface VizView extends IsWidget {
     void setNodeContextMenuClickHandler(@Nonnull Consumer<NodeDetails> nodeContextMenuClickHandler);
 
     void addContextMenuAction(@Nonnull UIAction uiAction);
+
+    void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
 }

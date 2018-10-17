@@ -37,11 +37,14 @@ public class Graph2Svg {
     @Nonnull
     private final Graph graph;
 
-    private Consumer<NodeDetails> nodeClickHandler = n -> {};
+    private BiConsumer<NodeDetails, Event> nodeClickHandler = (n, e) -> {};
 
-    private Consumer<NodeDetails> nodeDoubleClickHandler = n -> {};
+    private BiConsumer<NodeDetails, Event> nodeDoubleClickHandler = (n, e) -> {};
 
     private BiConsumer<NodeDetails, Event> nodeContextMenuClickHandler = (n, e) -> {};
+
+    private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
+
 
     public Graph2Svg(@Nonnull TextMeasurer measurer, @Nonnull Graph graph) {
         this.measurer = checkNotNull(measurer);
@@ -56,16 +59,20 @@ public class Graph2Svg {
         return Browser.getDocument();
     }
 
-    public void setNodeClickHandler(Consumer<NodeDetails> nodeClickHandler) {
+    public void setNodeClickHandler(BiConsumer<NodeDetails, Event> nodeClickHandler) {
         this.nodeClickHandler = checkNotNull(nodeClickHandler);
     }
 
-    public void setNodeDoubleClickHandler(Consumer<NodeDetails> nodeDoubleClickHandler) {
+    public void setNodeDoubleClickHandler(BiConsumer<NodeDetails, Event> nodeDoubleClickHandler) {
         this.nodeDoubleClickHandler = checkNotNull(nodeDoubleClickHandler);
     }
 
     public void setNodeContextMenuClickHandler(BiConsumer<NodeDetails, Event> nodeContextMenuClickHandler) {
         this.nodeContextMenuClickHandler = checkNotNull(nodeContextMenuClickHandler);
+    }
+
+    public void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler) {
+        this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
     }
 
     @Nonnull
@@ -148,9 +155,10 @@ public class Graph2Svg {
         }
         rectElement.setAttribute("class", nodeDetails.getStyleNames());
         rectElement.setAttribute("pointer-events","visible");
-        rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails));
-        rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails));
+        rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails, evt));
+        rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails, evt));
         rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
+        rectElement.addEventListener(Event.MOUSEOVER, evt -> nodeMouseOverHandler.accept(nodeDetails, evt));
         return rectElement;
     }
 
