@@ -115,7 +115,7 @@ public class VizPresenter {
     }
 
     private void handleSettingsChanged() {
-        resetCurrentGraph();
+        layoutAndDisplayGraph();
     }
 
     private void resetCurrentGraph() {
