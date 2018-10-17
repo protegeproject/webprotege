@@ -903,7 +903,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__node--individual {
-    stroke: #d38ad6;
+    stroke: #a16dd9;
 }
 
 .wp-graph__edge {
@@ -914,6 +914,8 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 .wp-graph__edge--is-a {
     stroke: #f8ba2c;
+}
+.wp-graph__edge--ind-cls {
 }
 .wp-graph__edge--rel {
     stroke: #6195cc;
@@ -932,10 +934,12 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke: #6195cc;
+    stroke-dasharray: none;
 }
 
 .wp-graph__edge__arrow-head--is-a {
-    fill: var(--primary--background-color);
+    /*fill: var(--primary--background-color);*/
+    fill: #f8ba2c;
     stroke: #f8ba2c;
 }
 

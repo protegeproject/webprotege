@@ -38,7 +38,6 @@ public class EntityGraph2Graph {
                     String tailId = toNodeId(edge.getTail());
                     String headId = toNodeId(edge.getHead());
                     g.setEdge(tailId, headId, edgeDetails);
-                    edgeDetails.setStyleNames(getEdgeStyleNames(edge));
                 });
         g.setRankDirBottomToTop();
         g.setNodeSep(10);
@@ -49,7 +48,17 @@ public class EntityGraph2Graph {
 
     private String getEdgeStyleNames(Edge edge) {
         if(edge.isIsA()) {
-            return "wp-graph__edge wp-graph__edge--is-a";
+            if (edge.getTail().getEntity().isOWLClass()) {
+                return "wp-graph__edge wp-graph__edge--is-a wp-graph__edge--cls-cls";
+            }
+            else {
+                if(edge.getHead().getEntity().isOWLClass()) {
+                    return "wp-graph__edge wp-graph__edge--is-a wp-graph__edge--ind-cls";
+                }
+                else {
+                    return "wp-graph__edge wp-graph__edge--is-a wp-graph__edge--ind-ind";
+                }
+            }
         }
         else {
             return "wp-graph__edge wp-graph__edge--rel";
@@ -90,6 +99,7 @@ public class EntityGraph2Graph {
 
     private EdgeDetails toEdgeDetails(Edge edge) {
         EdgeDetails edgeDetails = new EdgeDetails(edge.getLabel());
+        edgeDetails.setStyleNames(getEdgeStyleNames(edge));
         if (!edge.isIsA()) {
             textMeasurer.setStyleNames("wp-graph__edge__label");
             TextDimensions dimensions = textMeasurer.getTextDimensions(edge.getLabel());
