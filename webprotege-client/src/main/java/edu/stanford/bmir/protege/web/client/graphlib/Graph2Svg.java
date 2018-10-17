@@ -1,19 +1,18 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
 import elemental.dom.Document;
 import elemental.dom.Element;
 import elemental.dom.Text;
 import elemental.events.Event;
-import elemental.events.EventListener;
 import elemental.svg.*;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
@@ -34,8 +33,18 @@ public class Graph2Svg {
     @Nonnull
     private final TextMeasurer measurer;
 
-    public Graph2Svg(@Nonnull TextMeasurer measurer) {
+    @Nonnull
+    private final Graph graph;
+
+    private Consumer<NodeDetails> nodeClickHandler = n -> {};
+
+    private Consumer<NodeDetails> nodeDoubleClickHandler = n -> {};
+
+    private Consumer<NodeDetails> nodeContextMenuClickHandler = n -> {};
+
+    public Graph2Svg(@Nonnull TextMeasurer measurer, @Nonnull Graph graph) {
         this.measurer = checkNotNull(measurer);
+        this.graph = checkNotNull(graph);
     }
 
     private static String inPixels(double i) {
@@ -46,8 +55,20 @@ public class Graph2Svg {
         return Browser.getDocument();
     }
 
+    public void setNodeClickHandler(Consumer<NodeDetails> nodeClickHandler) {
+        this.nodeClickHandler = checkNotNull(nodeClickHandler);
+    }
+
+    public void setNodeDoubleClickHandler(Consumer<NodeDetails> nodeDoubleClickHandler) {
+        this.nodeDoubleClickHandler = nodeDoubleClickHandler;
+    }
+
+    public void setNodeContextMenuClickHandler(Consumer<NodeDetails> nodeContextMenuClickHandler) {
+        this.nodeContextMenuClickHandler = nodeContextMenuClickHandler;
+    }
+
     @Nonnull
-    public Element createSvg(@Nonnull Graph graph) {
+    public Element createSvg() {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
         svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
@@ -126,12 +147,10 @@ public class Graph2Svg {
         }
         rectElement.setAttribute("class", nodeDetails.getStyleNames());
         rectElement.setAttribute("pointer-events","visible");
-        rectElement.addEventListener(Event.CONTEXTMENU, new EventListener() {
-            @Override
-            public void handleEvent(Event evt) {
-                Window.alert("Clicked " + nodeDetails.getLabel());
-            }
-        });
+        rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails));
+        rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails));
+        rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails));
+
         return rectElement;
     }
 

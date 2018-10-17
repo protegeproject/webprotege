@@ -214,4 +214,6 @@ public class Graph {
     private native String [] nodes();
 
     public native NodeDetails node(@Nonnull String id);
+
+    public native void removeNode(String nodeDetailsId);
 }

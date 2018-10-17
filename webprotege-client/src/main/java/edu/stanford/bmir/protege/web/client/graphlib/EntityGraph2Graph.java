@@ -62,7 +62,7 @@ public class EntityGraph2Graph {
 
     private NodeDetails toNodeDetails(OWLEntityData node) {
         TextDimensions textDimensions = getTextDimensions(node);
-        NodeDetails nodeDetails = new NodeDetails(toNodeId(node),
+        NodeDetails nodeDetails = new NodeDetails(node,
                                                   textDimensions.getWidth() + 4,
                                                   textDimensions.getHeight() + 2,
                                                   node.getBrowserText());

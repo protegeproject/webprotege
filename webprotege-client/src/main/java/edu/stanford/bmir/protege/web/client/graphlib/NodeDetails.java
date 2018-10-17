@@ -2,9 +2,13 @@ package edu.stanford.bmir.protege.web.client.graphlib;
 
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.client.JSON;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import jsinterop.annotations.*;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -15,8 +19,12 @@ import javax.annotation.Nonnull;
 @JsType(namespace = "webprotege.graph")
 public class NodeDetails {
 
-    public NodeDetails(@Nonnull String id, int width, int height, String label) {
-        setId(id);
+    private final OWLEntityData entityData;
+
+    public NodeDetails(@Nonnull OWLEntityData entityData, int width, int height, String label) {
+        this.entityData = checkNotNull(entityData);
+        OWLEntity entity = entityData.getEntity();
+        setId(entity.getEntityType().getName() + "(" + entity.getIRI() + ")");
         setWidth(width);
         setHeight(height);
         setLabel(label);
@@ -86,5 +94,11 @@ public class NodeDetails {
     @JsMethod
     public String stringify() {
         return JSON.stringify(this);
+    }
+
+
+    @Nonnull
+    public OWLEntity getEntity() {
+        return entityData.getEntity();
     }
 }

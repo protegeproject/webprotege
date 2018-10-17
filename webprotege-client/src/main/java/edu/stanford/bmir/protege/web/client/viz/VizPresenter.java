@@ -5,9 +5,11 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
+import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
@@ -33,6 +35,9 @@ public class VizPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
+    private final SelectionModel selectionModel;
+
+    @Nonnull
     private final VizView view;
 
     @Nonnull
@@ -45,9 +50,10 @@ public class VizPresenter {
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
                         @Nonnull DispatchServiceManager dispatch,
-                        @Nonnull VizView view) {
+                        @Nonnull SelectionModel selectionModel, @Nonnull VizView view) {
         this.projectId = checkNotNull(projectId);
         this.dispatch = checkNotNull(dispatch);
+        this.selectionModel = checkNotNull(selectionModel);
         this.view = checkNotNull(view);
     }
 
@@ -60,10 +66,18 @@ public class VizPresenter {
         view.setSettingsChangedHandler(this::handleSettingsChanged);
         view.setLoadHandler(this::handleLoad);
         view.setDownloadHandler(this::handleDownload);
+        view.setNodeDoubleClickHandler(this::handleNodeDoubleClicked);
+    }
+
+    private void handleNodeDoubleClicked(@Nonnull NodeDetails node) {
+        if (currentGraph == null) {
+            return;
+        }
+        selectionModel.setSelection(node.getEntity());
     }
 
     private void handleLoad() {
-        layoutAndDisplayGraph();
+        resetCurrentGraph();
     }
 
     private void handleDownload() {
@@ -77,6 +91,11 @@ public class VizPresenter {
     }
 
     private void handleSettingsChanged() {
+        resetCurrentGraph();
+    }
+
+    private void resetCurrentGraph() {
+        currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
         layoutAndDisplayGraph();
     }
 
@@ -96,7 +115,7 @@ public class VizPresenter {
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
         currentEntityGraph = result.getEntityGraph();
         GWT.log("[VizPresenter] handing entity graph rendering");
-        layoutAndDisplayGraph();
+        resetCurrentGraph();
     }
 
     private void layoutCurrentGraph() {
@@ -112,7 +131,6 @@ public class VizPresenter {
             currentGraph = null;
             return;
         }
-        currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
         GWT.log("[VizPresenter] Laying out current graph)");
         currentGraph.setRankDirBottomToTop();
         currentGraph.setRankSep((int) (20 * view.getRankSpacing()));

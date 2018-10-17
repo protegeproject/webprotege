@@ -5,15 +5,15 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.graphlib.*;
 import elemental.dom.Element;
-import elemental.dom.Node;
 import elemental.dom.NodeList;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.joining;
@@ -31,6 +31,12 @@ public class VizViewImpl extends Composite implements VizView {
     private Runnable loadHandler = () -> {};
 
     private DownloadHandler downloadHandler = () -> {};
+
+    private Consumer<NodeDetails> nodeClickHandler = n -> {};
+
+    private Consumer<NodeDetails> nodeDoubleClickHandler = n -> {};
+
+    private Consumer<NodeDetails> nodeContextClickHandler = n -> {};
 
     interface VizViewImplUiBinder extends UiBinder<HTMLPanel, VizViewImpl> {
 
@@ -67,6 +73,21 @@ public class VizViewImpl extends Composite implements VizView {
         ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
         viewPort.addKeyDownHandler(this::handleKeyDown);
+    }
+
+    @Override
+    public void setNodeClickHandler(@Nonnull Consumer<NodeDetails> nodeClickHandler) {
+        this.nodeClickHandler = checkNotNull(nodeClickHandler);
+    }
+
+    @Override
+    public void setNodeDoubleClickHandler(@Nonnull Consumer<NodeDetails> nodeDoubleClickHandler) {
+        this.nodeDoubleClickHandler = checkNotNull(nodeDoubleClickHandler);
+    }
+
+    @Override
+    public void setNodeContextMenuClickHandler(@Nonnull Consumer<NodeDetails> nodeContextMenuClickHandler) {
+        this.nodeContextClickHandler = checkNotNull(nodeContextMenuClickHandler);
     }
 
     private void handleKeyDown(KeyDownEvent event) {
@@ -135,8 +156,11 @@ public class VizViewImpl extends Composite implements VizView {
     public void setGraph(Graph graph) {
         GWT.log("[VizViewImpl] set graph");
         removeCanvasChildren();
-        Graph2Svg graph2Svg = new Graph2Svg(textMeasurer);
-        Element svg = graph2Svg.createSvg(graph);
+        Graph2Svg graph2Svg = new Graph2Svg(textMeasurer, graph);
+        graph2Svg.setNodeClickHandler(nodeClickHandler);
+        graph2Svg.setNodeDoubleClickHandler(nodeDoubleClickHandler);
+        graph2Svg.setNodeContextMenuClickHandler(nodeContextClickHandler);
+        Element svg = graph2Svg.createSvg();
         com.google.gwt.user.client.Element element = canvas.getElement();
         element.appendChild((com.google.gwt.dom.client.Element) svg);
         canvasWidth = graph.getWidth();

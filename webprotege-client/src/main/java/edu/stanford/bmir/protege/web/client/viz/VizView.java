@@ -2,11 +2,16 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
+import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent.SelectionChangeHandler;
 import elemental.dom.Element;
 
 import javax.annotation.Nonnull;
+
+import java.util.function.Consumer;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -45,4 +50,11 @@ public interface VizView extends IsWidget {
     double getScaleFactor();
 
     void setScaleFactor(double scaleFactor);
+
+    void setNodeClickHandler(@Nonnull Consumer<NodeDetails> nodeClickHandler);
+
+    void setNodeDoubleClickHandler(@Nonnull Consumer<NodeDetails> nodeDoubleClickHandler);
+
+    void setNodeContextMenuClickHandler(@Nonnull Consumer<NodeDetails> nodeContextMenuClickHandler);
+
 }
