@@ -83,6 +83,12 @@ public class VizPresenter {
                 });
             }
         });
+        view.addContextMenuAction(new AbstractUiAction("Move focus to node") {
+            @Override
+            public void execute() {
+                view.getMostRecentTargetNode().ifPresent(n -> selectionModel.setSelection(n.getEntity()));
+            }
+        });
     }
 
     private void handleNodeContextMenuClick(@Nonnull NodeDetails nodeDetails) {
