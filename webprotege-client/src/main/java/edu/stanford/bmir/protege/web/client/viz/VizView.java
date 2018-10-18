@@ -55,10 +55,6 @@ public interface VizView extends IsWidget {
     @Nonnull
     TextMeasurer getTextMeasurer();
 
-    double getScaleFactor();
-
-    void setScaleFactor(double scaleFactor);
-
     void setNodeClickHandler(@Nonnull Consumer<NodeDetails> nodeClickHandler);
 
     void setNodeDoubleClickHandler(@Nonnull Consumer<NodeDetails> nodeDoubleClickHandler);

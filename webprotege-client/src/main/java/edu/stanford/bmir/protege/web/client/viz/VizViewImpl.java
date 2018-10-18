@@ -6,9 +6,11 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.d3.*;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph2Svg;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
@@ -33,6 +35,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class VizViewImpl extends Composite implements VizView {
 
+    private static int canvasCounter = 0;
+
     private static final double ZOOM_DELTA = 0.05;
 
     private static VizViewImplUiBinder ourUiBinder = GWT.create(VizViewImplUiBinder.class);
@@ -43,9 +47,6 @@ public class VizViewImpl extends Composite implements VizView {
 
     @UiField
     HTMLPanel canvas;
-
-    @UiField
-    FocusPanel viewPort;
 
     @UiField
     ListBox ranksepListBox;
@@ -74,15 +75,13 @@ public class VizViewImpl extends Composite implements VizView {
 
     private double scaleFactor = 1.0;
 
-    private int canvasWidth = 0;
-
-    private int canvasHeight = 0;
-
     private SettingsChangedHandler settingsChangedHandler = () -> {};
 
     private Optional<NodeDetails> mostRecentTargetNode = Optional.empty();
 
     private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
+
+    private int counter;
 
     @Inject
     public VizViewImpl() {
@@ -90,7 +89,9 @@ public class VizViewImpl extends Composite implements VizView {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
-        viewPort.addKeyDownHandler(this::handleKeyDown);
+        counter = canvasCounter;
+        counter++;
+        canvas.getElement().setId("graph-" + counter);
     }
 
     @Override
@@ -119,38 +120,7 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     private void handleKeyDown(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == 187) {
-            event.preventDefault();
-            event.stopPropagation();
-            handleZoomIn();
-        }
-        else if (event.getNativeKeyCode() == 189) {
-            event.preventDefault();
-            event.stopPropagation();
-            handleZoomOut();
-        }
-        else if (event.getNativeKeyCode() == 48) {
-            resetZoomLevel();
-        }
-    }
 
-    private void handleZoomIn() {
-        double sf = getScaleFactor();
-        sf += ZOOM_DELTA;
-        setScaleFactor(sf);
-    }
-
-    private void handleZoomOut() {
-        double sf = getScaleFactor();
-        if (sf <= ZOOM_DELTA) {
-            return;
-        }
-        sf -= ZOOM_DELTA;
-        setScaleFactor(sf);
-    }
-
-    private void resetZoomLevel() {
-        setScaleFactor(1);
     }
 
     @Override
@@ -197,9 +167,14 @@ public class VizViewImpl extends Composite implements VizView {
         Element svg = graph2Svg.createSvg();
         Element element = (Element) canvas.getElement();
         element.appendChild(svg);
-        canvasWidth = graph.getWidth();
-        canvasHeight = graph.getHeight();
-        updateCanvasDimensions();
+        Selection selection = d3.select("#graph-" + counter).select("svg");
+        Selection group = selection.select("g");
+        Zoom zoom = d3.zoom();
+        Object zoomFunc = zoom.on("zoom", () -> {
+            Transform transform = d3.getEvent().getTransform();
+            group.attr("transform", "translate(" + transform.getX() + " " + transform.getY() + ")" + " scale(" + transform.getK() + ")");
+        });
+        selection.call(zoomFunc);
     }
 
     private void handleNodeClick(NodeDetails n, Event e) {
@@ -243,72 +218,6 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     @Override
-    public double getScaleFactor() {
-        return scaleFactor;
-    }
-
-    @Override
-    public void setScaleFactor(double scaleFactor) {
-        if (scaleFactor != this.scaleFactor) {
-            this.scaleFactor = scaleFactor;
-            updateCanvasDimensions();
-        }
-    }
-
-    private void updateCanvasDimensions() {
-        double percentageX = getHorizontalScrollPercentage();
-        double percentageY = getVerticalScrollPercentage();
-
-        canvas.setWidth(canvasWidth * scaleFactor + "px");
-        canvas.setHeight(canvasHeight * scaleFactor + "px");
-
-        setHorizontalScrollPercentage(percentageX);
-        setVerticalScrollPercentage(percentageY);
-    }
-
-    private double getHorizontalScrollPercentage() {
-        Element viewPortElement = (Element) viewPort.getElement();
-        Element canvasElement = (Element) canvas.getElement();
-        if (canvasElement.getClientWidth() < viewPortElement.getClientWidth()) {
-            return 0.5;
-        }
-        double scrollX = viewPortElement.getScrollLeft();
-        return scrollX / getHorizontalScrollDistance();
-    }
-
-    private void setHorizontalScrollPercentage(double percentage) {
-        Element viewPortElement = (Element) viewPort.getElement();
-        viewPortElement.setScrollLeft((int) (percentage * getHorizontalScrollDistance()));
-    }
-
-    private double getVerticalScrollPercentage() {
-        Element viewPortElement = (Element) viewPort.getElement();
-        Element canvasElement = (Element) canvas.getElement();
-        if (canvasElement.getClientHeight() < viewPortElement.getClientHeight()) {
-            return 0.5;
-        }
-        double scrollY = viewPortElement.getScrollTop();
-        return scrollY / getVerticalScrollDistance();
-    }
-
-    private void setVerticalScrollPercentage(double percentage) {
-        Element viewPortElement = (Element) viewPort.getElement();
-        viewPortElement.setScrollTop((int) (percentage * getVerticalScrollDistance()));
-    }
-
-    private int getVerticalScrollDistance() {
-        Element viewPortElement = (Element) viewPort.getElement();
-        Element canvasElement = (Element) canvas.getElement();
-        return canvasElement.getScrollHeight() - viewPortElement.getClientHeight();
-    }
-
-    private int getHorizontalScrollDistance() {
-        Element viewPortElement = (Element) viewPort.getElement();
-        Element canvasElement = (Element) canvas.getElement();
-        return canvasElement.getScrollWidth() - viewPortElement.getClientWidth();
-    }
-
-    @Override
     public double getRankSpacing() {
         String value = ranksepListBox.getSelectedValue();
         try {
@@ -333,6 +242,7 @@ public class VizViewImpl extends Composite implements VizView {
     protected void onLoad() {
         super.onLoad();
         loadHandler.run();
+
     }
 
     interface VizViewImplUiBinder extends UiBinder<HTMLPanel, VizViewImpl> {

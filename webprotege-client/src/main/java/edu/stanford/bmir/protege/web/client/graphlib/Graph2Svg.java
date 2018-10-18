@@ -79,10 +79,6 @@ public class Graph2Svg {
     public Element createSvg() {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
-        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-        svg.setAttribute("width", "100%");
-        svg.setAttribute("height", "100%");
-
         // Arrow head defs
         SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--is-a", true);
         SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--rel", false);
@@ -90,17 +86,21 @@ public class Graph2Svg {
         svg.appendChild(defsElement);
         defsElement.appendChild(openArrowHead);
         defsElement.appendChild(closedArrowHead);
+        Element groupElement = document.createElementNS(SVG_NS, "g");
+        svg.setAttribute("class", "wp-graph");
+        svg.appendChild(groupElement);
 
 
         int w = graph.getWidth();
         int h = graph.getHeight();
         svg.setAttribute("viewbox", "0 0 " + w + " " + h);
+        svg.setAttribute("preserveAspectRatio", "none");
         graph.getNodes()
                 .map(this::toNodeSvgElement)
-                .forEach(svg::appendChild);
+                .forEach(groupElement::appendChild);
         graph.getEdges()
                 .flatMap(e -> toEdgeSvgElements(e).stream())
-                .forEach(svg::appendChild);
+                .forEach(groupElement::appendChild);
         return svg;
     }
 

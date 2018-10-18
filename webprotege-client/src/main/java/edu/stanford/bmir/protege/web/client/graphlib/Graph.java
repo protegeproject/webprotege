@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * 13 Oct 2018
  */
 @SuppressWarnings("Convert2MethodRef")
-@JsType(isNative = true, namespace = "graphlib")
+@JsType(isNative = true, namespace = "dagreD3.graphlib")
 public class Graph {
 
 

@@ -24,5 +24,11 @@ public class d3 {
     public static native Selection selectAll(@Nonnull String selector);
 
 
+    @JsMethod(name = "zoom")
+    @Nonnull
+    public static native Zoom zoom();
+
+    @JsProperty(name = "event")
+    public static native Event getEvent();
 
 }

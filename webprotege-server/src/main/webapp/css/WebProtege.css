@@ -887,6 +887,17 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     animation-delay:         0.41666666666666663s;
 }
 
+.wp-graph {
+    user-select: none;
+    -webkit-user-select: none;
+    fill: #f0f0f0;
+}
+
+.wp-graph {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 .wp-graph__node {
     fill: none;
     stroke-width: 4;
@@ -894,8 +905,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 }
 
 .wp-graph__node + text {
-    user-select: none;
-    pointer-events: none;
+
 }
 
 .wp-graph__node--class {
