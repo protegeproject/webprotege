@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.d3;
 
+import elemental.dom.Element;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -18,6 +19,9 @@ public class d3 {
     @JsMethod(name = "select")
     @Nonnull
     public static native Selection select(@Nonnull String selector);
+
+    @JsMethod(name = "select")
+    public static native Selection selectElement(@Nonnull Element element);
 
     @JsMethod(name = "selectAll")
     @Nonnull

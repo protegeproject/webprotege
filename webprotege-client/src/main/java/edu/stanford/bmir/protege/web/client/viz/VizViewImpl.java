@@ -35,8 +35,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class VizViewImpl extends Composite implements VizView {
 
-    private static int canvasCounter = 0;
-
     private static final double ZOOM_DELTA = 0.05;
 
     private static VizViewImplUiBinder ourUiBinder = GWT.create(VizViewImplUiBinder.class);
@@ -81,17 +79,12 @@ public class VizViewImpl extends Composite implements VizView {
 
     private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
 
-    private int counter;
-
     @Inject
     public VizViewImpl() {
         popupMenu = new PopupMenu();
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
-        counter = canvasCounter;
-        counter++;
-        canvas.getElement().setId("graph-" + counter);
     }
 
     @Override
@@ -157,7 +150,6 @@ public class VizViewImpl extends Composite implements VizView {
 
     @Override
     public void setGraph(Graph graph) {
-        GWT.log("[VizViewImpl] set graph");
         removeCanvasChildren();
         Graph2Svg graph2Svg = new Graph2Svg(textMeasurer, graph);
         graph2Svg.setNodeClickHandler(this::handleNodeClick);
@@ -167,14 +159,14 @@ public class VizViewImpl extends Composite implements VizView {
         Element svg = graph2Svg.createSvg();
         Element element = (Element) canvas.getElement();
         element.appendChild(svg);
-        Selection selection = d3.select("#graph-" + counter).select("svg");
-        Selection group = selection.select("g");
+        Selection svgElement = d3.selectElement(element).select("svg");
+        Selection gElement = svgElement.select("g");
         Zoom zoom = d3.zoom();
         Object zoomFunc = zoom.on("zoom", () -> {
             Transform transform = d3.getEvent().getTransform();
-            group.attr("transform", "translate(" + transform.getX() + " " + transform.getY() + ")" + " scale(" + transform.getK() + ")");
+            gElement.attr("transform", "translate(" + transform.getX() + " " + transform.getY() + ")" + " scale(" + transform.getK() + ")");
         });
-        selection.call(zoomFunc);
+        svgElement.call(zoomFunc);
     }
 
     private void handleNodeClick(NodeDetails n, Event e) {

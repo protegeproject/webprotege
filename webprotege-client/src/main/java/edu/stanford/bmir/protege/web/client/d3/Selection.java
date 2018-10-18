@@ -7,6 +7,7 @@ import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**
