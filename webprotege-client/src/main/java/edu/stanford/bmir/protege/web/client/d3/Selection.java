@@ -47,4 +47,7 @@ public class Selection {
 
     @JsMethod
     public native Selection html(@Nonnull String text);
+
+    @JsMethod
+    public native void remove();
 }
