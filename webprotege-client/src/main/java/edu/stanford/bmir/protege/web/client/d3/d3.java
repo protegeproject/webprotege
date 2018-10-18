@@ -1,0 +1,28 @@
+package edu.stanford.bmir.protege.web.client.d3;
+
+import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsProperty;
+import jsinterop.annotations.JsType;
+
+import javax.annotation.Nonnull;
+
+/**
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 17 Oct 2018
+ */
+@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "d3")
+public class d3 {
+
+    @JsMethod(name = "select")
+    @Nonnull
+    public static native Selection select(@Nonnull String selector);
+
+    @JsMethod(name = "selectAll")
+    @Nonnull
+    public static native Selection selectAll(@Nonnull String selector);
+
+
+
+}
