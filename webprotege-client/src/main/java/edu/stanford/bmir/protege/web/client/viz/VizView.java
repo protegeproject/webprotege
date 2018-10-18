@@ -37,6 +37,8 @@ public interface VizView extends IsWidget {
 
     void setGraph(Graph graph);
 
+    void updateGraph(Graph graph);
+
     void setLoadHandler(Runnable handler);
 
     void setDownloadHandler(@Nonnull DownloadHandler handler);

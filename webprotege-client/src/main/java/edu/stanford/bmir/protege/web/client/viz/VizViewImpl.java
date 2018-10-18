@@ -140,7 +140,7 @@ public class VizViewImpl extends Composite implements VizView {
     @Override
     public void clearGraph() {
         GWT.log("[VizViewImpl] clear graph");
-        removeCanvasChildren();
+        clearCanvas();
     }
 
     @Override
@@ -150,14 +150,10 @@ public class VizViewImpl extends Composite implements VizView {
 
     @Override
     public void setGraph(Graph graph) {
-        removeCanvasChildren();
-        Graph2Svg graph2Svg = new Graph2Svg(textMeasurer, graph);
-        graph2Svg.setNodeClickHandler(this::handleNodeClick);
-        graph2Svg.setNodeDoubleClickHandler(this::handleNodeDoubleClick);
-        graph2Svg.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
-        graph2Svg.setNodeMouseOverHandler(this::handleNodeMouseOver);
+        clearGraph();
+        Graph2Svg graph2Svg = createGraph2Svg(graph);
         Element svg = graph2Svg.createSvg();
-        Element element = (Element) canvas.getElement();
+        Element element = getCanvasElement();
         element.appendChild(svg);
         Selection svgElement = d3.selectElement(element).select("svg");
         Selection gElement = svgElement.select("g");
@@ -167,6 +163,21 @@ public class VizViewImpl extends Composite implements VizView {
             gElement.attr("transform", "translate(" + transform.getX() + " " + transform.getY() + ")" + " scale(" + transform.getK() + ")");
         });
         svgElement.call(zoomFunc);
+    }
+
+
+    @Override
+    public void updateGraph(Graph graph) {
+
+    }
+
+    private Graph2Svg createGraph2Svg(Graph graph) {
+        Graph2Svg graph2Svg = new Graph2Svg(textMeasurer, graph);
+        graph2Svg.setNodeClickHandler(this::handleNodeClick);
+        graph2Svg.setNodeDoubleClickHandler(this::handleNodeDoubleClick);
+        graph2Svg.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
+        graph2Svg.setNodeMouseOverHandler(this::handleNodeMouseOver);
+        return graph2Svg;
     }
 
     private void handleNodeClick(NodeDetails n, Event e) {
@@ -200,13 +211,13 @@ public class VizViewImpl extends Composite implements VizView {
         }
     }
 
-    private void removeCanvasChildren() {
-        GWT.log("[VizViewImpl] remove canvas children");
-        Element canvasElement = (Element) canvas.getElement();
-        NodeList childNodes = canvasElement.getChildNodes();
-        while (childNodes.getLength() > 0) {
-            canvasElement.removeChild(childNodes.item(0));
-        }
+    private void clearCanvas() {
+        Element canvasElement = getCanvasElement();
+        d3.selectElement(canvasElement).selectAll("*").remove();
+    }
+
+    private Element getCanvasElement() {
+        return (Element) canvas.getElement();
     }
 
     @Override

@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.client.graphlib;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
-import elemental.dom.Document;
-import elemental.dom.Element;
-import elemental.dom.Text;
+import elemental.dom.*;
 import elemental.events.Event;
 import elemental.svg.*;
 
@@ -75,6 +73,17 @@ public class Graph2Svg {
         this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
     }
 
+    public void updateSvg(Element element, Graph graph) {
+        NodeList svg = element.getElementsByTagNameNS(SVG_NS, "svg");
+        if(svg.getLength() == 0) {
+            return;
+        }
+        Node svgElement = svg.item(0);
+        Node groupElement = svgElement.getFirstChild();
+
+
+    }
+
     @Nonnull
     public Element createSvg() {
         Document document = getDocument();
@@ -89,8 +98,6 @@ public class Graph2Svg {
         Element groupElement = document.createElementNS(SVG_NS, "g");
         svg.setAttribute("class", "wp-graph");
         svg.appendChild(groupElement);
-
-
         int w = graph.getWidth();
         int h = graph.getHeight();
         svg.setAttribute("viewbox", "0 0 " + w + " " + h);
