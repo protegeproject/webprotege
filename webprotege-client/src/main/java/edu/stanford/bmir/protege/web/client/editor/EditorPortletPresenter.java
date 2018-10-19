@@ -78,6 +78,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                 NAMED_INDIVIDUAL,
                 DATATYPE
         ));
+        view.setEditorPaneChangedHandler(() -> handleAfterSetEntity(getSelectedEntity()));
     }
 
     public void setDisplayedTypes(EntityType<?> ... entityTypes) {
@@ -130,7 +131,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             setNothingSelectedVisible(false);
             entity.ifPresent(e -> {
                 for(EditorPanePresenter panePresenter : panePresenters) {
-                    panePresenter.setEntity(e);
+                    if (view.isPaneVisible(panePresenter.getCaption())) {
+                        panePresenter.setEntity(e);
+                    }
                 }
             });
             tagListPresenter.setEntity(entity.get());

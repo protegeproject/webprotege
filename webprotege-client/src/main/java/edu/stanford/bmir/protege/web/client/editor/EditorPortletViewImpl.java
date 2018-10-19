@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public class EditorPortletViewImpl extends Composite implements EditorPortletView {
 
+    private EditorPaneChangedHandler editorPaneChangedHandler = () -> {};
+
     interface EditorPortletViewImplUiBinder extends UiBinder<HTMLPanel, EditorPortletViewImpl> {
 
     }
@@ -47,6 +49,17 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         tabBar.addSelectionHandler(event -> setVisibleIndex(event.getSelectedItem()));
     }
 
+    @Override
+    public void setEditorPaneChangedHandler(@Nonnull EditorPaneChangedHandler handler) {
+        this.editorPaneChangedHandler = handler;
+    }
+
+    @Override
+    public boolean isPaneVisible(@Nonnull String displayName) {
+        SimplePanel simplePanel = containerMap.get(displayName);
+        return simplePanel != null && simplePanel.isVisible();
+    }
+
     @Nonnull
     @Override
     public SimplePanel getTagListViewContainer() {
@@ -68,6 +81,7 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         tabs.add(displayName);
         return simplePanel;
     }
+
 
     @Override
     protected void onLoad() {
@@ -91,5 +105,6 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
             }
         }
         tabBar.selectTab(index, false);
+        editorPaneChangedHandler.handleEditorPaneChanged();
     }
 }

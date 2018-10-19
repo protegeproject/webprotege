@@ -13,11 +13,20 @@ import javax.annotation.Nonnull;
  */
 public interface EditorPortletView extends IsWidget {
 
+    interface EditorPaneChangedHandler {
+        void handleEditorPaneChanged();
+    }
+
     @Nonnull
     SimplePanel getTagListViewContainer();
 
     @Nonnull
     AcceptsOneWidget addPane(@Nonnull String displayName,
                              @Nonnull String additionalStyles);
+
+    boolean isPaneVisible(@Nonnull String displayName);
+
+    void setEditorPaneChangedHandler(@Nonnull EditorPaneChangedHandler handler);
+
 
 }
