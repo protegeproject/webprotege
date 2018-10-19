@@ -165,6 +165,8 @@ public class Graph {
 
     public native EdgeDetails edge(EdgeKey e);
 
+    public native EdgeDetails edge(String tailId, String headId);
+
     @JsMethod(name = "nodeCount")
     public native int getNodeCount();
 

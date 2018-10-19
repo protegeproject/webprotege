@@ -890,37 +890,40 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 .wp-graph {
     user-select: none;
     -webkit-user-select: none;
-    fill: #f0f0f0;
-}
-
-.wp-graph {
-    user-select: none;
-    -webkit-user-select: none;
 }
 
 .wp-graph__node {
+    stroke-width: 2.5;
+}
+
+.wp_graph__node__shape {
     fill: none;
-    stroke-width: 4;
     padding: 5px;
 }
 
-.wp-graph__node + text {
-
-}
-
-.wp-graph__node--class {
+.wp-graph__node__shape--class {
+    fill: none;
     stroke: #6195cc;
 }
 
-.wp-graph__node--individual {
+.wp-graph__node__shape--individual {
+    fill: none;
     stroke: #a16dd9;
 }
+
+.wp-graph__node__label {
+    fill: var(--primary--color);
+}
+
 
 .wp-graph__edge {
     fill: none;
     stroke-width: 2px;
     stroke-linecap: round;
     stroke-linejoin: round;
+
+    transition-property: d;
+    transition-duration: 5000ms;
 }
 .wp-graph__edge--is-a {
     stroke: #f8ba2c;

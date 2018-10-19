@@ -72,30 +72,44 @@ public class EntityGraph2Graph {
                                                   textDimensions.getWidth() + 4,
                                                   textDimensions.getHeight() + 2,
                                                   node.getBrowserText());
-        String styleNames = getStyleNames(node);
-        nodeDetails.setStyleNames(styleNames);
+        nodeDetails.setNodeStyleNames(getNodeStyleNames(node));
+        nodeDetails.setNodeShapeStyleNames(getNodeShapeStyleNames(node));
+        nodeDetails.setNodeTextStyleNames(getNodeTextStyleNames(node));
         return nodeDetails;
     }
 
-    private String getStyleNames(OWLEntityData node) {
+    @Nonnull
+    private String getNodeStyleNames(OWLEntityData node) {
+        return "";
+    }
+
+    @Nonnull
+    private String getNodeShapeStyleNames(OWLEntityData node) {
         if(node.getEntity().isOWLClass()) {
-            return "wp-graph__node wp-graph__node--class";
+            return "wp-graph__node__shape--class";
         }
         else if(node.getEntity().isOWLNamedIndividual()) {
-            return "wp-graph__node wp-graph__node--individual";
+            return "wp-graph__node__shape--individual";
         }
         else {
-            return "wp-graph__node";
+            return "";
         }
     }
 
+    @Nonnull
+    private String getNodeTextStyleNames(OWLEntityData node) {
+        return "";
+    }
+
     private TextDimensions getTextDimensions(OWLEntityData node) {
-        textMeasurer.setStyleNames(getStyleNames(node));
+        textMeasurer.setStyleNames("wp_graph__node__shape " + getNodeShapeStyleNames(node));
         return textMeasurer.getTextDimensions(node.getBrowserText());
     }
 
     private EdgeDetails toEdgeDetails(Edge edge) {
         EdgeDetails edgeDetails = new EdgeDetails(edge.getLabel());
+        edgeDetails.setTailId(toNodeId(edge.getTail()));
+        edgeDetails.setHeadId(toNodeId(edge.getHead()));
         edgeDetails.setStyleNames(getEdgeStyleNames(edge));
         if (!edge.isIsA()) {
             textMeasurer.setStyleNames("wp-graph__edge__label");

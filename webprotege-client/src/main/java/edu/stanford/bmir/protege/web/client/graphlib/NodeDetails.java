@@ -75,10 +75,22 @@ public class NodeDetails {
     public native String getLabel();
 
     @JsProperty
-    public native String getStyleNames();
+    public native String getNodeStyleNames();
 
     @JsProperty
-    public native void setStyleNames(String name);
+    public native void setNodeStyleNames(String name);
+
+    @JsProperty
+    public native String getNodeShapeStyleNames();
+
+    @JsProperty
+    public native void setNodeShapeStyleNames(String name);
+
+    @JsProperty
+    public native String getNodeTextStyleNames();
+
+    @JsProperty
+    public native void setNodeTextStyleNames(String name);
 
     @JsMethod
     @Override

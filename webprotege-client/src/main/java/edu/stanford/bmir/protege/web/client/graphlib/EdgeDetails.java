@@ -25,6 +25,18 @@ public class EdgeDetails {
     public native int getY();
 
     @JsProperty
+    public native String getTailId();
+    
+    @JsProperty
+    public native void setTailId(String tailId);
+
+    @JsProperty
+    public native String getHeadId();
+    
+    @JsProperty
+    public native void setHeadId(String HeadId);
+
+    @JsProperty
     private native void setLabel(String label);
 
     @JsProperty

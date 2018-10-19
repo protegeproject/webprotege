@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental.client.Browser;
 import elemental.dom.Element;
+import elemental.dom.NodeList;
+import elemental.html.HTMLCollection;
 import elemental.util.Indexable;
 
 import javax.annotation.Nonnull;
@@ -48,10 +50,38 @@ public class ElementalUtil {
 
     public static Stream<Element> elementsByTagName(@Nonnull Element element,
                                                     @Nonnull String tagName) {
-        return ElementalUtil.streamOf(element.getElementsByTagName(tagName))
-                .peek(n -> GWT.log("ElementalUtil node " + n))
+        NodeList elementsByTagName = element.getElementsByTagName(tagName);
+        return getElementStream(elementsByTagName);
+    }
+
+    public static Stream<Element> childSvgGroupElements(@Nonnull Element element) {
+        return childElementsByTagName(element, "g");
+    }
+
+    public static Element firstChildGroupElement(@Nonnull Element element) {
+        return childElementsByTagName(element, "g").findFirst().orElseThrow(() -> new RuntimeException("Expected svg group element"));
+    }
+
+    public static Stream<Element> childElementsByTagName(@Nonnull Element element,
+                                                         @Nonnull String tagName) {
+        return getElementStream(element.getChildren())
+                .filter(e -> e.getTagName().equals(tagName));
+    }
+
+    private static Stream<Element> getElementStream(NodeList nodeList) {
+        return ElementalUtil.streamOf(nodeList)
                 .filter(node -> node instanceof Element)
                 .map(node -> (Element) node);
+    }
+
+    private static Stream<Element> getElementStream(HTMLCollection collection) {
+        return ElementalUtil.streamOf(collection)
+                .filter(node -> node instanceof Element)
+                .map(node -> (Element) node);
+    }
+
+    public static Element firstChildElementByTagName(Element element, String tagName) {
+        return childElementsByTagName(element, tagName).findFirst().orElseThrow(() -> new RuntimeException("Expected " + tagName + " element"));
     }
 
 
