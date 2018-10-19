@@ -236,8 +236,8 @@ public class Graph2Svg {
         SVGTextElement text = createText(nodeDetails);
         text.setAttribute("class",
                           (WP_GRAPH_NODE_LABEL + " " + nodeDetails.getNodeTextStyleNames()).trim());
-        group.appendChild(shape);
         group.appendChild(text);
+        group.appendChild(shape);
         layoutNodeGroup(nodeDetails, group, true);
         return group;
     }
