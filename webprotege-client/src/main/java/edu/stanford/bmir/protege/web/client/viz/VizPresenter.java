@@ -83,7 +83,8 @@ public class VizPresenter {
                 view.getMostRecentTargetNode().ifPresent(n -> {
                     if (currentGraph != null) {
                         currentGraph.removeNode(n.getId());
-                        layoutAndDisplayGraph();
+                        layoutCurrentGraph();
+                        view.updateGraph(currentGraph);
                     }
                 });
             }

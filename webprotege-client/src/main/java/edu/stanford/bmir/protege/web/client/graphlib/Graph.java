@@ -213,7 +213,9 @@ public class Graph {
 
     private native String [] nodes();
 
+    @JsMethod
     public native NodeDetails node(@Nonnull String id);
 
+    @JsMethod
     public native void removeNode(String nodeDetailsId);
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental.client.Browser;
 import elemental.dom.Element;
@@ -38,7 +39,19 @@ public class ElementalUtil {
     }
 
     public static  <T> Stream<T> streamOf(@Nonnull Indexable indexable) {
-        return StreamSupport.stream(new IndexableIterable<T>(indexable).spliterator(), false);
+        Stream.Builder<T> builder = Stream.builder();
+        for(int i = 0; i < indexable.length(); i++) {
+            builder.add((T) indexable.at(i));
+        }
+        return builder.build();
+    }
+
+    public static Stream<Element> elementsByTagName(@Nonnull Element element,
+                                                    @Nonnull String tagName) {
+        return ElementalUtil.streamOf(element.getElementsByTagName(tagName))
+                .peek(n -> GWT.log("ElementalUtil node " + n))
+                .filter(node -> node instanceof Element)
+                .map(node -> (Element) node);
     }
 
 

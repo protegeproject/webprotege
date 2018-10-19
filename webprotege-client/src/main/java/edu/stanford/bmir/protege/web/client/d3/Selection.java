@@ -22,6 +22,9 @@ public class Selection {
     public native void call(Object function);
 
     @JsMethod
+    public native void filter(@Nonnull Predicate<Boolean> filter);
+
+    @JsMethod
     public native Selection select(@Nonnull String selector);
 
     @JsMethod

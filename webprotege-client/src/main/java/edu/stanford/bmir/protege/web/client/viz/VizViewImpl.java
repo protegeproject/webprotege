@@ -168,7 +168,9 @@ public class VizViewImpl extends Composite implements VizView {
 
     @Override
     public void updateGraph(Graph graph) {
-
+        Element canvasElement = getCanvasElement();
+        Graph2Svg graph2Svg = createGraph2Svg(graph);
+        graph2Svg.updateSvg(canvasElement.getFirstElementChild(), graph);
     }
 
     private Graph2Svg createGraph2Svg(Graph graph) {

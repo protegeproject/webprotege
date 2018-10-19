@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
 import elemental.dom.*;
@@ -10,8 +11,8 @@ import elemental.svg.*;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
@@ -74,14 +75,39 @@ public class Graph2Svg {
     }
 
     public void updateSvg(Element element, Graph graph) {
-        NodeList svg = element.getElementsByTagNameNS(SVG_NS, "svg");
-        if(svg.getLength() == 0) {
-            return;
+        GWT.log("[Graph2SVG] updating svg");
+        if(!checkNotNull(element).getTagName().equals("svg")) {
+            throw new RuntimeException("SVG Element Not specified");
         }
-        Node svgElement = svg.item(0);
-        Node groupElement = svgElement.getFirstChild();
-
-
+        checkNotNull(graph);
+        GWT.log("[Graph2SVG] actually updating svg");
+        Element rootGroup = (Element) element.getElementsByTagName("g").item(0);
+        GWT.log("[Graph2SVG] Root Group: " + rootGroup);
+        ElementalUtil.elementsByTagName(rootGroup, "g")
+                .forEach(nodeGroupElement -> {
+                    GWT.log("[Graph2SVG] Processing " + nodeGroupElement.getId());
+                    NodeDetails nodeDetails = graph.node(nodeGroupElement.getId());
+                    if(nodeDetails == null) {
+                        // The node group element needs to be deleted
+                        // because it is not in the graph
+                        GWT.log("[Graph2SVG] removing node");
+                        rootGroup.removeChild(nodeGroupElement);
+                    }
+                    else {
+                        // Update
+                        GWT.log("[Graph2SVG] updating node details");
+                        updateNodeDetailsElement(nodeDetails, nodeGroupElement, false);
+                    }
+                });
+        graph.getNodes()
+                .forEach(nd -> {
+                    if(Browser.getDocument().getElementById(nd.getId()) == null) {
+                        // Need to add to the DOM because it is in
+                        // the graph but not in the DOM
+                        Element nodeGroup = createNodeGroup(nd);
+                        rootGroup.appendChild(nodeGroup);
+                    }
+                });
     }
 
     @Nonnull
@@ -103,7 +129,7 @@ public class Graph2Svg {
         svg.setAttribute("viewbox", "0 0 " + w + " " + h);
         svg.setAttribute("preserveAspectRatio", "none");
         graph.getNodes()
-                .map(this::toNodeSvgElement)
+                .map(this::createNodeGroup)
                 .forEach(groupElement::appendChild);
         graph.getEdges()
                 .flatMap(e -> toEdgeSvgElements(e).stream())
@@ -137,18 +163,29 @@ public class Graph2Svg {
     }
 
     @Nonnull
-    private Element toNodeSvgElement(@Nonnull NodeDetails nodeDetails) {
+    private Element createNodeGroup(@Nonnull NodeDetails nodeDetails) {
         Document document = getDocument();
+
         Element group = document.createElementNS(SVG_NS, "g");
-        SVGRectElement rect = createRect(nodeDetails, document);
+        group.setId(nodeDetails.getId());
+
+        SVGRectElement rect = createRect(nodeDetails);
         SVGTextElement text = createText(nodeDetails);
-        group.appendChild(text);
+        text.setAttribute("class", "wp-graph__node-text");
         group.appendChild(rect);
+        group.appendChild(text);
+        updateNodeDetailsElement(nodeDetails, group, true);
         return group;
     }
 
-    private SVGRectElement createRect(@Nonnull NodeDetails nodeDetails, Document document) {
-        SVGRectElement rectElement = document.createSVGRectElement();
+    private SVGRectElement createRect(@Nonnull NodeDetails nodeDetails) {
+        return getDocument().createSVGRectElement();
+    }
+
+    private void updateNodeDetailsElement(@Nonnull NodeDetails nodeDetails,
+                                          @Nonnull Element groupElement,
+                                          boolean attachHandlers) {
+        Element rectElement = (Element) groupElement.getElementsByTagName("rect").item(0);
         measurer.setStyleNames(nodeDetails.getStyleNames());
         double strokeWidth = measurer.getStrokeWidth();
         double halfStrokeWidth = strokeWidth / 2;
@@ -162,11 +199,17 @@ public class Graph2Svg {
         }
         rectElement.setAttribute("class", nodeDetails.getStyleNames());
         rectElement.setAttribute("pointer-events","visible");
-        rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails, evt));
-        rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails, evt));
-        rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
-        rectElement.addEventListener(Event.MOUSEOVER, evt -> nodeMouseOverHandler.accept(nodeDetails, evt));
-        return rectElement;
+
+        Element textElement = (Element) groupElement.getElementsByTagName("text").item(0);
+        updateTextElement(textElement, nodeDetails.getX(), nodeDetails.getY());
+
+        if (attachHandlers) {
+            rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails, evt));
+            rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails, evt));
+            rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
+            rectElement.addEventListener(Event.MOUSEOVER, evt -> nodeMouseOverHandler.accept(nodeDetails, evt));
+        }
+
     }
 
     @Nonnull
@@ -184,12 +227,24 @@ public class Graph2Svg {
         SVGTextElement textElement = getDocument().createSVGTextElement();
         Text textNode = getDocument().createTextNode(text);
         textElement.appendChild(textNode);
+        SVGAnimateElement animateElement = getDocument().createSVGAnimateElement();
+//        <animate attributeType="CSS" attributeName="opacity"
+//        from="1" to="0" dur="5s" repeatCount="indefinite" />
+        animateElement.setAttribute("attributeType", "CSS");
+        animateElement.setAttribute("attributeName", "x");
+        animateElement.setAttribute("dur", "5s");
+        animateElement.setAttribute("repeatCount", "1");
+        textElement.appendChild(animateElement);
         textElement.setAttribute("text-anchor", "middle");
         textElement.setAttribute("alignment-baseline", "middle");
         textElement.setAttribute("fill", "var(--primary--color)");
+        updateTextElement(textElement, x, y);
+        return textElement;
+    }
+
+    private void updateTextElement(Element textElement, int x, int y) {
         textElement.setAttribute("x", inPixels(x));
         textElement.setAttribute("y", inPixels(y));
-        return textElement;
     }
 
     @Nonnull
