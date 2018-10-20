@@ -934,10 +934,12 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 
 .wp-graph__edge__label {
     fill: var(--primary--background-color);
+    font-size: 0.8em;
 }
 
 .wp-graph__edge__label + text {
     fill: #6195cc;
+    font-size: 0.8em;
 }
 
 .wp-graph__edge__arrow-head {
