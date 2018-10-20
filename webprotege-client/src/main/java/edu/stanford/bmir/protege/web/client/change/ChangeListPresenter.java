@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -66,6 +67,8 @@ public class ChangeListPresenter {
 
     @Nonnull
     private MessageBox messageBox;
+
+    private EntityDisplay entityDisplay;
 
     @Inject
     public ChangeListPresenter(@Nonnull ProjectId projectId,
@@ -219,4 +222,7 @@ public class ChangeListPresenter {
         lastAction.ifPresent(action -> displayChangesForProject());
     }
 
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
+    }
 }

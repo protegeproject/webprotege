@@ -17,20 +17,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityGraph2Graph {
 
+    @Nonnull
     private final TextMeasurer textMeasurer;
 
-    public EntityGraph2Graph(TextMeasurer textMeasurer) {
+    @Nonnull
+    private final EntityGraph entityGraph;
+
+    public EntityGraph2Graph(@Nonnull TextMeasurer textMeasurer,
+                             @Nonnull EntityGraph entityGraph) {
         this.textMeasurer = checkNotNull(textMeasurer);
+        this.entityGraph = checkNotNull(entityGraph);
     }
 
     @Nonnull
-    public Graph convertGraph(@Nonnull EntityGraph graph) {
+    public Graph convertGraph() {
         Graph g = Graph.create();
-        graph.getNodes()
+        entityGraph.getNodes()
                 .stream()
                 .map(this::toNodeDetails)
                 .forEach(g::addNode);
-        graph.getEdges()
+        entityGraph.getEdges()
                 .forEach(edge -> {
                     EdgeDetails edgeDetails = toEdgeDetails(edge);
                     String tailId = toNodeId(edge.getTail());
@@ -77,6 +83,9 @@ public class EntityGraph2Graph {
 
     @Nonnull
     private String getNodeStyleNames(OWLEntityData node) {
+        if(node.getEntity().equals(entityGraph.getRootEntity())) {
+            return "wp-graph__node--root-node";
+        }
         return "";
     }
 

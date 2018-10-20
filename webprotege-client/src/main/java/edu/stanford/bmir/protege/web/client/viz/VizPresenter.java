@@ -203,7 +203,8 @@ public class VizPresenter {
             }
             Runnable layoutRunner = () -> {
                 if (regenerate) {
-                    currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
+                    currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
+                            .convertGraph();
                 }
                 currentGraph.setMarginX(10);
                 currentGraph.setMarginY(10);

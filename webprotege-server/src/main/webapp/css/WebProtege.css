@@ -896,10 +896,15 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     stroke-width: 2.5;
 }
 
+.wp-graph__node--root-node {
+
+}
+
 .wp_graph__node__shape {
     fill: none;
     padding: 5px;
 }
+
 
 .wp-graph__node__shape--class {
     fill: none;
@@ -911,8 +916,22 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     stroke: #a16dd9;
 }
 
+.wp-graph__node--root-node .wp-graph__node__shape--class {
+    fill: var(--selected-item--background-color);
+}
+
+
+.wp-graph__node--root-node .wp-graph__node__shape--individual {
+    fill: var(--selected-item--background-color);
+}
+
+
 .wp-graph__node__label {
-    fill: var(--primary--color);
+    pointer-events: none;
+}
+
+.wp-graph__node--root-node .wp-graph__node__label {
+    fill: var(--selected-item--color);
 }
 
 

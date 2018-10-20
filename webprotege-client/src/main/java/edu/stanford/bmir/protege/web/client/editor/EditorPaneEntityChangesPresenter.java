@@ -70,7 +70,7 @@ public class EditorPaneEntityChangesPresenter implements EditorPanePresenter {
 
     @Override
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
-        // Nothing to do
+        changesPresenter.setEntityDisplay(entityDisplay);
     }
 
     @Override
