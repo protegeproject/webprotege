@@ -109,7 +109,8 @@ public class Graph2Svg {
         Element edgesGroup = groupElements.get(1);
         ElementalUtil.childSvgGroupElements(nodesGroup)
                 .forEach(nodeGroupElement -> {
-                    NodeDetails nodeDetails = graph.node(nodeGroupElement.getId());
+                    String nodeId = nodeGroupElement.getAttribute(DATA_NODE_ID);
+                    NodeDetails nodeDetails = graph.node(nodeId);
                     if (nodeDetails == null) {
                         // The node group element needs to be deleted
                         // because it is not in the graph
@@ -126,7 +127,7 @@ public class Graph2Svg {
                         // Need to add to the DOM because it is in
                         // the graph but not in the DOM
                         Element nodeGroup = createNodeGroup(nd);
-                        rootGroup.appendChild(nodeGroup);
+                        nodesGroup.appendChild(nodeGroup);
                     }
                 });
         GWT.log("[Graph2SVG] There are " + ElementalUtil.childSvgGroupElements(edgesGroup).count());
@@ -135,8 +136,6 @@ public class Graph2Svg {
                 .forEach(edgeGroupElement -> {
                     String tailId = edgeGroupElement.getAttribute(DATA_TAIL);
                     String headId = edgeGroupElement.getAttribute(DATA_HEAD);
-                    GWT.log("[Graph2SVG] Updating edge: " + tailId + " ----> " + headId);
-
                     EdgeDetails edgeDetails = graph.edge(tailId, headId);
                     if (edgeDetails == null) {
                         edgesGroup.removeChild(edgeGroupElement);
@@ -151,7 +150,7 @@ public class Graph2Svg {
                     if (Browser.getDocument().getElementById(ed.getTailId() + ed.getHeadId()) == null) {
                         // Need to add to the DOM because it is not in the graph
                         Element edgeElement = createEdgeGroup(ed);
-                        rootGroup.appendChild(edgeElement);
+                        edgesGroup.appendChild(edgeElement);
                     }
                 });
     }
