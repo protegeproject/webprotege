@@ -88,9 +88,10 @@ public class VizPresenter {
             public void execute() {
                 view.getMostRecentTargetNode().ifPresent(n -> {
                     if (currentGraph != null) {
+                        GWT.log("[VizPresenter] Removing " + n);
                         currentGraph.removeNode(n.getId());
-                        layoutCurrentGraph();
-                        view.updateGraph(currentGraph);
+                        layoutCurrentGraph(false);
+                        displayGraph();
                     }
                 });
             }
@@ -157,7 +158,7 @@ public class VizPresenter {
     }
 
     private void layoutAndDisplayGraph() {
-        if(layoutCurrentGraph()) {
+        if(layoutCurrentGraph(true)) {
             displayGraph();
         }
     }
@@ -183,7 +184,7 @@ public class VizPresenter {
         return currentEntity.map(e -> e.equals(result.getEntityGraph().getRootEntity())).orElse(false);
     }
 
-    private boolean layoutCurrentGraph() {
+    private boolean layoutCurrentGraph(boolean regenerate) {
             if (!view.isVisible()) {
                 return false;
             }
@@ -197,7 +198,9 @@ public class VizPresenter {
                 return false;
             }
             Runnable layoutRunner = () -> {
-                currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
+                if (regenerate) {
+                    currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
+                }
                 currentGraph.setMarginX(10);
                 currentGraph.setMarginY(10);
                 currentGraph.setRankDirBottomToTop();
