@@ -117,8 +117,6 @@ public class EntityGraph2Graph {
             edgeDetails.setArrowHeadStyle("open");
         }
         else {
-            edgeDetails.setLabelHeight(0);
-            edgeDetails.setLabelWidth(0);
             edgeDetails.setArrowHeadStyle("closed");
         }
         return edgeDetails;
