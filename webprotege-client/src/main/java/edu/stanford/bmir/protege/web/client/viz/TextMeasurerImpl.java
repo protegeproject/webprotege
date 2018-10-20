@@ -63,7 +63,6 @@ public class TextMeasurerImpl extends Composite implements TextMeasurer {
         elemental.dom.Element element = (elemental.dom.Element) measuringElement.getElement();
         CSSStyleDeclaration computedStyle = Browser.getWindow().getComputedStyle(element, null);
         String strokeWidth = computedStyle.getPropertyValue("stroke-width");
-        GWT.log("[TextMeasurerImpl] Stroke width: " + strokeWidth);
         if(strokeWidth.isEmpty()) {
             return DEFAULT_STROKE_WIDTH;
         }
