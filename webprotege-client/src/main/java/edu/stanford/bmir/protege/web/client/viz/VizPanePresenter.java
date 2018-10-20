@@ -63,7 +63,7 @@ public class VizPanePresenter implements EditorPanePresenter {
 
     @Override
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
-
+        presenter.setEntityDisplay(entityDisplay);
     }
 
     @Override

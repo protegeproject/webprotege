@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -59,6 +60,8 @@ public class VizPresenter {
 
     @Nonnull
     private Optional<OWLEntity> currentEntity = Optional.empty();
+
+    private EntityDisplay entityDisplay;
 
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
@@ -176,6 +179,7 @@ public class VizPresenter {
         if(!isGraphForCurrentEntity(result)) {
             return;
         }
+        entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
         currentEntityGraph = result.getEntityGraph();
         resetCurrentGraph();
     }
@@ -235,5 +239,9 @@ public class VizPresenter {
         else {
             view.setGraph(currentGraph);
         }
+    }
+
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 }
