@@ -4,11 +4,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.d3.Selection;
+import edu.stanford.bmir.protege.web.client.d3.d3;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.graphlib.EdgeDetails;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -23,9 +27,13 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -35,6 +43,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class VizPresenter {
 
     private static final int LARGE_GRAPH_EDGE_COUNT = 500;
+
+    private static final String G_MUTED = "g--muted";
 
     @Nonnull
     private final ProjectId projectId;
@@ -108,19 +118,55 @@ public class VizPresenter {
     }
 
     private void handleNodeMouseOver(NodeDetails nodeDetails, Event event) {
-//        if (currentGraph != null) {
-//            currentGraph.getNodes().filter(n -> n.getId().equals(nodeDetails.getId()))
-//                    .findFirst()
-//                    .ifPresent(n -> {
-//                        int xOff = view.asWidget().getAbsoluteLeft();
-//                        int yOff = view.asWidget().getAbsoluteTop();
-//                        popupPanel.setWidget(new Label(nodeDetails.getLabel()));
-//                        popupPanel.setPopupPositionAndShow(
-//                                (offsetWidth, offsetHeight)
-//                                        -> popupPanel.setPopupPosition(xOff + n.getX() + n.getWidth() / 2,
-//                                                                       yOff + n.getY() + n.getHeight() / 2));
-//                    });
-//        }
+        if(currentGraph == null) {
+            return;
+        }
+        Set<NodeDetails> nodes = currentGraph.getNodes().collect(toSet());
+        HashSet<String> reachableNodes = new HashSet<>();
+        HashSet<EdgeDetails> reachableEdges = new HashSet<>();
+        collectReachableNodesAndEdges(nodeDetails,
+                                      reachableNodes,
+                                      reachableEdges,
+                                      new HashSet<>());
+        Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
+        Element nodeGroup = ElementalUtil.firstChildGroupElement(topGroup);
+        Element edgeGroup = ElementalUtil.nthChildGroupElement(topGroup, 1).orElseThrow(() -> new RuntimeException("Missing edge group"));
+        Stream<Element> nodeGroups = ElementalUtil.childElementsByTagName(nodeGroup, "g");
+        nodeGroups.forEach(
+                nodeElement -> {
+                    String nodeId = nodeElement.getAttribute("data-node-id");
+                    if(reachableNodes.contains(nodeId)) {
+                        ElementalUtil.removeClassName(nodeElement, G_MUTED);
+                    }
+                    else {
+                        ElementalUtil.addClassName(nodeElement, G_MUTED);
+                    }
+                }
+        );
+        Stream<Element> edgeGroups = ElementalUtil.childElementsByTagName(edgeGroup, "g");
+        edgeGroups.forEach(edgeElement -> {
+            String tailNodeId = edgeElement.getAttribute("data-tail");
+            if(reachableNodes.contains(tailNodeId)) {
+                ElementalUtil.removeClassName(edgeElement, G_MUTED);
+            }
+            else {
+                ElementalUtil.addClassName(edgeElement, G_MUTED);
+            }
+        });
+    }
+
+    private void collectReachableNodesAndEdges(@Nonnull NodeDetails from,
+                                               @Nonnull Set<String> reachableNodeIds,
+                                               @Nonnull Set<EdgeDetails> edgeDetails,
+                                               @Nonnull Set<String> processed) {
+        if(processed.contains(from.getId())) {
+            return;
+        }
+        processed.add(from.getId());
+        reachableNodeIds.add(from.getId());
+        currentGraph.getSuccessors(from.getId()).forEach(node -> {
+            collectReachableNodesAndEdges(node, reachableNodeIds, edgeDetails, processed);
+        });
     }
 
     private void handleNodeContextMenuClick(@Nonnull NodeDetails nodeDetails) {

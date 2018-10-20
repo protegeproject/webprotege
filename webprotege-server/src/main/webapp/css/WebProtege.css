@@ -27,8 +27,8 @@
 
     --item--hover--background-color:                #f0f0f0;
 
-    --selected-item--background-color:              #d5e1fa; /* #116cd6; */
-    --selected-item--color:                         inherit;
+    --selected-item--background-color:              var(--accent--color);
+    --selected-item--color:                         white;
 
     --selected-menu-item--background-color:         var(--accent--color);
     --selected-menu-item--color:                    white;
@@ -115,9 +115,8 @@ There's going to be something in Media Queries Level 5, but that is some way off
 
         --header-footer--box-shadow:                    none;
 
-        --selected-item--background-color:              #0572e7;
-        /* #116cd6; */
-        --selected-item--color:                         inherit;
+        --selected-item--background-color:              var(--accent--color);
+        --selected-item--color:                         white;
         --selected-menu-item--background-color:         var(--accent--color);
         --selected-menu-item--color:                    white;
         --selected-tab--color:                          var(--accent--color);
@@ -890,6 +889,15 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 .wp-graph {
     user-select: none;
     -webkit-user-select: none;
+}
+
+.wp-graph g {
+    transition-property: opacity;
+    transition-duration: 300ms;
+}
+
+.wp-graph .g--muted {
+    opacity: 0.1;
 }
 
 .wp-graph__node {

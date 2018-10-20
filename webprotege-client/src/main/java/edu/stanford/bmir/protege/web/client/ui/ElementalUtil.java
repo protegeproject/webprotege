@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental.client.Browser;
 import elemental.dom.Element;
@@ -9,10 +8,12 @@ import elemental.html.HTMLCollection;
 import elemental.util.Indexable;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,14 +26,15 @@ public class ElementalUtil {
 
     /**
      * Determines if the specified widget is active.
+     *
      * @param widget The widget.
      * @return true of the widget or a descendant of the widget is active, otherwise false.
      */
     public static boolean isWidgetOrDescendantWidgetActive(@Nonnull IsWidget widget) {
         Element activeElement = Browser.getDocument().getActiveElement();
         Element widgetElement = widget.asWidget().getElement().cast();
-        while(activeElement != null) {
-            if(activeElement.equals(widgetElement)) {
+        while (activeElement != null) {
+            if (activeElement.equals(widgetElement)) {
                 return true;
             }
             activeElement = activeElement.getParentElement();
@@ -40,9 +42,9 @@ public class ElementalUtil {
         return false;
     }
 
-    public static  <T> Stream<T> streamOf(@Nonnull Indexable indexable) {
+    public static <T> Stream<T> streamOf(@Nonnull Indexable indexable) {
         Stream.Builder<T> builder = Stream.builder();
-        for(int i = 0; i < indexable.length(); i++) {
+        for (int i = 0; i < indexable.length(); i++) {
             builder.add((T) indexable.at(i));
         }
         return builder.build();
@@ -59,7 +61,9 @@ public class ElementalUtil {
     }
 
     public static Element firstChildGroupElement(@Nonnull Element element) {
-        return childElementsByTagName(element, "g").findFirst().orElseThrow(() -> new RuntimeException("Expected svg group element"));
+        return childElementsByTagName(element, "g")
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Expected svg group element"));
     }
 
     public static Stream<Element> childElementsByTagName(@Nonnull Element element,
@@ -81,7 +85,33 @@ public class ElementalUtil {
     }
 
     public static Element firstChildElementByTagName(Element element, String tagName) {
-        return childElementsByTagName(element, tagName).findFirst().orElseThrow(() -> new RuntimeException("Expected " + tagName + " element"));
+        return childElementsByTagName(element, tagName)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Expected " + tagName + " element"));
+    }
+
+    public static Optional<Element> nthChildGroupElement(Element element, int n) {
+        return childElementsByTagName(element, "g").skip(n).findFirst();
+    }
+
+    public static void addClassName(@Nonnull Element element, String className) {
+        String current = element.getAttribute("class");
+        if (current == null) {
+            element.setAttribute("class", className);
+        }
+        else if (!current.contains(className)) {
+            String replacement = current.trim() + " " + className;
+            element.setAttribute("class", replacement);
+        }
+    }
+
+    public static void removeClassName(@Nonnull Element element, String className) {
+        String current = element.getAttribute("class");
+        if (current == null) {
+            return;
+        }
+        String replacement = current.replace(className, "").trim();
+        element.setAttribute("class", replacement);
     }
 
 
@@ -118,7 +148,7 @@ public class ElementalUtil {
         @SuppressWarnings("unchecked")
         @Override
         public void forEach(Consumer<? super T> action) {
-            for(int i = 0; i < indexable.length(); i++) {
+            for (int i = 0; i < indexable.length(); i++) {
                 action.accept((T) indexable.at(i));
             }
         }
