@@ -36,9 +36,6 @@ public class EntityGraph2Graph {
                     String tailId = toNodeId(edge.getTail());
                     String headId = toNodeId(edge.getHead());
                     g.setEdge(tailId, headId, edgeDetails);
-                    if(edge.isIsA()) {
-                        edgeDetails.setWeight(2);
-                    }
                 });
         return g;
     }

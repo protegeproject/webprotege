@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -23,6 +22,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -31,6 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 12 Oct 2018
  */
 public class VizPresenter {
+
+    private static final int LARGE_GRAPH_EDGE_COUNT = 500;
 
     @Nonnull
     private final ProjectId projectId;
@@ -53,6 +56,9 @@ public class VizPresenter {
     private EntityGraph currentEntityGraph;
 
     private PopupPanel popupPanel = new PopupPanel();
+
+    @Nonnull
+    private Optional<OWLEntity> currentEntity = Optional.empty();
 
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
@@ -147,17 +153,18 @@ public class VizPresenter {
     }
 
     private void resetCurrentGraph() {
-        currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
         layoutAndDisplayGraph();
     }
 
     private void layoutAndDisplayGraph() {
-        layoutCurrentGraph();
-        displayGraph();
+        if(layoutCurrentGraph()) {
+            displayGraph();
+        }
     }
 
     protected void displayEntity(@Nonnull OWLEntity entity) {
         checkNotNull(entity);
+        this.currentEntity = Optional.of(entity);
         dispatch.execute(new GetEntityDotRenderingAction(projectId, entity),
                          hasBusy,
                          this::handleRendering);
@@ -165,32 +172,57 @@ public class VizPresenter {
     }
 
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
+        if(!isGraphForCurrentEntity(result)) {
+            return;
+        }
         currentEntityGraph = result.getEntityGraph();
-        GWT.log("[VizPresenter] handing entity graph rendering");
         resetCurrentGraph();
     }
 
-    private void layoutCurrentGraph() {
-        if (!view.isVisible()) {
-            return;
-        }
-        if (currentEntityGraph == null) {
-            view.clearGraph();
-            return;
-        }
-        if (currentEntityGraph.getNodes().isEmpty()) {
-            view.clearGraph();
-            currentGraph = null;
-            return;
-        }
-        GWT.log("[VizPresenter] Laying out current graph)");
-        currentGraph.setMarginX(10);
-        currentGraph.setMarginY(10);
-        currentGraph.setRankDirBottomToTop();
-        currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
-        currentGraph.setNodeSep(10);
-        currentGraph.setRankerToLongestPath();
-        currentGraph.layout();
+    private Boolean isGraphForCurrentEntity(@Nonnull GetEntityDotRenderingResult result) {
+        return currentEntity.map(e -> e.equals(result.getEntityGraph().getRootEntity())).orElse(false);
+    }
+
+    private boolean layoutCurrentGraph() {
+            if (!view.isVisible()) {
+                return false;
+            }
+            if (currentEntityGraph == null) {
+                view.clearGraph();
+                return false;
+            }
+            if (currentEntityGraph.getNodes().isEmpty()) {
+                view.clearGraph();
+                currentGraph = null;
+                return false;
+            }
+            Runnable layoutRunner = () -> {
+                currentGraph = new EntityGraph2Graph(view.getTextMeasurer()).convertGraph(currentEntityGraph);
+                currentGraph.setMarginX(10);
+                currentGraph.setMarginY(10);
+                currentGraph.setRankDirBottomToTop();
+                currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
+                currentGraph.setNodeSep(10);
+                currentGraph.setRankerToLongestPath();
+                currentGraph.layout();
+            };
+        int edgeCount = currentEntityGraph.getEdges().size();
+            if(edgeCount > LARGE_GRAPH_EDGE_COUNT) {
+                int nodesCount = currentEntityGraph.getNodes().size();
+                GWT.log("[VizPresenter] Large graph");
+                view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
+                                              nodesCount,
+                                              edgeCount,
+                                              () -> {
+                                                  layoutRunner.run();
+                                                  displayGraph();
+                                              });
+                return false;
+            }
+            else {
+                layoutRunner.run();
+                return true;
+            }
     }
 
     private void displayGraph() {

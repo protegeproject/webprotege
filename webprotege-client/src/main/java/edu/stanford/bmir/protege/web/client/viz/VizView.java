@@ -4,8 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
-import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
-import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent.SelectionChangeHandler;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import elemental.dom.Element;
 import elemental.events.Event;
 
@@ -34,6 +33,8 @@ public interface VizView extends IsWidget {
 
         void handleDownload();
     }
+
+    void displayLargeGraphMessage(OWLEntityData rootEntity, int nodes, int edges, Runnable displayGraphCallback);
 
     void setGraph(Graph graph);
 

@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,6 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 11 Oct 2018
  */
 public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHandler<GetEntityDotRenderingAction, GetEntityDotRenderingResult> {
+
+    private static Logger logger = LoggerFactory.getLogger(GetEntityDotRenderingActionHandler.class);
 
     @Nonnull
     private final EntityGraphBuilder graphBuilder;
@@ -41,6 +45,7 @@ public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHan
     @Override
     public GetEntityDotRenderingResult execute(@Nonnull GetEntityDotRenderingAction action, @Nonnull ExecutionContext executionContext) {
         EntityGraph graph = graphBuilder.createGraph(action.getEntity());
+        logger.info("Created entity graph [" + graph.getNodes().size() + " nodes; edges " + graph.getEdges().size() + "]");
         return GetEntityDotRenderingResult.get(graph);
     }
 }

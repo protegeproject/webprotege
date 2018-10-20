@@ -10,6 +10,12 @@
             align-items: stretch;
         }
 
+        .messageView {
+            flex-grow: 1;
+            flex-shrink: 1;
+            position: relative;
+        }
+
         .canvas {
             flex-grow: 1;
             flex-shrink: 1;
@@ -57,6 +63,7 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
+        <viz:LargeGraphMessageViewImpl visible="false" ui:field="largeGraphMessageView" addStyleNames="{style.messageView}"/>
         <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
             <g:HTMLPanel addStyleNames="{style.settingsBarFormGroup}">

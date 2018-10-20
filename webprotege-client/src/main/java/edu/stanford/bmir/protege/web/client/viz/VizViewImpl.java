@@ -1,22 +1,21 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.d3.*;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph2Svg;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import elemental.dom.Element;
-import elemental.dom.NodeList;
 import elemental.events.Event;
 import elemental.events.MouseEvent;
 
@@ -55,6 +54,9 @@ public class VizViewImpl extends Composite implements VizView {
     @UiField
     TextMeasurerImpl textMeasurer;
 
+    @UiField
+    LargeGraphMessageViewImpl largeGraphMessageView;
+
     @Nonnull
     private Runnable loadHandler = () -> {
     };
@@ -78,6 +80,9 @@ public class VizViewImpl extends Composite implements VizView {
     private Optional<NodeDetails> mostRecentTargetNode = Optional.empty();
 
     private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
+
+    @Nonnull
+    private Runnable displayLargeGraphRunnable = () -> {};
 
     @Inject
     public VizViewImpl() {
@@ -139,7 +144,6 @@ public class VizViewImpl extends Composite implements VizView {
 
     @Override
     public void clearGraph() {
-        GWT.log("[VizViewImpl] clear graph");
         clearCanvas();
     }
 
@@ -149,7 +153,28 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     @Override
+    public void displayLargeGraphMessage(OWLEntityData rootEntity, int nodes, int edges, Runnable displayGraphCallback) {
+        largeGraphMessageView.setDisplayMessage(rootEntity, nodes, edges);
+        largeGraphMessageView.setDisplayGraphHandler(displayGraphCallback::run);
+        showLargeGraphMessage();
+    }
+
+    private void showLargeGraphMessage() {
+        GWT.log("[VizViewImpl] showLargeGraphMessage");
+        canvas.setVisible(false);
+        largeGraphMessageView.setVisible(true);
+    }
+
+    private void hideLargeGraphMessage() {
+        GWT.log("[VizViewImpl] hideLargeGraphMessage");
+        canvas.setVisible(true);
+        largeGraphMessageView.setVisible(false);
+    }
+
+    @Override
     public void setGraph(Graph graph) {
+        GWT.log("[VizViewImpl] setGraph");
+        hideLargeGraphMessage();
         clearGraph();
         Graph2Svg graph2Svg = createGraph2Svg(graph);
         Element svg = graph2Svg.createSvg();

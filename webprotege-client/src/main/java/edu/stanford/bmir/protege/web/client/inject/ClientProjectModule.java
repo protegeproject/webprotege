@@ -45,6 +45,8 @@ import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
+import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageView;
+import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageViewImpl;
 import edu.stanford.bmir.protege.web.client.viz.VizView;
 import edu.stanford.bmir.protege.web.client.viz.VizViewImpl;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
@@ -381,6 +383,11 @@ public class ClientProjectModule {
     @Provides
     VizView provideVizView(VizViewImpl view) {
         return view;
+    }
+
+    @Provides
+    LargeGraphMessageView provideLargeGraphMessageView(LargeGraphMessageViewImpl impl) {
+        return impl;
     }
 }
 

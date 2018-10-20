@@ -918,13 +918,11 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 
 .wp-graph__edge {
     fill: none;
-    stroke-width: 2px;
+    stroke-width: 1.6px;
     stroke-linecap: round;
     stroke-linejoin: round;
-
-    transition-property: d;
-    transition-duration: 5000ms;
 }
+
 .wp-graph__edge--is-a {
     stroke: #f8ba2c;
 }

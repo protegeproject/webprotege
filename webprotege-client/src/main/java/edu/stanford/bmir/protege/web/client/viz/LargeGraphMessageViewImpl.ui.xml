@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            margin: 20px;
+            border: 10px dashed #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .messageField {
+            text-align: center;
+            font-size: 16px;
+            color: literal("var(--placeholder--color)");
+            margin: 20px;
+        }
+        .displayButton {
+
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label ui:field="messageField" text="LARGE" addStyleNames="{style.messageField}"/>
+        <g:Button ui:field="displayButton" text="Display Graph" addStyleNames="{style.displayButton} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.primaryButton}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
