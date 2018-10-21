@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 12 Oct 2018
  */
-public class DownloadSvg {
+public class GraphSvgDownloader {
 
     public void save(@Nonnull Element element, int width, int height, @Nonnull String fileName) {
         download(element, width, height, fileName);
@@ -42,7 +42,11 @@ public class DownloadSvg {
         }
         CSSStyleDeclaration computedStyle = Browser.getWindow().getComputedStyle(element, null);
         rules.append("\n");
-        rules.append(":root {--primary--background-color: white;}\n");
+        rules.append(":root {" +
+                             "--primary--background-color: white;" +
+                             "--selected-item--color: white;" +
+                             "--selected-item--background-color: #116cd6;" +
+                             "}\n");
         rules.append("text {\n");
         for(int i = 0; i < computedStyle.getLength(); i++) {
             String property = computedStyle.item(i);

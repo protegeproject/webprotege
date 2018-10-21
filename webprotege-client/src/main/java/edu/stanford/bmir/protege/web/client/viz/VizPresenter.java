@@ -199,7 +199,7 @@ public class VizPresenter {
             return;
         }
         layoutAndDisplayGraph();
-        DownloadSvg saver = new DownloadSvg();
+        GraphSvgDownloader saver = new GraphSvgDownloader();
         Element element = view.getSvgElement();
         saver.save(element, currentGraph.getWidth(), currentGraph.getHeight(), "entity-graph");
     }
