@@ -186,14 +186,27 @@ public class VizViewImpl extends Composite implements VizView {
         Element svg = graph2Svg.createSvg();
         Element element = getCanvasElement();
         element.appendChild(svg);
-        Selection svgElement = d3.selectElement(element).select("svg");
-        Selection gElement = svgElement.select("g");
+        setupZoom();
+    }
+
+    private void setupZoom() {
+        Selection svgElement = d3.selectElement(getSvgElement());
         Zoom zoom = d3.zoom();
-        Object zoomFunc = zoom.on("zoom", () -> {
-            Transform transform = d3.getEvent().getTransform();
-            gElement.attr("transform", "translate(" + transform.getX() + " " + transform.getY() + ")" + " scale(" + transform.getK() + ")");
-        });
+        Object zoomFunc = zoom.on("zoom", this::applyZoomAndPanTransformFromLastEvent);
         svgElement.call(zoomFunc);
+    }
+
+    private void applyZoomAndPanTransformFromLastEvent() {
+        Transform transform = d3.getEvent().getTransform();
+        int transformX = transform.getX();
+        int transformY = transform.getY();
+        int transformK = transform.getK();
+        applyZoomAndPanTransform(transformX, transformY, transformK);
+    }
+
+    private void applyZoomAndPanTransform(int transformX, int transformY, int transformK) {
+        Selection svgTopLevelGroupElement = d3.selectElement(getSvgElement()).select("g");
+        svgTopLevelGroupElement.attr("transform", "translate(" + transformX + " " + transformY + ")" + " scale(" + transformK + ")");
     }
 
 
