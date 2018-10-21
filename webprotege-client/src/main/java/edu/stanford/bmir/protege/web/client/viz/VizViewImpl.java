@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -81,6 +80,8 @@ public class VizViewImpl extends Composite implements VizView {
 
     private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
 
+    private BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler = (n, e) -> {};
+
     @Nonnull
     private Runnable displayLargeGraphRunnable = () -> {};
 
@@ -110,6 +111,11 @@ public class VizViewImpl extends Composite implements VizView {
     @Override
     public void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler) {
         this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
+    }
+
+    @Override
+    public void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler) {
+        this.nodeMouseLeaveHandler = checkNotNull(nodeMouseLeaveHandler);
     }
 
     @Override
@@ -204,6 +210,7 @@ public class VizViewImpl extends Composite implements VizView {
         graph2Svg.setNodeDoubleClickHandler(this::handleNodeDoubleClick);
         graph2Svg.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
         graph2Svg.setNodeMouseOverHandler(this::handleNodeMouseOver);
+        graph2Svg.setNodeMouseLeaveHandler(this::handleNodeMouseLeave);
         return graph2Svg;
     }
 
@@ -215,6 +222,12 @@ public class VizViewImpl extends Composite implements VizView {
     private void handleNodeMouseOver(NodeDetails n, Event e) {
         mostRecentTargetNode = Optional.of(n);
         nodeMouseOverHandler.accept(n, e);
+    }
+
+    private void handleNodeMouseLeave(NodeDetails n, Event e) {
+        GWT.log("[VizViewImpl] handleNodeMouseLeave");
+        mostRecentTargetNode = Optional.of(n);
+        nodeMouseLeaveHandler.accept(n, e);
     }
 
     private void handleNodeContextMenuClick(NodeDetails n, Event e) {

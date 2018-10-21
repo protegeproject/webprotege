@@ -67,4 +67,6 @@ public interface VizView extends IsWidget {
     void addContextMenuAction(@Nonnull UIAction uiAction);
 
     void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
+
+    void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
 }

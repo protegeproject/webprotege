@@ -4,8 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.d3.Selection;
-import edu.stanford.bmir.protege.web.client.d3.d3;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.graphlib.EdgeDetails;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
@@ -96,6 +94,7 @@ public class VizPresenter {
         view.setNodeDoubleClickHandler(this::handleNodeDoubleClicked);
         view.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
         view.setNodeMouseOverHandler(this::handleNodeMouseOver);
+        view.setNodeMouseLeaveHandler(this::handleNodeMouseLeave);
         view.addContextMenuAction(new AbstractUiAction("Hide node") {
             @Override
             public void execute() {
@@ -115,6 +114,13 @@ public class VizPresenter {
                 view.getMostRecentTargetNode().ifPresent(n -> selectionModel.setSelection(n.getEntity()));
             }
         });
+    }
+
+    private void handleNodeMouseLeave(NodeDetails nodeDetails, Event event) {
+        GWT.log("[VizPresenter] Handle mouse leave");
+        Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
+        ElementalUtil.elementsByTagName(topGroup, "g")
+                .forEach(element -> ElementalUtil.removeClassName(element, G_MUTED));
     }
 
     private void handleNodeMouseOver(NodeDetails nodeDetails, Event event) {
@@ -145,8 +151,8 @@ public class VizPresenter {
         );
         Stream<Element> edgeGroups = ElementalUtil.childElementsByTagName(edgeGroup, "g");
         edgeGroups.forEach(edgeElement -> {
-            String tailNodeId = edgeElement.getAttribute("data-tail");
-            if(reachableNodes.contains(tailNodeId)) {
+            String headNodeId = edgeElement.getAttribute("data-head");
+            if(reachableNodes.contains(headNodeId)) {
                 ElementalUtil.removeClassName(edgeElement, G_MUTED);
             }
             else {
@@ -164,7 +170,7 @@ public class VizPresenter {
         }
         processed.add(from.getId());
         reachableNodeIds.add(from.getId());
-        currentGraph.getSuccessors(from.getId()).forEach(node -> {
+        currentGraph.getPredecessors(from.getId()).forEach(node -> {
             collectReachableNodesAndEdges(node, reachableNodeIds, edgeDetails, processed);
         });
     }

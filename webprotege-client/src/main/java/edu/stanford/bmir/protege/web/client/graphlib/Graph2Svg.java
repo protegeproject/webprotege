@@ -66,6 +66,9 @@ public class Graph2Svg {
     private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {
     };
 
+    private BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler = (n, e) -> {
+    };
+
 
     public Graph2Svg(@Nonnull TextMeasurer measurer, @Nonnull Graph graph) {
         this.measurer = checkNotNull(measurer);
@@ -94,6 +97,10 @@ public class Graph2Svg {
 
     public void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler) {
         this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
+    }
+
+    public void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler) {
+        this.nodeMouseLeaveHandler = checkNotNull(nodeMouseLeaveHandler);
     }
 
     public void updateSvg(Element svgElement, Graph graph) {
@@ -270,6 +277,7 @@ public class Graph2Svg {
             rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails, evt));
             rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
             rectElement.addEventListener(Event.MOUSEOVER, evt -> nodeMouseOverHandler.accept(nodeDetails, evt));
+            rectElement.addEventListener("mouseleave", evt -> nodeMouseLeaveHandler.accept(nodeDetails, evt));
         }
 
     }
