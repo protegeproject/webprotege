@@ -42,7 +42,7 @@ public class VizPresenter {
 
     private static final int LARGE_GRAPH_EDGE_COUNT = 500;
 
-    private static final String G_MUTED = "g--muted";
+    private static final String G_MUTED = "wp-graph__g--muted";
 
     @Nonnull
     private final ProjectId projectId;

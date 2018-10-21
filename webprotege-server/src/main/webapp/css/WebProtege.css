@@ -896,7 +896,7 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
     transition-duration: 300ms;
 }
 
-.wp-graph .g--muted {
+.wp-graph__g--muted {
     opacity: 0.1;
 }
 
