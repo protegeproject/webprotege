@@ -48,6 +48,18 @@ public class Graph2Svg {
 
     private static final String WP_GRAPH_NODE_LABEL = "wp-graph__node__label";
 
+    private static final String WP_GRAPH_EDGE_LABEL = "wp-graph__edge__label";
+
+    private static final String DATA_NODES = "data-nodes";
+
+    private static final String DATA_EDGES = "data-edges";
+
+    private static final String WP_GRAPH_EDGE_ARROW_HEAD = "wp-graph__edge__arrow-head";
+
+    private static final String WP_GRAPH_EDGE_ARROW_HEAD_IS_A = "wp-graph__edge__arrow-head--is-a";
+
+    private static final String WP_GRAPH_EDGE_ARROW_HEAD_REL = "wp-graph__edge__arrow-head--rel";
+
     @Nonnull
     private final TextMeasurer measurer;
 
@@ -79,10 +91,6 @@ public class Graph2Svg {
         return Double.toString(i);
     }
 
-    public Document getDocument() {
-        return Browser.getDocument();
-    }
-
     public void setNodeClickHandler(BiConsumer<NodeDetails, Event> nodeClickHandler) {
         this.nodeClickHandler = checkNotNull(nodeClickHandler);
     }
@@ -104,13 +112,11 @@ public class Graph2Svg {
     }
 
     public void updateSvg(Element svgElement, Graph graph) {
-        GWT.log("[Graph2SVG] updating svg");
         if (!checkNotNull(svgElement).getTagName().equals("svg")) {
             throw new RuntimeException("SVG Element Not specified");
         }
         checkNotNull(graph);
         Element rootGroup = ElementalUtil.firstChildGroupElement(svgElement);
-        GWT.log("[Graph2SVG] Root Group: " + rootGroup);
         List<Element> groupElements = ElementalUtil.childSvgGroupElements(rootGroup).collect(toList());
         Element nodesGroup = groupElements.get(0);
         Element edgesGroup = groupElements.get(1);
@@ -167,8 +173,8 @@ public class Graph2Svg {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
         // Arrow head defs
-        SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--is-a", true);
-        SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, "wp-graph__edge__arrow-head wp-graph__edge__arrow-head--rel", false);
+        SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, WP_GRAPH_EDGE_ARROW_HEAD + " " + WP_GRAPH_EDGE_ARROW_HEAD_IS_A, true);
+        SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, WP_GRAPH_EDGE_ARROW_HEAD + " " + WP_GRAPH_EDGE_ARROW_HEAD_REL, false);
         Element defsElement = document.createElementNS(SVG_NS, "defs");
         svg.appendChild(defsElement);
         defsElement.appendChild(openArrowHead);
@@ -179,11 +185,11 @@ public class Graph2Svg {
         svg.appendChild(groupElement);
 
         Element nodeGroupElement = document.createElementNS(SVG_NS, "g");
-        nodeGroupElement.setAttribute("data-nodes", "");
+        nodeGroupElement.setAttribute(DATA_NODES, "");
         groupElement.appendChild(nodeGroupElement);
 
         Element edgeGroupElement = document.createElementNS(SVG_NS, "g");
-        edgeGroupElement.setAttribute("data-edges", "");
+        edgeGroupElement.setAttribute(DATA_EDGES, "");
         groupElement.appendChild(edgeGroupElement);
 
         int w = graph.getWidth();
@@ -197,6 +203,10 @@ public class Graph2Svg {
                 .map(this::createEdgeGroup)
                 .forEach(edgeGroupElement::appendChild);
         return svg;
+    }
+
+    public Document getDocument() {
+        return Browser.getDocument();
     }
 
     private SVGMarkerElement createArrowHeadMarker(@Nonnull Document document,
@@ -321,7 +331,7 @@ public class Graph2Svg {
         // Edge
         Element groupElement = getDocument().createElementNS(SVG_NS, "g");
         groupElement.setId(edgeDetails.getTailId() + edgeDetails.getHeadId());
-        groupElement.setAttribute("data-type", "edge");
+        groupElement.setAttribute(DATA_TYPE, "edge");
         groupElement.setAttribute(DATA_TAIL, edgeDetails.getTailId());
         groupElement.setAttribute(DATA_HEAD, edgeDetails.getHeadId());
 
@@ -363,7 +373,7 @@ public class Graph2Svg {
         textRect.setAttribute("height", inPixels(h));
         textRect.setAttribute("x", inPixels(edgeDetails.getX() - (w / 2.0)));
         textRect.setAttribute("y", inPixels(edgeDetails.getY() - (h / 2.0)));
-        textRect.setAttribute("class", "wp-graph__edge__label");
+        textRect.setAttribute("class", WP_GRAPH_EDGE_LABEL);
 
     }
 
