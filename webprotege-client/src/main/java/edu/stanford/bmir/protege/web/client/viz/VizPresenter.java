@@ -88,6 +88,11 @@ public class VizPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
         container.setWidget(view);
+        addHandlersToView();
+        addContextMenuItemsToView();
+    }
+
+    private void addHandlersToView() {
         view.setSettingsChangedHandler(this::handleSettingsChanged);
         view.setLoadHandler(this::handleLoad);
         view.setDownloadHandler(this::handleDownload);
@@ -96,6 +101,9 @@ public class VizPresenter {
         view.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
         view.setNodeMouseOverHandler(this::handleNodeMouseOver);
         view.setNodeMouseLeaveHandler(this::handleNodeMouseLeave);
+    }
+
+    private void addContextMenuItemsToView() {
         view.addContextMenuAction(new AbstractUiAction("Hide node") {
             @Override
             public void execute() {
