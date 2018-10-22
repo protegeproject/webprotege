@@ -52,7 +52,7 @@ public class Graph2Svg {
     private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {
     };
 
-    private BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler = (n, e) -> {
+    private BiConsumer<NodeDetails, Event> nodeMouseOutHandler = (n, e) -> {
     };
 
 
@@ -81,8 +81,8 @@ public class Graph2Svg {
         this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
     }
 
-    public void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler) {
-        this.nodeMouseLeaveHandler = checkNotNull(nodeMouseLeaveHandler);
+    public void setNodeMouseOutHandler(BiConsumer<NodeDetails, Event> nodeMouseOutHandler) {
+        this.nodeMouseOutHandler = checkNotNull(nodeMouseOutHandler);
     }
 
     public void updateSvg(Element svgElement, Graph graph) {
@@ -146,7 +146,13 @@ public class Graph2Svg {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
         svg.setAttribute("class", WP_GRAPH);
+
         svg.addEventListener(Event.CONTEXTMENU, evt -> processNodeEvent(evt, nodeContextMenuClickHandler));
+        svg.addEventListener(Event.CLICK, evt -> processNodeEvent(evt, nodeClickHandler));
+        svg.addEventListener(Event.DBLCLICK, evt -> processNodeEvent(evt, nodeDoubleClickHandler));
+        svg.addEventListener(Event.MOUSEOVER, evt -> processNodeEvent(evt, nodeMouseOverHandler));
+        svg.addEventListener(Event.MOUSEOUT, evt -> processNodeEvent(evt, nodeMouseOutHandler));
+
 
         // Arrow head defs
         SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, WP_GRAPH__EDGE__ARROW_HEAD + " " + WP_GRAPH__EDGE__ARROW_HEAD_IS_A, true);
@@ -270,13 +276,7 @@ public class Graph2Svg {
         Element textElement = (Element) groupElement.getElementsByTagName("text").item(0);
         updateTextElement(textElement, nodeDetails.getX(), nodeDetails.getY());
 
-        if (attachHandlers) {
-            rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails, evt));
-            rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails, evt));
-            //            rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
-            rectElement.addEventListener(Event.MOUSEOVER, evt -> nodeMouseOverHandler.accept(nodeDetails, evt));
-            rectElement.addEventListener("mouseleave", evt -> nodeMouseLeaveHandler.accept(nodeDetails, evt));
-        }
+        if (attachHandlers) { }
 
     }
 

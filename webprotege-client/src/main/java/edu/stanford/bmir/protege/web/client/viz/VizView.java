@@ -68,5 +68,5 @@ public interface VizView extends IsWidget {
 
     void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
 
-    void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
+    void setNodeMouseOutHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
 }

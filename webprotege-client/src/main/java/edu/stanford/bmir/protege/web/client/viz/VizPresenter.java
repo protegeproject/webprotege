@@ -102,7 +102,7 @@ public class VizPresenter {
         view.setNodeDoubleClickHandler(this::handleNodeDoubleClicked);
         view.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
         view.setNodeMouseOverHandler(this::handleNodeMouseOver);
-        view.setNodeMouseLeaveHandler(this::handleNodeMouseLeave);
+        view.setNodeMouseOutHandler(this::handleNodeMouseOut);
     }
 
     private void addContextMenuItemsToView() {
@@ -110,7 +110,7 @@ public class VizPresenter {
         view.addContextMenuAction(new SelectNodeUiAction());
     }
 
-    private void handleNodeMouseLeave(NodeDetails nodeDetails, Event event) {
+    private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {
         Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
         ElementalUtil.elementsByTagName(topGroup, "g")
                 .forEach(element -> ElementalUtil.removeClassName(element, WP_GRAPH__G_MUTED));

@@ -80,7 +80,7 @@ public class VizViewImpl extends Composite implements VizView {
 
     private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
 
-    private BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler = (n, e) -> {};
+    private BiConsumer<NodeDetails, Event> nodeMouseOutHandler = (n, e) -> {};
 
     @Nonnull
     private Runnable displayLargeGraphRunnable = () -> {};
@@ -114,8 +114,8 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     @Override
-    public void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler) {
-        this.nodeMouseLeaveHandler = checkNotNull(nodeMouseLeaveHandler);
+    public void setNodeMouseOutHandler(BiConsumer<NodeDetails, Event> nodeMouseOutHandler) {
+        this.nodeMouseOutHandler = checkNotNull(nodeMouseOutHandler);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class VizViewImpl extends Composite implements VizView {
         graph2Svg.setNodeDoubleClickHandler(this::handleNodeDoubleClick);
         graph2Svg.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
         graph2Svg.setNodeMouseOverHandler(this::handleNodeMouseOver);
-        graph2Svg.setNodeMouseLeaveHandler(this::handleNodeMouseLeave);
+        graph2Svg.setNodeMouseOutHandler(this::handleNodeMouseOut);
         return graph2Svg;
     }
 
@@ -237,10 +237,9 @@ public class VizViewImpl extends Composite implements VizView {
         nodeMouseOverHandler.accept(n, e);
     }
 
-    private void handleNodeMouseLeave(NodeDetails n, Event e) {
-        GWT.log("[VizViewImpl] handleNodeMouseLeave");
+    private void handleNodeMouseOut(NodeDetails n, Event e) {
         mostRecentTargetNode = Optional.of(n);
-        nodeMouseLeaveHandler.accept(n, e);
+        nodeMouseOutHandler.accept(n, e);
     }
 
     private void handleNodeContextMenuClick(NodeDetails n, Event e) {
