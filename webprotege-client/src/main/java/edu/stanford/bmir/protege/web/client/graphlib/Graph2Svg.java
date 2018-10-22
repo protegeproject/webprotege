@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
@@ -16,7 +15,7 @@ import java.util.function.BiConsumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
-
+import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.*;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -32,36 +31,6 @@ public class Graph2Svg {
 
     private static final String OPEN_ARROW_HEAD_ID = "openArrowHead";
 
-    private static final String DATA_NODES = "data-nodes";
-
-    private static final String DATA_EDGES = "data-edges";
-
-    private static final String DATA_TAIL = "data-tail";
-
-    private static final String DATA_HEAD = "data-head";
-
-    private static final String DATA_NODE_ID = "data-node-id";
-
-    private static final String DATA_TYPE = "data-type";
-
-    private static final String NODE = "node";
-
-
-    private static final String WP_GRAPH = "wp-graph";
-
-    private static final String WP_GRAPH_NODE = "wp-graph__node";
-
-    private static final String WP_GRAPH_NODE_SHAPE = "wp-graph__node__shape";
-
-    private static final String WP_GRAPH_NODE_LABEL = "wp-graph__node__label";
-
-    private static final String WP_GRAPH_EDGE_LABEL = "wp-graph__edge__label";
-
-    private static final String WP_GRAPH_EDGE_ARROW_HEAD = "wp-graph__edge__arrow-head";
-
-    private static final String WP_GRAPH_EDGE_ARROW_HEAD_IS_A = "wp-graph__edge__arrow-head--is-a";
-
-    private static final String WP_GRAPH_EDGE_ARROW_HEAD_REL = "wp-graph__edge__arrow-head--rel";
 
     @Nonnull
     private final TextMeasurer measurer;
@@ -242,7 +211,7 @@ public class Graph2Svg {
 
         Element group = document.createElementNS(SVG_NS, "g");
         group.setId(nodeDetails.getId());
-        group.setAttribute(DATA_TYPE, NODE);
+        group.setAttribute(DATA_NODE, "");
         group.setAttribute(DATA_NODE_ID, nodeDetails.getId());
         group.setAttribute("class",
                            (WP_GRAPH_NODE + " " + nodeDetails.getNodeStyleNames()).trim());
@@ -333,7 +302,7 @@ public class Graph2Svg {
         // Edge
         Element groupElement = getDocument().createElementNS(SVG_NS, "g");
         groupElement.setId(edgeDetails.getTailId() + edgeDetails.getHeadId());
-        groupElement.setAttribute(DATA_TYPE, "edge");
+        groupElement.setAttribute(DATA_EDGE, "");
         groupElement.setAttribute(DATA_TAIL, edgeDetails.getTailId());
         groupElement.setAttribute(DATA_HEAD, edgeDetails.getHeadId());
 
