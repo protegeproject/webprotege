@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -97,6 +98,11 @@ public class ElementalUtil {
 
     public static Element nthChildGroupElementOrError(Element element, int n, String errorMsg) {
         return childElementsByTagName(element, "g").skip(n).findFirst().orElseThrow(() -> new RuntimeException(errorMsg));
+    }
+
+    public static void addClassNames(@Nonnull Element element, String ... classNames) {
+        String concat = Stream.of(classNames).collect(Collectors.joining(" "));
+        addClassName(element, concat);
     }
 
     public static void addClassName(@Nonnull Element element, String className) {

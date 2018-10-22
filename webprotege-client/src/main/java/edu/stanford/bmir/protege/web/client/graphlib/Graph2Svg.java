@@ -213,19 +213,25 @@ public class Graph2Svg {
         group.setId(nodeDetails.getId());
         group.setAttribute(DATA_NODE, "");
         group.setAttribute(DATA_NODE_ID, nodeDetails.getId());
-        group.setAttribute("class",
-                           (WP_GRAPH__NODE + " " + nodeDetails.getNodeStyleNames()).trim());
+        ElementalUtil.addClassNames(group,
+                                    WP_GRAPH__NODE,
+                                    nodeDetails.getNodeStyleNames());
 
         SVGRectElement shape = createRect(nodeDetails);
-        shape.setAttribute("class",
-                           (WP_GRAPH__NODE__SHAPE + " " + nodeDetails.getNodeShapeStyleNames()).trim());
+        ElementalUtil.addClassNames(shape,
+                                    WP_GRAPH__NODE__SHAPE,
+                                    nodeDetails.getNodeShapeStyleNames());
         shape.setAttribute("pointer-events", "visible");
+
         SVGTextElement text = createText(nodeDetails);
-        text.setAttribute("class",
-                          (WP_GRAPH__NODE__LABEL + " " + nodeDetails.getNodeTextStyleNames()).trim());
+        ElementalUtil.addClassNames(text,
+                                    WP_GRAPH__NODE__LABEL,
+                                    nodeDetails.getNodeTextStyleNames());
         group.appendChild(shape);
         group.appendChild(text);
+
         layoutNodeGroup(nodeDetails, group, true);
+
         return group;
     }
 
