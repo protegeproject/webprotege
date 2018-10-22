@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
@@ -104,86 +103,8 @@ public class VizPresenter {
     }
 
     private void addContextMenuItemsToView() {
-        view.addContextMenuAction(new AbstractUiAction("Hide node") {
-            @Override
-            public void execute() {
-                view.getMostRecentTargetNode().ifPresent(n -> {
-                    if (currentGraph != null) {
-                        GWT.log("[VizPresenter] Removing " + n);
-                        currentGraph.removeNode(n.getId());
-                        layoutCurrentGraph(false);
-                        displayGraph();
-                    }
-                });
-            }
-        });
-        view.addContextMenuAction(new AbstractUiAction("Move focus to node") {
-            @Override
-            public void execute() {
-                view.getMostRecentTargetNode().ifPresent(n -> selectionModel.setSelection(n.getEntity()));
-            }
-        });
-    }
-
-    private boolean layoutCurrentGraph(boolean regenerate) {
-        if (!view.isVisible()) {
-            return false;
-        }
-        if (currentEntityGraph == null) {
-            view.clearGraph();
-            return false;
-        }
-        if (currentEntityGraph.getNodes().isEmpty()) {
-            view.clearGraph();
-            currentGraph = null;
-            return false;
-        }
-        Runnable layoutRunner = getLayoutRunner(regenerate);
-        if (isLargeGraph(currentEntityGraph)) {
-            int edgeCount = currentEntityGraph.getEdges().size();
-            int nodesCount = currentEntityGraph.getNodes().size();
-            view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
-                                          nodesCount,
-                                          edgeCount,
-                                          () -> {
-                                              layoutRunner.run();
-                                              displayGraph();
-                                          });
-            return false;
-        }
-        else {
-            layoutRunner.run();
-            return true;
-        }
-    }
-
-    private void displayGraph() {
-        if (currentGraph == null) {
-            view.clearGraph();
-        }
-        else {
-            view.setGraph(currentGraph);
-        }
-    }
-
-    private Runnable getLayoutRunner(boolean regenerate) {
-        return () -> {
-            if (regenerate) {
-                currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
-                        .convertGraph();
-            }
-            currentGraph.setMarginX(10);
-            currentGraph.setMarginY(10);
-            currentGraph.setRankDirBottomToTop();
-            currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
-            currentGraph.setNodeSep(10);
-            currentGraph.setRankerToLongestPath();
-            currentGraph.layout();
-        };
-    }
-
-    private boolean isLargeGraph(@Nonnull EntityGraph entityGraph) {
-        return entityGraph.getEdges().size() > LARGE_GRAPH_EDGE_COUNT;
+        view.addContextMenuAction(new HideNodeUiAction());
+        view.addContextMenuAction(new SelectNodeUiAction());
     }
 
     private void handleNodeMouseLeave(NodeDetails nodeDetails, Event event) {
@@ -280,6 +201,67 @@ public class VizPresenter {
         }
     }
 
+    private boolean layoutCurrentGraph(boolean regenerate) {
+        if (!view.isVisible()) {
+            return false;
+        }
+        if (currentEntityGraph == null) {
+            view.clearGraph();
+            return false;
+        }
+        if (currentEntityGraph.getNodes().isEmpty()) {
+            view.clearGraph();
+            currentGraph = null;
+            return false;
+        }
+        Runnable layoutRunner = getLayoutRunner(regenerate);
+        if (isLargeGraph(currentEntityGraph)) {
+            int edgeCount = currentEntityGraph.getEdges().size();
+            int nodesCount = currentEntityGraph.getNodes().size();
+            view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
+                                          nodesCount,
+                                          edgeCount,
+                                          () -> {
+                                              layoutRunner.run();
+                                              displayGraph();
+                                          });
+            return false;
+        }
+        else {
+            layoutRunner.run();
+            return true;
+        }
+    }
+
+    private void displayGraph() {
+        if (currentGraph == null) {
+            view.clearGraph();
+        }
+        else {
+            view.setGraph(currentGraph);
+        }
+    }
+
+    private Runnable getLayoutRunner(boolean regenerate) {
+        return () -> {
+            if (regenerate) {
+                currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
+                        .convertGraph();
+            }
+            currentGraph.setMarginX(10);
+            currentGraph.setMarginY(10);
+            currentGraph.setRankDirBottomToTop();
+            currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
+            currentGraph.setNodeSep(10);
+            currentGraph.setRankerToLongestPath();
+            currentGraph.layout();
+        };
+    }
+
+    private boolean isLargeGraph(@Nonnull EntityGraph entityGraph) {
+        return entityGraph.getEdges().size() > LARGE_GRAPH_EDGE_COUNT;
+    }
+
     private void handleDownload() {
         if (currentGraph == null) {
             return;
@@ -318,5 +300,38 @@ public class VizPresenter {
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
         this.entityDisplay = checkNotNull(entityDisplay);
+    }
+
+    private class HideNodeUiAction extends AbstractUiAction {
+
+        public HideNodeUiAction() {
+            super("Hide node");
+        }
+
+        @Override
+        public void execute() {
+            if (currentGraph == null) {
+                return;
+            }
+            view.getMostRecentTargetNode()
+                    .ifPresent(n -> {
+                        currentGraph.removeNode(n.getId());
+                        layoutCurrentGraph(false);
+                        displayGraph();
+                    });
+        }
+    }
+
+    private class SelectNodeUiAction extends AbstractUiAction {
+
+        public SelectNodeUiAction() {
+            super("Move focus to node");
+        }
+
+        @Override
+        public void execute() {
+            view.getMostRecentTargetNode()
+                    .ifPresent(n -> selectionModel.setSelection(n.getEntity()));
+        }
     }
 }
