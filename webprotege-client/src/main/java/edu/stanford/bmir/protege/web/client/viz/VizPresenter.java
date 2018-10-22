@@ -31,6 +31,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.DATA_HEAD;
+import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.DATA_NODE_ID;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -140,7 +142,7 @@ public class VizPresenter {
         Stream<Element> nodeGroups = ElementalUtil.childElementsByTagName(nodeGroup, "g");
         nodeGroups.forEach(
                 nodeElement -> {
-                    String nodeId = nodeElement.getAttribute("data-node-id");
+                    String nodeId = nodeElement.getAttribute(DATA_NODE_ID);
                     if(reachableNodes.contains(nodeId)) {
                         ElementalUtil.removeClassName(nodeElement, G_MUTED);
                     }
@@ -151,7 +153,7 @@ public class VizPresenter {
         );
         Stream<Element> edgeGroups = ElementalUtil.childElementsByTagName(edgeGroup, "g");
         edgeGroups.forEach(edgeElement -> {
-            String headNodeId = edgeElement.getAttribute("data-head");
+            String headNodeId = edgeElement.getAttribute(DATA_HEAD);
             if(reachableNodes.contains(headNodeId)) {
                 ElementalUtil.removeClassName(edgeElement, G_MUTED);
             }
@@ -170,9 +172,8 @@ public class VizPresenter {
         }
         processed.add(from.getId());
         reachableNodeIds.add(from.getId());
-        currentGraph.getPredecessors(from.getId()).forEach(node -> {
-            collectReachableNodesAndEdges(node, reachableNodeIds, edgeDetails, processed);
-        });
+        currentGraph.getPredecessors(from.getId())
+                .forEach(node -> collectReachableNodesAndEdges(node, reachableNodeIds, edgeDetails, processed));
     }
 
     private void handleNodeContextMenuClick(@Nonnull NodeDetails nodeDetails) {
@@ -269,7 +270,6 @@ public class VizPresenter {
         int edgeCount = currentEntityGraph.getEdges().size();
             if(edgeCount > LARGE_GRAPH_EDGE_COUNT) {
                 int nodesCount = currentEntityGraph.getNodes().size();
-                GWT.log("[VizPresenter] Large graph");
                 view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
                                               nodesCount,
                                               edgeCount,
