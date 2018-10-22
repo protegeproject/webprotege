@@ -144,8 +144,8 @@ public class Graph2Svg {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
         // Arrow head defs
-        SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, WP_GRAPH_EDGE_ARROW_HEAD + " " + WP_GRAPH_EDGE_ARROW_HEAD_IS_A, true);
-        SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, WP_GRAPH_EDGE_ARROW_HEAD + " " + WP_GRAPH_EDGE_ARROW_HEAD_REL, false);
+        SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, WP_GRAPH__EDGE__ARROW_HEAD + " " + WP_GRAPH__EDGE__ARROW_HEAD_IS_A, true);
+        SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, WP_GRAPH__EDGE__ARROW_HEAD + " " + WP_GRAPH__EDGE__ARROW_HEAD_REL, false);
         Element defsElement = document.createElementNS(SVG_NS, "defs");
         svg.appendChild(defsElement);
         defsElement.appendChild(openArrowHead);
@@ -214,15 +214,15 @@ public class Graph2Svg {
         group.setAttribute(DATA_NODE, "");
         group.setAttribute(DATA_NODE_ID, nodeDetails.getId());
         group.setAttribute("class",
-                           (WP_GRAPH_NODE + " " + nodeDetails.getNodeStyleNames()).trim());
+                           (WP_GRAPH__NODE + " " + nodeDetails.getNodeStyleNames()).trim());
 
         SVGRectElement shape = createRect(nodeDetails);
         shape.setAttribute("class",
-                           (WP_GRAPH_NODE_SHAPE + " " + nodeDetails.getNodeShapeStyleNames()).trim());
+                           (WP_GRAPH__NODE__SHAPE + " " + nodeDetails.getNodeShapeStyleNames()).trim());
         shape.setAttribute("pointer-events", "visible");
         SVGTextElement text = createText(nodeDetails);
         text.setAttribute("class",
-                          (WP_GRAPH_NODE_LABEL + " " + nodeDetails.getNodeTextStyleNames()).trim());
+                          (WP_GRAPH__NODE__LABEL + " " + nodeDetails.getNodeTextStyleNames()).trim());
         group.appendChild(shape);
         group.appendChild(text);
         layoutNodeGroup(nodeDetails, group, true);
@@ -237,7 +237,7 @@ public class Graph2Svg {
                                  @Nonnull Element groupElement,
                                  boolean attachHandlers) {
         Element rectElement = ElementalUtil.firstChildElementByTagName(groupElement, "rect");
-        measurer.setStyleNames(WP_GRAPH_NODE_SHAPE + " " + nodeDetails.getNodeStyleNames());
+        measurer.setStyleNames(WP_GRAPH__NODE__SHAPE + " " + nodeDetails.getNodeStyleNames());
         double strokeWidth = measurer.getStrokeWidth();
         double halfStrokeWidth = strokeWidth / 2;
 
@@ -344,7 +344,7 @@ public class Graph2Svg {
         textRect.setAttribute("height", inPixels(h));
         textRect.setAttribute("x", inPixels(edgeDetails.getX() - (w / 2.0)));
         textRect.setAttribute("y", inPixels(edgeDetails.getY() - (h / 2.0)));
-        textRect.setAttribute("class", WP_GRAPH_EDGE_LABEL);
+        textRect.setAttribute("class", WP_GRAPH__EDGE__LABEL);
 
     }
 

@@ -25,17 +25,17 @@ public interface GraphConstants {
 
     String WP_GRAPH__G_MUTED = "wp-graph__g--muted";
 
-    String WP_GRAPH_NODE = "wp-graph__node";
+    String WP_GRAPH__NODE = "wp-graph__node";
 
-    String WP_GRAPH_NODE_SHAPE = "wp-graph__node__shape";
+    String WP_GRAPH__NODE__SHAPE = "wp-graph__node__shape";
 
-    String WP_GRAPH_NODE_LABEL = "wp-graph__node__label";
+    String WP_GRAPH__NODE__LABEL = "wp-graph__node__label";
 
-    String WP_GRAPH_EDGE_LABEL = "wp-graph__edge__label";
+    String WP_GRAPH__EDGE__LABEL = "wp-graph__edge__label";
 
-    String WP_GRAPH_EDGE_ARROW_HEAD = "wp-graph__edge__arrow-head";
+    String WP_GRAPH__EDGE__ARROW_HEAD = "wp-graph__edge__arrow-head";
 
-    String WP_GRAPH_EDGE_ARROW_HEAD_IS_A = "wp-graph__edge__arrow-head--is-a";
+    String WP_GRAPH__EDGE__ARROW_HEAD_IS_A = "wp-graph__edge__arrow-head--is-a";
 
-    String WP_GRAPH_EDGE_ARROW_HEAD_REL = "wp-graph__edge__arrow-head--rel";
+    String WP_GRAPH__EDGE__ARROW_HEAD_REL = "wp-graph__edge__arrow-head--rel";
 }
