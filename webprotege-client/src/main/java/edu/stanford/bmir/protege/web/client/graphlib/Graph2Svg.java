@@ -24,23 +24,30 @@ import static java.util.stream.Collectors.toList;
  */
 public class Graph2Svg {
 
+
+    private static final String SVG_NS = "http://www.w3.org/2000/svg";
+
+
     private static final String CLOSED_ARROW_HEAD_ID = "closedArrowHead";
 
     private static final String OPEN_ARROW_HEAD_ID = "openArrowHead";
 
-    private static final String SVG_NS = "http://www.w3.org/2000/svg";
+    private static final String DATA_NODES = "data-nodes";
+
+    private static final String DATA_EDGES = "data-edges";
 
     private static final String DATA_TAIL = "data-tail";
 
     private static final String DATA_HEAD = "data-head";
-
-    private static final String WP_GRAPH = "wp-graph";
 
     private static final String DATA_NODE_ID = "data-node-id";
 
     private static final String DATA_TYPE = "data-type";
 
     private static final String NODE = "node";
+
+
+    private static final String WP_GRAPH = "wp-graph";
 
     private static final String WP_GRAPH_NODE = "wp-graph__node";
 
@@ -49,10 +56,6 @@ public class Graph2Svg {
     private static final String WP_GRAPH_NODE_LABEL = "wp-graph__node__label";
 
     private static final String WP_GRAPH_EDGE_LABEL = "wp-graph__edge__label";
-
-    private static final String DATA_NODES = "data-nodes";
-
-    private static final String DATA_EDGES = "data-edges";
 
     private static final String WP_GRAPH_EDGE_ARROW_HEAD = "wp-graph__edge__arrow-head";
 
@@ -143,7 +146,6 @@ public class Graph2Svg {
                         nodesGroup.appendChild(nodeGroup);
                     }
                 });
-        GWT.log("[Graph2SVG] There are " + ElementalUtil.childSvgGroupElements(edgesGroup).count());
 
         ElementalUtil.childSvgGroupElements(edgesGroup)
                 .forEach(edgeGroupElement -> {
