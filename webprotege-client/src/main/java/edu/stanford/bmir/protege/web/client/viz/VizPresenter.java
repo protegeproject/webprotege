@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
+import com.google.common.base.Stopwatch;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
@@ -26,6 +28,7 @@ import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -250,8 +253,12 @@ public class VizPresenter {
     private Runnable getLayoutRunner(boolean regenerate) {
         return () -> {
             if (regenerate) {
+                Stopwatch stopwatch = Stopwatch.createStarted();
+                GWT.log("[VizPresenter] Creating graph");
                 currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
                         .convertGraph();
+                stopwatch.stop();
+                GWT.log("[VizPresenter] Created graph in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
             }
             currentGraph.setMarginX(10);
             currentGraph.setMarginY(10);
@@ -259,7 +266,11 @@ public class VizPresenter {
             currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
             currentGraph.setNodeSep(10);
             currentGraph.setRankerToLongestPath();
+            GWT.log("[VizPresenter] Laying out graph");
+            Stopwatch stopwatch = Stopwatch.createStarted();
             currentGraph.layout();
+            stopwatch.stop();
+            GWT.log("[VizPresenter] Laid out graph in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
         };
     }
 
