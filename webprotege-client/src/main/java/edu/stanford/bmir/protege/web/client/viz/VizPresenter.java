@@ -23,6 +23,7 @@ import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
@@ -130,21 +131,9 @@ public class VizPresenter {
             currentGraph = null;
             return false;
         }
-        Runnable layoutRunner = () -> {
-            if (regenerate) {
-                currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
-                        .convertGraph();
-            }
-            currentGraph.setMarginX(10);
-            currentGraph.setMarginY(10);
-            currentGraph.setRankDirBottomToTop();
-            currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
-            currentGraph.setNodeSep(10);
-            currentGraph.setRankerToLongestPath();
-            currentGraph.layout();
-        };
-        int edgeCount = currentEntityGraph.getEdges().size();
-        if (edgeCount > LARGE_GRAPH_EDGE_COUNT) {
+        Runnable layoutRunner = getLayoutRunner(regenerate);
+        if (isLargeGraph(currentEntityGraph)) {
+            int edgeCount = currentEntityGraph.getEdges().size();
             int nodesCount = currentEntityGraph.getNodes().size();
             view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
                                           nodesCount,
@@ -159,6 +148,26 @@ public class VizPresenter {
             layoutRunner.run();
             return true;
         }
+    }
+
+    private boolean isLargeGraph(@Nonnull EntityGraph entityGraph) {
+        return entityGraph.getEdges().size() > LARGE_GRAPH_EDGE_COUNT;
+    }
+
+    private Runnable getLayoutRunner(boolean regenerate) {
+        return () -> {
+                if (regenerate) {
+                    currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
+                            .convertGraph();
+                }
+                currentGraph.setMarginX(10);
+                currentGraph.setMarginY(10);
+                currentGraph.setRankDirBottomToTop();
+                currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
+                currentGraph.setNodeSep(10);
+                currentGraph.setRankerToLongestPath();
+                currentGraph.layout();
+            };
     }
 
     private void displayGraph() {
