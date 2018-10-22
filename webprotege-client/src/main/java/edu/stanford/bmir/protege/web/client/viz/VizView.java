@@ -29,11 +29,6 @@ public interface VizView extends IsWidget {
 
     Optional<NodeDetails> getMostRecentTargetNode();
 
-    interface DownloadHandler {
-
-        void handleDownload();
-    }
-
     void displayLargeGraphMessage(OWLEntityData rootEntity, int nodes, int edges, Runnable displayGraphCallback);
 
     void setGraph(Graph graph);
@@ -45,11 +40,6 @@ public interface VizView extends IsWidget {
     void setDownloadHandler(@Nonnull DownloadHandler handler);
 
     boolean isVisible();
-
-    interface SettingsChangedHandler {
-
-        void handleSettingsChanged();
-    }
 
     double getRankSpacing();
 
@@ -69,4 +59,14 @@ public interface VizView extends IsWidget {
     void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
 
     void setNodeMouseOutHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler);
+
+    interface DownloadHandler {
+
+        void handleDownload();
+    }
+
+    interface SettingsChangedHandler {
+
+        void handleSettingsChanged();
+    }
 }
