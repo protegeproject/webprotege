@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.ui;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental.client.Browser;
 import elemental.dom.Element;
+import elemental.dom.Node;
 import elemental.dom.NodeList;
+import elemental.events.EventTarget;
 import elemental.html.HTMLCollection;
 import elemental.util.Indexable;
 
@@ -43,34 +45,10 @@ public class ElementalUtil {
         return false;
     }
 
-    public static <T> Stream<T> streamOf(@Nonnull Indexable indexable) {
-        Stream.Builder<T> builder = Stream.builder();
-        for (int i = 0; i < indexable.length(); i++) {
-            builder.add((T) indexable.at(i));
-        }
-        return builder.build();
-    }
-
     public static Stream<Element> elementsByTagName(@Nonnull Element element,
                                                     @Nonnull String tagName) {
         NodeList elementsByTagName = element.getElementsByTagName(tagName);
         return getElementStream(elementsByTagName);
-    }
-
-    public static Stream<Element> childSvgGroupElements(@Nonnull Element element) {
-        return childElementsByTagName(element, "g");
-    }
-
-    public static Element firstChildGroupElement(@Nonnull Element element) {
-        return childElementsByTagName(element, "g")
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Expected svg group element"));
-    }
-
-    public static Stream<Element> childElementsByTagName(@Nonnull Element element,
-                                                         @Nonnull String tagName) {
-        return getElementStream(element.getChildren())
-                .filter(e -> e.getTagName().equals(tagName));
     }
 
     private static Stream<Element> getElementStream(NodeList nodeList) {
@@ -79,10 +57,34 @@ public class ElementalUtil {
                 .map(node -> (Element) node);
     }
 
+    public static <T> Stream<T> streamOf(@Nonnull Indexable indexable) {
+        Stream.Builder<T> builder = Stream.builder();
+        for (int i = 0; i < indexable.length(); i++) {
+            builder.add((T) indexable.at(i));
+        }
+        return builder.build();
+    }
+
+    public static Stream<Element> childSvgGroupElements(@Nonnull Element element) {
+        return childElementsByTagName(element, "g");
+    }
+
+    public static Stream<Element> childElementsByTagName(@Nonnull Element element,
+                                                         @Nonnull String tagName) {
+        return getElementStream(element.getChildren())
+                .filter(e -> e.getTagName().equals(tagName));
+    }
+
     private static Stream<Element> getElementStream(HTMLCollection collection) {
         return ElementalUtil.streamOf(collection)
                 .filter(node -> node instanceof Element)
                 .map(node -> (Element) node);
+    }
+
+    public static Element firstChildGroupElement(@Nonnull Element element) {
+        return childElementsByTagName(element, "g")
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Expected svg group element"));
     }
 
     public static Element firstChildElementByTagName(Element element, String tagName) {
@@ -97,10 +99,13 @@ public class ElementalUtil {
 
 
     public static Element nthChildGroupElementOrError(Element element, int n, String errorMsg) {
-        return childElementsByTagName(element, "g").skip(n).findFirst().orElseThrow(() -> new RuntimeException(errorMsg));
+        return childElementsByTagName(element, "g")
+                .skip(n)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(errorMsg));
     }
 
-    public static void addClassNames(@Nonnull Element element, String ... classNames) {
+    public static void addClassNames(@Nonnull Element element, String... classNames) {
         String concat = Stream.of(classNames).collect(Collectors.joining(" "));
         addClassName(element, concat);
     }
@@ -123,6 +128,35 @@ public class ElementalUtil {
         }
         String replacement = current.replace(className, "").trim();
         element.setAttribute("class", replacement);
+    }
+
+    public static Optional<String> getAncestorAttribute(@Nonnull EventTarget eventTarget,
+                                                        @Nonnull String attribute) {
+        if (eventTarget instanceof Node) {
+            return getAncestorAttribute((Node) eventTarget, attribute);
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<String> getAncestorAttribute(@Nonnull Node node,
+                                                        String attribute) {
+        Element parent;
+        if (node instanceof Element) {
+            parent = (Element) node;
+        }
+        else {
+            parent = node.getParentElement();
+        }
+        while (parent != null) {
+            String attributeValue = parent.getAttribute(attribute);
+            if (attributeValue != null) {
+                return Optional.of(attributeValue);
+            }
+            parent = parent.getParentElement();
+        }
+        return Optional.empty();
     }
 
 

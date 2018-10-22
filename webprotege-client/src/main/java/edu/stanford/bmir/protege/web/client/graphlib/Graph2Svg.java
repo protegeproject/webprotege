@@ -7,6 +7,7 @@ import elemental.dom.Document;
 import elemental.dom.Element;
 import elemental.dom.Text;
 import elemental.events.Event;
+import elemental.events.EventTarget;
 import elemental.svg.*;
 
 import javax.annotation.Nonnull;
@@ -14,8 +15,9 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toList;
 import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.*;
+import static java.util.stream.Collectors.toList;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -143,6 +145,9 @@ public class Graph2Svg {
     public Element createSvg() {
         Document document = getDocument();
         SVGElement svg = document.createSVGElement();
+        svg.setAttribute("class", WP_GRAPH);
+        svg.addEventListener(Event.CONTEXTMENU, evt -> processNodeEvent(evt, nodeContextMenuClickHandler));
+
         // Arrow head defs
         SVGMarkerElement closedArrowHead = createArrowHeadMarker(document, CLOSED_ARROW_HEAD_ID, WP_GRAPH__EDGE__ARROW_HEAD + " " + WP_GRAPH__EDGE__ARROW_HEAD_IS_A, true);
         SVGMarkerElement openArrowHead = createArrowHeadMarker(document, OPEN_ARROW_HEAD_ID, WP_GRAPH__EDGE__ARROW_HEAD + " " + WP_GRAPH__EDGE__ARROW_HEAD_REL, false);
@@ -152,7 +157,6 @@ public class Graph2Svg {
         defsElement.appendChild(closedArrowHead);
 
         Element groupElement = document.createElementNS(SVG_NS, "g");
-        svg.setAttribute("class", WP_GRAPH);
         svg.appendChild(groupElement);
 
         Element nodeGroupElement = document.createElementNS(SVG_NS, "g");
@@ -178,6 +182,13 @@ public class Graph2Svg {
 
     public Document getDocument() {
         return Browser.getDocument();
+    }
+
+    private void processNodeEvent(Event evt, BiConsumer<NodeDetails, Event> consumer) {
+        EventTarget target = evt.getTarget();
+        ElementalUtil.getAncestorAttribute(target, DATA_NODE_ID)
+                .flatMap(graph::getNodeDetails)
+                .ifPresent(nodeDetails -> consumer.accept(nodeDetails, evt));
     }
 
     private SVGMarkerElement createArrowHeadMarker(@Nonnull Document document,
@@ -262,7 +273,7 @@ public class Graph2Svg {
         if (attachHandlers) {
             rectElement.addEventListener(Event.CLICK, evt -> nodeClickHandler.accept(nodeDetails, evt));
             rectElement.addEventListener(Event.DBLCLICK, evt -> nodeDoubleClickHandler.accept(nodeDetails, evt));
-            rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
+            //            rectElement.addEventListener(Event.CONTEXTMENU, evt -> nodeContextMenuClickHandler.accept(nodeDetails, evt));
             rectElement.addEventListener(Event.MOUSEOVER, evt -> nodeMouseOverHandler.accept(nodeDetails, evt));
             rectElement.addEventListener("mouseleave", evt -> nodeMouseLeaveHandler.accept(nodeDetails, evt));
         }

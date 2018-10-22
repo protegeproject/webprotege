@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.dagre.Dagre;
 import jsinterop.annotations.*;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -217,6 +218,11 @@ public class Graph {
 
     @JsMethod
     public native NodeDetails node(@Nonnull String id);
+
+    @JsOverlay
+    public final Optional<NodeDetails> getNodeDetails(@Nonnull String id) {
+        return Optional.ofNullable(node(id));
+    }
 
     @JsMethod
     public native void removeNode(String nodeDetailsId);
