@@ -137,12 +137,32 @@ public class VizPresenter {
                                       reachableEdges,
                                       new HashSet<>());
         Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
+        applyMutedStylesToNonReachableNodes(reachableNodes, topGroup);
+        applyMutedStylesToNonReachableEdges(reachableNodes, topGroup);
+    }
+
+    private void applyMutedStylesToNonReachableNodes(HashSet<String> reachableNodes, Element topGroup) {
         Element nodeGroup = ElementalUtil.firstChildGroupElement(topGroup);
-        Element edgeGroup = ElementalUtil.nthChildGroupElement(topGroup, 1).orElseThrow(() -> new RuntimeException("Missing edge group"));
         Stream<Element> nodeGroups = ElementalUtil.childElementsByTagName(nodeGroup, "g");
+        applyMutedStylesToElements(reachableNodes, nodeGroups, DATA_NODE_ID);
+    }
+
+
+    private void applyMutedStylesToNonReachableEdges(HashSet<String> reachableNodes, Element topGroup) {
+        Element edgeGroup = ElementalUtil
+                .nthChildGroupElement(topGroup, 1)
+                .orElseThrow(() -> new RuntimeException("Missing edge group"));
+        Stream<Element> edgeGroups = ElementalUtil.childElementsByTagName(edgeGroup, "g");
+        applyMutedStylesToElements(reachableNodes, edgeGroups, DATA_HEAD);
+    }
+
+
+    private void applyMutedStylesToElements(HashSet<String> reachableNodes,
+                                            Stream<Element> nodeGroups,
+                                            String nodeIdAttributeName) {
         nodeGroups.forEach(
                 nodeElement -> {
-                    String nodeId = nodeElement.getAttribute(DATA_NODE_ID);
+                    String nodeId = nodeElement.getAttribute(nodeIdAttributeName);
                     if(reachableNodes.contains(nodeId)) {
                         ElementalUtil.removeClassName(nodeElement, G_MUTED);
                     }
@@ -151,16 +171,6 @@ public class VizPresenter {
                     }
                 }
         );
-        Stream<Element> edgeGroups = ElementalUtil.childElementsByTagName(edgeGroup, "g");
-        edgeGroups.forEach(edgeElement -> {
-            String headNodeId = edgeElement.getAttribute(DATA_HEAD);
-            if(reachableNodes.contains(headNodeId)) {
-                ElementalUtil.removeClassName(edgeElement, G_MUTED);
-            }
-            else {
-                ElementalUtil.addClassName(edgeElement, G_MUTED);
-            }
-        });
     }
 
     private void collectReachableNodesAndEdges(@Nonnull NodeDetails from,
