@@ -23,7 +23,6 @@ import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
@@ -150,26 +149,6 @@ public class VizPresenter {
         }
     }
 
-    private boolean isLargeGraph(@Nonnull EntityGraph entityGraph) {
-        return entityGraph.getEdges().size() > LARGE_GRAPH_EDGE_COUNT;
-    }
-
-    private Runnable getLayoutRunner(boolean regenerate) {
-        return () -> {
-                if (regenerate) {
-                    currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
-                            .convertGraph();
-                }
-                currentGraph.setMarginX(10);
-                currentGraph.setMarginY(10);
-                currentGraph.setRankDirBottomToTop();
-                currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
-                currentGraph.setNodeSep(10);
-                currentGraph.setRankerToLongestPath();
-                currentGraph.layout();
-            };
-    }
-
     private void displayGraph() {
         if (currentGraph == null) {
             view.clearGraph();
@@ -177,6 +156,26 @@ public class VizPresenter {
         else {
             view.setGraph(currentGraph);
         }
+    }
+
+    private Runnable getLayoutRunner(boolean regenerate) {
+        return () -> {
+            if (regenerate) {
+                currentGraph = new EntityGraph2Graph(view.getTextMeasurer(), currentEntityGraph)
+                        .convertGraph();
+            }
+            currentGraph.setMarginX(10);
+            currentGraph.setMarginY(10);
+            currentGraph.setRankDirBottomToTop();
+            currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
+            currentGraph.setNodeSep(10);
+            currentGraph.setRankerToLongestPath();
+            currentGraph.layout();
+        };
+    }
+
+    private boolean isLargeGraph(@Nonnull EntityGraph entityGraph) {
+        return entityGraph.getEdges().size() > LARGE_GRAPH_EDGE_COUNT;
     }
 
     private void handleNodeMouseLeave(NodeDetails nodeDetails, Event event) {
