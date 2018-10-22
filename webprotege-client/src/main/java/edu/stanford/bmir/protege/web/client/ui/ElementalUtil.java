@@ -94,6 +94,11 @@ public class ElementalUtil {
         return childElementsByTagName(element, "g").skip(n).findFirst();
     }
 
+
+    public static Element nthChildGroupElementOrError(Element element, int n, String errorMsg) {
+        return childElementsByTagName(element, "g").skip(n).findFirst().orElseThrow(() -> new RuntimeException(errorMsg));
+    }
+
     public static void addClassName(@Nonnull Element element, String className) {
         String current = element.getAttribute("class");
         if (current == null) {

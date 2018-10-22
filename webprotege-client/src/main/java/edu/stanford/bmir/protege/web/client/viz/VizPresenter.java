@@ -43,6 +43,10 @@ public class VizPresenter {
 
     private static final int LARGE_GRAPH_EDGE_COUNT = 500;
 
+    private static final int FIRST = 0;
+
+    private static final int SECOND = 1;
+
     @Nonnull
     private final ProjectId projectId;
 
@@ -129,15 +133,17 @@ public class VizPresenter {
     }
 
     private void applyMutedStylesToNonReachableNodes(HashSet<String> reachableNodes, Element topGroup) {
-        Element nodeGroup = ElementalUtil.firstChildGroupElement(topGroup);
+        Element nodeGroup = ElementalUtil.nthChildGroupElementOrError(topGroup,
+                                                                      FIRST,
+                                                                      "Missing nodes group");
         Stream<Element> nodeGroups = ElementalUtil.childElementsByTagName(nodeGroup, "g");
         applyMutedStylesToElements(reachableNodes, nodeGroups, DATA_NODE_ID);
     }
 
     private void applyMutedStylesToNonReachableEdges(HashSet<String> reachableNodes, Element topGroup) {
-        Element edgeGroup = ElementalUtil
-                .nthChildGroupElement(topGroup, 1)
-                .orElseThrow(() -> new RuntimeException("Missing edge group"));
+        Element edgeGroup = ElementalUtil.nthChildGroupElementOrError(topGroup,
+                                                                      SECOND,
+                                                                      "Missing edges group");
         Stream<Element> edgeGroups = ElementalUtil.childElementsByTagName(edgeGroup, "g");
         applyMutedStylesToElements(reachableNodes, edgeGroups, DATA_HEAD);
     }
