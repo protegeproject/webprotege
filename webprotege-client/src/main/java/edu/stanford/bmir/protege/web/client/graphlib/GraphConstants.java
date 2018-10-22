@@ -23,6 +23,8 @@ public interface GraphConstants {
 
     String WP_GRAPH = "wp-graph";
 
+    String WP_GRAPH__G_MUTED = "wp-graph__g--muted";
+
     String WP_GRAPH_NODE = "wp-graph__node";
 
     String WP_GRAPH_NODE_SHAPE = "wp-graph__node__shape";
@@ -36,5 +38,4 @@ public interface GraphConstants {
     String WP_GRAPH_EDGE_ARROW_HEAD_IS_A = "wp-graph__edge__arrow-head--is-a";
 
     String WP_GRAPH_EDGE_ARROW_HEAD_REL = "wp-graph__edge__arrow-head--rel";
-
 }

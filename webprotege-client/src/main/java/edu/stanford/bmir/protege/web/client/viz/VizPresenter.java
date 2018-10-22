@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.DATA_HEAD;
 import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.DATA_NODE_ID;
+import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.WP_GRAPH__G_MUTED;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -41,8 +42,6 @@ import static java.util.stream.Collectors.toSet;
 public class VizPresenter {
 
     private static final int LARGE_GRAPH_EDGE_COUNT = 500;
-
-    private static final String G_MUTED = "wp-graph__g--muted";
 
     @Nonnull
     private final ProjectId projectId;
@@ -110,7 +109,7 @@ public class VizPresenter {
     private void handleNodeMouseLeave(NodeDetails nodeDetails, Event event) {
         Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
         ElementalUtil.elementsByTagName(topGroup, "g")
-                .forEach(element -> ElementalUtil.removeClassName(element, G_MUTED));
+                .forEach(element -> ElementalUtil.removeClassName(element, WP_GRAPH__G_MUTED));
     }
 
     private void handleNodeMouseOver(NodeDetails nodeDetails, Event event) {
@@ -150,10 +149,10 @@ public class VizPresenter {
                 nodeElement -> {
                     String nodeId = nodeElement.getAttribute(nodeIdAttributeName);
                     if (reachableNodes.contains(nodeId)) {
-                        ElementalUtil.removeClassName(nodeElement, G_MUTED);
+                        ElementalUtil.removeClassName(nodeElement, WP_GRAPH__G_MUTED);
                     }
                     else {
-                        ElementalUtil.addClassName(nodeElement, G_MUTED);
+                        ElementalUtil.addClassName(nodeElement, WP_GRAPH__G_MUTED);
                     }
                 }
         );
