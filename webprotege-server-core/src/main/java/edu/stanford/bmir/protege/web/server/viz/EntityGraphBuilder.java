@@ -108,7 +108,7 @@ public class EntityGraphBuilder {
     }
 
     private void createEdgesForClass(Set<Edge> g, Set<OWLEntity> processed, OWLClass cls) {
-        Stream<OWLSubClassOfAxiom> subClsAx = getOntologies().flatMap(o -> o.getSubClassAxiomsForSubClass(cls).stream());
+        Stream<OWLSubClassOfAxiom> subClsAx = getOntologies().flatMap(o -> o.getSubClassAxiomsForSubClass(cls).stream().sorted());
         Stream<OWLSubClassOfAxiom> defs = getEquivalentClassAxiomsAsSubClassOfAxioms(cls);
         Streams.concat(subClsAx, defs)
                 .filter(ax -> !ax.getSubClass().isAnonymous())
