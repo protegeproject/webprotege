@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
+import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -133,7 +134,17 @@ public class RpcWhiteList implements Action, Result {
 
     RelationshipEdge relationshipEdge;
 
+    ImmutableSetMultimap immutableSetMultimap;
+
     public RpcWhiteList() {
+    }
+
+    public ImmutableSetMultimap getImmutableSetMultimap() {
+        return immutableSetMultimap;
+    }
+
+    public void setImmutableSetMultimap(ImmutableSetMultimap immutableSetMultimap) {
+        this.immutableSetMultimap = immutableSetMultimap;
     }
 
     public Criteria getCriteria() {

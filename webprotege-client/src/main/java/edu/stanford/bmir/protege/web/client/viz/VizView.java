@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multiset;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
@@ -29,7 +31,9 @@ public interface VizView extends IsWidget {
 
     Optional<NodeDetails> getMostRecentTargetNode();
 
-    void displayLargeGraphMessage(OWLEntityData rootEntity, int nodes, int edges, Runnable displayGraphCallback);
+    void displayLargeGraphMessage(OWLEntityData rootEntity, int nodes, int edges,
+                                  @Nonnull Multiset<OWLEntityData> edgeMultiset,
+                                  @Nonnull Runnable displayGraphCallback);
 
     void setGraph(Graph graph);
 

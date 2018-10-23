@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multiset;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -13,12 +16,11 @@ import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
+import edu.stanford.bmir.protege.web.shared.viz.*;
 import elemental.dom.Element;
 import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -32,9 +34,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.DATA_HEAD;
-import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.DATA_NODE_ID;
-import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.WP_GRAPH__G_MUTED;
+import static edu.stanford.bmir.protege.web.client.graphlib.GraphConstants.*;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -111,6 +111,18 @@ public class VizPresenter {
     private void addContextMenuItemsToView() {
         view.addContextMenuAction(new HideNodeUiAction());
         view.addContextMenuAction(new SelectNodeUiAction());
+    }
+
+
+    public void displayEntity(@Nonnull OWLEntity entity) {
+        checkNotNull(entity);
+        if(currentEntity.equals(Optional.of(entity))) {
+            return;
+        }
+        this.currentEntity = Optional.of(entity);
+        dispatch.execute(new GetEntityDotRenderingAction(projectId, entity),
+                         hasBusy,
+                         this::handleRendering);
     }
 
     private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {
@@ -205,7 +217,7 @@ public class VizPresenter {
 
     private void layoutAndDisplayGraph() {
         if (layoutCurrentGraph(true)) {
-            displayGraph();
+            displayGraphInView();
         }
     }
 
@@ -222,32 +234,64 @@ public class VizPresenter {
             currentGraph = null;
             return false;
         }
-        Runnable layoutRunner = getLayoutRunner(regenerate);
+
         if (isLargeGraph(currentEntityGraph)) {
-            int edgeCount = currentEntityGraph.getEdges().size();
-            int nodesCount = currentEntityGraph.getNodes().size();
-            view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
-                                          nodesCount,
-                                          edgeCount,
-                                          () -> {
-                                              layoutRunner.run();
-                                              displayGraph();
-                                          });
+            handleLargeGraph(regenerate);
             return false;
         }
         else {
+            Runnable layoutRunner = getLayoutRunner(regenerate);
             layoutRunner.run();
             return true;
         }
     }
 
-    private void displayGraph() {
+    private void displayGraphInView() {
         if (currentGraph == null) {
             view.clearGraph();
         }
         else {
             view.setGraph(currentGraph);
         }
+    }
+
+    private boolean isLargeGraph(@Nonnull EntityGraph entityGraph) {
+        return entityGraph.getEdgeCount() > LARGE_GRAPH_EDGE_COUNT;
+    }
+
+    private void handleLargeGraph(boolean regenerate) {
+        GWT.log("[VizPresenter] Examining large graph");
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        ImmutableSet<Edge> edges = currentEntityGraph.getEdges();
+        Multiset<OWLEntityData> edgeMultiset = HashMultiset.create();
+        OWLEntityData root = currentEntityGraph.getRoot();
+        currentEntityGraph
+                .getEdgesByTailNode()
+                .get(root)
+                .stream()
+                .filter(Edge::isRelationship)
+                .map(edge -> ((RelationshipEdge) edge).getRelationship())
+                .distinct()
+                .forEach(edge -> {
+                    Set<OWLEntityData> edgeLabels = new HashSet<>(currentEntityGraph.getEdgeLabels());
+                    edgeLabels.remove(edge);
+                    int totalNodes = currentEntityGraph.getNodes().size();
+                    int reachableNodesWithoutEdge = currentEntityGraph.getTransitiveClosure(root, edgeLabels).size();
+                    edgeMultiset.setCount(edge, totalNodes - reachableNodesWithoutEdge);
+                });
+        stopwatch.stop();
+        GWT.log("[VizPresenter] Examined large graph in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
+        int edgeCount = edges.size();
+        int nodesCount = currentEntityGraph.getNodes().size();
+        Runnable layoutRunner = getLayoutRunner(regenerate);
+        view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
+                                      nodesCount,
+                                      edgeCount,
+                                      edgeMultiset,
+                                      () -> {
+                                          layoutRunner.run();
+                                          displayGraphInView();
+                                      });
     }
 
     private Runnable getLayoutRunner(boolean regenerate) {
@@ -274,10 +318,6 @@ public class VizPresenter {
         };
     }
 
-    private boolean isLargeGraph(@Nonnull EntityGraph entityGraph) {
-        return entityGraph.getEdges().size() > LARGE_GRAPH_EDGE_COUNT;
-    }
-
     private void handleDownload() {
         if (currentGraph == null) {
             return;
@@ -292,21 +332,16 @@ public class VizPresenter {
         layoutAndDisplayGraph();
     }
 
-    protected void displayEntity(@Nonnull OWLEntity entity) {
-        checkNotNull(entity);
-        this.currentEntity = Optional.of(entity);
-        dispatch.execute(new GetEntityDotRenderingAction(projectId, entity),
-                         hasBusy,
-                         this::handleRendering);
-
-    }
 
     private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
         if (!isGraphForCurrentEntity(result)) {
             return;
         }
-        entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
+        if(result.getEntityGraph().equals(currentEntityGraph)) {
+            return;
+        }
         currentEntityGraph = result.getEntityGraph();
+        entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
         resetCurrentGraph();
     }
 
@@ -333,7 +368,7 @@ public class VizPresenter {
                     .ifPresent(n -> {
                         currentGraph.removeNode(n.getId());
                         layoutCurrentGraph(false);
-                        displayGraph();
+                        displayGraphInView();
                     });
         }
     }

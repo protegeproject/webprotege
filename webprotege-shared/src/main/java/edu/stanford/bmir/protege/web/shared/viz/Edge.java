@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -25,4 +26,8 @@ public interface Edge extends IsSerializable {
     String getLabel();
 
     boolean isIsA();
+
+    boolean isRelationship();
+
+    Optional<OWLEntityData> getLabellingEntity();
 }

@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multiset;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
@@ -35,6 +34,9 @@ public class LargeGraphMessageViewImpl extends Composite implements LargeGraphMe
     @UiField
     Label messageField;
 
+    @UiField
+    FlowPanel edgeList;
+
     public LargeGraphMessageViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
@@ -48,8 +50,10 @@ public class LargeGraphMessageViewImpl extends Composite implements LargeGraphMe
     }
 
     @Override
-    public void setDisplayMessage(@Nonnull OWLEntityData entity, int nodeCount, int edgeCount) {
+    public void setDisplayMessage(@Nonnull OWLEntityData entity, int nodeCount, int edgeCount,
+                                  @Nonnull Multiset<OWLEntityData> edgeMultiset) {
         messageField.setText("The entity graph for " + entity.getBrowserText() + " is large, with " + nodeCount + " nodes and " + edgeCount + " edges.  It may take a while to layout and display.");
+        edgeList.clear();
     }
 
     @Override

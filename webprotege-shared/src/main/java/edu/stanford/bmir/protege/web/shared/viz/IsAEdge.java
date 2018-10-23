@@ -5,6 +5,7 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -36,5 +37,15 @@ public abstract class IsAEdge implements Edge {
     @Override
     public boolean isIsA() {
         return true;
+    }
+
+    @Override
+    public boolean isRelationship() {
+        return false;
+    }
+
+    @Override
+    public Optional<OWLEntityData> getLabellingEntity() {
+        return Optional.empty();
     }
 }

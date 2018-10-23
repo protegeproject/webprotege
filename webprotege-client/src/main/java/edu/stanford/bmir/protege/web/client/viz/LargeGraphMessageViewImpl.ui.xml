@@ -20,10 +20,18 @@
         .displayButton {
 
         }
+        .edgeList {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 1;
+            flex-grow: 1;
+            overflow: auto;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Label ui:field="messageField" text="LARGE" addStyleNames="{style.messageField}"/>
         <g:Button ui:field="displayButton" text="Display Graph" addStyleNames="{style.displayButton} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.primaryButton}"/>
+        <g:FlowPanel ui:field="edgeList" addStyleNames="{style.edgeList}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

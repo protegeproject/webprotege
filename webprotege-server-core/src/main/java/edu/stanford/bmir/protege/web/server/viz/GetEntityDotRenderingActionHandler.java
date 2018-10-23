@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.viz;
 
+import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -13,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.io.StringWriter;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,8 +46,13 @@ public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHan
     @Nonnull
     @Override
     public GetEntityDotRenderingResult execute(@Nonnull GetEntityDotRenderingAction action, @Nonnull ExecutionContext executionContext) {
+        Stopwatch stopwatch = Stopwatch.createStarted();
         EntityGraph graph = graphBuilder.createGraph(action.getEntity());
-        logger.info("Created entity graph [" + graph.getNodes().size() + " nodes; edges " + graph.getEdges().size() + "]");
+        stopwatch.stop();
+        logger.info("Created entity graph [{} nodes; edges {}] in {} ms",
+                    graph.getNodes().size(),
+                    graph.getEdges().size(),
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
         return GetEntityDotRenderingResult.get(graph);
     }
 }
