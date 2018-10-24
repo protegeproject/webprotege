@@ -296,7 +296,7 @@ public class Graph2Svg {
         Text textNode = getDocument().createTextNode(text);
         textElement.appendChild(textNode);
         textElement.setAttribute("text-anchor", "middle");
-        textElement.setAttribute("alignment-baseline", "middle");
+        textElement.setAttribute("dominant-baseline", "middle");
         textElement.setAttribute("fill", "var(--primary--color)");
         updateTextElement(textElement, x, y);
         return textElement;
