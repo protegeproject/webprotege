@@ -319,7 +319,9 @@ public class VizPresenter {
             return;
         }
         currentEntityGraph = result.getEntityGraph();
-        entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
+        if (entityDisplay != null) {
+            entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
+        }
         resetCurrentGraph();
     }
 
