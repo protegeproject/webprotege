@@ -38,6 +38,8 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        setDisplaySelectedEntityNameAsSubtitle(true);
+        vizPresenter.setEntityDisplay(this);
         vizPresenter.start(portletUi, eventBus);
         vizPresenter.setHasBusy(portletUi);
     }
