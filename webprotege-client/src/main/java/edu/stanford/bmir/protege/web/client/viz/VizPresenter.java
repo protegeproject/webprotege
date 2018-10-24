@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multiset;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -262,32 +259,13 @@ public class VizPresenter {
     private void handleLargeGraph(boolean regenerate) {
         GWT.log("[VizPresenter] Examining large graph");
         Stopwatch stopwatch = Stopwatch.createStarted();
-        ImmutableSet<Edge> edges = currentEntityGraph.getEdges();
-        Multiset<OWLEntityData> edgeMultiset = HashMultiset.create();
         OWLEntityData root = currentEntityGraph.getRoot();
-        currentEntityGraph
-                .getEdgesByTailNode()
-                .get(root)
-                .stream()
-                .filter(Edge::isRelationship)
-                .map(edge -> ((RelationshipEdge) edge).getRelationship())
-                .distinct()
-                .forEach(edge -> {
-                    Set<OWLEntityData> edgeLabels = new HashSet<>(currentEntityGraph.getEdgeLabels());
-                    edgeLabels.remove(edge);
-                    int totalNodes = currentEntityGraph.getNodes().size();
-                    int reachableNodesWithoutEdge = currentEntityGraph.getTransitiveClosure(root, edgeLabels).size();
-                    edgeMultiset.setCount(edge, totalNodes - reachableNodesWithoutEdge);
-                });
-        stopwatch.stop();
-        GWT.log("[VizPresenter] Examined large graph in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
-        int edgeCount = edges.size();
-        int nodesCount = currentEntityGraph.getNodes().size();
+        int edgeCount = currentEntityGraph.getEdgeCount();
+        int nodesCount = currentEntityGraph.getNodeCount();
         Runnable layoutRunner = getLayoutRunner(regenerate);
         view.displayLargeGraphMessage(currentEntityGraph.getRoot(),
                                       nodesCount,
                                       edgeCount,
-                                      edgeMultiset,
                                       () -> {
                                           layoutRunner.run();
                                           displayGraphInView();

@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multiset;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
@@ -20,8 +18,7 @@ public interface LargeGraphMessageView extends IsWidget {
 
     void setDisplayMessage(@Nonnull OWLEntityData entity,
                            int nodeCount,
-                           int edgeCount,
-                           @Nonnull Multiset<OWLEntityData> edgeMultiset);
+                           int edgeCount);
 
     void setDisplayGraphHandler(@Nonnull DisplayGraphHandler handler);
 }

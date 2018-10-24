@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multiset;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -164,9 +162,8 @@ public class VizViewImpl extends Composite implements VizView {
     public void displayLargeGraphMessage(OWLEntityData rootEntity,
                                          int nodes,
                                          int edges,
-                                         @Nonnull Multiset<OWLEntityData> edgeMultiset,
                                          @Nonnull Runnable displayGraphCallback) {
-        largeGraphMessageView.setDisplayMessage(rootEntity, nodes, edges, edgeMultiset);
+        largeGraphMessageView.setDisplayMessage(rootEntity, nodes, edges);
         largeGraphMessageView.setDisplayGraphHandler(displayGraphCallback::run);
         showLargeGraphMessage();
     }
