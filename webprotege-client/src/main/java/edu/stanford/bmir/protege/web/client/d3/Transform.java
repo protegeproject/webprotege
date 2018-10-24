@@ -20,8 +20,15 @@ public class Transform {
     public native int getY();
 
     @JsProperty(name = "k")
-    public native int getK();
+    public native double getK();
 
     @JsMethod(name = "scale")
     public native String getScale();
+
+    @JsMethod(name = "scale")
+    public native Transform scale(double k);
+
+    @JsMethod(name = "translate")
+    public native Transform translate(double x, double y);
+
 }

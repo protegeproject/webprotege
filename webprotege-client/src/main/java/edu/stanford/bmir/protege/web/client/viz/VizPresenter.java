@@ -248,7 +248,7 @@ public class VizPresenter {
             view.clearGraph();
         }
         else {
-            view.setGraph(currentGraph);
+            view.setGraph(currentEntityGraph.getRootEntity(), currentGraph);
         }
     }
 

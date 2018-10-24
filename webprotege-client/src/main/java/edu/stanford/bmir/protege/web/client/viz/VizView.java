@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import elemental.dom.Element;
 import elemental.events.Event;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
@@ -32,7 +33,7 @@ public interface VizView extends IsWidget {
     void displayLargeGraphMessage(OWLEntityData rootEntity, int nodes, int edges,
                                   @Nonnull Runnable displayGraphCallback);
 
-    void setGraph(Graph graph);
+    void setGraph(@Nonnull OWLEntity rootEntity, @Nonnull Graph graph);
 
     void updateGraph(Graph graph);
 

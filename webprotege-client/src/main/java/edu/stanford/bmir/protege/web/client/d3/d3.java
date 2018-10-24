@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.d3;
 
 import elemental.dom.Element;
+import elemental.dom.Node;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
@@ -31,6 +32,9 @@ public class d3 {
     @JsMethod(name = "zoom")
     @Nonnull
     public static native Zoom zoom();
+
+    @JsMethod(name = "zoomTransform")
+    public static native Transform zoomTransform(Node node);
 
     @JsProperty(name = "event")
     public static native Event getEvent();

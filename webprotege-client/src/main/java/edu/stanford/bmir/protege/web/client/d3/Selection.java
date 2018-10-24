@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.d3;
 
 import elemental.dom.Element;
+import elemental.dom.Node;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
@@ -20,6 +21,9 @@ public class Selection {
 
     @JsMethod
     public native Selection call(Object function);
+
+    @JsMethod
+    public native Selection call(Object function, Object arg0, Object ... args);
 
     @JsMethod
     public native Function on(@Nonnull String typeName, Function listener);
@@ -56,4 +60,7 @@ public class Selection {
 
     @JsMethod
     public native void remove();
+
+    @JsMethod
+    public native Node node();
 }

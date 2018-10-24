@@ -19,6 +19,9 @@ public class Zoom {
     @JsMethod(name = "zoom")
     public native void zoom(@Nonnull Selection selection);
 
+    @JsMethod(name = "transform")
+    public native void transform(@Nonnull Selection selection, @Nonnull Transform transform);
+
     @JsMethod(name = "on")
     public native Object on(@Nonnull String event, @Nullable Function function);
 }

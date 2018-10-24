@@ -7,8 +7,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.d3.*;
+import edu.stanford.bmir.protege.web.client.d3.Selection;
+import edu.stanford.bmir.protege.web.client.d3.Transform;
+import edu.stanford.bmir.protege.web.client.d3.Zoom;
+import edu.stanford.bmir.protege.web.client.d3.d3;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph2Svg;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
@@ -17,9 +21,11 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.MouseEvent;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -34,6 +40,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class VizViewImpl extends Composite implements VizView {
 
     private static final double ZOOM_DELTA = 0.05;
+
+    private static final TransformCoordinates DEFAULT_TRANSFORM = TransformCoordinates.get(0, 0, 0.75);
 
     private static VizViewImplUiBinder ourUiBinder = GWT.create(VizViewImplUiBinder.class);
 
@@ -74,16 +82,27 @@ public class VizViewImpl extends Composite implements VizView {
 
     private double scaleFactor = 1.0;
 
-    private SettingsChangedHandler settingsChangedHandler = () -> {};
+    private SettingsChangedHandler settingsChangedHandler = () -> {
+    };
 
     private Optional<NodeDetails> mostRecentTargetNode = Optional.empty();
 
-    private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {};
+    private BiConsumer<NodeDetails, Event> nodeMouseOverHandler = (n, e) -> {
+    };
 
-    private BiConsumer<NodeDetails, Event> nodeMouseOutHandler = (n, e) -> {};
+    private BiConsumer<NodeDetails, Event> nodeMouseOutHandler = (n, e) -> {
+    };
 
     @Nonnull
-    private Runnable displayLargeGraphRunnable = () -> {};
+    private Runnable displayLargeGraphRunnable = () -> {
+    };
+
+    private double scale = 0.75;
+
+    private Optional<OWLEntity> currentEntity = Optional.empty();
+
+    private final LinkedHashMap<OWLEntity, TransformCoordinates> previousTransforms = new LinkedHashMap<>();
+
 
     @Inject
     public VizViewImpl() {
@@ -93,51 +112,86 @@ public class VizViewImpl extends Composite implements VizView {
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
     }
 
-    @Override
+    private void handleKeyDown(KeyDownEvent event) {
+
+    }    @Override
     public void setNodeClickHandler(@Nonnull Consumer<NodeDetails> nodeClickHandler) {
         this.nodeClickHandler = checkNotNull(nodeClickHandler);
     }
 
-    @Override
+    private void handleNodeClick(NodeDetails n, Event e) {
+        mostRecentTargetNode = Optional.of(n);
+        nodeClickHandler.accept(n);
+    }    @Override
     public void setNodeDoubleClickHandler(@Nonnull Consumer<NodeDetails> nodeDoubleClickHandler) {
         this.nodeDoubleClickHandler = checkNotNull(nodeDoubleClickHandler);
     }
 
-    @Override
+    private void handleNodeMouseOver(NodeDetails n, Event e) {
+        mostRecentTargetNode = Optional.of(n);
+        nodeMouseOverHandler.accept(n, e);
+    }    @Override
     public void setNodeContextMenuClickHandler(@Nonnull Consumer<NodeDetails> nodeContextMenuClickHandler) {
         this.nodeContextClickHandler = checkNotNull(nodeContextMenuClickHandler);
     }
 
-    @Override
+    private void handleNodeMouseOut(NodeDetails n, Event e) {
+        mostRecentTargetNode = Optional.of(n);
+        nodeMouseOutHandler.accept(n, e);
+    }    @Override
     public void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler) {
         this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
     }
 
-    @Override
+    private void handleNodeContextMenuClick(NodeDetails n, Event e) {
+        e.preventDefault();
+        e.stopPropagation();
+        mostRecentTargetNode = Optional.of(n);
+        handleContextMenu(n, e);
+        nodeContextClickHandler.accept(n);
+    }    @Override
     public void setNodeMouseOutHandler(BiConsumer<NodeDetails, Event> nodeMouseOutHandler) {
         this.nodeMouseOutHandler = checkNotNull(nodeMouseOutHandler);
     }
 
-    @Override
+    private void handleContextMenu(@Nonnull NodeDetails nodeDetails, @Nonnull Event event) {
+        if (event instanceof MouseEvent) {
+            MouseEvent mouseEvent = (MouseEvent) event;
+            popupMenu.show(mouseEvent.getClientX(),
+                           mouseEvent.getY());
+        }
+    }    @Override
     public void addContextMenuAction(@Nonnull UIAction uiAction) {
         popupMenu.addItem(uiAction);
     }
 
-    private void handleKeyDown(KeyDownEvent event) {
-
+    private void handleNodeDoubleClick(NodeDetails n, Event e) {
+        mostRecentTargetNode = Optional.of(n);
+        nodeDoubleClickHandler.accept(n);
     }
 
-    @Override
+    @UiHandler("downloadButton")
+    public void downloadButtonClick(ClickEvent event) {
+        Element e = (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
+        downloadHandler.handleDownload();
+    }    @Override
     public void setLoadHandler(Runnable handler) {
         this.loadHandler = checkNotNull(handler);
     }
 
     @Override
+    protected void onLoad() {
+        super.onLoad();
+        loadHandler.run();
+
+    }    @Override
     public void setDownloadHandler(@Nonnull DownloadHandler handler) {
         this.downloadHandler = checkNotNull(handler);
     }
 
-    @Nonnull
+    interface VizViewImplUiBinder extends UiBinder<HTMLPanel, VizViewImpl> {
+
+    }    @Nonnull
     @Override
     public TextMeasurer getTextMeasurer() {
         return textMeasurer;
@@ -181,7 +235,8 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     @Override
-    public void setGraph(Graph graph) {
+    public void setGraph(@Nonnull OWLEntity rootEntity, @Nonnull Graph graph) {
+        currentEntity = Optional.of(checkNotNull(rootEntity));
         GWT.log("[VizViewImpl] setGraph");
         hideLargeGraphMessage();
         clearGraph();
@@ -197,21 +252,49 @@ public class VizViewImpl extends Composite implements VizView {
         Zoom zoom = d3.zoom();
         Object zoomFunc = zoom.on("zoom", this::applyZoomAndPanTransformFromLastEvent);
         svgElement.call(zoomFunc).on("dblclick.zoom", null);
+        Transform transform = getInitialTransform(svgElement);
+        zoom.transform(svgElement, transform);
+    }
+
+    @Nonnull
+    private Transform getInitialTransform(@Nonnull Selection svgElement) {
+        GWT.log("[VizViewImpl] getInitialTransform: " + currentEntity);
+        if(currentEntity.isPresent()) {
+            TransformCoordinates transformCoords = previousTransforms.getOrDefault(currentEntity.get(), DEFAULT_TRANSFORM);
+            return d3.zoomTransform(svgElement.node())
+                    .translate(transformCoords.getX(), transformCoords.getY())
+                    .scale(transformCoords.getK());
+        }
+        else {
+            return d3.zoomTransform(svgElement.node())
+                    .translate(DEFAULT_TRANSFORM.getX(), DEFAULT_TRANSFORM.getY())
+                    .scale(DEFAULT_TRANSFORM.getK());
+        }
     }
 
     private void applyZoomAndPanTransformFromLastEvent() {
-        Transform transform = d3.getEvent().getTransform();
+        edu.stanford.bmir.protege.web.client.d3.Event event = d3.getEvent();
+        if (event == null) {
+            return;
+        }
+        Transform transform = event.getTransform();
+        if (transform == null) {
+            return;
+        }
+        applyZoomAndPanTransform(transform);
+    }
+
+    private void applyZoomAndPanTransform(Transform transform) {
+        Selection svgTopLevelGroupElement = d3.selectElement(getSvgElement()).select("g");
         int transformX = transform.getX();
         int transformY = transform.getY();
-        int transformK = transform.getK();
-        applyZoomAndPanTransform(transformX, transformY, transformK);
-    }
-
-    private void applyZoomAndPanTransform(int transformX, int transformY, int transformK) {
-        Selection svgTopLevelGroupElement = d3.selectElement(getSvgElement()).select("g");
+        double transformK = transform.getK();
         svgTopLevelGroupElement.attr("transform", "translate(" + transformX + " " + transformY + ")" + " scale(" + transformK + ")");
+        scale = transformK;
+        GWT.log("[VizViewImpl] Setting previous transform for " + currentEntity + " to " + JSON.stringify(transform));
+        TransformCoordinates transformCoords = TransformCoordinates.get(transformX, transformY, transformK);
+        currentEntity.ifPresent(entity -> previousTransforms.put(entity, transformCoords));
     }
-
 
     @Override
     public void updateGraph(Graph graph) {
@@ -228,42 +311,6 @@ public class VizViewImpl extends Composite implements VizView {
         graph2Svg.setNodeMouseOverHandler(this::handleNodeMouseOver);
         graph2Svg.setNodeMouseOutHandler(this::handleNodeMouseOut);
         return graph2Svg;
-    }
-
-    private void handleNodeClick(NodeDetails n, Event e) {
-        mostRecentTargetNode = Optional.of(n);
-        nodeClickHandler.accept(n);
-    }
-
-    private void handleNodeMouseOver(NodeDetails n, Event e) {
-        mostRecentTargetNode = Optional.of(n);
-        nodeMouseOverHandler.accept(n, e);
-    }
-
-    private void handleNodeMouseOut(NodeDetails n, Event e) {
-        mostRecentTargetNode = Optional.of(n);
-        nodeMouseOutHandler.accept(n, e);
-    }
-
-    private void handleNodeContextMenuClick(NodeDetails n, Event e) {
-        e.preventDefault();
-        e.stopPropagation();
-        mostRecentTargetNode = Optional.of(n);
-        handleContextMenu(n, e);
-        nodeContextClickHandler.accept(n);
-    }
-
-    private void handleNodeDoubleClick(NodeDetails n, Event e) {
-        mostRecentTargetNode = Optional.of(n);
-        nodeDoubleClickHandler.accept(n);
-    }
-
-    private void handleContextMenu(@Nonnull NodeDetails nodeDetails, @Nonnull Event event) {
-        if (event instanceof MouseEvent) {
-            MouseEvent mouseEvent = (MouseEvent) event;
-            popupMenu.show(mouseEvent.getClientX(),
-                           mouseEvent.getY());
-        }
     }
 
     private void clearCanvas() {
@@ -288,22 +335,5 @@ public class VizViewImpl extends Composite implements VizView {
     @Override
     public void setSettingsChangedHandler(@Nonnull SettingsChangedHandler handler) {
         this.settingsChangedHandler = checkNotNull(handler);
-    }
-
-    @UiHandler("downloadButton")
-    public void downloadButtonClick(ClickEvent event) {
-        Element e = (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
-        downloadHandler.handleDownload();
-    }
-
-    @Override
-    protected void onLoad() {
-        super.onLoad();
-        loadHandler.run();
-
-    }
-
-    interface VizViewImplUiBinder extends UiBinder<HTMLPanel, VizViewImpl> {
-
     }
 }
