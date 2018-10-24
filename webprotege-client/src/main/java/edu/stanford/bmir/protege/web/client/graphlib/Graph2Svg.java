@@ -332,7 +332,6 @@ public class Graph2Svg {
         if (!edgeDetails.getLabel().isEmpty()) {
             SVGTextElement text = createText(edgeDetails);
             SVGRectElement textRect = getDocument().createSVGRectElement();
-
             Element labelGroup = getDocument().createElementNS(SVG_NS, "g");
             labelGroup.appendChild(textRect);
             labelGroup.appendChild(text);
@@ -352,6 +351,7 @@ public class Graph2Svg {
         textElement.setInnerText(edgeDetails.getLabel());
         textElement.setAttribute("x", inPixels(edgeDetails.getX()));
         textElement.setAttribute("y", inPixels(edgeDetails.getY()));
+        textElement.setAttribute("class", WP_GRAPH__EDGE__LABEL);
 
         // Update the rect element
         Element textRect = ElementalUtil.firstChildElementByTagName(edgeLabelGroupElement, "rect");

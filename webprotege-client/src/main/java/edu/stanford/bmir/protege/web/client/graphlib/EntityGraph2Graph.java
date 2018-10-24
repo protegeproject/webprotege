@@ -118,7 +118,7 @@ public class EntityGraph2Graph {
         edgeDetails.setHeadId(toNodeId(edge.getHead()));
         edgeDetails.setStyleNames(getEdgeStyleNames(edge));
         if (!edge.isIsA()) {
-            textMeasurer.setStyleNames(getEdgeStyleNames(edge));
+            textMeasurer.setStyleNames("wp_graph__edge__label");
             TextDimensions dimensions = textMeasurer.getTextDimensions(edge.getLabel());
             edgeDetails.setLabelWidth(dimensions.getWidth());
             edgeDetails.setLabelHeight(dimensions.getHeight());
