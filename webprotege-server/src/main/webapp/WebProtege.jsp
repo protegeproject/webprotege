@@ -40,7 +40,6 @@
     <script src="js/viz/full.render.js"></script>
     <script src="js/graphlib/graphlib.js"></script>
     <script src="js/dagre/dagre.js"></script>
-    <script src="js/dagre-d3/dagre-d3.js"></script>
     <script src="js/polyfill/pathseg/pathseg.js"></script>
 
     <script src="https://d3js.org/d3-color.v1.js"></script>
