@@ -89,10 +89,9 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         if(tabs.isEmpty()) {
             return;
         }
-        setVisibleIndex(0);
     }
 
-    private void setVisibleIndex(int index) {
+    public void setVisibleIndex(int index) {
         for(int i = 0; i < tabs.size(); i++) {
             String dn = tabs.get(i);
             SimplePanel container = containerMap.get(dn);
@@ -107,4 +106,6 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         tabBar.selectTab(index, false);
         editorPaneChangedHandler.handleEditorPaneChanged();
     }
+
+
 }

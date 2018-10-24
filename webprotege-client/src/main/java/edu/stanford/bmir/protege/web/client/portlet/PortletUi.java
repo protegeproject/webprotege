@@ -8,8 +8,11 @@ import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
+import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * Matthew Horridge
@@ -35,4 +38,15 @@ public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions
     void setSubtitle(@Nonnull String subtitle);
 
     void setNothingSelectedVisible(boolean nothingSelectedVisible);
+
+    @Nonnull
+    NodeProperties getNodeProperties();
+
+    void setNodeProperties(@Nonnull NodeProperties nodeProperties);
+
+    void setNodeProperty(@Nonnull String propertyName, @Nonnull String propertyValue);
+
+    String getNodeProperty(@Nonnull String propertyName, String defaultValue);
+
+    void setNodePropertiesChangedHandler(BiConsumer<PortletUi, NodeProperties> handler);
 }

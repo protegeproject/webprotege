@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
@@ -97,8 +99,24 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                                         NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED,
                                         this::handleIndividualFrameChangedEvent);
         tagListPresenter.start(view.getTagListViewContainer(), eventBus);
+        int editorIndex = getEditorIndex(portletUi);
+        view.setVisibleIndex(editorIndex);
         handleAfterSetEntity(getSelectedEntity());
         setDisplaySelectedEntityNameAsSubtitle(true);
+    }
+
+    private int getEditorIndex(PortletUi portletUi) {
+        String editor = portletUi.getNodeProperty("editor", null);
+        GWT.log("[EditorPortletPresenter] Editor: " + editor);
+        if(editor != null) {
+            for(int i = 0; i < panePresenters.size(); i++) {
+                EditorPanePresenter panePresenter = panePresenters.get(i);
+                if(panePresenter.getCaption().equals(editor)) {
+                    return i;
+                }
+            }
+        }
+        return 0;
     }
 
     private void startPanePresenters(PortletUi portletUi, WebProtegeEventBus eventBus) {
@@ -133,6 +151,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                 for(EditorPanePresenter panePresenter : panePresenters) {
                     if (view.isPaneVisible(panePresenter.getCaption())) {
                         panePresenter.setEntity(e);
+                        setNodeProperty("editor", panePresenter.getCaption());
                     }
                 }
             });

@@ -7,8 +7,11 @@ import edu.stanford.bmir.protege.web.shared.perspective.HasPerspectiveId;
 import edu.stanford.protege.widgetmap.client.HasRootNode;
 import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.Node;
+import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
@@ -20,6 +23,8 @@ public interface Perspective extends IsWidget, HasRootNode, RequiresResize, HasD
     void setRootNode(Optional<Node> rootNode);
 
     void setRootNodeChangedHandler(RootNodeChangedHandler handler);
+
+    void setNodePropertiesChangedHandler(@Nonnull Consumer<TerminalNode> nodePropertiesChangedHandler);
 
     void dropView(String className);
 

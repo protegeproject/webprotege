@@ -26,6 +26,8 @@ public interface EditorPortletView extends IsWidget {
 
     boolean isPaneVisible(@Nonnull String displayName);
 
+    void setVisibleIndex(int index);
+
     void setEditorPaneChangedHandler(@Nonnull EditorPaneChangedHandler handler);
 
 

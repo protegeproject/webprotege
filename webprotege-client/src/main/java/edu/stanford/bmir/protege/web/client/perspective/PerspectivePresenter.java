@@ -177,11 +177,10 @@ public class PerspectivePresenter implements HasDispose {
         perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
             savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
         });
+        perspective.setNodePropertiesChangedHandler(node -> savePerspectiveLayout(perspectiveId, perspective.getRootNode()));
         perspectiveCache.put(perspectiveId, perspective);
         perspectiveView.setWidget(perspective);
-        if (rootNode.isPresent()) {
-            originalRootNodeMap.put(perspectiveId, rootNode.get().duplicate());
-        }
+        rootNode.ifPresent(node -> originalRootNodeMap.put(perspectiveId, node.duplicate()));
     }
 
     private final Map<PerspectiveId, SavePerspectiveRunner> perspectivesToSave = new HashMap<>();
@@ -235,6 +234,7 @@ public class PerspectivePresenter implements HasDispose {
 
         public void savePerspective() {
             GWT.log("[PerspectivePresenter] Saving perspective: " + perspectiveId);
+            GWT.log("[PerspectivePresenter]        perspective: " + node.toString());
             UserId currentUserId = loggedInUserProvider.getCurrentUserId();
             if(currentUserId.isGuest()) {
                 return;

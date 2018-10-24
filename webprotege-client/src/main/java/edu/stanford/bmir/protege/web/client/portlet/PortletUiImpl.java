@@ -20,10 +20,12 @@ import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedHandler;
+import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -72,6 +74,9 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     private String viewSubtitle = "";
 
+    private NodeProperties nodeProperties = NodeProperties.emptyNodeProperties();
+
+    private BiConsumer<PortletUi, NodeProperties> nodePropertiesChangedHandler = (ui, np) -> {};
 
     @Inject
     public PortletUiImpl(@Nonnull ForbiddenView forbiddenView,
@@ -231,5 +236,33 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     @Override
     public void addMenuAction(final PortletAction action) {
+    }
+
+    @Nonnull
+    @Override
+    public NodeProperties getNodeProperties() {
+        return nodeProperties;
+    }
+
+    @Override
+    public void setNodeProperties(@Nonnull NodeProperties nodeProperties) {
+        this.nodeProperties = checkNotNull(nodeProperties);
+        nodePropertiesChangedHandler.accept(this, this.nodeProperties);
+    }
+
+    @Override
+    public void setNodeProperty(@Nonnull String propertyName, @Nonnull String propertyValue) {
+        nodeProperties = nodeProperties.toBuilder().setValue(propertyName, propertyValue).build();
+        nodePropertiesChangedHandler.accept(this, nodeProperties);
+    }
+
+    @Override
+    public String getNodeProperty(@Nonnull String propertyName, String defaultValue) {
+        return nodeProperties.getPropertyValue(propertyName, defaultValue);
+    }
+
+    @Override
+    public void setNodePropertiesChangedHandler(BiConsumer<PortletUi, NodeProperties> handler) {
+        this.nodePropertiesChangedHandler = handler;
     }
 }

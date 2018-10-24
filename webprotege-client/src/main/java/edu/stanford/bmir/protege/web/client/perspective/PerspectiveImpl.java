@@ -8,19 +8,19 @@ import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
-import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
-import edu.stanford.protege.widgetmap.client.WidgetMapPanel;
-import edu.stanford.protege.widgetmap.client.WidgetMapPanelManager;
-import edu.stanford.protege.widgetmap.client.WidgetMapRootWidget;
+import edu.stanford.protege.widgetmap.client.*;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public final class PerspectiveImpl extends Composite implements IsWidget, Perspective {
@@ -33,11 +33,14 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     private Optional<Node> rootNode;
 
+    private Consumer<TerminalNode> nodePropertiesChangedHandler = node -> {};
+
     @Inject
     public PerspectiveImpl(@Assisted final PerspectiveId perspectiveId, PortletWidgetMapper widgetMapper) {
         super();
         this.perspectiveId = perspectiveId;
         this.widgetMapper = widgetMapper;
+        this.widgetMapper.setNodePropertiesChangedHandler(tn -> nodePropertiesChangedHandler.accept(tn));
         WidgetMapRootWidget rootWidget = new WidgetMapRootWidget();
         WidgetMapPanelManager panelManager = new WidgetMapPanelManager(rootWidget, widgetMapper);
         widgetMapPanel = new WidgetMapPanel(rootWidget, panelManager);
@@ -48,6 +51,10 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
     @Override
     public void setViewsCloseable(boolean closeable) {
         widgetMapper.setViewsCloseable(closeable);
+    }
+
+    public void setNodePropertiesChangedHandler(@Nonnull Consumer<TerminalNode> nodePropertiesChangedHandler) {
+        this.nodePropertiesChangedHandler = nodePropertiesChangedHandler;
     }
 
     @Override

@@ -166,4 +166,12 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     public void dispose() {
         selectionModelHandlerRegistration.removeHandler();
     }
+
+    public void setNodeProperty(@Nonnull String property, @Nonnull String value) {
+        portletUi.ifPresent(ui -> ui.setNodeProperty(property, value));
+    }
+
+    public String getNodeProperty(@Nonnull String property, String defaultValue) {
+        return portletUi.map(ui -> ui.getNodeProperty(property, defaultValue)).orElse(defaultValue);
+    }
 }

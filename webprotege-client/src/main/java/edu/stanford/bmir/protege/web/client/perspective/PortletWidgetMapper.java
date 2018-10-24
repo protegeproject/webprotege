@@ -10,6 +10,7 @@ import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
 import edu.stanford.protege.widgetmap.client.view.FixedSizeViewHolder;
 import edu.stanford.protege.widgetmap.client.view.ViewHolder;
+import edu.stanford.protege.widgetmap.shared.node.Node;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
@@ -20,6 +21,9 @@ import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -40,6 +44,8 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     private final Provider<WebProtegeEventBus> eventBusProvider;
 
+    private Consumer<TerminalNode> nodePropertiesChangedHandler = node -> {};
+
     @Inject
     public PortletWidgetMapper(@Nonnull PortletFactory portletFactory,
                                Provider<PortletUi> portletUiProvider,
@@ -56,6 +62,10 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     public void setViewsCloseable(boolean viewsCloseable) {
         this.viewsCloseable = viewsCloseable;
+    }
+
+    public void setNodePropertiesChangedHandler(Consumer<TerminalNode> nodePropertiesChangedHandler) {
+        this.nodePropertiesChangedHandler = checkNotNull(nodePropertiesChangedHandler);
     }
 
     @Override
@@ -75,7 +85,7 @@ public class PortletWidgetMapper implements WidgetMapper {
                 GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");
                 WebProtegePortletComponents portletComponents = thePortlet.get();
                 WebProtegePortletPresenter portletPresenter = portletComponents.getPresenter();
-                viewHolder = createViewHolder(terminalNode.getNodeId(),
+                viewHolder = createViewHolder(terminalNode,
                                               portletComponents,
                                               terminalNode.getNodeProperties());
             }
@@ -96,26 +106,31 @@ public class PortletWidgetMapper implements WidgetMapper {
     }
 
 
-    private ViewHolder createViewHolder(@Nonnull TerminalNodeId nodeId,
+    private ViewHolder createViewHolder(@Nonnull TerminalNode node,
                                         @Nonnull WebProtegePortletComponents portlet,
                                         @Nonnull NodeProperties nodeProperties) {
         PortletUi portletUi = portletUiProvider.get();
+        portletUi.setNodeProperties(nodeProperties);
+        portletUi.setNodePropertiesChangedHandler((ui, np) -> {
+            node.setNodeProperties(np);
+            nodePropertiesChangedHandler.accept(node);
+        });
         WebProtegeEventBus eventBus = eventBusProvider.get();
         portletUi.setTitle(portlet.getPortletDescriptor().getTitle());
         WebProtegePortletPresenter portletPresenter = portlet.getPresenter();
         portletPresenter.start(portletUi, eventBus);
         ViewHolder viewHolder;
         if (portletPresenter instanceof HasFixedPrimaryAxisSize) {
-            viewHolder = new FixedSizeViewHolder(portletUi.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) portletPresenter).getFixedPrimaryAxisSize());
+            viewHolder = new FixedSizeViewHolder(portletUi.asWidget(), nodeProperties, ((HasFixedPrimaryAxisSize) portletPresenter).getFixedPrimaryAxisSize());
         }
         else {
-            viewHolder = new ViewHolder(portletUi, NodeProperties.emptyNodeProperties());
+            viewHolder = new ViewHolder(portletUi, nodeProperties);
         }
         viewHolder.addStyleName(DROP_ZONE);
         viewHolder.addCloseHandler(event -> {
             eventBus.dispose();
             portletPresenter.dispose();
-            nodeId2ViewHolderMap.remove(nodeId);
+            nodeId2ViewHolderMap.remove(node.getNodeId());
         });
         return viewHolder;
     }
