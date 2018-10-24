@@ -19,7 +19,10 @@ import java.util.function.Predicate;
 public class Selection {
 
     @JsMethod
-    public native void call(Object function);
+    public native Selection call(Object function);
+
+    @JsMethod
+    public native Function on(@Nonnull String typeName, Function listener);
 
     @JsMethod
     public native void filter(@Nonnull Predicate<Boolean> filter);

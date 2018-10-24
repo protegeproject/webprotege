@@ -196,7 +196,7 @@ public class VizViewImpl extends Composite implements VizView {
         Selection svgElement = d3.selectElement(getSvgElement());
         Zoom zoom = d3.zoom();
         Object zoomFunc = zoom.on("zoom", this::applyZoomAndPanTransformFromLastEvent);
-        svgElement.call(zoomFunc);
+        svgElement.call(zoomFunc).on("dblclick.zoom", null);
     }
 
     private void applyZoomAndPanTransformFromLastEvent() {
