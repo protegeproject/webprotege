@@ -31,7 +31,7 @@ public class VizPanePresenter implements EditorPanePresenter {
     @Nonnull
     @Override
     public String getCaption() {
-        return "Viz";
+        return "Entity Graph";
     }
 
     @Nonnull
