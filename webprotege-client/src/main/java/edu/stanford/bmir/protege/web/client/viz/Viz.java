@@ -26,21 +26,4 @@ public class Viz {
     }
 
     private native Promise renderString(String s);
-
-
-    /*
-
-    viz.renderString(dot, {'format':'svg'})
-        .then(function(element) {
-            let el = document.getElementById("c");
-            el.innerHTML = element;
-        })
-        .catch(error => {
-            viz = new Viz();
-            // Possibly display the error
-            console.error(error);
-            window.alert(error);
-        });
-
-     */
 }
