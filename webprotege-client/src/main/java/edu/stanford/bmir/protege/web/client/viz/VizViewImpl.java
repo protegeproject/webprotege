@@ -171,7 +171,9 @@ public class VizViewImpl extends Composite implements VizView {
     public void downloadButtonClick(ClickEvent event) {
         Element e = (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
         downloadHandler.handleDownload();
-    }    @Override
+    }
+
+    @Override
     public void setNodeMouseOverHandler(BiConsumer<NodeDetails, Event> nodeMouseOverHandler) {
         this.nodeMouseOverHandler = checkNotNull(nodeMouseOverHandler);
     }

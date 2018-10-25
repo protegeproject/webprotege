@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.io.BaseEncoding;
+import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import elemental.client.Browser;
 import elemental.css.*;
 import elemental.dom.Element;
@@ -40,6 +41,7 @@ public class GraphSvgDownloader {
                 }
             }
         }
+        ElementalUtil.firstChildGroupElement(svgCopy).removeAttribute("transform");
         CSSStyleDeclaration computedStyle = Browser.getWindow().getComputedStyle(element, null);
         rules.append("\n");
         rules.append(":root {" +
