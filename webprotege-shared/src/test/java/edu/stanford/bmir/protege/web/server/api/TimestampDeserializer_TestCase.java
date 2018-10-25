@@ -26,7 +26,7 @@ public class TimestampDeserializer_TestCase {
 
     private String dateTime = "2018-09-01T10:50:33Z";
 
-    private String dateTimeNonUtc = "2018-09-01T10:50:33-09:00:00";
+    private String dateTimeNonUtc = "2018-09-01T10:50:33-09:00";
 
     private String dateTimeWithNumericOffsetInBasicFormat = "2018-09-01T10:50:33+0100";
 
