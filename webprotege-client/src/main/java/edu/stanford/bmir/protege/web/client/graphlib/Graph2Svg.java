@@ -55,6 +55,10 @@ public class Graph2Svg {
     private BiConsumer<NodeDetails, Event> nodeMouseOutHandler = (n, e) -> {
     };
 
+    private BiConsumer<NodeDetails, Event> nodeMouseEnterHandler = (n, e) -> {};
+
+    private BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler = (n, e) -> {};
+
 
     public Graph2Svg(@Nonnull TextMeasurer measurer, @Nonnull Graph graph) {
         this.measurer = checkNotNull(measurer);
@@ -83,6 +87,14 @@ public class Graph2Svg {
 
     public void setNodeMouseOutHandler(BiConsumer<NodeDetails, Event> nodeMouseOutHandler) {
         this.nodeMouseOutHandler = checkNotNull(nodeMouseOutHandler);
+    }
+
+    public void setNodeMouseEnterHandler(BiConsumer<NodeDetails, Event> nodeMouseEnterHandler) {
+        this.nodeMouseEnterHandler = checkNotNull(nodeMouseEnterHandler);
+    }
+
+    public void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler) {
+        this.nodeMouseLeaveHandler = checkNotNull(nodeMouseLeaveHandler);
     }
 
     public void updateSvg(Element svgElement, Graph graph) {
@@ -276,7 +288,10 @@ public class Graph2Svg {
         Element textElement = (Element) groupElement.getElementsByTagName("text").item(0);
         updateTextElement(textElement, nodeDetails.getX(), nodeDetails.getY());
 
-        if (attachHandlers) { }
+        if (attachHandlers) {
+            rectElement.addEventListener("mouseenter", evt -> processNodeEvent(evt, nodeMouseEnterHandler));
+            rectElement.addEventListener("mouseleave", evt -> processNodeEvent(evt, nodeMouseLeaveHandler));
+        }
 
     }
 

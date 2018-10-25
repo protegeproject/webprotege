@@ -105,6 +105,10 @@ public class VizViewImpl extends Composite implements VizView {
 
     private Optional<Graph> currentGraph = Optional.empty();
 
+    private BiConsumer<NodeDetails, Event> nodeMouseEnterHandler = (n, e) -> {};
+
+    private BiConsumer<NodeDetails, Event> nodeMouseExitHandler = (n, e) -> {};
+
 
     @Inject
     public VizViewImpl() {
@@ -136,6 +140,16 @@ public class VizViewImpl extends Composite implements VizView {
     private void handleNodeMouseOut(NodeDetails n, Event e) {
         mostRecentTargetNode = Optional.of(n);
         nodeMouseOutHandler.accept(n, e);
+    }
+
+    @Override
+    public void setNodeMouseEnterHandler(BiConsumer<NodeDetails, Event> nodeMouseEnterHandler) {
+        this.nodeMouseEnterHandler = checkNotNull(nodeMouseEnterHandler);
+    }
+
+    @Override
+    public void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler) {
+        this.nodeMouseExitHandler = checkNotNull(nodeMouseLeaveHandler);
     }
 
     @Override
@@ -353,8 +367,22 @@ public class VizViewImpl extends Composite implements VizView {
         graph2Svg.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
         graph2Svg.setNodeMouseOverHandler(this::handleNodeMouseOver);
         graph2Svg.setNodeMouseOutHandler(this::handleNodeMouseOut);
+        graph2Svg.setNodeMouseEnterHandler(this::handleNodeMouseEnter);
+        graph2Svg.setNodeMouseLeaveHandler(this::handleNodeMouseExit);
         return graph2Svg;
     }
+
+
+    private void handleNodeMouseEnter(NodeDetails nodeDetails, Event event) {
+        mostRecentTargetNode = Optional.of(nodeDetails);
+        nodeMouseEnterHandler.accept(nodeDetails, event);
+    }
+
+    private void handleNodeMouseExit(NodeDetails nodeDetails, Event event) {
+        mostRecentTargetNode = Optional.of(nodeDetails);
+        nodeMouseExitHandler.accept(nodeDetails, event);
+    }
+
 
     private void clearCanvas() {
         Element canvasElement = getCanvasElement();

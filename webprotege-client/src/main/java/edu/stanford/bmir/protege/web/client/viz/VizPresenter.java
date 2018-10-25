@@ -17,7 +17,9 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.viz.*;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
 import elemental.dom.Element;
 import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -103,6 +105,8 @@ public class VizPresenter {
         view.setNodeContextMenuClickHandler(this::handleNodeContextMenuClick);
         view.setNodeMouseOverHandler(this::handleNodeMouseOver);
         view.setNodeMouseOutHandler(this::handleNodeMouseOut);
+        view.setNodeMouseEnterHandler(this::handleMouseEnter);
+        view.setNodeMouseLeaveHandler(this::handleMouseLeave);
     }
 
     private void addContextMenuItemsToView() {
@@ -110,25 +114,7 @@ public class VizPresenter {
         view.addContextMenuAction(new SelectNodeUiAction());
     }
 
-
-    public void displayEntity(@Nonnull OWLEntity entity) {
-        checkNotNull(entity);
-        if(currentEntity.equals(Optional.of(entity))) {
-            return;
-        }
-        this.currentEntity = Optional.of(entity);
-        dispatch.execute(new GetEntityDotRenderingAction(projectId, entity),
-                         hasBusy,
-                         this::handleRendering);
-    }
-
-    private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {
-        Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
-        ElementalUtil.elementsByTagName(topGroup, "g")
-                .forEach(element -> ElementalUtil.removeClassName(element, WP_GRAPH__G_MUTED));
-    }
-
-    private void handleNodeMouseOver(NodeDetails nodeDetails, Event event) {
+    private void handleMouseEnter(NodeDetails nodeDetails, Event event) {
         if (currentGraph == null) {
             return;
         }
@@ -142,6 +128,30 @@ public class VizPresenter {
         Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
         applyMutedStylesToNonReachableNodes(reachableNodes, topGroup);
         applyMutedStylesToNonReachableEdges(reachableNodes, topGroup);
+    }
+
+    private void handleMouseLeave(NodeDetails nodeDetails, Event event) {
+        Element topGroup = ElementalUtil.firstChildGroupElement(view.getSvgElement());
+        ElementalUtil.elementsByTagName(topGroup, "g")
+                .forEach(element -> ElementalUtil.removeClassName(element, WP_GRAPH__G_MUTED));
+    }
+
+    public void displayEntity(@Nonnull OWLEntity entity) {
+        checkNotNull(entity);
+        if(currentEntity.equals(Optional.of(entity))) {
+            return;
+        }
+        this.currentEntity = Optional.of(entity);
+        dispatch.execute(new GetEntityDotRenderingAction(projectId, entity),
+                         hasBusy,
+                         this::handleRendering);
+    }
+
+    private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {
+    }
+
+    private void handleNodeMouseOver(NodeDetails nodeDetails, Event event) {
+
     }
 
     private void applyMutedStylesToNonReachableNodes(HashSet<String> reachableNodes, Element topGroup) {
