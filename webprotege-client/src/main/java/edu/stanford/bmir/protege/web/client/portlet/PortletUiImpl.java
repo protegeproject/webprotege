@@ -15,12 +15,17 @@ import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.filter.FilterButtonImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
+import edu.stanford.bmir.protege.web.client.tooltip.TooltipOptions;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
+import elemental.client.Browser;
+import elemental.dom.Element;
+import elemental.html.HtmlElement;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,6 +47,8 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     private static PortletUiImplUiBinder ourUiBinder = GWT.create(PortletUiImplUiBinder.class);
 
+    @Nonnull
+    private final List<Tooltip> tooltips = new ArrayList<>();
 
     @UiField
     protected FlowPanel toolbar;
@@ -170,6 +177,12 @@ public class PortletUiImpl extends Composite implements PortletUi {
     public void addAction(final UIAction action) {
         SimplePanel simplePanel = new SimplePanel();
         simplePanel.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btnGlyphContainer());
+        TooltipOptions options = new TooltipOptions();
+        options.setTitle(action.getLabel());
+        options.setContainer(Browser.getDocument().getBody());
+        Tooltip tooltip = new Tooltip((Element) simplePanel.getElement(),
+                                      options);
+        tooltips.add(tooltip);
         final Button button = new Button();
         button.setTitle(action.getLabel());
         if(action.hasIcon()) {
@@ -264,5 +277,10 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void setNodePropertiesChangedHandler(BiConsumer<PortletUi, NodeProperties> handler) {
         this.nodePropertiesChangedHandler = handler;
+    }
+
+    @Override
+    public void dispose() {
+        tooltips.forEach(tt -> tt.dispose());
     }
 }

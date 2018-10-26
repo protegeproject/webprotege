@@ -132,17 +132,17 @@
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.2.2</version>
-                    <configuration>
-                        <webResources>
-                            <resource>
-                                <filtering>true</filtering>
-                                <directory>src/main/webapp</directory>
-                                <includes>
-                                    <include>**/*.jsp</include>
-                                </includes>
-                            </resource>
-                        </webResources>
-                    </configuration>
+                    <!--<configuration>-->
+                        <!--<webResources>-->
+                            <!--<resource>-->
+                                <!--<filtering>true</filtering>-->
+                                <!--<directory>src/main/webapp</directory>-->
+                                <!--<includes>-->
+                                    <!--<include>**/*.jsp</include>-->
+                                <!--</includes>-->
+                            <!--</resource>-->
+                        <!--</webResources>-->
+                    <!--</configuration>-->
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>

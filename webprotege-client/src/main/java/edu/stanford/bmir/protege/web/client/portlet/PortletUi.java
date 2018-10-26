@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.app.HasForbiddenView;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
@@ -19,7 +20,7 @@ import java.util.function.BiConsumer;
  * Stanford Center for Biomedical Informatics Research
  * 10/02/16
  */
-public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions, HasViewTitleChangedHandlers, HasForbiddenView, HasViewTitle, HasBusy {
+public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions, HasViewTitleChangedHandlers, HasForbiddenView, HasViewTitle, HasBusy, HasDispose {
 
     void setToolbarVisible(boolean visible);
 
