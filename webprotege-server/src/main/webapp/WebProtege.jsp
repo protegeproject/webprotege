@@ -38,18 +38,22 @@
 
     <script src="js/viz/viz.js"></script>
     <script src="js/viz/full.render.js"></script>
-    <script src="js/graphlib/graphlib.js"></script>
-    <script src="js/dagre/dagre.js"></script>
+
+    <script src="https://dagrejs.github.io/project/graphlib/v2.1.2/graphlib.js"></script>
+    <script src="https://dagrejs.github.io/project/dagre/latest/dagre.js"></script>
     <script src="js/polyfill/pathseg/pathseg.js"></script>
 
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+
+    <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js"></script>
+    <script src="https://unpkg.com/tooltip.js@1.3.0/dist/umd/tooltip.js"></script>
+
 
     <script>
         <%
             writeUserInSession(session, out);
         %>
     </script>
-
 
     <script type="text/javascript" language="javascript" src="webprotege/webprotege.nocache.js"></script>
 
