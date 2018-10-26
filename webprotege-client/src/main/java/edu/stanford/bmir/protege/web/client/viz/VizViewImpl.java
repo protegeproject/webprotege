@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph2Svg;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import elemental.dom.Element;
 import elemental.events.Event;
@@ -25,7 +26,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -108,6 +111,8 @@ public class VizViewImpl extends Composite implements VizView {
     private BiConsumer<NodeDetails, Event> nodeMouseEnterHandler = (n, e) -> {};
 
     private BiConsumer<NodeDetails, Event> nodeMouseExitHandler = (n, e) -> {};
+
+    private List<Tooltip> tooltips = new ArrayList<>();
 
 
     @Inject
@@ -298,11 +303,15 @@ public class VizViewImpl extends Composite implements VizView {
     public void setGraph(@Nonnull OWLEntity rootEntity, @Nonnull Graph graph) {
         currentEntity = Optional.of(checkNotNull(rootEntity));
         currentGraph = Optional.of(graph);
+        tooltips.forEach(Tooltip::dispose);
+        tooltips.clear();
         GWT.log("[VizViewImpl] setGraph");
         hideLargeGraphMessage();
         clearGraph();
         Graph2Svg graph2Svg = createGraph2Svg(graph);
         Element svg = graph2Svg.createSvg();
+        graph2Svg.getGeneratedTooltips();
+        tooltips.addAll(graph2Svg.getGeneratedTooltips());
         Element element = getCanvasElement();
         element.appendChild(svg);
         setupZoom();

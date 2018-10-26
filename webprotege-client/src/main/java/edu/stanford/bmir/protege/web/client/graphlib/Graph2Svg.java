@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
+import edu.stanford.bmir.protege.web.client.tooltip.TooltipOptions;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
@@ -11,6 +13,7 @@ import elemental.events.EventTarget;
 import elemental.svg.*;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -39,6 +42,8 @@ public class Graph2Svg {
 
     @Nonnull
     private final Graph graph;
+
+    private final List<Tooltip> generatedTooltips = new ArrayList<>();
 
     private BiConsumer<NodeDetails, Event> nodeClickHandler = (n, e) -> {
     };
@@ -153,6 +158,10 @@ public class Graph2Svg {
                 });
     }
 
+    public List<Tooltip> getGeneratedTooltips() {
+        return new ArrayList<>(generatedTooltips);
+    }
+
     @Nonnull
     public Element createSvg() {
         Document document = getDocument();
@@ -247,6 +256,8 @@ public class Graph2Svg {
                                     nodeDetails.getNodeStyleNames());
 
         SVGRectElement shape = createRect(nodeDetails);
+
+        generatedTooltips.add(Tooltip.createOnRight(shape, nodeDetails.getLabel()));
         ElementalUtil.addClassNames(shape,
                                     WP_GRAPH__NODE__SHAPE,
                                     nodeDetails.getNodeShapeStyleNames());
@@ -350,7 +361,7 @@ public class Graph2Svg {
             Element labelGroup = getDocument().createElementNS(SVG_NS, "g");
             labelGroup.appendChild(textRect);
             labelGroup.appendChild(text);
-
+            generatedTooltips.add(Tooltip.createOnRight(text, edgeDetails.getLabel()));
 
             updateEdgeLabelGroup(edgeDetails, labelGroup);
 
@@ -377,7 +388,6 @@ public class Graph2Svg {
         textRect.setAttribute("x", inPixels(edgeDetails.getX() - (w / 2.0)));
         textRect.setAttribute("y", inPixels(edgeDetails.getY() - (h / 2.0)));
         textRect.setAttribute("class", WP_GRAPH__EDGE__LABEL);
-
     }
 
     private void updateEdgeDetails(EdgeDetails edgeDetails, Element edgeGroupElement) {

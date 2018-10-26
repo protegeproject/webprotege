@@ -93,6 +93,8 @@ public class PortletUiImpl extends Composite implements PortletUi {
         this.nothingSelectedView = nothingSelectedView;
         setToolbarVisible(false);
         setMenuButtonVisible(false);
+        Tooltip filterTooltip = Tooltip.create(filterButton, "Filter");
+        tooltips.add(filterTooltip);
     }
 
     @Override
@@ -184,7 +186,6 @@ public class PortletUiImpl extends Composite implements PortletUi {
                                       options);
         tooltips.add(tooltip);
         final Button button = new Button();
-        button.setTitle(action.getLabel());
         if(action.hasIcon()) {
             button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btnGlyph());
             button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarGlyphButton());

@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.tooltip;
 
+import com.google.gwt.user.client.ui.IsWidget;
+import elemental.client.Browser;
 import elemental.dom.Element;
 import elemental.html.HtmlElement;
 import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -19,6 +22,40 @@ public class Tooltip {
     public Tooltip(Element reference,
                    TooltipOptions options) {
         // Native implementation
+    }
+
+    @JsOverlay
+    public static Tooltip create(Element element,
+                                 String title) {
+        TooltipOptions options = new TooltipOptions();
+        options.setTitle(title);
+        options.setContainer(Browser.getDocument().getBody());
+        return new Tooltip(element, options);
+    }
+
+    @JsOverlay
+    public static Tooltip createOnRight(Element element,
+                                 String title) {
+        TooltipOptions options = new TooltipOptions();
+        options.setTitle(title);
+        options.setPlacement("right");
+        options.setContainer(Browser.getDocument().getBody());
+        return new Tooltip(element, options);
+    }
+
+
+    @JsOverlay
+    public static Tooltip create(IsWidget widget,
+                          TooltipOptions options) {
+        return new Tooltip((Element) widget.asWidget().getElement(),
+                           options);
+    }
+
+    @JsOverlay
+    public static Tooltip create(IsWidget widget,
+                          String title) {
+        return create((Element) widget.asWidget().getElement(),
+               title);
     }
 
     public native void show();
