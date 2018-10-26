@@ -59,7 +59,7 @@
     overflow-y: auto;
     flex-grow: 1;
     flex-shrink: 1;
-    height: 0; <!-- Needed because of FireFox (perculiarity) -->
+    height: 0; /* Needed because of FireFox (perculiarity) */
     box-sizing: padding-box;
 }
 
