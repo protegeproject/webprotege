@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class EditorPortletViewImpl extends Composite implements EditorPortletView {
 
     private EditorPaneChangedHandler editorPaneChangedHandler = () -> {};
+
+    private List<Tooltip> tooltips = new ArrayList<>();
 
     interface EditorPortletViewImplUiBinder extends UiBinder<HTMLPanel, EditorPortletViewImpl> {
 
@@ -73,8 +76,8 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         EditorPaneTabSelector widget = new EditorPaneTabSelector();
         if (!additionalStyles.isEmpty()) {
             widget.addStyleName(additionalStyles);
-            widget.setTitle(displayName);
         }
+        tooltips.add(Tooltip.create(widget, displayName));
         tabBar.addTab(widget);
         SimplePanel simplePanel = new SimplePanel();
         containerMap.put(displayName, simplePanel);
@@ -107,5 +110,8 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         editorPaneChangedHandler.handleEditorPaneChanged();
     }
 
-
+    @Override
+    public void dispose() {
+        tooltips.forEach(Tooltip::dispose);
+    }
 }

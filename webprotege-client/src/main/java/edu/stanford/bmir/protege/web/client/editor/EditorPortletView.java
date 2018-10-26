@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 import javax.annotation.Nonnull;
 
@@ -11,7 +12,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 22 Mar 2018
  */
-public interface EditorPortletView extends IsWidget {
+public interface EditorPortletView extends IsWidget, HasDispose {
 
     interface EditorPaneChangedHandler {
         void handleEditorPaneChanged();
