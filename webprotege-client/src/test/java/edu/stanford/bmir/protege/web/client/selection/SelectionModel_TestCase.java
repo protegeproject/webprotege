@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import org.junit.Before;
@@ -26,6 +27,9 @@ import static org.mockito.Mockito.*;
 public class SelectionModel_TestCase {
 
     private SelectionModel selectionModel;
+
+    @Mock
+    private DispatchServiceManager dispatch;
 
     @Spy
     private EventBus eventBus = new SimpleEventBus();
@@ -59,7 +63,7 @@ public class SelectionModel_TestCase {
     @Before
     public void setUp() {
         selectionModel = new SelectionModel(
-                eventBus,
+                dispatch, eventBus,
                 placeController,
                 selectedClassManager,
                 selectedObjectPropertyManager,

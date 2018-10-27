@@ -6,6 +6,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.place.*;
 import org.semanticweb.owlapi.model.*;
@@ -25,6 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @ProjectSingleton
 public class SelectionModel {
+
+    private final DispatchServiceManager dispatch;
 
     private final EventBus eventBus;
 
@@ -54,7 +57,8 @@ public class SelectionModel {
     private final List<OWLEntity> pendingSelection = new ArrayList<>();
 
     @Inject
-    public SelectionModel(EventBus eventBus,
+    public SelectionModel(DispatchServiceManager dispatch,
+                          EventBus eventBus,
                           PlaceController placeController,
                           SelectedEntityManager<OWLClass> selectedClassManager,
                           SelectedEntityManager<OWLObjectProperty> selectedObjectPropertyManager,
@@ -62,6 +66,7 @@ public class SelectionModel {
                           SelectedEntityManager<OWLAnnotationProperty> selectedAnnotationPropertyManager,
                           SelectedEntityManager<OWLDatatype> selectedDatatypeManager,
                           SelectedEntityManager<OWLNamedIndividual> selectedIndividualManager) {
+        this.dispatch = dispatch;
         this.eventBus = eventBus;
         this.placeController = placeController;
         this.selectedClassManager = checkNotNull(selectedClassManager);
