@@ -366,7 +366,7 @@ public class Graph2Svg {
                 + OboId.getOboId(nodeDetails.getEntity().getIRI())
                 .map(id -> " (" + id + ")")
                 .orElse("");
-        generatedTooltips.add(Tooltip.createOnRight(shape, tooltip));
+        generatedTooltips.add(Tooltip.create(shape, tooltip));
         ElementalUtil.addClassNames(shape,
                                     WP_GRAPH__NODE__SHAPE,
                                     nodeDetails.getNodeShapeStyleNames());
