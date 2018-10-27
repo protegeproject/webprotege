@@ -14,6 +14,7 @@ import elemental.svg.SVGElement;
 import elemental.svg.SVGMarkerElement;
 import elemental.svg.SVGRectElement;
 import elemental.svg.SVGTextElement;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -272,7 +273,13 @@ public class Graph2Svg {
             Element labelGroup = getDocument().createElementNS(SVG_NS, "g");
             labelGroup.appendChild(textRect);
             labelGroup.appendChild(text);
-            generatedTooltips.add(Tooltip.createOnRight(text, edgeDetails.getLabel()));
+            String tooltip = edgeDetails.getLabel()
+                    + edgeDetails.getRelation()
+                    .flatMap(rel -> OboId.getOboId(rel.getEntity().getIRI())
+                            .map(id -> " (" + id + ")"))
+                    .orElse("");
+
+            generatedTooltips.add(Tooltip.createOnRight(text, tooltip));
             updateEdgeLabelGroup(edgeDetails, labelGroup);
             groupElement.appendChild(labelGroup);
         }
@@ -362,8 +369,9 @@ public class Graph2Svg {
                                     nodeDetails.getNodeStyleNames());
 
         SVGRectElement shape = createRect(nodeDetails);
+        IRI iri = nodeDetails.getEntity().getIRI();
         String tooltip = nodeDetails.getLabel()
-                + OboId.getOboId(nodeDetails.getEntity().getIRI())
+                + OboId.getOboId(iri)
                 .map(id -> " (" + id + ")")
                 .orElse("");
         generatedTooltips.add(Tooltip.create(shape, tooltip));

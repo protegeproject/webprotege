@@ -113,7 +113,7 @@ public class EntityGraph2Graph {
     }
 
     private EdgeDetails toEdgeDetails(Edge edge) {
-        EdgeDetails edgeDetails = new EdgeDetails(edge.getLabel());
+        EdgeDetails edgeDetails = EdgeDetails.createWithRelation(edge.getLabel(), edge.getLabellingEntity());
         edgeDetails.setTailId(toNodeId(edge.getTail()));
         edgeDetails.setHeadId(toNodeId(edge.getHead()));
         edgeDetails.setStyleNames(getEdgeStyleNames(edge));

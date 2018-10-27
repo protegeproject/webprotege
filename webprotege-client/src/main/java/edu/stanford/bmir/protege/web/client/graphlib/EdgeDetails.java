@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
 import edu.stanford.bmir.protege.web.client.JSON;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import jsinterop.annotations.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -14,8 +17,25 @@ import java.util.stream.Stream;
 @JsType(namespace = "webprotege.graph")
 public class EdgeDetails {
 
-    public EdgeDetails(String label) {
+    @Nullable
+    private OWLEntityData relation = null;
+
+    private EdgeDetails(String label, @Nullable OWLEntityData relation) {
         setLabel(label);
+        this.relation = relation;
+    }
+
+    public static EdgeDetails create(@Nonnull String label) {
+        return new EdgeDetails(label, null);
+    }
+
+    public static EdgeDetails createWithRelation(@Nonnull String label, @Nonnull Optional<OWLEntityData> relation) {
+        return new EdgeDetails(label, relation.orElse(null));
+    }
+
+    @Nonnull
+    public Optional<OWLEntityData> getRelation() {
+        return Optional.ofNullable(relation);
     }
 
     @JsProperty
