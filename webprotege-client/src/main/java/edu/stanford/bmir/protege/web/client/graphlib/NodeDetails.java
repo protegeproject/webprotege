@@ -113,4 +113,9 @@ public class NodeDetails {
     public OWLEntity getEntity() {
         return entityData.getEntity();
     }
+
+    @Nonnull
+    public OWLEntityData getEntityData() {
+        return entityData;
+    }
 }

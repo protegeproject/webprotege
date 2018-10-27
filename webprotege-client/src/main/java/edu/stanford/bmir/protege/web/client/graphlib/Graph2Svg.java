@@ -3,13 +3,17 @@ package edu.stanford.bmir.protege.web.client.graphlib;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import elemental.client.Browser;
 import elemental.dom.Document;
 import elemental.dom.Element;
 import elemental.dom.Text;
 import elemental.events.Event;
 import elemental.events.EventTarget;
-import elemental.svg.*;
+import elemental.svg.SVGElement;
+import elemental.svg.SVGMarkerElement;
+import elemental.svg.SVGRectElement;
+import elemental.svg.SVGTextElement;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -59,18 +63,16 @@ public class Graph2Svg {
     private BiConsumer<NodeDetails, Event> nodeMouseOutHandler = (n, e) -> {
     };
 
-    private BiConsumer<NodeDetails, Event> nodeMouseEnterHandler = (n, e) -> {};
+    private BiConsumer<NodeDetails, Event> nodeMouseEnterHandler = (n, e) -> {
+    };
 
-    private BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler = (n, e) -> {};
+    private BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler = (n, e) -> {
+    };
 
 
     public Graph2Svg(@Nonnull TextMeasurer measurer, @Nonnull Graph graph) {
         this.measurer = checkNotNull(measurer);
         this.graph = checkNotNull(graph);
-    }
-
-    private static String inPixels(double i) {
-        return Double.toString(i);
     }
 
     public void setNodeClickHandler(BiConsumer<NodeDetails, Event> nodeClickHandler) {
@@ -242,6 +244,111 @@ public class Graph2Svg {
         return marker;
     }
 
+    /**
+     * Creates an edge group.  This is comprised of a group node that
+     * contains a path element and another group element that represents
+     * the edge label.  The label group element comprises a text element
+     * that contains the label text and a rect element that represents
+     * the label area.
+     */
+    @Nonnull
+    Element createEdgeGroup(@Nonnull EdgeDetails edgeDetails) {
+        // Edge
+        Element groupElement = getDocument().createElementNS(SVG_NS, "g");
+        groupElement.setId(edgeDetails.getTailId() + edgeDetails.getHeadId());
+        groupElement.setAttribute(DATA_EDGE, "");
+        groupElement.setAttribute(DATA_TAIL, edgeDetails.getTailId());
+        groupElement.setAttribute(DATA_HEAD, edgeDetails.getHeadId());
+
+        // Path
+        Element pathElement = getDocument().createElementNS(SVG_NS, "path");
+        updatePathElement(edgeDetails, pathElement);
+        groupElement.appendChild(pathElement);
+
+        // Edge label
+        if (!edgeDetails.getLabel().isEmpty()) {
+            SVGTextElement text = createText(edgeDetails);
+            SVGRectElement textRect = getDocument().createSVGRectElement();
+            Element labelGroup = getDocument().createElementNS(SVG_NS, "g");
+            labelGroup.appendChild(textRect);
+            labelGroup.appendChild(text);
+            generatedTooltips.add(Tooltip.createOnRight(text, edgeDetails.getLabel()));
+            updateEdgeLabelGroup(edgeDetails, labelGroup);
+            groupElement.appendChild(labelGroup);
+        }
+        return groupElement;
+    }
+
+    private void updatePathElement(@Nonnull EdgeDetails edgeDetails, Element pathElement) {
+        List<Point> points = edgeDetails.getPoints().collect(toList());
+        pathElement.setAttribute("class", edgeDetails.getStyleNames());
+        pathElement.setAttribute("fill", "none");
+        StringBuilder dAttr = new StringBuilder();
+        for (int i = 0; i < points.size(); i++) {
+            Point point = points.get(i);
+            if (i == 0) {
+                dAttr.append("M ");
+            }
+            else {
+                dAttr.append("L ");
+            }
+
+            dAttr.append(point.getX());
+            dAttr.append(",");
+            dAttr.append(point.getY());
+            dAttr.append(" ");
+        }
+        pathElement.setAttribute("d", dAttr.toString());
+        String arrowHeadId = "open".equalsIgnoreCase(edgeDetails.getArrowHeadStyle()) ? OPEN_ARROW_HEAD_ID : CLOSED_ARROW_HEAD_ID;
+        pathElement.setAttribute("marker-end", "url(#" + arrowHeadId + ")");
+    }
+
+    @Nonnull
+    private SVGTextElement createText(@Nonnull EdgeDetails details) {
+        return createTextElement(details.getLabel(), details.getX(), details.getY());
+    }
+
+    private void updateEdgeLabelGroup(@Nonnull EdgeDetails edgeDetails,
+                                      @Nonnull Element edgeLabelGroupElement) {
+        // Update the text element
+        Element textElement = ElementalUtil.firstChildElementByTagName(edgeLabelGroupElement, "text");
+        textElement.setInnerText(edgeDetails.getLabel());
+        textElement.setAttribute("x", inPixels(edgeDetails.getX()));
+        textElement.setAttribute("y", inPixels(edgeDetails.getY()));
+        textElement.setAttribute("class", WP_GRAPH__EDGE__LABEL);
+
+        // Update the rect element
+        Element textRect = ElementalUtil.firstChildElementByTagName(edgeLabelGroupElement, "rect");
+        int w = edgeDetails.getLabelWidth();
+        int h = edgeDetails.getLabelHeight();
+        textRect.setAttribute("width", inPixels(w));
+        textRect.setAttribute("height", inPixels(h));
+        textRect.setAttribute("x", inPixels(edgeDetails.getX() - (w / 2.0)));
+        textRect.setAttribute("y", inPixels(edgeDetails.getY() - (h / 2.0)));
+        textRect.setAttribute("class", WP_GRAPH__EDGE__LABEL);
+    }
+
+    @Nonnull
+    private SVGTextElement createTextElement(@Nonnull String text, int x, int y) {
+        SVGTextElement textElement = getDocument().createSVGTextElement();
+        Text textNode = getDocument().createTextNode(text);
+        textElement.appendChild(textNode);
+        textElement.setAttribute("text-anchor", "middle");
+        textElement.setAttribute("dominant-baseline", "middle");
+        textElement.setAttribute("fill", "var(--primary--color)");
+        updateTextElement(textElement, x, y);
+        return textElement;
+    }
+
+    private static String inPixels(double i) {
+        return Double.toString(i);
+    }
+
+    private void updateTextElement(Element textElement, int x, int y) {
+        textElement.setAttribute("x", inPixels(x));
+        textElement.setAttribute("y", inPixels(y));
+    }
+
     @Nonnull
     private Element createNodeGroup(@Nonnull NodeDetails nodeDetails) {
         Document document = getDocument();
@@ -255,8 +362,11 @@ public class Graph2Svg {
                                     nodeDetails.getNodeStyleNames());
 
         SVGRectElement shape = createRect(nodeDetails);
-
-        generatedTooltips.add(Tooltip.createOnRight(shape, nodeDetails.getLabel()));
+        String tooltip = nodeDetails.getLabel()
+                + OboId.getOboId(nodeDetails.getEntity().getIRI())
+                .map(id -> " (" + id + ")")
+                .orElse("");
+        generatedTooltips.add(Tooltip.createOnRight(shape, tooltip));
         ElementalUtil.addClassNames(shape,
                                     WP_GRAPH__NODE__SHAPE,
                                     nodeDetails.getNodeShapeStyleNames());
@@ -310,116 +420,12 @@ public class Graph2Svg {
         return createTextElement(details.getLabel(), details.getX(), details.getY());
     }
 
-    @Nonnull
-    private SVGTextElement createText(@Nonnull EdgeDetails details) {
-        return createTextElement(details.getLabel(), details.getX(), details.getY());
-    }
-
-    @Nonnull
-    private SVGTextElement createTextElement(@Nonnull String text, int x, int y) {
-        SVGTextElement textElement = getDocument().createSVGTextElement();
-        Text textNode = getDocument().createTextNode(text);
-        textElement.appendChild(textNode);
-        textElement.setAttribute("text-anchor", "middle");
-        textElement.setAttribute("dominant-baseline", "middle");
-        textElement.setAttribute("fill", "var(--primary--color)");
-        updateTextElement(textElement, x, y);
-        return textElement;
-    }
-
-    private void updateTextElement(Element textElement, int x, int y) {
-        textElement.setAttribute("x", inPixels(x));
-        textElement.setAttribute("y", inPixels(y));
-    }
-
-    /**
-     * Creates an edge group.  This is comprised of a group node that
-     * contains a path element and another group element that represents
-     * the edge label.  The label group element comprises a text element
-     * that contains the label text and a rect element that represents
-     * the label area.
-     */
-    @Nonnull
-    Element createEdgeGroup(@Nonnull EdgeDetails edgeDetails) {
-        // Edge
-        Element groupElement = getDocument().createElementNS(SVG_NS, "g");
-        groupElement.setId(edgeDetails.getTailId() + edgeDetails.getHeadId());
-        groupElement.setAttribute(DATA_EDGE, "");
-        groupElement.setAttribute(DATA_TAIL, edgeDetails.getTailId());
-        groupElement.setAttribute(DATA_HEAD, edgeDetails.getHeadId());
-
-        // Path
-        Element pathElement = getDocument().createElementNS(SVG_NS, "path");
-        updatePathElement(edgeDetails, pathElement);
-        groupElement.appendChild(pathElement);
-
-        // Edge label
-        if (!edgeDetails.getLabel().isEmpty()) {
-            SVGTextElement text = createText(edgeDetails);
-            SVGRectElement textRect = getDocument().createSVGRectElement();
-            Element labelGroup = getDocument().createElementNS(SVG_NS, "g");
-            labelGroup.appendChild(textRect);
-            labelGroup.appendChild(text);
-            generatedTooltips.add(Tooltip.createOnRight(text, edgeDetails.getLabel()));
-
-            updateEdgeLabelGroup(edgeDetails, labelGroup);
-
-            groupElement.appendChild(labelGroup);
-        }
-        return groupElement;
-    }
-
-    private void updateEdgeLabelGroup(@Nonnull EdgeDetails edgeDetails,
-                                      @Nonnull Element edgeLabelGroupElement) {
-        // Update the text element
-        Element textElement = ElementalUtil.firstChildElementByTagName(edgeLabelGroupElement, "text");
-        textElement.setInnerText(edgeDetails.getLabel());
-        textElement.setAttribute("x", inPixels(edgeDetails.getX()));
-        textElement.setAttribute("y", inPixels(edgeDetails.getY()));
-        textElement.setAttribute("class", WP_GRAPH__EDGE__LABEL);
-
-        // Update the rect element
-        Element textRect = ElementalUtil.firstChildElementByTagName(edgeLabelGroupElement, "rect");
-        int w = edgeDetails.getLabelWidth();
-        int h = edgeDetails.getLabelHeight();
-        textRect.setAttribute("width", inPixels(w));
-        textRect.setAttribute("height", inPixels(h));
-        textRect.setAttribute("x", inPixels(edgeDetails.getX() - (w / 2.0)));
-        textRect.setAttribute("y", inPixels(edgeDetails.getY() - (h / 2.0)));
-        textRect.setAttribute("class", WP_GRAPH__EDGE__LABEL);
-    }
-
     private void updateEdgeDetails(EdgeDetails edgeDetails, Element edgeGroupElement) {
         Element pathElement = ElementalUtil.firstChildElementByTagName(edgeGroupElement, "path");
         updatePathElement(edgeDetails, pathElement);
         ElementalUtil.childElementsByTagName(edgeGroupElement, "g").findFirst().ifPresent(edgeLabelGroup -> {
             updateEdgeLabelGroup(edgeDetails, edgeLabelGroup);
         });
-    }
-
-
-    private void updatePathElement(@Nonnull EdgeDetails edgeDetails, Element pathElement) {
-        List<Point> points = edgeDetails.getPoints().collect(toList());
-        pathElement.setAttribute("class", edgeDetails.getStyleNames());
-        pathElement.setAttribute("fill", "none");
-        StringBuilder dAttr = new StringBuilder();
-        for (int i = 0; i < points.size(); i++) {
-            Point point = points.get(i);
-            if (i == 0) {
-                dAttr.append("M ");
-            }
-            else {
-                dAttr.append("L ");
-            }
-
-            dAttr.append(point.getX());
-            dAttr.append(",");
-            dAttr.append(point.getY());
-            dAttr.append(" ");
-        }
-        pathElement.setAttribute("d", dAttr.toString());
-        String arrowHeadId = "open".equalsIgnoreCase(edgeDetails.getArrowHeadStyle()) ? OPEN_ARROW_HEAD_ID : CLOSED_ARROW_HEAD_ID;
-        pathElement.setAttribute("marker-end", "url(#" + arrowHeadId + ")");
     }
 
 }
