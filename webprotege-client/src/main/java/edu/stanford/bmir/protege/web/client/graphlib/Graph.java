@@ -2,9 +2,12 @@ package edu.stanford.bmir.protege.web.client.graphlib;
 
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.dagre.Dagre;
+import edu.stanford.bmir.protege.web.shared.viz.Edge;
 import jsinterop.annotations.*;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -160,12 +163,18 @@ public class Graph {
     }
 
     @JsOverlay
-    public final Stream<EdgeDetails> getEdges() {
-        return Stream.of(edges()).map(ek -> edge(ek));
+    public final List<EdgeDetails> getEdgeList() {
+        List<EdgeDetails> edgeDetails = new ArrayList<>();
+        for(EdgeKey ek : edges()) {
+            edgeDetails.add(edge(ek));
+        }
+        return edgeDetails;
     }
 
+    @JsMethod
     public native EdgeDetails edge(EdgeKey e);
 
+    @JsMethod
     public native EdgeDetails edge(String tailId, String headId);
 
     @JsMethod(name = "nodeCount")
@@ -206,14 +215,18 @@ public class Graph {
         return Stream.of(predecessors(nodeId)).map(id -> node(id));
     }
 
-    private native EdgeKey [] edges();
+    @JsMethod
+    public native EdgeKey [] edges();
 
+    @JsMethod
     public native void setNode(@Nonnull String id, NodeDetails n);
 
+    @JsMethod
     public native void setEdge(@Nonnull String tailNodeId,
                                @Nonnull String headNodeId,
                                @Nonnull EdgeDetails edge);
 
+    @JsMethod
     private native String [] nodes();
 
     @JsMethod

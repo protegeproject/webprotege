@@ -36,9 +36,6 @@
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
 
-    <script src="js/viz/viz.js"></script>
-    <script src="js/viz/full.render.js"></script>
-
     <script src="https://dagrejs.github.io/project/graphlib/v2.1.2/graphlib.js"></script>
     <script src="https://dagrejs.github.io/project/dagre/latest/dagre.js"></script>
     <script src="js/polyfill/pathseg/pathseg.js"></script>

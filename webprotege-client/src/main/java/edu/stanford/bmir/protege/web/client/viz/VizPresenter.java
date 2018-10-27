@@ -241,7 +241,6 @@ public class VizPresenter {
             currentGraph = null;
             return false;
         }
-
         if (isLargeGraph(currentEntityGraph)) {
             handleLargeGraph(regenerate);
             return false;

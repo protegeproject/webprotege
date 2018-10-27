@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
-import edu.stanford.bmir.protege.web.client.tooltip.TooltipOptions;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.client.viz.TextMeasurer;
 import elemental.client.Browser;
@@ -148,7 +147,7 @@ public class Graph2Svg {
                         updateEdgeDetails(edgeDetails, edgeGroupElement);
                     }
                 });
-        graph.getEdges()
+        graph.getEdgeList()
                 .forEach(ed -> {
                     if (Browser.getDocument().getElementById(ed.getTailId() + ed.getHeadId()) == null) {
                         // Need to add to the DOM because it is not in the graph
@@ -201,9 +200,11 @@ public class Graph2Svg {
         graph.getNodes()
                 .map(this::createNodeGroup)
                 .forEach(nodeGroupElement::appendChild);
-        graph.getEdges()
-                .map(this::createEdgeGroup)
-                .forEach(edgeGroupElement::appendChild);
+        graph.getEdgeList()
+                .forEach(edge -> {
+                    Element element = createEdgeGroup(edge);
+                    edgeGroupElement.appendChild(element);
+                });
         return svg;
     }
 
@@ -222,7 +223,7 @@ public class Graph2Svg {
                                                    @Nonnull String id,
                                                    @Nonnull String styleNames,
                                                    boolean closed) {
-        SVGMarkerElement marker = getDocument().createSVGMarkerElement();
+        SVGMarkerElement marker = document.createSVGMarkerElement();
         marker.setId(id);
         marker.setAttribute("viewBox", "0 0 10 10");
         marker.setAttribute("markerWidth", "6");
@@ -231,14 +232,12 @@ public class Graph2Svg {
         marker.setAttribute("refY", "5");
         marker.setOrientToAuto();
         marker.setAttribute("class", styleNames);
-        SVGPathElement markerPath = document.createSVGPathElement();
-        SVGPathSegList markerSegments = markerPath.getPathSegList();
-        markerSegments.appendItem(markerPath.createSVGPathSegMovetoAbs(1, 1));
-        markerSegments.appendItem(markerPath.createSVGPathSegLinetoAbs(9, 5));
-        markerSegments.appendItem(markerPath.createSVGPathSegLinetoAbs(1, 9));
+        Element markerPath = getDocument().createElementNS(SVG_NS, "path");
+        String dAttr = "M 1,1 L 9,5 L 1,9";
         if (closed) {
-            markerSegments.appendItem(markerPath.createSVGPathSegClosePath());
+            dAttr = dAttr + " Z";
         }
+        markerPath.setAttribute("d", dAttr);
         marker.appendChild(markerPath);
         return marker;
     }
@@ -350,7 +349,7 @@ public class Graph2Svg {
         groupElement.setAttribute(DATA_HEAD, edgeDetails.getHeadId());
 
         // Path
-        SVGPathElement pathElement = getDocument().createSVGPathElement();
+        Element pathElement = getDocument().createElementNS(SVG_NS, "path");
         updatePathElement(edgeDetails, pathElement);
         groupElement.appendChild(pathElement);
 
@@ -391,7 +390,7 @@ public class Graph2Svg {
     }
 
     private void updateEdgeDetails(EdgeDetails edgeDetails, Element edgeGroupElement) {
-        SVGPathElement pathElement = (SVGPathElement) ElementalUtil.firstChildElementByTagName(edgeGroupElement, "path");
+        Element pathElement = ElementalUtil.firstChildElementByTagName(edgeGroupElement, "path");
         updatePathElement(edgeDetails, pathElement);
         ElementalUtil.childElementsByTagName(edgeGroupElement, "g").findFirst().ifPresent(edgeLabelGroup -> {
             updateEdgeLabelGroup(edgeDetails, edgeLabelGroup);
@@ -399,23 +398,26 @@ public class Graph2Svg {
     }
 
 
-    private void updatePathElement(@Nonnull EdgeDetails edgeDetails, SVGPathElement pathElement) {
-        pathElement.getPathSegList().clear();
+    private void updatePathElement(@Nonnull EdgeDetails edgeDetails, Element pathElement) {
         List<Point> points = edgeDetails.getPoints().collect(toList());
         pathElement.setAttribute("class", edgeDetails.getStyleNames());
         pathElement.setAttribute("fill", "none");
+        StringBuilder dAttr = new StringBuilder();
         for (int i = 0; i < points.size(); i++) {
             Point point = points.get(i);
             if (i == 0) {
-                SVGPathSegMovetoAbs move = pathElement.createSVGPathSegMovetoAbs(point.getX(), point.getY());
-                pathElement.getPathSegList().appendItem(move);
+                dAttr.append("M ");
             }
             else {
-                SVGPathSegLinetoAbs lineTo = pathElement.createSVGPathSegLinetoAbs(point.getX(), point.getY());
-                pathElement.getPathSegList().appendItem(lineTo);
+                dAttr.append("L ");
             }
-        }
 
+            dAttr.append(point.getX());
+            dAttr.append(",");
+            dAttr.append(point.getY());
+            dAttr.append(" ");
+        }
+        pathElement.setAttribute("d", dAttr.toString());
         String arrowHeadId = "open".equalsIgnoreCase(edgeDetails.getArrowHeadStyle()) ? OPEN_ARROW_HEAD_ID : CLOSED_ARROW_HEAD_ID;
         pathElement.setAttribute("marker-end", "url(#" + arrowHeadId + ")");
     }
