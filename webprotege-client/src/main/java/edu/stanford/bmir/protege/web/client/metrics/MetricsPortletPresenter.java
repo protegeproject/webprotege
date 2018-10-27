@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 
 import javax.inject.Inject;
 

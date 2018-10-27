@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 

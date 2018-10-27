@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.annotation.Nonnull;

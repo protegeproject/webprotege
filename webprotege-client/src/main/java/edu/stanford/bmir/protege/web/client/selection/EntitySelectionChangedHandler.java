@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.selection;
+package edu.stanford.bmir.protege.web.client.selection;
 
 /**
  * Matthew Horridge

@@ -3,16 +3,13 @@ package edu.stanford.bmir.protege.web.client.tag;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
-import edu.stanford.bmir.protege.web.client.match.DateIsAfterPresenter;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

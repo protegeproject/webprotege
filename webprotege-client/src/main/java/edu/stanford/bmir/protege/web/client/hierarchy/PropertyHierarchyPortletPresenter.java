@@ -21,7 +21,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.SelectionChangeEvent;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;

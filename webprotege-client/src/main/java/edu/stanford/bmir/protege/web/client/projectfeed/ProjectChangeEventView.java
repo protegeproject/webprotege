@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.library.entitylabel.EntityLabel;
 import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;

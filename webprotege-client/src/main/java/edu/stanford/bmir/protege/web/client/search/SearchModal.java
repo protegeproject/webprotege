@@ -4,8 +4,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;

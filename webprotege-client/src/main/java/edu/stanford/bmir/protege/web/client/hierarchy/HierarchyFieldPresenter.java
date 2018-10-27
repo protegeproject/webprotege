@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -18,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -27,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;

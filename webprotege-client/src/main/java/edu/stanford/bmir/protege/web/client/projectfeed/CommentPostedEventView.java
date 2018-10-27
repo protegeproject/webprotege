@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;

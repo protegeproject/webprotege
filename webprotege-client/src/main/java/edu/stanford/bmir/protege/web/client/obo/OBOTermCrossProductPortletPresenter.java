@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.obo.GetOboTermCrossProductAction;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermCrossProductAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 

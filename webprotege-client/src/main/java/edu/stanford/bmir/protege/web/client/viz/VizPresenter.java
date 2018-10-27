@@ -16,7 +16,7 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;

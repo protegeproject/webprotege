@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.usage;
 
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -12,9 +11,8 @@ import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
-import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
 import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import edu.stanford.webprotege.shared.annotations.Portlet;

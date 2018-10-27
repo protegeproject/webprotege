@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
@@ -17,7 +16,7 @@ import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;

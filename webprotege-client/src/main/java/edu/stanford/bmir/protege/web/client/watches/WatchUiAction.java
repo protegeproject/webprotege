@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.client.watches;
 
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.hierarchy.HierarchyActionStatePresenter;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

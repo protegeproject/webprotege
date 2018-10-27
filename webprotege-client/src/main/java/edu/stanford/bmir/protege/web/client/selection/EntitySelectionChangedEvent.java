@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.selection;
+package edu.stanford.bmir.protege.web.client.selection;
 
 import com.google.web.bindery.event.shared.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
