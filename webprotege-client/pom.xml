@@ -211,6 +211,23 @@
 
     <profiles>
         <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.ltgt.gwt.maven</groupId>
+                        <artifactId>gwt-maven-plugin</artifactId>
+                        <configuration>
+                            <moduleName>edu.stanford.bmir.protege.web.WebProtege</moduleName>
+                            <moduleShortName>webprotege</moduleShortName>
+                            <classpathScope>compile+runtime</classpathScope>
+                            <moduleTemplate>${project.basedir}/src/main/module-dev.gwt.xml</moduleTemplate>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>webprotege.stanford.edu</id>
             <build>
                 <plugins>
