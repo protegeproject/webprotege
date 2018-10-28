@@ -265,8 +265,11 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     @Override
     public void setNodeProperty(@Nonnull String propertyName, @Nonnull String propertyValue) {
-        nodeProperties = nodeProperties.toBuilder().setValue(propertyName, propertyValue).build();
-        nodePropertiesChangedHandler.accept(this, nodeProperties);
+        String currentValue = nodeProperties.getPropertyValue(propertyName, null);
+        if(!Objects.equals(currentValue, propertyValue)) {
+            nodeProperties = nodeProperties.toBuilder().setValue(propertyName, propertyValue).build();
+            nodePropertiesChangedHandler.accept(this, nodeProperties);
+        }
     }
 
     @Override
