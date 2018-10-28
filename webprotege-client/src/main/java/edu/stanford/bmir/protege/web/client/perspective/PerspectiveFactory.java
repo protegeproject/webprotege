@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -15,9 +18,14 @@ public class PerspectiveFactory {
     @Nonnull
     private final PortletWidgetMapper portletWidgetMapper;
 
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
+
     @Inject
-    public PerspectiveFactory(@Nonnull PortletWidgetMapper portletWidgetMapper) {
-        this.portletWidgetMapper = portletWidgetMapper;
+    public PerspectiveFactory(@Nonnull PortletWidgetMapper portletWidgetMapper,
+                              @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.portletWidgetMapper = checkNotNull(portletWidgetMapper);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     /**
@@ -27,6 +35,6 @@ public class PerspectiveFactory {
      */
     @Nonnull
     public Perspective createPerspective(@Nonnull PerspectiveId perspectiveId) {
-        return new PerspectiveImpl(perspectiveId, portletWidgetMapper);
+        return new PerspectiveImpl(perspectiveId, dispatchServiceManager, portletWidgetMapper);
     }
 }

@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.assistedinject.Assisted;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public final class PerspectiveImpl extends Composite implements IsWidget, Perspective {
@@ -29,6 +28,8 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     private final WidgetMapPanel widgetMapPanel;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private final PortletWidgetMapper widgetMapper;
 
     private Optional<Node> rootNode;
@@ -36,9 +37,12 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
     private Consumer<TerminalNode> nodePropertiesChangedHandler = node -> {};
 
     @Inject
-    public PerspectiveImpl(@Assisted final PerspectiveId perspectiveId, PortletWidgetMapper widgetMapper) {
+    public PerspectiveImpl(@Nonnull final PerspectiveId perspectiveId,
+                           @Nonnull DispatchServiceManager dispatchServiceManager,
+                           @Nonnull PortletWidgetMapper widgetMapper) {
         super();
         this.perspectiveId = perspectiveId;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.widgetMapper = widgetMapper;
         this.widgetMapper.setNodePropertiesChangedHandler(tn -> nodePropertiesChangedHandler.accept(tn));
         WidgetMapRootWidget rootWidget = new WidgetMapRootWidget();
@@ -109,7 +113,12 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         GWT.log("[Perspective] Root node set: " + rootNode);
         this.rootNode = rootNode;
         if (rootNode.isPresent()) {
-            widgetMapPanel.setRootNode(rootNode.get());
+            dispatchServiceManager.beginBatch();
+            try {
+                widgetMapPanel.setRootNode(rootNode.get());
+            } finally {
+                dispatchServiceManager.executeCurrentBatch();
+            }
         }
         else {
             // TODO:
