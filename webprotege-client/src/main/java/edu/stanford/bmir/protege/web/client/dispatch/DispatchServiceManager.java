@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUser;
+import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
@@ -100,7 +101,6 @@ public class DispatchServiceManager {
         ImmutableList<PendingActionExecution<?, ?>> pending = ImmutableList.copyOf(pendingActionExecutions);
         pendingActionExecutions.clear();
         batch = false;
-        GWT.log("[Dispatch] Submitting batch of " + pending.size() + " actions");
         ImmutableList.Builder<Action<?>> builder = ImmutableList.builder();
         for(PendingActionExecution<?,?> execution : pending) {
             Action<?> action = execution.getAction();
@@ -131,7 +131,7 @@ public class DispatchServiceManager {
             }
         }
         if(batch) {
-            GWT.log("[Dispatch] Batching submitted action: " + action.getClass().getSimpleName());
+            GWT.log("[Dispatch]     Batching submitted action: " + action.getClass().getSimpleName());
             AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
             PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
             pendingActionExecutions.add(actionExecution);
@@ -144,8 +144,20 @@ public class DispatchServiceManager {
     @SuppressWarnings("unchecked")
     private <A extends Action<R>, R extends Result> void execAction(A action, DispatchServiceCallback<R> callback) {
         requestCount++;
-        GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
+        logAction(action);
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
+    }
+
+    private <A extends Action<R>, R extends Result> void logAction(A action) {
+        if ((action instanceof GetProjectEventsAction)) {
+            return;
+        }
+        if(action instanceof BatchAction) {
+            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName() + "(" + ((BatchAction) action).getActions().size() + " actions)");
+        }
+        else {
+            GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
+        }
     }
 
 
