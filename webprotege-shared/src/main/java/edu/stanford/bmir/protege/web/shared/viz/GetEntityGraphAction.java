@@ -14,19 +14,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Oct 2018
  */
-public class GetEntityDotRenderingAction implements ProjectAction<GetEntityDotRenderingResult> {
+public class GetEntityGraphAction implements ProjectAction<GetEntityGraphResult> {
 
     private ProjectId projectId;
 
     private OWLEntity entity;
 
-    public GetEntityDotRenderingAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+    public GetEntityGraphAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
     }
 
     @GwtSerializationConstructor
-    private GetEntityDotRenderingAction() {
+    private GetEntityGraphAction() {
     }
 
     @Nonnull

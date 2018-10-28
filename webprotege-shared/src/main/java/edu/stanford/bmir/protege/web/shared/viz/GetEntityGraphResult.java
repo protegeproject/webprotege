@@ -13,10 +13,10 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GetEntityDotRenderingResult implements Result {
+public abstract class GetEntityGraphResult implements Result {
 
-    public static GetEntityDotRenderingResult get(@Nonnull EntityGraph entityGraph) {
-        return new AutoValue_GetEntityDotRenderingResult(entityGraph);
+    public static GetEntityGraphResult get(@Nonnull EntityGraph entityGraph) {
+        return new AutoValue_GetEntityGraphResult(entityGraph);
     }
 
     @Nonnull

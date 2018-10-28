@@ -4,8 +4,8 @@ import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.io.StringWriter;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,36 +22,36 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Oct 2018
  */
-public class GetEntityDotRenderingActionHandler extends AbstractProjectActionHandler<GetEntityDotRenderingAction, GetEntityDotRenderingResult> {
+public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<GetEntityGraphAction, GetEntityGraphResult> {
 
-    private static Logger logger = LoggerFactory.getLogger(GetEntityDotRenderingActionHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(GetEntityGraphActionHandler.class);
 
     @Nonnull
     private final EntityGraphBuilder graphBuilder;
 
     @Inject
-    public GetEntityDotRenderingActionHandler(@Nonnull AccessManager accessManager,
-                                              @Nonnull EntityGraphBuilder graphBuilder) {
+    public GetEntityGraphActionHandler(@Nonnull AccessManager accessManager,
+                                       @Nonnull EntityGraphBuilder graphBuilder) {
         super(accessManager);
         this.graphBuilder = checkNotNull(graphBuilder);
     }
 
     @Nonnull
     @Override
-    public Class<GetEntityDotRenderingAction> getActionClass() {
-        return GetEntityDotRenderingAction.class;
+    public Class<GetEntityGraphAction> getActionClass() {
+        return GetEntityGraphAction.class;
     }
 
     @Nonnull
     @Override
-    public GetEntityDotRenderingResult execute(@Nonnull GetEntityDotRenderingAction action, @Nonnull ExecutionContext executionContext) {
+    public GetEntityGraphResult execute(@Nonnull GetEntityGraphAction action, @Nonnull ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         EntityGraph graph = graphBuilder.createGraph(action.getEntity());
         stopwatch.stop();
-        logger.info("Created entity graph [{} nodes; edges {}] in {} ms",
+        logger.debug("Created entity graph [{} nodes; edges {}] in {} ms",
                     graph.getNodes().size(),
                     graph.getEdges().size(),
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        return GetEntityDotRenderingResult.get(graph);
+        return GetEntityGraphResult.get(graph);
     }
 }

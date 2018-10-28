@@ -18,8 +18,8 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingAction;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityDotRenderingResult;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
+import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
 import elemental.dom.Element;
 import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -142,7 +142,7 @@ public class VizPresenter {
             return;
         }
         this.currentEntity = Optional.of(entity);
-        dispatch.execute(new GetEntityDotRenderingAction(projectId, entity),
+        dispatch.execute(new GetEntityGraphAction(projectId, entity),
                          hasBusy,
                          this::handleRendering);
     }
@@ -320,7 +320,7 @@ public class VizPresenter {
     }
 
 
-    private void handleRendering(@Nonnull GetEntityDotRenderingResult result) {
+    private void handleRendering(@Nonnull GetEntityGraphResult result) {
         if (!isGraphForCurrentEntity(result)) {
             return;
         }
@@ -334,7 +334,7 @@ public class VizPresenter {
         resetCurrentGraph();
     }
 
-    private Boolean isGraphForCurrentEntity(@Nonnull GetEntityDotRenderingResult result) {
+    private Boolean isGraphForCurrentEntity(@Nonnull GetEntityGraphResult result) {
         return currentEntity.map(e -> e.equals(result.getEntityGraph().getRootEntity())).orElse(false);
     }
 
