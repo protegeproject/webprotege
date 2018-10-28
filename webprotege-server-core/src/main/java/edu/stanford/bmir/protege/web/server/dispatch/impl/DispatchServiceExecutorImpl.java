@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
@@ -35,7 +36,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
     @Nonnull
     private final UserInSessionFactory userInSessionFactory;
-    
+
     @Inject
     public DispatchServiceExecutorImpl(@Nonnull ApplicationActionHandlerRegistry handlerRegistry,
                                        @Nonnull ProjectManager projectManager,
@@ -45,12 +46,74 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         this.userInSessionFactory = userInSessionFactory;
     }
 
+    /**
+     * Sets the name of a thread so that it contains details of the action (and target project) being executed
+     *
+     * @param thread    The thread.
+     * @param action    The action.
+     * @param projectId The optional project id.
+     */
+    private static void setTemporaryThreadName(@Nonnull Thread thread,
+                                               @Nonnull Action<?> action,
+                                               @Nullable ProjectId projectId) {
+        String tempThreadName;
+        final ProjectId targetProjectId;
+        if (projectId != null) {
+            targetProjectId = projectId;
+        }
+        else if (action instanceof HasProjectId) {
+            targetProjectId = ((HasProjectId) action).getProjectId();
+        }
+        else {
+            targetProjectId = null;
+        }
+        if (targetProjectId == null) {
+            tempThreadName = String.format("[DispatchService] %s",
+                                           action.getClass().getSimpleName());
+        }
+        else {
+            tempThreadName = String.format("[DispatchService] %s %s",
+                                           action.getClass().getSimpleName(),
+                                           targetProjectId);
+        }
+        thread.setName(tempThreadName);
+    }
+
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
-        ActionHandler<A, R> actionHandler = null;
+        if (action instanceof BatchAction) {
+            BatchAction batchAction = (BatchAction) action;
+            return execBatchAction(batchAction, requestContext, executionContext);
+        }
+        else {
+            return execAction(action, requestContext, executionContext);
+        }
+    }
+
+    private DispatchServiceResultContainer execBatchAction(BatchAction batchAction, RequestContext requestContext, ExecutionContext executionContext) {
+        ImmutableList.Builder<ActionExecutionResult> executionResultBuilder = ImmutableList.builder();
+        for (Action<?> action : batchAction.getActions()) {
+            ActionExecutionResult executionResult;
+            try {
+                DispatchServiceResultContainer container = execAction(action, requestContext, executionContext);
+                Result result = container.getResult();
+                executionResult = ActionExecutionResult.get(new DispatchServiceResultContainer(result));
+            } catch (ActionExecutionException e) {
+                executionResult = ActionExecutionResult.get(e);
+            } catch (PermissionDeniedException e) {
+                executionResult = ActionExecutionResult.get(e);
+            }
+            executionResultBuilder.add(executionResult);
+        }
+        ImmutableList<ActionExecutionResult> results = executionResultBuilder.build();
+        return new DispatchServiceResultContainer(BatchResult.get(results));
+    }
+
+    private <A extends Action<R>, R extends Result> DispatchServiceResultContainer execAction(A action, RequestContext requestContext, ExecutionContext executionContext) {
+        final ActionHandler<A, R> actionHandler;
         final Thread thread = Thread.currentThread();
         String threadName = thread.getName();
-        if(action instanceof ProjectAction) {
+        if (action instanceof ProjectAction) {
             ProjectAction projectAction = (ProjectAction) action;
             ProjectId projectId = projectAction.getProjectId();
             setTemporaryThreadName(thread, action, projectId);
@@ -64,9 +127,9 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
         RequestValidator validator = actionHandler.getRequestValidator(action, requestContext);
         RequestValidationResult validationResult = validator.validateAction();
-        if(!validationResult.isValid()) {
-            throw  getPermissionDeniedException(requestContext.getUserId(),
-                                                validationResult);
+        if (!validationResult.isValid()) {
+            throw getPermissionDeniedException(requestContext.getUserId(),
+                                               validationResult);
         }
 
         try {
@@ -77,50 +140,17 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         } catch (Exception e) {
             logger.error("An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e);
-        }
-        finally {
+        } finally {
             thread.setName(threadName);
         }
     }
 
-    /**
-     * Sets the name of a thread so that it contains details of the action (and target project) being executed
-     * @param thread The thread.
-     * @param action The action.
-     * @param projectId The optional project id.
-     */
-    private static void setTemporaryThreadName(@Nonnull Thread thread,
-                                               @Nonnull Action<?> action,
-                                               @Nullable ProjectId projectId) {
-        String tempThreadName;
-        final ProjectId targetProjectId;
-        if(projectId != null) {
-            targetProjectId = projectId;
-        }
-        else if(action instanceof HasProjectId) {
-            targetProjectId = ((HasProjectId) action).getProjectId();
-        }
-        else {
-            targetProjectId = null;
-        }
-        if(targetProjectId == null) {
-            tempThreadName = String.format("[DispatchService] %s",
-                                           action.getClass().getSimpleName());
-        }
-        else {
-            tempThreadName = String.format("[DispatchService] %s %s",
-                          action.getClass().getSimpleName(),
-                          targetProjectId);
-        }
-        thread.setName(tempThreadName);
-    }
-
     private PermissionDeniedException getPermissionDeniedException(@Nonnull UserId userId,
                                                                    @Nonnull RequestValidationResult validationResult) {
-        if(validationResult.getInvalidException().isPresent()) {
+        if (validationResult.getInvalidException().isPresent()) {
             Exception validationException = validationResult.getInvalidException().get();
-            if(validationException instanceof PermissionDeniedException) {
-                return  ((PermissionDeniedException) validationException);
+            if (validationException instanceof PermissionDeniedException) {
+                return ((PermissionDeniedException) validationException);
             }
         }
         throw new PermissionDeniedException(validationResult.getInvalidMessage(),

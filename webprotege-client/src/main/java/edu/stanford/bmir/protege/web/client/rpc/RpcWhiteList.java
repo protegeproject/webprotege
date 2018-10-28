@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
@@ -91,6 +92,16 @@ public class RpcWhiteList implements Action, Result {
     EntityNameMatchResult entityNameMatchResult;
 
     InstanceRetrievalMode instanceRetrievalMode;
+
+    ActionExecutionResult actionExecutionResult;
+
+    public ActionExecutionResult getActionExecutionResult() {
+        return actionExecutionResult;
+    }
+
+    public void setActionExecutionResult(ActionExecutionResult actionExecutionResult) {
+        this.actionExecutionResult = actionExecutionResult;
+    }
 
     public Operation getOperation() {
         return operation;

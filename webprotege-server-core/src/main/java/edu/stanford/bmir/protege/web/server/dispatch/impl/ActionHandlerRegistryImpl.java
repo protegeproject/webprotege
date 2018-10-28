@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,7 @@ public abstract class ActionHandlerRegistryImpl implements ActionHandlerRegistry
         registry.put(handler.getActionClass(), handler);
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public <A extends Action<R>, R extends Result> ActionHandler<A, R> getActionHandler(A action) {

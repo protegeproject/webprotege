@@ -261,7 +261,15 @@ public class SelectionModel {
 
 
     private void fireEvent(Optional<OWLEntity> previousLastSelection) {
-        Optional<OWLEntity> curSelection = extractEntityFromItem(selection);
-        eventBus.fireEvent(new EntitySelectionChangedEvent(previousLastSelection, curSelection));
+        // It's likely that several actions will be executed as a result of the selection
+        // change.  These can be nicely batched together so that only one HTTP call takes
+        // place.
+        dispatch.beginBatch();
+        try {
+            Optional<OWLEntity> curSelection = extractEntityFromItem(selection);
+            eventBus.fireEvent(new EntitySelectionChangedEvent(previousLastSelection, curSelection));
+        } finally {
+            dispatch.executeCurrentBatch();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -24,13 +25,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -61,6 +60,10 @@ public class DispatchServiceManager {
 
     private DispatchErrorMessageDisplay errorDisplay;
 
+    private boolean batch = false;
+
+    private List<PendingActionExecution<?,?>> pendingActionExecutions = new ArrayList<>();
+
     @Inject
     public DispatchServiceManager(@Nonnull EventBus eventBus,
                                   @Nonnull SignInRequiredHandler signInRequiredHandler,
@@ -80,7 +83,32 @@ public class DispatchServiceManager {
 
     private Map<ProjectId, ResultCache> resultCacheMap = new HashMap<>();
 
+    public void beginBatch() {
+        if(batch) {
+            throw new RuntimeException("Already in batch");
+        }
+        if(!pendingActionExecutions.isEmpty()) {
+            throw new RuntimeException("Pending actions is not empty");
+        }
+        batch = true;
+    }
 
+    public void executeCurrentBatch() {
+        if(!batch) {
+            throw new RuntimeException("Not in batch");
+        }
+        ImmutableList<PendingActionExecution<?, ?>> pending = ImmutableList.copyOf(pendingActionExecutions);
+        pendingActionExecutions.clear();
+        batch = false;
+        GWT.log("[DispatchServiceManager] Submitting batch of " + pending.size() + " actions");
+        ImmutableList.Builder<Action<?>> builder = ImmutableList.builder();
+        for(PendingActionExecution<?,?> execution : pending) {
+            Action<?> action = execution.getAction();
+            builder.add(action);
+        }
+        BatchAction batchAction = BatchAction.create(builder.build());
+        execAction(batchAction, new BatchActionCallback(errorDisplay, pending));
+    }
 
     private ResultCache getResultCache(ProjectId projectId, EventBus eventBus) {
         ResultCache resultCache = resultCacheMap.get(projectId);
@@ -91,7 +119,6 @@ public class DispatchServiceManager {
         return resultCache;
     }
 
-    @SuppressWarnings("unchecked")
     public <A extends Action<R>, R extends Result> void execute(A action, final DispatchServiceCallback<R> callback) {
         callback.handleSubmittedForExecution();
         if(action instanceof HasProjectId) {
@@ -103,6 +130,19 @@ public class DispatchServiceManager {
                 return;
             }
         }
+        if(batch) {
+            GWT.log("[DispatchServiceManager] Batching submitted action");
+            AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
+            PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
+            pendingActionExecutions.add(actionExecution);
+        }
+        else {
+            execAction(action, callback);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <A extends Action<R>, R extends Result> void execAction(A action, DispatchServiceCallback<R> callback) {
         requestCount++;
         GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
