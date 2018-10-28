@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -24,6 +25,7 @@ public interface ActionHandlerRegistry {
      * specified {@link Action}.
      * @throws NullPointerException if {@code action} is {@code null}.
      */
+    @Nonnull
     <A extends Action<R>, R extends Result> ActionHandler<A, R> getActionHandler(A action) throws ActionHandlerNotFoundException;
 
 }
