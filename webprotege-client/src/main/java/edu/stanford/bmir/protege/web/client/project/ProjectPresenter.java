@@ -100,15 +100,19 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                 @Nonnull EventBus eventBus,
                                 @Nonnull ProjectViewPlace place) {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
-                                       result -> {
-                                           topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
-                                           linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
-                                           perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
-                                           eventPollingManager.start();
-                                           container.setWidget(view);
-            dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
-                                           r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
-        });
+                                       result -> handleProjectLoaded(container, eventBus, place));
+    }
+
+    private void handleProjectLoaded(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus, @Nonnull ProjectViewPlace place) {
+        dispatchServiceManager.beginBatch();
+        topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
+        linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
+        perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
+        eventPollingManager.start();
+        container.setWidget(view);
+        dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
+                                       r -> projectTagsStyleManager.setProjectTags(r.getTags(), view));
+        dispatchServiceManager.executeCurrentBatch();
     }
 
     @Override

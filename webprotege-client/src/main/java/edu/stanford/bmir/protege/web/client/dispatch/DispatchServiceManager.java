@@ -100,7 +100,7 @@ public class DispatchServiceManager {
         ImmutableList<PendingActionExecution<?, ?>> pending = ImmutableList.copyOf(pendingActionExecutions);
         pendingActionExecutions.clear();
         batch = false;
-        GWT.log("[DispatchServiceManager] Submitting batch of " + pending.size() + " actions");
+        GWT.log("[Dispatch] Submitting batch of " + pending.size() + " actions");
         ImmutableList.Builder<Action<?>> builder = ImmutableList.builder();
         for(PendingActionExecution<?,?> execution : pending) {
             Action<?> action = execution.getAction();
@@ -131,7 +131,7 @@ public class DispatchServiceManager {
             }
         }
         if(batch) {
-            GWT.log("[DispatchServiceManager] Batching submitted action");
+            GWT.log("[Dispatch] Batching submitted action: " + action.getClass().getSimpleName());
             AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
             PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);
             pendingActionExecutions.add(actionExecution);
