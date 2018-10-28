@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -12,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     is the exception thrown during action execution.
  * </p>
  */
-public class ActionExecutionException extends RuntimeException {
+public class ActionExecutionException extends RuntimeException implements IsSerializable {
 
     private Throwable serializedCause;
 
