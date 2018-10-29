@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import elemental.client.Browser;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -61,7 +62,7 @@ public class DispatchServiceManager {
 
     private DispatchErrorMessageDisplay errorDisplay;
 
-    private boolean batch = false;
+    private int batch = 0;
 
     private List<PendingActionExecution<?,?>> pendingActionExecutions = new ArrayList<>();
 
@@ -85,22 +86,17 @@ public class DispatchServiceManager {
     private Map<ProjectId, ResultCache> resultCacheMap = new HashMap<>();
 
     public void beginBatch() {
-        if(batch) {
-            throw new RuntimeException("Already in batch");
-        }
-        if(!pendingActionExecutions.isEmpty()) {
-            throw new RuntimeException("Pending actions is not empty");
-        }
-        batch = true;
+        batch++;
     }
 
     public void executeCurrentBatch() {
-        if(!batch) {
-            throw new RuntimeException("Not in batch");
+        batch--;
+        if(batch != 0) {
+            // Still in an outer batch
+            return;
         }
         ImmutableList<PendingActionExecution<?, ?>> pending = ImmutableList.copyOf(pendingActionExecutions);
         pendingActionExecutions.clear();
-        batch = false;
         ImmutableList.Builder<Action<?>> builder = ImmutableList.builder();
         for(PendingActionExecution<?,?> execution : pending) {
             Action<?> action = execution.getAction();
@@ -130,7 +126,7 @@ public class DispatchServiceManager {
                 return;
             }
         }
-        if(batch) {
+        if(batch > 0) {
             GWT.log("[Dispatch]     Batching submitted action: " + action.getClass().getSimpleName());
             AsyncCallbackProxy<R> proxy = new AsyncCallbackProxy(action, callback);
             PendingActionExecution<A, R> actionExecution = PendingActionExecution.get(action, proxy);

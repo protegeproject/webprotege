@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.client.viz.VizPanePresenter;
+import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -48,6 +50,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+    @Nonnull
+    private final DispatchServiceManager dispatch;
+
     private final Set<EntityType<?>> displayedTypes = new HashSet<>();
 
     @Inject
@@ -61,11 +66,13 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull EditorPaneEntityChangesPresenter changesPresenter,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull VizPanePresenter vizPresenter,
-            @Nonnull Provider<ForbiddenView> forbiddenViewProvider) {
+            @Nonnull Provider<ForbiddenView> forbiddenViewProvider,
+            @Nonnull DispatchServiceManager dispatch) {
         super(selectionModel, projectId, displayNameRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
         this.permissionChecker = permissionChecker;
+        this.dispatch = checkNotNull(dispatch);
         panePresenters = ImmutableList.of(
                 checkNotNull(editorPresenter),
                 checkNotNull(vizPresenter),
@@ -79,7 +86,16 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                 NAMED_INDIVIDUAL,
                 DATATYPE
         ));
-        view.setEditorPaneChangedHandler(() -> handleAfterSetEntity(getSelectedEntity()));
+        view.setEditorPaneChangedHandler(this::handleEditorPaneChanged);
+    }
+
+    private void handleEditorPaneChanged() {
+        try {
+            dispatch.beginBatch();
+            handleAfterSetEntity(getSelectedEntity());
+        } finally {
+            dispatch.executeCurrentBatch();
+        }
     }
 
     public void setDisplayedTypes(EntityType<?> ... entityTypes) {
@@ -100,8 +116,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         tagListPresenter.start(view.getTagListViewContainer(), eventBus);
         int editorIndex = getEditorIndex(portletUi);
         view.setVisibleIndex(editorIndex);
-        handleAfterSetEntity(getSelectedEntity());
         setDisplaySelectedEntityNameAsSubtitle(true);
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     private int getEditorIndex(PortletUi portletUi) {

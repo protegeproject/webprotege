@@ -131,6 +131,7 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --inlay-panel--border-radius:                   3px;
         --inlay-panel--alternate-background-color:      #fafaff;
         --view-toolbar--background-color:               var(--alternate--background-color);
+        --view-toolbar--hover--background-color:        #707070;
         --error--color:                                 #af0002;
         --outline:                                      #94c0ed solid 2px;
         --card--box-shadow:                none;
