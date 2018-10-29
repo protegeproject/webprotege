@@ -28,6 +28,7 @@ public abstract class EntityGraph {
     public static EntityGraph create(OWLEntityData root, ImmutableSet<Edge> edges) {
         final ImmutableSet.Builder<OWLEntityData> builder = ImmutableSet.builder();
         final ImmutableSetMultimap.Builder<OWLEntityData, Edge> edgesByTailNode = ImmutableSetMultimap.builder();
+        builder.add(root);
         edges.forEach(e -> {
             builder.add(e.getTail());
             builder.add(e.getHead());
