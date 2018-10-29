@@ -68,7 +68,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     }
 
     private void handleEntityHierarchyChanged(EntityHierarchyChangedEvent event) {
-        if(!event.getHierarchyId().equals(hierarchyId)) {
+        if (!event.getHierarchyId().equals(hierarchyId)) {
             return;
         }
         GraphModelChangeProcessor changeProcessor = new GraphModelChangeProcessor(parent2ChildMap, rootNodes);
@@ -102,18 +102,23 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     public void getRootNodes(GetRootNodesCallback<EntityNode> callback) {
         dispatchServiceManager.execute(new GetHierarchyRootsAction(projectId, hierarchyId), result -> {
             cacheRootNodes(result);
-            callback.handleRootNodes(result.getRootNodes());
+            try {
+                dispatchServiceManager.beginBatch();
+                callback.handleRootNodes(result.getRootNodes());
+            } finally {
+                dispatchServiceManager.executeCurrentBatch();
+            }
         });
 
     }
 
     private void cacheRootNodes(GetHierarchyRootsResult result) {
         result.getRootNodes().stream()
-              .map(GraphNode::getUserObject)
-              .forEach(node -> {
-                  nodeCache.put(node.getEntity(), node);
-                  rootNodes.add(node.getEntity());
-              });
+                .map(GraphNode::getUserObject)
+                .forEach(node -> {
+                    nodeCache.put(node.getEntity(), node);
+                    rootNodes.add(node.getEntity());
+                });
     }
 
     @Override
@@ -128,18 +133,25 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
 
     private void cacheEdges(@Nonnull OWLEntity parent, GetHierarchyChildrenResult result) {
         result.getChildren().getPageElements().stream()
-              .map(GraphNode::getUserObject)
-              .forEach(node -> {
-                  nodeCache.put(node.getEntity(), node);
-                  parent2ChildMap.put(parent, node.getEntity());
-              });
+                .map(GraphNode::getUserObject)
+                .forEach(node -> {
+                    nodeCache.put(node.getEntity(), node);
+                    parent2ChildMap.put(parent, node.getEntity());
+                });
     }
 
     @Override
     public void getPathsFromRootNodes(@Nonnull OWLEntity node,
                                       @Nonnull GetPathsBetweenNodesCallback<EntityNode> callback) {
         dispatchServiceManager.execute(new GetHierarchyPathsToRootAction(projectId, node, hierarchyId),
-                                       result -> callback.handlePaths(result.getPaths()));
+                                       result -> {
+                                           try {
+                                               dispatchServiceManager.beginBatch();
+                                               callback.handlePaths(result.getPaths());
+                                           } finally {
+                                               dispatchServiceManager.executeCurrentBatch();
+                                           }
+                                       });
     }
 
     @Override
