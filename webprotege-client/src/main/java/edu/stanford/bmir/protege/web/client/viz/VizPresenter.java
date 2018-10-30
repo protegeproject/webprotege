@@ -34,6 +34,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -154,9 +155,6 @@ public class VizPresenter {
 
     public void displayEntity(@Nonnull OWLEntity entity) {
         checkNotNull(entity);
-        if(currentEntity.equals(Optional.of(entity))) {
-            return;
-        }
         this.currentEntity = Optional.of(entity);
         dispatch.execute(new GetEntityGraphAction(projectId, entity),
                          hasBusy,
@@ -354,9 +352,6 @@ public class VizPresenter {
 
 
     private void handleRendering(@Nonnull GetEntityGraphResult result) {
-        if (!isGraphForCurrentEntity(result)) {
-            return;
-        }
         if(result.getEntityGraph().equals(currentEntityGraph)) {
             return;
         }
@@ -368,7 +363,7 @@ public class VizPresenter {
     }
 
     private Boolean isGraphForCurrentEntity(@Nonnull GetEntityGraphResult result) {
-        return currentEntity.map(e -> e.equals(result.getEntityGraph().getRootEntity())).orElse(false);
+        return Objects.equals(currentEntityGraph, result.getEntityGraph());
     }
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
