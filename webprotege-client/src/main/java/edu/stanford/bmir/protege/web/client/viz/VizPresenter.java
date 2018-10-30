@@ -2,10 +2,13 @@ package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.base.Stopwatch;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.entity.EntityItemMapper;
 import edu.stanford.bmir.protege.web.client.graphlib.EdgeDetails;
 import edu.stanford.bmir.protege.web.client.graphlib.EntityGraph2Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
@@ -15,6 +18,10 @@ import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.place.Item;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
@@ -62,6 +69,13 @@ public class VizPresenter {
     private final VizView view;
 
     @Nonnull
+    private final EntityTypePerspectiveMapper typePerspectiveMapper;
+
+    @Nonnull
+    private final PlaceController placeController;
+
+
+    @Nonnull
     private HasBusy hasBusy = busy -> {
     };
 
@@ -75,15 +89,17 @@ public class VizPresenter {
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
     private EntityDisplay entityDisplay;
-
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
                         @Nonnull DispatchServiceManager dispatch,
-                        @Nonnull SelectionModel selectionModel, @Nonnull VizView view) {
+                        @Nonnull SelectionModel selectionModel, @Nonnull VizView view, @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper,
+                        @Nonnull PlaceController placeController) {
         this.projectId = checkNotNull(projectId);
         this.dispatch = checkNotNull(dispatch);
         this.selectionModel = checkNotNull(selectionModel);
         this.view = checkNotNull(view);
+        this.typePerspectiveMapper = checkNotNull(typePerspectiveMapper);
+        this.placeController = checkNotNull(placeController);
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -211,7 +227,24 @@ public class VizPresenter {
         if (currentGraph == null) {
             return;
         }
-        selectionModel.setSelection(node.getEntity());
+        navigateToEntity(node);
+    }
+
+    private void navigateToEntity(NodeDetails node) {
+        Optional<Item<?>> item = EntityItemMapper.getItem(node.getEntity());
+        item.ifPresent(i -> {
+            PerspectiveId perspectiveId = typePerspectiveMapper
+                    .getPerspectiveId(node.getEntity().getEntityType());
+            Place place = placeController.getWhere();
+            if(place instanceof ProjectViewPlace) {
+                ProjectViewPlace nextPlace = ((ProjectViewPlace) place).builder()
+                        .withPerspectiveId(perspectiveId)
+                        .clearSelection()
+                        .withSelectedItem(i)
+                        .build();
+                placeController.goTo(nextPlace);
+            }
+        });
     }
 
     private void handleLoad() {
@@ -371,7 +404,7 @@ public class VizPresenter {
         @Override
         public void execute() {
             view.getMostRecentTargetNode()
-                    .ifPresent(n -> selectionModel.setSelection(n.getEntity()));
+                    .ifPresent(VizPresenter.this::navigateToEntity);
         }
     }
 }
