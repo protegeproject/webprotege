@@ -278,11 +278,6 @@
         <profile>
             <id>webprotege.stanford.edu</id>
             <properties>
-                <data.directory>/srv/protege/webprotege-data/</data.directory>
-                <mail.smtp.from.wp.personalName>WebProtege</mail.smtp.from.wp.personalName>
-                <mail.smtp.host>smtp-unencrypted.stanford.edu</mail.smtp.host>
-                <mail.smtp.auth>false</mail.smtp.auth>
-                <mail.smtp.port>25</mail.smtp.port>
                 <!-- Insert the code for google analytics.  This code is not inserted by default. -->
                 <application.analytics>
                     <![CDATA[
