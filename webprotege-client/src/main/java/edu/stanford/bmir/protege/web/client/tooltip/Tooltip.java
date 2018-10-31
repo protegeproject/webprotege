@@ -4,7 +4,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import elemental.client.Browser;
 import elemental.dom.Element;
 import elemental.html.HtmlElement;
-import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
@@ -25,28 +24,29 @@ public class Tooltip {
     }
 
     @JsOverlay
-    public static Tooltip create(Element element,
-                                 String title) {
-        TooltipOptions options = new TooltipOptions();
-        options.setTitle(title);
-        options.setPlacement("top");
-        options.setContainer(Browser.getDocument().getBody());
-        return new Tooltip(element, options);
+    public static Tooltip createOnBottom(IsWidget widget,
+                                         String title) {
+        return getTooltip(widget, title, "bottom");
     }
 
     @JsOverlay
-    public static Tooltip createOnBottom(IsWidget widget,
-                                 String title) {
+    public static Tooltip createOnBottomStart(IsWidget widget,
+                                              String title) {
+        return getTooltip(widget, title, "bottom-start");
+    }
+
+    @JsOverlay
+    private static Tooltip getTooltip(IsWidget widget, String title, String placement) {
         TooltipOptions options = new TooltipOptions();
         options.setTitle(title);
-        options.setPlacement("bottom");
+        options.setPlacement(placement);
         options.setContainer(Browser.getDocument().getBody());
         return new Tooltip((Element) widget.asWidget().getElement(), options);
     }
 
     @JsOverlay
     public static Tooltip createOnRight(Element element,
-                                 String title) {
+                                        String title) {
         TooltipOptions options = new TooltipOptions();
         options.setTitle(title);
         options.setPlacement("right");
@@ -54,19 +54,28 @@ public class Tooltip {
         return new Tooltip(element, options);
     }
 
-
     @JsOverlay
     public static Tooltip create(IsWidget widget,
-                          TooltipOptions options) {
+                                 TooltipOptions options) {
         return new Tooltip((Element) widget.asWidget().getElement(),
                            options);
     }
 
     @JsOverlay
     public static Tooltip create(IsWidget widget,
-                          String title) {
+                                 String title) {
         return create((Element) widget.asWidget().getElement(),
-               title);
+                      title);
+    }
+
+    @JsOverlay
+    public static Tooltip create(Element element,
+                                 String title) {
+        TooltipOptions options = new TooltipOptions();
+        options.setTitle(title);
+        options.setPlacement("top");
+        options.setContainer(Browser.getDocument().getBody());
+        return new Tooltip(element, options);
     }
 
     public native void show();
