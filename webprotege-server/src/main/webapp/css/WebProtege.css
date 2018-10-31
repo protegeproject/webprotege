@@ -23,7 +23,8 @@
 
     --accent--color:                        #116cd6;
 
-    --tooltip--background-color:            #d0d0d0;
+    --tooltip--color:                       #ffffff;
+    --tooltip--background-color:            #808080;
 
     --header-footer--box-shadow:            0 0 10px 0 #e0e0e0;
 
@@ -994,18 +995,20 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 
 .tooltip {
     position: absolute;
+    color: var(--tooltip--color);
     background: var(--tooltip--background-color);
     border-radius: 3px;
     padding: 5px;
-    text-align: left;
+    text-align: center;
     max-width: 500px;
+    min-width: 20px;
 }
 .tooltip .tooltip-arrow {
     width: 0;
     height: 0;
     border-style: solid;
     position: absolute;
-    margin: 8px;
+    margin: 7px;
 }
 
 .tooltip .tooltip-arrow {
@@ -1015,54 +1018,74 @@ div.CodeMirror-linenumber.CodeMirror-gutter-elt {
 .tooltip[x-placement^="top"] {
     margin-bottom: 8px;
 }
+
+/* Down Arrow */
 .tooltip[x-placement^="top"] .tooltip-arrow {
-    border-width: 8px 8px 0 8px;
-    border-left-color: transparent;
-    border-right-color: transparent;
+    border-top-width:    8px;
+    border-right-width:  8px;
+    border-left-width:   8px;
+    border-bottom-width: 0;
+    border-left-color:   transparent;
+    border-right-color:  transparent;
     border-bottom-color: transparent;
-    bottom: -8px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
+    bottom:              -8px;
+    left:                calc(50% - 8px);
+    margin-top:          0;
+    margin-bottom:       0;
 }
 
 .tooltip[x-placement^="bottom"] {
     margin-top: 8px;
 }
+
+/* Up Arrow */
 .tooltip[x-placement^="bottom"] .tooltip-arrow {
-    border-width: 0 8px 8px 8px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-top-color: transparent;
-    top: -8px;
-    left: calc(50% - 8px);
-    margin-top: 0;
-    margin-bottom: 0;
+    border-top-width:    0;
+    border-right-width:  8px;
+    border-left-width:   8px;
+    border-bottom-width: 8px;
+    border-left-color:   transparent;
+    border-right-color:  transparent;
+    border-top-color:    transparent;
+    top:                 -8px;
+    left:                calc(50% - 8px);
+    margin-top:          0;
+    margin-bottom:       0;
 }
 .tooltip[x-placement^="right"] {
     margin-left: 8px;
 }
+
+/* Left Arrow */
 .tooltip[x-placement^="right"] .tooltip-arrow {
-    border-width: 8px 8px 8px 0;
-    border-left-color: transparent;
-    border-top-color: transparent;
+    border-top-width:    8px;
+    border-right-width:  8px;
+    border-left-width:   0;
+    border-bottom-width: 8px;
+    border-left-color:   transparent;
+    border-top-color:    transparent;
     border-bottom-color: transparent;
-    left: -8px;
-    top: calc(50% - 8px);
-    margin-left: 0;
-    margin-right: 0;
+    left:                -8px;
+    top:                 calc(50% - 8px);
+    margin-left:         0;
+    margin-right:        0;
 }
 .tooltip[x-placement^="left"] {
     margin-right: 8px;
 }
+
+/* Right Arrow */
 .tooltip[x-placement^="left"] .tooltip-arrow {
-    border-width: 8px 0 8px 8px;
-    border-top-color: transparent;
-    border-right-color: transparent;
+    border-top-width:    8px;
+    border-right-width:  0;
+    border-left-width:   8px;
+    border-bottom-width: 8px;
+    border-top-color:    transparent;
+    border-right-color:  transparent;
     border-bottom-color: transparent;
-    right: -8px;
-    top: calc(50% - 8px);
-    margin-left: 0;
-    margin-right: 0;
+    right:               -8px;
+    top:                 calc(50% - 8px);
+    margin-left:         0;
+    margin-right:        0;
 }
 

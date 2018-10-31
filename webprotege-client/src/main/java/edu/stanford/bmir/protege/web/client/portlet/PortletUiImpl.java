@@ -179,11 +179,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
     public void addAction(final UIAction action) {
         SimplePanel simplePanel = new SimplePanel();
         simplePanel.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btnGlyphContainer());
-        TooltipOptions options = new TooltipOptions();
-        options.setTitle(action.getLabel());
-        options.setContainer(Browser.getDocument().getBody());
-        Tooltip tooltip = new Tooltip((Element) simplePanel.getElement(),
-                                      options);
+        Tooltip tooltip = Tooltip.createOnBottom(simplePanel, action.getLabel());
         tooltips.add(tooltip);
         final Button button = new Button();
         if(action.hasIcon()) {

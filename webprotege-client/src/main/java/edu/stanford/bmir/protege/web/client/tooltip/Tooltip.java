@@ -29,8 +29,19 @@ public class Tooltip {
                                  String title) {
         TooltipOptions options = new TooltipOptions();
         options.setTitle(title);
+        options.setPlacement("top");
         options.setContainer(Browser.getDocument().getBody());
         return new Tooltip(element, options);
+    }
+
+    @JsOverlay
+    public static Tooltip createOnBottom(IsWidget widget,
+                                 String title) {
+        TooltipOptions options = new TooltipOptions();
+        options.setTitle(title);
+        options.setPlacement("bottom");
+        options.setContainer(Browser.getDocument().getBody());
+        return new Tooltip((Element) widget.asWidget().getElement(), options);
     }
 
     @JsOverlay

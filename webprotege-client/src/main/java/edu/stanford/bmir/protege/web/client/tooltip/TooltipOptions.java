@@ -46,4 +46,7 @@ public class TooltipOptions {
 
     @JsProperty
     public native void setPlacement(String right);
+
+    @JsProperty
+    public native void setTrigger(String click);
 }
