@@ -56,6 +56,7 @@ public class AvailableProjectsListViewImpl extends Composite implements Availabl
 
     @Override
     public void setListData(List<AvailableProject> availableProjects) {
+        entries.forEach(AvailableProjectPresenter::stop);
         itemContainer.clear();
         entries.clear();
         for(final AvailableProject project : availableProjects) {

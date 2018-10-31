@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.projectlist;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -11,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
-public interface AvailableProjectView extends IsWidget {
+public interface AvailableProjectView extends IsWidget, HasDispose {
 
     void setProject(ProjectId project, String projectName);
 

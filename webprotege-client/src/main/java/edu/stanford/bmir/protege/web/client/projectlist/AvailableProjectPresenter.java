@@ -86,6 +86,10 @@ public class AvailableProjectPresenter {
         addActions();
     }
 
+    public void stop() {
+        view.dispose();
+    }
+
     public ProjectId getProjectId() {
         return project.getProjectId();
     }

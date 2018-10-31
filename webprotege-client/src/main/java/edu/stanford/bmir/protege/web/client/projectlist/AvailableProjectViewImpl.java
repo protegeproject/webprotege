@@ -13,12 +13,15 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
+import edu.stanford.bmir.protege.web.client.tooltip.TooltipOptions;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 19/02/16
  */
 public class AvailableProjectViewImpl extends Composite implements AvailableProjectView {
+
+    @Nullable
+    private Tooltip tooltip;
 
     interface AvailableProjectViewImplUiBinder extends UiBinder<HTMLPanel, AvailableProjectViewImpl> {
 
@@ -101,6 +107,15 @@ public class AvailableProjectViewImpl extends Composite implements AvailableProj
 
     @Override
     public void setDescription(String description) {
+        if(checkNotNull(description).trim().isEmpty()) {
+            return;
+        }
+        TooltipOptions options = new TooltipOptions();
+        options.setHtml(true);
+        description = description.replace("\n", "<br>");
+        options.setTitle(description);
+        options.setPlacement("bottom-start");
+        tooltip = Tooltip.create(displayNameField, options);
     }
 
     @Override
@@ -127,6 +142,13 @@ public class AvailableProjectViewImpl extends Composite implements AvailableProj
         else {
             displayNameField.removeStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
             ownerField.removeStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
+        }
+    }
+
+    @Override
+    public void dispose() {
+        if(tooltip != null) {
+            tooltip.dispose();
         }
     }
 }
