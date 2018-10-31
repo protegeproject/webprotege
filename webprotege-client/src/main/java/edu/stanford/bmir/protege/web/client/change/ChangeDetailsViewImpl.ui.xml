@@ -8,7 +8,7 @@
     <ui:style>
         .main {
             padding: 2px;
-            margin-left: 10px;
+            margin-left: 14px;
             padding-left: 20px;
             padding-bottom: 10px;
             border-left: 1px solid literal("var(--separator--color)");
@@ -19,6 +19,9 @@
             color: literal("var(--secondary--color)");
             padding-bottom: 2px;
             padding-left: 24px;
+        }
+        .header {
+            padding-bottom: 0.2em;
         }
 
 
@@ -45,8 +48,7 @@
         }
 
         .highLevelDescription {
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 13px;
             color: literal("var(--secondary--color)");
         }
 
@@ -112,7 +114,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.container}">
-            <div>
+            <div class="{style.header}">
                 <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
                 <g:HTMLPanel addStyleNames="{style.rightContainer}">
                     <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
