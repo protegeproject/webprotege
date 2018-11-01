@@ -143,7 +143,7 @@ public class EntityGraphBuilder {
         if (superClass instanceof OWLObjectSomeValuesFrom) {
             OWLObjectSomeValuesFrom svf = (OWLObjectSomeValuesFrom) superClass;
             OWLClassExpression filler = svf.getFiller();
-            if (!filler.isAnonymous()) {
+            if (!filler.isAnonymous() && !svf.getProperty().isAnonymous()) {
                 OWLClass fillerCls = filler.asOWLClass();
                 OWLClassData fillerClsData = renderingManager.getRendering(fillerCls);
                 OWLObjectProperty prop = svf.getProperty().asOWLObjectProperty();
@@ -156,7 +156,7 @@ public class EntityGraphBuilder {
         else if (superClass instanceof OWLObjectHasValue) {
             OWLObjectHasValue hv = (OWLObjectHasValue) superClass;
             OWLIndividual filler = hv.getFiller();
-            if (filler.isNamed()) {
+            if (filler.isNamed() && !hv.getProperty().isAnonymous()) {
                 OWLNamedIndividual ind = filler.asOWLNamedIndividual();
                 OWLNamedIndividualData indData = renderingManager.getRendering(ind);
                 OWLObjectProperty prop = hv.getProperty().asOWLObjectProperty();
