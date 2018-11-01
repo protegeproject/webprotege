@@ -175,7 +175,7 @@
                     <!-- Unless you use annotation processors, then upgrade to 3.5.1 at a minimum -->
                     <version>3.8.0</version>
                     <configuration>
-                        <release>8</release>
+                        <release>11</release>
                     </configuration>
                 </plugin>
                 <plugin>
