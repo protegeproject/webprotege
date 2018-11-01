@@ -23,6 +23,7 @@
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
         <auto-factory.version>1.0-beta6</auto-factory.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <scm>
@@ -101,18 +102,10 @@
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
-                <artifactId>junit-dep</artifactId>
-                <version>4.10</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.10</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
