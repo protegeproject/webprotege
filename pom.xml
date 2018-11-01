@@ -146,6 +146,10 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.4.1</version>
+                </plugin>
+                <plugin>
                     <groupId>edu.stanford.protege</groupId>
                     <artifactId>webprotege-maven-plugin</artifactId>
                     <version>1.1.0</version>
@@ -226,6 +230,16 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rules>
+                        <requireMavenVersion>
+                            <version>3.0</version>
+                        </requireMavenVersion>
+                    </rules>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
