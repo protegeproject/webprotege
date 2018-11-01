@@ -29,7 +29,7 @@ public class Selection {
     public native Function on(@Nonnull String typeName, Function listener);
 
     @JsMethod
-    public native void filter(@Nonnull Predicate<Boolean> filter);
+    public native void filter(@SuppressWarnings("unusable-by-js") @Nonnull Predicate<Boolean> filter);
 
     @JsMethod
     public native Selection select(@Nonnull String selector);
@@ -62,5 +62,6 @@ public class Selection {
     public native void remove();
 
     @JsMethod
+    @SuppressWarnings("unusable-by-js")
     public native Node node();
 }

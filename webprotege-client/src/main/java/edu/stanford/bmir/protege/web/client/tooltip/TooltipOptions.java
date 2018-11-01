@@ -17,10 +17,11 @@ import javax.annotation.Nullable;
 public class TooltipOptions {
 
     @JsProperty
-    public native void setContainer(@Nullable Element container);
+    public native void setContainer(@SuppressWarnings("unusable-by-js") @Nullable Element container);
 
     @Nullable
     @JsProperty
+    @SuppressWarnings("unusable-by-js")
     public native Element getContainer();
 
 

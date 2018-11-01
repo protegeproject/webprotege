@@ -88,5 +88,5 @@ public class Tooltip {
 
     public native void updateTitleContent(@Nonnull String titleContent);
 
-    public native void updateTitleContent(@Nonnull HtmlElement titleContent);
+    public native void updateTitleContent(@SuppressWarnings("unusable-by-js") @Nonnull HtmlElement titleContent);
 }
