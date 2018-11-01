@@ -29,6 +29,10 @@
         <url>https://github.com/webprotege/webprotege.git</url>
     </scm>
 
+    <prerequisites>
+        <maven>3.5.0</maven>
+    </prerequisites>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
