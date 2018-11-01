@@ -168,7 +168,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <!-- Do not upgrade past 3.1 to avoid triggering https://issues.apache.org/jira/browse/MSOURCES-95 -->
                     <!-- Unless you use annotation processors, then upgrade to 3.5.1 at a minimum -->
-                    <version>3.5.1</version>
+                    <version>3.8.0</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
