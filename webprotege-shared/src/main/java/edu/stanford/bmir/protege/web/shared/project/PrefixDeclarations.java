@@ -24,11 +24,13 @@ public class PrefixDeclarations {
     public static final String PROJECT_ID = "_id";
 
     @Id
-    @Nonnull
-    private final ProjectId projectId;
+    private ProjectId projectId;
 
-    @Nonnull
-    private final Map<String, String> prefixes;
+    private Map<String, String> prefixes;
+
+    // For Morphia
+    private PrefixDeclarations() {
+    }
 
     private PrefixDeclarations(@Nonnull ProjectId projectId,
                                @Nonnull Map<String, String> prefixes) {

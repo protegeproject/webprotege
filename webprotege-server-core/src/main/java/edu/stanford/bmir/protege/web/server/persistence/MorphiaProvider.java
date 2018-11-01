@@ -83,7 +83,6 @@ public class MorphiaProvider implements Provider<Morphia> {
 
         Mapper mapper = morphia.getMapper();
         mapper.getOptions().setStoreEmpties(true);
-        mapper.getOptions().setObjectFactory(new CustomMorphiaObjectFactory());
 
         Converters converters = mapper.getConverters();
         converters.addConverter(userIdConverter);

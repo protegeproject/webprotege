@@ -33,6 +33,10 @@ public class ProjectWebhook implements Webhook, HasProjectId {
 
     private List<ProjectWebhookEventType> subscribedToEvents = new ArrayList<>();
 
+    // For Morphia
+    private ProjectWebhook() {
+    }
+
     public ProjectWebhook(ProjectId projectId,
                           String payloadUrl,
                           List<ProjectWebhookEventType> subscribedToEvents) {

@@ -19,18 +19,18 @@ public class ApiKeyRecord {
 
     public static final String API_KEY_ID = "apiKeyId";
 
-    @Nonnull
-    private final ApiKeyId apiKeyId;
+    private ApiKeyId apiKeyId;
 
-    @Nonnull
-    private final HashedApiKey apiKey;
+    private HashedApiKey apiKey;
 
     // Note that this is a Date object because it serializes in a human readable way in MongoDB
-    @Nonnull
-    private final Date createdAt;
+    private Date createdAt;
 
-    @Nonnull
-    private final String purpose;
+    private String purpose;
+
+
+    private ApiKeyRecord() {
+    }
 
     /**
      * Creates an API Key Record.  The record holds a hashed API Key, the time that it was

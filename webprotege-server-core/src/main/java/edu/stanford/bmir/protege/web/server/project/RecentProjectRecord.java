@@ -24,17 +24,19 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
 
     public static final String TIMESTAMP = "timestamp";
 
-    @Nonnull
     @Property(value = PROJECT_ID)
-    private final ProjectId projectId;
+    private ProjectId projectId;
 
     @Property(value = TIMESTAMP)
-    private final Date timestamp;
+    private Date timestamp;
 
     private static Comparator<RecentProjectRecord> comparator = Comparator.comparing(RecentProjectRecord::getTimestamp)
                                                                .reversed()
                                                                .thenComparing(r -> r.getProjectId().getId());
 
+    // For Morphia
+    private RecentProjectRecord() {
+    }
 
     /**
      * Constructs a {@link RecentProjectRecord} with the specified id and timestamp.

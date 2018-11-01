@@ -37,18 +37,20 @@ public class UserActivityRecord {
     public static final long UNKNOWN = 0;
 
     @Id
-    @Nonnull
     @Property(USER_ID)
-    private final UserId userId;
+    private UserId userId;
 
     @Property(LAST_LOGIN)
-    private final Date lastLogin;
+    private Date lastLogin;
 
     @Property(LAST_LOGOUT)
-    private final Date lastLogout;
+    private Date lastLogout;
 
-    @Nonnull
-    private final List<RecentProjectRecord> recentProjects;
+    private List<RecentProjectRecord> recentProjects;
+
+    // For Morphia
+    private UserActivityRecord() {
+    }
 
     /**
      * Creates a {@link UserActivityRecord}

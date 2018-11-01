@@ -38,21 +38,20 @@ public class WatchRecord {
 
     public static final String TYPE = "type";
 
-    @Nonnull
     @Property(PROJECT_ID)
-    private final ProjectId projectId;
+    private ProjectId projectId;
 
-    @Nonnull
     @Property(USER_ID)
-    private final UserId userId;
+    private UserId userId;
 
-    @Nonnull
     @Property(ENTITY)
-    private final OWLEntity entity;
+    private OWLEntity entity;
 
-    @Nonnull
     @Property(TYPE)
-    private final WatchType type;
+    private WatchType type;
+
+    private WatchRecord() {
+    }
 
     public WatchRecord(@Nonnull ProjectId projectId,
                        @Nonnull UserId userId,

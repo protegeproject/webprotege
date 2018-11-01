@@ -34,14 +34,15 @@ public class EntityTags {
 
     public static final String TAGS = "tags";
 
-    @Nonnull
-    private final ProjectId projectId;
+    private ProjectId projectId;
 
-    @Nonnull
-    private final OWLEntity entity;
+    private OWLEntity entity;
 
-    @Nonnull
-    private final List<TagId> tags;
+    private List<TagId> tags;
+
+    // For Morphia
+    private EntityTags() {
+    }
 
     public EntityTags(@Nonnull ProjectId projectId,
                       @Nonnull OWLEntity entity,

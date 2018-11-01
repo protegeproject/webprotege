@@ -34,11 +34,13 @@ public class UserApiKeys {
     public static final String API_KEYS__API_KEY = API_KEYS + ".apiKey";
 
     @Id
-    @Nonnull
-    private final UserId userId;
+    private UserId userId;
 
-    @Nonnull
-    private final List<ApiKeyRecord> apiKeys;
+    private List<ApiKeyRecord> apiKeys;
+
+    // For Morphia
+    private UserApiKeys() {
+    }
 
     public UserApiKeys(@Nonnull UserId userId, @Nonnull List<ApiKeyRecord> apiKeys) {
         this.userId = checkNotNull(userId);
