@@ -20,6 +20,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger-compiler</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
@@ -106,7 +118,7 @@
         <dependency>
             <groupId>com.google.auto.factory</groupId>
             <artifactId>auto-factory</artifactId>
-            <version>1.0-beta3</version>
+            <version>1.0-beta5</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -148,6 +160,17 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <!--<plugin>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<annotationProcessors>-->
+                        <!--<annotationProcessor>com.google.auto.factory.processor.AutoFactoryProcessor</annotationProcessor>-->
+                        <!--<annotationProcessor>dagger.internal.codegen.DaggerComponentProcessor_ProcessorComponent</annotationProcessor>-->
+                    <!--</annotationProcessors>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
