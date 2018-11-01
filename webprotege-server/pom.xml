@@ -138,7 +138,7 @@
                                 <filtering>true</filtering>
                                 <directory>src/main/webapp</directory>
                                 <includes>
-                                    <include>**/*.jsp</include>
+                                    <include>**/*.*</include>
                                 </includes>
                             </resource>
                         </webResources>
@@ -189,6 +189,15 @@
 ]]>
                 </application.analytics>
             </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>webprotege-client</artifactId>
+                    <version>${project.version}</version>
+                    <type>war</type>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <!-- XXX: We want to exclude webprotege-client from 'env-dev' profile, Maven forces us to make a 'env-prod' profile -->
