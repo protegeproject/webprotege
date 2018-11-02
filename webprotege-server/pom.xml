@@ -22,7 +22,6 @@
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -160,17 +159,6 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <!--<plugin>-->
-                <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<annotationProcessors>-->
-                        <!--<annotationProcessor>com.google.auto.factory.processor.AutoFactoryProcessor</annotationProcessor>-->
-                        <!--<annotationProcessor>dagger.internal.codegen.DaggerComponentProcessor_ProcessorComponent</annotationProcessor>-->
-                    <!--</annotationProcessors>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>

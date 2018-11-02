@@ -26,19 +26,20 @@ public class ApplicationPreferences {
 
     @Id
     @SuppressWarnings("unused")
-    private final String id = ID;
+    private String id = ID;
 
-    @Nonnull
-    private final String applicationName;
+    private String applicationName;
 
-    @Nonnull
     @AlsoLoad("adminEmailAddress")
-    private final String systemNotificationEmailAddress;
+    private String systemNotificationEmailAddress;
 
-    @Nonnull
-    private final ApplicationLocation applicationLocation;
+    private ApplicationLocation applicationLocation;
 
-    private final long maxUploadSize;
+    private long maxUploadSize;
+
+    // For Morphia
+    private ApplicationPreferences() {
+    }
 
     public ApplicationPreferences(@Nonnull String applicationName,
                                   @Nonnull String systemNotificationEmailAddress,

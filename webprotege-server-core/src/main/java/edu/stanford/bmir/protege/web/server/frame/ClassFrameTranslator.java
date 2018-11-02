@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -20,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
@@ -33,13 +32,14 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, OWLClassData> {
 
-    private boolean includeAncestorFrames = false;
-
     @Nonnull
     private final ContextRenderer ren;
 
     @Nonnull
     private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
 
     @Nonnull
     private final HasGetAncestors<OWLClass> ancestorsProvider;
@@ -53,19 +53,23 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
+    private boolean includeAncestorFrames = false;
+
     @Inject
     public ClassFrameTranslator(@Nonnull ContextRenderer renderer,
                                 @Nonnull @RootOntology OWLOntology rootOntology,
+                                @Nonnull OWLDataFactory dataFactory,
                                 @Nonnull HasGetAncestors<OWLClass> ancestorsProvider,
                                 @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                 @Nonnull PropertyValueComparator propertyValueComparator,
                                 @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
-        this.ren = renderer;
-        this.rootOntology = rootOntology;
-        this.ancestorsProvider = ancestorsProvider;
-        this.propertyValueMinimiser = propertyValueMinimiser;
-        this.propertyValueComparator = propertyValueComparator;
-        this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
+        this.ren = checkNotNull(renderer);
+        this.rootOntology = checkNotNull(rootOntology);
+        this.dataFactory = checkNotNull(dataFactory);
+        this.ancestorsProvider = checkNotNull(ancestorsProvider);
+        this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
+        this.propertyValueComparator = checkNotNull(propertyValueComparator);
+        this.axiomPropertyValueTranslatorProvider = checkNotNull(axiomPropertyValueTranslatorProvider);
     }
 
     /**
@@ -90,13 +94,24 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         return translateToAxioms(frame.getSubject(), frame, mode);
     }
 
+    private Set<OWLAxiom> translateToAxioms(OWLClassData subject, ClassFrame classFrame, Mode mode) {
+        var result = new HashSet<OWLAxiom>();
+        for (OWLClassData cls : classFrame.getClassEntries()) {
+            result.add(dataFactory.getOWLSubClassOfAxiom(subject.getEntity(), cls.getEntity()));
+        }
+        for (PropertyValue propertyValue : classFrame.getPropertyValues()) {
+            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
+            result.addAll(translator.getAxioms(subject.getEntity(), propertyValue, mode));
+        }
+        return result;
+    }
+
     private ClassFrame translateToClassFrame(OWLClassData subject) {
-        OWLClassData subjectData = ren.getRendering(subject.getEntity());
-        List<PropertyValue> propertyValues = Lists.newArrayList();
-        final Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity(), true);
-        propertyValues.addAll(translateAxiomsToPropertyValues(subject.getEntity(),
-                                                              relevantAxioms,
-                                                              State.ASSERTED));
+        var subjectData = ren.getRendering(subject.getEntity());
+        var relevantAxioms = getRelevantAxioms(subject.getEntity(), true);
+        var propertyValues = new ArrayList<>(translateAxiomsToPropertyValues(subject.getEntity(),
+                                                                             relevantAxioms,
+                                                                             State.ASSERTED));
         if (includeAncestorFrames) {
             for (OWLClass ancestor : ancestorsProvider.getAncestors(subject.getEntity())) {
                 if (!ancestor.equals(subject.getEntity())) {
@@ -106,33 +121,22 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                 }
             }
         }
-        propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
-        propertyValues.sort(propertyValueComparator);
         ImmutableSet<OWLClassData> entries = rootOntology.getSubClassAxiomsForSubClass(subject.getEntity()).stream()
-                                                          .filter(ax -> !ax.getSuperClass().isAnonymous())
-                                                          .map(ax -> ax.getSuperClass().asOWLClass())
-                                                          .distinct()
-                                                          .map(ren::getRendering)
-                                                          .collect(toImmutableSet());
+                .filter(ax -> !ax.getSuperClass().isAnonymous())
+                .map(ax -> ax.getSuperClass().asOWLClass())
+                .distinct()
+                .map(ren::getRendering)
+                .collect(toImmutableSet());
+        var propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues);
+        propertyValuesMin.sort(propertyValueComparator);
         return ClassFrame.get(subjectData,
                               entries,
-                              ImmutableSet.copyOf(propertyValues));
-    }
-
-    private List<PropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
-                                                                Set<OWLAxiom> relevantAxioms,
-                                                                State initialState) {
-        List<PropertyValue> propertyValues = new ArrayList<>();
-        for (OWLAxiom axiom : relevantAxioms) {
-            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
-            propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology, initialState));
-        }
-        return propertyValues;
+                              ImmutableSet.copyOf(propertyValuesMin));
     }
 
     private Set<OWLAxiom> getRelevantAxioms(OWLClass subject,
                                             boolean includeAnnotations) {
-        final Set<OWLAxiom> relevantAxioms = new HashSet<>();
+        var relevantAxioms = new HashSet<OWLAxiom>();
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             relevantAxioms.addAll(ont.getSubClassAxiomsForSubClass(subject));
             relevantAxioms.addAll(rootOntology.getEquivalentClassesAxioms(subject));
@@ -143,15 +147,14 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         return relevantAxioms;
     }
 
-    private Set<OWLAxiom> translateToAxioms(OWLClassData subject, ClassFrame classFrame, Mode mode) {
-        Set<OWLAxiom> result = new HashSet<>();
-        for (OWLClassData cls : classFrame.getClassEntries()) {
-            result.add(DataFactory.get().getOWLSubClassOfAxiom(subject.getEntity(), cls.getEntity()));
-        }
-        for (PropertyValue propertyValue : classFrame.getPropertyValues()) {
+    private List<PropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
+                                                                Set<OWLAxiom> relevantAxioms,
+                                                                State initialState) {
+        var propertyValues = new ArrayList<PropertyValue>();
+        for (OWLAxiom axiom : relevantAxioms) {
             AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
-            result.addAll(translator.getAxioms(subject.getEntity(), propertyValue, mode));
+            propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology, initialState));
         }
-        return result;
+        return propertyValues;
     }
 }
