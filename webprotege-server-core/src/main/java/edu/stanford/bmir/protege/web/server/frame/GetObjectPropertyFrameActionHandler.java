@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +54,7 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
     @Nonnull
     public GetObjectPropertyFrameResult execute(@Nonnull GetObjectPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         ObjectPropertyFrameTranslator translator = translatorProvider.get();
-        OWLObjectPropertyData objectPropertyData = rm.getRendering(action.getSubject());
+        OWLObjectPropertyData objectPropertyData = rm.getObjectPropertyData(action.getSubject());
         ObjectPropertyFrame f = translator.getFrame(objectPropertyData);
         logger.info(BROWSING,
                      "{} {} retrieved ObjectProperty frame for {} ({})",

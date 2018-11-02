@@ -27,32 +27,32 @@ public class ContextRenderer {
 
     @Nonnull
     public OWLClassData getClassData(@Nonnull OWLClass cls) {
-        return renderingManager.getRendering(cls);
+        return renderingManager.getClassData(cls);
     }
 
     @Nonnull
     public OWLObjectPropertyData getObjectPropertyData(@Nonnull OWLObjectProperty property) {
-        return renderingManager.getRendering(property);
+        return renderingManager.getObjectPropertyData(property);
     }
 
     @Nonnull
     public OWLDataPropertyData getDataPropertyData(@Nonnull OWLDataProperty property) {
-        return renderingManager.getRendering(property);
+        return renderingManager.getDataPropertyData(property);
     }
 
     @Nonnull
     public OWLAnnotationPropertyData getAnnotationPropertyData(@Nonnull OWLAnnotationProperty property) {
-        return renderingManager.getRendering(property);
+        return renderingManager.getAnnotationPropertyData(property);
     }
 
     @Nonnull
     public OWLNamedIndividualData getIndividualData(@Nonnull OWLNamedIndividual individual) {
-        return renderingManager.getRendering(individual);
+        return renderingManager.getIndividualData(individual);
     }
 
     @Nonnull
     public OWLDatatypeData getDatatypeData(@Nonnull OWLDatatype datatype) {
-        return renderingManager.getRendering(datatype);
+        return renderingManager.getDatatypeData(datatype);
     }
 
     @Nonnull

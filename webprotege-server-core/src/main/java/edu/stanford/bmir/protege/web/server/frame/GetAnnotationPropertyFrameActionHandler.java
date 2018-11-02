@@ -55,7 +55,7 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
     @Override
     public GetAnnotationPropertyFrameResult execute(@Nonnull GetAnnotationPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         AnnotationPropertyFrameTranslator translator = translatorProvider.get();
-        OWLAnnotationPropertyData annotationPropertyData = renderingManager.getRendering(action.getSubject());
+        OWLAnnotationPropertyData annotationPropertyData = renderingManager.getAnnotationPropertyData(action.getSubject());
         AnnotationPropertyFrame frame = translator.getFrame(annotationPropertyData);
         logger.info(BROWSING,
                      "{} {} retrieved AnnotationProperty frame for {} ({})",

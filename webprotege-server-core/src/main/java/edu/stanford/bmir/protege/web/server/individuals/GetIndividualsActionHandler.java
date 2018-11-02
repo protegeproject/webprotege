@@ -100,7 +100,7 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                                  action.getInstanceRetrievalMode(),
                                                  filterString,
                                                  pageRequest);
-        OWLClassData typeData = renderingManager.getRendering(type);
+        OWLClassData typeData = renderingManager.getClassData(type);
         logger.info(BROWSING,
                     "{} {} retrieved instances of {} ({})",
                     projectId,

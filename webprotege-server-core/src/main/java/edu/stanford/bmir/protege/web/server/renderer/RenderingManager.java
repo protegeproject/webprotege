@@ -100,27 +100,27 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
         }
     }
 
-    public OWLClassData getRendering(OWLClass cls) {
+    public OWLClassData getClassData(OWLClass cls) {
         return OWLClassData.get(cls, dictionaryManager.getShortForm(cls), dictionaryManager.getShortForms(cls));
     }
 
-    public OWLObjectPropertyData getRendering(OWLObjectProperty property) {
+    public OWLObjectPropertyData getObjectPropertyData(OWLObjectProperty property) {
         return OWLObjectPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
     }
 
-    public OWLDataPropertyData getRendering(OWLDataProperty property) {
+    public OWLDataPropertyData getDataPropertyData(OWLDataProperty property) {
         return OWLDataPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
     }
 
-    public OWLAnnotationPropertyData getRendering(OWLAnnotationProperty property) {
+    public OWLAnnotationPropertyData getAnnotationPropertyData(OWLAnnotationProperty property) {
         return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
     }
 
-    public OWLNamedIndividualData getRendering(OWLNamedIndividual individual) {
+    public OWLNamedIndividualData getIndividualData(OWLNamedIndividual individual) {
         return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForm(individual), dictionaryManager.getShortForms(individual));
     }
 
-    public OWLDatatypeData getRendering(OWLDatatype datatype) {
+    public OWLDatatypeData getDatatypeData(OWLDatatype datatype) {
         return OWLDatatypeData.get(datatype, dictionaryManager.getShortForm(datatype), dictionaryManager.getShortForms(datatype));
     }
 

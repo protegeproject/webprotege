@@ -70,8 +70,8 @@ public class TermRelationshipsManager {
             }
             if (relationships.size() == conjuncts.size()) {
                 for (OWLObjectSomeValuesFrom rel : relationships) {
-                    OWLObjectPropertyData property = renderingManager.getRendering(rel.getProperty().asOWLObjectProperty());
-                    OWLClassData filler = renderingManager.getRendering(rel.getFiller().asOWLClass());
+                    OWLObjectPropertyData property = renderingManager.getObjectPropertyData(rel.getProperty().asOWLObjectProperty());
+                    OWLClassData filler = renderingManager.getClassData(rel.getFiller().asOWLClass());
                     OBORelationship oboRel = new OBORelationship(property, filler);
                     rels.add(oboRel);
                 }

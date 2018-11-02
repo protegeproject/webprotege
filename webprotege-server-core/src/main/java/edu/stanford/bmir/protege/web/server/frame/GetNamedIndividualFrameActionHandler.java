@@ -64,7 +64,7 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
     @Override
     public GetNamedIndividualFrameResult execute(@Nonnull GetNamedIndividualFrameAction action,
                                                  @Nonnull ExecutionContext executionContext) {
-        OWLNamedIndividualData individualData = renderingManager.getRendering(action.getSubject());
+        OWLNamedIndividualData individualData = renderingManager.getIndividualData(action.getSubject());
         NamedIndividualFrame frame = translator.getFrame(individualData);
         logger.info(BROWSING,
                      "{} {} retrieved NamedIndividual frame for {} ({})",

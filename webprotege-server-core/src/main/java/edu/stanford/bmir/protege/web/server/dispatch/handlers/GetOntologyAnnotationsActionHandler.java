@@ -71,7 +71,7 @@ public class GetOntologyAnnotationsActionHandler extends AbstractProjectActionHa
         ImmutableList.Builder<PropertyAnnotationValue> annotationValues = ImmutableList.builder();
         result.stream()
                 .map(annotation -> PropertyAnnotationValue.get(
-                        renderingManager.getRendering(annotation.getProperty()),
+                        renderingManager.getAnnotationPropertyData(annotation.getProperty()),
                         renderingManager.getRendering(annotation.getValue()),
                         State.ASSERTED
                 ))

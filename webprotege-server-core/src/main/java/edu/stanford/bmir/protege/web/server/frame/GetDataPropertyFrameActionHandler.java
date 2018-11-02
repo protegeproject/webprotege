@@ -55,7 +55,7 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     @Override
     public GetDataPropertyFrameResult execute(@Nonnull GetDataPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         DataPropertyFrameTranslator translator = translatorProvider.get();
-        OWLDataPropertyData dataPropertyData = renderingManager.getRendering(action.getSubject());
+        OWLDataPropertyData dataPropertyData = renderingManager.getDataPropertyData(action.getSubject());
         DataPropertyFrame frame = translator.getFrame(dataPropertyData);
         String displayName = renderingManager.getShortForm(action.getSubject());
         logger.info(BROWSING,

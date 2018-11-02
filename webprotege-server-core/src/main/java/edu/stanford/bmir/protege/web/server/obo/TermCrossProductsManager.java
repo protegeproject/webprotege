@@ -73,7 +73,7 @@ public class TermCrossProductsManager {
                 }
             }
         }
-        Optional<OWLClassData> visualCls = genus.map(renderingManager::getRendering);
+        Optional<OWLClassData> visualCls = genus.map(renderingManager::getClassData);
         Set<OBORelationship> discriminatingRelationships =
                 relationships.stream()
                              .map(relationshipConverter::toOboRelationship)

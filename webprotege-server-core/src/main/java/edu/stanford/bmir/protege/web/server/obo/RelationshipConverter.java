@@ -41,8 +41,8 @@ public class RelationshipConverter {
 
     @Nonnull
     public OBORelationship toOboRelationship(@Nonnull OWLObjectSomeValuesFrom someValuesFrom) {
-        OWLObjectPropertyData property = renderingManager.getRendering(someValuesFrom.getProperty().asOWLObjectProperty());
-        OWLClassData filler = renderingManager.getRendering(someValuesFrom.getFiller().asOWLClass());
+        OWLObjectPropertyData property = renderingManager.getObjectPropertyData(someValuesFrom.getProperty().asOWLObjectProperty());
+        OWLClassData filler = renderingManager.getClassData(someValuesFrom.getFiller().asOWLClass());
         return new OBORelationship(property, filler);
     }
 }
