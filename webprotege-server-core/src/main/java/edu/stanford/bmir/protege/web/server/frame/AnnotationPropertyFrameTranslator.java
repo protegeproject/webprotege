@@ -43,8 +43,8 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(subject.getEntity().getIRI())) {
                 if (!(ax.getValue() instanceof OWLAnonymousIndividual)) {
-                    propertyValues.add(PropertyAnnotationValue.get(ren.getRendering(ax.getProperty()),
-                                                                   ren.getRendering(ax.getValue()),
+                    propertyValues.add(PropertyAnnotationValue.get(ren.getAnnotationPropertyData(ax.getProperty()),
+                                                                   ren.getAnnotationValueData(ax.getValue()),
                                                                    State.ASSERTED));
                 }
             }
@@ -52,7 +52,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
                 rootOntology.getEntitiesInSignature(ax.getDomain(), Imports.INCLUDED)
                             .stream()
                             .distinct()
-                            .map(ren::getRendering)
+                            .map(ren::getEntityData)
                             .sorted()
                             .forEach(domains::add);
             }
@@ -60,12 +60,12 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
                 rootOntology.getEntitiesInSignature(ax.getRange(), Imports.INCLUDED)
                             .stream()
                             .distinct()
-                            .map(ren::getRendering)
+                            .map(ren::getEntityData)
                             .sorted()
                             .forEach(ranges::add);
             }
         }
-        return AnnotationPropertyFrame.get(ren.getRendering(subject.getEntity()),
+        return AnnotationPropertyFrame.get(ren.getAnnotationPropertyData(subject.getEntity()),
                                            propertyValues.build(),
                                            domains.build(),
                                            ranges.build());

@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -60,13 +59,13 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
             for (OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject.getEntity())) {
                 final OWLClassExpression domain = ax.getDomain();
                 if (!domain.isAnonymous()) {
-                    domains.add(ren.getRendering(domain.asOWLClass()));
+                    domains.add(ren.getClassData(domain.asOWLClass()));
                 }
             }
             for (OWLObjectPropertyRangeAxiom ax : ontology.getObjectPropertyRangeAxioms(subject.getEntity())) {
                 OWLClassExpression range = ax.getRange();
                 if (!range.isAnonymous()) {
-                    ranges.add(ren.getRendering(range.asOWLClass()));
+                    ranges.add(ren.getClassData(range.asOWLClass()));
                 }
             }
             if (ontology.getAxiomCount(AxiomType.FUNCTIONAL_OBJECT_PROPERTY) > 1) {

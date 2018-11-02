@@ -107,7 +107,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
     private ClassFrame translateToClassFrame(OWLClassData subject) {
-        var subjectData = ren.getRendering(subject.getEntity());
+        var subjectData = ren.getClassData(subject.getEntity());
         var relevantAxioms = getRelevantAxioms(subject.getEntity(), true);
         var propertyValues = new ArrayList<>(translateAxiomsToPropertyValues(subject.getEntity(),
                                                                              relevantAxioms,
@@ -125,7 +125,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                 .filter(ax -> !ax.getSuperClass().isAnonymous())
                 .map(ax -> ax.getSuperClass().asOWLClass())
                 .distinct()
-                .map(ren::getRendering)
+                .map(ren::getClassData)
                 .collect(toImmutableSet());
         var propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues);
         propertyValuesMin.sort(propertyValueComparator);

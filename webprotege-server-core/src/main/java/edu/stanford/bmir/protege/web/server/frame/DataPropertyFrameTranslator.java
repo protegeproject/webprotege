@@ -56,12 +56,12 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
             for(OWLDataPropertyDomainAxiom ax : ontology.getDataPropertyDomainAxioms(subject.getEntity())) {
                 if(!ax.getDomain().isAnonymous()) {
-                    domains.add(ren.getRendering(ax.getDomain().asOWLClass()));
+                    domains.add(ren.getClassData(ax.getDomain().asOWLClass()));
                 }
             }
             for(OWLDataPropertyRangeAxiom ax : ontology.getDataPropertyRangeAxioms(subject.getEntity())) {
                 if(ax.getRange().isDatatype()) {
-                    ranges.add(ren.getRendering(ax.getRange().asOWLDatatype()));
+                    ranges.add(ren.getDatatypeData(ax.getRange().asOWLDatatype()));
                 }
             }
             if(EntitySearcher.isFunctional(subject.getEntity(), ontology)) {

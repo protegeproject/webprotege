@@ -92,7 +92,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
                       .map(ax -> (OWLClassAssertionAxiom) ax)
                       .filter(ax -> !ax.getClassExpression().isAnonymous())
                       .map(ax -> ax.getClassExpression().asOWLClass())
-                      .map(rm::getRendering)
+                      .map(rm::getClassData)
                       .sorted()
                       .collect(toImmutableSet());
 
@@ -106,7 +106,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
                 if(!ax.getClassExpression().isAnonymous()) {
                     OWLClass type = (OWLClass) ax.getClassExpression();
                     ClassFrameTranslator classFrameTranslator = translatorProvider.get();
-                    ClassFrame classFrame = classFrameTranslator.getFrame(rm.getRendering(type));
+                    ClassFrame classFrame = classFrameTranslator.getFrame(rm.getClassData(type));
                     for(PropertyValue propertyValue : classFrame.getPropertyValues()) {
                         // Bit yucky
                         if (!propertyValue.isAnnotation()) {
@@ -126,7 +126,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
                     .filter(OWLIndividual::isNamed)
                     .filter(ind -> !ind.equals(subject.getEntity()))
                     .map(OWLIndividual::asOWLNamedIndividual)
-                    .map(rm::getRendering)
+                    .map(rm::getIndividualData)
                     .sorted()
                     .collect(toImmutableSet());
 

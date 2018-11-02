@@ -21,42 +21,42 @@ public class ContextRenderer {
     }
 
     @Nonnull
-    public OWLEntityData getRendering(@Nonnull OWLEntity entity) {
+    public OWLEntityData getEntityData(@Nonnull OWLEntity entity) {
         return renderingManager.getRendering(entity);
     }
 
     @Nonnull
-    public OWLClassData getRendering(@Nonnull OWLClass cls) {
+    public OWLClassData getClassData(@Nonnull OWLClass cls) {
         return renderingManager.getRendering(cls);
     }
 
     @Nonnull
-    public OWLObjectPropertyData getRendering(@Nonnull OWLObjectProperty property) {
+    public OWLObjectPropertyData getObjectPropertyData(@Nonnull OWLObjectProperty property) {
         return renderingManager.getRendering(property);
     }
 
     @Nonnull
-    public OWLDataPropertyData getRendering(@Nonnull OWLDataProperty property) {
+    public OWLDataPropertyData getDataPropertyData(@Nonnull OWLDataProperty property) {
         return renderingManager.getRendering(property);
     }
 
     @Nonnull
-    public OWLAnnotationPropertyData getRendering(@Nonnull OWLAnnotationProperty property) {
+    public OWLAnnotationPropertyData getAnnotationPropertyData(@Nonnull OWLAnnotationProperty property) {
         return renderingManager.getRendering(property);
     }
 
     @Nonnull
-    public OWLNamedIndividualData getRendering(@Nonnull OWLNamedIndividual individual) {
+    public OWLNamedIndividualData getIndividualData(@Nonnull OWLNamedIndividual individual) {
         return renderingManager.getRendering(individual);
     }
 
     @Nonnull
-    public OWLDatatypeData getRendering(@Nonnull OWLDatatype datatype) {
+    public OWLDatatypeData getDatatypeData(@Nonnull OWLDatatype datatype) {
         return renderingManager.getRendering(datatype);
     }
 
     @Nonnull
-    public OWLPrimitiveData getRendering(@Nonnull OWLAnnotationValue value) {
+    public OWLPrimitiveData getAnnotationValueData(@Nonnull OWLAnnotationValue value) {
         return renderingManager.getRendering(value);
     }
 }
