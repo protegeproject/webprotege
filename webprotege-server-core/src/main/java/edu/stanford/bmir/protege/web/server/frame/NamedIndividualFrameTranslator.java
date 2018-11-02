@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.server.frame;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
@@ -17,9 +15,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
@@ -48,19 +46,23 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     @Inject
     public NamedIndividualFrameTranslator(@Nonnull @RootOntology OWLOntology rootOntology,
                                           @Nonnull ContextRenderer rm,
                                           @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                           @Nonnull PropertyValueComparator propertyValueComparator,
                                           @Nonnull Provider<ClassFrameTranslator> translatorProvider,
-                                          @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
-        this.rootOntology = rootOntology;
-        this.rm = rm;
-        this.propertyValueMinimiser = propertyValueMinimiser;
-        this.propertyValueComparator = propertyValueComparator;
-        this.translatorProvider = translatorProvider;
-        this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
+                                          @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider, @Nonnull OWLDataFactory dataFactory) {
+        this.rootOntology = checkNotNull(rootOntology);
+        this.rm = checkNotNull(rm);
+        this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
+        this.propertyValueComparator = checkNotNull(propertyValueComparator);
+        this.translatorProvider = checkNotNull(translatorProvider);
+        this.axiomPropertyValueTranslatorProvider = checkNotNull(axiomPropertyValueTranslatorProvider);
+        this.dataFactory = checkNotNull(dataFactory);
     }
 
     /**
@@ -85,8 +87,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
     private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividualData subject) {
-        Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity());
-
+        var relevantAxioms = getRelevantAxioms(subject.getEntity());
         ImmutableSet<OWLClassData> types = relevantAxioms.stream()
                       .filter(ax -> ax instanceof OWLClassAssertionAxiom)
                       .map(ax -> (OWLClassAssertionAxiom) ax)
@@ -96,17 +97,17 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
                       .sorted()
                       .collect(toImmutableSet());
 
-        List<PropertyValue> propertyValues = new ArrayList<>();
+        final var propertyValues = new ArrayList<PropertyValue>();
         for(OWLAxiom axiom : relevantAxioms) {
-            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
+            var translator = axiomPropertyValueTranslatorProvider.get();
             propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), axiom, rootOntology, State.ASSERTED));
         }
         for(OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLClassAssertionAxiom ax : ont.getClassAssertionAxioms(subject.getEntity())) {
                 if(!ax.getClassExpression().isAnonymous()) {
-                    OWLClass type = (OWLClass) ax.getClassExpression();
-                    ClassFrameTranslator classFrameTranslator = translatorProvider.get();
-                    ClassFrame classFrame = classFrameTranslator.getFrame(rm.getClassData(type));
+                    var type = (OWLClass) ax.getClassExpression();
+                    var classFrameTranslator = translatorProvider.get();
+                    var classFrame = classFrameTranslator.getFrame(rm.getClassData(type));
                     for(PropertyValue propertyValue : classFrame.getPropertyValues()) {
                         // Bit yucky
                         if (!propertyValue.isAnnotation()) {
@@ -117,8 +118,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
             }
         }
 
-        propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
-        propertyValues.sort(propertyValueComparator);
+        var propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues);
+        propertyValuesMin.sort(propertyValueComparator);
 
         ImmutableSet<OWLNamedIndividualData> sameIndividuals = rootOntology.getImportsClosure().stream()
                     .flatMap(ont -> ont.getSameIndividualAxioms(subject.getEntity()).stream())
@@ -132,12 +133,12 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
 
         return NamedIndividualFrame.get(subject,
                                         types,
-                                        ImmutableSet.copyOf(propertyValues),
+                                        ImmutableSet.copyOf(propertyValuesMin),
                                         sameIndividuals);
     }
 
     private Set<OWLAxiom> getRelevantAxioms(OWLNamedIndividual subject) {
-        Set<OWLAxiom> relevantAxioms = new HashSet<>();
+        var relevantAxioms = new HashSet<OWLAxiom>();
         for (OWLOntology ontology : rootOntology.getImportsClosure()) {
             relevantAxioms.addAll(ontology.getClassAssertionAxioms(subject));
             relevantAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getIRI()));
@@ -148,16 +149,16 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
     private Set<OWLAxiom> translateToAxioms(OWLNamedIndividual subject, NamedIndividualFrame frame, Mode mode) {
-        Set<OWLAxiom> result = new HashSet<>();
+        var result = new HashSet<OWLAxiom>();
         for(OWLClassData cls : frame.getClasses()) {
-            result.add(DataFactory.get().getOWLClassAssertionAxiom(cls.getEntity(), subject));
+            result.add(dataFactory.getOWLClassAssertionAxiom(cls.getEntity(), subject));
         }
         for(PropertyValue propertyValue : frame.getPropertyValues()) {
-            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
+            var translator = axiomPropertyValueTranslatorProvider.get();
             result.addAll(translator.getAxioms(subject, propertyValue, mode));
         }
         for(OWLNamedIndividualData individual : frame.getSameIndividuals()) {
-            result.add(DataFactory.get().getOWLSameIndividualAxiom(subject, individual.getEntity()));
+            result.add(dataFactory.getOWLSameIndividualAxiom(subject, individual.getEntity()));
         }
         return result;
     }
