@@ -148,16 +148,22 @@ public class EntityGraphBuilder {
         }
     }
 
-    private void addEdgeForHasValue(Set<Edge> edges, Set<OWLEntity> processed, OWLEntityData subClsData, OWLObjectHasValue hasValue) {
+    private void addEdgeForHasValue(Set<Edge> edges, Set<OWLEntity> processed,
+                                    OWLEntityData subClsData,
+                                    OWLObjectHasValue hasValue) {
         var property = hasValue.getProperty();
-        var filler = hasValue.getFiller();
-        if (filler.isNamed() && isNamedProperty(property)) {
-            var ind = filler.asOWLNamedIndividual();
-            var indData = renderer.getIndividualData(ind);
-            var propData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
-            edges.add(RelationshipEdge.get(subClsData, indData, propData));
-            createGraph(ind, edges, processed);
+        if (isInverseProperty(property)) {
+            return;
         }
+        var filler = hasValue.getFiller();
+        if (isAnonymousIndividual(filler)) {
+            return;
+        }
+        var individual = filler.asOWLNamedIndividual();
+        var individualData = renderer.getIndividualData(individual);
+        var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
+        edges.add(RelationshipEdge.get(subClsData, individualData, propertyData));
+        createGraph(individual, edges, processed);
     }
 
     private void addEdgeForSomeValuesFrom(Set<Edge> edges, Set<OWLEntity> processed, OWLEntityData subClsData, OWLObjectSomeValuesFrom someValuesFrom) {

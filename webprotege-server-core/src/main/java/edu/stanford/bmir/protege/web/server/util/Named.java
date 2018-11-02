@@ -17,6 +17,10 @@ public class Named {
         return individual.isNamed();
     }
 
+    public static boolean isAnonymousIndividual(@Nonnull OWLIndividual individual) {
+        return individual.isAnonymous();
+    }
+
     public static boolean isNamedClass(@Nonnull OWLClassExpression classExpression) {
         return !classExpression.isAnonymous();
     }
@@ -24,4 +28,9 @@ public class Named {
     public static boolean isNamedProperty(@Nonnull OWLObjectPropertyExpression propertyExpression) {
         return !propertyExpression.isAnonymous();
     }
+
+    public static boolean isInverseProperty(@Nonnull OWLObjectPropertyExpression propertyExpression) {
+        return propertyExpression.isAnonymous();
+    }
+
 }
