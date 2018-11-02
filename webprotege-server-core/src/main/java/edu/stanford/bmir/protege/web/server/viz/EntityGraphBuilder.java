@@ -5,6 +5,7 @@ import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.viz.Edge;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.IsAEdge;
@@ -50,7 +51,7 @@ public class EntityGraphBuilder {
     }
 
     public Stream<OWLOntology> getOntologies() {
-        if (ontologies == null) {
+        if(ontologies == null) {
             ontologies = ImmutableSet.copyOf(ont.getImportsClosure());
         }
         return ontologies.stream();
@@ -60,39 +61,40 @@ public class EntityGraphBuilder {
     public EntityGraph createGraph(@Nonnull OWLEntity root) {
         var edges = new LinkedHashSet<Edge>();
         createGraph(root, edges, new HashSet<>());
-        return EntityGraph.create(renderer.getRendering(root),
-                                  ImmutableSet.copyOf(edges));
+        return EntityGraph.create(renderer.getRendering(root), ImmutableSet.copyOf(edges));
     }
 
     private void createGraph(@Nonnull OWLEntity entity,
                              @Nonnull Set<Edge> edges,
                              @Nonnull Set<OWLEntity> processed) {
-        if (processed.contains(entity)) {
+        if(processed.contains(entity)) {
             return;
         }
         processed.add(entity);
-        if (entity.isOWLClass()) {
+        if(entity.isOWLClass()) {
             var cls = entity.asOWLClass();
             createEdgesForClass(edges, processed, cls);
         }
-        else if (entity.isOWLNamedIndividual()) {
+        else if(entity.isOWLNamedIndividual()) {
             var ind = entity.asOWLNamedIndividual();
             createEdgesForIndividual(edges, processed, ind);
         }
     }
 
-    private void createEdgesForIndividual(Set<Edge> edges, Set<OWLEntity> processed, OWLNamedIndividual individual) {
+    private void createEdgesForIndividual(Set<Edge> edges,
+                                          Set<OWLEntity> processed,
+                                          OWLNamedIndividual individual) {
         var individualData = renderer.getIndividualData(individual);
-        getOntologies().flatMap(o -> o.getClassAssertionAxioms(individual).stream())
-                .filter(ax -> isNotOwlThing(ax.getClassExpression()))
-                .filter(ax -> isNamedClass(ax.getClassExpression()))
-                .forEach(ax -> {
-                    var cls = ax.getClassExpression().asOWLClass();
-                    var clsData = renderer.getClassData(cls);
-                    edges.add(IsAEdge.get(individualData, clsData));
-                    createEdgesForClass(edges, processed, cls);
-                });
-        getOntologies().flatMap(o -> o.getObjectPropertyAssertionAxioms(individual).stream())
+        createEdgesForPropertyAssertions(edges, processed, individual, individualData);
+        createEdgesForClassAssertions(edges, processed, individual, individualData);
+    }
+
+    private void createEdgesForClassAssertions(Set<Edge> edges,
+                                               Set<OWLEntity> processed,
+                                               OWLNamedIndividual individual,
+                                               OWLNamedIndividualData individualData) {
+        getOntologies()
+                .flatMap(o -> o.getObjectPropertyAssertionAxioms(individual).stream())
                 .filter(ax -> isNamedIndividual(ax.getObject()))
                 .filter(ax -> isNamedProperty(ax.getProperty()))
                 .forEach(ax -> {
@@ -102,61 +104,100 @@ public class EntityGraphBuilder {
                     edges.add(RelationshipEdge.get(individualData, objectData, propertyData));
                     createEdgesForIndividual(edges, processed, object);
                 });
-
     }
 
-    private void createEdgesForClass(Set<Edge> g, Set<OWLEntity> processed, OWLClass cls) {
+    private void createEdgesForPropertyAssertions(Set<Edge> edges,
+                                                  Set<OWLEntity> processed,
+                                                  OWLNamedIndividual individual,
+                                                  OWLNamedIndividualData individualData) {
+        getOntologies()
+                .flatMap(o -> o.getClassAssertionAxioms(individual).stream())
+                .filter(ax -> isNotOwlThing(ax.getClassExpression()))
+                .filter(ax -> isNamedClass(ax.getClassExpression()))
+                .forEach(ax -> {
+                    var cls = ax.getClassExpression().asOWLClass();
+                    var clsData = renderer.getClassData(cls);
+                    edges.add(IsAEdge.get(individualData, clsData));
+                    createEdgesForClass(edges, processed, cls);
+                });
+    }
+
+    private void createEdgesForClass(Set<Edge> edges,
+                                     Set<OWLEntity> processed,
+                                     OWLClass cls) {
         var subClassAxioms = getOntologies().flatMap(o -> o.getSubClassAxiomsForSubClass(cls).stream().sorted());
         var equivalentClassesAxioms = getEquivalentClassAxiomsAsSubClassOfAxioms(cls);
         var combinedAxioms = Streams.concat(subClassAxioms, equivalentClassesAxioms);
         combinedAxioms
                 .filter(ax -> isNamedClass(ax.getSubClass()))
-                .forEach(ax -> createEdgeForSubClassOfAxiom(cls, ax, g, processed));
+                .forEach(ax -> createEdgeForSubClassOfAxiom(cls, ax, edges, processed));
     }
 
     private Stream<OWLSubClassOfAxiom> getEquivalentClassAxiomsAsSubClassOfAxioms(OWLClass cls) {
-        return getOntologies().flatMap(o -> o.getEquivalentClassesAxioms(cls).stream())
+        return getOntologies()
+                .flatMap(o -> o.getEquivalentClassesAxioms(cls).stream())
                 .flatMap(ax -> ax.asOWLSubClassOfAxioms().stream());
     }
 
-    private void createEdgeForSubClassOfAxiom(OWLClass subCls, OWLSubClassOfAxiom ax, Set<Edge> edges, Set<OWLEntity> processed) {
+    private void createEdgeForSubClassOfAxiom(OWLClass subCls,
+                                              OWLSubClassOfAxiom subClassOfAxiom,
+                                              Set<Edge> edges,
+                                              Set<OWLEntity> processed) {
         OWLEntityData subClsData = renderer.getClassData(subCls);
-        ax.getSuperClass().asConjunctSet()
+        subClassOfAxiom
+                .getSuperClass()
+                .asConjunctSet()
                 .stream()
                 .filter(ClassExpression::isNotOwlThing)
-                .forEach(superClass -> {
-                    if (isNamedClass(superClass)) {
-                        var superCls = superClass.asOWLClass();
-                        var superClsData = renderer.getClassData(superCls);
-                        edges.add(IsAEdge.get(subClsData, superClsData));
-                        createGraph(superCls, edges, processed);
-                    }
-                    else {
-                        addEdgeForComplexSuperClass(edges, processed, subClsData, superClass);
-                    }
-                });
+                .forEach(superClass -> addEdgeForSuperClass(edges, processed, subClsData, superClass));
     }
 
-    private void addEdgeForComplexSuperClass(Set<Edge> edges, Set<OWLEntity> processed, OWLEntityData subClsData, OWLClassExpression superClass) {
-        if (superClass instanceof OWLObjectSomeValuesFrom) {
+    private void addEdgeForSuperClass(Set<Edge> edges,
+                                      Set<OWLEntity> processed,
+                                      OWLEntityData subClsData,
+                                      OWLClassExpression superClass) {
+        if(isNamedClass(superClass)) {
+            addEdgeForNamedSuperClass(edges, processed, subClsData, superClass);
+        }
+        else {
+            addEdgeForComplexSuperClass(edges, processed, subClsData, superClass);
+        }
+    }
+
+    private void addEdgeForNamedSuperClass(Set<Edge> edges,
+                                           Set<OWLEntity> processed,
+                                           OWLEntityData subClsData,
+                                           OWLClassExpression superClass) {
+        var superCls = superClass.asOWLClass();
+        var superClsData = renderer.getClassData(superCls);
+        edges.add(IsAEdge.get(subClsData, superClsData));
+        createGraph(superCls, edges, processed);
+    }
+
+    private void addEdgeForComplexSuperClass(Set<Edge> edges,
+                                             Set<OWLEntity> processed,
+                                             OWLEntityData subClsData,
+                                             OWLClassExpression superClass) {
+        if(superClass instanceof OWLObjectSomeValuesFrom) {
             var someValuesFrom = (OWLObjectSomeValuesFrom) superClass;
             addEdgeForSomeValuesFrom(edges, processed, subClsData, someValuesFrom);
         }
-        else if (superClass instanceof OWLObjectHasValue) {
+        else if(superClass instanceof OWLObjectHasValue) {
             var hasValue = (OWLObjectHasValue) superClass;
             addEdgeForHasValue(edges, processed, subClsData, hasValue);
         }
     }
 
-    private void addEdgeForHasValue(Set<Edge> edges, Set<OWLEntity> processed,
+    private void addEdgeForHasValue(Set<Edge> edges,
+                                    Set<OWLEntity> processed,
                                     OWLEntityData subClsData,
                                     OWLObjectHasValue hasValue) {
         var property = hasValue.getProperty();
-        if (isInverseProperty(property)) {
+        if(isInverseProperty(property)) {
             return;
         }
         var filler = hasValue.getFiller();
-        if (isAnonymousIndividual(filler)) {
+        if(isAnonymousIndividual(filler)) {
             return;
         }
         var individual = filler.asOWLNamedIndividual();
@@ -166,19 +207,22 @@ public class EntityGraphBuilder {
         createGraph(individual, edges, processed);
     }
 
-    private void addEdgeForSomeValuesFrom(Set<Edge> edges, Set<OWLEntity> processed, OWLEntityData subClsData, OWLObjectSomeValuesFrom someValuesFrom) {
+    private void addEdgeForSomeValuesFrom(Set<Edge> edges,
+                                          Set<OWLEntity> processed,
+                                          OWLEntityData subClsData,
+                                          OWLObjectSomeValuesFrom someValuesFrom) {
         var property = someValuesFrom.getProperty();
-        var filler = someValuesFrom.getFiller();
-        if (isNamedClass(filler) && isNamedProperty(property)) {
-            var fillerCls = filler.asOWLClass();
-            var fillerClsData = renderer.getClassData(fillerCls);
-            var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
-            edges.add(RelationshipEdge.get(subClsData, fillerClsData, propertyData));
-            createGraph(fillerCls, edges, processed);
+        if(!isNamedProperty(property)) {
+            return;
         }
-    }
-
-    private OWLEntityData toEntity(@Nonnull OWLClass cls) {
-        return renderer.getClassData(cls);
+        var filler = someValuesFrom.getFiller();
+        if(!isNamedClass(filler)) {
+            return;
+        }
+        var fillerCls = filler.asOWLClass();
+        var fillerClsData = renderer.getClassData(fillerCls);
+        var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
+        edges.add(RelationshipEdge.get(subClsData, fillerClsData, propertyData));
+        createGraph(fillerCls, edges, processed);
     }
 }
