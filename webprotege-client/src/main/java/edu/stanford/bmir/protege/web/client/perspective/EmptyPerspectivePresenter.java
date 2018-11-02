@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
@@ -20,7 +19,7 @@ public class EmptyPerspectivePresenter {
     private final PerspectiveId perspectiveId;
 
     @Inject
-    public EmptyPerspectivePresenter(@Assisted PerspectiveId perspectiveId, EmptyPerspectiveView view, EventBus eventBus) {
+    public EmptyPerspectivePresenter(PerspectiveId perspectiveId, EmptyPerspectiveView view, EventBus eventBus) {
         this.perspectiveId = perspectiveId;
         this.view = view;
         this.eventBus = eventBus;

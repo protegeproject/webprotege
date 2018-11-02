@@ -17,7 +17,6 @@ public class OWLDataFactoryProvider implements Provider<OWLDataFactory> {
 
     @Override
     public OWLDataFactory get() {
-        boolean useCompression = false;
-        return new OWLDataFactoryImpl(new OWLDataFactoryInternalsImpl(useCompression));
+        return new OWLDataFactoryImpl();
     }
 }

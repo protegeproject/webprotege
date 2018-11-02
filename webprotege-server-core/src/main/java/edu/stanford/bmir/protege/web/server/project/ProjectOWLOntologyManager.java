@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Supplier;
 
 /**
  * Author: Matthew Horridge<br>
@@ -666,16 +667,10 @@ public class ProjectOWLOntologyManager implements OWLOntologyManager {
         return delegate.getOntologyLoaderConfiguration();
     }
 
-    /**
-     * Sets the configuration provider.
-     *
-     * @param provider the provider to be used
-     */
     @Override
-    public void setOntologyLoaderConfigurationProvider(Provider<OWLOntologyLoaderConfiguration> provider) {
-        delegate.setOntologyLoaderConfigurationProvider(provider);
+    public void setOntologyLoaderConfigurationProvider(@Nonnull Supplier<OWLOntologyLoaderConfiguration> supplier) {
+        delegate.setOntologyLoaderConfigurationProvider(supplier);
     }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

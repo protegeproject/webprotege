@@ -30,7 +30,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 
     @Inject
     public ObjectMapperProvider() {
-        this.dataFactory = new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
+        this.dataFactory = new OWLDataFactoryImpl();
     }
 
     @Override

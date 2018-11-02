@@ -14,7 +14,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
  */
 public class OWLEntityReadConverter implements Converter<DBObject, OWLEntity> {
 
-    private OWLDataFactory dataFactory = new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
+    private OWLDataFactory dataFactory = new OWLDataFactoryImpl();
 
     @Override
     public OWLEntity convert(DBObject object) {

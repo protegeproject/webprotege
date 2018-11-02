@@ -93,7 +93,7 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-apibinding</artifactId>
-            <version>4.5.1</version>
+            <version>${owlapi.version}</version>
         </dependency>
 
         <dependency>

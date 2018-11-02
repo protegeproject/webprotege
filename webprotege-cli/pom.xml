@@ -26,7 +26,7 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-impl</artifactId>
-            <version>4.5.1</version>
+            <version>${owlapi.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

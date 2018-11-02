@@ -160,7 +160,7 @@ public class ApplicationModule {
     @ApplicationSingleton
     @ApplicationDataFactory
     public OWLDataFactory provideOWLDataFactory() {
-        return new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
+        return new OWLDataFactoryImpl();
     }
 
     @Provides
