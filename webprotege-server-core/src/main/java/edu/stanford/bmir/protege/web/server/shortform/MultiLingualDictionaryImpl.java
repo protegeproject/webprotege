@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,38 +70,91 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     }
 
     @Nonnull
+    private List<Dictionary> findDictionaries(@Nonnull List<DictionaryLanguage> languages) {
+        final var foundDictionaries = new ArrayList<Dictionary>();
+        final var dictionariesToBuild = new ArrayList<DictionaryLanguage>();
+        for(var language : languages) {
+            var dictionary = dictionaries.get(language);
+            if(dictionary == null) {
+                // At this moment, we need to build a dictionary for this language
+                // We might not need to build it in the end if someone builds it before us...
+                dictionariesToBuild.add(language);
+            }
+            else {
+                foundDictionaries.add(dictionary);
+            }
+        }
+        if(!dictionariesToBuild.isEmpty()) {
+            buildDictionaries(dictionariesToBuild);
+            return languages.stream().map(dictionaries::get).collect(toList());
+        }
+        else {
+            return foundDictionaries;
+        }
+
+    }
+
+    private void buildDictionaries(@Nonnull List<DictionaryLanguage> dictionaryLanguages) {
+        if(dictionaryLanguages.isEmpty()) {
+            return;
+        }
+        try {
+            // Prevent others from building the same dictionaries at the same time.  Dictionaries
+            // can still be read whilst building is taking place.  Others may make requests for a
+            // dictionary that is alread being built but they will not get to build this themselves.
+            writeLock.lock();
+            var stopwatch = Stopwatch.createStarted();
+            logger.info("{} Building dictionaries for {}", projectId, dictionaryLanguages);
+            var dictionariesToBuild = dictionaryLanguages
+                    .stream()
+                    .filter(lang -> !dictionaries.containsKey(lang))
+                    .map(Dictionary::create)
+                    .collect(toList());
+
+            dictionaryBuilder.buildAll(dictionariesToBuild);
+            dictionariesToBuild.forEach(dictionary -> dictionaries.put(dictionary.getLanguage(), dictionary));
+            stopwatch.stop();
+            logger.info("{} Built dictionaries for {} in {}", projectId, dictionaryLanguages, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        } finally {
+            writeLock.unlock();
+        }
+
+    }
+
+    @Nonnull
     @Override
     public String getShortForm(@Nonnull OWLEntity entity,
                                @Nonnull List<DictionaryLanguage> languages,
                                @Nonnull String defaultShortForm) {
         checkNotNull(defaultShortForm);
-        List<Dictionary> dictionaries = findDictionaries(languages);
-        return dictionaries.stream()
-                           .map(dictionary -> dictionary.getShortForm(entity, ""))
-                           .filter(shortForm -> !shortForm.isEmpty())
-                           .findFirst()
-                           .orElse(defaultShortForm);
+        var dictionaries = findDictionaries(languages);
+        return dictionaries
+                .stream()
+                .map(dictionary -> dictionary.getShortForm(entity, ""))
+                .filter(shortForm -> !shortForm.isEmpty())
+                .findFirst()
+                .orElse(defaultShortForm);
     }
 
     @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchString,
                                                           @Nonnull Set<EntityType<?>> entityTypes,
                                                           @Nonnull List<DictionaryLanguage> languages) {
-        if (entityTypes.isEmpty()) {
+        if(entityTypes.isEmpty()) {
             return Stream.empty();
         }
-        List<Dictionary> dictionaries = findDictionaries(languages);
-        return dictionaries.stream()
-                           .flatMap(dictionary -> dictionary.getShortFormsContaining(searchString, entityTypes));
+        var dictionaries = findDictionaries(languages);
+        return dictionaries
+                .stream()
+                .flatMap(dictionary -> dictionary.getShortFormsContaining(searchString, entityTypes));
 
     }
 
     @Override
     public Stream<OWLEntity> getEntities(@Nonnull String shortForm,
                                          @Nonnull List<DictionaryLanguage> languages) {
-        List<Dictionary> dictionaries = findDictionaries(languages);
-        return dictionaries.stream()
-                           .flatMap(dictionary -> dictionary.getEntities(shortForm));
+        var dictionaries = findDictionaries(languages);
+        return dictionaries.stream().flatMap(dictionary -> dictionary.getEntities(shortForm));
     }
 
     @Override
@@ -112,28 +164,10 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         findAllDictionaries(languages).forEach(dictionary -> dictionaryUpdater.update(dictionary, entities));
     }
 
-    @Nonnull
-    @Override
-    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
-        ImmutableMap.Builder<DictionaryLanguage, String> resultBuilder = ImmutableMap.builder();
-        dictionaries.forEach((lang, dict) -> {
-            String shortForm = dict.getShortForm(entity, "");
-            if(!shortForm.isEmpty()) {
-                resultBuilder.put(lang, shortForm);
-            }
-        });
-        return resultBuilder.build();
-    }
-
-    @Override
-    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity, List<DictionaryLanguage> languages) {
-        findDictionaries(languages);
-        return getShortForms(entity);
-    }
-
     /**
      * Finds all the dictionaries in this multi-lingual dictionary.  The specified list of
      * languages will be guaranteed to exists.
+     *
      * @param languages The languages
      * @return The dictionaries
      */
@@ -144,63 +178,23 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         return dictionaries.values().stream();
     }
 
-    @Nonnull
-    private List<Dictionary> findDictionaries(@Nonnull List<DictionaryLanguage> languages) {
-        final List<Dictionary> foundDictionaries = new ArrayList<>();
-        final List<DictionaryLanguage> dictionariesToBuild = new ArrayList<>();
-        for (DictionaryLanguage language : languages) {
-            Dictionary dictionary = dictionaries.get(language);
-            if (dictionary == null) {
-                // At this moment, we need to build a dictionary for this language
-                // We might not need to build it in the end if someone builds it before us...
-                dictionariesToBuild.add(language);
-            }
-            else {
-                foundDictionaries.add(dictionary);
-            }
-        }
-        if (!dictionariesToBuild.isEmpty()) {
-            buildDictionaries(dictionariesToBuild);
-            return languages.stream()
-                            .map(dictionaries::get)
-                            .collect(toList());
-        }
-        else {
-            return foundDictionaries;
-        }
-
+    @Override
+    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity,
+                                                                  List<DictionaryLanguage> languages) {
+        findDictionaries(languages);
+        return getShortForms(entity);
     }
 
-    private void buildDictionaries(@Nonnull List<DictionaryLanguage> languages) {
-        if (languages.isEmpty()) {
-            return;
-        }
-        try {
-            // Prevent others from building the same dictionaries at the same time.  Dictionaries
-            // can still be read whilst building is taking place.  Others may make requests for a
-            // dictionary that is alread being built but they will not get to build this themselves.
-            writeLock.lock();
-            Stopwatch stopwatch = Stopwatch.createStarted();
-            logger.info("{} Building dictionaries for {}",
-                        projectId,
-                        languages);
-            List<Dictionary> dictionariesThatNeedBuilding =
-                    languages.stream()
-                             .filter(lang -> !dictionaries.containsKey(lang))
-                             .map(Dictionary::create)
-                             .collect(toList());
-
-            dictionaryBuilder.buildAll(dictionariesThatNeedBuilding);
-            dictionariesThatNeedBuilding.forEach(dictionary -> dictionaries.put(dictionary.getLanguage(),
-                                                                                dictionary));
-            stopwatch.stop();
-            logger.info("{} Built dictionaries for {} in {}",
-                        projectId,
-                        languages,
-                        stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        } finally {
-            writeLock.unlock();
-        }
-
+    @Nonnull
+    @Override
+    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
+        var resultBuilder = ImmutableMap.<DictionaryLanguage, String>builder();
+        dictionaries.forEach((lang, dict) -> {
+            var shortForm = dict.getShortForm(entity, "");
+            if(!shortForm.isEmpty()) {
+                resultBuilder.put(lang, shortForm);
+            }
+        });
+        return resultBuilder.build();
     }
 }

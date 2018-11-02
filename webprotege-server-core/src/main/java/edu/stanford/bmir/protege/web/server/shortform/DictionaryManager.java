@@ -56,7 +56,7 @@ public class DictionaryManager {
     @Nonnull
     public String getShortForm(@Nonnull OWLEntity entity,
                                @Nonnull List<DictionaryLanguage> languages) {
-        final String builtInEntityShortForm = builtInShortFormDictionary.getShortForm(entity, null);
+        var builtInEntityShortForm = builtInShortFormDictionary.getShortForm(entity, null);
         if (builtInEntityShortForm != null) {
             return builtInEntityShortForm;
         }
@@ -66,7 +66,7 @@ public class DictionaryManager {
     @Nonnull
     public String getQuotedShortForm(@Nonnull OWLEntity entity,
                                      @Nonnull List<DictionaryLanguage> languages) {
-        String shortForm = getShortForm(entity, languages);
+        var shortForm = getShortForm(entity, languages);
         return ShortFormQuotingUtils.getQuotedShortForm(shortForm);
     }
 
@@ -115,7 +115,7 @@ public class DictionaryManager {
 
     @Nonnull
     public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
-        String shortForm = builtInShortFormDictionary.getShortForm(entity, null);
+        var shortForm = builtInShortFormDictionary.getShortForm(entity, null);
         if(shortForm != null) {
             return ImmutableMap.of(DictionaryLanguage.localName(), shortForm);
         }
