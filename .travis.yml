@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - oraclejdk8
+  - oraclejdk11
 script: mvn verify
 sudo: false
 services: mongodb
