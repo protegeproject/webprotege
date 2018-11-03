@@ -56,13 +56,6 @@ public class ProjectCache {
 
     private final ProjectImporterFactory projectImporterFactory;
 
-
-
-    /**
-     * The period between purge checks (in ms).  Every 30 seconds.
-     */
-    public static final int PURGE_CHECK_PERIOD_MS = 30 * 1000;
-
     /**
      * Elapsed time from the last access after which a project should be considered dormant (and should therefore
      * be purged).  This can interact with the frequency with which clients poll the project event queue (which is
@@ -77,13 +70,6 @@ public class ProjectCache {
                         @Nonnull ProjectImporterFactory projectImporterFactory) {
         this.projectComponentFactory = checkNotNull(projectComponentFactory);
         this.projectImporterFactory = checkNotNull(projectImporterFactory);
-        Timer timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                purgeDormantProjects();
-            }
-        }, 0, PURGE_CHECK_PERIOD_MS);
         projectIdInterner = Interners.newWeakInterner();
 
     }
@@ -108,8 +94,10 @@ public class ProjectCache {
         }
     }
 
-
-    private void purgeDormantProjects() {
+    /**
+     * Purges projects that have not been access for some given period of time
+     */
+    public void purgeDormantProjects() {
         // No locking needed
         for (ProjectId projectId : getCachedProjectIds()) {
             long time = getLastAccessTime(projectId);
