@@ -202,6 +202,7 @@ public class ProjectDownloadService {
         logger.info("Shutting down Project Download Service");
         downloadGeneratorExecutor.shutdown();
         fileTransferExecutor.shutdown();
+        logger.info("Project Download Service has been shut down");
     }
 
     private RevisionNumber getHeadRevisionNumber(@Nonnull ProjectId projectId, @Nonnull UserId userId) throws IOException {
