@@ -56,10 +56,12 @@ import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Matthew Horridge
@@ -229,13 +231,23 @@ public class ApplicationModule {
     public ExecutorService provideDownloadGeneratorExecutorService() {
         // Might prove to be too much of a bottle neck.  For now, this limits the memory we need
         // to generate downloads
-        return Executors.newSingleThreadExecutor();
+        return Executors.newSingleThreadExecutor(r -> {
+            Thread thread = new Thread();
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.setName("Download generator");
+            return thread;
+        });
     }
 
     @Provides
     @FileTransferExecutor
     public ExecutorService provideFileTransferExecutorService() {
-        return Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS);
+        return Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
+            Thread thread = new Thread(r);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.setName("File transfer service");
+            return thread;
+        });
     }
 
     @Provides
