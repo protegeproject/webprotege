@@ -9,6 +9,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
+
 import static edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger.WebProtegeMarker;
 
 public class WebProtegeServletContextListener implements ServletContextListener {
@@ -41,8 +46,8 @@ public class WebProtegeServletContextListener implements ServletContextListener 
                           .addMapping("/data/*");
 
             servletContext.addListener(serverComponent.getSessionListener());
-
             serverComponent.getWebProtegeConfigurationChecker().performConfiguration();
+            serverComponent.getProjectCacheManager().start();
 
             Runtime runtime = Runtime.getRuntime();
             logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));
@@ -58,13 +63,20 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        logger.info(WebProtegeMarker, "Shutting down WebProtege");
-        ServletContext servletContext = servletContextEvent.getServletContext();
-        ServerComponent serverComponent = (ServerComponent) servletContext.getAttribute(ServerComponent.class.getName());
-        if (serverComponent != null) {
-            logger.info(WebProtegeMarker, "Disposing of objects");
-            serverComponent.getDisposableObjectManager().dispose();
+
+        try {
+            logger.info(WebProtegeMarker, "Shutting down WebProtege");
+            var servletContext = servletContextEvent.getServletContext();
+            var serverComponent = (ServerComponent) servletContext.getAttribute(ServerComponent.class.getName());
+            if (serverComponent != null) {
+                logger.info(WebProtegeMarker, "Disposing of objects");
+                serverComponent.getDisposableObjectManager().dispose();
+            }
+            logger.info(WebProtegeMarker, "WebProtege shutdown complete");
+        } finally {
+            var servletContext = servletContextEvent.getServletContext();
+            servletContext.removeAttribute(ServerComponent.class.getName());
         }
-        logger.info(WebProtegeMarker, "WebProtege shutdown complete");
+
     }
 }

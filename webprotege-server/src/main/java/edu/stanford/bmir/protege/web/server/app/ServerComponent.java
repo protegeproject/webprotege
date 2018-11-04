@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.DispatchServlet;
 import edu.stanford.bmir.protege.web.server.download.ProjectDownloadServlet;
 import edu.stanford.bmir.protege.web.server.inject.*;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
+import edu.stanford.bmir.protege.web.server.project.ProjectCacheManager;
+import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.upload.FileUploadServlet;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -56,5 +58,6 @@ public interface ServerComponent {
 
     DisposableObjectManager getDisposableObjectManager();
 
+    ProjectCacheManager getProjectCacheManager();
 
 }
