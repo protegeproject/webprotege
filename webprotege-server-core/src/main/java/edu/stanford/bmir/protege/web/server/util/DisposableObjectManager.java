@@ -32,7 +32,6 @@ public class DisposableObjectManager {
     public synchronized void dispose() {
         disposables.forEach(disposable -> {
             try {
-                logger.info("Disposing of " + disposable.getClass().getName());
                 disposable.dispose();
             }
             catch (Throwable throwable) {
