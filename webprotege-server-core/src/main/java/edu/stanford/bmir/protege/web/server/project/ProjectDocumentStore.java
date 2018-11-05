@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntologyDocument;
@@ -12,21 +13,19 @@ import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentSerializer;
 import org.semanticweb.binaryowl.change.OntologyChangeDataList;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.io.FileDocumentSource;
-import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
-import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
-import org.semanticweb.owlapi.io.StreamDocumentSource;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -50,8 +49,6 @@ public class ProjectDocumentStore {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectDocumentStore.class);
 
-    private ProjectId projectId;
-
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final Lock readLock = readWriteLock.readLock();
@@ -61,6 +58,8 @@ public class ProjectDocumentStore {
     private final File rootOntologyDocument;
 
     private final Provider<ImportsCacheManager> importsCacheManagerProvider;
+
+    private ProjectId projectId;
 
 
     @Inject
@@ -87,26 +86,25 @@ public class ProjectDocumentStore {
                 ListMultimap<OWLOntology, OWLOntologyChange> changesByOntology = ArrayListMultimap.create();
                 rawChangeList.forEach(change -> changesByOntology.put(change.getOntology(), change));
 
-                for (var ontology : changesByOntology.keySet()) {
+                for(var ontology : changesByOntology.keySet()) {
                     var docIRI = ontology.getOWLOntologyManager().getOntologyDocumentIRI(ontology);
-                    if (!"file".equalsIgnoreCase(docIRI.toURI().getScheme())) {
-                        throw new RuntimeException("Document IRI is not a local file IRI" );
+                    if(!"file".equalsIgnoreCase(docIRI.toURI().getScheme())) {
+                        throw new RuntimeException("Document IRI is not a local file IRI");
                     }
                     var changesForOntology = changesByOntology.get(ontology);
                     var changeDataListForOntology = new ArrayList<OWLOntologyChangeData>();
-                    for (var changeForOntology : changesForOntology) {
+                    for(var changeForOntology : changesForOntology) {
                         var changeRecord = changeForOntology.getChangeRecord();
                         changeDataListForOntology.add(changeRecord.getData());
                     }
                     var file = new File(docIRI.toURI());
                     var serializer = new BinaryOWLOntologyDocumentSerializer();
-                    var changeDataList = new OntologyChangeDataList(changeDataListForOntology,
-                                                                    System.currentTimeMillis(),
-                                                                    BinaryOWLMetadata.emptyMetadata());
+                    var changeDataList = new OntologyChangeDataList(changeDataListForOntology, System.currentTimeMillis(), BinaryOWLMetadata
+                            .emptyMetadata());
                     serializer.appendOntologyChanges(file, changeDataList);
                 }
 
-            } catch (IOException e) {
+            } catch(IOException e) {
                 logger.error("An error occurred whilst saving ontology changes: {}", e.getMessage(), e);
             }
         } finally {
@@ -121,7 +119,7 @@ public class ProjectDocumentStore {
     public OWLOntology initialiseOntologyManagerWithProject(OWLOntologyManager manager) throws OWLOntologyCreationException, OWLOntologyStorageException {
         try {
             writeLock.lock();
-            if (rootOntologyDocument.exists()) {
+            if(rootOntologyDocument.exists()) {
                 return loadProjectOntologiesIntoManager(manager);
             }
             else {
@@ -133,22 +131,16 @@ public class ProjectDocumentStore {
     }
 
     private OWLOntology loadProjectOntologiesIntoManager(OWLOntologyManager manager) throws OWLOntologyCreationException {
-        logger.info("{} Loading project" , projectId);
-        long t0 = System.currentTimeMillis();
+        logger.info("{} Loading project", projectId);
+        var stopwatch = Stopwatch.createStarted();
         OWLOntologyLoaderListener loaderListener = new OWLOntologyLoaderListener() {
             public void startedLoadingOntology(LoadingStartedEvent event) {
-                logger.info("{} Ontology loading started: {}",
-                            projectId,
-                            event.getDocumentIRI());
+                logger.info("{} Ontology loading started: {}", projectId, event.getDocumentIRI());
             }
 
             public void finishedLoadingOntology(LoadingFinishedEvent event) {
-                // Give something else a chance - in case we have LOTS of imports
-                Thread.yield();
-                if (event.isSuccessful()) {
-                    logger.info("{} Ontology loading finished: (Loaded:  {})",
-                                projectId, event.getDocumentIRI(),
-                                event.getOntologyID());
+                if(event.isSuccessful()) {
+                    logger.info("{} Ontology loading finished: (Loaded:  {})", projectId, event.getDocumentIRI(), event.getOntologyID());
                     MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
                     memoryMonitor.monitorMemoryUsage();
                 }
@@ -158,10 +150,8 @@ public class ProjectDocumentStore {
             }
         };
         manager.addOntologyLoaderListener(loaderListener);
-        final MissingImportListener missingImportListener = (MissingImportListener) missingImportEvent ->
-                logger.info("{} Missing import: {} due to {}", projectId,
-                            missingImportEvent.getImportedOntologyURI(),
-                            missingImportEvent.getCreationException().getMessage());
+        final MissingImportListener missingImportListener = (MissingImportListener) missingImportEvent -> logger.info("{} Missing import: {} due to {}", projectId, missingImportEvent
+                .getImportedOntologyURI(), missingImportEvent.getCreationException().getMessage());
         manager.addMissingImportListener(missingImportListener);
         manager.getIRIMappers().add((OWLOntologyIRIMapper) iri -> {
             logger.info("{} Fetching imported ontology from {}.", projectId, iri.toQuotedString());
@@ -174,21 +164,16 @@ public class ProjectDocumentStore {
 
 
         try {
-            OWLOntologyLoaderConfiguration config = new OWLOntologyLoaderConfiguration();
-            config = config.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
-            config = config.setReportStackTraces(true);
-            // It is safe to turn of illegal punning fixing as we've already parsed (and saved) the ontology
-            // using a manager with this turned on.
-            config = config.setRepairIllegalPunnings(false);
+            var config = createLoaderConfig();
             logger.info("{} Loading root ontology imports closure.", projectId);
-            ProjectInputSource projectInputSource = new ProjectInputSource(rootOntologyDocument);
-            OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(projectInputSource, config);
+            var projectInputSource = new ProjectInputSource(rootOntologyDocument);
+            var rootOntology = manager.loadOntologyFromOntologyDocument(projectInputSource, config);
             importsCacheManager.cacheImports(rootOntology);
             return rootOntology;
         } finally {
-            long t1 = System.currentTimeMillis();
-            logger.info("{} Ontology loading completed in {} ms.", projectId, (t1 - t0) );
-            MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+            stopwatch.stop();
+            logger.info("{} Ontology loading completed in {} ms.", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            var memoryMonitor = new MemoryMonitor(logger);
             memoryMonitor.monitorMemoryUsage();
             memoryMonitor.logMemoryUsage();
             manager.removeIRIMapper(iriMapper);
@@ -198,7 +183,7 @@ public class ProjectDocumentStore {
     }
 
     private OWLOntology createFreshProjectOntology(OWLOntologyManager manager) throws OWLOntologyCreationException, OWLOntologyStorageException {
-        logger.info("Creating a fresh project with an Id of {}" , projectId);
+        logger.info("Creating a fresh project with an Id of {}", projectId);
         File parentDirectory = rootOntologyDocument.getParentFile();
         parentDirectory.mkdirs();
         IRI ontologyIRI = createUniqueOntologyIRI();
@@ -211,20 +196,27 @@ public class ProjectDocumentStore {
         return ontology;
     }
 
-    private void writeNewProject(
-            OWLOntologyManager rootOntologyManager,
-            OWLOntology ontology) throws
-            OWLOntologyStorageException {
-        rootOntologyDocument.getParentFile().mkdirs();
-        rootOntologyManager.saveOntology(ontology, new BinaryOWLOntologyDocumentFormat(),
-                                         IRI.create(rootOntologyDocument));
-
-        ImportsCacheManager cacheManager = importsCacheManagerProvider.get();
-        cacheManager.cacheImports(ontology);
+    @Nonnull
+    private static OWLOntologyLoaderConfiguration createLoaderConfig() {
+        return new OWLOntologyLoaderConfiguration()
+                .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT)
+                .setReportStackTraces(true)
+                // It is safe to turn of illegal punning fixing as we've already parsed
+                // (and saved) the ontology using a manager with this turned on.
+                .setRepairIllegalPunnings(false);
     }
 
     private static IRI createUniqueOntologyIRI() {
         String ontologyName = IdUtil.getBase62UUID();
         return IRI.create(GENERATED_ONTOLOGY_IRI_PREFIX + ontologyName);
+    }
+
+    private void writeNewProject(OWLOntologyManager rootOntologyManager,
+                                 OWLOntology ontology) throws OWLOntologyStorageException {
+        rootOntologyDocument.getParentFile().mkdirs();
+        rootOntologyManager.saveOntology(ontology, new BinaryOWLOntologyDocumentFormat(), IRI.create(rootOntologyDocument));
+
+        ImportsCacheManager cacheManager = importsCacheManagerProvider.get();
+        cacheManager.cacheImports(ontology);
     }
 }
