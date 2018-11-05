@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Lock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -125,12 +126,15 @@ public class ProjectDownloadService {
                                                                        revisionNumber,
                                                                        downloadFormat,
                                                                        downloadPath);
-            logger.info("{} {} Submitted request to create download to queue", projectId, requester);
-            Future<?> futureOfCreateDownload = downloadGeneratorExecutor.submit(task);
             try {
-                Stopwatch stopwatch = Stopwatch.createStarted();
+                var futureOfCreateDownload = downloadGeneratorExecutor.submit(task);
+                logger.info("{} {} Submitted request to create download to queue", projectId, requester);
+                var stopwatch = Stopwatch.createStarted();
+                logger.info("{} {} Waiting for download to be created", projectId, requester);
                 futureOfCreateDownload.get();
                 logger.info("{} {} Created download after {} ms", projectId, requester, stopwatch.elapsed(MILLISECONDS));
+            } catch(RejectedExecutionException e) {
+                logger.info("{} {} Generate download request rejected", projectId, requester);
             } catch (InterruptedException e) {
                 logger.info("{} {} The download of this project was interrupted.", projectId, requester);
             } catch (ExecutionException e) {

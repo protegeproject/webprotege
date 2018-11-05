@@ -8,9 +8,10 @@ import edu.stanford.bmir.protege.web.server.download.ProjectDownloadServlet;
 import edu.stanford.bmir.protege.web.server.inject.*;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectCacheManager;
-import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.upload.FileUploadServlet;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -56,7 +57,7 @@ public interface ServerComponent {
 
     ProjectComponent getProjectComponent(ProjectModule module);
 
-    DisposableObjectManager getDisposableObjectManager();
+    ApplicationDisposablesManager getApplicationDisposablesManager();
 
     ProjectCacheManager getProjectCacheManager();
 

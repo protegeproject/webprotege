@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.server.app.DisposableObjectManager;
+import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,18 +31,22 @@ public class ProjectCacheManager implements HasDispose {
     private final ProjectCache projectCache;
 
     @Nonnull
-    private final DisposableObjectManager disposableObjectManager;
+    private final ApplicationDisposablesManager disposablesManager;
 
     @Inject
     public ProjectCacheManager(@Nonnull ProjectCache projectCache,
-                               @Nonnull DisposableObjectManager disposableObjectManager) {
+                               @Nonnull ApplicationDisposablesManager disposablesManager) {
         this.projectCache = checkNotNull(projectCache);
-        this.disposableObjectManager = checkNotNull(disposableObjectManager);
-        this.purgeService = Executors.newSingleThreadScheduledExecutor(r -> new Thread("Project purge service"));
+        this.disposablesManager = checkNotNull(disposablesManager);
+        this.purgeService = Executors.newSingleThreadScheduledExecutor(runnable -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+            thread.setName(thread.getName().replace("thread", "project-purge-service-thread"));
+            return thread;
+        });
     }
 
     public void start() {
-        disposableObjectManager.register(this);
+        disposablesManager.register(this);
         purgeService.scheduleAtFixedRate(projectCache::purgeDormantProjects,
                                          0,
                                          PROJECT_PURGE_CHECK_INTERVAL_MS,
@@ -54,6 +57,7 @@ public class ProjectCacheManager implements HasDispose {
     public void dispose() {
         logger.info("Shutting down project purge service");
         purgeService.shutdown();
+        projectCache.dispose();
         logger.info("Project purge service had been shut down");
     }
 }

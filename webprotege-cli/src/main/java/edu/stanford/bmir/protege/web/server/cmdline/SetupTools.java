@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.cmdline;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
-import edu.stanford.bmir.protege.web.server.app.DisposableObjectManager;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;

@@ -1,14 +1,12 @@
-package edu.stanford.bmir.protege.web.server.app;
+package edu.stanford.bmir.protege.web.server.util;
 
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,12 +15,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 10 Apr 2018
  */
-@ApplicationSingleton
 public class DisposableObjectManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DisposableObjectManager.class);
 
-    private final List<HasDispose> disposables = new ArrayList<>();
+    private final LinkedHashSet<HasDispose> disposables = new LinkedHashSet<>();
 
     @Inject
     public DisposableObjectManager() {
@@ -35,6 +32,7 @@ public class DisposableObjectManager {
     public synchronized void dispose() {
         disposables.forEach(disposable -> {
             try {
+                logger.info("Disposing of " + disposable.getClass().getName());
                 disposable.dispose();
             }
             catch (Throwable throwable) {

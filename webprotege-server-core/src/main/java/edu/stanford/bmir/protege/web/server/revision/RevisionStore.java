@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import javax.annotation.Nonnull;
@@ -11,6 +12,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 29/05/15
  */
+@ProjectSingleton
 public interface RevisionStore {
 
     /**

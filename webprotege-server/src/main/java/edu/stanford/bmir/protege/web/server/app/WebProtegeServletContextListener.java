@@ -70,7 +70,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             var serverComponent = (ServerComponent) servletContext.getAttribute(ServerComponent.class.getName());
             if (serverComponent != null) {
                 logger.info(WebProtegeMarker, "Disposing of objects");
-                serverComponent.getDisposableObjectManager().dispose();
+                serverComponent.getApplicationDisposablesManager().dispose();
             }
             logger.info(WebProtegeMarker, "WebProtege shutdown complete");
         } finally {

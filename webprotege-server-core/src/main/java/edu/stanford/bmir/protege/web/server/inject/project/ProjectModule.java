@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomComparatorImpl;
 import edu.stanford.bmir.protege.web.server.axiom.DefaultAxiomTypeOrdering;
 import edu.stanford.bmir.protege.web.server.change.*;
@@ -582,6 +584,7 @@ public class ProjectModule {
         return impl;
     }
 
+    @ProjectSingleton
     @Provides
     EntityTagsRepositoryCachingImpl provideEntityTagsRepositoryCachingImpl(EntityTagsRepositoryImpl impl) {
         EntityTagsRepositoryCachingImpl rep = new EntityTagsRepositoryCachingImpl(impl);
@@ -593,5 +596,11 @@ public class ProjectModule {
     @ProjectSingleton
     IndividualsIndex provideIndividualsIndex(IndividualsIndexImpl impl) {
         return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    ProjectDisposablesManager provideProjectDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
+        return new ProjectDisposablesManager(disposableObjectManager);
     }
 }

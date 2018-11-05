@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFile;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -40,11 +41,11 @@ import static edu.stanford.bmir.protege.web.server.revision.RevisionSerializatio
  * Stanford Center for Biomedical Informatics Research
  * 29/05/15
  */
-public class RevisionStoreImpl implements RevisionStore {
+public class RevisionStoreImpl implements RevisionStore, HasDispose {
 
     private static final Logger logger = LoggerFactory.getLogger(RevisionStoreImpl.class);
 
-    private final ExecutorService changeSerializationExucutor = Executors.newSingleThreadExecutor();
+    private final ExecutorService changeSerializationExecutor;
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -68,6 +69,11 @@ public class RevisionStoreImpl implements RevisionStore {
         this.projectId = checkNotNull(projectId);
         this.dataFactory = checkNotNull(dataFactory);
         this.changeHistoryFile = checkNotNull(changeHistoryFile);
+        changeSerializationExecutor = Executors.newSingleThreadExecutor(runnable -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+            thread.setName(thread.getName().replace("thread", "change-serializer-thread"));
+            return thread;
+        });
     }
 
     @Nonnull
@@ -161,7 +167,7 @@ public class RevisionStoreImpl implements RevisionStore {
             writeLock.lock();
             var revisionSerializationTask = new RevisionSerializationTask(changeHistoryFile, revision);
             if(revisions.size() != 1) {
-                changeSerializationExucutor.submit(revisionSerializationTask);
+                changeSerializationExecutor.submit(revisionSerializationTask);
             }
             else {
                 // Save immediately
@@ -221,6 +227,11 @@ public class RevisionStoreImpl implements RevisionStore {
         }
 
 
+    }
+
+    @Override
+    public void dispose() {
+        changeSerializationExecutor.shutdown();
     }
 
     @Nonnull

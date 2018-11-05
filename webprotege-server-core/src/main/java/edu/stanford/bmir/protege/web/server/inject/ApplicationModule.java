@@ -11,7 +11,9 @@ import edu.stanford.bmir.protege.web.server.access.RoleOracle;
 import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
 import edu.stanford.bmir.protege.web.server.api.UserApiKeyStore;
 import edu.stanford.bmir.protege.web.server.api.UserApiKeyStoreImpl;
+import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
@@ -50,18 +52,14 @@ import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Matthew Horridge
@@ -232,9 +230,8 @@ public class ApplicationModule {
         // Might prove to be too much of a bottle neck.  For now, this limits the memory we need
         // to generate downloads
         return Executors.newSingleThreadExecutor(r -> {
-            Thread thread = new Thread();
-            thread.setPriority(Thread.MIN_PRIORITY);
-            thread.setName("Download generator");
+            Thread thread = Executors.defaultThreadFactory().newThread(r);
+            thread.setName(thread.getName().replace("thread", "Download-Generator"));
             return thread;
         });
     }
@@ -243,9 +240,8 @@ public class ApplicationModule {
     @FileTransferExecutor
     public ExecutorService provideFileTransferExecutorService() {
         return Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
-            Thread thread = new Thread(r);
-            thread.setPriority(Thread.MIN_PRIORITY);
-            thread.setName("File transfer service");
+            Thread thread = Executors.defaultThreadFactory().newThread(r);
+            thread.setName(thread.getName().replace("thread", "Download-Streamer"));
             return thread;
         });
     }
@@ -319,5 +315,11 @@ public class ApplicationModule {
     UserApiKeyStore provideUserApiKeyStore(UserApiKeyStoreImpl impl) {
         impl.ensureIndexes();
         return impl;
+    }
+
+    @ApplicationSingleton
+    @Provides
+    ApplicationDisposablesManager provideApplicationDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
+        return new ApplicationDisposablesManager(disposableObjectManager);
     }
 }

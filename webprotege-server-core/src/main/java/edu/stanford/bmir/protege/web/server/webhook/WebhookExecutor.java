@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.webhook;
 
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
 import javax.annotation.Nonnull;
@@ -13,12 +14,21 @@ import java.util.concurrent.Executors;
  * 19 May 2017
  */
 @ApplicationSingleton
-public class WebhookExecutor {
+public class WebhookExecutor implements HasDispose {
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+        thread.setName(thread.getName().replace("thread", "webhook-processor-thread"));
+        return thread;
+    });
 
     @Inject
     public WebhookExecutor() {
+    }
+
+    @Override
+    public void dispose() {
+        shutdown();
     }
 
     /**

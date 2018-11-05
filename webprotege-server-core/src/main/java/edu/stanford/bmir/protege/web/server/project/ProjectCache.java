@@ -5,6 +5,7 @@ import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
@@ -36,7 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 07/03/2012
  */
 @ApplicationSingleton
-public class ProjectCache {
+public class ProjectCache implements HasDispose {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectCache.class);
 
@@ -107,6 +108,13 @@ public class ProjectCache {
             if (time == 0 || lastAccessTimeDiff > DORMANT_PROJECT_TIME_MS) {
                 purge(projectId);
             }
+        }
+    }
+
+    public void purgeAllProjects() {
+        logger.info("Purging all loaded projects");
+        for (ProjectId projectId : getCachedProjectIds()) {
+            purge(projectId);
         }
     }
 
@@ -194,7 +202,11 @@ public class ProjectCache {
         try {
             WRITE_LOCK.lock();
             LAST_ACCESS_LOCK.writeLock().lock();
-            ProjectComponent projectComponent = projectId2ProjectComponent.remove(projectId);
+            var projectComponent = projectId2ProjectComponent.remove(projectId);
+            if(projectComponent != null) {
+                var projectDisposableObjectManager = projectComponent.getDisposablesManager();
+                projectDisposableObjectManager.dispose();
+            }
             lastAccessMap.remove(projectId);
         }
         finally {
@@ -251,5 +263,10 @@ public class ProjectCache {
         finally {
             LAST_ACCESS_LOCK.writeLock().unlock();
         }
+    }
+
+    @Override
+    public void dispose() {
+        purgeAllProjects();
     }
 }

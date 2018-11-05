@@ -52,7 +52,11 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
 
     private EventTag currentTag = EventTag.getFirst();
 
-    private ScheduledExecutorService purgeSweepService = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService purgeSweepService = Executors.newSingleThreadScheduledExecutor(runnable -> {
+        Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+        thread.setName(thread.getName().replace("thread", "event-purge-thread"));
+        return thread;
+    });
 
     private List<HandlerRegistration> registeredHandlers = new ArrayList<>();
 

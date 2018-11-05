@@ -1,7 +1,12 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
+import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
+
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -10,13 +15,19 @@ import javax.inject.Provider;
  */
 public class RevisionStoreProvider implements Provider<RevisionStore> {
 
-    private RevisionStoreImpl revisionStore;
+    @Nonnull
+    private final RevisionStoreImpl revisionStore;
+
+    @Nonnull
+    private final ProjectDisposablesManager disposablesManager;
 
     private boolean loaded = false;
 
     @Inject
-    public RevisionStoreProvider(RevisionStoreImpl revisionStore) {
-        this.revisionStore = revisionStore;
+    public RevisionStoreProvider(@Nonnull RevisionStoreImpl revisionStore,
+                                 @Nonnull ProjectDisposablesManager disposablesManager) {
+        this.revisionStore = checkNotNull(revisionStore);
+        this.disposablesManager = checkNotNull(disposablesManager);
     }
 
     @Override
@@ -24,6 +35,7 @@ public class RevisionStoreProvider implements Provider<RevisionStore> {
         if(!loaded) {
             revisionStore.load();
             loaded = true;
+            disposablesManager.register(revisionStore);
         }
         return revisionStore;
     }

@@ -71,6 +71,7 @@ class CreateDownloadTask implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
+        logger.info("{} {} Processing download request", projectId, userId);
         if(Files.exists(downloadPath)) {
             logger.info("{} {} Project download already exists.  Not recreating download. ({})",
                         projectId,
