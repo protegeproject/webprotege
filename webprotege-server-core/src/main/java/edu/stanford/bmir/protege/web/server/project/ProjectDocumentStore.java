@@ -176,7 +176,7 @@ public class ProjectDocumentStore {
             var memoryMonitor = new MemoryMonitor(logger);
             memoryMonitor.monitorMemoryUsage();
             memoryMonitor.logMemoryUsage();
-            manager.removeIRIMapper(iriMapper);
+            manager.getIRIMappers().remove(iriMapper);
             manager.removeOntologyLoaderListener(loaderListener);
             manager.removeMissingImportListener(missingImportListener);
         }
@@ -189,9 +189,9 @@ public class ProjectDocumentStore {
         IRI ontologyIRI = createUniqueOntologyIRI();
         IRI documentIRI = IRI.create(rootOntologyDocument);
         SimpleIRIMapper mapper = new SimpleIRIMapper(ontologyIRI, documentIRI);
-        manager.addIRIMapper(mapper);
+        manager.getIRIMappers().add(mapper);
         OWLOntology ontology = manager.createOntology(ontologyIRI);
-        manager.removeIRIMapper(mapper);
+        manager.getIRIMappers().remove(mapper);
         writeNewProject(manager, ontology);
         return ontology;
     }
