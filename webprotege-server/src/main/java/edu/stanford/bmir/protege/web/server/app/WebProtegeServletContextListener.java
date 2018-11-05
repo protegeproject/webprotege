@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.app;
 
+import ch.qos.logback.classic.LoggerContext;
 import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import org.slf4j.Logger;
@@ -73,6 +74,9 @@ public class WebProtegeServletContextListener implements ServletContextListener 
                 serverComponent.getApplicationDisposablesManager().dispose();
             }
             logger.info(WebProtegeMarker, "WebProtege shutdown complete");
+            // Finally stop logging
+            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+            loggerContext.stop();
         } finally {
             var servletContext = servletContextEvent.getServletContext();
             servletContext.removeAttribute(ServerComponent.class.getName());
