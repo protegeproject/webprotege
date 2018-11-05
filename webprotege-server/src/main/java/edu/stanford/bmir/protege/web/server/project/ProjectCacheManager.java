@@ -58,6 +58,6 @@ public class ProjectCacheManager implements HasDispose {
         logger.info("Shutting down project purge service");
         purgeService.shutdown();
         projectCache.dispose();
-        logger.info("Project purge service had been shut down");
+        logger.info("Project purge service shutdown complete");
     }
 }
