@@ -31,6 +31,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -65,9 +67,9 @@ public class ProjectDocumentStore {
     public ProjectDocumentStore(ProjectId projectId,
                                 @RootOntologyDocument File rootOntologyDocument,
                                 Provider<ImportsCacheManager> importsCacheManagerProvider) {
-        this.projectId = projectId;
-        this.rootOntologyDocument = rootOntologyDocument;
-        this.importsCacheManagerProvider = importsCacheManagerProvider;
+        this.projectId = checkNotNull(projectId);
+        this.rootOntologyDocument = checkNotNull(rootOntologyDocument);
+        this.importsCacheManagerProvider = checkNotNull(importsCacheManagerProvider);
     }
 
 
@@ -83,31 +85,29 @@ public class ProjectDocumentStore {
             writeLock.lock();
             try {
                 ListMultimap<OWLOntology, OWLOntologyChange> changesByOntology = ArrayListMultimap.create();
-                for (OWLOntologyChange change : rawChangeList) {
-                    changesByOntology.put(change.getOntology(), change);
-                }
-                for (OWLOntology ontology : changesByOntology.keySet()) {
-                    IRI docIRI = ontology.getOWLOntologyManager().getOntologyDocumentIRI(ontology);
+                rawChangeList.forEach(change -> changesByOntology.put(change.getOntology(), change));
+
+                for (var ontology : changesByOntology.keySet()) {
+                    var docIRI = ontology.getOWLOntologyManager().getOntologyDocumentIRI(ontology);
                     if (!"file".equalsIgnoreCase(docIRI.toURI().getScheme())) {
                         throw new RuntimeException("Document IRI is not a local file IRI" );
                     }
-                    List<OWLOntologyChange> ontologyChangeList = changesByOntology.get(ontology);
-                    List<OWLOntologyChangeData> infoList = new ArrayList<>();
-                    for (OWLOntologyChange change : ontologyChangeList) {
-                        OWLOntologyChangeRecord changeRecord = change.getChangeRecord();
-                        infoList.add(changeRecord.getData());
+                    var changesForOntology = changesByOntology.get(ontology);
+                    var changeDataListForOntology = new ArrayList<OWLOntologyChangeData>();
+                    for (var changeForOntology : changesForOntology) {
+                        var changeRecord = changeForOntology.getChangeRecord();
+                        changeDataListForOntology.add(changeRecord.getData());
                     }
-                    File file = new File(docIRI.toURI());
-                    BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
-                    serializer.appendOntologyChanges(file, new OntologyChangeDataList(infoList,
-                                                                                      System.currentTimeMillis(),
-                                                                                      BinaryOWLMetadata.emptyMetadata
-                                                                                              ()));
+                    var file = new File(docIRI.toURI());
+                    var serializer = new BinaryOWLOntologyDocumentSerializer();
+                    var changeDataList = new OntologyChangeDataList(changeDataListForOntology,
+                                                                    System.currentTimeMillis(),
+                                                                    BinaryOWLMetadata.emptyMetadata());
+                    serializer.appendOntologyChanges(file, changeDataList);
                 }
 
             } catch (IOException e) {
                 logger.error("An error occurred whilst saving ontology changes: {}", e.getMessage(), e);
-                e.printStackTrace();
             }
         } finally {
             writeLock.unlock();

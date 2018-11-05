@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.cmdline;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
+import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
@@ -131,7 +132,7 @@ public class SetupTools {
         WebProtegeProperties properties = getWebProtegeProperties();
         String dbHost = properties.getDBHost().orElse("localhost");
         int dbPort = Integer.parseInt(properties.getDBPort().orElse(WebProtegePropertyName.MONGO_DB_PORT.toString()));
-        return new MongoClientProvider(dbHost, dbPort, new DisposableObjectManager()).get();
+        return new MongoClientProvider(dbHost, dbPort, new ApplicationDisposablesManager(new DisposableObjectManager())).get();
     }
 
     private static Morphia getMorphia() {
