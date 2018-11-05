@@ -115,13 +115,12 @@
         <dependency>
             <groupId>com.google.auto.value</groupId>
             <artifactId>auto-value-annotations</artifactId>
-            <version>1.6</version>
-            <scope>provided</scope>
+            <version>${autovalue.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.auto.value</groupId>
             <artifactId>auto-value</artifactId>
-            <version>1.6</version>
+            <version>${autovalue.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -131,6 +130,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
             </plugin>
         </plugins>
     </build>
