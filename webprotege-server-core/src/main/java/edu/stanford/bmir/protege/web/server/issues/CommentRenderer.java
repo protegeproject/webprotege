@@ -3,11 +3,16 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.shared.issues.Mention;
 import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
 import edu.stanford.bmir.protege.web.shared.issues.mention.ParsedMention;
-import org.pegdown.Extensions;
-import org.pegdown.LinkRenderer;
-import org.pegdown.PegDownProcessor;
-import org.pegdown.plugins.PegDownPlugins;
+import org.commonmark.Extension;
+import org.commonmark.ext.autolink.AutolinkExtension;
+import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension;
+import org.commonmark.ext.gfm.tables.TablesExtension;
+import org.commonmark.ext.ins.InsExtension;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,11 +46,17 @@ public class CommentRenderer {
         if(currentPos < commentBody.length()) {
             rendering.append(commentBody.substring(currentPos));
         }
-        PegDownProcessor processor = new PegDownProcessor(Extensions.ABBREVIATIONS | Extensions.QUOTES | Extensions.STRIKETHROUGH | Extensions.AUTOLINKS | Extensions.FENCED_CODE_BLOCKS,
-                                                          new PegDownPlugins.Builder().build());
-        String html = processor.markdownToHtml(rendering.toString(), new LinkRenderer() {
-
-        });
-        return html;
+        List<Extension> extensions = Arrays.asList(AutolinkExtension.create(),
+                                                   StrikethroughExtension.create(),
+                                                   TablesExtension.create(),
+                                                   InsExtension.create());
+        Parser parser = Parser.builder()
+                .extensions(extensions)
+                .build();
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                .extensions(extensions)
+                .build();
+        Node document = parser.parse(rendering.toString());
+        return renderer.render(document);
     }
 }
