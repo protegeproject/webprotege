@@ -26,9 +26,6 @@
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
         <auto-factory.version>1.0-beta6</auto-factory.version>
         <junit.version>4.12</junit.version>
-        <!-- For intellij -->
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <commonmark.version>0.11.0</commonmark.version>
     </properties>
 
@@ -218,11 +215,10 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <!-- Do not upgrade past 3.1 to avoid triggering https://issues.apache.org/jira/browse/MSOURCES-95 -->
-                    <!-- Unless you use annotation processors, then upgrade to 3.5.1 at a minimum -->
                     <version>3.8.0</version>
                     <configuration>
                         <release>11</release>
+                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -300,6 +296,9 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
