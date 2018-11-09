@@ -372,6 +372,12 @@
                 <data.directory>/srv/webprotege</data.directory>
             </properties>
         </profile>
+        <profile>
+            <id>skip-gwt-compilation</id>
+            <properties>
+                <gwt.skipCompilation>true</gwt.skipCompilation>
+            </properties>
+        </profile>
         <!-- Profile for producing a deployment on a particular machine -->
         <profile>
             <id>deployment</id>
