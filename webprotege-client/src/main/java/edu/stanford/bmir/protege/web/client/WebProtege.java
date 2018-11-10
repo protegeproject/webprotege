@@ -61,17 +61,18 @@ public class WebProtege implements EntryPoint {
         BUNDLE.glyphs().ensureInjected();
         WidgetMapClientBundle.BUNDLE.style().ensureInjected();
 
-        ApplicationPresenter applicationPresenter = WebProtegeClientInjector.get().getApplicationPresenter();
+        WebProtegeClientInjector injector = WebProtegeClientInjector.get();
+        ApplicationPresenter applicationPresenter = injector.getApplicationPresenter();
         applicationPresenter.start();
 
         ApplicationView applicationView = applicationPresenter.getApplicationView();
 
         RootLayoutPanel.get().add(applicationView);
 
-        WebProtegeActivityManager activityManager =  WebProtegeClientInjector.get().getActivityManager();
+        WebProtegeActivityManager activityManager =  injector.getActivityManager();
         activityManager.setDisplay(applicationView);
 
-        PlaceHistoryHandler placeHistoryHandler = WebProtegeClientInjector.get().getPlaceHistoryHandler();
+        PlaceHistoryHandler placeHistoryHandler = injector.getPlaceHistoryHandler();
         placeHistoryHandler.handleCurrentHistory();
 
 
