@@ -253,9 +253,7 @@ public class ChangeManager implements HasApplyChanges {
     @Override
     public <R> ChangeApplicationResult<R> applyChanges(@Nonnull final UserId userId,
                                                        @Nonnull final ChangeListGenerator<R> changeListGenerator) throws PermissionDeniedException {
-        //noinspection ResultOfMethodCallIgnored
         checkNotNull(userId);
-        //noinspection ResultOfMethodCallIgnored
         checkNotNull(changeListGenerator);
 
         // Final check of whether the user can actually edit the project
@@ -363,7 +361,7 @@ public class ChangeManager implements HasApplyChanges {
     }
 
     private void throwEditPermissionDeniedIfNecessary(UserId userId) {
-        Subject subject = forUser(userId);
+        var subject = forUser(userId);
         var projectResource = new ProjectResource(projectId);
         if(!accessManager.hasPermission(subject, projectResource, EDIT_ONTOLOGY)) {
             throw new PermissionDeniedException("You do not have permission to edit this project", userInSessionFactory.getUserInSession(userId));
@@ -371,11 +369,11 @@ public class ChangeManager implements HasApplyChanges {
     }
 
     private EntityCrudContext getEntityCrudContext(UserId userId) {
-        PrefixedNameExpander.Builder builder = PrefixedNameExpander.builder();
-        prefixDeclarationsStore.find(projectId).getPrefixes().forEach(builder::withPrefixNamePrefix);
-        builder.withNamespaces(Namespaces.values());
-        PrefixedNameExpander expander = builder.build();
-        return entityCrudContextFactory.create(userId, expander);
+        var prefixNameExpanderBuilder = PrefixedNameExpander.builder();
+        prefixDeclarationsStore.find(projectId).getPrefixes().forEach(prefixNameExpanderBuilder::withPrefixNamePrefix);
+        prefixNameExpanderBuilder.withNamespaces(Namespaces.values());
+        var prefixNameExpander = prefixNameExpanderBuilder.build();
+        return entityCrudContextFactory.create(userId, prefixNameExpander);
     }
 
     @SuppressWarnings("unchecked")
