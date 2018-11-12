@@ -370,7 +370,9 @@ public class ChangeManager implements HasApplyChanges {
 
     private EntityCrudContext getEntityCrudContext(UserId userId) {
         var prefixNameExpanderBuilder = PrefixedNameExpander.builder();
-        prefixDeclarationsStore.find(projectId).getPrefixes().forEach(prefixNameExpanderBuilder::withPrefixNamePrefix);
+        prefixDeclarationsStore.find(projectId)
+                .getPrefixes()
+                .forEach(prefixNameExpanderBuilder::withPrefixNamePrefix);
         prefixNameExpanderBuilder.withNamespaces(Namespaces.values());
         var prefixNameExpander = prefixNameExpanderBuilder.build();
         return entityCrudContextFactory.create(userId, prefixNameExpander);
@@ -415,15 +417,15 @@ public class ChangeManager implements HasApplyChanges {
         }
     }
 
-    private String extractShortNameFromFreshEntity(OWLEntity freshEntity) {
+    private static String extractShortNameFromFreshEntity(OWLEntity freshEntity) {
         return DataFactory.getFreshEntityShortName(freshEntity);
     }
 
-    private Optional<String> extractLangTagFromFreshEntity(OWLEntity freshEntity) {
+    private static Optional<String> extractLangTagFromFreshEntity(OWLEntity freshEntity) {
         return DataFactory.getFreshEntityLangTag(freshEntity);
     }
 
-    private EntityType<?> extractEntityTypeFromFreshEntity(OWLEntity freshEntity) {
+    private static EntityType<?> extractEntityTypeFromFreshEntity(OWLEntity freshEntity) {
         return freshEntity.getEntityType();
     }
 
