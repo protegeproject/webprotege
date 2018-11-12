@@ -384,9 +384,6 @@
             <properties>
                 <data.directory>/srv/webprotege</data.directory>
             </properties>
-            <modules>
-                <module>webprotege-cli</module>
-            </modules>
         </profile>
         <!-- Profile for producing a release of WebProtege that people can download and install locally -->
         <profile>
@@ -394,9 +391,6 @@
             <properties>
                 <data.directory>/srv/webprotege</data.directory>
             </properties>
-            <modules>
-                <module>webprotege-cli</module>
-            </modules>
         </profile>
         <!-- Profile for deployment of WebProtege to webprotege.stanford.edu -->
         <profile>
@@ -418,9 +412,6 @@
                     ]]>
                 </application.analytics>
             </properties>
-            <modules>
-                <module>webprotege-cli</module>
-            </modules>
         </profile>
     </profiles>
 
@@ -430,5 +421,6 @@
         <module>webprotege-server</module>
         <module>webprotege-client</module>
         <module>webprotege-shared-core</module>
+        <module>webprotege-cli</module>
     </modules>
 </project>
