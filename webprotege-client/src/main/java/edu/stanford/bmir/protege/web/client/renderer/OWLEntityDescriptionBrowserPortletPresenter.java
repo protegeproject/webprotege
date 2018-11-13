@@ -7,10 +7,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -28,51 +29,50 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
 
     private final HTML html;
 
-    private final DispatchServiceManager dispatchServiceManager;
+    private final DispatchServiceManager dsm;
 
     @Inject
     public OWLEntityDescriptionBrowserPortletPresenter(SelectionModel selectionModel,
                                                        EventBus eventBus,
-                                                       DispatchServiceManager dispatchServiceManager,
-                                                       ProjectId projectId, DisplayNameRenderer displayNameRenderer) {
+                                                       DispatchServiceManager dsm,
+                                                       ProjectId projectId,
+                                                       DisplayNameRenderer displayNameRenderer) {
         super(selectionModel, projectId, displayNameRenderer);
-        this.dispatchServiceManager = dispatchServiceManager;
+        this.dsm = dsm;
         html = new HTML();
     }
 
     @Override
-    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi,
+                             WebProtegeEventBus eventBus) {
         portletUi.setWidget(new ScrollPanel(html));
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        CLASS_FRAME_CHANGED, event -> handleEntityChange(event.getEntity()));
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        ObjectPropertyFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        DataPropertyFrameChangedEvent.TYPE,
-                                        (DataPropertyFrameChangedEventHandler) event -> handleEntityChange(event.getEntity()));
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        AnnotationPropertyFrameChangedEvent.TYPE,
-                                        event -> handleEntityChange(event.getEntity()));
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED, event -> handleEntityChange(event.getEntity()));
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        AnnotationPropertyFrameChangedEvent.TYPE,
-                                        event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(), CLASS_FRAME_CHANGED, event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(), ObjectPropertyFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(), DataPropertyFrameChangedEvent.TYPE, (DataPropertyFrameChangedEventHandler) event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(), AnnotationPropertyFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(), NamedIndividualFrameChangedEvent.NAMED_INDIVIDUAL_CHANGED, event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(), AnnotationPropertyFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+        setDisplaySelectedEntityNameAsSubtitle(true);
         handleAfterSetEntity(getSelectedEntity());
+    }
+
+    private void handleEntityChange(OWLEntity entity) {
+        if(Optional.of(entity).equals(getSelectedEntity())) {
+            handleAfterSetEntity(getSelectedEntity());
+        }
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        entity.ifPresent(owlEntity -> dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), owlEntity),
-                                                                     this,
-                                                                     result -> html.setHTML(result.getRendering())));
+        entity.ifPresent(owlEntity -> dsm.execute(new GetEntityRenderingAction(getProjectId(),
+                                                                               owlEntity),
+                                                  this,
+                                                  this::handleRenderingResult));
     }
 
-
-    private void handleEntityChange(OWLEntity entity) {
-        if (Optional.of(entity).equals(getSelectedEntity())) {
-            handleAfterSetEntity(getSelectedEntity());
-        }
+    private void handleRenderingResult(GetEntityRenderingResult result) {
+        setDisplayedEntity(Optional.of(result.getEntityData()));
+        html.setHTML(result.getRendering());
     }
 
 }
