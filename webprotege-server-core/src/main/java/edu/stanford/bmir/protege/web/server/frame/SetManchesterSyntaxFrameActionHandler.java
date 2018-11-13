@@ -75,10 +75,10 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
             throw new SetManchesterSyntaxFrameException(result.getSubject().get());
         }
         else {
-            GetManchesterSyntaxFrameAction ac = new GetManchesterSyntaxFrameAction(action.getProjectId(),
-                                                                                   action.getSubject());
+            var ac = new GetManchesterSyntaxFrameAction(action.getProjectId(),
+                                                        action.getSubject());
             GetManchesterSyntaxFrameResult frame = handler.execute(ac, executionContext);
-            String reformattedFrame = frame.getManchesterSyntax();
+            String reformattedFrame = frame.getFrameManchesterSyntax();
             return new SetManchesterSyntaxFrameResult(eventList, reformattedFrame);
         }
     }

@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
@@ -16,6 +16,8 @@ import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.StringWriter;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
@@ -32,33 +34,35 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectAction
     @Nonnull
     private final DictionaryManager dictionaryManager;
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
     public GetManchesterSyntaxFrameActionHandler(@Nonnull AccessManager accessManager,
                                                  @Nonnull HasImportsClosure importsClosure,
                                                  @Nonnull OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
-                                                 @Nonnull DictionaryManager dictionaryManager) {
+                                                 @Nonnull DictionaryManager dictionaryManager,
+                                                 @Nonnull RenderingManager renderingManager) {
         super(accessManager);
-        this.importsClosure = importsClosure;
-        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
-        this.dictionaryManager = dictionaryManager;
+        this.importsClosure = checkNotNull(importsClosure);
+        this.ontologyIRIShortFormProvider = checkNotNull(ontologyIRIShortFormProvider);
+        this.dictionaryManager = checkNotNull(dictionaryManager);
+        this.renderingManager = checkNotNull(renderingManager);
     }
 
     @Nonnull
     @Override
     public GetManchesterSyntaxFrameResult execute(@Nonnull GetManchesterSyntaxFrameAction action,
                                                   @Nonnull ExecutionContext executionContext) {
-        StringWriter writer = new StringWriter();
-        final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(), writer,
-                                                                                                    new EscapingShortFormProvider(dictionaryManager));
+        var writer = new StringWriter();
+        var escapingShortFormProvider = new EscapingShortFormProvider(dictionaryManager);
+        var frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(),
+                                                                 writer, escapingShortFormProvider);
         frameRenderer.setOntologyIRIShortFormProvider(ontologyIRIShortFormProvider);
         frameRenderer.setRenderExtensions(true);
-//        frameRenderer.setRenderOntologyLists(true);
-//        frameRenderer.setUseTabbing(true);
-//        frameRenderer.setUseWrapping(true);
         frameRenderer.writeFrame(action.getSubject());
-//        frameRenderer.writeEntityNaryAxioms(action.getSubject());
-//        frameRenderer.writeRulesContainingPredicate(action.getSubject());
-        return new GetManchesterSyntaxFrameResult(writer.getBuffer().toString());
+        var frameSubject = renderingManager.getRendering(action.getSubject());
+        return GetManchesterSyntaxFrameResult.get(frameSubject, writer.getBuffer().toString());
     }
 
     @Nonnull

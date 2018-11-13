@@ -4,6 +4,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -36,6 +37,7 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
         portletUi.setWidget(presenter.getView());
         handleAfterSetEntity(getSelectedEntity());
         setDisplaySelectedEntityNameAsSubtitle(true);
+        presenter.setEntityDisplay(this);
     }
 
     @Override

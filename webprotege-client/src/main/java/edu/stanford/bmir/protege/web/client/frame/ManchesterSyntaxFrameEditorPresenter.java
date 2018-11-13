@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -29,6 +30,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
@@ -37,9 +41,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
  */
 public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntity>, HasFreshEntities {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private final LoggedInUserProvider loggedInUserProvider;
+    private final DispatchServiceManager dsm;
 
     private final ManchesterSyntaxFrameEditor editor;
 
@@ -87,16 +89,21 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     @Nonnull
     private final InputBox inputBox;
 
+    @Nonnull
+    private EntityDisplay entityDisplay = entityData -> {};
 
     @Inject
     public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, DispatchErrorMessageDisplay errorDisplay, @Nonnull InputBox inputBox) {
         this.editor = editor;
         this.permissionChecker = permissionChecker;
         this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.loggedInUserProvider = loggedInUserProvider;
+        this.dsm = dispatchServiceManager;
         this.errorDisplay = errorDisplay;
         this.inputBox = inputBox;
+    }
+
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     public ManchesterSyntaxFrameEditor getView() {
@@ -109,11 +116,11 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
             errorCheckTimer.schedule(500);
         });
         editor.setCreateAsEntityTypeHandler(createAsEntityTypeHandler);
-        editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(dispatchServiceManager,
+        editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(dsm,
                                                                                        projectId, this, this, errorDisplay));
         editor.setApplyChangesHandler(applyChangesActionHandler);
-        eventBus.addProjectEventHandler(projectId, UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updateState());
-        eventBus.addProjectEventHandler(projectId, UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, ON_USER_LOGGED_IN, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, ON_USER_LOGGED_OUT, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ProjectChangedEvent.TYPE, event -> refreshIfPristine());
         updateState();
@@ -135,9 +142,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     }
 
     public void refresh() {
-        if (currentSubject.isPresent()) {
-            replaceTextWithFrameRendering(currentSubject.get());
-        }
+        currentSubject.ifPresent(this::replaceTextWithFrameRendering);
     }
 
     private void refreshIfPristine() {
@@ -175,8 +180,8 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         }
         else {
             String newRendering = editor.getValue().get();
-            dispatchServiceManager.execute(new CheckManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), newRendering, freshEntities),
-                    new DispatchServiceCallback<CheckManchesterSyntaxFrameResult>(errorDisplay) {
+            dsm.execute(new CheckManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), newRendering, freshEntities),
+                        new DispatchServiceCallback<CheckManchesterSyntaxFrameResult>(errorDisplay) {
 
                         @Override
                         public void handleErrorFinally(Throwable throwable) {
@@ -227,7 +232,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         final Optional<String> editorText = editor.getValue();
         if(!isPristine() && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
             String text = editorText.get();
-            dispatchServiceManager.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new DispatchServiceCallback<SetManchesterSyntaxFrameResult>(errorDisplay) {
+            dsm.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new DispatchServiceCallback<SetManchesterSyntaxFrameResult>(errorDisplay) {
                 @Override
                 public void handleSuccess(SetManchesterSyntaxFrameResult result) {
                     if(reformatText) {
@@ -262,13 +267,11 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     private void replaceTextWithFrameRendering(final OWLEntity subject) {
         editor.setApplyChangesViewVisible(false);
         freshEntities.clear();
-        dispatchServiceManager.execute(new GetManchesterSyntaxFrameAction(projectId, subject), new DispatchServiceCallback<GetManchesterSyntaxFrameResult>(errorDisplay) {
-            @Override
-            public void handleSuccess(GetManchesterSyntaxFrameResult result) {
-                editor.setValue(result.getManchesterSyntax());
-                pristineValue = Optional.of(result.getManchesterSyntax());
-                currentSubject = Optional.of(subject);
-            }
+        dsm.execute(new GetManchesterSyntaxFrameAction(projectId, subject), result -> {
+            editor.setValue(result.getFrameManchesterSyntax());
+            entityDisplay.setDisplayedEntity(Optional.of(result.getFrameSubject()));
+            pristineValue = Optional.of(result.getFrameManchesterSyntax());
+            currentSubject = Optional.of(subject);
         });
     }
 }
