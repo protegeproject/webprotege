@@ -280,7 +280,7 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
         public OWLOntologyChangeData visit(RemoveAxiomData data) throws RuntimeException {
             final OWLAxiom ax = axiomInterner.intern(data.getAxiom());
             if(ax != null) {
-                return new AddAxiomData(ax);
+                return new RemoveAxiomData(ax);
             }
             else {
                 return data;
