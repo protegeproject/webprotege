@@ -229,11 +229,14 @@ a {
 }
 
 .widget-holder-header {
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
     padding-left: 4px !important;
     background-color: var(--widgetmap-view-header-background-color) !important;
 }
+
+.poly-split-panel-movable-splitter,.poly-split-panel-fixed-splitter {
+    background-color: var(--alternate--separator--color);
+}
+
 
 pre {
     margin:  0;

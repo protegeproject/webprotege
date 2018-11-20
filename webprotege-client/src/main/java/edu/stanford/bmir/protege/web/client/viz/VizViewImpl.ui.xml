@@ -37,6 +37,7 @@
             flex-direction: row;
             padding: 2px;
             align-items: center;
+            border-top: 1px solid literal("var(--alternate--separator--color)");
         }
         .settingsBarLabel {
             margin-right: 5px;

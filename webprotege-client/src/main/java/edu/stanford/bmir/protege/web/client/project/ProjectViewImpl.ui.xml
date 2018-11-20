@@ -19,7 +19,6 @@
         .center {
             flex-grow: 1;
             flex-shrink: 1;
-            margin: 1px;
         }
     </ui:style>
 

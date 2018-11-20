@@ -45,7 +45,6 @@
             background-color: literal("var(--inlay-panel--background-color)");
         }
         .typeGroup {
-            border-top: 1px solid literal("var(--alternate--separator--color)");
             flex-grow: 0;
             flex-shrink: 0;
         }

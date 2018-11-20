@@ -4,6 +4,7 @@
              xmlns:cellview="urn:import:com.google.gwt.user.cellview.client">
     <ui:import field="edu.stanford.bmir.protege.web.shared.issues.SortingKey.*"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .outer {
             display: flex;
@@ -16,9 +17,6 @@
         .topBar {
             flex-grow: 0;
             flex-shrink: 0;
-            background: literal("var(--inlay-panel--background-color)");
-            padding-top: 2px;
-            padding-bottom: 2px;
         }
         .bottomBar {
             flex-grow: 0;
@@ -28,7 +26,7 @@
 
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.outer}">
-        <g:HTMLPanel addStyleNames="{style.topBar}">
+        <g:HTMLPanel addStyleNames="{style.topBar} {wp.toolbar.toolbar}">
             <g:ListBox ui:field="sortingKey">
                 <g:item value="SORT_BY_ENTITY"><ui:text from="{msg.sortByEntity}"/></g:item>
                 <g:item value="SORT_BY_LAST_MODIFIED"><ui:text from="{msg.sortByLastUpdated}"/></g:item>
