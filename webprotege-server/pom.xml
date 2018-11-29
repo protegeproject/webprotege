@@ -210,6 +210,12 @@
 <script>
     window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
     ga('create', 'UA-128037947-1', 'auto');
+    ga('require', 'cleanUrlTracker', {stripQuery:true,
+    urlFieldsFilter: function(fieldsObj, parseUrl) {
+    fieldsObj.page = parseUrl(fieldsObj.page).pathname
+        .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/, '{id}')
+    return fieldsObj;
+  }});
     ga('require', 'urlChangeTracker');
     ga('send', 'pageview');
 </script>

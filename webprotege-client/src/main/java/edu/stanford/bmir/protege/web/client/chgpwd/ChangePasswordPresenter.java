@@ -82,7 +82,7 @@ public class ChangePasswordPresenter {
         modalPresenter.setPrimaryButton(DialogButton.OK);
         modalPresenter.setButtonHandler(DialogButton.OK, closer -> {
             if (changePasswordView.getNewPassword().isEmpty()) {
-                messageBox.showAlert("Please specify a new password");
+                messageBox.showAlert(messages.password_change_specifyNewPassword());
             } else if (!isPasswordConfirmationCorrect()) {
                 handleIncorrectPasswordConfirmation();
             } else {
@@ -100,11 +100,13 @@ public class ChangePasswordPresenter {
 
 
     private void handleIncorrectPasswordConfirmation() {
-        messageBox.showAlert("Passwords do not match", "Please re-enter the new password and confirmation.");
+        messageBox.showAlert(messages.password_change_passwordsDoNotMatch_Title(),
+                             messages.password_change_passwordsDoNotMatch_Body());
     }
 
     private void handleIncorrectCurrentPassword() {
-        messageBox.showAlert("Current password is incorrect", "The password that you specified as your current password is incorrect. Please re-enter your current password and try again.");
+        messageBox.showAlert(messages.password_change_currentPasswordIncorrect_Title(),
+                             messages.password_change_currentPasswordIncorrect_Body());
     }
 
 
@@ -118,8 +120,9 @@ public class ChangePasswordPresenter {
             @Override
             public void handleAuthenticationResponse(@Nonnull AuthenticationResponse response) {
                 if(response == AuthenticationResponse.SUCCESS) {
-                    messageBox.showMessage("Your password has been changed");
-                    closer.closeModal();
+                    messageBox.showMessage(messages.password_change_passwordChanged_Title(),
+                                           messages.password_change_passwordChanged_Body(),
+                                           closer::closeModal);
                 }
                 else {
                     handleIncorrectCurrentPassword();

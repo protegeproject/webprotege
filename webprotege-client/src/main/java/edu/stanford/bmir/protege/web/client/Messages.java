@@ -1,11 +1,7 @@
 package edu.stanford.bmir.protege.web.client;
 
 
-import com.google.gwt.i18n.client.LocalizableResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import org.semanticweb.owlapi.model.EntityType;
-
-import java.util.Optional;
 
 import static com.google.gwt.i18n.client.LocalizableResource.*;
 
@@ -1248,4 +1244,32 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Search for {0}")
     @Key("search.searchFor")
     String searchFor(String entityType);
+
+    @DefaultMessage("Password changed")
+    @Key("password.change.passwordChanged.title")
+    String password_change_passwordChanged_Title();
+
+    @DefaultMessage("Your password has been successfully changed.")
+    @Key("password.change.passwordChanged.body")
+    String password_change_passwordChanged_Body();
+
+    @DefaultMessage("Please specify a new password")
+    @Key("password.change.specifyNewPassword")
+    String password_change_specifyNewPassword();
+
+    @DefaultMessage("Passwords do not match")
+    @Key("password.change.passwordsDoNotMatch.title")
+    String password_change_passwordsDoNotMatch_Title();
+
+    @DefaultMessage("Please re-enter the new password and confirmation.")
+    @Key("password.change.passwordsDoNotMatch.body")
+    String password_change_passwordsDoNotMatch_Body();
+
+    @DefaultMessage("Current password is incorrect")
+    @Key("password.change.currentPasswordIncorrect.title")
+    String password_change_currentPasswordIncorrect_Title();
+
+    @DefaultMessage("The password that you specified as your current password is incorrect. Please re-enter your current password and try again.")
+    @Key("password.change.currentPasswordIncorrect.body")
+    String password_change_currentPasswordIncorrect_Body();
 }
