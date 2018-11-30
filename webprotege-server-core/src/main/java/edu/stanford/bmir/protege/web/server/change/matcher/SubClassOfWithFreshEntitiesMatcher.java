@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.change.AddAxiomData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
+import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -26,20 +28,20 @@ public class SubClassOfWithFreshEntitiesMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<String> getDescription(ChangeApplicationResult<?> result) {
-        Set<PropertyFiller> added = addedPropertyFillers(result.getChangeList())
+    public Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
+        Set<PropertyFiller> added = addedPropertyFillers(changeData)
                 .collect(Collectors.toSet());
         if (added.size() != 1) {
             return Optional.empty();
         }
         PropertyFiller addedPropertyValue = added.iterator().next();
-        Set<PropertyFiller> removed = removePropertyFillers(result.getChangeList())
+        Set<PropertyFiller> removed = removePropertyFillers(changeData)
                 .collect(Collectors.toSet());
-        Optional<OWLEntity> declaredFiller = addedDeclarationAxioms(result.getChangeList())
+        Optional<OWLEntity> declaredFiller = addedDeclarationAxioms(changeData)
                 .filter(ax -> ax.getEntity().equals(addedPropertyValue.getFiller().get()))
                 .map(OWLDeclarationAxiom::getEntity)
                 .findFirst();
-        Optional<OWLEntity> declaredProperty = addedDeclarationAxioms(result.getChangeList())
+        Optional<OWLEntity> declaredProperty = addedDeclarationAxioms(changeData)
                 .map(OWLDeclarationAxiom::getEntity)
                 .filter(entity -> entity.equals(addedPropertyValue.getProperty().get()))
                 .findFirst();
@@ -69,29 +71,29 @@ public class SubClassOfWithFreshEntitiesMatcher implements ChangeMatcher {
         }
     }
 
-    private static Stream<OWLAxiom> addedAxioms(List<OWLOntologyChange> change) {
+    private static Stream<OWLAxiom> addedAxioms(List<OWLOntologyChangeData> change) {
         return change.stream()
-                     .filter(OWLOntologyChange::isAddAxiom)
-                     .map(OWLOntologyChange::getAxiom);
+                     .filter(data -> data instanceof AddAxiomData)
+                     .map(data -> (OWLAxiom) data.getItem());
     }
 
-    private static Stream<OWLAxiom> removedAxiom(List<OWLOntologyChange> changes) {
+    private static Stream<OWLAxiom> removedAxiom(List<OWLOntologyChangeData> changes) {
         return changes.stream()
-                      .filter((OWLOntologyChange::isRemoveAxiom))
-                      .map(OWLOntologyChange::getAxiom);
+                      .filter(data -> data instanceof RemoveAxiomData)
+                      .map(data -> (OWLAxiom) data.getItem());
     }
 
-    private static Stream<OWLDeclarationAxiom> addedDeclarationAxioms(List<OWLOntologyChange> change) {
+    private static Stream<OWLDeclarationAxiom> addedDeclarationAxioms(List<OWLOntologyChangeData> change) {
         return addedAxioms(change)
                 .filter(ax -> ax instanceof OWLDeclarationAxiom)
                 .map(ax -> ((OWLDeclarationAxiom) ax));
     }
 
-    private static Stream<PropertyFiller> addedPropertyFillers(List<OWLOntologyChange> change) {
+    private static Stream<PropertyFiller> addedPropertyFillers(List<OWLOntologyChangeData> change) {
         return toPropertyFillerExtractors(addedAxioms(change));
     }
 
-    private static Stream<PropertyFiller> removePropertyFillers(List<OWLOntologyChange> change) {
+    private static Stream<PropertyFiller> removePropertyFillers(List<OWLOntologyChangeData> change) {
         return toPropertyFillerExtractors(removedAxiom(change));
     }
 

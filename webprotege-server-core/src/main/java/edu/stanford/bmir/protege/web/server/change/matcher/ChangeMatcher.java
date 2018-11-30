@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,5 +12,5 @@ import java.util.Optional;
  */
 public interface ChangeMatcher {
 
-    Optional<String> getDescription(ChangeApplicationResult<?> result);
+    Optional<String> getDescription(List<OWLOntologyChangeData> changeData);
 }
