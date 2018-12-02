@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.util.Counter;
 import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
@@ -11,7 +12,10 @@ import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * Matthew Horridge
@@ -60,6 +64,19 @@ public class OWLObjectStringFormatter {
     }
 
     private String renderObject(Object object) {
+        if(object instanceof Collection) {
+            Counter counter = new Counter();
+            Collection<?> objects = (Collection) object;
+            String list = objects.stream()
+                    .limit(50)
+                    .peek(o -> counter.increment())
+                    .map(this::renderObject)
+                    .collect(joining(", "));
+            if(counter.getCounter() < objects.size()) {
+                return list + ", ...";
+            }
+            return list;
+        }
         if (!(object instanceof OWLObject)) {
             return object.toString();
         }
