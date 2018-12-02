@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.util.Counter;
-import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.IRI;
@@ -11,10 +11,12 @@ import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -24,19 +26,25 @@ import static java.util.stream.Collectors.joining;
  */
 public class OWLObjectStringFormatter {
 
-    public static final int MAX_LITERAL_LENGTH = 50;
-
+    @Nonnull
     private final ShortFormProvider shortFormProvider;
 
+    @Nonnull
     private final IRIShortFormProvider iriShortFormProvider;
 
+    @Nonnull
+    private final LiteralRenderer literalRenderer;
+
+    @Nonnull
     private final OWLObjectRenderer render;
 
     @Inject
-    public OWLObjectStringFormatter(ShortFormProvider shortFormProvider,
-                                    IRIShortFormProvider iriShortFormProvider) {
-        this.iriShortFormProvider = iriShortFormProvider;
-        this.shortFormProvider = shortFormProvider;
+    public OWLObjectStringFormatter(@Nonnull ShortFormProvider shortFormProvider,
+                                    @Nonnull IRIShortFormProvider iriShortFormProvider,
+                                    @Nonnull LiteralRenderer literalRenderer) {
+        this.iriShortFormProvider = checkNotNull(iriShortFormProvider);
+        this.shortFormProvider = checkNotNull(shortFormProvider);
+        this.literalRenderer = checkNotNull(literalRenderer);
         render = new ManchesterOWLSyntaxOWLObjectRendererImpl();
         render.setShortFormProvider(shortFormProvider);
     }
@@ -87,33 +95,7 @@ public class OWLObjectStringFormatter {
             return iriShortFormProvider.getShortForm((IRI) object);
         }
         else if (object instanceof OWLLiteral) {
-            OWLLiteral literal = (OWLLiteral) object;
-            String rendering;
-            if(literal.isRDFPlainLiteral() || literal.getDatatype().isString()) {
-                rendering = "\"" + literal.getLiteral() + "\"";
-            }
-            else {
-                rendering = this.render.render((OWLLiteral) object);
-            }
-
-            int startIndex = rendering.indexOf("\"" );
-            int endIndex = rendering.lastIndexOf("\"" );
-            if (startIndex == -1 || endIndex == -1) {
-                return rendering;
-            }
-            if(endIndex - startIndex < 10) {
-                return rendering;
-            }
-            if (rendering.length() < MAX_LITERAL_LENGTH) {
-                return rendering;
-            }
-            String withoutQuotes = rendering.substring(startIndex + 1, endIndex);
-            String abbreviatedLexicalValue =  StringUtils.abbreviate(withoutQuotes,
-                                                MAX_LITERAL_LENGTH);
-            String prefix = rendering.substring(0, startIndex + 1);
-            String suffix = rendering.substring(endIndex);
-            return prefix + abbreviatedLexicalValue + suffix;
-
+            return literalRenderer.getLiteralRendering((OWLLiteral) object);
         }
         else {
             String rendering = this.render.render((OWLObject) object);

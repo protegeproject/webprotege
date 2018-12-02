@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
+import edu.stanford.bmir.protege.web.server.renderer.*;
+import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomComparatorImpl;
 import edu.stanford.bmir.protege.web.server.axiom.DefaultAxiomTypeOrdering;
@@ -29,15 +32,8 @@ import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
-import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesInSignatureImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesWithIRIImpl;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
-import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
@@ -65,6 +61,7 @@ import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Comparator;
 import java.util.List;
@@ -602,5 +599,16 @@ public class ProjectModule {
     @Provides
     ProjectDisposablesManager provideProjectDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
         return new ProjectDisposablesManager(disposableObjectManager);
+    }
+
+    @Provides
+    LiteralRenderer provideLiteralRenderer(@Nonnull
+                                           StringFormatterLiteralRendererImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    LiteralLexicalFormTransformer provideLiteralLexicalFormTransformer() {
+        return lexicalForm -> lexicalForm;
     }
 }
