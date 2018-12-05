@@ -23,6 +23,11 @@ public class PropertyDomainAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPr
     }
 
     @Override
+    protected boolean allowSignatureDeclarations() {
+        return true;
+    }
+
+    @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyDomainAxiom<?> axiom) {
         return formatter.format("Added %s to the domain of %s", axiom.getDomain(), axiom.getProperty());
     }

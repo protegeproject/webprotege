@@ -26,73 +26,11 @@ import static org.semanticweb.owlapi.model.EntityType.*;
  */
 public class EntityCreationMatcher implements ChangeMatcher {
 
-
     @Nonnull
     private final OWLObjectStringFormatter formatter;
 
-    private final OWLAxiomVisitorExAdapter<IRI> entityCreationAxiomVisitor = new OWLAxiomVisitorExAdapter<>(null) {
-        @Override
-        public IRI visit(OWLDeclarationAxiom axiom) {
-            return axiom.getEntity().getIRI();
-        }
-
-        @Override
-        public IRI visit(OWLClassAssertionAxiom axiom) {
-            var individual = axiom.getIndividual();
-            if(individual.isAnonymous()) {
-                return null;
-            }
-            else {
-                return individual.asOWLNamedIndividual().getIRI();
-            }
-        }
-
-        @Override
-        public IRI visit(OWLSubClassOfAxiom axiom) {
-            if(axiom.getSubClass().isAnonymous()) {
-                return null;
-            }
-            if(axiom.getSuperClass().isAnonymous()) {
-                return null;
-            }
-            return axiom.getSubClass().asOWLClass().getIRI();
-        }
-
-        @Override
-        public IRI visit(OWLSubAnnotationPropertyOfAxiom axiom) {
-            return axiom.getSubProperty().getIRI();
-        }
-
-        @Override
-        public IRI visit(OWLSubObjectPropertyOfAxiom axiom) {
-            if(axiom.getSubProperty().isAnonymous()) {
-                return null;
-            }
-            if(axiom.getSuperProperty().isAnonymous()) {
-                return null;
-            }
-            return axiom.getSubProperty().asOWLObjectProperty().getIRI();
-        }
-
-        @Override
-        public IRI visit(OWLSubDataPropertyOfAxiom axiom) {
-            if(axiom.getSubProperty().isAnonymous()) {
-                return null;
-            }
-            if(axiom.getSuperProperty().isAnonymous()) {
-                return null;
-            }
-            return axiom.getSubProperty().asOWLDataProperty().getIRI();
-        }
-
-        @Override
-        public IRI visit(OWLAnnotationAssertionAxiom axiom) {
-            if(!(axiom.getSubject() instanceof IRI)) {
-                return null;
-            }
-            return (IRI) axiom.getSubject();
-        }
-    };
+    @Nonnull
+    private final EntityCreationAxiomSubjectProvider entityCreationAxiomSubjectProvider = new EntityCreationAxiomSubjectProvider();
 
     @Inject
     public EntityCreationMatcher(@Nonnull OWLObjectStringFormatter formatter) {
@@ -218,11 +156,15 @@ public class EntityCreationMatcher implements ChangeMatcher {
     }
 
     private boolean isEntityCreationAxiom(OWLAxiom axiom) {
-        return axiom.accept(entityCreationAxiomVisitor) != null;
+        return entityCreationAxiomSubjectProvider
+                .getEntityCreationAxiomSubject(axiom)
+                .isPresent();
     }
 
     private IRI getSubject(OWLAxiom axiom) {
-        return axiom.accept(entityCreationAxiomVisitor);
+        return entityCreationAxiomSubjectProvider
+                .getEntityCreationAxiomSubject(axiom)
+                .orElseThrow();
     }
 
     private boolean isEntityDeclaringAxiomSet(List<OWLAxiom> axioms) {

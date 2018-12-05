@@ -23,6 +23,11 @@ public class PropertyRangeAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPro
     }
 
     @Override
+    protected boolean allowSignatureDeclarations() {
+        return true;
+    }
+
+    @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom) {
         return formatter.format("Added %s to the range of %s", axiom.getRange(), axiom.getProperty());
     }

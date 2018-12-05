@@ -5,11 +5,14 @@ import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLAxiomChange;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -26,26 +29,52 @@ public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements Change
 
     @Override
     public final Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
-        if(changeData.size() != 1) {
+        var nonDeclarationChangeData = getNonDeclarationChangeData(changeData);
+        if(nonDeclarationChangeData.size() != 1) {
             return Optional.empty();
         }
-        OWLOntologyChangeData change = changeData.get(0);
-        if(!(change instanceof AxiomChangeData)) {
+        var firstChange = nonDeclarationChangeData.get(0);
+        if(!(firstChange instanceof AxiomChangeData)) {
             return Optional.empty();
         }
-        OWLAxiom axiom = ((AxiomChangeData) change).getAxiom();
+        OWLAxiom axiom = ((AxiomChangeData) firstChange).getAxiom();
         if(!axiomCls.getRawType().isInstance(axiom)) {
             return Optional.empty();
         }
-        if(change instanceof AddAxiomData) {
-            return getDescriptionForAddAxiomChange((A)axiom);
+        if(firstChange instanceof AddAxiomData) {
+            return getDescriptionForAddAxiomChange((A) axiom);
         }
         else {
-            return getDescriptionForRemoveAxiomChange((A)axiom);
+            return getDescriptionForRemoveAxiomChange((A) axiom);
+        }
+    }
+
+    private List<OWLOntologyChangeData> getNonDeclarationChangeData(List<OWLOntologyChangeData> changeData) {
+        if(allowSignatureDeclarations()) {
+            var entityCreationAxiomSubjectProvider = new EntityCreationAxiomSubjectProvider();
+            return changeData.stream()
+                    .filter(data -> {
+                        if(data instanceof AddAxiomData) {
+                            var axiom = ((AddAxiomData) data).getAxiom();
+                            var subject = entityCreationAxiomSubjectProvider.getEntityCreationAxiomSubject(axiom);
+                            return subject.isEmpty();
+                        }
+                        else {
+                            return true;
+                        }
+                    })
+                    .collect(Collectors.toList());
+        }
+        else {
+            return changeData;
         }
     }
 
     protected abstract Optional<String> getDescriptionForAddAxiomChange(A axiom);
 
     protected abstract Optional<String> getDescriptionForRemoveAxiomChange(A axiom);
+
+    protected boolean allowSignatureDeclarations() {
+        return false;
+    }
 }
