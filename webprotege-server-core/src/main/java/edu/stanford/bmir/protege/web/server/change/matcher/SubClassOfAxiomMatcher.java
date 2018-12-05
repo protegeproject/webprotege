@@ -52,5 +52,8 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
         }
     }
 
-
+    @Override
+    protected boolean allowSignatureDeclarations() {
+        return true;
+    }
 }

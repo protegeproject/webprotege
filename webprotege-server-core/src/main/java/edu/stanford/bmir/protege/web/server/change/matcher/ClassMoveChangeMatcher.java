@@ -14,12 +14,12 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 13/04/16
  */
-public class SubClassOfChangeMatcher implements ChangeMatcher {
+public class ClassMoveChangeMatcher implements ChangeMatcher {
 
     private final OWLObjectStringFormatter formatter;
 
     @Inject
-    public SubClassOfChangeMatcher(OWLObjectStringFormatter formatter) {
+    public ClassMoveChangeMatcher(OWLObjectStringFormatter formatter) {
         this.formatter = formatter;
     }
 
