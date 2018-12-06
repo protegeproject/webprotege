@@ -25,9 +25,11 @@ public class EntityCreationAxiomSubjectProvider {
             if(individual.isAnonymous()) {
                 return null;
             }
-            else {
-                return individual.asOWLNamedIndividual().getIRI();
+            var classExpression = axiom.getClassExpression();
+            if(classExpression.isAnonymous()) {
+                return null;
             }
+            return individual.asOWLNamedIndividual().getIRI();
         }
 
         @Override

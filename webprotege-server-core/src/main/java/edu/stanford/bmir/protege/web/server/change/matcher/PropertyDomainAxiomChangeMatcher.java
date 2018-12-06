@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLPropertyDomainAxiom;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,7 +30,8 @@ public class PropertyDomainAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPr
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyDomainAxiom<?> axiom) {
+    protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyDomainAxiom<?> axiom,
+                                                               List<OWLOntologyChangeData> changes) {
         return formatter.format("Added %s to the domain of %s", axiom.getDomain(), axiom.getProperty());
     }
 

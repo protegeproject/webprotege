@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,7 +25,8 @@ public class PropertyAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLPrope
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyAssertionAxiom<?,?> axiom) {
+    protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyAssertionAxiom<?, ?> axiom,
+                                                               List<OWLOntologyChangeData> changes) {
         return Optional.of(formatter.formatString(
                 "Added relationship (%s %s) on individual %s",
                 axiom.getProperty(),
@@ -40,5 +43,10 @@ public class PropertyAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLPrope
                 axiom.getObject(),
                 axiom.getSubject()
         ));
+    }
+
+    @Override
+    protected boolean allowSignatureDeclarations() {
+        return true;
     }
 }

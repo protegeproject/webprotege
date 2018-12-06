@@ -42,17 +42,26 @@ public class SubClassOfEditChangeMatcher implements ChangeMatcher {
         if (!extractorAdd.isPropertyAndFillerPresent() || !extractorRem.isPropertyAndFillerPresent()) {
             return Optional.empty();
         }
-        OWLProperty addedProp = extractorAdd.getProperty().get();
-        OWLProperty removedProp = extractorRem.getProperty().get();
-        if (!addedProp.equals(removedProp)) {
-            return Optional.empty();
-        }
-        OWLObject addedFiller = extractorAdd.getFiller().get();
-        OWLObject removedFiller = extractorRem.getFiller().get();
+        var addedProp = extractorAdd.getProperty().get();
+        var removedProp = extractorRem.getProperty().get();
+
+        var addedFiller = extractorAdd.getFiller().get();
+        var removedFiller = extractorRem.getFiller().get();
+
         if (addedFiller.equals(removedFiller)) {
-            return Optional.empty();
+            if (addedProp.equals(removedProp)) {
+                return Optional.empty();
+            }
+            else {
+                return formatter.format("Changed the (%s %s) relationship to (%s %s) on %s",
+                                        removedProp,
+                                        addedFiller,
+                                        addedProp,
+                                        addedFiller,
+                                        addAx.getSubClass());
+            }
         }
-        return formatter.format("Changed the value of %s from %s to %s on %s" ,
+        return formatter.format("Changed the value of the %s relationship from %s to %s on %s" ,
                                 addedProp,
                                 removedFiller,
                                 addedFiller,

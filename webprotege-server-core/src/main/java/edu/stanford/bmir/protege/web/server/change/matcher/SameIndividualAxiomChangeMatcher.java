@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -28,7 +30,8 @@ public class SameIndividualAxiomChangeMatcher extends AbstractAxiomMatcher<OWLSa
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLSameIndividualAxiom axiom) {
+    protected Optional<String> getDescriptionForAddAxiomChange(OWLSameIndividualAxiom axiom,
+                                                               List<OWLOntologyChangeData> changes) {
         if(axiom.getIndividuals().size() != 2) {
             return Optional.empty();
         }

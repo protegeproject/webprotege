@@ -2,11 +2,15 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.change.AddAxiomData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,7 +29,17 @@ public class ClassAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLClassAss
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLClassAssertionAxiom axiom) {
+    protected Optional<String> getDescriptionForAddAxiomChange(OWLClassAssertionAxiom axiom,
+                                                               List<OWLOntologyChangeData> changes) {
+        var possibleEntityCreation = changes.stream()
+                .filter(data -> data instanceof AddAxiomData)
+                .map(data -> ((AddAxiomData) data).getAxiom())
+                .filter(ax -> ax instanceof OWLDeclarationAxiom)
+                .map(ax -> ((OWLDeclarationAxiom) ax).getEntity())
+                .anyMatch(entity -> entity.equals(axiom.getIndividual()));
+        if(possibleEntityCreation) {
+            return Optional.empty();
+        }
         PropertyFiller propertyFiller = new PropertyFiller(axiom.getIndividual(),
                                                            axiom.getClassExpression());
         Optional<OWLProperty> property = propertyFiller.getProperty();
@@ -50,5 +64,10 @@ public class ClassAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLClassAss
         else {
             return formatter.format("Removed %s as a type from %s", axiom.getClassExpression(), axiom.getIndividual());
         }
+    }
+
+    @Override
+    protected boolean allowSignatureDeclarations() {
+        return true;
     }
 }

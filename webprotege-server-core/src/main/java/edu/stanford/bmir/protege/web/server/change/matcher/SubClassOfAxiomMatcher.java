@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,7 +27,8 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLSubClassOfAxiom axiom) {
+    protected Optional<String> getDescriptionForAddAxiomChange(OWLSubClassOfAxiom axiom,
+                                                               List<OWLOntologyChangeData> changes) {
         PropertyFiller propertyFiller = new PropertyFiller(axiom.getSubClass(),
                                                            axiom.getSuperClass());
         Optional<OWLProperty> property = propertyFiller.getProperty();
@@ -33,8 +36,11 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
         if(property.isPresent() && filler.isPresent()) {
             return formatter.format("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getSubClass());
         }
-        else {
+        else if(changes.size() == 1) {
             return formatter.format("Made %s a subclass of %s", axiom.getSubClass(), axiom.getSuperClass());
+        }
+        else {
+            return Optional.empty();
         }
     }
 

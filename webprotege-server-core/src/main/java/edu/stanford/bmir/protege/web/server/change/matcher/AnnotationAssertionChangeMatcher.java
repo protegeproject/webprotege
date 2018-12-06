@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,7 +25,8 @@ public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAn
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom) {
+    protected Optional<String> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom,
+                                                               List<OWLOntologyChangeData> changes) {
         if(axiom.getProperty().isDeprecated()) {
             return formatter.format("Deprecated %s", axiom.getSubject());
         }
