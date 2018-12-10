@@ -74,9 +74,9 @@ public class MergeEntitiesMatcher implements ChangeMatcher {
         if(removedAxiomsIriSignature.isEmpty()) {
             return Optional.empty();
         }
-        var mergedEntity = removedSignature.iterator().next();
+        var mergedEntities = removedSignature;
         var mergedIntoEntity = introducedSignature.iterator().next();
-        var msg = formatter.formatString("Merged %s into %s", mergedEntity, mergedIntoEntity);
+        var msg = formatter.formatString("Merged %s into %s", mergedEntities, mergedIntoEntity);
         return Optional.of(ChangeSummary.get(msg));
     }
 
