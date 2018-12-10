@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.description.AddedRelationship;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLObject;
