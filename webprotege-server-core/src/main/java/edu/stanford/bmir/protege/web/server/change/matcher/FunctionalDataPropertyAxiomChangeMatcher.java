@@ -25,13 +25,15 @@ public class FunctionalDataPropertyAxiomChangeMatcher extends AbstractAxiomMatch
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLFunctionalDataPropertyAxiom axiom,
-                                                               List<OWLOntologyChangeData> changes) {
-        return formatter.format("Made property %s functional", axiom.getProperty());
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLFunctionalDataPropertyAxiom axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
+        var msg = formatter.formatString("Made property %s functional", axiom.getProperty());
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLFunctionalDataPropertyAxiom axiom) {
-        return formatter.format("Removed the functional property characteristic from %s", axiom.getProperty());
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLFunctionalDataPropertyAxiom axiom) {
+        var msg = formatter.formatString("Removed the functional property characteristic from %s", axiom.getProperty());
+        return Optional.of(ChangeSummary.get(msg));
     }
 }

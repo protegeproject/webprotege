@@ -28,7 +28,7 @@ public class SubClassOfWithFreshEntitiesMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
         Set<PropertyFiller> added = addedPropertyFillers(changeData)
                 .collect(Collectors.toSet());
         if (added.size() != 1) {
@@ -56,18 +56,20 @@ public class SubClassOfWithFreshEntitiesMatcher implements ChangeMatcher {
             created += formatter.formatString("Created %s inline.  " , declaredFiller.get());
         }
         if (removed.isEmpty()) {
-            return formatter.format("Added relationship (%s  %s) on %s.  %s" ,
+            var msg = formatter.formatString("Added relationship (%s  %s) on %s.  %s" ,
                                     addedPropertyValue.getProperty().get(),
                                     addedPropertyValue.getFiller().get(),
                                     addedPropertyValue.getSubject(),
                                     created);
+            return Optional.of(ChangeSummary.get(msg));
         }
         else {
-            return formatter.format("Edited relationship (%s  %s) on %s.  %s" ,
+            var msg = formatter.formatString("Edited relationship (%s  %s) on %s.  %s" ,
                                     addedPropertyValue.getProperty().get(),
                                     addedPropertyValue.getFiller().get(),
                                     addedPropertyValue.getSubject(),
                                     created);
+            return Optional.of(ChangeSummary.get(msg));
         }
     }
 

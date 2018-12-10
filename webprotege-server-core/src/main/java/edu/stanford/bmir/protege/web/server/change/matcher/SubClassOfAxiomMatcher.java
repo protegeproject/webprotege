@@ -27,17 +27,19 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLSubClassOfAxiom axiom,
-                                                               List<OWLOntologyChangeData> changes) {
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLSubClassOfAxiom axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
         PropertyFiller propertyFiller = new PropertyFiller(axiom.getSubClass(),
                                                            axiom.getSuperClass());
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getSubClass());
+            var msg = formatter.formatString("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getSubClass());
+            return Optional.of(ChangeSummary.get(msg));
         }
         else if(changes.size() == 1) {
-            return formatter.format("Made %s a subclass of %s", axiom.getSubClass(), axiom.getSuperClass());
+            var msg = formatter.formatString("Made %s a subclass of %s", axiom.getSubClass(), axiom.getSuperClass());
+            return Optional.of(ChangeSummary.get(msg));
         }
         else {
             return Optional.empty();
@@ -45,16 +47,18 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLSubClassOfAxiom axiom) {
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLSubClassOfAxiom axiom) {
         PropertyFiller propertyFiller = new PropertyFiller(axiom.getSuperClass(),
                                                            axiom.getSuperClass());
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Removed relationship (%s %s) from %s", property.get(), filler.get(), axiom.getSubClass());
+            var msg = formatter.formatString("Removed relationship (%s %s) from %s", property.get(), filler.get(), axiom.getSubClass());
+            return Optional.of(ChangeSummary.get(msg));
         }
         else {
-            return formatter.format("Removed %s as a subclass of %s" , axiom.getSubClass(), axiom.getSuperClass());
+            var msg = formatter.formatString("Removed %s as a subclass of %s" , axiom.getSubClass(), axiom.getSuperClass());
+            return Optional.of(ChangeSummary.get(msg));
         }
     }
 

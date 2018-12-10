@@ -612,4 +612,9 @@ public class ProjectModule {
     LiteralLexicalFormTransformer provideLiteralLexicalFormTransformer() {
         return lexicalForm -> lexicalForm;
     }
+
+    @Provides
+    LiteralLangTagTransformer provideLangTagTransformer() {
+        return langTag -> langTag;
+    }
 }

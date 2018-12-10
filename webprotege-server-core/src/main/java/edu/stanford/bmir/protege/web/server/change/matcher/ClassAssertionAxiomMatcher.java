@@ -29,8 +29,8 @@ public class ClassAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLClassAss
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLClassAssertionAxiom axiom,
-                                                               List<OWLOntologyChangeData> changes) {
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLClassAssertionAxiom axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
         var possibleEntityCreation = changes.stream()
                 .filter(data -> data instanceof AddAxiomData)
                 .map(data -> ((AddAxiomData) data).getAxiom())
@@ -45,24 +45,28 @@ public class ClassAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLClassAss
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getIndividual());
+            var msg = formatter.formatString("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getIndividual());
+            return Optional.of(ChangeSummary.get(msg));
         }
         else {
-            return formatter.format("Added %s as a type to %s", axiom.getClassExpression(), axiom.getIndividual());
+            var msg = formatter.formatString("Added %s as a type to %s", axiom.getClassExpression(), axiom.getIndividual());
+            return Optional.of(ChangeSummary.get(msg));
         }
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLClassAssertionAxiom axiom) {
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLClassAssertionAxiom axiom) {
         PropertyFiller propertyFiller = new PropertyFiller(axiom.getIndividual(),
                                                            axiom.getClassExpression());
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Removed relationship (%s %s) on %s", property.get(), filler.get(), axiom.getIndividual());
+            var msg = formatter.formatString("Removed relationship (%s %s) on %s", property.get(), filler.get(), axiom.getIndividual());
+            return Optional.of(ChangeSummary.get(msg));
         }
         else {
-            return formatter.format("Removed %s as a type from %s", axiom.getClassExpression(), axiom.getIndividual());
+            var msg = formatter.formatString("Removed %s as a type from %s", axiom.getClassExpression(), axiom.getIndividual());
+            return Optional.of(ChangeSummary.get(msg));
         }
     }
 

@@ -30,7 +30,7 @@ public class EntityDeletionMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
         // All changes must be removes
         var nonRemovalChange = changeData.stream()
                 .anyMatch(EntityDeletionMatcher::isNonRemovalChange);
@@ -48,7 +48,8 @@ public class EntityDeletionMatcher implements ChangeMatcher {
         if(removedEntities.isEmpty()) {
             return Optional.empty();
         }
-        return formatter.format("Deleted %s", removedEntities);
+        var msg = formatter.formatString("Deleted %s", removedEntities);
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     private static boolean isRemoveAxiomData(OWLOntologyChangeData data) {

@@ -23,7 +23,7 @@ public class SubClassOfEditChangeMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
         if (changeData.size() != 2) {
             return Optional.empty();
         }
@@ -53,19 +53,21 @@ public class SubClassOfEditChangeMatcher implements ChangeMatcher {
                 return Optional.empty();
             }
             else {
-                return formatter.format("Changed the (%s %s) relationship to (%s %s) on %s",
+                var msg = formatter.formatString("Changed the (%s %s) relationship to (%s %s) on %s",
                                         removedProp,
                                         addedFiller,
                                         addedProp,
                                         addedFiller,
                                         addAx.getSubClass());
+                return Optional.of(ChangeSummary.get(msg));
             }
         }
-        return formatter.format("Changed the value of the %s relationship from %s to %s on %s" ,
+        var msg = formatter.formatString("Changed the value of the %s relationship from %s to %s on %s" ,
                                 addedProp,
                                 removedFiller,
                                 addedFiller,
                                 addAx.getSubClass());
+        return Optional.of(ChangeSummary.get(msg));
 
     }
 }

@@ -30,13 +30,15 @@ public class PropertyDomainAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPr
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyDomainAxiom<?> axiom,
-                                                               List<OWLOntologyChangeData> changes) {
-        return formatter.format("Added %s to the domain of %s", axiom.getDomain(), axiom.getProperty());
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyDomainAxiom<?> axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
+        var msg = formatter.formatString("Added %s to the domain of %s", axiom.getDomain(), axiom.getProperty());
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLPropertyDomainAxiom<?> axiom) {
-        return formatter.format("Removed %s from the domain of %s", axiom.getDomain(), axiom.getProperty());
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLPropertyDomainAxiom<?> axiom) {
+        var msg = formatter.formatString("Removed %s from the domain of %s", axiom.getDomain(), axiom.getProperty());
+        return Optional.of(ChangeSummary.get(msg));
     }
 }

@@ -25,25 +25,29 @@ public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAn
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom,
-                                                               List<OWLOntologyChangeData> changes) {
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
         if(axiom.getProperty().isDeprecated()) {
-            return formatter.format("Deprecated %s", axiom.getSubject());
+            var msg = formatter.formatString("Deprecated %s", axiom.getSubject());
+            return Optional.of(ChangeSummary.get(msg));
         }
-        return formatter.format("Added annotation (%s  %s) to %s",
+        var msg = formatter.formatString("Added annotation (%s  %s) to %s",
                                 axiom.getProperty(),
                                 axiom.getValue(),
                                 axiom.getSubject());
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLAnnotationAssertionAxiom axiom) {
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLAnnotationAssertionAxiom axiom) {
         if(axiom.getProperty().isDeprecated()) {
-            return formatter.format("Undeprecated %s", axiom.getSubject());
+            var msg = formatter.formatString("Undeprecated %s", axiom.getSubject());
+            return Optional.of(ChangeSummary.get(msg));
         }
-        return formatter.format("Removed annotation (%s  %s) from %s",
+        var msg = formatter.formatString("Removed annotation (%s  %s) from %s",
                                 axiom.getProperty(),
                                 axiom.getValue(),
                                 axiom.getSubject());
+        return Optional.of(ChangeSummary.get(msg));
     }
 }

@@ -12,5 +12,5 @@ import java.util.Optional;
  */
 public interface ChangeMatcher {
 
-    Optional<String> getDescription(List<OWLOntologyChangeData> changeData);
+    Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData);
 }

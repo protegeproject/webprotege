@@ -30,21 +30,23 @@ public class SameIndividualAxiomChangeMatcher extends AbstractAxiomMatcher<OWLSa
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLSameIndividualAxiom axiom,
-                                                               List<OWLOntologyChangeData> changes) {
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLSameIndividualAxiom axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
         if(axiom.getIndividuals().size() != 2) {
             return Optional.empty();
         }
         Iterator<OWLIndividual> it = axiom.getIndividuals().iterator();
-        return formatter.format("Added SameAs between %s and %s", it.next(), it.next());
+        var msg = formatter.formatString("Added SameAs between %s and %s", it.next(), it.next());
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLSameIndividualAxiom axiom) {
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLSameIndividualAxiom axiom) {
         if(axiom.getIndividuals().size() != 2) {
             return Optional.empty();
         }
         Iterator<OWLIndividual> it = axiom.getIndividuals().iterator();
-        return formatter.format("Removed SameAs between %s and %s", it.next(), it.next());
+        var msg = formatter.formatString("Removed SameAs between %s and %s", it.next(), it.next());
+        return Optional.of(ChangeSummary.get(msg));
     }
 }

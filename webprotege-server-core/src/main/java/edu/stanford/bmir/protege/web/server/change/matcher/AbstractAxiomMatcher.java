@@ -29,7 +29,7 @@ public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements Change
     }
 
     @Override
-    public final Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
+    public final Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
         List<OWLOntologyChangeData> coreChangeData;
         if(changeData.size() != 1) {
             var nonDeclarationChangeData = getNonDeclarationChangeData(changeData);
@@ -105,10 +105,10 @@ public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements Change
         }
     }
 
-    protected abstract Optional<String> getDescriptionForAddAxiomChange(A axiom,
-                                                                        List<OWLOntologyChangeData> changes);
+    protected abstract Optional<ChangeSummary> getDescriptionForAddAxiomChange(A axiom,
+                                                                               List<OWLOntologyChangeData> changes);
 
-    protected abstract Optional<String> getDescriptionForRemoveAxiomChange(A axiom);
+    protected abstract Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(A axiom);
 
     protected boolean allowSignatureDeclarations() {
         return false;

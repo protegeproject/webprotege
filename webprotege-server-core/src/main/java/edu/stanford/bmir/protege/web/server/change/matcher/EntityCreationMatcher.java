@@ -38,7 +38,7 @@ public class EntityCreationMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
         // Make sure that we only have axiom additions.  Axiom removals indicate something
         // other kind of edit
         var changeDataContainsNonAxiomAddition = changeData
@@ -147,11 +147,13 @@ public class EntityCreationMatcher implements ChangeMatcher {
                     .map(String::toLowerCase)
                     .findFirst()
                     .orElse(getFallbackName(singleEntityDeclaration));
-            return formatter.format("Created %s %s", entityTypePrintName, declaredEntities);
+            var msg = formatter.formatString("Created %s %s", entityTypePrintName, declaredEntities);
+            return Optional.of(ChangeSummary.get(msg));
         }
         else {
             var parent = declaredEntityParents.iterator().next();
-            return formatter.format("Created %s as %s of %s", declaredEntities, relationshipLabel, parent);
+            var msg = formatter.formatString("Created %s as %s of %s", declaredEntities, relationshipLabel, parent);
+            return Optional.of(ChangeSummary.get(msg));
         }
     }
 

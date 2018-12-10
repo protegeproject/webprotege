@@ -25,24 +25,26 @@ public class PropertyAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLPrope
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyAssertionAxiom<?, ?> axiom,
-                                                               List<OWLOntologyChangeData> changes) {
-        return Optional.of(formatter.formatString(
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyAssertionAxiom<?, ?> axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
+        var msg = formatter.formatString(
                 "Added relationship (%s %s) on individual %s",
                 axiom.getProperty(),
                 axiom.getObject(),
                 axiom.getSubject()
-        ));
+        );
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLPropertyAssertionAxiom<?,?> axiom) {
-        return Optional.of(formatter.formatString(
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLPropertyAssertionAxiom<?,?> axiom) {
+        var msg = formatter.formatString(
                 "Removed relationship (%s %s) on individual %s",
                 axiom.getProperty(),
                 axiom.getObject(),
                 axiom.getSubject()
-        ));
+        );
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     @Override

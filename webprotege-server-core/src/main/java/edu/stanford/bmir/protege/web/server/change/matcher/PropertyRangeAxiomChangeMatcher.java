@@ -30,13 +30,15 @@ public class PropertyRangeAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPro
     }
 
     @Override
-    protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom,
-                                                               List<OWLOntologyChangeData> changes) {
-        return formatter.format("Added %s to the range of %s", axiom.getRange(), axiom.getProperty());
+    protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom,
+                                                                      List<OWLOntologyChangeData> changes) {
+        var msg = formatter.formatString("Added %s to the range of %s", axiom.getRange(), axiom.getProperty());
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     @Override
-    protected Optional<String> getDescriptionForRemoveAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom) {
-        return formatter.format("Removed %s from the range of %s", axiom.getRange(), axiom.getProperty());
+    protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom) {
+        var msg = formatter.formatString("Removed %s from the range of %s", axiom.getRange(), axiom.getProperty());
+        return Optional.of(ChangeSummary.get(msg));
     }
 }

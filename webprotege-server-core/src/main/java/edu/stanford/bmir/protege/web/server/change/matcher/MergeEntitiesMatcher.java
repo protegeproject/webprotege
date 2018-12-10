@@ -34,7 +34,7 @@ public class MergeEntitiesMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<String> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
         // Don't match simple edits matched by other stuff
         if(changeData.size() < 3) {
             return Optional.empty();
@@ -76,7 +76,8 @@ public class MergeEntitiesMatcher implements ChangeMatcher {
         }
         var mergedEntity = removedSignature.iterator().next();
         var mergedIntoEntity = introducedSignature.iterator().next();
-        return formatter.format("Merged %s into %s", mergedEntity, mergedIntoEntity);
+        var msg = formatter.formatString("Merged %s into %s", mergedEntity, mergedIntoEntity);
+        return Optional.of(ChangeSummary.get(msg));
     }
 
     private Stream<IRI> getIriSignature(OWLAxiom axiom) {
