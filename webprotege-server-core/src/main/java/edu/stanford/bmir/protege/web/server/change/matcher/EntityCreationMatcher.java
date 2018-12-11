@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.change.description.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.AxiomChangeData;
@@ -15,8 +16,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static org.semanticweb.owlapi.model.EntityType.*;
 
 /**
@@ -96,65 +96,27 @@ public class EntityCreationMatcher implements ChangeMatcher {
 
         var singleEntityDeclaration = numberOfDeclaredEntities == 1;
         final String relationshipLabel;
+        final StructuredChangeDescription description;
         if(onlyClassesAreDeclared(declaredEntityTypes)) {
-            if(singleEntityDeclaration) {
-                relationshipLabel = "a subclass";
-            }
-            else {
-                relationshipLabel = "subclasses";
-            }
+            description = CreatedClasses.get(to(declaredEntities), to(declaredEntityParents));
         }
         else if(onlyIndividualsAreDeclared(declaredEntityTypes)) {
-            if(singleEntityDeclaration) {
-                relationshipLabel = "an instance";
-            }
-            else {
-                relationshipLabel = "instances";
-            }
+            description = CreatedIndividuals.get(to(declaredEntities), to(declaredEntityParents));
         }
         else if(onlyObjectPropertiesAreDeclared(declaredEntityTypes)) {
-            if(singleEntityDeclaration) {
-                relationshipLabel = "a sub-property";
-            }
-            else {
-                relationshipLabel = "sub-properties";
-            }
+            description = CreatedObjectProperties.get(to(declaredEntities), to(declaredEntityParents));
         }
         else if(onlyDataPropertiesAreDeclared(declaredEntityTypes)) {
-            if(singleEntityDeclaration) {
-                relationshipLabel = "a sub-property";
-            }
-            else {
-                relationshipLabel = "sub-properties";
-            }
+            description = CreatedDataProperties.get(to(declaredEntities), to(declaredEntityParents));
         }
         else if(onlyAnnotationPropertiesAreDeclared(declaredEntityTypes)) {
-            if(singleEntityDeclaration) {
-                relationshipLabel = "a sub-property";
-            }
-            else {
-                relationshipLabel = "sub-properties";
-            }
+            description = CreatedAnnotationProperties.get(to(declaredEntities), to(declaredEntityParents));
         }
         else {
             // Mixed stuff created
             return Optional.empty();
         }
-        if(declaredEntityParents.isEmpty()) {
-            var entityTypePrintName = declaredEntityTypes
-                    .stream()
-                    .map(entityType -> toEntityTypePrintName(singleEntityDeclaration, entityType))
-                    .map(String::toLowerCase)
-                    .findFirst()
-                    .orElse(getFallbackName(singleEntityDeclaration));
-            var msg = formatter.formatString("Created %s %s", entityTypePrintName, declaredEntities);
-            return Optional.of(ChangeSummary.get(msg));
-        }
-        else {
-            var parent = declaredEntityParents.iterator().next();
-            var msg = formatter.formatString("Created %s as %s of %s", declaredEntities, relationshipLabel, parent);
-            return Optional.of(ChangeSummary.get(msg));
-        }
+        return Optional.of(ChangeSummary.get(description));
     }
 
     private boolean isEntityCreationAxiom(OWLAxiom axiom) {
@@ -178,6 +140,13 @@ public class EntityCreationMatcher implements ChangeMatcher {
                 .stream()
                 .filter(ax -> ax instanceof OWLDeclarationAxiom)
                 .map(ax -> ((OWLDeclarationAxiom) ax).getEntity());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <E extends OWLEntity> ImmutableSet<E> to(Collection<OWLEntity> from) {
+        return from.stream()
+                .map(e -> (E) e)
+                .collect(toImmutableSet());
     }
 
     @Nullable

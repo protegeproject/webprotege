@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import edu.stanford.bmir.protege.web.server.change.description.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLangTagTransformer;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -48,10 +46,20 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
         // Same property?
         OWLAnnotationAssertionAxiom removed = edit.getRemoveAxiom().get();
         OWLAnnotationAssertionAxiom added = edit.getAddAxiom().get();
+        if(!removed.getSubject().equals(added.getSubject())) {
+            return Optional.empty();
+        }
+        if(!added.getSubject().isIRI()) {
+            return Optional.empty();
+        }
+        var subject = (IRI) removed.getSubject();
         if(!removed.getProperty().equals(added.getProperty())) {
             var msg = formatter.formatString("Changed annotation property from %s to %s on %s", removed.getProperty(), added
                     .getProperty(), added.getSubject());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(SwitchedAnnotationProperty.get(subject,
+                                                                                removed.getProperty(),
+                                                                                added.getProperty(),
+                                                                                added.getValue())));
         }
         else {
             OWLAnnotationValue removeValue = removed.getValue();
@@ -62,33 +70,34 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
                     OWLLiteral removedLiteral = (OWLLiteral) removeValue;
                     if(addedLiteral.getLiteral().equals(removedLiteral.getLiteral())) {
                         if(addedLiteral.getLang().isEmpty()) {
-                            var msg = formatter.formatString("Removed language tag %s from %s %s annotation", getTransformedLangTag(removedLiteral
-                                                                                                                                            .getLang()), removed
-                                                                     .getSubject(), added.getProperty());
-                            return Optional.of(ChangeSummary.get(msg));
+                            return Optional.of(ChangeSummary.get(RemovedLanguageTag.get(subject,
+                                                                                        added.getProperty(),
+                                                                                        removeValue,
+                                                                                        getTransformedLangTag(removedLiteral.getLang()))));
                         }
                         else {
                             if(removedLiteral.getLang().isEmpty()) {
-                                var msg = formatter.formatString("Added language tag %s to %s %s annotation", getTransformedLangTag(addedLiteral
-                                                                                                                                            .getLang()), removed
-                                                                         .getSubject(), added.getProperty());
-                                return Optional.of(ChangeSummary.get(msg));
+                                return Optional.of(ChangeSummary.get(AddedLanguageTag.get(subject,
+                                                                                          added.getProperty(),
+                                                                                          addedValue,
+                                                                                          getTransformedLangTag(addedLiteral.getLang()))));
+
                             }
                             else {
-                                var msg = formatter.formatString("Changed language tag from %s to %s on %s %s annotation", getTransformedLangTag(removedLiteral
-                                                                                                                                                         .getLang()), getTransformedLangTag(addedLiteral
-                                                                                                                                                                                                    .getLang()), removed
-                                                                         .getSubject(), added.getProperty());
-                                return Optional.of(ChangeSummary.get(msg));
+                                return Optional.of(ChangeSummary.get(EditedLanguageTag.get(subject,
+                                                                                           added.getProperty(),
+                                                                                           removeValue,
+                                                                                           removedLiteral.getLang(),
+                                                                                           addedLiteral.getLang())));
                             }
                         }
                     }
                     else {
-                        return getValueChangedDescription(added);
+                        return getValueChangedDescription(added, removed);
                     }
                 }
                 else {
-                    return getValueChangedDescription(added);
+                    return getValueChangedDescription(added, removed);
                 }
             }
             else {
@@ -101,8 +110,12 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
         return literalLangTagTransformer.transformLangTag(LanguageTagFormatter.format(langTag));
     }
 
-    private Optional<ChangeSummary> getValueChangedDescription(OWLAnnotationAssertionAxiom added) {
+    private Optional<ChangeSummary> getValueChangedDescription(OWLAnnotationAssertionAxiom added,
+                                                               OWLAnnotationAssertionAxiom removed) {
         var msg = formatter.formatString("Edited %s annotation on %s", added.getProperty(), added.getSubject());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(EditedAnnotationValue.get((IRI) added.getSubject(),
+                                                                       added.getProperty(),
+                                                                       added.getValue(),
+                                                                       removed.getValue())));
     }
 }

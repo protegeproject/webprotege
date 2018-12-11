@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.description.AddedIndividualType;
+import edu.stanford.bmir.protege.web.server.change.description.AddedRelationship;
+import edu.stanford.bmir.protege.web.server.change.description.RemovedIndividualType;
+import edu.stanford.bmir.protege.web.server.change.description.RemovedRelationship;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
@@ -45,12 +49,13 @@ public class ClassAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLClassAss
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            var msg = formatter.formatString("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getIndividual());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(AddedRelationship.get(axiom.getIndividual(),
+                                                                       property.get(),
+                                                                       filler.get())));
         }
         else {
-            var msg = formatter.formatString("Added %s as a type to %s", axiom.getClassExpression(), axiom.getIndividual());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(AddedIndividualType.get(axiom.getIndividual(),
+                                                                         axiom.getClassExpression().asOWLClass())));
         }
     }
 
@@ -61,12 +66,13 @@ public class ClassAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLClassAss
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            var msg = formatter.formatString("Removed relationship (%s %s) on %s", property.get(), filler.get(), axiom.getIndividual());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(RemovedRelationship.get(axiom.getIndividual(),
+                                                                         property.get(),
+                                                                         filler.get())));
         }
         else {
-            var msg = formatter.formatString("Removed %s as a type from %s", axiom.getClassExpression(), axiom.getIndividual());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(RemovedIndividualType.get(axiom.getIndividual(),
+                                                                           axiom.getClassExpression().asOWLClass())));
         }
     }
 

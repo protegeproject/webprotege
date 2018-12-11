@@ -23,10 +23,10 @@ public abstract class AbstractCreatedProperties implements StructuredChangeDescr
     public String formatDescription(@Nonnull OWLObjectStringFormatter formatter) {
         if(getParentProperties().isEmpty()) {
             if(getProperties().size() == 1) {
-                return formatter.formatString("Created property %s");
+                return formatter.formatString("Created property %s", getProperties());
             }
             else {
-                return formatter.formatString("Created properties %s");
+                return formatter.formatString("Created properties %s", getProperties());
             }
         }
         else {

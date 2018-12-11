@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeSummary;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
@@ -27,11 +28,16 @@ public class ReverseEngineeredChangeDescriptionGenerator<S> implements ChangeDes
     @Nonnull
     private final List<ChangeMatcher> matchers;
 
+    @Nonnull
+    private final OWLObjectStringFormatter formatter;
+
     @Inject
     public ReverseEngineeredChangeDescriptionGenerator(@Nonnull String defaultDescription,
-                                                       @Nonnull Set<ChangeMatcher> matchers) {
-        this.defaultDescription = defaultDescription;
+                                                       @Nonnull Set<ChangeMatcher> matchers,
+                                                       @Nonnull OWLObjectStringFormatter formatter) {
+        this.defaultDescription = checkNotNull(defaultDescription);
         this.matchers = new ArrayList<>(matchers);
+        this.formatter = checkNotNull(formatter);
     }
 
     @Override
@@ -40,7 +46,7 @@ public class ReverseEngineeredChangeDescriptionGenerator<S> implements ChangeDes
         for(ChangeMatcher matcher : matchers) {
             Optional<ChangeSummary> description = matcher.getDescription(changeData);
             if(description.isPresent()) {
-                return description.get().getDescription();
+                return description.get().getDescription().formatDescription(formatter);
             }
         }
         return defaultDescription;

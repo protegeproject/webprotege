@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.description.AddedRelationship;
+import edu.stanford.bmir.protege.web.server.change.description.RemovedRelationship;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
+import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
 
 import javax.inject.Inject;
@@ -27,24 +30,16 @@ public class PropertyAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLPrope
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyAssertionAxiom<?, ?> axiom,
                                                                       List<OWLOntologyChangeData> changes) {
-        var msg = formatter.formatString(
-                "Added relationship (%s %s) on individual %s",
-                axiom.getProperty(),
-                axiom.getObject(),
-                axiom.getSubject()
-        );
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(AddedRelationship.get(axiom.getSubject(),
+                                                                   (OWLProperty) axiom.getProperty(),
+                                                                   axiom.getObject())));
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLPropertyAssertionAxiom<?,?> axiom) {
-        var msg = formatter.formatString(
-                "Removed relationship (%s %s) on individual %s",
-                axiom.getProperty(),
-                axiom.getObject(),
-                axiom.getSubject()
-        );
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(RemovedRelationship.get(axiom.getSubject(),
+                                                                     (OWLProperty) axiom.getProperty(),
+                                                                     axiom.getObject())));
     }
 
     @Override

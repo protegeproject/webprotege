@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.description.SetDataPropertyFunctional;
+import edu.stanford.bmir.protege.web.server.change.description.UnsetDataPropertyFunctional;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLFunctionalDataPropertyAxiom;
@@ -27,13 +29,11 @@ public class FunctionalDataPropertyAxiomChangeMatcher extends AbstractAxiomMatch
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLFunctionalDataPropertyAxiom axiom,
                                                                       List<OWLOntologyChangeData> changes) {
-        var msg = formatter.formatString("Made property %s functional", axiom.getProperty());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(SetDataPropertyFunctional.get(axiom.getProperty().asOWLDataProperty())));
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLFunctionalDataPropertyAxiom axiom) {
-        var msg = formatter.formatString("Removed the functional property characteristic from %s", axiom.getProperty());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(UnsetDataPropertyFunctional.get(axiom.getProperty().asOWLDataProperty())));
     }
 }

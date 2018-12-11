@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.change.description.MovedClasses;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +48,8 @@ public class ClassMoveChangeMatcher implements ChangeMatcher {
         if(remAx.getSuperClass().isAnonymous()) {
             return Optional.empty();
         }
-        var msg = formatter.formatString("Moved class %s from %s to %s", addAx.getSubClass(), remAx.getSuperClass(), addAx.getSuperClass());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(MovedClasses.get(ImmutableSet.of(addAx.getSubClass().asOWLClass()),
+                                                              ImmutableSet.of(remAx.getSuperClass().asOWLClass()),
+                                                              addAx.getSuperClass().asOWLClass())));
     }
 }

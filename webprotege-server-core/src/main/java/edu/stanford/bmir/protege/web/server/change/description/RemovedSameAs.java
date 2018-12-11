@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.server.change.description;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -15,28 +17,23 @@ import javax.annotation.Nonnull;
  * 2018-12-10
  */
 @AutoValue
-public abstract class RemovedIndividualType implements StructuredChangeDescription {
+public abstract class RemovedSameAs implements StructuredChangeDescription {
 
-    public static RemovedIndividualType get(@Nonnull OWLIndividual individual,
-                                            @Nonnull OWLClass type) {
-        return new AutoValue_RemovedIndividualType(individual, type);
+    public static RemovedSameAs get(@Nonnull ImmutableSet<OWLIndividual> individuals) {
+        return new AutoValue_RemovedSameAs(individuals);
     }
 
-    @Nonnull
-    public abstract OWLIndividual getIndividual();
-
-    @Nonnull
-    public abstract OWLClass getType();
+    public abstract ImmutableSet<OWLIndividual> getIndividuals();
 
     @Nonnull
     @Override
     public String getTypeName() {
-        return "RemovedIndividualType";
+        return "RemovedSameAs";
     }
 
     @Nonnull
     @Override
     public String formatDescription(@Nonnull OWLObjectStringFormatter formatter) {
-        return formatter.formatString("Removed %s as a type from %s", getType(), getIndividual());
+        return formatter.formatString("Removed SameAs between %s", getIndividuals());
     }
 }

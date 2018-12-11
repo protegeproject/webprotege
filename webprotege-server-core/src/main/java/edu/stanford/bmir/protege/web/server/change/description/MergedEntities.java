@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -18,14 +19,14 @@ public abstract class MergedEntities implements StructuredChangeDescription {
 
     private static final String MERGED_ENTITIES = "MergedEntities";
 
-    public static MergedEntities get(@Nonnull ImmutableSet<OWLEntity> mergedEntities,
-                                     @Nonnull OWLEntity targetEntity) {
+    public static MergedEntities get(@Nonnull ImmutableSet<IRI> mergedEntities,
+                                     @Nonnull IRI targetEntity) {
         return new AutoValue_MergedEntities(mergedEntities, targetEntity);
     }
 
-    public abstract ImmutableSet<OWLEntity> getMergedEntities();
+    public abstract ImmutableSet<IRI> getMergedEntities();
 
-    public abstract OWLEntity getTargetEntity();
+    public abstract IRI getTargetEntity();
 
     @Nonnull
     public static String getAssociatedTypeName() {

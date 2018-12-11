@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.auto.value.AutoValue;
+import edu.stanford.bmir.protege.web.server.change.description.StructuredChangeDescription;
 
 import javax.annotation.Nonnull;
 
@@ -12,10 +13,10 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class ChangeSummary {
 
-    public static ChangeSummary get(@Nonnull String description) {
+    public static ChangeSummary get(@Nonnull StructuredChangeDescription description) {
         return new AutoValue_ChangeSummary(description);
     }
 
     @Nonnull
-    public abstract String getDescription();
+    public abstract StructuredChangeDescription getDescription();
 }

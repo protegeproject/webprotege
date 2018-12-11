@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.description;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -13,24 +12,28 @@ import javax.annotation.Nonnull;
  * 2018-12-10
  */
 @AutoValue
-public abstract class DeletedEntities implements StructuredChangeDescription {
+public abstract class AddedParent implements StructuredChangeDescription {
 
-    public static DeletedEntities get(@Nonnull ImmutableSet<OWLEntity> entities) {
-        return new AutoValue_DeletedEntities(entities);
+    public static AddedParent get(@Nonnull OWLEntity child,
+                                    @Nonnull OWLEntity parent) {
+        return new AutoValue_AddedParent(child, parent);
     }
-
-    @Nonnull
-    public abstract ImmutableSet<OWLEntity> getEntities();
 
     @Nonnull
     @Override
     public String getTypeName() {
-        return "DeletedEntities";
+        return "AddedParent";
     }
 
     @Nonnull
     @Override
     public String formatDescription(@Nonnull OWLObjectStringFormatter formatter) {
-        return formatter.formatString("Deleted %s", getEntities());
+        return formatter.formatString("Added parent %s from %s", getParent(), getChild());
     }
+
+    @Nonnull
+    public abstract OWLEntity getChild();
+
+    @Nonnull
+    public abstract OWLEntity getParent();
 }

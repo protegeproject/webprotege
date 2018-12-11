@@ -67,6 +67,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
  *         <p>
@@ -158,19 +160,8 @@ public class ProjectModule {
             SameIndividualAxiomChangeMatcher sameIndividualAxiomChangeMatcher,
             EntityCreationMatcher entityCreationMatcher,
             EntityDeletionMatcher entityDeletionMatcher) {
-        return ImmutableSet.of(
-                annotationAssertionChangeMatcher,
-                propertyDomainAxiomChangeMatcher,
-                propertyRangeAxiomChangeMatcher,
-                editedAnnotationAssertionChangeMatcher,
-                functionalDataPropertyAxiomChangeMatcher,
-                classAssertionAxiomMatcher,
-                subClassOfAxiomMatcher, classMoveChangeMatcher,
-                subClassOfEditChangeMatcher,
-                subClassOfWithFreshEntitiesMatcher,
-                propertyAssertionAxiomMatcher,
-                sameIndividualAxiomChangeMatcher
-        );
+        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher, propertyDomainAxiomChangeMatcher, propertyRangeAxiomChangeMatcher, editedAnnotationAssertionChangeMatcher, functionalDataPropertyAxiomChangeMatcher, classAssertionAxiomMatcher, subClassOfAxiomMatcher, classMoveChangeMatcher, subClassOfEditChangeMatcher, subClassOfWithFreshEntitiesMatcher, propertyAssertionAxiomMatcher, sameIndividualAxiomChangeMatcher, entityCreationMatcher, entityDeletionMatcher);
+        return matchers.stream().map(m -> (ChangeMatcher)m).collect(toImmutableSet());
     }
 
     @Provides

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
@@ -20,12 +21,17 @@ public class ReverseEngineeredChangeDescriptionGeneratorFactory {
     @Nonnull
     private Set<ChangeMatcher> changeMatchers;
 
+    @Nonnull
+    private OWLObjectStringFormatter formatter;
+
     @Inject
-    public ReverseEngineeredChangeDescriptionGeneratorFactory(@Nonnull Set<ChangeMatcher> changeMatchers) {
+    public ReverseEngineeredChangeDescriptionGeneratorFactory(@Nonnull Set<ChangeMatcher> changeMatchers,
+                                                              @Nonnull OWLObjectStringFormatter formatter) {
         this.changeMatchers = ImmutableSet.copyOf(changeMatchers);
+        this.formatter = formatter;
     }
 
     public <S extends OWLEntityData> ReverseEngineeredChangeDescriptionGenerator<S> get(String defaultDescription) {
-        return new ReverseEngineeredChangeDescriptionGenerator<>(defaultDescription, changeMatchers);
+        return new ReverseEngineeredChangeDescriptionGenerator<>(defaultDescription, changeMatchers, formatter);
     }
 }

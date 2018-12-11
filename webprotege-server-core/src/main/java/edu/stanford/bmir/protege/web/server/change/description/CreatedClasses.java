@@ -45,10 +45,10 @@ public abstract class CreatedClasses implements StructuredChangeDescription {
     public String formatDescription(@Nonnull OWLObjectStringFormatter formatter) {
         if(getParentClasses().isEmpty()) {
             if(getClasses().size() == 1) {
-                return formatter.formatString("Created class %s");
+                return formatter.formatString("Created class %s", getClasses());
             }
             else {
-                return formatter.formatString("Created classes %s");
+                return formatter.formatString("Created classes %s", getClasses());
             }
         }
         else {

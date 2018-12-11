@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.change.description;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLIndividual;
 
 import javax.annotation.Nonnull;
 
@@ -13,24 +13,24 @@ import javax.annotation.Nonnull;
  * 2018-12-10
  */
 @AutoValue
-public abstract class DeletedEntities implements StructuredChangeDescription {
+public abstract class AddedSameAs implements StructuredChangeDescription {
 
-    public static DeletedEntities get(@Nonnull ImmutableSet<OWLEntity> entities) {
-        return new AutoValue_DeletedEntities(entities);
+    public static AddedSameAs get(@Nonnull ImmutableSet<OWLIndividual> individuals) {
+        return new AutoValue_AddedSameAs(individuals);
     }
 
-    @Nonnull
-    public abstract ImmutableSet<OWLEntity> getEntities();
+    public abstract ImmutableSet<OWLIndividual> getIndividuals();
 
     @Nonnull
     @Override
     public String getTypeName() {
-        return "DeletedEntities";
+        return "AddedSameAs";
     }
 
     @Nonnull
     @Override
     public String formatDescription(@Nonnull OWLObjectStringFormatter formatter) {
-        return formatter.formatString("Deleted %s", getEntities());
+        return formatter.formatString("Added SameAs between %s", getIndividuals());
     }
+    
 }

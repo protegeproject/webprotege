@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import edu.stanford.bmir.protege.web.server.change.description.MergedEntities;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
@@ -77,7 +79,8 @@ public class MergeEntitiesMatcher implements ChangeMatcher {
         var mergedEntities = removedSignature;
         var mergedIntoEntity = introducedSignature.iterator().next();
         var msg = formatter.formatString("Merged %s into %s", mergedEntities, mergedIntoEntity);
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(MergedEntities.get(ImmutableSet.copyOf(mergedEntities),
+                                                                mergedIntoEntity)));
     }
 
     private Stream<IRI> getIriSignature(OWLAxiom axiom) {

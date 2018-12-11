@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.description.AddedSameAs;
+import edu.stanford.bmir.protege.web.server.change.description.RemovedSameAs;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLIndividual;
@@ -32,21 +35,11 @@ public class SameIndividualAxiomChangeMatcher extends AbstractAxiomMatcher<OWLSa
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLSameIndividualAxiom axiom,
                                                                       List<OWLOntologyChangeData> changes) {
-        if(axiom.getIndividuals().size() != 2) {
-            return Optional.empty();
-        }
-        Iterator<OWLIndividual> it = axiom.getIndividuals().iterator();
-        var msg = formatter.formatString("Added SameAs between %s and %s", it.next(), it.next());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(AddedSameAs.get(ImmutableSet.copyOf(axiom.getIndividuals()))));
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLSameIndividualAxiom axiom) {
-        if(axiom.getIndividuals().size() != 2) {
-            return Optional.empty();
-        }
-        Iterator<OWLIndividual> it = axiom.getIndividuals().iterator();
-        var msg = formatter.formatString("Removed SameAs between %s and %s", it.next(), it.next());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(RemovedSameAs.get(ImmutableSet.copyOf(axiom.getAnonymousIndividuals()))));
     }
 }

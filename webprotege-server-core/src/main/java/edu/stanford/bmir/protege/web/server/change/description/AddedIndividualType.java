@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.change.description;
 import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
@@ -16,13 +17,13 @@ import javax.annotation.Nonnull;
 public abstract class AddedIndividualType implements StructuredChangeDescription {
 
     @Nonnull
-    public static AddedIndividualType get(@Nonnull OWLNamedIndividual individual,
+    public static AddedIndividualType get(@Nonnull OWLIndividual individual,
                                           @Nonnull OWLClass type) {
         return new AutoValue_AddedIndividualType(individual, type);
     }
 
     @Nonnull
-    public abstract OWLNamedIndividual getIndividual();
+    public abstract OWLIndividual getIndividual();
 
     @Nonnull
     public abstract OWLClass getType();

@@ -38,10 +38,10 @@ public abstract class CreatedIndividuals implements StructuredChangeDescription 
     public String formatDescription(@Nonnull OWLObjectStringFormatter formatter) {
         if(getTypes().isEmpty()) {
             if(getIndividuals().size() == 1) {
-                return formatter.formatString("Created individual %s");
+                return formatter.formatString("Created individual %s", getIndividuals());
             }
             else {
-                return formatter.formatString("Created individuals %s");
+                return formatter.formatString("Created individuals %s", getIndividuals());
             }
         }
         else {

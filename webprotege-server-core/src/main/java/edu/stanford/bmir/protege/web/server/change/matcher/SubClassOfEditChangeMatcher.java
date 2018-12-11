@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import edu.stanford.bmir.protege.web.server.change.description.EditedRelationshipValue;
+import edu.stanford.bmir.protege.web.server.change.description.SwitchedRelationshipProperty;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.*;
@@ -53,13 +55,12 @@ public class SubClassOfEditChangeMatcher implements ChangeMatcher {
                 return Optional.empty();
             }
             else {
-                var msg = formatter.formatString("Changed the (%s %s) relationship to (%s %s) on %s",
-                                        removedProp,
-                                        addedFiller,
-                                        addedProp,
-                                        addedFiller,
-                                        addAx.getSubClass());
-                return Optional.of(ChangeSummary.get(msg));
+                return Optional.of(ChangeSummary.get(SwitchedRelationshipProperty.get(
+                        addAx.getSubClass(),
+                        removedProp,
+                        addedProp,
+                        addedFiller
+                )));
             }
         }
         var msg = formatter.formatString("Changed the value of the %s relationship from %s to %s on %s" ,
@@ -67,7 +68,10 @@ public class SubClassOfEditChangeMatcher implements ChangeMatcher {
                                 removedFiller,
                                 addedFiller,
                                 addAx.getSubClass());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(EditedRelationshipValue.get(addAx.getSubClass(),
+                                                                         addedProp,
+                                                                         removedFiller,
+                                                                         addedFiller)));
 
     }
 }

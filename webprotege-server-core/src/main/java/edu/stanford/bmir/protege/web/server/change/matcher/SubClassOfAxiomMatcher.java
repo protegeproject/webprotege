@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.description.AddedParent;
 import edu.stanford.bmir.protege.web.server.change.description.AddedRelationship;
+import edu.stanford.bmir.protege.web.server.change.description.RemovedParent;
+import edu.stanford.bmir.protege.web.server.change.description.RemovedRelationship;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLObject;
@@ -35,12 +38,13 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            var msg = formatter.formatString("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getSubClass());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(AddedRelationship.get(axiom.getSubClass(),
+                                                                       property.get(),
+                                                                       filler.get())));
         }
         else if(changes.size() == 1) {
-            var msg = formatter.formatString("Made %s a subclass of %s", axiom.getSubClass(), axiom.getSuperClass());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(AddedParent.get(axiom.getSubClass().asOWLClass(),
+                                                                 axiom.getSuperClass().asOWLClass())));
         }
         else {
             return Optional.empty();
@@ -54,12 +58,19 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            var msg = formatter.formatString("Removed relationship (%s %s) from %s", property.get(), filler.get(), axiom.getSubClass());
-            return Optional.of(ChangeSummary.get(msg));
+            return Optional.of(ChangeSummary.get(AddedRelationship.get(axiom.getSubClass(),
+                                                                       property.get(),
+                                                                       filler.get())));
         }
         else {
-            var msg = formatter.formatString("Removed %s as a subclass of %s" , axiom.getSubClass(), axiom.getSuperClass());
-            return Optional.of(ChangeSummary.get(msg));
+            if(axiom.getSubClass().isAnonymous()) {
+                return Optional.empty();
+            }
+            if(axiom.getSuperClass().isAnonymous()) {
+                return Optional.empty();
+            }
+            return Optional.of(ChangeSummary.get(RemovedParent.get(axiom.getSubClass().asOWLClass(),
+                                                                   axiom.getSuperClass().asOWLClass())));
         }
     }
 

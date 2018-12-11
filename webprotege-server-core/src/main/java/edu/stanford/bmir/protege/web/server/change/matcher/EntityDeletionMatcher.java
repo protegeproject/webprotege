@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import edu.stanford.bmir.protege.web.server.change.description.DeletedEntities;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.RemoveAxiomData;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -44,12 +46,12 @@ public class EntityDeletionMatcher implements ChangeMatcher {
                 .map(data -> ((RemoveAxiomData) data).getAxiom())
                 .filter(ax -> ax instanceof OWLDeclarationAxiom)
                 .map(ax -> ((OWLDeclarationAxiom) ax).getEntity())
-                .collect(Collectors.toSet());
+                .collect(toImmutableSet());
         if(removedEntities.isEmpty()) {
             return Optional.empty();
         }
         var msg = formatter.formatString("Deleted %s", removedEntities);
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(DeletedEntities.get(removedEntities)));
     }
 
     private static boolean isRemoveAxiomData(OWLOntologyChangeData data) {

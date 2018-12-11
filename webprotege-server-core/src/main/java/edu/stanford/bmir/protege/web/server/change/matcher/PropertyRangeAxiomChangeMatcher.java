@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.description.AddedPropertyRange;
+import edu.stanford.bmir.protege.web.server.change.description.RemovedPropertyRange;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
+import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLPropertyRangeAxiom;
 
 import javax.inject.Inject;
@@ -32,13 +35,13 @@ public class PropertyRangeAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPro
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom,
                                                                       List<OWLOntologyChangeData> changes) {
-        var msg = formatter.formatString("Added %s to the range of %s", axiom.getRange(), axiom.getProperty());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(AddedPropertyRange.get((OWLProperty) axiom.getProperty(),
+                                                                    axiom.getRange())));
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom) {
-        var msg = formatter.formatString("Removed %s from the range of %s", axiom.getRange(), axiom.getProperty());
-        return Optional.of(ChangeSummary.get(msg));
+        return Optional.of(ChangeSummary.get(RemovedPropertyRange.get((OWLProperty) axiom.getProperty(),
+                                                                      axiom.getRange())));
     }
 }
