@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.description.RemovedParent;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedRelationship;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
@@ -33,18 +34,25 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLSubClassOfAxiom axiom,
                                                                       List<OWLOntologyChangeData> changes) {
-        PropertyFiller propertyFiller = new PropertyFiller(axiom.getSubClass(),
-                                                           axiom.getSuperClass());
+        var subClass = axiom.getSubClass();
+        var superClass = axiom.getSuperClass();
+        var propertyFiller = new PropertyFiller(subClass, superClass);
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return Optional.of(ChangeSummary.get(AddedRelationship.get(axiom.getSubClass(),
+            return Optional.of(ChangeSummary.get(AddedRelationship.get(subClass,
                                                                        property.get(),
                                                                        filler.get())));
         }
         else if(changes.size() == 1) {
-            return Optional.of(ChangeSummary.get(AddedParent.get(axiom.getSubClass().asOWLClass(),
-                                                                 axiom.getSuperClass().asOWLClass())));
+            if(subClass.isAnonymous()) {
+                return Optional.empty();
+            }
+            if(superClass.isAnonymous()) {
+                return Optional.empty();
+            }
+            return Optional.of(ChangeSummary.get(AddedParent.get(subClass.asOWLClass(),
+                                                                 superClass.asOWLClass())));
         }
         else {
             return Optional.empty();
