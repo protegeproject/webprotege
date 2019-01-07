@@ -155,12 +155,11 @@ public class ProjectModule {
             SubClassOfAxiomMatcher subClassOfAxiomMatcher,
             ClassMoveChangeMatcher classMoveChangeMatcher,
             SubClassOfEditChangeMatcher subClassOfEditChangeMatcher,
-            SubClassOfWithFreshEntitiesMatcher subClassOfWithFreshEntitiesMatcher,
             PropertyAssertionAxiomMatcher propertyAssertionAxiomMatcher,
             SameIndividualAxiomChangeMatcher sameIndividualAxiomChangeMatcher,
             EntityCreationMatcher entityCreationMatcher,
             EntityDeletionMatcher entityDeletionMatcher) {
-        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher, propertyDomainAxiomChangeMatcher, propertyRangeAxiomChangeMatcher, editedAnnotationAssertionChangeMatcher, functionalDataPropertyAxiomChangeMatcher, classAssertionAxiomMatcher, subClassOfAxiomMatcher, classMoveChangeMatcher, subClassOfEditChangeMatcher, subClassOfWithFreshEntitiesMatcher, propertyAssertionAxiomMatcher, sameIndividualAxiomChangeMatcher, entityCreationMatcher, entityDeletionMatcher);
+        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher, propertyDomainAxiomChangeMatcher, propertyRangeAxiomChangeMatcher, editedAnnotationAssertionChangeMatcher, functionalDataPropertyAxiomChangeMatcher, classAssertionAxiomMatcher, subClassOfAxiomMatcher, classMoveChangeMatcher, subClassOfEditChangeMatcher, propertyAssertionAxiomMatcher, sameIndividualAxiomChangeMatcher, entityCreationMatcher, entityDeletionMatcher);
         return matchers.stream().map(m -> (ChangeMatcher)m).collect(toImmutableSet());
     }
 
