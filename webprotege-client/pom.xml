@@ -99,7 +99,6 @@
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger-compiler</artifactId>
-            <version>${dagger.version}</version>
         </dependency>
 
         <dependency>
