@@ -43,6 +43,10 @@ public abstract class EditedAnnotationValue implements StructuredChangeDescripti
     @Nonnull
     @Override
     public String formatDescription(@Nonnull OWLObjectStringFormatter formatter) {
-        return formatter.formatString("Changed the value of %s from %s to %s on %s", getProperty(), getFromValue(), getToValue(), getSubject());
+        return formatter.formatString("Changed the value of %s from %s to %s on %s",
+                                      getProperty(),
+                                      getFromValue(),
+                                      getToValue(),
+                                      getSubject());
     }
 }

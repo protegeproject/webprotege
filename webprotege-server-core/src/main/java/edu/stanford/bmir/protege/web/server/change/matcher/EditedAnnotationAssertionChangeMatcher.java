@@ -112,10 +112,9 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
 
     private Optional<ChangeSummary> getValueChangedDescription(OWLAnnotationAssertionAxiom added,
                                                                OWLAnnotationAssertionAxiom removed) {
-        var msg = formatter.formatString("Edited %s annotation on %s", added.getProperty(), added.getSubject());
         return Optional.of(ChangeSummary.get(EditedAnnotationValue.get((IRI) added.getSubject(),
                                                                        added.getProperty(),
-                                                                       added.getValue(),
-                                                                       removed.getValue())));
+                                                                       removed.getValue(),
+                                                                       added.getValue())));
     }
 }
