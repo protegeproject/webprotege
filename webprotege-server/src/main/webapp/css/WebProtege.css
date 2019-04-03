@@ -94,7 +94,7 @@ DARK MODE
 This is an apple specific media query that works if Dark Mode is enabled in macOS Mojave.
 There's going to be something in Media Queries Level 5, but that is some way off.
 */
-@media (prefers-dark-interface) {
+@media (prefers-color-scheme: dark) {
     :root {
         /* Used for text color */
         --primary--color:                               #d0d0d0;
@@ -111,7 +111,7 @@ There's going to be something in Media Queries Level 5, but that is some way off
         /* Used for the color of placeholder text */
         --placeholder--color:                           rgba(70, 70, 70, 1.0);
         --alternate--background-color:                  #505050;
-        --alternate--separator--color:                  #707070;
+        --alternate--separator--color:                  #505050;
         --item--hover--background-color:                #707070;
         --accent--color:                                #3699ff;
 
