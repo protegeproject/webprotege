@@ -8,6 +8,7 @@
     align-items: center;
     color: literal("var(--topbar--color)");
     background-color: literal("var(--topbar--background-color)");
+    border-bottom: 1px solid literal("var(--alternate--separator-strong--color)");
     padding-top: 1px;
     padding-bottom: 2px;
     min-height: 2.2em;

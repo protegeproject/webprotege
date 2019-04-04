@@ -27,14 +27,14 @@
         }
         .splitter {
             align-self: stretch;
-            margin-top: 3px;
-            margin-bottom: 3px;
+            /*margin-top: 3px;*/
+            /*margin-bottom: 3px;*/
             margin-left: 8px;
             margin-right: 8px;
         }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main} {wp.laf.topBar} {wp.style.panelFilled}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.laf.topBar}">
         <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarLogo}"/>
         <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
             <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {wp.laf.topBarTitle}"/>

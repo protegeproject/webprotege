@@ -20,6 +20,7 @@
 
     --alternate--background-color:          #f0f0f0;
     --alternate--separator--color:          #e0e0e0;
+    --alternate--separator-strong--color:   #d0d0d0;
 
     --accent--color:                        #116cd6;
 
@@ -36,7 +37,10 @@
     --selected-menu-item--background-color: var(--accent--color);
     --selected-menu-item--color:            white;
 
+    --tab--background-color:                #e4e4e4;
     --selected-tab--color:                  var(--accent--color);
+    --selected-tab--background-color:       #f4f4f4;
+
 
     --btn--hover--color:                    var(--accent--color);
 
@@ -127,6 +131,7 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --btn--hover--color:                            var(--accent--color);
         --wp-topbar--color:                             var(--primary--color);
         --topbar--background-color:                     var(--alternate--background-color);
+        --topbar--border:                               1px solid var(--alternate--separator--color);
         --inlay-panel--background-color:                var(--alternate--background-color);
         --inlay-panel--border:                          1px solid var(--alternate--separator--color);
         --inlay-panel--border-radius:                   3px;

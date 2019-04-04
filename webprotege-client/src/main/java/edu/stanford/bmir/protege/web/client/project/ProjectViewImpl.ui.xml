@@ -10,7 +10,6 @@
         .topBar {
             flex-grow: 0;
             flex-shrink: 0;
-            margin-bottom: 0.3em;
         }
         .linkBar {
             flex-grow: 0;

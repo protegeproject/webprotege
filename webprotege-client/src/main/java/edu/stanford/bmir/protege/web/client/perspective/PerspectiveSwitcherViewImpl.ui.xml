@@ -3,14 +3,12 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
-        @external .gwt-TabBar, .gwt-TabBarItem, .gwt-TabBarItem-selected;
+        @external .gwt-TabBar, .gwt-TabBarItem, .gwt-TabBarFirst .gwt-TabBarItem-selected;
         .main {
             display: flex;
             flex-direction: row;
-            margin-bottom: 5px;
-            margin-top: 3px;
-            border-bottom: solid 1px literal("var(--separator--color)");
             overflow: hidden;
+            background-color: literal("var(--alternate--background-color)");
         }
         .tabBarContainer {
             flex-grow: 1;
@@ -28,20 +26,29 @@
             margin-right: 5px;
         }
 
+        .main .gwt-TabBar .gwt-TabBarFirst {
+            width: 0;
+        }
+
         .main .gwt-TabBar .gwt-TabBarItem {
-            padding: 2px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 12px;
+            padding-right: 12px;
             font-size: 12px;
             cursor: pointer;
-            margin-left: 10px;
-            margin-right: 10px;
-            border-bottom: solid transparent 2px;
             outline-style: none;
             outline-width: 0;
+            background-color: literal("var(--tab--background-color)");
+            border-right: 1px solid literal("var(--alternate--separator-strong--color)");
+            border-bottom: none;
+            border-top: none;
+            margin: 0;
         }
 
         .main .gwt-TabBar .gwt-TabBarItem-selected {
-            border-bottom: solid 2px literal("var(--selected-tab--color)");
             color: literal("var(--selected-tab--color)");
+            background-color: literal("var(--selected-tab--background-color)");
             outline: none 0;
         }
 
