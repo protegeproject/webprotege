@@ -115,7 +115,7 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --separator--color:                             #707070;
 
         /* Used for the color of placeholder text */
-        --placeholder--color:                           rgba(70, 70, 70, 1.0);
+        --placeholder--color:                           rgba(100, 100, 100, 1.0);
         --alternate--background-color:                  #505050;
         --alternate--separator--color:                  #505050;
         --alternate--separator-strong--color:           #686868;
