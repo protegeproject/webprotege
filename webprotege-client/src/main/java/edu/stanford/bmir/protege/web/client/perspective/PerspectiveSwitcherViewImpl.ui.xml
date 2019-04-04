@@ -9,6 +9,7 @@
             flex-direction: row;
             overflow: hidden;
             background-color: literal("var(--alternate--background-color)");
+            border-bottom: 1px solid literal("var(--alternate--separator-strong--color)");
         }
         .tabBarContainer {
             flex-grow: 1;

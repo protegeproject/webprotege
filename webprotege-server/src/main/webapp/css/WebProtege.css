@@ -116,8 +116,9 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --placeholder--color:                           rgba(70, 70, 70, 1.0);
         --alternate--background-color:                  #505050;
         --alternate--separator--color:                  #505050;
+        --alternate--separator-strong--color:           #686868;
         --item--hover--background-color:                #707070;
-        --accent--color:                                #3699ff;
+        --accent--color:                                #408BF9;
 
         --tooltip--background-color:                    #707070;
 
@@ -127,11 +128,16 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --selected-item--color:                         white;
         --selected-menu-item--background-color:         var(--accent--color);
         --selected-menu-item--color:                    white;
-        --selected-tab--color:                          var(--accent--color);
+
         --btn--hover--color:                            var(--accent--color);
         --wp-topbar--color:                             var(--primary--color);
         --topbar--background-color:                     var(--alternate--background-color);
         --topbar--border:                               1px solid var(--alternate--separator--color);
+
+        --tab--background-color:                #404040;
+        --selected-tab--color:                  var(--accent--color);
+        --selected-tab--background-color:       #505050;
+
         --inlay-panel--background-color:                var(--alternate--background-color);
         --inlay-panel--border:                          1px solid var(--alternate--separator--color);
         --inlay-panel--border-radius:                   3px;

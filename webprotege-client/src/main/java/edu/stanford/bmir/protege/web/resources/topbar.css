@@ -41,7 +41,7 @@
 
 .wp-topbar__separator {
     width: 1px;
-    background: #c8c8c8;
+    background: literal("var(--alternate--separator-strong--color)");
 }
 
 .wp-topbar__home-icon {
