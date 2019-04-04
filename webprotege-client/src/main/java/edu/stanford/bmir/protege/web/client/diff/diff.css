@@ -9,7 +9,7 @@
 }
 
 .add {
-    background-color: mintcream;
+    background-color: literal("var(--create--background-color)");
     padding: 4px;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .remove {
-    background-color: #fff5fa;
+    background-color: literal("var(--delete--background-color)");
     padding: 4px;
 }
 
