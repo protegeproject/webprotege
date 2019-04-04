@@ -4,7 +4,6 @@
     <ui:style>
         .main {
             max-width: 350px;
-            background-color: #ffffff;
             padding: 40px;
         }
         .main p {
