@@ -138,7 +138,7 @@ There's going to be something in Media Queries Level 5, but that is some way off
 
         --tab--background-color:                #404040;
         --selected-tab--color:                  var(--accent--color);
-        --selected-tab--background-color:       #505050;
+        --selected-tab--background-color:       #585858;
 
         --inlay-panel--background-color:                var(--alternate--background-color);
         --inlay-panel--border:                          1px solid var(--alternate--separator--color);
