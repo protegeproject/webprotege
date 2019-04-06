@@ -38,6 +38,7 @@
     --selected-menu-item--color:            white;
 
     --tab--background-color:                #e4e4e4;
+    --tab--hover--background-color:         #d8d8d8;
     --selected-tab--color:                  var(--accent--color);
     --selected-tab--background-color:       #ffffff;
 

@@ -47,7 +47,11 @@
             margin: 0;
         }
 
-        .main .gwt-TabBar .gwt-TabBarItem-selected {
+        .main .gwt-TabBar .gwt-TabBarItem:hover {
+            background-color: literal("var(--tab--hover--background-color)");
+        }
+
+        .main .gwt-TabBar .gwt-TabBarItem-selected, .main .gwt-TabBar .gwt-TabBarItem-selected:hover {
             color: literal("var(--selected-tab--color)");
             background-color: literal("var(--selected-tab--background-color)");
             outline: none 0;
