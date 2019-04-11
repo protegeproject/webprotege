@@ -25,6 +25,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -48,6 +51,12 @@ public class ProjectDetailsRepository implements Repository {
     private final LoadingCache<ProjectId, ProjectDetails> cache;
 
     private final LoadingCache<ProjectId, ImmutableList<DictionaryLanguage>> displayLanguagesCache;
+
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private final Lock readLock = readWriteLock.readLock();
+
+    private final Lock writeLock = readWriteLock.writeLock();
 
     @Inject
     public ProjectDetailsRepository(@Nonnull MongoDatabase database,
@@ -96,69 +105,119 @@ public class ProjectDetailsRepository implements Repository {
     }
 
     public boolean containsProject(@Nonnull ProjectId projectId) {
-        return collection
-                .find(withProjectId(projectId))
-                .projection(new Document())
-                .limit(1)
-                .first() != null;
+        try {
+            readLock.lock();
+            return collection
+                    .find(withProjectId(projectId))
+                    .projection(new Document())
+                    .limit(1)
+                    .first() != null;
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public boolean containsProjectWithOwner(@Nonnull ProjectId projectId, @Nonnull UserId owner) {
-        return collection
-                .find(withProjectIdAndWithOwner(projectId, owner))
-                .projection(new Document())
-                .limit(1)
-                .first() != null;
+        try {
+            readLock.lock();
+            return collection
+                    .find(withProjectIdAndWithOwner(projectId, owner))
+                    .projection(new Document())
+                    .limit(1)
+                    .first() != null;
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public void setInTrash(ProjectId projectId, boolean inTrash) {
-        collection.updateOne(withProjectId(projectId), updateInTrash(inTrash));
-        cache.invalidate(projectId);
-        // No need to invalidate display languages cache
+        try {
+            writeLock.lock();
+            collection.updateOne(withProjectId(projectId), updateInTrash(inTrash));
+            cache.invalidate(projectId);
+            // No need to invalidate display languages cache
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public void setModified(ProjectId projectId, long modifiedAt, UserId modifiedBy) {
-        collection.updateOne(withProjectId(projectId), updateModified(modifiedBy, modifiedAt));
-        cache.invalidate(projectId);
-        // No need to invalidate display languages cache
+        try {
+            writeLock.lock();
+            collection.updateOne(withProjectId(projectId), updateModified(modifiedBy, modifiedAt));
+            cache.invalidate(projectId);
+            // No need to invalidate display languages cache
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public Optional<ProjectDetails> findOne(@Nonnull ProjectId projectId) {
-        return Optional.ofNullable(cache.get(projectId));
+        try {
+            readLock.lock();
+            return Optional.ofNullable(cache.get(projectId));
+        } finally {
+            readLock.unlock();
+        }
     }
 
     private Optional<ProjectDetails> findOneFromDb(@Nonnull ProjectId projectId) {
-        return Optional.ofNullable(
-                collection.find(withProjectId(projectId))
-                          .limit(1)
-                          .first())
-                       .map(d -> objectMapper.convertValue(d, ProjectDetails.class));
+        try {
+            readLock.lock();
+            return Optional.ofNullable(
+                    collection.find(withProjectId(projectId))
+                              .limit(1)
+                              .first())
+                           .map(d -> objectMapper.convertValue(d, ProjectDetails.class));
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public List<ProjectDetails> findByOwner(UserId owner) {
-        ArrayList<ProjectDetails> result = new ArrayList<>();
-        collection.find(withOwner(owner))
-                  .map(d -> objectMapper.convertValue(d, ProjectDetails.class))
-                  .into(result);
-        return result;
+        try {
+            readLock.lock();
+            ArrayList<ProjectDetails> result = new ArrayList<>();
+            collection.find(withOwner(owner))
+                      .map(d -> objectMapper.convertValue(d, ProjectDetails.class))
+                      .into(result);
+            return result;
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public void save(@Nonnull ProjectDetails projectRecord) {
-        Document document = objectMapper.convertValue(projectRecord, Document.class);
-        collection.replaceOne(withProjectId(projectRecord.getProjectId()),
-                              document,
-                              new UpdateOptions().upsert(true));
-        cache.invalidate(projectRecord.getProjectId());
-        displayLanguagesCache.invalidate(projectRecord.getProjectId());
+        try {
+            writeLock.lock();
+            Document document = objectMapper.convertValue(projectRecord, Document.class);
+            collection.replaceOne(withProjectId(projectRecord.getProjectId()),
+                                  document,
+                                  new UpdateOptions().upsert(true));
+            cache.invalidate(projectRecord.getProjectId());
+            displayLanguagesCache.invalidate(projectRecord.getProjectId());
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public void delete(@Nonnull ProjectId projectId) {
-        collection.deleteOne(withProjectId(projectId));
-        cache.invalidate(projectId);
-        displayLanguagesCache.invalidate(projectId);
+        try {
+            writeLock.lock();
+            collection.deleteOne(withProjectId(projectId));
+            cache.invalidate(projectId);
+            displayLanguagesCache.invalidate(projectId);
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public ImmutableList<DictionaryLanguage> getDisplayNameLanguages(@Nonnull ProjectId projectId) {
-        return displayLanguagesCache.get(projectId);
+        try {
+            readLock.lock();
+            return displayLanguagesCache.get(projectId);
+        } finally {
+            readLock.unlock();
+        }
     }
 }
