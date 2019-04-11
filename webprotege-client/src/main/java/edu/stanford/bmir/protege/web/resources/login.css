@@ -17,7 +17,7 @@
 }
 
 .wp-login__form {
-    background-color: literal("var(--inlay-panel--background-color)");
+    background-color: literal("var(--inlay-panel--alternate-background-color)");
     border: 5px solid literal("var(--alternate--separator--color)");
     width: 230px;
     padding-left: 40px;

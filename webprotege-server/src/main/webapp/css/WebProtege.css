@@ -54,7 +54,7 @@
 
     --inlay-panel--border-radius:                   3px;
 
-    --inlay-panel--alternate-background-color:      #fafaff;
+    --inlay-panel--alternate-background-color:      #f0f0f0;
 
     --view-toolbar--background-color:               var(--alternate--background-color);
     --view-toolbar--hover--background-color             :#e0e0e0;
