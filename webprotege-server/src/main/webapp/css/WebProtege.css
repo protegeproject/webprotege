@@ -18,7 +18,7 @@
     /* Used for the color of placeholder text */
     --placeholder--color:                   rgba(200, 200, 200, 1.0);
 
-    --alternate--background-color:          #f0f0f0;
+    --alternate--background-color:          #fafafa;
     --alternate--separator--color:          #e0e0e0;
     --alternate--separator-strong--color:   #d0d0d0;
 
@@ -252,6 +252,7 @@ a {
 .widget-holder-header {
     padding-left: 4px !important;
     background-color: var(--widgetmap-view-header-background-color) !important;
+    line-height: 1.4em;
 }
 
 .poly-split-panel-movable-splitter,.poly-split-panel-fixed-splitter {
