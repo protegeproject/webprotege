@@ -18,8 +18,10 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -63,40 +65,52 @@ public class ProjectDetailsRepository implements Repository {
                                     @Nonnull ObjectMapper objectMapper) {
         this.collection = database.getCollection(COLLECTION_NAME);
         this.objectMapper = checkNotNull(objectMapper);
-        this.cache = Caffeine.newBuilder()
-                             .expireAfterAccess(Duration.ofMinutes(2))
-                             .build(projectId -> findOneFromDb(projectId).orElse(null));
-        this.displayLanguagesCache = Caffeine.newBuilder()
-                                             .expireAfterAccess(Duration.ofMinutes(2))
-                                             .build(projectId -> findOne(projectId).map(settings -> settings.getDefaultDisplayNameSettings().getPrimaryDisplayNameLanguages().stream()
-                                                                                                            .map(DictionaryLanguageData::getDictionaryLanguage)
-                                                                                                            .collect(toImmutableList()))
-                                                                                   .orElse(ImmutableList.of()));
+        this.cache = Caffeine
+                .newBuilder()
+                .expireAfterAccess(Duration.ofMinutes(2))
+                .build(this::findOneFromDbOrNull);
+        this.displayLanguagesCache = Caffeine
+                .newBuilder()
+                .expireAfterAccess(Duration.ofMinutes(2))
+                .build(projectId -> findOne(projectId)
+                        .map(settings -> settings
+                                .getDefaultDisplayNameSettings()
+                                .getPrimaryDisplayNameLanguages()
+                                .stream()
+                                .map(DictionaryLanguageData::getDictionaryLanguage)
+                                .collect(toImmutableList()))
+                        .orElse(ImmutableList.of()));
+    }
+
+    /**
+     * Find project details from the database.  If the project details are not found
+     * then null is returned.
+     * @param projectId The project id for the project details to be retrieved
+     */
+    @Nullable
+    private ProjectDetails findOneFromDbOrNull(@NonNull ProjectId projectId) {
+        return findOneFromDb(projectId).orElse(null);
+    }
+
+    private Optional<ProjectDetails> findOneFromDb(@Nonnull ProjectId projectId) {
+        return Optional
+                .ofNullable(collection.find(withProjectId(projectId))
+                                    .limit(1)
+                                    .first())
+                .map(d -> objectMapper.convertValue(d, ProjectDetails.class));
+    }
+
+    public Optional<ProjectDetails> findOne(@Nonnull ProjectId projectId) {
+        try {
+            readLock.lock();
+            return Optional.ofNullable(cache.get(projectId));
+        } finally {
+            readLock.unlock();
+        }
     }
 
     private static Document withProjectId(@Nonnull ProjectId projectId) {
         return new Document(PROJECT_ID, projectId.getId());
-    }
-
-    private static Document withOwner(@Nonnull UserId owner) {
-        return new Document(OWNER, owner.getUserName());
-    }
-
-    private static Document withProjectIdAndWithOwner(@Nonnull ProjectId projectId,
-                                                      @Nonnull UserId owner) {
-        return new Document(PROJECT_ID, projectId.getId())
-                .append(OWNER, owner.getUserName());
-    }
-
-    public static Bson updateInTrash(boolean inTrash) {
-        return Updates.set(IN_TRASH, inTrash);
-    }
-
-    public static Bson updateModified(UserId userId, long timestamp) {
-        return Updates.combine(
-                Updates.set(MODIFIED_AT, TimestampSerializer.toIsoDateTime(timestamp)),
-                Updates.set(MODIFIED_BY, userId.getUserName())
-        );
     }
 
     @Override
@@ -107,17 +121,14 @@ public class ProjectDetailsRepository implements Repository {
     public boolean containsProject(@Nonnull ProjectId projectId) {
         try {
             readLock.lock();
-            return collection
-                    .find(withProjectId(projectId))
-                    .projection(new Document())
-                    .limit(1)
-                    .first() != null;
+            return collection.find(withProjectId(projectId)).projection(new Document()).limit(1).first() != null;
         } finally {
             readLock.unlock();
         }
     }
 
-    public boolean containsProjectWithOwner(@Nonnull ProjectId projectId, @Nonnull UserId owner) {
+    public boolean containsProjectWithOwner(@Nonnull ProjectId projectId,
+                                            @Nonnull UserId owner) {
         try {
             readLock.lock();
             return collection
@@ -130,7 +141,13 @@ public class ProjectDetailsRepository implements Repository {
         }
     }
 
-    public void setInTrash(ProjectId projectId, boolean inTrash) {
+    private static Document withProjectIdAndWithOwner(@Nonnull ProjectId projectId,
+                                                      @Nonnull UserId owner) {
+        return new Document(PROJECT_ID, projectId.getId()).append(OWNER, owner.getUserName());
+    }
+
+    public void setInTrash(ProjectId projectId,
+                           boolean inTrash) {
         try {
             writeLock.lock();
             collection.updateOne(withProjectId(projectId), updateInTrash(inTrash));
@@ -141,7 +158,13 @@ public class ProjectDetailsRepository implements Repository {
         }
     }
 
-    public void setModified(ProjectId projectId, long modifiedAt, UserId modifiedBy) {
+    public static Bson updateInTrash(boolean inTrash) {
+        return Updates.set(IN_TRASH, inTrash);
+    }
+
+    public void setModified(ProjectId projectId,
+                            long modifiedAt,
+                            UserId modifiedBy) {
         try {
             writeLock.lock();
             collection.updateOne(withProjectId(projectId), updateModified(modifiedBy, modifiedAt));
@@ -152,48 +175,32 @@ public class ProjectDetailsRepository implements Repository {
         }
     }
 
-    public Optional<ProjectDetails> findOne(@Nonnull ProjectId projectId) {
-        try {
-            readLock.lock();
-            return Optional.ofNullable(cache.get(projectId));
-        } finally {
-            readLock.unlock();
-        }
-    }
-
-    private Optional<ProjectDetails> findOneFromDb(@Nonnull ProjectId projectId) {
-        try {
-            readLock.lock();
-            return Optional.ofNullable(
-                    collection.find(withProjectId(projectId))
-                              .limit(1)
-                              .first())
-                           .map(d -> objectMapper.convertValue(d, ProjectDetails.class));
-        } finally {
-            readLock.unlock();
-        }
+    public static Bson updateModified(UserId userId,
+                                      long timestamp) {
+        return Updates.combine(Updates.set(MODIFIED_AT, TimestampSerializer.toIsoDateTime(timestamp)), Updates.set(MODIFIED_BY, userId
+                .getUserName()));
     }
 
     public List<ProjectDetails> findByOwner(UserId owner) {
         try {
             readLock.lock();
             ArrayList<ProjectDetails> result = new ArrayList<>();
-            collection.find(withOwner(owner))
-                      .map(d -> objectMapper.convertValue(d, ProjectDetails.class))
-                      .into(result);
+            collection.find(withOwner(owner)).map(d -> objectMapper.convertValue(d, ProjectDetails.class)).into(result);
             return result;
         } finally {
             readLock.unlock();
         }
     }
 
+    private static Document withOwner(@Nonnull UserId owner) {
+        return new Document(OWNER, owner.getUserName());
+    }
+
     public void save(@Nonnull ProjectDetails projectRecord) {
         try {
             writeLock.lock();
             Document document = objectMapper.convertValue(projectRecord, Document.class);
-            collection.replaceOne(withProjectId(projectRecord.getProjectId()),
-                                  document,
-                                  new UpdateOptions().upsert(true));
+            collection.replaceOne(withProjectId(projectRecord.getProjectId()), document, new UpdateOptions().upsert(true));
             cache.invalidate(projectRecord.getProjectId());
             displayLanguagesCache.invalidate(projectRecord.getProjectId());
         } finally {
