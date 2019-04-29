@@ -45,6 +45,8 @@ public class ProjectDetailsRepository implements Repository {
 
     public static final String COLLECTION_NAME = "ProjectDetails";
 
+    private static final long MAX_CACHE_SIZE = 2000;
+
     @Nonnull
     private final ObjectMapper objectMapper;
 
@@ -67,19 +69,25 @@ public class ProjectDetailsRepository implements Repository {
         this.objectMapper = checkNotNull(objectMapper);
         this.cache = Caffeine
                 .newBuilder()
-                .expireAfterAccess(Duration.ofMinutes(2))
+                .maximumSize(MAX_CACHE_SIZE)
                 .build(this::findOneFromDbOrNull);
         this.displayLanguagesCache = Caffeine
                 .newBuilder()
-                .expireAfterAccess(Duration.ofMinutes(2))
-                .build(projectId -> findOne(projectId)
-                        .map(settings -> settings
-                                .getDefaultDisplayNameSettings()
-                                .getPrimaryDisplayNameLanguages()
-                                .stream()
-                                .map(DictionaryLanguageData::getDictionaryLanguage)
-                                .collect(toImmutableList()))
-                        .orElse(ImmutableList.of()));
+                .maximumSize(MAX_CACHE_SIZE)
+                .build(this::findDisplayLanguagesForProject);
+    }
+
+    private ImmutableList<DictionaryLanguage> findDisplayLanguagesForProject(@NonNull ProjectId projectId) {
+        // Find the project details
+        return findOne(projectId)
+                // Map the project details into a list of dictionary languages
+                .map(details -> details
+                        .getDefaultDisplayNameSettings()
+                        .getPrimaryDisplayNameLanguages()
+                        .stream()
+                        .map(DictionaryLanguageData::getDictionaryLanguage)
+                        .collect(toImmutableList()))
+                .orElse(ImmutableList.of());
     }
 
     /**
@@ -152,6 +160,7 @@ public class ProjectDetailsRepository implements Repository {
             writeLock.lock();
             collection.updateOne(withProjectId(projectId), updateInTrash(inTrash));
             cache.invalidate(projectId);
+            cache.get(projectId);
             // No need to invalidate display languages cache
         } finally {
             writeLock.unlock();
@@ -169,6 +178,7 @@ public class ProjectDetailsRepository implements Repository {
             writeLock.lock();
             collection.updateOne(withProjectId(projectId), updateModified(modifiedBy, modifiedAt));
             cache.invalidate(projectId);
+            cache.get(projectId);
             // No need to invalidate display languages cache
         } finally {
             writeLock.unlock();
@@ -199,10 +209,12 @@ public class ProjectDetailsRepository implements Repository {
     public void save(@Nonnull ProjectDetails projectRecord) {
         try {
             writeLock.lock();
-            Document document = objectMapper.convertValue(projectRecord, Document.class);
-            collection.replaceOne(withProjectId(projectRecord.getProjectId()), document, new UpdateOptions().upsert(true));
-            cache.invalidate(projectRecord.getProjectId());
-            displayLanguagesCache.invalidate(projectRecord.getProjectId());
+            var document = objectMapper.convertValue(projectRecord, Document.class);
+            var projectId = projectRecord.getProjectId();
+            collection.replaceOne(withProjectId(projectId), document, new UpdateOptions().upsert(true));
+            cache.invalidate(projectId);
+            cache.get(projectId);
+            displayLanguagesCache.invalidate(projectId);
         } finally {
             writeLock.unlock();
         }
@@ -213,6 +225,7 @@ public class ProjectDetailsRepository implements Repository {
             writeLock.lock();
             collection.deleteOne(withProjectId(projectId));
             cache.invalidate(projectId);
+            cache.get(projectId);
             displayLanguagesCache.invalidate(projectId);
         } finally {
             writeLock.unlock();
