@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class PrefixDeclarationsCsvParser {
 
     @Nonnull
-    public ImmutableList<PrefixDeclaration> parseWellKnownPrefixes(@Nonnull InputStream inputStream) throws IOException {
+    public ImmutableList<PrefixDeclaration> parse(@Nonnull InputStream inputStream) throws IOException {
         checkNotNull(inputStream);
         CsvMapper mapper = new CsvMapper();
         mapper.registerModule(new GuavaModule());

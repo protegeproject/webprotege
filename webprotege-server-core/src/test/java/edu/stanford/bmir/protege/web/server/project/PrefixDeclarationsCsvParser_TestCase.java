@@ -30,7 +30,7 @@ public class PrefixDeclarationsCsvParser_TestCase {
 
     @Test
     public void shouldParsePrefixDeclarationsFile() throws IOException {
-        var prefixDeclarations = parser.parseWellKnownPrefixes(new ByteArrayInputStream(input.getBytes()));
+        var prefixDeclarations = parser.parse(new ByteArrayInputStream(input.getBytes()));
 
         assertThat(prefixDeclarations, hasSize(2));
 
