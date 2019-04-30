@@ -85,14 +85,14 @@ public class EntityGraphBuilder {
                                           Set<OWLEntity> processed,
                                           OWLNamedIndividual individual) {
         var individualData = renderer.getIndividualData(individual);
-        createEdgesForPropertyAssertions(edges, processed, individual, individualData);
         createEdgesForClassAssertions(edges, processed, individual, individualData);
+        createEdgesForObjectPropertyAssertions(edges, processed, individual, individualData);
     }
 
-    private void createEdgesForClassAssertions(Set<Edge> edges,
-                                               Set<OWLEntity> processed,
-                                               OWLNamedIndividual individual,
-                                               OWLNamedIndividualData individualData) {
+    private void createEdgesForObjectPropertyAssertions(Set<Edge> edges,
+                                                        Set<OWLEntity> processed,
+                                                        OWLNamedIndividual individual,
+                                                        OWLNamedIndividualData individualData) {
         getOntologies()
                 .flatMap(o -> o.getObjectPropertyAssertionAxioms(individual).stream())
                 .filter(ax -> isNamedIndividual(ax.getObject()))
@@ -102,14 +102,14 @@ public class EntityGraphBuilder {
                     var objectData = renderer.getIndividualData(object);
                     var propertyData = renderer.getObjectPropertyData(ax.getProperty().asOWLObjectProperty());
                     edges.add(RelationshipEdge.get(individualData, objectData, propertyData));
-                    createEdgesForIndividual(edges, processed, object);
+                    createGraph(object, edges, processed);
                 });
     }
 
-    private void createEdgesForPropertyAssertions(Set<Edge> edges,
-                                                  Set<OWLEntity> processed,
-                                                  OWLNamedIndividual individual,
-                                                  OWLNamedIndividualData individualData) {
+    private void createEdgesForClassAssertions(Set<Edge> edges,
+                                               Set<OWLEntity> processed,
+                                               OWLNamedIndividual individual,
+                                               OWLNamedIndividualData individualData) {
         getOntologies()
                 .flatMap(o -> o.getClassAssertionAxioms(individual).stream())
                 .filter(ax -> isNotOwlThing(ax.getClassExpression()))
