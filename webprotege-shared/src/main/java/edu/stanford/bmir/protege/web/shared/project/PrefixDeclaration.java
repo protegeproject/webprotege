@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -19,6 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * perform any proper checking of prefix names or prefixes.  The only requirement is that
  * prefix names must be terminated with a colon.
  */
+@JsonPropertyOrder({"prefixName", "prefix"})
 public class PrefixDeclaration implements IsSerializable {
 
     private String prefixName;
@@ -39,6 +44,7 @@ public class PrefixDeclaration implements IsSerializable {
     /**
      * Gets the prefix name that maps to the declared prefix.
      */
+    @JsonProperty("prefixName")
     @Nonnull
     public String getPrefixName() {
         return prefixName;
@@ -47,6 +53,7 @@ public class PrefixDeclaration implements IsSerializable {
     /**
      * Gets the declared prefix.
      */
+    @JsonProperty("prefix")
     @Nonnull
     public String getPrefix() {
         return prefix;
@@ -60,6 +67,7 @@ public class PrefixDeclaration implements IsSerializable {
      * @return true if the prefix associated with this prefix declaration ends with a slash (/), hash (#) or
      * underscore (_), otherwise false.
      */
+    @JsonIgnore
     public boolean isPrefixWithCommonTerminatingCharacter() {
         return prefix.endsWith("/") || prefix.endsWith("#") || prefix.endsWith("_");
     }
@@ -72,9 +80,10 @@ public class PrefixDeclaration implements IsSerializable {
      *                   about the prefix.
      * @return           A prefix declaration that maps the specified prefix name to the specified prefix.
      */
+    @JsonCreator
     @Nonnull
-    public static PrefixDeclaration get(@Nonnull String prefixName,
-                                        @Nonnull String prefix) {
+    public static PrefixDeclaration get(@Nonnull @JsonProperty("prefixName") String prefixName,
+                                        @Nonnull @JsonProperty("prefix") String prefix) {
         checkArgument(prefixName.endsWith(":"), "A prefix name must end with a colon.");
         return new PrefixDeclaration(prefixName, prefix);
     }
