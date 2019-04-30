@@ -47,3 +47,5 @@ dbp:,http://dbpedia.org/property/
 dbo:,http://dbpedia.org/ontology/
 yago:,http://dbpedia.org/class/yago/
 wikidata:,http://www.wikidata.org/entity/
+vann:,http://purl.org/vocab/vann/
+vs:,http://www.w3.org/2003/06/sw-vocab-status/ns#
