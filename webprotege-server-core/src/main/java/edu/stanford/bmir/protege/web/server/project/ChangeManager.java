@@ -36,6 +36,7 @@ import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
@@ -186,6 +187,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final RenameMapFactory renameMapFactory;
 
+    @Nonnull
+    private final BuiltInPrefixDeclarations builtInPrefixDeclarations;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLOntology rootOntology,
@@ -208,7 +212,8 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
                          @Nonnull UserInSessionFactory userInSessionFactory,
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,
-                         @Nonnull RenameMapFactory renameMapFactory) {
+                         @Nonnull RenameMapFactory renameMapFactory,
+                         @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -231,6 +236,7 @@ public class ChangeManager implements HasApplyChanges {
         this.userInSessionFactory = userInSessionFactory;
         this.entityCrudContextFactory = entityCrudContextFactory;
         this.renameMapFactory = renameMapFactory;
+        this.builtInPrefixDeclarations = builtInPrefixDeclarations;
     }
 
     /**
@@ -373,7 +379,8 @@ public class ChangeManager implements HasApplyChanges {
         prefixDeclarationsStore.find(projectId)
                 .getPrefixes()
                 .forEach(prefixNameExpanderBuilder::withPrefixNamePrefix);
-        prefixNameExpanderBuilder.withNamespaces(Namespaces.values());
+        builtInPrefixDeclarations.getPrefixDeclarations()
+                .forEach(decl -> prefixNameExpanderBuilder.withPrefixNamePrefix(decl.getPrefixName(), decl.getPrefix()));
         var prefixNameExpander = prefixNameExpanderBuilder.build();
         return entityCrudContextFactory.create(userId, prefixNameExpander);
     }

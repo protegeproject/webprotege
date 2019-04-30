@@ -56,6 +56,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -321,5 +322,11 @@ public class ApplicationModule {
     @Provides
     ApplicationDisposablesManager provideApplicationDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
         return new ApplicationDisposablesManager(disposableObjectManager);
+    }
+
+    @ApplicationSingleton
+    @Provides
+    BuiltInPrefixDeclarations provideBuiltInPrefixDeclarations(@Nonnull BuiltInPrefixDeclarationsLoader loader) {
+        return loader.getBuiltInPrefixDeclarations();
     }
 }
