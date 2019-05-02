@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="edu.stanford.bmir.protege.web" level="info">
+    <logger name="edu.stanford.bmir.protege.web" level="error">
         <appender-ref ref="stdout"/>
     </logger>
     

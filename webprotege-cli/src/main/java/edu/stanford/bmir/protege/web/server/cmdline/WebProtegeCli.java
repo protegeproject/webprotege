@@ -32,7 +32,8 @@ public class WebProtegeCli {
         return new WebProtegeCli(asList(
                 new CreateAdminAccountCmd(),
                 new RebuildPermissionsCmd(),
-                new GenerateApiKeyCmd()
+                new GenerateApiKeyCmd(),
+                new SetPermissionsCmd()
         ));
     }
 
@@ -65,7 +66,13 @@ public class WebProtegeCli {
     }
 
     public static void main(String[] args) {
+        disableWarning();
         WebProtegeCli cli = WebProtegeCli.create();
         cli.run(asList(args));
+    }
+
+    public static void disableWarning() {
+        System.err.close();
+        System.setErr(System.out);
     }
 }
