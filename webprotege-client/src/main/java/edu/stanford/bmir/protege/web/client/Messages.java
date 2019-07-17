@@ -1004,7 +1004,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String tree_pruneBranchToRoot();
 
     
-    @DefaultMessage("Upload and Merge")
+    @DefaultMessage("Apply External Edits")
     @Key("uploadAndMerge")
     String uploadAndMerge();
 
