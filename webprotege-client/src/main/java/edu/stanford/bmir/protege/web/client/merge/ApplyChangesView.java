@@ -21,4 +21,6 @@ public interface ApplyChangesView extends IsWidget, HasInitialFocusable {
     void setAnnotationDiff(Diff<OWLAnnotation> annotationDiff);
 
     void setDiff(List<DiffElement<String, SafeHtml>> preview);
+
+    void displayEmptyDiffMessage();
 }

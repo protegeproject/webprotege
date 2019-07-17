@@ -15,5 +15,9 @@
                 <d:DiffViewImpl ui:field="diffView"/>
             </g:ScrollPanel>
         </div>
+        <div>
+            <g:Label addStyleNames="{wp.style.warningLabel}" ui:field="emptyDiffMessage">No differences found.  Please make sure that the ontology IRIs of any
+            uploaded ontology documents correspond to ontology IRIs of ontologies already in the project.</g:Label>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>

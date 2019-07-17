@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.merge;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
@@ -10,11 +12,14 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.merge.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -71,7 +76,11 @@ public class MergeUploadedProjectWorkflow {
 
     private void confirmMerge(ComputeProjectMergeResult mergeResult, final ProjectId projectId, final DocumentId documentId) {
         final ApplyChangesView view = new ApplyChangesViewImpl();
-        view.setDiff(mergeResult.getDiff());
+        List<DiffElement<String, SafeHtml>> diff = mergeResult.getDiff();
+        view.setDiff(diff);
+        if(diff.isEmpty()) {
+            view.displayEmptyDiffMessage();
+        }
         ApplyChangesDialogController controller = new ApplyChangesDialogController(view);
         controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<MergeData>() {
             @Override

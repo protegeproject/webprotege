@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import edu.stanford.bmir.protege.web.client.diff.DiffLineElementRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
@@ -39,9 +40,13 @@ public class ApplyChangesViewImpl extends Composite implements ApplyChangesView,
     @UiField
     protected DiffViewImpl diffView;
 
+    @UiField
+    Label emptyDiffMessage;
+
     public ApplyChangesViewImpl() {
         MergeClientBundle.BUNDLE.style().ensureInjected();
         initWidget(ourUiBinder.createAndBindUi(this));
+        emptyDiffMessage.setVisible(false);
     }
 
     @Override
@@ -52,6 +57,11 @@ public class ApplyChangesViewImpl extends Composite implements ApplyChangesView,
     @Override
     public void setAnnotationDiff(Diff<OWLAnnotation> annotationDiff) {
 
+    }
+
+    @Override
+    public void displayEmptyDiffMessage() {
+        emptyDiffMessage.setVisible(true);
     }
 
     @Override
