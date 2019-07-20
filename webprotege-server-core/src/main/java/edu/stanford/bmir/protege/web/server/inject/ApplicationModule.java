@@ -329,4 +329,11 @@ public class ApplicationModule {
     BuiltInPrefixDeclarations provideBuiltInPrefixDeclarations(@Nonnull BuiltInPrefixDeclarationsLoader loader) {
         return loader.getBuiltInPrefixDeclarations();
     }
+
+    @Provides
+    @DormantProjectTime
+    @ApplicationSingleton
+    long providesProjectDormantTime(WebProtegeProperties properties) {
+        return properties.getProjectDormantTime();
+    }
 }

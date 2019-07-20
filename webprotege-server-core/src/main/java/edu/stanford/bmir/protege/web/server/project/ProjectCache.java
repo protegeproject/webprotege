@@ -64,17 +64,19 @@ public class ProjectCache implements HasDispose {
      * be purged).  This can interact with the frequency with which clients poll the project event queue (which is
      * be default every 10 seconds).
      */
-    private static final long DORMANT_PROJECT_TIME_MS = 3 * 60 * 1000;
+    private final long dormantProjectTime;
 
     private final ProjectComponentFactory projectComponentFactory;
 
     @Inject
     public ProjectCache(@Nonnull ProjectComponentFactory projectComponentFactory,
-                        @Nonnull ProjectImporterFactory projectImporterFactory) {
+                        @Nonnull ProjectImporterFactory projectImporterFactory,
+                        @DormantProjectTime  long dormantProjectTime) {
         this.projectComponentFactory = checkNotNull(projectComponentFactory);
         this.projectImporterFactory = checkNotNull(projectImporterFactory);
         projectIdInterner = Interners.newWeakInterner();
-
+        this.dormantProjectTime = dormantProjectTime;
+        logger.info("Dormant project time: {} milliseconds", dormantProjectTime);
     }
 
     public ProjectActionHandlerRegistry getActionHandlerRegistry(ProjectId projectId) {
@@ -105,7 +107,7 @@ public class ProjectCache implements HasDispose {
         for (ProjectId projectId : getCachedProjectIds()) {
             long time = getLastAccessTime(projectId);
             long lastAccessTimeDiff = System.currentTimeMillis() - time;
-            if (time == 0 || lastAccessTimeDiff > DORMANT_PROJECT_TIME_MS) {
+            if (time == 0 || lastAccessTimeDiff > dormantProjectTime) {
                 purge(projectId);
             }
         }

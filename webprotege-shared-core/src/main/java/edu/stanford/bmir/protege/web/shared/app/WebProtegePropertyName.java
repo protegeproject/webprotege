@@ -36,7 +36,10 @@ public enum WebProtegePropertyName {
     MONGO_DB_HOST("mongodb.host", PropertyValue.ofString("localhost")),
 
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
-    MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017));
+    MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017)),
+
+    @WebProtegePropertiesDocumentation(description = "The time in milliseconds after which a project becomes dormant and is purgable from memory", example = "180000")
+    PROJECT_DORMANT_TIME("project.dormant.time", PropertyValue.ofInteger(180_000));
 
     private static class PropertyValue {
 
