@@ -24,3 +24,20 @@ If you have downloaded the webprotege war file from GitHub, and would like to de
 please follow the instructions at:
 
 https://github.com/protegeproject/webprotege/wiki/WebProtégé-3.0.0-Installation
+
+Building
+--------
+
+1) To build WebProtégé from source,
+
+2) Clone the github repository
+
+```git clone https://github.com/protegeproject/webprotege.git```
+
+3) Open a terminal in the directory where you clone the repository to
+
+4) Use maven to package WebProtégé
+
+```mvn package```
+
+5) The WebProtege .war file will be built into the webprotege-server directory
