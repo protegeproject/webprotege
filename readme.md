@@ -28,16 +28,11 @@ https://github.com/protegeproject/webprotege/wiki/WebProtégé-3.0.0-Installatio
 Building
 --------
 
-1) To build WebProtégé from source,
+To build WebProtégé from source
 
-2) Clone the github repository
-
-```git clone https://github.com/protegeproject/webprotege.git```
-
-3) Open a terminal in the directory where you clone the repository to
-
-4) Use maven to package WebProtégé
-
+1) Clone the github repository
+   ```git clone https://github.com/protegeproject/webprotege.git```
+2) Open a terminal in the directory where you clone the repository to
+3) Use maven to package WebProtégé
 ```mvn package```
-
 5) The WebProtege .war file will be built into the webprotege-server directory
