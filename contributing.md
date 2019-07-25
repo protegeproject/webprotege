@@ -40,4 +40,10 @@ A number of the issues are tagged as ["Easy first issue"](https://github.com/pro
 
 If you start working on an issue, please leave a comment in the issue discussion thread so that other people know you are working on the issue.  If you stop working on an issue please leave a comment in the thread so that we know.
 
+Here are some other ideas for other ways you can contribute:
+
+* __Provide a translation of the User Interface into a different language__  The WebProtégé user-interface is largely localizable.  If you would like to provide a translation of the text used in user-interface you can do this by filling out a template file.  File an issue for this first e.g. "Translate the User-Interface into Dutch".  Translations should be submitted as pull requests.
+
+* __Add more unit tests__ We are always looking to increase test coverage.  Writing tests is a good way to "get your toes wet" with the code base.  We use Mockito and Hamcrest for writing tests.  Before writing tests please take a look at other tests in the code base so that you get a feeling for the style that we use.  Test code is as important as the main code base.  Please write your test code with the same care that you would write you main code.  New tests should be submitted as pull requests.
+
 
