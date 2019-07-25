@@ -28,8 +28,10 @@ We will assign the correct labels to your issue after reviewing your issue.
 
 ## Code Contributions
 
-WebProtégé is written using Java and the Google Web Toolkit (GWT).  You can contribute by forking the GitHub repository and submitting a pull request.  Once you have submitted a pull request we will review your code and test it.  We may require you to make some changes to your code or the documentaiton of your code.  In general, you should include automated tests with your pull request.
+WebProtégé is written using Java and the Google Web Toolkit (GWT).  You can contribute by forking the GitHub repository and submitting a pull request.  
+
+Once you have submitted a pull request we will review your code and test it.  We may require you to make some changes to your code or the documentaiton of your code.  You should include automated tests with your code.
 
 ### What can I work on?
 
-Our [issue tracker](https://github.com/protegeproject/webprotege/issues) has a list of feature requests and bugs that need fixing.  You can use this as an inspiration for something to work on.
+Our [issue tracker](https://github.com/protegeproject/webprotege/issues) has a list of feature requests and bugs that need fixing.  You can use this as an inspiration for something to work on.  A number of the issues are tagged as "Good first issue".  These are some of the easier issues to tackle.  If you start working on an issue, please leave a comment in the issue discussion thread so that other people know you are working on the issue.  If you stop working on an issue please leave a comment in the thread so that we know.
