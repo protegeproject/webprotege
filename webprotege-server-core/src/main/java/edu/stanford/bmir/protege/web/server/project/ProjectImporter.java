@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
@@ -7,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.inject.project.*;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreImpl;
+import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -18,6 +20,8 @@ import org.semanticweb.owlapi.change.AddImportData;
 import org.semanticweb.owlapi.change.AddOntologyAnnotationData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
@@ -25,6 +29,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,6 +39,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 03/06/15
  */
 public class ProjectImporter {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProjectImporter.class);
 
     private final File uploadsDirectory;
 
@@ -74,12 +81,19 @@ public class ProjectImporter {
             RawProjectSources projectSources = uploadedProjectSourcesExtractor.extractProjectSources(uploadedFile);
             OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration()
                     .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+
+            logger.info("{} Creating project from sources", projectId);
+            Stopwatch stopwatch = Stopwatch.createStarted();
             RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
             OWLOntology ontology = importer.importRawProjectSources(projectSources);
-
+            logger.info("{} Loaded sources in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+            memoryMonitor.logMemoryUsage();
+            logger.info("{} Writing change log", projectId);
             generateInitialChanges(owner, rootOntologyManager);
-            writeNewProject(rootOntologyManager, ontology);
             deleteSourceFile(uploadedFile);
+            logger.info("{} Project creation from sources complete in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            memoryMonitor.logMemoryUsage();
         }
         else {
             throw new FileNotFoundException(uploadedFile.getAbsolutePath());
@@ -89,6 +103,8 @@ public class ProjectImporter {
 
     private void generateInitialChanges(UserId owner, OWLOntologyManager rootOntologyManager) {
         ImmutableList<OWLOntologyChangeRecord> changeRecords = getInitialChangeRecords(rootOntologyManager);
+        logger.info("{} Writing initial revision containing {} change records", projectId, changeRecords.size());
+        Stopwatch stopwatch = Stopwatch.createStarted();
         revisionStore.addRevision(
                 new Revision(
                         owner,
@@ -96,12 +112,13 @@ public class ProjectImporter {
                         changeRecords,
                         System.currentTimeMillis(),
                         "Initial import"));
+        logger.info("{} Initial revision written in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     private ImmutableList<OWLOntologyChangeRecord> getInitialChangeRecords(OWLOntologyManager rootOntologyManager) {
-        // TODO:  Separate change generator
         ImmutableList.Builder<OWLOntologyChangeRecord> changeRecordList = ImmutableList.builder();
         for (OWLOntology ont : rootOntologyManager.getOntologies()) {
+            logger.info("{} Processing ontology source ({} axioms)", projectId, ont.getAxiomCount());
             rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
             for (OWLAxiom axiom : ont.getAxioms()) {
                 changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddAxiomData(axiom)));
@@ -122,18 +139,18 @@ public class ProjectImporter {
         FileUtils.deleteQuietly(sourceFile);
     }
 
-    private void writeNewProject(OWLOntologyManager rootOntologyManager,
-                                 OWLOntology ontology) throws OWLOntologyStorageException {
-        rootOntologyDocument.getParentFile().mkdirs();
-        rootOntologyManager.saveOntology(ontology, new BinaryOWLOntologyDocumentFormat(), IRI.create(rootOntologyDocument));
-        ImportsCacheManager importsCacheManager = new ImportsCacheManager(
-                projectId,
-                new ImportsCacheDirectoryProvider(
-                        new ProjectDirectoryProvider(
-                                new ProjectDirectoryFactory(dataDirectory),
-                                projectId))
-        );
-        importsCacheManager.cacheImports(ontology);
-    }
+//    private void writeNewProject(OWLOntologyManager rootOntologyManager,
+//                                 OWLOntology ontology) throws OWLOntologyStorageException {
+//        rootOntologyDocument.getParentFile().mkdirs();
+//        rootOntologyManager.saveOntology(ontology, new BinaryOWLOntologyDocumentFormat(), IRI.create(rootOntologyDocument));
+//        ImportsCacheManager importsCacheManager = new ImportsCacheManager(
+//                projectId,
+//                new ImportsCacheDirectoryProvider(
+//                        new ProjectDirectoryProvider(
+//                                new ProjectDirectoryFactory(dataDirectory),
+//                                projectId))
+//        );
+//        importsCacheManager.cacheImports(ontology);
+//    }
 
 }

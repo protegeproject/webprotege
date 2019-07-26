@@ -558,8 +558,6 @@ public class ChangeManager implements HasApplyChanges {
                 .collect(toList());
         var revision = changeManager.addRevision(userId, changeRecords, changeDescription);
 
-        documentStore.saveOntologyChanges(changes);
-
         classHierarchyProvider.handleChanges(changes);
         objectPropertyHierarchyProvider.handleChanges(changes);
         dataPropertyHierarchyProvider.handleChanges(changes);
