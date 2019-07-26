@@ -37,6 +37,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.concurrent.TimeUnit.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -92,7 +93,7 @@ public class ProjectDocumentStore {
             writeLock.lock();
             Stopwatch stopwatch = Stopwatch.createStarted();
             ImmutableList<Revision> revisions = revisionManager.getRevisions();
-            logger.info("{} Processing {} revisions", projectId, revisions.size());
+            logger.info("{} Processing {} revisions", projectId, String.format("%,d", revisions.size()));
             if(revisions.isEmpty()) {
                 var ontologyIri = createUniqueOntologyIRI();
                 return manager.createOntology(ontologyIri);
@@ -103,9 +104,13 @@ public class ProjectDocumentStore {
                     .peek(chg -> createOntologyIfNecessary(chg, manager))
                     .map(chg -> chg.createOntologyChange(manager))
                     .collect(Collectors.toList());
+            logger.info("{} Applying {} ontology changes", projectId, String.format("%,d", changes.size()));
+            long t0 = stopwatch.elapsed(MILLISECONDS);
             manager.applyChanges(changes);
+            long t1 = stopwatch.elapsed(MILLISECONDS);
+            logger.info("{} Applied {} ontology changes in {} ms", projectId, String.format("%,d", changes.size()), (t1 - t0));
             Set<OWLOntology> rootOnts = new HashSet<>(manager.getOntologies());
-            logger.info("{} Loaded {} ontologies in {} ms", projectId, rootOnts.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            logger.info("{} Loaded {} ontologies in {} ms", projectId, rootOnts.size(), stopwatch.elapsed(MILLISECONDS));
             MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
             memoryMonitor.monitorMemoryUsage();
             if(rootOnts.size() == 1) {
