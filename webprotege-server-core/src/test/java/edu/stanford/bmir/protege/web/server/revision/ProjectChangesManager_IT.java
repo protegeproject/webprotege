@@ -97,17 +97,6 @@ public class ProjectChangesManager_IT {
                 entityComparator);
         OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
         SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
-        EntitiesByRevisionCache entitiesByRevisionCache = new EntitiesByRevisionCache(
-                new AxiomSubjectProvider(
-                        classExpressionSelector,
-                        objectPropertyExpressionSelector,
-                        dataPropertyExpressionSelector,
-                        individualSelector,
-                        atomSelector
-                ),
-                rootOntology,
-                dataFactory
-        );
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManager(projectId,
                                                                                                     rootOntology), repo);
         RenderingManager renderingManager = new RenderingManager(
@@ -136,15 +125,13 @@ public class ProjectChangesManager_IT {
                 new AxiomByTypeComparator(DefaultAxiomTypeOrdering.get()),
                 new AxiomByRenderingComparator(new OWLObjectRendererImpl(renderingManager))
         );
-        changesManager = new ProjectChangesManager(
-                revisionManager,
-                entitiesByRevisionCache,
-                renderingManager,
-                new ChangeRecordComparator(
+        changesManager = new ProjectChangesManager(projectId, revisionManager,
+                                                   renderingManager,
+                                                   new ChangeRecordComparator(
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
-                () -> new Revision2DiffElementsTranslator(ontologyIRIShortFormProvider, rootOntology));
+                                                   () -> new Revision2DiffElementsTranslator(ontologyIRIShortFormProvider, rootOntology));
 
 
         createChanges(manager, rootOntology, dataFactory, revisionManager);

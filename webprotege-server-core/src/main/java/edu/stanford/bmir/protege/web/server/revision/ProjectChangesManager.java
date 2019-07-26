@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Table;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
@@ -11,17 +14,23 @@ import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -34,11 +43,13 @@ import static java.util.stream.Collectors.groupingBy;
 @ProjectSingleton
 public class ProjectChangesManager {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProjectChangesManager.class);
+
     public static final int DEFAULT_CHANGE_LIMIT = 50;
 
-    private final RevisionManager revisionManager;
+    private final ProjectId projectId;
 
-    private final EntitiesByRevisionCache entitiesByRevisionCache;
+    private final RevisionManager revisionManager;
 
     private final RenderingManager browserTextProvider;
 
@@ -46,14 +57,16 @@ public class ProjectChangesManager {
 
     private final Provider<Revision2DiffElementsTranslator> revision2DiffElementsTranslatorProvider;
 
+    private final Table<RevisionNumber, Optional<IRI>, ImmutableList<OWLOntologyChangeRecord>> cache = HashBasedTable.create();
+
     @Inject
-    public ProjectChangesManager(@Nonnull RevisionManager revisionManager,
-                                 @Nonnull EntitiesByRevisionCache entitiesByRevisionCache,
+    public ProjectChangesManager(ProjectId projectId,
+                                 @Nonnull RevisionManager revisionManager,
                                  @Nonnull RenderingManager browserTextProvider,
                                  @Nonnull Comparator<OWLOntologyChangeRecord> changeRecordComparator,
                                  @Nonnull Provider<Revision2DiffElementsTranslator> revision2DiffElementsTranslatorProvider) {
+        this.projectId = projectId;
         this.revisionManager = revisionManager;
-        this.entitiesByRevisionCache = entitiesByRevisionCache;
         this.browserTextProvider = browserTextProvider;
         this.changeRecordComparator = changeRecordComparator;
         this.revision2DiffElementsTranslatorProvider = revision2DiffElementsTranslatorProvider;
@@ -120,16 +133,19 @@ public class ProjectChangesManager {
     private void getProjectChangesForRevision(Revision revision,
                                               Optional<OWLEntity> subject,
                                               ImmutableList.Builder<ProjectChange> changesBuilder) {
-        if (subject.isPresent() && !entitiesByRevisionCache.containsEntity(revision, subject.get())) {
-            return;
+        if(!cache.containsRow(revision.getRevisionNumber())) {
+            logger.info("{} Building cache for revision {}", projectId, revision.getRevisionNumber().getValue());
+            var stopwatch = Stopwatch.createStarted();
+            var changeRecordsBySubject = getChangeRecordsBySubject(revision);
+            changeRecordsBySubject.forEach((subj, records) -> {
+                cache.put(revision.getRevisionNumber(), subj, ImmutableList.copyOf(records));
+            });
+            logger.info("{} Cached revision {} in {} ms", projectId, revision.getRevisionNumber().getValue(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
-
-        Map<Optional<IRI>, List<OWLOntologyChangeRecord>> recordsBySubject = getChangeRecordsBySubject(revision);
-
         List<OWLOntologyChangeRecord> limitedRecords = new ArrayList<>();
         final int totalChanges;
         if (subject.isPresent()) {
-            List<OWLOntologyChangeRecord> records = recordsBySubject.get(subject.map(OWLEntity::getIRI));
+            List<OWLOntologyChangeRecord> records = cache.get(revision.getRevisionNumber(), subject.map(OWLNamedObject::getIRI));
             if (records == null) {
                 // Nothing in this revision that changes the subject
                 return;
@@ -139,12 +155,9 @@ public class ProjectChangesManager {
         }
         else {
             totalChanges = revision.getSize();
-            for (Map.Entry<Optional<IRI>, List<OWLOntologyChangeRecord>> entry : recordsBySubject.entrySet()) {
-                limitedRecords.addAll(entry.getValue());
-                if (limitedRecords.size() >= DEFAULT_CHANGE_LIMIT) {
-                    break;
-                }
-            }
+            revision.getChanges().stream()
+                    .limit(DEFAULT_CHANGE_LIMIT)
+                    .forEach(limitedRecords::add);
         }
 
 
