@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -63,10 +62,10 @@ public class ProjectChangesManager {
     private static Map<Optional<IRI>, List<OWLOntologyChangeRecord>> getChangeRecordsBySubject(Revision revision) {
         return revision.getChanges()
                 .stream()
-                .collect(groupingBy(ProjectChangesManager::getAxiom));
+                .collect(groupingBy(ProjectChangesManager::getSubject));
     }
 
-    private static Optional<IRI> getAxiom(OWLOntologyChangeRecord rec) {
+    private static Optional<IRI> getSubject(OWLOntologyChangeRecord rec) {
         OWLOntologyChangeData data = rec.getData();
         if (data instanceof AxiomChangeData) {
             OWLAxiom axiom = ((AxiomChangeData) data).getAxiom();
