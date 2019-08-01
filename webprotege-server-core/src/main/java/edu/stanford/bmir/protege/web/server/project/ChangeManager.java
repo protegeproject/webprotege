@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
-import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
@@ -33,10 +32,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
-import org.semanticweb.owlapi.vocab.Namespaces;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
@@ -152,9 +149,6 @@ public class ChangeManager implements HasApplyChanges {
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final ProjectDocumentStore documentStore;
-
-    @Nonnull
     private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
@@ -174,9 +168,6 @@ public class ChangeManager implements HasApplyChanges {
 
     @Nonnull
     private final ReadWriteLock projectChangeLock = new ReentrantReadWriteLock();
-
-    @Nonnull
-    private final Lock projectChangeReadLock = projectChangeLock.readLock();
 
     @Nonnull
     private final Lock projectChangeWriteLock = projectChangeLock.writeLock();
@@ -205,7 +196,6 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull RevisionManager changeManager,
                          @Nonnull OWLDataFactory dataFactory,
                          @Nonnull DictionaryManager dictionaryManager,
-                         @Nonnull ProjectDocumentStore documentStore,
                          @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                          @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
@@ -228,7 +218,6 @@ public class ChangeManager implements HasApplyChanges {
         this.changeManager = changeManager;
         this.dataFactory = dataFactory;
         this.dictionaryManager = dictionaryManager;
-        this.documentStore = documentStore;
         this.classHierarchyProvider = classHierarchyProvider;
         this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
         this.dataPropertyHierarchyProvider = dataPropertyHierarchyProvider;
