@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentParserFactory;
 import org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory;
@@ -23,11 +22,11 @@ import javax.inject.Inject;
 public class RootOntologyLoader {
 
     @Nonnull
-    private final ProjectDocumentStore documentStore;
+    private final ProjectOntologyManagerLoader projectOntologyManagerLoader;
 
     @Inject
-    public RootOntologyLoader(@Nonnull ProjectDocumentStore documentStore) {
-        this.documentStore = documentStore;
+    public RootOntologyLoader(@Nonnull ProjectOntologyManagerLoader projectOntologyManagerLoader) {
+        this.projectOntologyManagerLoader = projectOntologyManagerLoader;
     }
 
     public OWLOntology loadRootOntology() {
@@ -48,11 +47,11 @@ public class RootOntologyLoader {
         int threadPriority = Thread.currentThread().getPriority();
         try {
             Thread.currentThread().setPriority(3);
-            OWLOntology rootOntology = documentStore.initialiseOntologyManagerWithProject(manager.getDelegate());
+            OWLOntology rootOntology = projectOntologyManagerLoader.createProjectOntologiesInManager(manager.getDelegate());
             manager.sealDelegate();
             return rootOntology;
         }
-        catch (OWLOntologyCreationException | OWLOntologyStorageException e) {
+        catch (OWLOntologyCreationException e) {
             throw new RuntimeException("Failed to load project: " + e.getMessage(), e);
         }
         finally {
