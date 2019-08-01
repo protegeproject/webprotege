@@ -29,7 +29,7 @@ public class CandidateAxiomEdit<A extends OWLAxiom> {
 
     @SuppressWarnings("unchecked")
     private void processChanges(OWLOntologyChangeData change0, OWLOntologyChangeData change1, final AxiomType<A> axiomType) {
-        OWLOntologyChangeDataVisitor visitor = new OWLOntologyChangeDataVisitor<Void, RuntimeException>() {
+        OWLOntologyChangeDataVisitor<Void, RuntimeException> visitor = new OWLOntologyChangeDataVisitor<Void, RuntimeException>() {
             @Nonnull
             @Override
             public Void visit(AddAxiomData data) throws RuntimeException {
