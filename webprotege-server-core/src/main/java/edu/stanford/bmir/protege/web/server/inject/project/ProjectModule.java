@@ -115,12 +115,6 @@ public class ProjectModule {
     }
 
     @Provides
-    @ImportsCacheDirectory
-    public File provideImportsCacheDirectory(ImportsCacheDirectoryProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
     @ChangeHistoryFile
     public File provideChangeHistoryFile(ChangeHistoryFileProvider provider) {
         return provider.get();
