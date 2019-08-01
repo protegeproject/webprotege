@@ -139,12 +139,7 @@ public class RevisionManagerImpl implements RevisionManager {
     @Override
     public Optional<RevisionSummary> getRevisionSummary(@Nonnull RevisionNumber revisionNumber) {
         Optional<Revision> revision = revisionStore.getRevision(revisionNumber);
-        if (!revision.isPresent()) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(toRevisionSummary(revision.get()));
-        }
+        return revision.map(RevisionManagerImpl::toRevisionSummary);
 
     }
 
