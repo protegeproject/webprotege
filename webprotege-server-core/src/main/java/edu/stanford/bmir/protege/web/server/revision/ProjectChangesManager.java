@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Table;
+import com.google.common.collect.*;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
@@ -57,7 +55,7 @@ public class ProjectChangesManager {
 
     private final Provider<Revision2DiffElementsTranslator> revision2DiffElementsTranslatorProvider;
 
-    private final Table<RevisionNumber, Optional<IRI>, ImmutableList<OWLOntologyChangeRecord>> cache = HashBasedTable.create();
+    private final Table<RevisionNumber, IRI, ImmutableList<OWLOntologyChangeRecord>> cache = HashBasedTable.create();
 
     @Inject
     public ProjectChangesManager(ProjectId projectId,
@@ -72,10 +70,10 @@ public class ProjectChangesManager {
         this.revision2DiffElementsTranslatorProvider = revision2DiffElementsTranslatorProvider;
     }
 
-    private static Map<Optional<IRI>, List<OWLOntologyChangeRecord>> getChangeRecordsBySubject(Revision revision) {
-        return revision.getChanges()
-                .stream()
-                .collect(groupingBy(ProjectChangesManager::getSubject));
+    private static Multimap<IRI, OWLOntologyChangeRecord> getChangeRecordsBySubject(Revision revision) {
+        Multimap<IRI, OWLOntologyChangeRecord> results = HashMultimap.create();
+        revision.getChanges().forEach(record -> results.put(getSubject(record).orElse(null), record));
+        return results;
     }
 
     private static Optional<IRI> getSubject(OWLOntologyChangeRecord rec) {
@@ -137,7 +135,7 @@ public class ProjectChangesManager {
             logger.info("{} Building cache for revision {}", projectId, revision.getRevisionNumber().getValue());
             var stopwatch = Stopwatch.createStarted();
             var changeRecordsBySubject = getChangeRecordsBySubject(revision);
-            changeRecordsBySubject.forEach((subj, records) -> {
+            changeRecordsBySubject.asMap().forEach((subj, records) -> {
                 cache.put(revision.getRevisionNumber(), subj, ImmutableList.copyOf(records));
             });
             logger.info("{} Cached revision {} in {} ms", projectId, revision.getRevisionNumber().getValue(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
@@ -145,7 +143,7 @@ public class ProjectChangesManager {
         List<OWLOntologyChangeRecord> limitedRecords = new ArrayList<>();
         final int totalChanges;
         if (subject.isPresent()) {
-            List<OWLOntologyChangeRecord> records = cache.get(revision.getRevisionNumber(), subject.map(OWLNamedObject::getIRI));
+            List<OWLOntologyChangeRecord> records = cache.get(revision.getRevisionNumber(), subject.map(OWLEntity::getIRI));
             if (records == null) {
                 // Nothing in this revision that changes the subject
                 return;
