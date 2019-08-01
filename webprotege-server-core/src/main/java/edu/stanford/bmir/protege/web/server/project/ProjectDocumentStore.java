@@ -44,10 +44,6 @@ import static java.util.concurrent.TimeUnit.*;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/04/2012
- * <p>
- * Essentially manages the location and layout of a project on disk.  There is no commitment to how a project is
- * stored.
- * </p>
  */
 @ProjectSingleton
 public class ProjectDocumentStore {
@@ -69,11 +65,9 @@ public class ProjectDocumentStore {
 
     @Inject
     public ProjectDocumentStore(ProjectId projectId,
-                                @RootOntologyDocument File rootOntologyDocument,
-                                Provider<ImportsCacheManager> importsCacheManagerProvider,
                                 RevisionManager revisionManager) {
         this.projectId = checkNotNull(projectId);
-        this.revisionManager = revisionManager;
+        this.revisionManager = checkNotNull(revisionManager);
     }
 
 
@@ -139,17 +133,6 @@ public class ProjectDocumentStore {
         } catch(OWLOntologyCreationException e) {
             logger.error("{} Could not create ontology with Id: {}", projectId, ontologyId, e);
         }
-    }
-
-
-    @Nonnull
-    private static OWLOntologyLoaderConfiguration createLoaderConfig() {
-        return new OWLOntologyLoaderConfiguration()
-                .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT)
-                .setReportStackTraces(true)
-                // It is safe to turn of illegal punning fixing as we've already parsed
-                // (and saved) the ontology using a manager with this turned on.
-                .setRepairIllegalPunnings(false);
     }
 
     private static IRI createUniqueOntologyIRI() {
