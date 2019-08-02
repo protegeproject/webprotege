@@ -47,13 +47,13 @@ public class ProjectCache implements HasDispose {
 
     private final ReadWriteLock projectMapReadWriteLoc = new ReentrantReadWriteLock();
 
-    private final Lock READ_LOCK = projectMapReadWriteLoc.readLock();
+    private final Lock readLock = projectMapReadWriteLoc.readLock();
 
-    private final Lock WRITE_LOCK = projectMapReadWriteLoc.writeLock();
+    private final Lock writeLock = projectMapReadWriteLoc.writeLock();
 
     private final Map<ProjectId, ProjectComponent> projectId2ProjectComponent = new ConcurrentHashMap<>();
 
-    private final ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
+    private final ReadWriteLock lastAccessLock = new ReentrantReadWriteLock();
 
     private final Map<ProjectId, Long> lastAccessMap = new HashMap<>();
 
@@ -91,11 +91,11 @@ public class ProjectCache implements HasDispose {
     private List<ProjectId> getCachedProjectIds() {
         try {
 
-            READ_LOCK.lock();
+            readLock.lock();
             return new ArrayList<>(lastAccessMap.keySet());
         }
         finally {
-            READ_LOCK.unlock();
+            readLock.unlock();
         }
     }
 
@@ -132,7 +132,7 @@ public class ProjectCache implements HasDispose {
     @Nonnull
     public Optional<EventManager<ProjectEvent<?>>> getProjectEventManagerIfActive(@Nonnull ProjectId projectId) {
         try {
-            READ_LOCK.lock();
+            readLock.lock();
             boolean active = isActive(projectId);
             if(!active) {
                 return Optional.empty();
@@ -143,7 +143,7 @@ public class ProjectCache implements HasDispose {
             }
         }
         finally {
-            READ_LOCK.unlock();
+            readLock.unlock();
         }
     }
 
@@ -210,8 +210,8 @@ public class ProjectCache implements HasDispose {
 
     public void purge(ProjectId projectId) {
         try {
-            WRITE_LOCK.lock();
-            LAST_ACCESS_LOCK.writeLock().lock();
+            writeLock.lock();
+            lastAccessLock.writeLock().lock();
             var projectComponent = projectId2ProjectComponent.remove(projectId);
             if(projectComponent != null) {
                 var projectDisposableObjectManager = projectComponent.getDisposablesManager();
@@ -221,19 +221,19 @@ public class ProjectCache implements HasDispose {
         }
         finally {
             final int projectsBeingAccessed = lastAccessMap.size();
-            LAST_ACCESS_LOCK.writeLock().unlock();
-            WRITE_LOCK.unlock();
+            lastAccessLock.writeLock().unlock();
+            writeLock.unlock();
             logger.info("Purged project: {}.  {} projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
         }
     }
 
     public boolean isActive(ProjectId projectId) {
         try {
-            READ_LOCK.lock();
+            readLock.lock();
             return projectId2ProjectComponent.containsKey(projectId) && lastAccessMap.containsKey(projectId);
         }
         finally {
-            READ_LOCK.unlock();
+            readLock.unlock();
         }
     }
 
@@ -246,18 +246,18 @@ public class ProjectCache implements HasDispose {
     private long getLastAccessTime(ProjectId projectId) {
         Long timestamp;
         try {
-            LAST_ACCESS_LOCK.readLock().lock();
+            lastAccessLock.readLock().lock();
             timestamp = lastAccessMap.get(projectId);
         }
         finally {
-            LAST_ACCESS_LOCK.readLock().unlock();
+            lastAccessLock.readLock().unlock();
         }
         return Objects.requireNonNullElse(timestamp, 0L);
     }
 
     private void logProjectAccess(final ProjectId projectId) {
         try {
-            LAST_ACCESS_LOCK.writeLock().lock();
+            lastAccessLock.writeLock().lock();
             long currentTime = System.currentTimeMillis();
             int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
@@ -266,7 +266,7 @@ public class ProjectCache implements HasDispose {
             }
         }
         finally {
-            LAST_ACCESS_LOCK.writeLock().unlock();
+            lastAccessLock.writeLock().unlock();
         }
     }
 
