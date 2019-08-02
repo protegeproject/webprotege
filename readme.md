@@ -36,3 +36,14 @@ To build WebProtégé from source
 3) Use maven to package WebProtégé
 ```mvn package```
 5) The WebProtege .war file will be built into the webprotege-server directory
+
+Running from Maven
+------------------
+
+To run WebProtégé in SuperDev Mode using maven
+
+1) Start the GWT code server in one terminal window
+    ```mvn gwt:codeserver```
+2) In a different terminal window start the tomcat server
+    ```mvn -Denv=dev tomcat7:run```
+3) Browse to WebProtégé in a Web browser by navigating to ```http://localhost:8080```
