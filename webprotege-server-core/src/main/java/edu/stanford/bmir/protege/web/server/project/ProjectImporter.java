@@ -44,15 +44,11 @@ public class ProjectImporter {
 
     private final File uploadsDirectory;
 
-    private final File rootOntologyDocument;
-
     private final ProjectId projectId;
 
     private final RevisionStoreImpl revisionStore;
 
     private final UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor;
-
-    private final File dataDirectory;
 
     @Inject
     public ProjectImporter(ProjectId projectId,
@@ -60,11 +56,9 @@ public class ProjectImporter {
                            @Nonnull @DataDirectory File dataDirectory,
                            UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor) {
         this.projectId = projectId;
-        this.dataDirectory = checkNotNull(dataDirectory);
         this.uploadsDirectory = checkNotNull(uploadsDirectory);
         File projectDirectory = new ProjectDirectoryProvider(
                 new ProjectDirectoryFactory(dataDirectory), projectId).get();
-        rootOntologyDocument = new RootOntologyDocumentProvider(projectDirectory).get();
         this.revisionStore = new RevisionStoreImpl(projectId,
                                                    new ChangeHistoryFileProvider(projectDirectory).get(),
                                                    new OWLDataFactoryImpl());
@@ -85,7 +79,7 @@ public class ProjectImporter {
             logger.info("{} Creating project from sources", projectId);
             Stopwatch stopwatch = Stopwatch.createStarted();
             RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
-            OWLOntology ontology = importer.importRawProjectSources(projectSources);
+            importer.importRawProjectSources(projectSources);
             logger.info("{} Loaded sources in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
             MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
             memoryMonitor.logMemoryUsage();
@@ -138,19 +132,4 @@ public class ProjectImporter {
     private void deleteSourceFile(File sourceFile) {
         FileUtils.deleteQuietly(sourceFile);
     }
-
-//    private void writeNewProject(OWLOntologyManager rootOntologyManager,
-//                                 OWLOntology ontology) throws OWLOntologyStorageException {
-//        rootOntologyDocument.getParentFile().mkdirs();
-//        rootOntologyManager.saveOntology(ontology, new BinaryOWLOntologyDocumentFormat(), IRI.create(rootOntologyDocument));
-//        ImportsCacheManager importsCacheManager = new ImportsCacheManager(
-//                projectId,
-//                new ImportsCacheDirectoryProvider(
-//                        new ProjectDirectoryProvider(
-//                                new ProjectDirectoryFactory(dataDirectory),
-//                                projectId))
-//        );
-//        importsCacheManager.cacheImports(ontology);
-//    }
-
 }
