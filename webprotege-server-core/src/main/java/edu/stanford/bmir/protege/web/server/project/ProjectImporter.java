@@ -68,7 +68,7 @@ public class ProjectImporter {
 
 
     public void createProjectFromSources(DocumentId sourcesId,
-                                         UserId owner) throws IOException, OWLOntologyCreationException, OWLOntologyStorageException {
+                                         UserId owner) throws IOException, OWLOntologyCreationException {
         var uploadedFile = new File(uploadsDirectory, sourcesId.getDocumentId());
         if(!uploadedFile.exists()) {
             throw new FileNotFoundException(uploadedFile.getAbsolutePath());
