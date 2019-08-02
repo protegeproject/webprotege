@@ -6,6 +6,7 @@ import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -55,8 +56,6 @@ public class ProjectCache implements HasDispose {
 
     private final ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
 
-    private final ReadWriteLock PROJECT_ID_LOCK = new ReentrantReadWriteLock();
-
     private Map<ProjectId, Long> lastAccessMap = new HashMap<>();
 
     private final ProjectImporterFactory projectImporterFactory;
@@ -82,7 +81,7 @@ public class ProjectCache implements HasDispose {
     }
 
     public ProjectActionHandlerRegistry getActionHandlerRegistry(ProjectId projectId) {
-        return getProject(projectId).getActionHanderRegistry();
+        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.LAZY).getActionHandlerRegistry();
     }
 
 
@@ -122,8 +121,13 @@ public class ProjectCache implements HasDispose {
         }
     }
 
-    public Project getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
-        return getProjectInternal(projectId, AccessMode.NORMAL).getProject();
+    public void ensureProjectIsLoaded(ProjectId projectId) throws ProjectDocumentNotFoundException {
+        var projectComponent = getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER);
+        logger.info("Loaded {}", projectComponent.getProjectId());
+    }
+
+    public RevisionManager getRevisionManager(ProjectId projectId) {
+        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.LAZY).getRevisionManager();
     }
 
     @Nonnull
@@ -135,7 +139,7 @@ public class ProjectCache implements HasDispose {
                 return Optional.empty();
             }
             else {
-                return Optional.of(getProjectInternal(projectId, AccessMode.QUIET))
+                return Optional.of(getProjectInternal(projectId, AccessMode.QUIET, InstantiationMode.LAZY))
                         .map(ProjectComponent::getEventManager);
             }
         }
@@ -149,11 +153,11 @@ public class ProjectCache implements HasDispose {
         QUIET
     }
 
-    private ProjectComponent getProjectInternal(ProjectId projectId, AccessMode accessMode) {
+    private ProjectComponent getProjectInternal(ProjectId projectId, AccessMode accessMode, InstantiationMode instantiationMode) {
         // Per project lock
         synchronized (getInternedProjectId(projectId)) {
             try {
-                ProjectComponent projectComponent = getProjectInjector(projectId);
+                ProjectComponent projectComponent = getProjectInjector(projectId, instantiationMode);
                 if (accessMode == AccessMode.NORMAL) {
                     logProjectAccess(projectId);
                 }
@@ -165,15 +169,17 @@ public class ProjectCache implements HasDispose {
         }
     }
 
-    private ProjectComponent getProjectInjector(ProjectId projectId) {
+    private ProjectComponent getProjectInjector(ProjectId projectId, InstantiationMode instantiationMode) {
         ProjectComponent projectComponent = projectId2ProjectComponent.get(projectId);
         if (projectComponent == null) {
             logger.info("Request for unloaded project {}.", projectId.getId());
             Stopwatch stopwatch = Stopwatch.createStarted();
             projectComponent = projectComponentFactory.createProjectComponent(projectId);
-            // Force instantiation of the project graph.
-            // This needs to be done in a nicer way, but this approach works for now.
-            projectComponent.getProject();
+            if(instantiationMode == InstantiationMode.EAGER) {
+                // Force instantiation of certain objects in the project graph.
+                // This needs to be done in a nicer way, but this approach works for now.
+                projectComponent.init();
+            }
             stopwatch.stop();
             logger.info("{} Instantiated project component in {} ms",
                         projectId,
@@ -193,14 +199,14 @@ public class ProjectCache implements HasDispose {
         return projectIdInterner.intern(projectId);
     }
 
-    public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, OWLOntologyStorageException, IOException {
+    public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
         Optional<DocumentId> sourceDocumentId = newProjectSettings.getSourceDocumentId();
         if(sourceDocumentId.isPresent()) {
             ProjectImporter importer = projectImporterFactory.getProjectImporter(projectId);
             importer.createProjectFromSources(sourceDocumentId.get(), newProjectSettings.getProjectOwner());
         }
-        return getProjectInternal(projectId, AccessMode.NORMAL).getProjectId();
+        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER).getProjectId();
     }
 
     public void purge(ProjectId projectId) {
@@ -239,7 +245,7 @@ public class ProjectCache implements HasDispose {
      *         if the project does not exist.
      */
     private long getLastAccessTime(ProjectId projectId) {
-        Long timestamp = null;
+        Long timestamp;
         try {
             LAST_ACCESS_LOCK.readLock().lock();
             timestamp = lastAccessMap.get(projectId);

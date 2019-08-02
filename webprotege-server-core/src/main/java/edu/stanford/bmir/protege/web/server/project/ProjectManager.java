@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -46,21 +47,21 @@ public class ProjectManager {
         return projectCache.getActionHandlerRegistry(checkNotNull(projectId));
     }
     
-    public Project getProject(@Nonnull ProjectId projectId,
-                              @Nonnull UserId requestingUser) throws ProjectDocumentNotFoundException {
+    public void ensureProjectIsLoaded(@Nonnull ProjectId projectId,
+                                      @Nonnull UserId requestingUser) throws ProjectDocumentNotFoundException {
         long currentTime = System.currentTimeMillis();
         projectAccessManager.logProjectAccess(projectId, requestingUser, currentTime);
-        return projectCache.getProject(projectId);
+        projectCache.ensureProjectIsLoaded(projectId);
+    }
+
+    public RevisionManager getRevisionManager(@Nonnull ProjectId projectId) {
+        return projectCache.getRevisionManager(projectId);
     }
 
     public Optional<EventManager<ProjectEvent<?>>> getProjectEventManagerIfActive(@Nonnull ProjectId projectId) {
         return projectCache.getProjectEventManagerIfActive(projectId);
     }
 
-    public boolean isActive(@Nonnull ProjectId projectId) {
-        return projectCache.isActive(projectId);
-    }
-    
     public ProjectId createNewProject(@Nonnull NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
         return projectCache.getProject(newProjectSettings);
     }

@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.download;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -82,12 +82,13 @@ class CreateDownloadTask implements Callable<Void> {
         logger.info("{} {} Creating project download", projectId, userId);
         MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
         memoryMonitor.monitorMemoryUsage();
-        Project project = projectManager.getProject(projectId, userId);
+        RevisionManager revisionManager = projectManager.getRevisionManager(projectId);
         memoryMonitor.monitorMemoryUsage();
-        ProjectDownloader downloader = projectDownloaderFactory.create(projectDisplayName,
-                                                                       project,
+        ProjectDownloader downloader = projectDownloaderFactory.create(projectId,
+                                                                       projectDisplayName,
                                                                        revisionNumber,
-                                                                       format);
+                                                                       format,
+                                                                       revisionManager);
         logger.info("{} {} Writing download to file: {}", projectId, userId, downloadPath);
         Files.createDirectories(downloadPath.getParent());
         try (BufferedOutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(downloadPath))) {

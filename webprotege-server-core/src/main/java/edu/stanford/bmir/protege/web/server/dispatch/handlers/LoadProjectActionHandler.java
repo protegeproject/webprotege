@@ -80,7 +80,7 @@ public class LoadProjectActionHandler implements ApplicationActionHandler<LoadPr
         logger.info("{} is being loaded due to request by {}",
                     action.getProjectId(),
                     executionContext.getUserId());
-        projectManager.getProject(action.getProjectId(), executionContext.getUserId());
+        projectManager.ensureProjectIsLoaded(action.getProjectId(), executionContext.getUserId());
         stopwatch.stop();
         logger.info("{} was loaded in {} ms due to request by {}",
                     action.getProjectId(),

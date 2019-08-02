@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.ProjectResource.forProject;
@@ -36,16 +33,11 @@ public class GetProjectEventsActionHandler implements ApplicationActionHandler<G
     @Nonnull
     private final AccessManager accessManager;
 
-    @Nonnull
-    private final UserInSessionFactory userInSessionFactory;
-
     @Inject
     public GetProjectEventsActionHandler(@Nonnull ProjectManager projectManager,
-                                         @Nonnull AccessManager accessManager,
-                                         @Nonnull UserInSessionFactory userInSessionFactory) {
+                                         @Nonnull AccessManager accessManager) {
         this.projectManager = checkNotNull(projectManager);
         this.accessManager = checkNotNull(accessManager);
-        this.userInSessionFactory = checkNotNull(userInSessionFactory);
     }
 
     @Nonnull
