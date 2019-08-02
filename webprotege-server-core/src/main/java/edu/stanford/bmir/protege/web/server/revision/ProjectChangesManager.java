@@ -55,7 +55,7 @@ public class ProjectChangesManager {
 
     private final Provider<Revision2DiffElementsTranslator> revision2DiffElementsTranslatorProvider;
 
-    private final Table<RevisionNumber, IRI, ImmutableList<OWLOntologyChangeRecord>> cache = HashBasedTable.create();
+    private final Table<RevisionNumber, Optional<IRI>, ImmutableList<OWLOntologyChangeRecord>> cache = HashBasedTable.create();
 
     @Inject
     public ProjectChangesManager(ProjectId projectId,
@@ -70,9 +70,9 @@ public class ProjectChangesManager {
         this.revision2DiffElementsTranslatorProvider = revision2DiffElementsTranslatorProvider;
     }
 
-    private static Multimap<IRI, OWLOntologyChangeRecord> getChangeRecordsBySubject(Revision revision) {
-        Multimap<IRI, OWLOntologyChangeRecord> results = HashMultimap.create();
-        revision.getChanges().forEach(record -> results.put(getSubject(record).orElse(null), record));
+    private static Multimap<Optional<IRI>, OWLOntologyChangeRecord> getChangeRecordsBySubject(Revision revision) {
+        Multimap<Optional<IRI>, OWLOntologyChangeRecord> results = HashMultimap.create();
+        revision.getChanges().forEach(record -> results.put(getSubject(record), record));
         return results;
     }
 

@@ -24,8 +24,6 @@ public class Project {
 
     private final ProjectId projectId;
 
-    private final EventManager<ProjectEvent<?>> projectEventManager;
-
     private final OWLOntology ontology;
 
     private final RevisionManager changeManager;
@@ -40,7 +38,6 @@ public class Project {
                    RevisionManager changeManager,
                    @Nonnull ProjectActionHandlerRegistry actionHandlerRegistry) {
         this.projectId = projectId;
-        this.projectEventManager = projectEventManager;
         this.ontology = ontology;
         this.changeManager = changeManager;
         this.actionHandlerRegistry = actionHandlerRegistry;
@@ -48,10 +45,6 @@ public class Project {
 
     public ProjectId getProjectId() {
         return projectId;
-    }
-
-    public EventManager<ProjectEvent<?>> getEventManager() {
-        return projectEventManager;
     }
 
     public RevisionManager getRevisionManager() {

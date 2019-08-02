@@ -71,16 +71,7 @@ public class GetProjectEventsActionHandler implements ApplicationActionHandler<G
                                         VIEW_PROJECT)) {
             return getEmptyResult(projectId, sinceTag);
         }
-        if(!projectManager.isActive(projectId)) {
-            return getEmptyResult(projectId, sinceTag);
-        }
-        Optional<Project> project = projectManager.getProjectIfActive(projectId);
-        if(!project.isPresent()) {
-            return getEmptyResult(projectId, sinceTag);
-        }
-        EventManager<ProjectEvent<?>> eventManager = project.get().getEventManager();
-        EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(sinceTag);
-        ProjectEventList projectEventList = ProjectEventList.builder(eventList.getStartTag(), projectId, eventList.getEndTag()).addEvents(eventList.getEvents()).build();
+        ProjectEventList projectEventList = projectManager.getProjectEventsSinceTag(projectId, sinceTag);
         return  new GetProjectEventsResult(projectEventList);
     }
 

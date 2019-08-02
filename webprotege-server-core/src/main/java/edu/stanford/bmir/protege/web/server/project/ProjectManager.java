@@ -1,6 +1,11 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEventList;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
@@ -48,8 +53,8 @@ public class ProjectManager {
         return projectCache.getProject(projectId);
     }
 
-    public Optional<Project> getProjectIfActive(@Nonnull ProjectId projectId) throws ProjectDocumentNotFoundException {
-        return projectCache.getProjectIfActive(projectId);
+    public Optional<EventManager<ProjectEvent<?>>> getProjectEventManagerIfActive(@Nonnull ProjectId projectId) {
+        return projectCache.getProjectEventManagerIfActive(projectId);
     }
 
     public boolean isActive(@Nonnull ProjectId projectId) {
@@ -58,5 +63,29 @@ public class ProjectManager {
     
     public ProjectId createNewProject(@Nonnull NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
         return projectCache.getProject(newProjectSettings);
+    }
+
+    /**
+     * Gets the events for the specified project, if the project is active.
+     * @param projectId The project id
+     * @param sinceTag The event tag from which events should be retrieved
+     * @return A, possibly empty, event list
+     */
+    @Nonnull
+    public ProjectEventList getProjectEventsSinceTag(@Nonnull ProjectId projectId,
+                                                     @Nonnull EventTag sinceTag) {
+        Optional<EventManager<ProjectEvent<?>>> pem = getProjectEventManagerIfActive(projectId);
+        if(pem.isEmpty()) {
+            return getEmptyProjectEventList(projectId, sinceTag);
+        }
+        EventManager<ProjectEvent<?>> eventManager = pem.get();
+        EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(sinceTag);
+        return ProjectEventList.builder(eventList.getStartTag(), projectId, eventList.getEndTag()).addEvents(eventList.getEvents()).build();
+
+    }
+
+    private static ProjectEventList getEmptyProjectEventList(@Nonnull ProjectId projectId,
+                                                             @Nonnull EventTag sinceTag) {
+        return ProjectEventList.builder(sinceTag, projectId, sinceTag).build();
     }
 }

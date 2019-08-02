@@ -4,9 +4,11 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
@@ -121,10 +123,11 @@ public class ProjectCache implements HasDispose {
     }
 
     public Project getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
-        return getProjectInternal(projectId, AccessMode.NORMAL);
+        return getProjectInternal(projectId, AccessMode.NORMAL).getProject();
     }
 
-    public Optional<Project> getProjectIfActive(ProjectId projectId) {
+    @Nonnull
+    public Optional<EventManager<ProjectEvent<?>>> getProjectEventManagerIfActive(@Nonnull ProjectId projectId) {
         try {
             READ_LOCK.lock();
             boolean active = isActive(projectId);
@@ -132,13 +135,13 @@ public class ProjectCache implements HasDispose {
                 return Optional.empty();
             }
             else {
-                return Optional.of(getProjectInternal(projectId, AccessMode.QUIET));
+                return Optional.of(getProjectInternal(projectId, AccessMode.QUIET))
+                        .map(ProjectComponent::getEventManager);
             }
         }
         finally {
             READ_LOCK.unlock();
         }
-
     }
 
     private enum AccessMode {
@@ -146,7 +149,7 @@ public class ProjectCache implements HasDispose {
         QUIET
     }
 
-    private Project getProjectInternal(ProjectId projectId, AccessMode accessMode) {
+    private ProjectComponent getProjectInternal(ProjectId projectId, AccessMode accessMode) {
         // Per project lock
         synchronized (getInternedProjectId(projectId)) {
             try {
@@ -154,7 +157,7 @@ public class ProjectCache implements HasDispose {
                 if (accessMode == AccessMode.NORMAL) {
                     logProjectAccess(projectId);
                 }
-                return projectComponent.getProject();
+                return projectComponent;
             }
             catch (OWLParserException e) {
                 throw new RuntimeException(e);
