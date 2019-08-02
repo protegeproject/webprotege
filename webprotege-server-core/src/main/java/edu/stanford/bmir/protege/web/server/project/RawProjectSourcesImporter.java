@@ -25,14 +25,14 @@ public class RawProjectSourcesImporter {
 
     public OWLOntology importRawProjectSources(RawProjectSources projectSources) throws OWLOntologyCreationException {
         try {
-            manager.addIRIMapper(projectSources.getOntologyIRIMapper());
+            manager.getIRIMappers().add(projectSources.getOntologyIRIMapper());
             OWLOntology ontology = null;
             for (OWLOntologyDocumentSource documentSource : projectSources.getDocumentSources()) {
                 ontology = manager.loadOntologyFromOntologyDocument(documentSource, loaderConfig);
             }
             return ontology;
         } finally {
-            manager.removeIRIMapper(projectSources.getOntologyIRIMapper());
+            manager.getIRIMappers().remove(projectSources.getOntologyIRIMapper());
         }
     }
 
