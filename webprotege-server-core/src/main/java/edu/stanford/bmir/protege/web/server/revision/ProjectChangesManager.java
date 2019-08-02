@@ -20,7 +20,6 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +29,6 @@ import javax.inject.Provider;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Matthew Horridge
