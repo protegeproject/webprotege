@@ -70,28 +70,26 @@ public class ProjectImporter {
     public void createProjectFromSources(DocumentId sourcesId,
                                          UserId owner) throws IOException, OWLOntologyCreationException, OWLOntologyStorageException {
         File uploadedFile = new File(uploadsDirectory, sourcesId.getDocumentId());
-        if (uploadedFile.exists()) {
-            OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
-            RawProjectSources projectSources = uploadedProjectSourcesExtractor.extractProjectSources(uploadedFile);
-            OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration()
-                    .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
-
-            logger.info("{} Creating project from sources", projectId);
-            Stopwatch stopwatch = Stopwatch.createStarted();
-            RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
-            importer.importRawProjectSources(projectSources);
-            logger.info("{} Loaded sources in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
-            MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
-            memoryMonitor.logMemoryUsage();
-            logger.info("{} Writing change log", projectId);
-            generateInitialChanges(owner, rootOntologyManager);
-            deleteSourceFile(uploadedFile);
-            logger.info("{} Project creation from sources complete in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
-            memoryMonitor.logMemoryUsage();
-        }
-        else {
+        if(!uploadedFile.exists()) {
             throw new FileNotFoundException(uploadedFile.getAbsolutePath());
         }
+        OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
+        RawProjectSources projectSources = uploadedProjectSourcesExtractor.extractProjectSources(uploadedFile);
+        OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration()
+                .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+
+        logger.info("{} Creating project from sources", projectId);
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
+        importer.importRawProjectSources(projectSources);
+        logger.info("{} Loaded sources in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+        memoryMonitor.logMemoryUsage();
+        logger.info("{} Writing change log", projectId);
+        generateInitialChanges(owner, rootOntologyManager);
+        deleteSourceFile(uploadedFile);
+        logger.info("{} Project creation from sources complete in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        memoryMonitor.logMemoryUsage();
 
     }
 
