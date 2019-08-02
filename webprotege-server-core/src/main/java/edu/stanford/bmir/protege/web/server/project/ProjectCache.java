@@ -252,12 +252,7 @@ public class ProjectCache implements HasDispose {
         finally {
             LAST_ACCESS_LOCK.readLock().unlock();
         }
-        if (timestamp == null) {
-            return 0;
-        }
-        else {
-            return timestamp;
-        }
+        return Objects.requireNonNullElse(timestamp, 0L);
     }
 
     private void logProjectAccess(final ProjectId projectId) {
