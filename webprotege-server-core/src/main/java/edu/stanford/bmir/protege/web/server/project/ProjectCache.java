@@ -51,11 +51,11 @@ public class ProjectCache implements HasDispose {
 
     private final Lock WRITE_LOCK = projectMapReadWriteLoc.writeLock();
 
-    private Map<ProjectId, ProjectComponent> projectId2ProjectComponent = new ConcurrentHashMap<>();
+    private final Map<ProjectId, ProjectComponent> projectId2ProjectComponent = new ConcurrentHashMap<>();
 
     private final ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
 
-    private Map<ProjectId, Long> lastAccessMap = new HashMap<>();
+    private final Map<ProjectId, Long> lastAccessMap = new HashMap<>();
 
     private final ProjectImporterFactory projectImporterFactory;
 
