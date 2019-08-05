@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
+import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.renderer.*;
@@ -517,6 +519,11 @@ public class ProjectModule {
     @Provides
     OBONamespaceCache providesOboNamespaceCache(@RootOntology OWLOntology rootOntology) {
         return OBONamespaceCache.get(rootOntology);
+    }
+
+    @Provides
+    ActiveLanguagesManager provideActiveLanguagesManager(ActiveLanguagesManagerImpl impl) {
+        return impl;
     }
 
     @Provides
