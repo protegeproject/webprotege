@@ -46,7 +46,13 @@ public class ProjectManager {
     public ProjectActionHandlerRegistry getActionHandlerRegistry(@Nonnull ProjectId projectId) {
         return projectCache.getActionHandlerRegistry(checkNotNull(projectId));
     }
-    
+
+    /**
+     * Requests that the specified project is loaded for the specified user.
+     * @param projectId The project.
+     * @param requestingUser The user that is requesting that the project is loaded.
+     * @throws ProjectDocumentNotFoundException If there is no such project.
+     */
     public void ensureProjectIsLoaded(@Nonnull ProjectId projectId,
                                       @Nonnull UserId requestingUser) throws ProjectDocumentNotFoundException {
         long currentTime = System.currentTimeMillis();
