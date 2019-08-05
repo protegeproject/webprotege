@@ -4,18 +4,16 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguageComparators;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
-import edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +27,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris.isWellKnownLabellingIri;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
 
 /**
  * Matthew Horridge
@@ -46,16 +43,16 @@ public class ActiveLanguagesManager {
 
     private final ProjectId projectId;
 
-    private final OWLOntology rootOntology;
+    private final AnnotationAssertionAxiomsIndex annotationAssertions;
 
     private final Multiset<DictionaryLanguage> activeLangs = HashMultiset.create();
 
     private ImmutableList<DictionaryLanguage> sortedLanguages = null;
 
     @Inject
-    public ActiveLanguagesManager(ProjectId projectId, OWLOntology rootOntology) {
+    public ActiveLanguagesManager(ProjectId projectId, AnnotationAssertionAxiomsIndex annotationAssertions) {
         this.projectId = projectId;
-        this.rootOntology = rootOntology;
+        this.annotationAssertions = annotationAssertions;
     }
 
     private static boolean isLabellingAnnotation(OWLAnnotationAssertionAxiom ax) {
@@ -124,8 +121,7 @@ public class ActiveLanguagesManager {
     private void rebuild() {
         activeLangs.clear();
         Stopwatch stopwatch = Stopwatch.createStarted();
-        rootOntology.getImportsClosure().stream()
-                    .flatMap(ont -> ont.getAxioms(ANNOTATION_ASSERTION).stream())
+        annotationAssertions.getAnnotationAssertionAxioms()
                     .filter(ActiveLanguagesManager::isLabellingAnnotation)
                     .forEach(this::addAxiom);
         stopwatch.stop();

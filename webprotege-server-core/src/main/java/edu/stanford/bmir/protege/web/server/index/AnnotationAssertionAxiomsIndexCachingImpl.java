@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
 
 /**
  * Matthew Horridge
@@ -39,6 +40,13 @@ public class AnnotationAssertionAxiomsIndexCachingImpl implements AnnotationAsse
         this.rootOntology = checkNotNull(rootOntology);
         axiomsBySubject = Caffeine.newBuilder()
                                   .build();
+    }
+
+    @Override
+    public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms() {
+        // Just delegate to OWLOntology implementation
+        return rootOntology.getImportsClosure().stream()
+                .flatMap(ont -> ont.getAxioms(ANNOTATION_ASSERTION).stream());
     }
 
     @Nonnull

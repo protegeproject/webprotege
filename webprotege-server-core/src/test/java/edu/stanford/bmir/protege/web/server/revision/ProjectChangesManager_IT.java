@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -38,8 +40,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -97,8 +98,9 @@ public class ProjectChangesManager_IT {
                 entityComparator);
         OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
         SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
+        AnnotationAssertionAxiomsIndex assertionAxiomsIndex = new AnnotationAssertionAxiomsIndexCachingImpl(rootOntology);
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManager(projectId,
-                                                                                                    rootOntology), repo);
+                                                                                                    assertionAxiomsIndex), repo);
         RenderingManager renderingManager = new RenderingManager(
                 new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(rootOntology)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),

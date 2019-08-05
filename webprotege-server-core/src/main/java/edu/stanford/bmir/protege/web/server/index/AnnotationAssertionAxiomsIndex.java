@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 @ProjectSingleton
 public interface AnnotationAssertionAxiomsIndex {
 
+    Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms();
 
     Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull IRI subject);
 

@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -24,6 +21,14 @@ public class AnnotationAssertionAxiomsIndexWrapperImpl implements AnnotationAsse
     @Inject
     public AnnotationAssertionAxiomsIndexWrapperImpl(@Nonnull OWLOntology rootOntology) {
         this.rootOntology = checkNotNull(rootOntology);
+    }
+
+    @Override
+    public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms() {
+        return this.rootOntology
+                .getImportsClosure()
+                .stream()
+                .flatMap(ont -> ont.getAxioms(AxiomType.ANNOTATION_ASSERTION).stream());
     }
 
     @Override
