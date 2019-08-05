@@ -58,10 +58,6 @@ public class ProjectManager {
         return projectCache.getRevisionManager(projectId);
     }
 
-    public Optional<EventManager<ProjectEvent<?>>> getProjectEventManagerIfActive(@Nonnull ProjectId projectId) {
-        return projectCache.getProjectEventManagerIfActive(projectId);
-    }
-
     public ProjectId createNewProject(@Nonnull NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
         return projectCache.getProject(newProjectSettings);
     }
@@ -75,7 +71,7 @@ public class ProjectManager {
     @Nonnull
     public ProjectEventList getProjectEventsSinceTag(@Nonnull ProjectId projectId,
                                                      @Nonnull EventTag sinceTag) {
-        Optional<EventManager<ProjectEvent<?>>> pem = getProjectEventManagerIfActive(projectId);
+        Optional<EventManager<ProjectEvent<?>>> pem = projectCache.getProjectEventManagerIfActive(projectId);
         if(pem.isEmpty()) {
             return getEmptyProjectEventList(projectId, sinceTag);
         }
