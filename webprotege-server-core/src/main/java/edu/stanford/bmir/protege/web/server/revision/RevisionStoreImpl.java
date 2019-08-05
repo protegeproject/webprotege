@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFile;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -10,10 +9,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.binaryowl.BinaryOWLOntologyChangeLog;
-import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.binaryowl.chunk.SkipSetting;
-import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -192,7 +188,6 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
                 return;
             }
             var revisionsBuilder = ImmutableList.<Revision>builder();
-            var axiomInterner = Interners.<OWLAxiom>newStrongInterner();
             var metadataInterner = Interners.<String>newStrongInterner();
             var userIdInterner = Interners.<UserId>newStrongInterner();
 
@@ -209,7 +204,7 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
                     var description = metadata.getStringAttribute(DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), "");
                     var userId = userIdInterner.intern(UserId.getUserId(userName));
 
-                    var internedChangeRecords = internChangeRecords(changeRecordList, axiomInterner);
+                    var internedChangeRecords = ImmutableList.copyOf(changeRecordList.getChangeRecords());
                     var revision = new Revision(userId, revisionNumber, internedChangeRecords, changeRecordList.getTimestamp(), description);
                     revisionsBuilder.add(revision);
                 }, SkipSetting.SKIP_NONE);
@@ -232,84 +227,5 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
     @Override
     public void dispose() {
         changeSerializationExecutor.shutdown();
-    }
-
-    @Nonnull
-    private static ImmutableList<OWLOntologyChangeRecord> internChangeRecords(OntologyChangeRecordList list,
-                                                                              final Interner<OWLAxiom> axiomInterner) {
-        var changeRecords = list.getChangeRecords();
-        var internedChangeRecordsListBuilder = ImmutableList.<OWLOntologyChangeRecord>builder();
-        var changeDataInterner = new ChangeDataInterner(axiomInterner);
-        for(var chanceRecord : changeRecords) {
-            var ontologyId = chanceRecord.getOntologyID();
-            var changeData = chanceRecord.getData();
-            var internedChangeData = changeData.accept(changeDataInterner);
-            if(internedChangeData == changeData) {
-                internedChangeRecordsListBuilder.add(chanceRecord);
-            }
-            else {
-                OWLOntologyChangeRecord rec = new OWLOntologyChangeRecord(ontologyId, internedChangeData);
-                internedChangeRecordsListBuilder.add(rec);
-            }
-        }
-        return internedChangeRecordsListBuilder.build();
-    }
-
-    private static class ChangeDataInterner implements OWLOntologyChangeDataVisitor<OWLOntologyChangeData, RuntimeException> {
-
-        @Nonnull
-        private final Interner<OWLAxiom> axiomInterner;
-
-        public ChangeDataInterner(@Nonnull Interner<OWLAxiom> axiomInterner) {
-            this.axiomInterner = checkNotNull(axiomInterner);
-        }
-
-        @Nonnull
-        @Override
-        public OWLOntologyChangeData visit(AddAxiomData data) throws RuntimeException {
-            final OWLAxiom ax = axiomInterner.intern(data.getAxiom());
-            if(ax != null) {
-                return new AddAxiomData(ax);
-            }
-            else {
-                return data;
-            }
-        }
-
-        @Override
-        public OWLOntologyChangeData visit(RemoveAxiomData data) throws RuntimeException {
-            final OWLAxiom ax = axiomInterner.intern(data.getAxiom());
-            if(ax != null) {
-                return new RemoveAxiomData(ax);
-            }
-            else {
-                return data;
-            }
-        }
-
-        @Override
-        public OWLOntologyChangeData visit(AddOntologyAnnotationData data) throws RuntimeException {
-            return data;
-        }
-
-        @Override
-        public OWLOntologyChangeData visit(RemoveOntologyAnnotationData data) throws RuntimeException {
-            return data;
-        }
-
-        @Override
-        public OWLOntologyChangeData visit(SetOntologyIDData data) throws RuntimeException {
-            return data;
-        }
-
-        @Override
-        public OWLOntologyChangeData visit(AddImportData data) throws RuntimeException {
-            return data;
-        }
-
-        @Override
-        public OWLOntologyChangeData visit(RemoveImportData data) throws RuntimeException {
-            return data;
-        }
     }
 }

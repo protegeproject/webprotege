@@ -120,7 +120,7 @@ public abstract class NewProjectSettings implements IsSerializable {
      */
     @JsonIgnore
     public boolean hasSourceDocument() {
-        return getSourceDocumentId() != null;
+        return getSourceDocumentId().isPresent();
     }
 
     /**
@@ -128,7 +128,7 @@ public abstract class NewProjectSettings implements IsSerializable {
      *
      * @return A {@link DocumentId} object identifying a source document.
      */
-    @Nullable
+    @Nonnull
     public Optional<DocumentId> getSourceDocumentId() {
         return Optional.ofNullable(sourceDocument());
     }

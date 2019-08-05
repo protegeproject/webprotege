@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomSubjectProvider;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
@@ -26,7 +27,7 @@ public class EntitiesByRevisionCache {
 
     private final OWLDataFactory dataFactory;
 
-    private final Map<Revision, ImmutableSet<OWLEntity>> entity2Revisions = new HashMap<>();
+    private final Map<RevisionNumber, ImmutableSet<OWLEntity>> entity2Revisions = new HashMap<>();
 
     @Inject
     public EntitiesByRevisionCache(@Nonnull AxiomSubjectProvider axiomSubjectProvider,
@@ -42,12 +43,12 @@ public class EntitiesByRevisionCache {
     }
 
     public ImmutableSet<OWLEntity> getEntities(Revision revision) {
-        ImmutableSet<OWLEntity> cachedEntities = entity2Revisions.get(revision);
+        ImmutableSet<OWLEntity> cachedEntities = entity2Revisions.get(revision.getRevisionNumber());
         if(cachedEntities != null) {
             return cachedEntities;
         }
         ImmutableSet<OWLEntity> entitiesToCache = getEntitiesInternal(revision);
-        entity2Revisions.put(revision, entitiesToCache);
+        entity2Revisions.put(revision.getRevisionNumber(), entitiesToCache);
         return entitiesToCache;
     }
 

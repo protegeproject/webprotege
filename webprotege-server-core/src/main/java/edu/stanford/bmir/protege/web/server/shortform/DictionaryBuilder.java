@@ -101,6 +101,6 @@ public class DictionaryBuilder {
                     });
         logger.info("{} Processed {} axioms in order to build annotation based dictionaries",
                     projectId,
-                    counter.getCounter());
+                    String.format("%,d", counter.getCounter()));
     }
 }

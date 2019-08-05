@@ -4,12 +4,13 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.project.PrefixDeclarationsStore;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,34 +46,35 @@ public class ProjectDownloader {
     private final String fileName;
 
     @Nonnull
-    private final Project project;
-
-    @Nonnull
-    private final ApplicationNameSupplier applicationNameSupplier;
-
-    @Nonnull
     private final PrefixDeclarationsStore prefixDeclarationsStore;
+
+    @Nonnull
+    private final RevisionManager revisionManager;
+
+    @Nonnull
+    private final ProjectId projectId;
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
-     *  @param project  The project to be downloaded.  Not <code>null</code>.
-     * @param revision The revision of the project to be downloaded.
-     * @param format   The format which the project should be downloaded in.
+     *
+     * @param revisionManager         The revision manager of project to be downloaded.  Not <code>null</code>.
+     * @param revision                The revision of the project to be downloaded.
+     * @param format                  The format which the project should be downloaded in.
      * @param prefixDeclarationsStore The prefix declarations store that is used to retrieve customised prefixes
      */
     @AutoFactory
     @Inject
-    public ProjectDownloader(@Nonnull String fileName,
-                             @Nonnull Project project,
+    public ProjectDownloader(@Nonnull ProjectId projectId,
+                             @Nonnull String fileName,
                              @Nonnull RevisionNumber revision,
                              @Nonnull DownloadFormat format,
-                             @Provided @Nonnull ApplicationNameSupplier applicationNameSupplier,
+                             @Nonnull RevisionManager revisionManager,
                              @Provided @Nonnull PrefixDeclarationsStore prefixDeclarationsStore) {
-        this.project = project;
-        this.revision = revision;
-        this.format = format;
-        this.fileName = fileName;
-        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
+        this.projectId = checkNotNull(projectId);
+        this.revision = checkNotNull(revision);
+        this.revisionManager = checkNotNull(revisionManager);
+        this.format = checkNotNull(format);
+        this.fileName = checkNotNull(fileName);
         this.prefixDeclarationsStore = checkNotNull(prefixDeclarationsStore);
     }
 
@@ -80,100 +82,56 @@ public class ProjectDownloader {
         try {
             exportProjectRevision(fileName, revision, outputStream, format);
 
-        } catch (OWLOntologyStorageException e) {
+        } catch(OWLOntologyStorageException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void exportProjectRevision(
-            @Nonnull String projectDisplayName,
-            @Nonnull RevisionNumber revisionNumber,
-            @Nonnull OutputStream outputStream,
-            @Nonnull DownloadFormat format) throws IOException, OWLOntologyStorageException {
-        RevisionManager revisionManager = project.getRevisionManager();
+    private void exportProjectRevision(@Nonnull String projectDisplayName,
+                                       @Nonnull RevisionNumber revisionNumber,
+                                       @Nonnull OutputStream outputStream,
+                                       @Nonnull DownloadFormat format) throws IOException, OWLOntologyStorageException {
         OWLOntologyManager manager = revisionManager.getOntologyManagerForRevision(revisionNumber);
-        OWLOntologyID rootOntologyId = project.getRootOntology().getOntologyID();
-        Optional<OWLOntology> revisionRootOntology = getOntologyFromManager(manager, rootOntologyId);
-        if (revisionRootOntology.isPresent()) {
-            saveImportsClosureToStream(projectDisplayName,
-                                       revisionRootOntology.get(),
-                                       format,
-                                       outputStream,
-                                       revisionNumber);
-        }
-        else {
-            // An error - no flipping ontology!
-            logger.info(
-                    "Project download failed because the root ontology could not be retrived from the manager.  Project: ",
-                    project.getProjectId());
-            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameSupplier.get() + ".  Please contact the administrator.");
-        }
+        saveOntologiesToStream(projectDisplayName, manager, format, outputStream, revisionNumber);
     }
 
-    private void saveImportsClosureToStream(@Nonnull String projectDisplayName,
-                                            @Nonnull OWLOntology rootOntology,
-                                            @Nonnull DownloadFormat format,
-                                            @Nonnull OutputStream outputStream,
-                                            @Nonnull RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
-        MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+    private void saveOntologiesToStream(@Nonnull String projectDisplayName,
+                                        @Nonnull OWLOntologyManager manager,
+                                        @Nonnull DownloadFormat format,
+                                        @Nonnull OutputStream outputStream,
+                                        @Nonnull RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
         // TODO: Separate object
-        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(outputStream))) {
+        try(ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(outputStream))) {
             String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
             baseFolder = baseFolder.toLowerCase();
             baseFolder = baseFolder + "-REVISION-" + (revisionNumber.isHead() ? "HEAD" : revisionNumber.getValue());
-            ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
-            zipOutputStream.putNextEntry(rootOntologyEntry);
-            OWLDocumentFormat documentFormat = format.getDocumentFormat();
-            if(documentFormat.isPrefixOWLOntologyFormat()) {
-                PrefixDocumentFormat prefixDocumentFormat = documentFormat.asPrefixOWLOntologyFormat();
-                Map<String, String> prefixes = prefixDeclarationsStore.find(project.getProjectId()).getPrefixes();
-                prefixes.forEach(prefixDocumentFormat::setPrefix);
-            }
-            rootOntology.getOWLOntologyManager()
-                        .saveOntology(rootOntology, documentFormat, zipOutputStream);
-            zipOutputStream.closeEntry();
-            int importCount = 0;
-            for (OWLOntology ontology : rootOntology.getImportsClosure()) {
-                if (!ontology.equals(rootOntology)) {
-                    importCount++;
-                    ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format
-                            .getExtension());
-                    zipOutputStream.putNextEntry(zipEntry);
-                    ontology.getOWLOntologyManager().saveOntology(ontology, documentFormat, zipOutputStream);
-                    zipOutputStream.closeEntry();
-                    memoryMonitor.monitorMemoryUsage();
+            for(var ontology : manager.getOntologies()) {
+                var documentFormat = format.getDocumentFormat();
+                if(documentFormat.isPrefixOWLOntologyFormat()) {
+                    var prefixDocumentFormat = documentFormat.asPrefixOWLOntologyFormat();
+                    Map<String, String> prefixes = prefixDeclarationsStore.find(projectId).getPrefixes();
+                    prefixes.forEach(prefixDocumentFormat::setPrefix);
                 }
+                String ontologyShortForm = getOntologyShortForm(ontology);
+                ZipEntry zipEntry = new ZipEntry(baseFolder + "/" + ontologyShortForm + "." + format.getExtension());
+                zipOutputStream.putNextEntry(zipEntry);
+                ontology.getOWLOntologyManager().saveOntology(ontology, documentFormat, zipOutputStream);
+                zipOutputStream.closeEntry();
+                logMemoryUsage();
             }
             zipOutputStream.finish();
             zipOutputStream.flush();
         }
     }
 
-    /**
-     * Gets an ontology from the manager specified manager.  This method is a workaround for
-     * https://github.com/owlcs/owlapi/issues/215
-     * https://github.com/protegeproject/webprotege/issues/143
-     *
-     * @param manager        The manager.  Not {@code null}.
-     * @param rootOntologyId The OntologyId.  Not {@code null}.
-     * @return The ontology or an absent value if the manager does not contain the ontology.
-     */
-    private static Optional<OWLOntology> getOntologyFromManager(
-            OWLOntologyManager manager,
-            OWLOntologyID rootOntologyId) {
-        checkNotNull(manager);
-        checkNotNull(rootOntologyId);
-        for (OWLOntology ont : manager.getOntologies()) {
-            if (rootOntologyId.equals(ont.getOntologyID())) {
-                return Optional.of(ont);
-            }
-        }
-        if (rootOntologyId.isAnonymous()) {
-            if (manager.getOntologies().size() == 1) {
-                return Optional.of(manager.getOntologies().iterator().next());
-            }
-        }
-        return Optional.empty();
+    private void logMemoryUsage() {
+        MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+        memoryMonitor.monitorMemoryUsage();
+    }
+
+    private String getOntologyShortForm(OWLOntology ontology) {
+        OntologyIRIShortFormProvider sfp = new OntologyIRIShortFormProvider();
+        return sfp.getShortForm(ontology);
     }
 }

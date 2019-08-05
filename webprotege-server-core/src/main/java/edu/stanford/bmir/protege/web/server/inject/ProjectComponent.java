@@ -1,11 +1,16 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Subcomponent;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
@@ -20,11 +25,16 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 @ProjectSingleton
 public interface ProjectComponent {
 
-    @Deprecated
-    Project getProject();
+    EagerProjectSingletons init();
+
+    ProjectId getProjectId();
+
+    EventManager<ProjectEvent<?>> getEventManager();
 
     ProjectDisposablesManager getDisposablesManager();
 
     ProjectActionHandlerRegistry getActionHandlerRegistry();
+
+    RevisionManager getRevisionManager();
 }
 

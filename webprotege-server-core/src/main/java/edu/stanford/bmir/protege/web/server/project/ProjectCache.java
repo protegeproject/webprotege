@@ -4,9 +4,12 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
@@ -14,7 +17,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundExcep
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,17 +47,15 @@ public class ProjectCache implements HasDispose {
 
     private final ReadWriteLock projectMapReadWriteLoc = new ReentrantReadWriteLock();
 
-    private final Lock READ_LOCK = projectMapReadWriteLoc.readLock();
+    private final Lock readLock = projectMapReadWriteLoc.readLock();
 
-    private final Lock WRITE_LOCK = projectMapReadWriteLoc.writeLock();
+    private final Lock writeLock = projectMapReadWriteLoc.writeLock();
 
-    private Map<ProjectId, ProjectComponent> projectId2ProjectComponent = new ConcurrentHashMap<>();
+    private final Map<ProjectId, ProjectComponent> projectId2ProjectComponent = new ConcurrentHashMap<>();
 
-    private final ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
+    private final ReadWriteLock lastAccessLock = new ReentrantReadWriteLock();
 
-    private final ReadWriteLock PROJECT_ID_LOCK = new ReentrantReadWriteLock();
-
-    private Map<ProjectId, Long> lastAccessMap = new HashMap<>();
+    private final Map<ProjectId, Long> lastAccessMap = new HashMap<>();
 
     private final ProjectImporterFactory projectImporterFactory;
 
@@ -80,7 +80,7 @@ public class ProjectCache implements HasDispose {
     }
 
     public ProjectActionHandlerRegistry getActionHandlerRegistry(ProjectId projectId) {
-        return getProject(projectId).getActionHanderRegistry();
+        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.LAZY).getActionHandlerRegistry();
     }
 
 
@@ -91,11 +91,11 @@ public class ProjectCache implements HasDispose {
     private List<ProjectId> getCachedProjectIds() {
         try {
 
-            READ_LOCK.lock();
+            readLock.lock();
             return new ArrayList<>(lastAccessMap.keySet());
         }
         finally {
-            READ_LOCK.unlock();
+            readLock.unlock();
         }
     }
 
@@ -120,25 +120,31 @@ public class ProjectCache implements HasDispose {
         }
     }
 
-    public Project getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
-        return getProjectInternal(projectId, AccessMode.NORMAL);
+    public void ensureProjectIsLoaded(ProjectId projectId) throws ProjectDocumentNotFoundException {
+        var projectComponent = getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER);
+        logger.info("Loaded {}", projectComponent.getProjectId());
     }
 
-    public Optional<Project> getProjectIfActive(ProjectId projectId) {
+    public RevisionManager getRevisionManager(ProjectId projectId) {
+        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.LAZY).getRevisionManager();
+    }
+
+    @Nonnull
+    public Optional<EventManager<ProjectEvent<?>>> getProjectEventManagerIfActive(@Nonnull ProjectId projectId) {
         try {
-            READ_LOCK.lock();
+            readLock.lock();
             boolean active = isActive(projectId);
             if(!active) {
                 return Optional.empty();
             }
             else {
-                return Optional.of(getProjectInternal(projectId, AccessMode.QUIET));
+                return Optional.of(getProjectInternal(projectId, AccessMode.QUIET, InstantiationMode.LAZY))
+                        .map(ProjectComponent::getEventManager);
             }
         }
         finally {
-            READ_LOCK.unlock();
+            readLock.unlock();
         }
-
     }
 
     private enum AccessMode {
@@ -146,15 +152,15 @@ public class ProjectCache implements HasDispose {
         QUIET
     }
 
-    private Project getProjectInternal(ProjectId projectId, AccessMode accessMode) {
+    private ProjectComponent getProjectInternal(ProjectId projectId, AccessMode accessMode, InstantiationMode instantiationMode) {
         // Per project lock
         synchronized (getInternedProjectId(projectId)) {
             try {
-                ProjectComponent projectComponent = getProjectInjector(projectId);
+                ProjectComponent projectComponent = getProjectInjector(projectId, instantiationMode);
                 if (accessMode == AccessMode.NORMAL) {
                     logProjectAccess(projectId);
                 }
-                return projectComponent.getProject();
+                return projectComponent;
             }
             catch (OWLParserException e) {
                 throw new RuntimeException(e);
@@ -162,15 +168,17 @@ public class ProjectCache implements HasDispose {
         }
     }
 
-    private ProjectComponent getProjectInjector(ProjectId projectId) {
+    private ProjectComponent getProjectInjector(ProjectId projectId, InstantiationMode instantiationMode) {
         ProjectComponent projectComponent = projectId2ProjectComponent.get(projectId);
         if (projectComponent == null) {
             logger.info("Request for unloaded project {}.", projectId.getId());
             Stopwatch stopwatch = Stopwatch.createStarted();
             projectComponent = projectComponentFactory.createProjectComponent(projectId);
-            // Force instantiation of the project graph.
-            // This needs to be done in a nicer way, but this approach works for now.
-            projectComponent.getProject();
+            if(instantiationMode == InstantiationMode.EAGER) {
+                // Force instantiation of certain objects in the project graph.
+                // This needs to be done in a nicer way, but this approach works for now.
+                projectComponent.init();
+            }
             stopwatch.stop();
             logger.info("{} Instantiated project component in {} ms",
                         projectId,
@@ -190,20 +198,20 @@ public class ProjectCache implements HasDispose {
         return projectIdInterner.intern(projectId);
     }
 
-    public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, OWLOntologyStorageException, IOException {
+    public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
         Optional<DocumentId> sourceDocumentId = newProjectSettings.getSourceDocumentId();
         if(sourceDocumentId.isPresent()) {
             ProjectImporter importer = projectImporterFactory.getProjectImporter(projectId);
             importer.createProjectFromSources(sourceDocumentId.get(), newProjectSettings.getProjectOwner());
         }
-        return getProjectInternal(projectId, AccessMode.NORMAL).getProjectId();
+        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER).getProjectId();
     }
 
     public void purge(ProjectId projectId) {
         try {
-            WRITE_LOCK.lock();
-            LAST_ACCESS_LOCK.writeLock().lock();
+            writeLock.lock();
+            lastAccessLock.writeLock().lock();
             var projectComponent = projectId2ProjectComponent.remove(projectId);
             if(projectComponent != null) {
                 var projectDisposableObjectManager = projectComponent.getDisposablesManager();
@@ -213,19 +221,19 @@ public class ProjectCache implements HasDispose {
         }
         finally {
             final int projectsBeingAccessed = lastAccessMap.size();
-            LAST_ACCESS_LOCK.writeLock().unlock();
-            WRITE_LOCK.unlock();
+            lastAccessLock.writeLock().unlock();
+            writeLock.unlock();
             logger.info("Purged project: {}.  {} projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
         }
     }
 
     public boolean isActive(ProjectId projectId) {
         try {
-            READ_LOCK.lock();
+            readLock.lock();
             return projectId2ProjectComponent.containsKey(projectId) && lastAccessMap.containsKey(projectId);
         }
         finally {
-            READ_LOCK.unlock();
+            readLock.unlock();
         }
     }
 
@@ -236,25 +244,20 @@ public class ProjectCache implements HasDispose {
      *         if the project does not exist.
      */
     private long getLastAccessTime(ProjectId projectId) {
-        Long timestamp = null;
+        Long timestamp;
         try {
-            LAST_ACCESS_LOCK.readLock().lock();
+            lastAccessLock.readLock().lock();
             timestamp = lastAccessMap.get(projectId);
         }
         finally {
-            LAST_ACCESS_LOCK.readLock().unlock();
+            lastAccessLock.readLock().unlock();
         }
-        if (timestamp == null) {
-            return 0;
-        }
-        else {
-            return timestamp;
-        }
+        return Objects.requireNonNullElse(timestamp, 0L);
     }
 
     private void logProjectAccess(final ProjectId projectId) {
         try {
-            LAST_ACCESS_LOCK.writeLock().lock();
+            lastAccessLock.writeLock().lock();
             long currentTime = System.currentTimeMillis();
             int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
@@ -263,7 +266,7 @@ public class ProjectCache implements HasDispose {
             }
         }
         finally {
-            LAST_ACCESS_LOCK.writeLock().unlock();
+            lastAccessLock.writeLock().unlock();
         }
     }
 

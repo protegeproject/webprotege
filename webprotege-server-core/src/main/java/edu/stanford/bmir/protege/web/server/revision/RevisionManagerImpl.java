@@ -34,8 +34,6 @@ public class RevisionManagerImpl implements RevisionManager {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    private final Lock readLock = readWriteLock.readLock();
-
     private final Lock writeLock = readWriteLock.writeLock();
 
     private final RevisionStore revisionStore;
@@ -54,13 +52,12 @@ public class RevisionManagerImpl implements RevisionManager {
             writeLock.lock();
             long timestamp = System.currentTimeMillis();
             RevisionNumber revisionNumber = revisionStore.getCurrentRevisionNumber().getNextRevisionNumber();
-            final String highlevelDescription = desc != null ? desc : "";
             final Revision revision = new Revision(
                     userId,
                     revisionNumber,
                     ImmutableList.copyOf(changes),
                     timestamp,
-                    highlevelDescription);
+                    desc);
             revisionStore.addRevision(revision);
             return revision;
         } finally {
@@ -142,12 +139,7 @@ public class RevisionManagerImpl implements RevisionManager {
     @Override
     public Optional<RevisionSummary> getRevisionSummary(@Nonnull RevisionNumber revisionNumber) {
         Optional<Revision> revision = revisionStore.getRevision(revisionNumber);
-        if (!revision.isPresent()) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(toRevisionSummary(revision.get()));
-        }
+        return revision.map(RevisionManagerImpl::toRevisionSummary);
 
     }
 
