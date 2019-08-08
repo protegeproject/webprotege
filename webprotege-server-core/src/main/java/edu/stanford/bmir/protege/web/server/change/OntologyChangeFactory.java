@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -9,6 +10,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-06
  */
+@ProjectSingleton
 public interface OntologyChangeFactory {
 
     @Nonnull
