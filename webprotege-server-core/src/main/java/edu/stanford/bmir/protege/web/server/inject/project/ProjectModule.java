@@ -599,8 +599,8 @@ public class ProjectModule {
 
 
     @Provides
-    IRIIndexProvider provideIRIIndexProvider() {
-        return IRIIndexProvider.withDefaultAnnotationPropertyOrdering();
+    IRIOrdinalProvider provideIRIIndexProvider() {
+        return IRIOrdinalProvider.withDefaultAnnotationPropertyOrdering();
     }
 
     @Provides

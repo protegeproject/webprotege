@@ -16,13 +16,13 @@ public class AnnotationPropertyComparatorImpl implements Comparator<OWLAnnotatio
     private final ShortFormProvider shortFormProvider;
 
     @Nonnull
-    private final IRIIndexProvider indexProvider;
+    private final IRIOrdinalProvider indexProvider;
 
     @Inject
     public AnnotationPropertyComparatorImpl(@Nonnull ShortFormProvider shortFormProvider,
-                                            @Nonnull IRIIndexProvider iriIndexProvider) {
+                                            @Nonnull IRIOrdinalProvider iriOrdinalProvider) {
         this.shortFormProvider = shortFormProvider;
-        this.indexProvider = iriIndexProvider;
+        this.indexProvider = iriOrdinalProvider;
     }
 
     @Override

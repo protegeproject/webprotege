@@ -17,10 +17,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 03/10/2014
  *
- * Provides a predefined index of IRIs for tasks such as ordering.
+ * Provides a predefined ordinal of IRIs for tasks such as ordering.
  */
 @ProjectSingleton
-public class IRIIndexProvider {
+public class IRIOrdinalProvider {
 
     private final ImmutableMap<IRI, Integer> indexMap;
 
@@ -67,15 +67,15 @@ public class IRIIndexProvider {
                 Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_Subset.getIRI()
         ).build();
 
-    private static final IRIIndexProvider INDEX_WITH_DEFAULT_ORDERING =
-            new IRIIndexProvider(DEFAULT_ANNOTATION_PROPERTY_ORDERING);
+    private static final IRIOrdinalProvider INDEX_WITH_DEFAULT_ORDERING =
+            new IRIOrdinalProvider(DEFAULT_ANNOTATION_PROPERTY_ORDERING);
 
     /**
      * Constructs an index provider for the specified list of IRIs.
      * @param iris The list of IRIs.  Not {@code null}.
      * @throws NullPointerException if the list is {@code null}.
      */
-    public IRIIndexProvider(ImmutableList<IRI> iris) {
+    public IRIOrdinalProvider(ImmutableList<IRI> iris) {
         checkNotNull(iris);
         Map<IRI, Integer> map = Maps.newHashMap();
         for(IRI iri : iris) {
@@ -102,9 +102,9 @@ public class IRIIndexProvider {
 
     /**
      * Gets the index based on a predefined default ordering for annotation property IRIs.
-     * @return The IRIIndexProvider for the default annotation property IRI ordering.  Not {@code null}.
+     * @return The IRIOrdinalProvider for the default annotation property IRI ordering.  Not {@code null}.
      */
-    public static IRIIndexProvider withDefaultAnnotationPropertyOrdering() {
+    public static IRIOrdinalProvider withDefaultAnnotationPropertyOrdering() {
         return INDEX_WITH_DEFAULT_ORDERING;
     }
 
