@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
  * 2019-08-08
  */
 @RunWith(MockitoJUnitRunner.class)
-public class OntologyIndex_TestCase {
+public class OntologyIndexImpl_TestCase {
 
     @Mock
     private OWLOntologyManager manager;
