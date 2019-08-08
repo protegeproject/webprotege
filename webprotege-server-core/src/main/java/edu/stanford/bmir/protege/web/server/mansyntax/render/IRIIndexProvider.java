@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
@@ -18,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * Provides a predefined index of IRIs for tasks such as ordering.
  */
+@ProjectSingleton
 public class IRIIndexProvider {
 
     private final ImmutableMap<IRI, Integer> indexMap;
