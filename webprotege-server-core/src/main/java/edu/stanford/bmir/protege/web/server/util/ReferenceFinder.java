@@ -91,7 +91,7 @@ public class ReferenceFinder {
     }
 
 
-    public static final class ReferenceSet {
+    public static class ReferenceSet {
 
         private final OWLOntologyID ontologyId;
 
