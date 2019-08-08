@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +11,8 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,10 +20,10 @@ import static org.mockito.Mockito.when;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-08-06
+ * 2019-08-08
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectOntologiesIndexImpl_TestCase {
+public class OntologyIndex_TestCase {
 
     @Mock
     private OWLOntologyManager manager;
@@ -37,7 +34,8 @@ public class ProjectOntologiesIndexImpl_TestCase {
     @Mock
     private OWLOntologyID rootOntologyId;
 
-    private ProjectOntologiesIndexImpl impl;
+    private OntologyIndexImpl impl;
+
 
     @Before
     public void setUp() {
@@ -45,13 +43,19 @@ public class ProjectOntologiesIndexImpl_TestCase {
         when(rootOntology.getOWLOntologyManager()).thenReturn(manager);
         when(manager.getOntologies()).thenReturn(Collections.singleton(rootOntology));
         when(manager.getOntology(rootOntologyId)).thenReturn(rootOntology);
-        impl = new ProjectOntologiesIndexImpl(rootOntology);
+        impl = new OntologyIndexImpl(rootOntology);
+    }
+
+
+    @Test
+    public void shouldGetRootOntology() {
+        var ontology = impl.getOntology(rootOntologyId);
+        assertThat(ontology, is(Optional.of(rootOntology)));
     }
 
     @Test
-    public void shouldReturnStreamOfRootOntologyId() {
-        var ontologyIdStream = impl.getOntologyIds();
-        var ontologyIds = ontologyIdStream.collect(Collectors.toSet());
-        assertThat(ontologyIds, contains(rootOntologyId));
+    public void shouldNotReturnNonExistentOntology() {
+        var ontology = impl.getOntology(mock(OWLOntologyID.class));
+        assertThat(ontology.isEmpty(), is(true));
     }
 }

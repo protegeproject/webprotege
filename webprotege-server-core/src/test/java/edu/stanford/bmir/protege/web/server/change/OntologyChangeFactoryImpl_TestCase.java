@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +26,7 @@ public class OntologyChangeFactoryImpl_TestCase {
     private OWLOntologyID ontologyId;
 
     @Mock
-    private ProjectOntologiesIndex projectOntologiesIndex;
+    private OntologyIndex ontologyIndex;
 
     @Mock
     private OWLOntology ontology;
@@ -42,8 +41,8 @@ public class OntologyChangeFactoryImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(projectOntologiesIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
-        impl = new OntologyChangeFactoryImpl(projectOntologiesIndex);
+        when(ontologyIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
+        impl = new OntologyChangeFactoryImpl(ontologyIndex);
     }
 
     @Test

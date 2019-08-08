@@ -27,11 +27,11 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex {
     private final Lock writeLock = readWriteLock.writeLock();
 
     @Nonnull
-    private final ProjectOntologiesIndex projectOntologiesIndex;
+    private final OntologyIndex ontologyIndex;
 
     @Inject
-    public AxiomsByTypeIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
-        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+    public AxiomsByTypeIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
+        this.ontologyIndex = checkNotNull(ontologyIndex);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex {
         checkNotNull(ontologyId);
         try {
             writeLock.lock();
-            return projectOntologiesIndex.getOntology(ontologyId)
+            return ontologyIndex.getOntology(ontologyId)
                     .stream()
                     .flatMap(ont -> ont.getAxioms(axiomType).stream());
         } finally {

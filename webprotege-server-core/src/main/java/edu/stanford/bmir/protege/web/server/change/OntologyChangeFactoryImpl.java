@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -17,11 +17,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class OntologyChangeFactoryImpl implements OntologyChangeFactory {
 
     @Nonnull
-    private final ProjectOntologiesIndex projectOntologiesIndex;
+    private final OntologyIndex ontologyIndex;
 
     @Inject
-    public OntologyChangeFactoryImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
-        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+    public OntologyChangeFactoryImpl(@Nonnull OntologyIndex ontologyIndex) {
+        this.ontologyIndex = checkNotNull(ontologyIndex);
     }
 
     @Nonnull
@@ -54,7 +54,7 @@ public class OntologyChangeFactoryImpl implements OntologyChangeFactory {
 
 
     private Optional<OWLOntology> getOntology(@Nonnull OWLOntologyID ontologyId) {
-        return projectOntologiesIndex.getOntology(ontologyId);
+        return ontologyIndex.getOntology(ontologyId);
     }
 
 }

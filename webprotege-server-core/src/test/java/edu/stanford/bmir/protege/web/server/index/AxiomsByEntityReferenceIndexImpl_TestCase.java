@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,7 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
     AxiomsByEntityReferenceIndexImpl impl;
 
     @Mock
-    private ProjectOntologiesIndex projectOntologiesIndex;
+    private OntologyIndex ontologyIndex;
 
     @Mock
     private OWLOntologyID ontologyId;
@@ -47,11 +46,10 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(projectOntologiesIndex.getOntologyIds()).thenReturn(Stream.of(ontologyId));
-        when(projectOntologiesIndex.getOntology(any())).thenReturn(Optional.empty());
-        when(projectOntologiesIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
+        when(ontologyIndex.getOntology(any())).thenReturn(Optional.empty());
+        when(ontologyIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
         when(ontology.getReferencingAxioms(entity)).thenReturn(Collections.singleton(axiom));
-        impl = new AxiomsByEntityReferenceIndexImpl(projectOntologiesIndex);
+        impl = new AxiomsByEntityReferenceIndexImpl(ontologyIndex);
     }
 
     @Test

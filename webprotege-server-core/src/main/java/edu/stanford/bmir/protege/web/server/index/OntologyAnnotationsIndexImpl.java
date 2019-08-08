@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.UnknownOWLOntologyException;
 
@@ -21,17 +20,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsIndex {
 
     @Nonnull
-    private final ProjectOntologiesIndex projectOntologiesIndex;
+    private final OntologyIndex ontologyIndex;
 
     @Inject
-    public OntologyAnnotationsIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
-        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+    public OntologyAnnotationsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
+        this.ontologyIndex = checkNotNull(ontologyIndex);
     }
 
     @Nonnull
     @Override
     public Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OWLOntologyID ontologyID) {
-        return projectOntologiesIndex.getOntology(ontologyID)
+        return ontologyIndex.getOntology(ontologyID)
                 .map(ont -> ont.getAnnotations().stream())
                 .orElseThrow(() -> new UnknownOWLOntologyException(ontologyID));
     }

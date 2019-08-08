@@ -22,11 +22,4 @@ public interface ProjectOntologiesIndex {
      */
     @Nonnull
     Stream<OWLOntologyID> getOntologyIds();
-
-    /**
-     * Gets the ontology with the specified ontology id.
-     * @param ontologyId The ontology id.
-     */
-    @Nonnull
-    Optional<OWLOntology> getOntology(@Nonnull OWLOntologyID ontologyId);
 }

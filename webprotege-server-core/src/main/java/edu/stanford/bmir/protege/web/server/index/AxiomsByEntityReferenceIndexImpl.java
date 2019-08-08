@@ -18,11 +18,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReferenceIndex {
 
     @Nonnull
-    private final ProjectOntologiesIndex projectOntologiesIndex;
+    private final OntologyIndex ontologyIndex;
 
     @Inject
-    public AxiomsByEntityReferenceIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
-        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+    public AxiomsByEntityReferenceIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
+        this.ontologyIndex = checkNotNull(ontologyIndex);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
                                                  @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(entity);
         checkNotNull(ontologyId);
-        return projectOntologiesIndex.getOntology(ontologyId)
+        return ontologyIndex.getOntology(ontologyId)
                 .stream()
                 .flatMap(ontology -> ontology.getReferencingAxioms(entity).stream());
     }

@@ -12,7 +12,6 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +32,7 @@ public class AxiomsByTypeIndexImpl_TestCase {
     private AxiomsByTypeIndexImpl impl;
 
     @Mock
-    private ProjectOntologiesIndex projectOntologiesIndex;
+    private OntologyIndex projectOntologyIndex;
 
     @Mock
     private OWLOntology ontology;
@@ -46,10 +45,9 @@ public class AxiomsByTypeIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        impl = new AxiomsByTypeIndexImpl(projectOntologiesIndex);
-        when(projectOntologiesIndex.getOntologyIds()).thenReturn(Stream.of(ontologyId));
-        when(projectOntologiesIndex.getOntology(any())).thenReturn(Optional.empty());
-        when(projectOntologiesIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
+        impl = new AxiomsByTypeIndexImpl(projectOntologyIndex);
+        when(projectOntologyIndex.getOntology(any())).thenReturn(Optional.empty());
+        when(projectOntologyIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
         when(ontology.getAxioms(any(AxiomType.class))).thenReturn(Collections.emptySet());
         when(ontology.getAxioms(AxiomType.SUBCLASS_OF)).thenReturn(Collections.singleton(axiom));
     }

@@ -13,7 +13,6 @@ import org.semanticweb.owlapi.model.UnknownOWLOntologyException;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +31,7 @@ public class OntologyAnnotationsIndexImpl_TestCase {
     private OntologyAnnotationsIndexImpl impl;
 
     @Mock
-    private ProjectOntologiesIndex projectOntologiesIndex;
+    private OntologyIndex ontologyIndex;
 
     @Mock
     private OWLOntologyID ontologyId;
@@ -45,11 +44,10 @@ public class OntologyAnnotationsIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(projectOntologiesIndex.getOntologyIds()).thenReturn(Stream.of(ontologyId));
-        when(projectOntologiesIndex.getOntology(any())).thenReturn(Optional.empty());
-        when(projectOntologiesIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
+        when(ontologyIndex.getOntology(any())).thenReturn(Optional.empty());
+        when(ontologyIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
         when(ontology.getAnnotations()).thenReturn(Collections.singleton(ontologyAnnotation));
-        impl = new OntologyAnnotationsIndexImpl(projectOntologiesIndex);
+        impl = new OntologyAnnotationsIndexImpl(ontologyIndex);
     }
 
     @Test
