@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -57,8 +58,9 @@ public class OntologyAnnotationsIndexImpl_TestCase {
         assertThat(ontologyAnnotations, Matchers.contains(ontologyAnnotation));
     }
 
-    @Test(expected = UnknownOWLOntologyException.class)
-    public void shouldThrowUnknownOntologyException() {
-        impl.getOntologyAnnotations(mock(OWLOntologyID.class));
+    @Test
+    public void shouldGetEmptyStreamForUnknownOntology() {
+        var ontologyAnnotationsStream = impl.getOntologyAnnotations(mock(OWLOntologyID.class));
+        assertThat(ontologyAnnotationsStream.count(), is(0L));
     }
 }

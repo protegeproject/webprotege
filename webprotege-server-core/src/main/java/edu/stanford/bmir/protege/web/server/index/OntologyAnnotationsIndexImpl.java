@@ -31,7 +31,7 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsIndex {
     @Override
     public Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OWLOntologyID ontologyID) {
         return ontologyIndex.getOntology(ontologyID)
-                .map(ont -> ont.getAnnotations().stream())
-                .orElseThrow(() -> new UnknownOWLOntologyException(ontologyID));
+                .stream()
+                .flatMap(ont -> ont.getAnnotations().stream());
     }
 }

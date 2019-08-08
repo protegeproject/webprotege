@@ -18,7 +18,8 @@ public interface OntologyAnnotationsIndex {
     /**
      * Gets the ontology annotations for the specified ontology Id
      * @param ontologyID The ontology Id
-     * @return A stream of annotations that are annotations on the ontology id
+     * @return A stream of annotations that are annotations on the ontology id.  If the ontology Id
+     * is not recognized then an empty stream is returned.
      */
     @Nonnull
     Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OWLOntologyID ontologyID);
