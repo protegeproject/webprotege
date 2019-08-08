@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
@@ -20,8 +21,6 @@ import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
 import edu.stanford.bmir.protege.web.server.individuals.IndividualsIndex;
 import edu.stanford.bmir.protege.web.server.individuals.IndividualsIndexImpl;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
@@ -438,11 +437,6 @@ public class ProjectModule {
     }
 
     @Provides
-    IRIIndexProvider provideIRIIndexProvider() {
-        return IRIIndexProvider.withDefaultAnnotationPropertyOrdering();
-    }
-
-    @Provides
     Comparator<OWLOntologyChangeRecord> providesOWLOntologyChangeRecordComparator(ChangeRecordComparator comparator) {
         return comparator;
     }
@@ -546,12 +540,6 @@ public class ProjectModule {
     }
 
     @Provides
-    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexCachingImpl impl) {
-        impl.attachOntologyListener();
-        return impl;
-    }
-
-    @Provides
     MatchingEngine provideMatchingEngine(MatchingEngineImpl impl) {
         return impl;
     }
@@ -608,4 +596,61 @@ public class ProjectModule {
     LiteralLangTagTransformer provideLangTagTransformer() {
         return langTag -> langTag;
     }
+
+
+    @Provides
+    IRIIndexProvider provideIRIIndexProvider() {
+        return IRIIndexProvider.withDefaultAnnotationPropertyOrdering();
+    }
+
+    @Provides
+    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexCachingImpl impl) {
+        impl.attachOntologyListener();
+        return impl;
+    }
+
+    @Provides
+    ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyChangeFactory provideOntologyChangeFactory(OntologyChangeFactoryImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl,
+                                                                         AxiomsByTypeIndexImpl axiomsByTypeIndex,
+                                                                         ProjectOntologiesIndex projectOntologiesIndex) {
+        impl.load(projectOntologiesIndex.getOntologyIds(), axiomsByTypeIndex);
+        return impl;
+    }
+
+    @Provides
+    AxiomsByReferenceIndex provideAxiomsByReferenceIndex(AxiomsByReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyIndex provideOntologyIndex(OntologyIndexImpl impl) {
+        return impl;
+    }
+
+
 }
