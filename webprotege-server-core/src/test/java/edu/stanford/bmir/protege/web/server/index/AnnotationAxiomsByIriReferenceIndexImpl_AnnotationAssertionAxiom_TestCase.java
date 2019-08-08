@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationAssertionAxiomImpl;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -48,18 +49,25 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
     @Mock
     private OWLAnnotationProperty property;
 
+    @Mock
+    private OWLAnnotation axiomAnnotation;
+
+    @Mock
+    private IRI axiomAnnotationValue;
+
+
     @Before
     public void setUp() {
         // Use real objects rather than mocks because we need proper visitor functionality
         annotationAssertionAxiom = new OWLAnnotationAssertionAxiomImpl(subjectIri,
                                                                        property,
                                                                        valueIri,
-                                                                       noAnnotations());
+                                                                       axiomAnnotations());
 
         otherAnnotationAssertionAxiom = new OWLAnnotationAssertionAxiomImpl(otherSubjectIri,
                                                                             property,
                                                                             otherValueIri,
-                                                                            noAnnotations());
+                                                                            axiomAnnotations());
 
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId))
                 .thenReturn(Stream.empty());
@@ -72,8 +80,10 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
         impl.load(Stream.of(ontologyId), axiomsByTypeIndex);
     }
 
-    private static Set<OWLAnnotation> noAnnotations() {
-        return emptySet();
+    private Set<OWLAnnotation> axiomAnnotations() {
+        when(axiomAnnotation.getValue())
+                .thenReturn(axiomAnnotationValue);
+        return Collections.singleton(axiomAnnotation);
     }
 
     @Test
@@ -87,6 +97,13 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
         var axioms = impl.getReferencingAxioms(valueIri, ontologyId).collect(toSet());
         assertThat(axioms, hasItem(annotationAssertionAxiom));
     }
+
+    @Test
+    public void shouldGetAnnotationPropertyAssertionAxiomByAxiomAnnotationValue() {
+        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyId).collect(toSet());
+        assertThat(axioms, hasItem(annotationAssertionAxiom));
+    }
+
 
     @Test
     public void shouldHandleAddAnnotationAssertionAxiom() {
@@ -115,5 +132,4 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
         var axiomsByValueIri = impl.getReferencingAxioms(valueIri, ontologyId).collect(toSet());
         assertThat(axiomsByValueIri.isEmpty(), Matchers.is(true));
     }
-
 }

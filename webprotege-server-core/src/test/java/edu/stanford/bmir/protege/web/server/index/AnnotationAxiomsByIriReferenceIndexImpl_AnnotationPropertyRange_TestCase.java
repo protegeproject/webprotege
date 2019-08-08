@@ -11,10 +11,12 @@ import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyRangeAxiomImpl;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -27,7 +29,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_TestCase {
-    
+
     private AnnotationAxiomsByIriReferenceIndexImpl impl;
 
     @Mock
@@ -44,6 +46,12 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
     @Mock
     private OWLAnnotationProperty property;
 
+    @Mock
+    private OWLAnnotation axiomAnnotation;
+
+    @Mock
+    private IRI axiomAnnotationValue;
+
     @Before
     public void setUp() {
 
@@ -53,20 +61,29 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
                 .thenReturn(Stream.empty());
 
 
-        annotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, rangeIri, noAnnotations());
-        otherAnnotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, otherRangeIri, noAnnotations());
+        annotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, rangeIri, axiomAnnotations());
+        otherAnnotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, otherRangeIri, axiomAnnotations());
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_RANGE, ontologyId)).thenReturn(Stream.of(annotationPropertyRangeAxiom));
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
         impl.load(Stream.of(ontologyId), axiomsByTypeIndex);
     }
 
-    private static Set<OWLAnnotation> noAnnotations() {
-        return emptySet();
+    private Set<OWLAnnotation> axiomAnnotations() {
+        when(axiomAnnotation.getValue())
+                .thenReturn(axiomAnnotationValue);
+        return Collections.singleton(axiomAnnotation);
     }
+
     @Test
     public void shouldGetAnnotationPropertyRangeAxiomByRangeIri() {
         var axioms = impl.getReferencingAxioms(rangeIri, ontologyId).collect(toSet());
+        assertThat(axioms, hasItem(annotationPropertyRangeAxiom));
+    }
+
+    @Test
+    public void shouldGetAnnotationPropertyRangeAxiomByAxiomAnnotationValue() {
+        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyId).collect(toSet());
         assertThat(axioms, hasItem(annotationPropertyRangeAxiom));
     }
 

@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyDomainAxiomImpl;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -42,10 +43,17 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
     @Mock
     private IRI domainIri, otherDomainIri;
 
-    private OWLAnnotationPropertyDomainAxiom annotationPropertyDomainAxiom, otherAnnotationPropertyDomainAxiom;
+    @Mock
+    private OWLAnnotation axiomAnnotation;
+
+    @Mock
+    private IRI axiomAnnotationValue;
 
     @Mock
     private OWLAnnotationProperty property;
+
+    private OWLAnnotationPropertyDomainAxiom annotationPropertyDomainAxiom, otherAnnotationPropertyDomainAxiom;
+
 
     @Before
     public void setUp() {
@@ -57,22 +65,32 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
                 .thenReturn(Stream.empty());
 
 
-        annotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, domainIri, noAnnotations());
-        otherAnnotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, otherDomainIri, noAnnotations());
+        annotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, domainIri, axiomAnnotations());
+        otherAnnotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, otherDomainIri, axiomAnnotations());
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId)).thenReturn(Stream.of(annotationPropertyDomainAxiom));
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
         impl.load(Stream.of(ontologyId), axiomsByTypeIndex);
     }
 
-    private static Set<OWLAnnotation> noAnnotations() {
-        return emptySet();
+    private Set<OWLAnnotation> axiomAnnotations() {
+        when(axiomAnnotation.getValue())
+                .thenReturn(axiomAnnotationValue);
+        return Collections.singleton(axiomAnnotation);
     }
+
     @Test
     public void shouldGetAnnotationPropertyDomainAxiomByDomainIri() {
         var axioms = impl.getReferencingAxioms(domainIri, ontologyId).collect(toSet());
         assertThat(axioms, hasItem(annotationPropertyDomainAxiom));
     }
+
+    @Test
+    public void shouldGetAnnotationPropertyDomainAxiomByAxiomAnnotationValue() {
+        var axioms = impl.getReferencingAxioms(axiomAnnotationValue, ontologyId).collect(toSet());
+        assertThat(axioms, hasItem(annotationPropertyDomainAxiom));
+    }
+
 
     @Test
     public void shouldHandleAddAnnotationPropertyDomainAxiom() {

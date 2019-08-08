@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -168,6 +169,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
         if(ax.getValue() instanceof IRI) {
             index.put((IRI) ax.getValue(), ax);
         }
+        indexAgainstAnnotations(ax, ax, index);
     }
 
     private void remove(OWLAnnotationAssertionAxiom ax, Multimap<IRI, OWLAnnotationAxiom> index) {
@@ -177,24 +179,48 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
         if(ax.getValue() instanceof IRI) {
             index.remove(ax.getValue(), ax);
         }
+        clearIndexAgainstAnnotations(ax, ax, index);
     }
 
     private void add(OWLAnnotationPropertyDomainAxiom ax, Multimap<IRI, OWLAnnotationAxiom> index) {
         index.put(ax.getDomain(), ax);
+        indexAgainstAnnotations(ax, ax, index);
     }
 
     private void remove(OWLAnnotationPropertyDomainAxiom ax, Multimap<IRI, OWLAnnotationAxiom> index) {
         index.remove(ax.getDomain(), ax);
+        clearIndexAgainstAnnotations(ax, ax, index);
     }
 
 
     private void add(OWLAnnotationPropertyRangeAxiom ax, Multimap<IRI, OWLAnnotationAxiom> index) {
         index.put(ax.getRange(), ax);
+        indexAgainstAnnotations(ax, ax, index);
     }
 
     private void remove(OWLAnnotationPropertyRangeAxiom ax, Multimap<IRI, OWLAnnotationAxiom> index) {
         index.remove(ax.getRange(), ax);
+        clearIndexAgainstAnnotations(ax, ax, index);
     }
+
+    private void indexAgainstAnnotations(OWLAnnotationAxiom rootAxiom, HasAnnotations hasAnnotations, Multimap<IRI, OWLAnnotationAxiom> index) {
+        for(OWLAnnotation annotation : hasAnnotations.getAnnotations()) {
+            if(annotation.getValue() instanceof IRI) {
+                index.put((IRI) annotation.getValue(), rootAxiom);
+            }
+            indexAgainstAnnotations(rootAxiom, annotation, index);
+        }
+    }
+
+    private void clearIndexAgainstAnnotations(OWLAnnotationAxiom rootAxiom, HasAnnotations hasAnnotations, Multimap<IRI, OWLAnnotationAxiom> index) {
+        for(OWLAnnotation annotation : hasAnnotations.getAnnotations()) {
+            if(annotation.getValue() instanceof IRI) {
+                index.remove(annotation.getValue(), rootAxiom);
+            }
+            clearIndexAgainstAnnotations(rootAxiom, annotation, index);
+        }
+    }
+
 
     @Override
     public Stream<OWLAnnotationAxiom> getReferencingAxioms(@Nonnull IRI iri,
