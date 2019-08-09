@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
 
     protected abstract String getHierarchyName();
 
-    public void handleChanges(List<? extends OWLOntologyChange> changes) {
+    public void handleChanges(List<OWLOntologyChangeRecord> changes) {
         Set<P> properties = new HashSet<>(getPropertiesReferencedInChange(changes));
         for (P prop : properties) {
             if (isSubPropertyOfRoot(prop)) {
@@ -79,7 +80,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
     }
 
 
-    protected abstract Set<P> getPropertiesReferencedInChange(List<? extends OWLOntologyChange> changes);
+    protected abstract Set<P> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes);
 
     private Set<OWLOntology> getOntologies() {
         return rootOntology.getImportsClosure();

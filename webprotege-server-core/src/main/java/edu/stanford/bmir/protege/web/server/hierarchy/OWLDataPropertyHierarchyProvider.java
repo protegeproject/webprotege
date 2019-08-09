@@ -4,6 +4,8 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.change.AxiomChangeData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -31,11 +33,11 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
         return "data property";
     }
 
-    protected Set<OWLDataProperty> getPropertiesReferencedInChange(List<? extends OWLOntologyChange> changes) {
+    protected Set<OWLDataProperty> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes) {
         Set<OWLDataProperty> result = new HashSet<>();
-        for (OWLOntologyChange change : changes) {
-            if (change.isAxiomChange()) {
-                for (OWLEntity entity : change.getSignature()) {
+        for (OWLOntologyChangeRecord change : changes) {
+            if (change.getData() instanceof AxiomChangeData) {
+                for (OWLEntity entity : change.getData().getSignature()) {
                     if (entity.isOWLDataProperty()) {
                         result.add(entity.asOWLDataProperty());
                     }
