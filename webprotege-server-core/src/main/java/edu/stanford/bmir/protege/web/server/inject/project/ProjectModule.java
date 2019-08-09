@@ -654,5 +654,9 @@ public class ProjectModule {
         return impl;
     }
 
+    @Provides
+    AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
 
 }
