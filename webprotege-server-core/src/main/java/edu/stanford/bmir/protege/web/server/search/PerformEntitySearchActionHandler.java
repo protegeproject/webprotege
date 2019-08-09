@@ -28,32 +28,12 @@ import java.util.Set;
 public class PerformEntitySearchActionHandler extends AbstractProjectActionHandler<PerformEntitySearchAction, PerformEntitySearchResult> {
 
     @Nonnull
-    private final ProjectId projectId;
-
-    @Nonnull
-    private final HasGetRendering renderer;
-
-    @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
-
-    @Nonnull
-    private final TagsManager tagsManager;
-
-    @Nonnull
     private final EntitySearcherFactory entitySearcherFactory;
 
     @Inject
     public PerformEntitySearchActionHandler(@Nonnull AccessManager accessManager,
-                                            @Nonnull ProjectId projectId,
-                                            @Nonnull HasGetRendering renderer,
-                                            @Nonnull @RootOntology OWLOntology rootOntology,
-                                            @Nonnull TagsManager tagsManager, @Nonnull EntitySearcherFactory entitySearcherFactory) {
+                                            @Nonnull EntitySearcherFactory entitySearcherFactory) {
         super(accessManager);
-        this.projectId = projectId;
-        this.renderer = renderer;
-        this.rootOntology = rootOntology;
-        this.tagsManager = tagsManager;
         this.entitySearcherFactory = entitySearcherFactory;
     }
 
