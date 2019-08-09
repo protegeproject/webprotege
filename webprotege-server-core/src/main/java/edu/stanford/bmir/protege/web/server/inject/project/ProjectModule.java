@@ -664,4 +664,9 @@ public class ProjectModule {
         return impl;
     }
 
+    @Provides
+    EquivalentClassesAxiomsIndex provideEquivalentClassesAxiomsIndex(EquivalentClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
 }
