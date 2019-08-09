@@ -558,7 +558,7 @@ public class ChangeManager implements HasApplyChanges {
         classHierarchyProvider.handleChanges(changeRecords);
         objectPropertyHierarchyProvider.handleChanges(changeRecords);
         dataPropertyHierarchyProvider.handleChanges(changeRecords);
-        annotationPropertyHierarchyProvider.handleChanges(changes);
+        annotationPropertyHierarchyProvider.handleChanges(changeRecords);
         return revision;
     }
 

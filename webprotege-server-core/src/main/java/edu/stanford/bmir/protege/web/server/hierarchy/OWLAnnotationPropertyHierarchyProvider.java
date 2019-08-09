@@ -5,6 +5,8 @@ import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.change.AxiomChangeData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
@@ -115,7 +117,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
     }
 
 
-    public void handleChanges(List<? extends OWLOntologyChange> changes) {
+    public void handleChanges(List<OWLOntologyChangeRecord> changes) {
         Set<OWLAnnotationProperty> properties = new HashSet<>(getPropertiesReferencedInChange(changes));
         for (OWLAnnotationProperty prop : properties) {
             if (isRoot(prop)) {
@@ -140,11 +142,11 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
     }
 
 
-    private Set<OWLAnnotationProperty> getPropertiesReferencedInChange(List<? extends OWLOntologyChange> changes){
+    private Set<OWLAnnotationProperty> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes){
         final Set<OWLAnnotationProperty> props = new HashSet<>();
-        for (OWLOntologyChange chg : changes){
-            if(chg.isAxiomChange()){
-                chg.getAxiom().accept(new OWLAxiomVisitorAdapter(){
+        for (OWLOntologyChangeRecord chg : changes){
+            if(chg.getData() instanceof AxiomChangeData){
+                ((AxiomChangeData) chg.getData()).getAxiom().accept(new OWLAxiomVisitorAdapter(){
                     public void visit(OWLSubAnnotationPropertyOfAxiom owlSubAnnotationPropertyOfAxiom) {
                         props.add(owlSubAnnotationPropertyOfAxiom.getSubProperty());
                         props.add(owlSubAnnotationPropertyOfAxiom.getSuperProperty());
