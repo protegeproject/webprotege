@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.index.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
@@ -181,6 +182,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final BuiltInPrefixDeclarations builtInPrefixDeclarations;
 
+    @Nonnull
+    private final IndexUpdater indexUpdater;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLOntology rootOntology,
@@ -203,7 +207,8 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull UserInSessionFactory userInSessionFactory,
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,
                          @Nonnull RenameMapFactory renameMapFactory,
-                         @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations) {
+                         @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
+                         @Nonnull IndexUpdater indexUpdater) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -226,6 +231,7 @@ public class ChangeManager implements HasApplyChanges {
         this.entityCrudContextFactory = entityCrudContextFactory;
         this.renameMapFactory = renameMapFactory;
         this.builtInPrefixDeclarations = builtInPrefixDeclarations;
+        this.indexUpdater = indexUpdater;
     }
 
     /**
@@ -546,6 +552,8 @@ public class ChangeManager implements HasApplyChanges {
                 .map(OWLOntologyChange::getChangeRecord)
                 .collect(toList());
         var revision = changeManager.addRevision(userId, changeRecords, changeDescription);
+
+        indexUpdater.propagateOntologyChanges(changeRecords);
 
         classHierarchyProvider.handleChanges(changes);
         objectPropertyHierarchyProvider.handleChanges(changes);

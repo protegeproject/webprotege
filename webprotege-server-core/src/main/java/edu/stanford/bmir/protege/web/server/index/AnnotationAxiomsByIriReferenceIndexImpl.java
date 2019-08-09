@@ -11,8 +11,8 @@ import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-07
  */
 @ProjectSingleton
-public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxiomsByIriReferenceIndex {
+public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxiomsByIriReferenceIndex, RequiresOntologyChangeNotification {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -75,10 +75,10 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
                 .forEach(ax -> add(ax, index));
     }
 
-    public void handleOntologyChanges(Stream<OWLOntologyChangeRecord> changes) {
+    public void handleOntologyChanges(@Nonnull List<OWLOntologyChangeRecord> changes) {
         try {
             writeLock.lock();
-            changes.filter(chg -> chg.getData().getItem() instanceof OWLAnnotationAxiom)
+            changes.stream().filter(chg -> chg.getData().getItem() instanceof OWLAnnotationAxiom)
                     .forEach(chg -> chg.getData().accept(new OWLOntologyChangeDataVisitor<Object, RuntimeException>() {
                         @Nonnull
                         @Override

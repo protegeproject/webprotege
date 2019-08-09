@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import com.google.common.collect.ImmutableList;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,7 +111,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
         var addAxiomData = new AddAxiomData(otherAnnotationAssertionAxiom);
         var changeRecord = new OWLOntologyChangeRecord(ontologyId, addAxiomData);
 
-        impl.handleOntologyChanges(Stream.of(changeRecord));
+        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
 
         var axiomsBySubjectIri = impl.getReferencingAxioms(otherSubjectIri, ontologyId).collect(toSet());
         assertThat(axiomsBySubjectIri, hasItems(otherAnnotationAssertionAxiom));
@@ -124,7 +125,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
         var removeAxiomData = new RemoveAxiomData(annotationAssertionAxiom);
         var changeRecord = new OWLOntologyChangeRecord(ontologyId, removeAxiomData);
 
-        impl.handleOntologyChanges(Stream.of(changeRecord));
+        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
 
         var axiomsBySubjectIri = impl.getReferencingAxioms(subjectIri, ontologyId).collect(toSet());
         assertThat(axiomsBySubjectIri.isEmpty(), is(true));

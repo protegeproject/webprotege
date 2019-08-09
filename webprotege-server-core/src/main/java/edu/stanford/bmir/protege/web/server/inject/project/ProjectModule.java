@@ -627,8 +627,10 @@ public class ProjectModule {
     @Provides
     AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl,
                                                                          AxiomsByTypeIndexImpl axiomsByTypeIndex,
-                                                                         ProjectOntologiesIndex projectOntologiesIndex) {
+                                                                         ProjectOntologiesIndex projectOntologiesIndex,
+                                                                         IndexUpdater indexUpdater) {
         impl.load(projectOntologiesIndex.getOntologyIds(), axiomsByTypeIndex);
+        indexUpdater.registerIndex(impl);
         return impl;
     }
 

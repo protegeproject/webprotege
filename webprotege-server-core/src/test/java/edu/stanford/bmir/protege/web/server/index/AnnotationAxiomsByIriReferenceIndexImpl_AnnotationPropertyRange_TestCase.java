@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,7 +93,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
         var addAxiomData = new AddAxiomData(otherAnnotationPropertyRangeAxiom);
         var changeRecord = new OWLOntologyChangeRecord(ontologyId, addAxiomData);
 
-        impl.handleOntologyChanges(Stream.of(changeRecord));
+        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
 
         var axioms = impl.getReferencingAxioms(otherRangeIri, ontologyId).collect(toSet());
         assertThat(axioms, hasItems(otherAnnotationPropertyRangeAxiom));
@@ -103,7 +104,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
         var removeAxiomData = new RemoveAxiomData(annotationPropertyRangeAxiom);
         var changeRecord = new OWLOntologyChangeRecord(ontologyId, removeAxiomData);
 
-        impl.handleOntologyChanges(Stream.of(changeRecord));
+        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
 
         var axioms = impl.getReferencingAxioms(rangeIri, ontologyId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
