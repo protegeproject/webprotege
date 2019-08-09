@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.util.EntityDeleter;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -25,30 +26,30 @@ import java.util.stream.Collectors;
 @AutoFactory
 public class DeleteEntitiesChangeListGenerator implements ChangeListGenerator<Set<OWLEntity>> {
 
-    private final Set<OWLEntity> entities;
+    @Nonnull
+    private final EntityDeleter entityDeleter;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final Set<OWLEntity> entities;
 
     @Nonnull
     private final MessageFormatter msgFormatter;
 
     private String message = "Deleted entities";
 
-    public DeleteEntitiesChangeListGenerator(@Provided @Nonnull OWLOntology rootOntology,
-                                             @Provided @Nonnull MessageFormatter msgFormatter,
+    public DeleteEntitiesChangeListGenerator(@Provided @Nonnull MessageFormatter msgFormatter,
+                                             @Provided @Nonnull EntityDeleter entityDeleter,
                                              @Nonnull Set<OWLEntity> entities) {
+        this.entityDeleter = entityDeleter;
         this.entities = ImmutableSet.copyOf(entities);
         this.msgFormatter = msgFormatter;
-        this.rootOntology = rootOntology;
     }
 
     @Override
     public OntologyChangeList<Set<OWLEntity>> generateChanges(ChangeGenerationContext context) {
         generateMessage();
-        OWLEntityRemover entityRemover = new OWLEntityRemover(rootOntology.getImportsClosure());
-        entities.forEach(entity -> entity.accept(entityRemover));
-        return OntologyChangeList.<Set<OWLEntity>>builder().addAll(entityRemover.getChanges()).build(entities);
+        var ontologyChanges = entityDeleter.getChangesToDeleteEntities(entities);
+        return OntologyChangeList.<Set<OWLEntity>>builder().addAll(ontologyChanges).build(entities);
     }
 
     private void generateMessage() {
