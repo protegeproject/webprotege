@@ -538,22 +538,28 @@ public class ChangeManager implements HasApplyChanges {
     private <R> Revision logAndProcessAppliedChanges(UserId userId,
                                                      ChangeListGenerator<R> changeList,
                                                      ChangeApplicationResult<R> finalResult) {
+
+
         var changes = finalResult.getChangeList();
+
+        // Update indexes in response to the changes
+        var changeRecords = finalResult
+                .getChangeList()
+                .stream()
+                .map(OWLOntologyChange::getChangeRecord)
+                .collect(toList());
+        indexUpdater.propagateOntologyChanges(changeRecords);
+
+
         // Update the rendering first so that a proper change message is generated
         activeLanguagesManager.handleChanges(changes);
         dictionaryUpdatesProcessor.handleChanges(changes);
 
         // Generate a description for the changes that were actually applied
         var changeDescription = changeList.getMessage(finalResult);
-        // Log the changes
-        var changeRecords = finalResult
-                .getChangeList()
-                .stream()
-                .map(OWLOntologyChange::getChangeRecord)
-                .collect(toList());
-        var revision = changeManager.addRevision(userId, changeRecords, changeDescription);
 
-        indexUpdater.propagateOntologyChanges(changeRecords);
+        // Log the changes
+        var revision = changeManager.addRevision(userId, changeRecords, changeDescription);
 
         classHierarchyProvider.handleChanges(changeRecords);
         objectPropertyHierarchyProvider.handleChanges(changeRecords);
