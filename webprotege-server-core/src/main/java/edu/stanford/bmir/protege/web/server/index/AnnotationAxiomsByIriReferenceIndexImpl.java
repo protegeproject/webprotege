@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.server.util.OWLOntologyChangeDataVisitorAdapter;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
@@ -79,75 +80,11 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
         try {
             writeLock.lock();
             changes.stream().filter(chg -> chg.getData().getItem() instanceof OWLAnnotationAxiom)
-                    .forEach(chg -> chg.getData().accept(new OWLOntologyChangeDataVisitor<Object, RuntimeException>() {
-                        @Nonnull
-                        @Override
-                        public Object visit(AddAxiomData data) throws RuntimeException {
-                            data.getAxiom().accept(new OWLAxiomVisitorAdapter() {
-                                @Override
-                                public void visit(OWLAnnotationAssertionAxiom axiom) {
-                                    add(axiom, getIndexForOntology(chg.getOntologyID()));
-                                }
-
-                                @Override
-                                public void visit(OWLAnnotationPropertyDomainAxiom axiom) {
-                                    add(axiom, getIndexForOntology(chg.getOntologyID()));
-                                }
-
-                                @Override
-                                public void visit(OWLAnnotationPropertyRangeAxiom axiom) {
-                                    add(axiom, getIndexForOntology(chg.getOntologyID()));
-                                }
-                            });
-                            return null;
-                        }
-
-                        @Override
-                        public Object visit(RemoveAxiomData data) throws RuntimeException {
-                            data.getAxiom().accept(new OWLAxiomVisitorAdapter() {
-                                @Override
-                                public void visit(OWLAnnotationAssertionAxiom axiom) {
-                                    remove(axiom, getIndexForOntology(chg.getOntologyID()));
-                                }
-
-                                @Override
-                                public void visit(OWLAnnotationPropertyDomainAxiom axiom) {
-                                    remove(axiom, getIndexForOntology(chg.getOntologyID()));
-                                }
-
-                                @Override
-                                public void visit(OWLAnnotationPropertyRangeAxiom axiom) {
-                                    remove(axiom, getIndexForOntology(chg.getOntologyID()));
-                                }
-                            });
-                            return null;
-                        }
-
-                        @Override
-                        public Object visit(AddOntologyAnnotationData data) throws RuntimeException {
-                            return null;
-                        }
-
-                        @Override
-                        public Object visit(RemoveOntologyAnnotationData data) throws RuntimeException {
-                            return null;
-                        }
-
-                        @Override
-                        public Object visit(SetOntologyIDData data) throws RuntimeException {
-                            return null;
-                        }
-
-                        @Override
-                        public Object visit(AddImportData data) throws RuntimeException {
-                            return null;
-                        }
-
-                        @Override
-                        public Object visit(RemoveImportData data) throws RuntimeException {
-                            return null;
-                        }
-                    }));
+                    .forEach(chg -> {
+                        var ontologyId = chg.getOntologyID();
+                        var axiomChangeDataVisitor = new AxiomChangeDataVisitor(this, ontologyId);
+                        chg.getData().accept(axiomChangeDataVisitor);
+                    });
         } finally {
             writeLock.unlock();
         }
@@ -237,6 +174,64 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
             }
         } finally {
             readLock.unlock();
+        }
+    }
+
+
+
+    private static class AxiomChangeDataVisitor extends OWLOntologyChangeDataVisitorAdapter {
+
+        @Nonnull
+        private final AnnotationAxiomsByIriReferenceIndexImpl index;
+
+        @Nonnull
+        private final OWLOntologyID ontologyID;
+
+
+        public AxiomChangeDataVisitor(@Nonnull AnnotationAxiomsByIriReferenceIndexImpl index,
+                                      @Nonnull OWLOntologyID ontologyID) {
+            this.index = index;
+            this.ontologyID = ontologyID;
+        }
+
+        @Override
+        public void visitAddAxiomData(AddAxiomData data) throws RuntimeException {
+            data.getAxiom().accept(new OWLAxiomVisitorAdapter() {
+                @Override
+                public void visit(OWLAnnotationAssertionAxiom axiom) {
+                    index.add(axiom, index.getIndexForOntology(ontologyID));
+                }
+
+                @Override
+                public void visit(OWLAnnotationPropertyDomainAxiom axiom) {
+                    index.add(axiom, index.getIndexForOntology(ontologyID));
+                }
+
+                @Override
+                public void visit(OWLAnnotationPropertyRangeAxiom axiom) {
+                    index.add(axiom, index.getIndexForOntology(ontologyID));
+                }
+            });
+        }
+
+        @Override
+        public void visitRemoveAxiomData(RemoveAxiomData data) throws RuntimeException {
+            data.getAxiom().accept(new OWLAxiomVisitorAdapter() {
+                @Override
+                public void visit(OWLAnnotationAssertionAxiom axiom) {
+                    index.remove(axiom, index.getIndexForOntology(ontologyID));
+                }
+
+                @Override
+                public void visit(OWLAnnotationPropertyDomainAxiom axiom) {
+                    index.remove(axiom, index.getIndexForOntology(ontologyID));
+                }
+
+                @Override
+                public void visit(OWLAnnotationPropertyRangeAxiom axiom) {
+                    index.remove(axiom, index.getIndexForOntology(ontologyID));
+                }
+            });
         }
     }
 }
