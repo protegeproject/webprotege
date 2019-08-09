@@ -659,4 +659,9 @@ public class ProjectModule {
         return impl;
     }
 
+    @Provides
+    SubClassOfAxiomsBySubClassIndex provideSubClassOfAxiomsBySubClassIndex(SubClassOfAxiomsBySubClassIndexImpl impl) {
+        return impl;
+    }
+
 }
