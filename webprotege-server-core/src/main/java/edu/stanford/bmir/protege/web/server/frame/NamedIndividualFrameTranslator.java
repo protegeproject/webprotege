@@ -100,7 +100,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         final var propertyValues = new ArrayList<PropertyValue>();
         for(OWLAxiom axiom : relevantAxioms) {
             var translator = axiomPropertyValueTranslatorProvider.get();
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), axiom, rootOntology, State.ASSERTED));
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), axiom, State.ASSERTED));
         }
         for(OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLClassAssertionAxiom ax : ont.getClassAssertionAxioms(subject.getEntity())) {

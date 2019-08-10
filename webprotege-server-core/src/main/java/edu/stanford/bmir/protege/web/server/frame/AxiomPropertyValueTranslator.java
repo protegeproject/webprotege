@@ -57,15 +57,19 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
     @Nonnull
     private final RenderingManager rm;
 
+    @Nonnull
+    private final OWLOntology rootOntology;
+
 
     @Inject
-    public AxiomPropertyValueTranslator(@Nonnull RenderingManager renderingManager) {
+    public AxiomPropertyValueTranslator(@Nonnull RenderingManager renderingManager,
+                                        @Nonnull OWLOntology rootOntology) {
         this.rm = checkNotNull(renderingManager);
+        this.rootOntology = checkNotNull(rootOntology);
     }
 
     public Set<PropertyValue> getPropertyValues(OWLEntity subject,
                                                 OWLAxiom axiom,
-                                                OWLOntology rootOntology,
                                                 State initialState) {
         final AxiomTranslator visitor = new AxiomTranslator(subject, rootOntology, initialState);
         Set<PropertyValue> result = axiom.accept(visitor);

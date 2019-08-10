@@ -71,8 +71,7 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
         ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
         AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
         for(OWLAxiom ax : propertyValueAxioms) {
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED
-            ));
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, State.ASSERTED));
         }
         return DataPropertyFrame.get(subject,
                                      propertyValues.build(),

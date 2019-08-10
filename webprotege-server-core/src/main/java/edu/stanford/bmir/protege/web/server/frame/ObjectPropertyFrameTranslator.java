@@ -92,7 +92,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
         }
         AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
         ImmutableSet<PropertyAnnotationValue> propertyValues = propertyValueAxioms.stream()
-                                                                                   .flatMap(ax -> translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED).stream())
+                                                                                   .flatMap(ax -> translator.getPropertyValues(subject.getEntity(), ax, State.ASSERTED).stream())
                                                                                    .filter(PropertyValue::isAnnotation)
                                                                                    .map(pv -> (PropertyAnnotationValue) pv)
                                                                                    .distinct()
