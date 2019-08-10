@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -29,7 +31,19 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     private final ContextRenderer ren;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final ProjectOntologiesIndex ontologiesIndex;
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubject;
+
+    @Nonnull
+    private final ObjectPropertyDomainAxiomsIndex objectPropertyDomainAxiomsIndex;
+
+    @Nonnull
+    private final ObjectPropertyRangeAxiomsIndex objectPropertyRangeAxiomsIndex;
+
+    @Nonnull
+    private final ObjectPropertyCharacteristicsIndex objectPropertyCharacteristicsIndex;
 
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
@@ -40,9 +54,19 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     @Inject
     public ObjectPropertyFrameTranslator(@Nonnull ContextRenderer ren,
                                          @Nonnull @RootOntology OWLOntology rootOntology,
-                                         @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider, @Nonnull PropertyValueComparator propertyValueComparator) {
+                                         @Nonnull ProjectOntologiesIndex ontologiesIndex,
+                                         @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubject,
+                                         @Nonnull ObjectPropertyDomainAxiomsIndex objectPropertyDomainAxiomsIndex,
+                                         @Nonnull ObjectPropertyRangeAxiomsIndex objectPropertyRangeAxiomsIndex,
+                                         @Nonnull ObjectPropertyCharacteristicsIndex objectPropertyCharacteristicsIndex,
+                                         @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider,
+                                         @Nonnull PropertyValueComparator propertyValueComparator) {
         this.ren = ren;
-        this.rootOntology = rootOntology;
+        this.ontologiesIndex = ontologiesIndex;
+        this.annotationAssertionAxiomsBySubject = annotationAssertionAxiomsBySubject;
+        this.objectPropertyDomainAxiomsIndex = objectPropertyDomainAxiomsIndex;
+        this.objectPropertyRangeAxiomsIndex = objectPropertyRangeAxiomsIndex;
+        this.objectPropertyCharacteristicsIndex = objectPropertyCharacteristicsIndex;
         this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
         this.propertyValueComparator = propertyValueComparator;
     }
@@ -54,45 +78,35 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
         ImmutableSet.Builder<OWLClassData> domains = ImmutableSet.builder();
         ImmutableSet.Builder<OWLClassData> ranges = ImmutableSet.builder();
         ImmutableSet.Builder<ObjectPropertyCharacteristic> characteristics = ImmutableSet.builder();
-        for (OWLOntology ontology : rootOntology.getImportsClosure()) {
-            propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
-            for (OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject.getEntity())) {
-                final OWLClassExpression domain = ax.getDomain();
-                if (!domain.isAnonymous()) {
-                    domains.add(ren.getClassData(domain.asOWLClass()));
-                }
-            }
-            for (OWLObjectPropertyRangeAxiom ax : ontology.getObjectPropertyRangeAxioms(subject.getEntity())) {
-                OWLClassExpression range = ax.getRange();
-                if (!range.isAnonymous()) {
-                    ranges.add(ren.getClassData(range.asOWLClass()));
-                }
-            }
-            if (ontology.getAxiomCount(AxiomType.FUNCTIONAL_OBJECT_PROPERTY) > 1) {
-                characteristics.add(ObjectPropertyCharacteristic.FUNCTIONAL);
-            }
-            if (ontology.getAxiomCount(AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY) > 1) {
-                characteristics.add(ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL);
-            }
-            if (ontology.getAxiomCount(AxiomType.SYMMETRIC_OBJECT_PROPERTY) > 1) {
-                characteristics.add(ObjectPropertyCharacteristic.SYMMETRIC);
-            }
-            if (ontology.getAxiomCount(AxiomType.ASYMMETRIC_OBJECT_PROPERTY) > 1) {
-                characteristics.add(ObjectPropertyCharacteristic.ASYMMETRIC);
-            }
-            if (ontology.getAxiomCount(AxiomType.REFLEXIVE_OBJECT_PROPERTY) > 1) {
-                characteristics.add(ObjectPropertyCharacteristic.REFLEXIVE);
-            }
-            if (ontology.getAxiomCount(AxiomType.IRREFLEXIVE_OBJECT_PROPERTY) > 1) {
-                characteristics.add(ObjectPropertyCharacteristic.IRREFLEXIVE);
-            }
-            if (ontology.getAxiomCount(AxiomType.TRANSITIVE_OBJECT_PROPERTY) > 1) {
-                characteristics.add(ObjectPropertyCharacteristic.TRANSITIVE);
-            }
-        }
+
+        var subjectEntity = subject.getEntity();
+        ontologiesIndex.getOntologyIds()
+                .forEach(ontologyId -> {
+                    annotationAssertionAxiomsBySubject.getAxiomsForSubject(subjectEntity.getIRI(), ontologyId)
+                            .forEach(propertyValueAxioms::add);
+
+                    objectPropertyDomainAxiomsIndex.getObjectPropertyDomainAxioms(subjectEntity, ontologyId)
+                            .map(OWLPropertyDomainAxiom::getDomain)
+                            .filter(OWLClassExpression::isNamed)
+                            .map(OWLClassExpression::asOWLClass)
+                            .map(ren::getClassData)
+                            .forEach(domains::add);
+
+                    objectPropertyRangeAxiomsIndex.getObjectPropertyRangeAxioms(subjectEntity, ontologyId)
+                            .map(OWLPropertyRangeAxiom::getRange)
+                            .filter(OWLClassExpression::isNamed)
+                            .map(OWLClassExpression::asOWLClass)
+                            .map(ren::getClassData)
+                            .forEach(ranges::add);
+
+                    Stream.of(ObjectPropertyCharacteristic.values())
+                            .filter(characteristic -> objectPropertyCharacteristicsIndex.hasCharacteristic(subjectEntity, characteristic, ontologyId))
+                            .forEach(characteristics::add);
+                });
+
         AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
         ImmutableSet<PropertyAnnotationValue> propertyValues = propertyValueAxioms.stream()
-                                                                                   .flatMap(ax -> translator.getPropertyValues(subject.getEntity(), ax, State.ASSERTED).stream())
+                                                                                   .flatMap(ax -> translator.getPropertyValues(subjectEntity, ax, State.ASSERTED).stream())
                                                                                    .filter(PropertyValue::isAnnotation)
                                                                                    .map(pv -> (PropertyAnnotationValue) pv)
                                                                                    .distinct()
