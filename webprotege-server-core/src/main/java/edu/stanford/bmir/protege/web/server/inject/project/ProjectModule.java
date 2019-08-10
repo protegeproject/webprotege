@@ -669,4 +669,19 @@ public class ProjectModule {
         return impl;
     }
 
+    @Provides
+    ObjectPropertyDomainAxiomsIndex provideObjectPropertyDomainAxiomsIndex(ObjectPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyRangeAxiomsIndex provideObjectPropertyRangeAxiomsIndex(ObjectPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyCharacteristicsIndex provideObjectPropertyCharacteristicsIndex(ObjectPropertyCharacteristicsIndexImpl impl) {
+        return impl;
+    }
+
 }
