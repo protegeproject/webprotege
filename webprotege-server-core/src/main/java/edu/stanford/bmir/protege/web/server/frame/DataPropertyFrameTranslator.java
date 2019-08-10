@@ -1,23 +1,25 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
-import edu.stanford.bmir.protege.web.shared.frame.*;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.search.EntitySearcher;
+import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.State;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,7 +30,20 @@ import java.util.Set;
 public class DataPropertyFrameTranslator implements FrameTranslator<DataPropertyFrame, OWLDataPropertyData> {
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
+
+    @Nonnull
+    private final DataPropertyDomainAxiomsIndex domainAxiomsIndex;
+
+    @Nonnull
+    private final DataPropertyRangeAxiomsIndex rangeAxiomsIndex;
+
+    @Nonnull
+    private final DataPropertyCharacteristicsIndex characteristicsIndex;
+
 
     @Nonnull
     private final ContextRenderer ren;
@@ -37,10 +52,18 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
     @Inject
-    public DataPropertyFrameTranslator(@Nonnull OWLOntology rootOntology,
+    public DataPropertyFrameTranslator(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                       @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectId,
+                                       @Nonnull DataPropertyDomainAxiomsIndex dataPropertyDomainAxiomsIndex,
+                                       @Nonnull DataPropertyRangeAxiomsIndex dataPropertyRangeAxiomsIndex,
+                                       @Nonnull DataPropertyCharacteristicsIndex dataPropertyCharacteristicsIndex,
                                        @Nonnull ContextRenderer ren,
                                        @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
-        this.rootOntology = rootOntology;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.annotationAssertionsIndex = annotationAssertionAxiomsBySubjectId;
+        this.domainAxiomsIndex = dataPropertyDomainAxiomsIndex;
+        this.rangeAxiomsIndex = dataPropertyRangeAxiomsIndex;
+        this.characteristicsIndex = dataPropertyCharacteristicsIndex;
         this.ren = ren;
         this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
     }
@@ -48,52 +71,65 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
     @Nonnull
     @Override
     public DataPropertyFrame getFrame(@Nonnull OWLDataPropertyData subject) {
-        Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
-        ImmutableSet.Builder<OWLClassData> domains = ImmutableSet.builder();
-        ImmutableSet.Builder<OWLDatatypeData> ranges = ImmutableSet.builder();
-        boolean functional = false;
-        for(OWLOntology ontology : rootOntology.getImportsClosure()) {
-            propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
-            for(OWLDataPropertyDomainAxiom ax : ontology.getDataPropertyDomainAxioms(subject.getEntity())) {
-                if(!ax.getDomain().isAnonymous()) {
-                    domains.add(ren.getClassData(ax.getDomain().asOWLClass()));
-                }
-            }
-            for(OWLDataPropertyRangeAxiom ax : ontology.getDataPropertyRangeAxioms(subject.getEntity())) {
-                if(ax.getRange().isDatatype()) {
-                    ranges.add(ren.getDatatypeData(ax.getRange().asOWLDatatype()));
-                }
-            }
-            if(EntitySearcher.isFunctional(subject.getEntity(), ontology)) {
-                functional = true;
-            }
-        }
+
+        var property = subject.getEntity();
+
+        var propertyValueAxioms = projectOntologiesIndex
+                .getOntologyIds()
+                .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(property.getIRI(), ontId))
+                .collect(toImmutableSet());
+
+        var domains = projectOntologiesIndex
+                .getOntologyIds()
+                .flatMap(ontId -> domainAxiomsIndex.getDataPropertyDomainAxioms(property, ontId))
+                .map(OWLDataPropertyDomainAxiom::getDomain)
+                .filter(OWLClassExpression::isNamed)
+                .map(OWLClassExpression::asOWLClass)
+                .map(ren::getClassData)
+                .collect(toImmutableSet());
+
+        var ranges = projectOntologiesIndex
+                .getOntologyIds()
+                .flatMap(ontId -> rangeAxiomsIndex.getDataPropertyRangeAxioms(property, ontId))
+                .map(OWLDataPropertyRangeAxiom::getRange)
+                .filter(OWLDataRange::isDatatype)
+                .map(OWLDataRange::asOWLDatatype)
+                .map(ren::getDatatypeData)
+                .collect(toImmutableSet());
+
+
+        var functional = projectOntologiesIndex
+                .getOntologyIds()
+                .anyMatch(ont -> characteristicsIndex.isFunctional(property, ont));
+
+
         ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
         AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
         for(OWLAxiom ax : propertyValueAxioms) {
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, State.ASSERTED));
+            propertyValues.addAll(translator.getPropertyValues(property, ax, State.ASSERTED));
         }
-        return DataPropertyFrame.get(subject,
-                                     propertyValues.build(),
-                                     domains.build(),
-                                     ranges.build(),
-                                     functional);
+        return DataPropertyFrame.get(subject, propertyValues.build(), domains, ranges, functional);
     }
 
     @Nonnull
     @Override
-    public Set<OWLAxiom> getAxioms(@Nonnull DataPropertyFrame frame, @Nonnull Mode mode) {
+    public Set<OWLAxiom> getAxioms(@Nonnull DataPropertyFrame frame,
+                                   @Nonnull Mode mode) {
         Set<OWLAxiom> result = new HashSet<>();
         for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
             AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
             result.addAll(translator.getAxioms(frame.getSubject().getEntity(), pv, mode));
         }
         for(OWLClassData domain : frame.getDomains()) {
-            OWLAxiom ax = DataFactory.get().getOWLDataPropertyDomainAxiom(frame.getSubject().getEntity(), domain.getEntity());
+            OWLAxiom ax = DataFactory
+                    .get()
+                    .getOWLDataPropertyDomainAxiom(frame.getSubject().getEntity(), domain.getEntity());
             result.add(ax);
         }
         for(OWLDatatypeData range : frame.getRanges()) {
-            OWLAxiom ax = DataFactory.get().getOWLDataPropertyRangeAxiom(frame.getSubject().getEntity(), range.getEntity());
+            OWLAxiom ax = DataFactory
+                    .get()
+                    .getOWLDataPropertyRangeAxiom(frame.getSubject().getEntity(), range.getEntity());
             result.add(ax);
         }
         if(frame.isFunctional()) {
