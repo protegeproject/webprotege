@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import org.mongodb.morphia.Morphia;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import java.util.Optional;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -21,7 +23,7 @@ public class MongoTestUtils {
     private static final String TEST_DB_NAME = "webprotege-test";
 
     public static MongoClient createMongoClient() {
-        return new MongoClientProvider("localhost", 27017, new ApplicationDisposablesManager(new DisposableObjectManager())).get();
+        return new MongoClientProvider("localhost", 27017, Optional.empty(), new ApplicationDisposablesManager(new DisposableObjectManager())).get();
     }
 
     public static Morphia createMorphia() {

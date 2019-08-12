@@ -1,15 +1,19 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.persistence.DbName;
 import edu.stanford.bmir.protege.web.server.persistence.MorphiaDatastoreProvider;
 import edu.stanford.bmir.protege.web.server.persistence.MorphiaProvider;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -29,6 +33,29 @@ public class DbModule {
     @DbPort
     public int provideDbPort(DbPortProvider dbPortProvider) {
         return dbPortProvider.get();
+    }
+
+    @Provides
+    @DbUsername
+    public String provideDbUserName(WebProtegeProperties webProtegeProperties) {
+        return webProtegeProperties.getDBUserName().orElse("");
+    }
+
+    @Provides
+    @DbPassword
+    char [] provideDbPassword(WebProtegeProperties webProtegeProperties) {
+        return webProtegeProperties.getDBPassword().orElse("").toCharArray();
+    }
+
+    @Provides
+    @DbAuthenticationSource
+    String provideDbAuthenticationSource(WebProtegeProperties webProtegeProperties) {
+        return webProtegeProperties.getDBAuthenticationSource().orElse("");
+    }
+
+    @Provides
+    public Optional<MongoCredential> provideMongoCredentials(MongoCredentialProvider credentialsProvider) {
+        return credentialsProvider.get();
     }
 
     @Provides

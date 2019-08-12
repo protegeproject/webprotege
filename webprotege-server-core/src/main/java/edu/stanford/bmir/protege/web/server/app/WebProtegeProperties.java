@@ -123,4 +123,16 @@ public class WebProtegeProperties implements Serializable {
             return Long.parseLong(PROJECT_DORMANT_TIME.getDefaultValue().orElseThrow());
         }
     }
+
+    public Optional<String> getDBUserName() {
+        return getOptionalString(MONGO_DB_AUTH_USERNAME);
+    }
+
+    public Optional<String> getDBPassword() {
+        return getOptionalString(MONGO_DB_AUTH_PASSWORD);
+    }
+
+    public Optional<String> getDBAuthenticationSource() {
+        return getOptionalString(MONGO_DB_AUTH_SOURCE);
+    }
 }

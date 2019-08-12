@@ -38,6 +38,15 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
     MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017)),
 
+    @WebProtegePropertiesDocumentation(description = "The username that WebProtégé should use to connect to to MongoDB")
+    MONGO_DB_AUTH_USERNAME("mongodb.auth.username", PropertyValue.ofString("")),
+
+    @WebProtegePropertiesDocumentation(description = "The MongoDB database (source) that is used to store credentials in MongoDB")
+    MONGO_DB_AUTH_SOURCE("mongodb.auth.source", PropertyValue.ofString("")),
+
+    @WebProtegePropertiesDocumentation(description = "The password that WebProtégé should use to connect to MongoDB")
+    MONGO_DB_AUTH_PASSWORD("mongodb.auth.password", PropertyValue.ofString("")),
+
     @WebProtegePropertiesDocumentation(description = "The time in milliseconds after which a project becomes dormant and is purgable from memory", example = "180000")
     PROJECT_DORMANT_TIME("project.dormant.time", PropertyValue.ofInteger(180_000));
 

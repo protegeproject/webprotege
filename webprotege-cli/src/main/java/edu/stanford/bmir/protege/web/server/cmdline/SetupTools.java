@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
+import edu.stanford.bmir.protege.web.server.inject.MongoCredentialProvider;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
@@ -132,7 +133,13 @@ public class SetupTools {
         WebProtegeProperties properties = getWebProtegeProperties();
         String dbHost = properties.getDBHost().orElse("localhost");
         int dbPort = Integer.parseInt(properties.getDBPort().orElse(WebProtegePropertyName.MONGO_DB_PORT.toString()));
-        return new MongoClientProvider(dbHost, dbPort, new ApplicationDisposablesManager(new DisposableObjectManager())).get();
+        MongoCredentialProvider mongoCredentialProvider = new MongoCredentialProvider(
+                properties.getDBUserName().orElse(""),
+                properties.getDBAuthenticationSource().orElse(""),
+                properties.getDBPassword().map(String::toCharArray).orElse(new char [0])
+        );
+        var credential = mongoCredentialProvider.get();
+        return new MongoClientProvider(dbHost, dbPort, credential, new ApplicationDisposablesManager(new DisposableObjectManager())).get();
     }
 
     private static Morphia getMorphia() {
