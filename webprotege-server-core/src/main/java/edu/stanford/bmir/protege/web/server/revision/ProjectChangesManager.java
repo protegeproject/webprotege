@@ -129,13 +129,13 @@ public class ProjectChangesManager {
                                               Optional<OWLEntity> subject,
                                               ImmutableList.Builder<ProjectChange> changesBuilder) {
         if(!cache.containsRow(revision.getRevisionNumber())) {
-            logger.info("{} Building cache for revision {}", projectId, revision.getRevisionNumber().getValue());
+            logger.debug("{} Building cache for revision {}", projectId, revision.getRevisionNumber().getValue());
             var stopwatch = Stopwatch.createStarted();
             var changeRecordsBySubject = getChangeRecordsBySubject(revision);
             changeRecordsBySubject.asMap().forEach((subj, records) -> {
                 cache.put(revision.getRevisionNumber(), subj, ImmutableList.copyOf(records));
             });
-            logger.info("{} Cached revision {} in {} ms", projectId, revision.getRevisionNumber().getValue(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            logger.debug("{} Cached revision {} in {} ms", projectId, revision.getRevisionNumber().getValue(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
         List<OWLOntologyChangeRecord> limitedRecords = new ArrayList<>();
         final int totalChanges;
