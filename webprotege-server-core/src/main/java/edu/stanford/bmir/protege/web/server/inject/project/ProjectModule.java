@@ -708,4 +708,9 @@ public class ProjectModule {
     SameIndividualAxiomsIndex provideSameIndividualAxiomsIndex(SameIndividualAxiomsIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
 }
