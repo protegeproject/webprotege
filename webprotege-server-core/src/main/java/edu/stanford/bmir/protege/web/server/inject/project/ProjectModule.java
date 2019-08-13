@@ -713,4 +713,9 @@ public class ProjectModule {
     ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    DataPropertyAssertionAxiomsBySubjectIndex provideDataPropertyAssertionAxiomsBySubjectIndex(DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
 }
