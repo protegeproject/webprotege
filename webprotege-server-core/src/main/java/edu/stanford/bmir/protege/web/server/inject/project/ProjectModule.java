@@ -723,4 +723,9 @@ public class ProjectModule {
     PropertyAssertionAxiomsBySubjectIndex providePropertyAssertionAxiomsBySubjectIndex(PropertyAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(AnnotationPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
 }
