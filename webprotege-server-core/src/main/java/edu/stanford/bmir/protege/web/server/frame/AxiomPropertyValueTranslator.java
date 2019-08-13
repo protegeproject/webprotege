@@ -64,14 +64,8 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
     public Set<PropertyValue> getPropertyValues(OWLEntity subject,
                                                 OWLAxiom axiom,
                                                 State initialState) {
-        final AxiomTranslator visitor = new AxiomTranslator(subject, initialState, entitiesIndex, ren);
-        Set<PropertyValue> result = axiom.accept(visitor);
-        if (result == null) {
-            return Collections.emptySet();
-        }
-        else {
-            return result;
-        }
+        var translator = new AxiomTranslator(subject, initialState, entitiesIndex, ren);
+        return translator.translate(axiom);
     }
 
     public Set<OWLAxiom> getAxioms(OWLEntity subject,
