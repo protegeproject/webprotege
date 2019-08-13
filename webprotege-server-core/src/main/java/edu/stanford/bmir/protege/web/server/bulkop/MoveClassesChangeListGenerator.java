@@ -49,11 +49,11 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
     @AutoFactory
     public MoveClassesChangeListGenerator(@Nonnull ImmutableSet<OWLClass> childClasses,
                                           @Nonnull OWLClass targetParent,
-                                          @Nonnull ProjectOntologiesIndex projectOntologies,
-                                          @Nonnull SubClassOfAxiomsBySubClassIndex subClassAxiomIndex,
-                                          @Nonnull OntologyChangeFactory ontologyChangeFactory,
-                                          @Provided @Nonnull OWLDataFactory dataFactory,
-                                          @Nonnull String commitMessage) {
+                                          @Nonnull String commitMessage,
+                                          @Provided @Nonnull ProjectOntologiesIndex projectOntologies,
+                                          @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassAxiomIndex,
+                                          @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
+                                          @Provided @Nonnull OWLDataFactory dataFactory) {
         this.childClasses = checkNotNull(childClasses);
         this.targetParent = checkNotNull(targetParent);
         this.projectOntologies = checkNotNull(projectOntologies);
