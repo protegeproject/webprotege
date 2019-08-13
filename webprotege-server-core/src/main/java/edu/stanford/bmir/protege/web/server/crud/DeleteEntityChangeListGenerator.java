@@ -5,14 +5,14 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.util.EntityDeleter;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.RemoveAxiom;
-import org.semanticweb.owlapi.util.OWLEntityRemover;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Collections;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,24 +26,21 @@ public class DeleteEntityChangeListGenerator implements ChangeListGenerator<OWLE
     private final OWLEntity entity;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final EntityDeleter entityDeleter;
 
     @Inject
     public DeleteEntityChangeListGenerator(@Nonnull OWLEntity entity,
-                                           @Nonnull OWLOntology rootOntology) {
-        this.entity = entity;
-        this.rootOntology = rootOntology;
+                                           @Nonnull EntityDeleter entityDeleter) {
+        this.entity = checkNotNull(entity);
+        this.entityDeleter = checkNotNull(entityDeleter);
     }
 
     @Override
     public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<OWLEntity> builder = new OntologyChangeList.Builder<>();
-        OWLEntityRemover remover = new OWLEntityRemover(
-                rootOntology.getImportsClosure());
-        entity.accept(remover);
-        List<RemoveAxiom> changeList = remover.getChanges();
-        builder.addAll(changeList);
-        return builder.build(entity);
+        var deletionChanges = entityDeleter.getChangesToDeleteEntities(Collections.singleton(entity));
+        var changeListBuilder = new OntologyChangeList.Builder<OWLEntity>();
+        changeListBuilder.addAll(deletionChanges);
+        return changeListBuilder.build(entity);
     }
 
     @Override
