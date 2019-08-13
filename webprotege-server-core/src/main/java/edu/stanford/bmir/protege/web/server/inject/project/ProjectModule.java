@@ -733,4 +733,9 @@ public class ProjectModule {
     AnnotationPropertyRangeAxiomsIndex provideAnnotationPropertyRangeAxiomsIndex(AnnotationPropertyRangeAxiomsIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(EntitiesInProjectSignatureByIriIndexImpl impl) {
+        return impl;
+    }
 }
