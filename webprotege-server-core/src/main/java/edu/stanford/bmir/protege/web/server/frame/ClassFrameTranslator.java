@@ -158,11 +158,12 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                 .map(ren::getClassData)
                 .collect(toImmutableSet());
 
-        var propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues);
-        propertyValuesMin.sort(propertyValueComparator);
+        var propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues)
+                .sorted(propertyValueComparator)
+                .collect(toImmutableSet());
         return ClassFrame.get(subjectData,
                               parents,
-                              ImmutableSet.copyOf(propertyValuesMin));
+                              propertyValuesMin);
     }
 
     private Set<OWLAxiom> getRelevantAxioms(OWLClass subject,
