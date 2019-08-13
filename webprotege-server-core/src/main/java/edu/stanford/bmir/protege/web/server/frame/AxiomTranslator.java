@@ -8,17 +8,16 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
-import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -27,13 +26,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 class AxiomTranslator {
 
+    @Nonnull
     private final OWLEntity subject;
 
+    @Nonnull
+    private final OWLAxiom axiom;
+
+    @Nonnull
     private final State initialState;
 
+    @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesIndex;
 
+    @Nonnull
     private final ContextRenderer ren;
+
+    @Nonnull
+    private final ClassExpressionTranslatorFactory classExpressionTranslatorFactory;
 
     private final OWLAxiomVisitorExAdapter<Set<PropertyValue>> axiomVisitor = new OWLAxiomVisitorExAdapter<>(Collections
                                                                                                                      .emptySet()) {
@@ -76,110 +85,110 @@ class AxiomTranslator {
 
     @Inject
     @AutoFactory
-    public AxiomTranslator(OWLEntity subject,
-                    State initialState,
-                    @Provided EntitiesInProjectSignatureByIriIndex entitiesIndex,
-                    @Provided ContextRenderer ren) {
+    public AxiomTranslator(@Nonnull OWLEntity subject,
+                           @Nonnull OWLAxiom axiom,
+                           @Nonnull State initialState,
+                           @Provided EntitiesInProjectSignatureByIriIndex entitiesIndex,
+                           @Provided ContextRenderer ren,
+                           @Provided @Nonnull ClassExpressionTranslatorFactory classExpressionTranslatorFactory) {
         this.subject = checkNotNull(subject);
+        this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
         this.entitiesIndex = checkNotNull(entitiesIndex);
         this.ren = checkNotNull(ren);
+        this.classExpressionTranslatorFactory = checkNotNull(classExpressionTranslatorFactory);
     }
 
-    public Set<PropertyValue> translate(@Nonnull OWLAxiom axiom) {
+    public Set<PropertyValue> translate() {
         return axiom.accept(axiomVisitor);
     }
 
     private Set<PropertyValue> translateSubClassOf(OWLSubClassOfAxiom axiom) {
-        if(axiom.getSubClass().equals(subject)) {
-            return axiom.getSuperClass().accept(new ClassExpressionTranslator(initialState, ren));
-        }
-        else {
+        if(!axiom.getSubClass().equals(subject)) {
             return Collections.emptySet();
         }
+        var superClass = axiom.getSuperClass();
+        var classExpressionTranslator = classExpressionTranslatorFactory.create(initialState, superClass);
+        return classExpressionTranslator.translate();
     }
-
-
 
     private Set<PropertyValue> translateEquivalentClasses(OWLEquivalentClassesAxiom axiom) {
         if(!subject.isOWLClass()) {
             return Collections.emptySet();
         }
-        Set<PropertyValue> result = new HashSet<>();
-        if(axiom.contains(subject.asOWLClass())) {
-            for(OWLClassExpression ce : axiom.getClassExpressions()) {
-                if(!ce.equals(subject)) {
-                    for(OWLClassExpression conj : ce.asConjunctSet()) {
-                        Set<PropertyValue> vals = conj.accept(new ClassExpressionTranslator(State.DERIVED, ren));
-                        if(vals != null) {
-                            result.addAll(vals);
-                        }
-                    }
-                }
-            }
+        var classExpressions = axiom.getClassExpressions();
+        if(!classExpressions.contains(subject.asOWLClass())) {
+            return Collections.emptySet();
         }
-        return result;
+        return classExpressions.stream()
+                .filter(ce -> !ce.equals(subject))
+                .flatMap(this::toPropertyValues)
+                .collect(toImmutableSet());
     }
 
+    private Stream<? extends PropertyValue> toPropertyValues(OWLClassExpression ce) {
+        var classExpressionTranslator = classExpressionTranslatorFactory.create(State.DERIVED, ce);
+        return classExpressionTranslator.translate().stream();
+    }
 
 
     @Nonnull
     private Set<PropertyValue> translateAnnotationAssertion(OWLAnnotationAssertionAxiom axiom) {
-        if(axiom.getSubject().equals(subject.getIRI())) {
-            if(axiom.getValue() instanceof IRI) {
-                var entities = entitiesIndex.getEntityInSignature((IRI) axiom.getValue()).collect(Collectors.toSet());
-                if(!entities.isEmpty()) {
-                    return entities
-                            .stream()
-                            .sorted()
-                            .map(entity -> PropertyAnnotationValue.get(ren.getAnnotationPropertyData(axiom.getProperty()), ren
-                                    .getAnnotationValueData(axiom.getValue()), State.ASSERTED))
-                            .collect(Collectors.toSet());
-                }
+        if(!axiom.getSubject().equals(subject.getIRI())) {
+            return Collections.emptySet();
+        }
+        if(axiom.getValue() instanceof IRI) {
+            var entities = entitiesIndex.getEntityInSignature((IRI) axiom.getValue()).collect(Collectors.toSet());
+            if(!entities.isEmpty()) {
+                return entities
+                        .stream()
+                        .sorted()
+                        .map(entity -> PropertyAnnotationValue.get(ren.getAnnotationPropertyData(axiom.getProperty()), ren
+                                .getAnnotationValueData(axiom.getValue()), State.ASSERTED))
+                        .collect(Collectors.toSet());
             }
-            return Collections.singleton(PropertyAnnotationValue.get(ren.getAnnotationPropertyData(axiom.getProperty()), ren.getAnnotationValueData(axiom.getValue()), State.ASSERTED));
+        }
+        return Collections.singleton(PropertyAnnotationValue.get(ren.getAnnotationPropertyData(axiom.getProperty()), ren.getAnnotationValueData(axiom.getValue()), State.ASSERTED));
 
-        }
-        else {
-            return null;
-        }
     }
 
 
     @Nonnull
     private Set<PropertyValue> translateObjectPropertyAssertion(OWLObjectPropertyAssertionAxiom axiom) {
-        if(axiom.getSubject().equals(subject) && !axiom.getProperty().isAnonymous() && !axiom.getObject().isAnonymous()) {
-            return Collections.singleton(PropertyIndividualValue.get(ren.getObjectPropertyData(axiom
-                                                                                                                    .getProperty()
-                                                                                                                    .asOWLObjectProperty()), ren.getIndividualData(axiom
-                                                                                                                                                                           .getObject()
-                                                                                                                                                                           .asOWLNamedIndividual()), State.ASSERTED));
+        if(axiom.getProperty().isAnonymous()) {
+            return Collections.emptySet();
         }
-        else {
-            return null;
+        if(axiom.getObject().isAnonymous()) {
+            return Collections.emptySet();
         }
+        if(!axiom.getSubject().equals(subject)) {
+            return Collections.emptySet();
+        }
+        var property = axiom.getProperty().asOWLObjectProperty();
+        var object = axiom.getObject().asOWLNamedIndividual();
+        return Collections.singleton(PropertyIndividualValue.get(ren.getObjectPropertyData(property),
+                                                                 ren.getIndividualData(object),
+                                                                 State.ASSERTED));
     }
 
     @Nonnull
     private Set<PropertyValue> translateDataPropertyAssertion(OWLDataPropertyAssertionAxiom axiom) {
-        if(axiom.getSubject().equals(subject)) {
-            return Collections.singleton(PropertyLiteralValue.get(ren.getDataPropertyData(axiom
-                                                                                                               .getProperty()
-                                                                                                               .asOWLDataProperty()), OWLLiteralData
-                                                                                       .get(axiom.getObject()), State.ASSERTED));
+        if(!axiom.getSubject().equals(subject)) {
+            return Collections.emptySet();
         }
-        else {
-            return null;
-        }
+        OWLDataProperty property = axiom.getProperty().asOWLDataProperty();
+        return Collections.singleton(PropertyLiteralValue.get(ren.getDataPropertyData(property),
+                                                              OWLLiteralData.get(axiom.getObject()),
+                                                              State.ASSERTED));
     }
 
     @Nonnull
     private Set<PropertyValue> translateClassAssertion(OWLClassAssertionAxiom axiom) {
-        if(axiom.getIndividual().equals(subject)) {
-            return axiom.getClassExpression().accept(new ClassExpressionTranslator(initialState, ren));
+        if(!axiom.getIndividual().equals(subject)) {
+            return Collections.emptySet();
         }
-        else {
-            return null;
-        }
+        var classExpression = axiom.getClassExpression();
+        var classExpressionTranslator = classExpressionTranslatorFactory.create(initialState, classExpression);
+        return classExpressionTranslator.translate();
     }
 }

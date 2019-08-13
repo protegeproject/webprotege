@@ -48,26 +48,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
     @Nonnull
-    private final EntitiesInProjectSignatureByIriIndex entitiesIndex;
-
-    @Nonnull
-    private final ContextRenderer ren;
+    private final AxiomTranslatorFactory axiomTranslatorFactory;
 
 
     @Inject
-    public AxiomPropertyValueTranslator(@Nonnull ContextRenderer ren,
-                                        @Nonnull EntitiesInProjectSignatureByIriIndex entitiesIndex) {
-        this.ren = checkNotNull(ren);
-        this.entitiesIndex = checkNotNull(entitiesIndex);
+    public AxiomPropertyValueTranslator(@Nonnull AxiomTranslatorFactory axiomTranslatorFactory) {
+        this.axiomTranslatorFactory = checkNotNull(axiomTranslatorFactory);
     }
 
-    public Set<PropertyValue> getPropertyValues(OWLEntity subject,
-                                                OWLAxiom axiom,
-                                                State initialState) {
-        var translator = new AxiomTranslator(subject, initialState, entitiesIndex, ren);
-        return translator.translate(axiom);
+    @Nonnull
+    public Set<PropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
+                                                @Nonnull OWLAxiom axiom,
+                                                @Nonnull State initialState) {
+        var axiomTranslator = axiomTranslatorFactory.create(subject, axiom, initialState);
+        return axiomTranslator.translate();
     }
 
+    @Nonnull
     public Set<OWLAxiom> getAxioms(OWLEntity subject,
                                    PropertyValue propertyValue,
                                    Mode mode) {
