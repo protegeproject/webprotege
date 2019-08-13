@@ -6,7 +6,7 @@
     <parent>
         <groupId>edu.stanford.protege</groupId>
         <artifactId>webprotege</artifactId>
-        <version>4.0.0-beta-2</version>
+        <version>4.0.0-beta-3-SNAPSHOT</version>
     </parent>
 
     <artifactId>webprotege-shared</artifactId>
