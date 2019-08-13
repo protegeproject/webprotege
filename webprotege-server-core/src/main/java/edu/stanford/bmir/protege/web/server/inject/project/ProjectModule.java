@@ -728,4 +728,9 @@ public class ProjectModule {
     AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(AnnotationPropertyDomainAxiomsIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    AnnotationPropertyRangeAxiomsIndex provideAnnotationPropertyRangeAxiomsIndex(AnnotationPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
 }
