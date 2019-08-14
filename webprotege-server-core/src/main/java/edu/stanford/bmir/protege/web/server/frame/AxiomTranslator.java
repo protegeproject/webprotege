@@ -38,7 +38,7 @@ class AxiomTranslator {
     private final ContextRenderer ren;
 
     @Nonnull
-    private final ClassExpressionTranslatorFactory classExpressionTranslatorFactory;
+    private final ClassExpressionTranslator classExpressionTranslator;
 
     @Nonnull
     private final AnnotationTranslator annotationTranslator;
@@ -88,13 +88,13 @@ class AxiomTranslator {
                            @Nonnull OWLAxiom axiom,
                            @Nonnull State initialState,
                            @Provided ContextRenderer ren,
-                           @Provided @Nonnull ClassExpressionTranslatorFactory classExpressionTranslatorFactory,
+                           @Provided @Nonnull ClassExpressionTranslator classExpressionTranslator,
                            @Provided @Nonnull AnnotationTranslator annotationTranslator) {
         this.subject = checkNotNull(subject);
         this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
         this.ren = checkNotNull(ren);
-        this.classExpressionTranslatorFactory = checkNotNull(classExpressionTranslatorFactory);
+        this.classExpressionTranslator = checkNotNull(classExpressionTranslator);
         this.annotationTranslator = checkNotNull(annotationTranslator);
     }
 
@@ -111,8 +111,7 @@ class AxiomTranslator {
             return Collections.emptySet();
         }
         var superClass = axiom.getSuperClass();
-        var classExpressionTranslator = classExpressionTranslatorFactory.create(initialState, superClass);
-        return classExpressionTranslator.translate();
+        return classExpressionTranslator.translate(initialState, superClass);
     }
 
     private Set<PropertyValue> translateEquivalentClasses(OWLEquivalentClassesAxiom axiom) {
@@ -130,8 +129,7 @@ class AxiomTranslator {
     }
 
     private Stream<? extends PropertyValue> toPropertyValues(OWLClassExpression ce) {
-        var classExpressionTranslator = classExpressionTranslatorFactory.create(State.DERIVED, ce);
-        return classExpressionTranslator.translate().stream();
+        return classExpressionTranslator.translate(State.DERIVED, ce).stream();
     }
 
 
@@ -179,7 +177,6 @@ class AxiomTranslator {
             return Collections.emptySet();
         }
         var classExpression = axiom.getClassExpression();
-        var classExpressionTranslator = classExpressionTranslatorFactory.create(initialState, classExpression);
-        return classExpressionTranslator.translate();
+        return classExpressionTranslator.translate(initialState, classExpression);
     }
 }

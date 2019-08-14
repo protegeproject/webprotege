@@ -192,16 +192,15 @@ public class ClassExpressionTranslator_TestCase {
     }
 
     private void assertThatExpressionIsTranslatedAsTheEmptySet(OWLClassExpression classExpression) {
-        var translator = new ClassExpressionTranslator(renderer, State.ASSERTED, classExpression);
-        var translated = translator.translate();
+        var translated = new ClassExpressionTranslator(renderer).translate(State.ASSERTED, classExpression);
         assertThat(translated.isEmpty(), Matchers.is(true));
     }
 
     private void assertThatClassExpressionIsTranslatedAs(OWLClassExpression classExpression,
                                                          State expectedState,
                                                          Collection<? extends PropertyValue> expectedPropertyValues) {
-        var translator = new ClassExpressionTranslator(renderer, expectedState, classExpression);
-        var translated = translator.translate();
+        var translator = new ClassExpressionTranslator(renderer);
+        var translated = translator.translate(expectedState, classExpression);
         assertThat(translated, containsInAnyOrder(expectedPropertyValues.toArray()));
     }
 
