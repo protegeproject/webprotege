@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,13 +35,13 @@ class AxiomTranslator {
     private final State initialState;
 
     @Nonnull
-    private final EntitiesInProjectSignatureByIriIndex entitiesIndex;
-
-    @Nonnull
     private final ContextRenderer ren;
 
     @Nonnull
     private final ClassExpressionTranslatorFactory classExpressionTranslatorFactory;
+
+    @Nonnull
+    private final AnnotationTranslator annotationTranslator;
 
     private final OWLAxiomVisitorExAdapter<Set<PropertyValue>> axiomVisitor = new OWLAxiomVisitorExAdapter<>(Collections
                                                                                                                      .emptySet()) {
@@ -88,17 +87,21 @@ class AxiomTranslator {
     public AxiomTranslator(@Nonnull OWLEntity subject,
                            @Nonnull OWLAxiom axiom,
                            @Nonnull State initialState,
-                           @Provided EntitiesInProjectSignatureByIriIndex entitiesIndex,
                            @Provided ContextRenderer ren,
-                           @Provided @Nonnull ClassExpressionTranslatorFactory classExpressionTranslatorFactory) {
+                           @Provided @Nonnull ClassExpressionTranslatorFactory classExpressionTranslatorFactory,
+                           @Provided @Nonnull AnnotationTranslator annotationTranslator) {
         this.subject = checkNotNull(subject);
         this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
-        this.entitiesIndex = checkNotNull(entitiesIndex);
         this.ren = checkNotNull(ren);
         this.classExpressionTranslatorFactory = checkNotNull(classExpressionTranslatorFactory);
+        this.annotationTranslator = checkNotNull(annotationTranslator);
     }
 
+    /**
+     * Translate the supplied axiom to a set of {@link PropertyValue}s.
+     */
+    @Nonnull
     public Set<PropertyValue> translate() {
         return axiom.accept(axiomVisitor);
     }
@@ -137,19 +140,7 @@ class AxiomTranslator {
         if(!axiom.getSubject().equals(subject.getIRI())) {
             return Collections.emptySet();
         }
-        if(axiom.getValue() instanceof IRI) {
-            var entities = entitiesIndex.getEntityInSignature((IRI) axiom.getValue()).collect(Collectors.toSet());
-            if(!entities.isEmpty()) {
-                return entities
-                        .stream()
-                        .sorted()
-                        .map(entity -> PropertyAnnotationValue.get(ren.getAnnotationPropertyData(axiom.getProperty()), ren
-                                .getAnnotationValueData(axiom.getValue()), State.ASSERTED))
-                        .collect(Collectors.toSet());
-            }
-        }
-        return Collections.singleton(PropertyAnnotationValue.get(ren.getAnnotationPropertyData(axiom.getProperty()), ren.getAnnotationValueData(axiom.getValue()), State.ASSERTED));
-
+        return annotationTranslator.translate(axiom.getAnnotation(), State.ASSERTED);
     }
 
 
