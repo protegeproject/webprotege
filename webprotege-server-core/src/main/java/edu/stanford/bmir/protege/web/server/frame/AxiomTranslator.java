@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -35,7 +34,7 @@ class AxiomTranslator {
     private final State initialState;
 
     @Nonnull
-    private final ContextRenderer ren;
+    private final ContextRenderer renderer;
 
     @Nonnull
     private final ClassExpressionTranslator classExpressionTranslator;
@@ -87,13 +86,13 @@ class AxiomTranslator {
     public AxiomTranslator(@Nonnull OWLEntity subject,
                            @Nonnull OWLAxiom axiom,
                            @Nonnull State initialState,
-                           @Provided ContextRenderer ren,
+                           @Provided ContextRenderer renderer,
                            @Provided @Nonnull ClassExpressionTranslator classExpressionTranslator,
                            @Provided @Nonnull AnnotationTranslator annotationTranslator) {
         this.subject = checkNotNull(subject);
         this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
-        this.ren = checkNotNull(ren);
+        this.renderer = checkNotNull(renderer);
         this.classExpressionTranslator = checkNotNull(classExpressionTranslator);
         this.annotationTranslator = checkNotNull(annotationTranslator);
     }
@@ -155,8 +154,8 @@ class AxiomTranslator {
         }
         var property = axiom.getProperty().asOWLObjectProperty();
         var object = axiom.getObject().asOWLNamedIndividual();
-        return Collections.singleton(PropertyIndividualValue.get(ren.getObjectPropertyData(property),
-                                                                 ren.getIndividualData(object),
+        return Collections.singleton(PropertyIndividualValue.get(renderer.getObjectPropertyData(property),
+                                                                 renderer.getIndividualData(object),
                                                                  State.ASSERTED));
     }
 
@@ -166,7 +165,7 @@ class AxiomTranslator {
             return Collections.emptySet();
         }
         OWLDataProperty property = axiom.getProperty().asOWLDataProperty();
-        return Collections.singleton(PropertyLiteralValue.get(ren.getDataPropertyData(property),
+        return Collections.singleton(PropertyLiteralValue.get(renderer.getDataPropertyData(property),
                                                               OWLLiteralData.get(axiom.getObject()),
                                                               State.ASSERTED));
     }
