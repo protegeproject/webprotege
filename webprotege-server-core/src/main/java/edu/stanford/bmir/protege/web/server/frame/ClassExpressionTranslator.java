@@ -120,18 +120,20 @@ class ClassExpressionTranslator {
 
     @Nonnull
     private Set<PropertyValue> translateObjectMinCardinality(OWLObjectMinCardinality ce) {
+        // Min cardinality of one is syntactic sugar for SomeValuesFrom
+        if(ce.getCardinality() != 1) {
+            state = State.DERIVED;
+        }
         return translateObjectCardinality(ce);
     }
 
     @Nonnull
     private Set<PropertyValue> translateObjectExactCardinality(OWLObjectExactCardinality ce) {
+        state = State.DERIVED;
         return translateObjectCardinality(ce);
     }
 
     private Set<PropertyValue> translateObjectCardinality(OWLObjectCardinalityRestriction ce) {
-        if(ce.getCardinality() != 1) {
-            state = State.DERIVED;
-        }
         return translateObjectPropertyFiller(ce.getProperty(), ce.getFiller());
     }
 
@@ -187,18 +189,19 @@ class ClassExpressionTranslator {
 
     @Nonnull
     private Set<PropertyValue> translateDataMinCardinality(OWLDataMinCardinality ce) {
+        if(ce.getCardinality() != 1) {
+            state = State.DERIVED;
+        }
         return translateDataCardinality(ce);
     }
 
     private Set<PropertyValue> translateDataCardinality(OWLDataCardinalityRestriction ce) {
-        if(ce.getCardinality() != 1) {
-            state = State.DERIVED;
-        }
         return translateDataPropertyFiller(ce.getProperty(), ce.getFiller());
     }
 
     @Nonnull
     private Set<PropertyValue> translateDataExactCardinality(OWLDataExactCardinality ce) {
+        state = State.DERIVED;
         return translateDataCardinality(ce);
     }
 
