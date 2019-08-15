@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 
@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27/01/15
  */
-public class HasAnnotationAssertionAxiomsImpl implements HasAnnotationAssertionAxioms {
+public class ProjectAnnotationAssertionAxiomsBySubjectIndexImpl implements ProjectAnnotationAssertionAxiomsBySubjectIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex ontologiesIndex;
@@ -26,12 +26,13 @@ public class HasAnnotationAssertionAxiomsImpl implements HasAnnotationAssertionA
     private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Inject
-    public HasAnnotationAssertionAxiomsImpl(@Nonnull ProjectOntologiesIndex ontologiesIndex,
-                                            @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
+    public ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(@Nonnull ProjectOntologiesIndex ontologiesIndex,
+                                                              @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
         this.ontologiesIndex = checkNotNull(ontologiesIndex);
         this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
     }
 
+    @Nonnull
     @Override
     public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject subject) {
         checkNotNull(subject);

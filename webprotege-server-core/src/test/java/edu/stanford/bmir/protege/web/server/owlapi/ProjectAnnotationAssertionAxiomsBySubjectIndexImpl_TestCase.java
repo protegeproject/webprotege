@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
-import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Set;
@@ -23,7 +19,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,9 +28,9 @@ import static org.mockito.Mockito.when;
  * 27/01/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class HasAnnotationAssertionAxiomsImpl_TestCase {
+public class ProjectAnnotationAssertionAxiomsBySubjectIndexImpl_TestCase {
 
-    private HasAnnotationAssertionAxiomsImpl impl;
+    private ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl;
 
     @Mock
     private OWLAnnotationAssertionAxiom annotationAssertionAxiomA, annotationAssertionAxiomB;
@@ -61,7 +56,7 @@ public class HasAnnotationAssertionAxiomsImpl_TestCase {
                 .thenReturn(Stream.empty());
         when(annotationAssertionsIndex.getAxiomsForSubject(subject, ontologyId))
                 .thenReturn(Stream.of(annotationAssertionAxiomA, annotationAssertionAxiomB));
-        impl = new HasAnnotationAssertionAxiomsImpl(ontologiesIndex, annotationAssertionsIndex);
+        impl = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
     }
 
     @Test

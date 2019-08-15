@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.server.index.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
@@ -28,7 +28,7 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
 
     private static final String PREFIXED_NAME_SEPARATOR = ":";
 
-    private final HasAnnotationAssertionAxioms annotationAssertionAxiomProvider;
+    private final ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomProvider;
 
     private final HasLang languageProvider;
 
@@ -40,7 +40,7 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
 
     @Inject
     public WebProtegeIRIShortFormProvider(ImmutableList<IRI> labellingIRIs,
-                                          HasAnnotationAssertionAxioms annotationAssertionAxiomProvider,
+                                          ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomProvider,
                                           HasLang languageProvider,
                                           LocalNameExtractor localNameExtractor) {
 

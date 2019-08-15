@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndexImpl;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
-import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
+import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
@@ -232,7 +232,7 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
         final ShortFormProvider uploadedOntologyShortFormProvider = new WebProtegeShortFormProvider(
                 new WebProtegeIRIShortFormProvider(
                         DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
-                        new HasAnnotationAssertionAxiomsImpl(ontologiesIndex, annotationAssertionsIndex), new HasLang() {
+                        new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex), new HasLang() {
                     @Override
                     public String getLang() {
                         return hasLang.getLang();

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -11,7 +12,8 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 27/01/15
  */
-public interface HasAnnotationAssertionAxioms {
+public interface ProjectAnnotationAssertionAxiomsBySubjectIndex {
 
-    Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(OWLAnnotationSubject subject);
+    @Nonnull
+    Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject subject);
 }

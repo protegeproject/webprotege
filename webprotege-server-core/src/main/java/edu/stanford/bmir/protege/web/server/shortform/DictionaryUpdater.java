@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import edu.stanford.bmir.protege.web.server.index.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -18,13 +18,13 @@ import static edu.stanford.bmir.protege.web.server.shortform.DictionaryPredicate
 public class DictionaryUpdater {
 
     @Nonnull
-    private final HasAnnotationAssertionAxioms annotationAssertionAxioms;
+    private final ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxioms;
 
     @Nonnull
     private final LocalNameExtractor extractor = new LocalNameExtractor();
 
     @Inject
-    public DictionaryUpdater(@Nonnull HasAnnotationAssertionAxioms annotationAssertionAxioms) {
+    public DictionaryUpdater(@Nonnull ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxioms) {
         this.annotationAssertionAxioms = checkNotNull(annotationAssertionAxioms);
     }
 

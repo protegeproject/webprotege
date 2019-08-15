@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import com.google.common.collect.Sets;
-import edu.stanford.bmir.protege.web.server.index.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +29,7 @@ public class WebProtegeIRIShortFormProvider_TestCase {
     public static final String LITERAL = "LITERAL";
 
     @Mock
-    private HasAnnotationAssertionAxioms annotationAssertionAxiomsProvider;
+    private ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsProvider;
 
     @Mock
     private HasLang languageProvider;
