@@ -2,11 +2,9 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
-import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -17,6 +15,7 @@ import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Author: Matthew Horridge<br>
@@ -34,18 +33,18 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     private final HasGetRevisionSummary hasGetRevisionSummary;
 
-    private final HasGetEntitiesWithIRI hasGetEntitiesWithIRI;
+    private final EntitiesInProjectSignatureByIriIndex entitiesByIri;
 
     @Inject
     public HighLevelEventGenerator(ProjectId projectId,
                                    OWLOntology rootOntology,
                                    RenderingManager renderingManager,
-                                   HasGetEntitiesWithIRI hasGetEntitiesWithIRI,
+                                   EntitiesInProjectSignatureByIriIndex entitiesByIri,
                                    HasGetRevisionSummary hasGetRevisionSummary) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
-        this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
+        this.entitiesByIri = entitiesByIri;
         this.hasGetRevisionSummary = hasGetRevisionSummary;
     }
 
@@ -102,7 +101,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                     OWLObject subject = p.getSubject(axiom);
                     Set<OWLEntity> entities;
                     if(subject instanceof IRI) {
-                        entities = hasGetEntitiesWithIRI.getEntitiesWithIRI((IRI) subject);
+                        entities = entitiesByIri.getEntityInSignature((IRI) subject).collect(Collectors.toSet());
                     }
                     else if (subject instanceof OWLEntity) {
                         entities = Collections.singleton((OWLEntity) subject);

@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Matthew Horridge,
@@ -19,8 +20,8 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
     private ChangeSubjectProvider changeSubjectProvider;
 
     @Inject
-    public OntologyChangeSubjectProvider(HasGetEntitiesWithIRI entitiesWithIRI) {
-        this.changeSubjectProvider = new ChangeSubjectProvider(new AxiomEntitySubjectProvider(entitiesWithIRI));
+    public OntologyChangeSubjectProvider(EntitiesInProjectSignatureByIriIndex entitiesByIRI) {
+        this.changeSubjectProvider = new ChangeSubjectProvider(new AxiomEntitySubjectProvider(entitiesByIRI));
     }
 
     @Override
@@ -77,10 +78,10 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
 
     private static class AxiomEntitySubjectProvider {
 
-        private HasGetEntitiesWithIRI hasGetEntitiesWithIRI;
+        private EntitiesInProjectSignatureByIriIndex entitiesByIri;
 
-        private AxiomEntitySubjectProvider(HasGetEntitiesWithIRI hasGetEntitiesWithIRI) {
-            this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
+        private AxiomEntitySubjectProvider(EntitiesInProjectSignatureByIriIndex entitiesByIri) {
+            this.entitiesByIri = entitiesByIri;
         }
 
         public Set<OWLEntity> getSubject(OWLAxiom axiom) {
@@ -89,7 +90,7 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
                 return Collections.singleton((OWLEntity) subject);
             }
             else if(subject instanceof IRI) {
-                return hasGetEntitiesWithIRI.getEntitiesWithIRI((IRI) subject);
+                return entitiesByIri.getEntityInSignature((IRI) subject).collect(Collectors.toSet());
             }
             else {
                 return Collections.emptySet();

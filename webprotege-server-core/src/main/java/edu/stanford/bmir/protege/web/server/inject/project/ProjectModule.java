@@ -344,11 +344,6 @@ public class ProjectModule {
     }
 
     @Provides
-    HasGetEntitiesWithIRI providesHasGetEntitiesWithIRI(HasGetEntitiesWithIRIImpl impl) {
-        return impl;
-    }
-
-    @Provides
     HasAnnotationAssertionAxioms providesHasAnnotationAssertionAxioms(HasAnnotationAssertionAxiomsImpl impl) {
         return impl;
     }
