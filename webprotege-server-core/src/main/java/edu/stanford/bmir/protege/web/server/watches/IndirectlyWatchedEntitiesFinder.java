@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
+import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -11,6 +13,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -18,8 +23,6 @@ import java.util.Set;
  * 04/03/15
  */
 public class IndirectlyWatchedEntitiesFinder {
-
-    private final OWLOntology rootOntology;
 
     @Nonnull
     private final HasGetAncestors<OWLClass> classAncestorsProvider;
@@ -33,19 +36,22 @@ public class IndirectlyWatchedEntitiesFinder {
     @Nonnull
     private final HasGetAncestors<OWLAnnotationProperty> annotationPropertyAncestorsProvider;
 
+    @Nonnull
+    private final ProjectClassAssertionAxiomsByIndividualIndex classAssertionAxiomsIndex;
+
 
     @Inject
-    public IndirectlyWatchedEntitiesFinder(@RootOntology OWLOntology rootOntology,
-                                           @Nonnull HasGetAncestors<OWLClass> classAncestorsProvider,
+    public IndirectlyWatchedEntitiesFinder(@Nonnull HasGetAncestors<OWLClass> classAncestorsProvider,
                                            @Nonnull HasGetAncestors<OWLObjectProperty> objectAncestorsProvider,
                                            @Nonnull HasGetAncestors<OWLDataProperty> dataPropertyAncestorsProvider,
-                                           @Nonnull HasGetAncestors<OWLAnnotationProperty> annotationPropertyAncestorsProvider) {
+                                           @Nonnull HasGetAncestors<OWLAnnotationProperty> annotationPropertyAncestorsProvider,
+                                           @Nonnull ProjectClassAssertionAxiomsByIndividualIndex classAssertionAxiomsIndex) {
 
-        this.rootOntology = rootOntology;
         this.classAncestorsProvider = classAncestorsProvider;
         this.objectAncestorsProvider = objectAncestorsProvider;
         this.dataPropertyAncestorsProvider = dataPropertyAncestorsProvider;
         this.annotationPropertyAncestorsProvider = annotationPropertyAncestorsProvider;
+        this.classAssertionAxiomsIndex = classAssertionAxiomsIndex;
     }
 
     public Set<? extends OWLEntity> getRelatedWatchedEntities(OWLEntity entity) {
@@ -72,14 +78,12 @@ public class IndirectlyWatchedEntitiesFinder {
             @Nonnull
             @Override
             public Set<? extends OWLEntity> visit(@Nonnull OWLNamedIndividual individual) {
-                Collection<OWLClassExpression> types = EntitySearcher.getTypes(individual, rootOntology.getImportsClosure());
-                Set<OWLClass> result = new HashSet<>();
-                for(OWLClassExpression ce : types) {
-                    if(!ce.isAnonymous()) {
-                        result.addAll(classAncestorsProvider.getAncestors(ce.asOWLClass()));
-                    }
-                }
-                return result;
+                return classAssertionAxiomsIndex.getClassAssertionAxioms(individual)
+                        .map(OWLClassAssertionAxiom::getClassExpression)
+                        .filter(OWLClassExpression::isNamed)
+                        .map(OWLClassExpression::asOWLClass)
+                        .flatMap(cls -> classAncestorsProvider.getAncestors(cls).stream())
+                        .collect(toImmutableSet());
             }
 
             @Nonnull
