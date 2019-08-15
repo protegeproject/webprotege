@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
 import javax.annotation.Nonnull;
@@ -29,6 +30,21 @@ public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortForm
             return ROOT_ONTOLOGY_SHORT_FORM;
         }
         return super.getShortForm(ont);
+    }
+
+    @Nonnull
+    public String getShortForm(OWLOntologyID ontologyId) {
+        var versionIri = ontologyId.getVersionIRI();
+        if(versionIri.isPresent()) {
+            return getShortForm(versionIri.get());
+        }
+        var ontologyIri = ontologyId.getOntologyIRI();
+        if(ontologyIri.isPresent()) {
+            return getShortForm(ontologyIri.get());
+        }
+        else {
+            return "Anonymous Ontology";
+        }
     }
 
     @Nonnull
