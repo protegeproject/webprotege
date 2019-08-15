@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
-import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
+import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -33,8 +33,6 @@ import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
-import edu.stanford.bmir.protege.web.server.project.ChangeManager;
-import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
@@ -756,6 +754,11 @@ public class ProjectModule {
     
     @Provides
     SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DefaultOntologyIdManager provideDefaultOntologyIdManager(DefaultOntologyIdManagerImpl impl) {
         return impl;
     }
 
