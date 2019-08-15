@@ -23,7 +23,7 @@ https://webprotege.stanford.edu
 If you have downloaded the webprotege war file from GitHub, and would like to deploy it on your own server,
 please follow the instructions at:
 
-https://github.com/protegeproject/webprotege/wiki/WebProtégé-3.0.0-Installation
+https://github.com/protegeproject/webprotege/wiki/WebProtégé-4.0.0-beta-x-Installation
 
 Building
 --------
@@ -47,3 +47,31 @@ To run WebProtégé in SuperDev Mode using maven
 2) In a different terminal window start the tomcat server
     ```mvn -Denv=dev tomcat7:run```
 3) Browse to WebProtégé in a Web browser by navigating to ```http://localhost:8080```
+
+Running from Docker
+-------------------
+
+To run WebProtégé using the Docker container
+
+1) Create a new file called "docker-compose.yml" and copy-and-paste the following text:
+   ```yml
+   version: '3'
+
+   services:
+     wpmongo:
+       image: mongo:4.1-bionic
+     webprotege:
+       image: protegeproject/webprotege
+       restart: always
+       environment:
+         - webprotege.mongodb.host=wpmongo
+       ports:
+         - 5000:8080
+       depends_on:
+         - wpmongo
+   ```
+2) Enter this following command in the Terminal to start the docker container.
+   ```bash
+   $ docker-compose up
+   ```
+3) Browse to WebProtégé in a Web browser by navigating to ```http://localhost:5000```
