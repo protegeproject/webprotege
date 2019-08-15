@@ -349,11 +349,6 @@ public class ProjectModule {
     }
 
     @Provides
-    HasGetEntitiesInSignature providesHasGetEntitiesInSignature(HasGetEntitiesInSignatureImpl impl) {
-        return impl;
-    }
-
-    @Provides
     HasAnnotationAssertionAxioms providesHasAnnotationAssertionAxioms(HasAnnotationAssertionAxiomsImpl impl) {
         return impl;
     }
