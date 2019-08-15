@@ -45,7 +45,7 @@ import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;

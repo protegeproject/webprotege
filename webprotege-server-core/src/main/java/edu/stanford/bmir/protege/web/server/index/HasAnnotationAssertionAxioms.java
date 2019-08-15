@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared;
+package edu.stanford.bmir.protege.web.server.index;
 
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;

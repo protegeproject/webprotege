@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;

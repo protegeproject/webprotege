@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.Sets;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.HasAnnotationAssertionAxioms;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
