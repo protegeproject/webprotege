@@ -14,6 +14,11 @@ import java.util.stream.Stream;
  */
 public interface ProjectAnnotationAssertionAxiomsBySubjectIndex {
 
+    /**
+     * Gets the {@link OWLAnnotationAssertionAxiom}s that are contained in project
+     * ontologies and have the specified subject.
+     * @param subject The subject
+     */
     @Nonnull
     Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject subject);
 }
