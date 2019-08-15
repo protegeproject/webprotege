@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,6 +18,7 @@ public class SubAnnotationPropertyAxiomsBySubPropertyIndexImpl implements SubAnn
     @Nonnull
     private final OntologyIndex ontologyIndex;
 
+    @Inject
     public SubAnnotationPropertyAxiomsBySubPropertyIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
         this.ontologyIndex = checkNotNull(ontologyIndex);
     }

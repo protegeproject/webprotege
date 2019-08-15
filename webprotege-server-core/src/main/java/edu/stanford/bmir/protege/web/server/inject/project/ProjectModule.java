@@ -742,6 +742,22 @@ public class ProjectModule {
     ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
         return impl;
     }
+    
+    @Provides
+    SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+    
+    
+    @Provides
+    SubObjectPropertyAxiomsBySubPropertyIndex provideSubObjectPropertyAxiomsBySubPropertyIndex(SubObjectPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+    
+    @Provides
+    SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
 
 }
 
