@@ -1,15 +1,15 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.obo.OboUtil.isXRefProperty;
 import static java.util.stream.Collectors.toList;
 
@@ -24,13 +24,13 @@ public class XRefExtractor {
     private final AnnotationToXRefConverter converter;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Inject
     public XRefExtractor(@Nonnull AnnotationToXRefConverter converter,
-                         @Nonnull @RootOntology OWLOntology rootOntology) {
-        this.converter = converter;
-        this.rootOntology = rootOntology;
+                         @Nonnull ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
+        this.converter = checkNotNull(converter);
+        this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
     }
 
     @Nonnull
@@ -38,13 +38,12 @@ public class XRefExtractor {
         return annotationAssertion.getAnnotations().stream()
                                   .filter(anno -> isXRefProperty(anno.getProperty()))
                                   .map(anno -> converter.toXRef(anno, anno.getAnnotations()))
-                                  .filter(xref -> xref != null)
                                   .collect(toList());
     }
 
     @Nonnull
     public List<OBOXRef> getXRefs(@Nonnull OWLEntity term) {
-        return rootOntology.getAnnotationAssertionAxioms(term.getIRI()).stream()
+        return annotationAssertionsIndex.getAnnotationAssertionAxioms(term.getIRI())
                 .filter(ax -> isXRefProperty(ax.getProperty()))
                 .map(ax -> converter.toXRef(ax.getAnnotation(), ax.getAnnotations()))
                 .collect(toList());
