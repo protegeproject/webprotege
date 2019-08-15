@@ -26,6 +26,8 @@ public class DataPropertyCharacteristicsIndexImpl implements DataPropertyCharact
     @Override
     public boolean isFunctional(@Nonnull OWLDataProperty dataProperty,
                                 @Nonnull OWLOntologyID ontologyId) {
+        checkNotNull(dataProperty);
+        checkNotNull(ontologyId);
         return ontologyIndex.getOntology(ontologyId)
                 .stream()
                 .flatMap(ont -> ont.getFunctionalDataPropertyAxioms(dataProperty).stream())
