@@ -31,10 +31,14 @@ Building
 To build WebProtégé from source
 
 1) Clone the github repository
-   ```git clone https://github.com/protegeproject/webprotege.git```
+   ```
+   git clone https://github.com/protegeproject/webprotege.git
+   ```
 2) Open a terminal in the directory where you clone the repository to
 3) Use maven to package WebProtégé
-```mvn package```
+   ```
+   mvn clean package
+   ```
 5) The WebProtege .war file will be built into the webprotege-server directory
 
 Running from Maven
@@ -43,10 +47,14 @@ Running from Maven
 To run WebProtégé in SuperDev Mode using maven
 
 1) Start the GWT code server in one terminal window
-    ```mvn gwt:codeserver```
+    ```
+    mvn gwt:codeserver
+    ```
 2) In a different terminal window start the tomcat server
-    ```mvn -Denv=dev tomcat7:run```
-3) Browse to WebProtégé in a Web browser by navigating to ```http://localhost:8080```
+    ```
+    mvn -Denv=dev tomcat7:run
+    ```
+3) Browse to WebProtégé in a Web browser by navigating to [http://localhost:8080](http://localhost:8080)
 
 Running from Docker
 -------------------
@@ -74,4 +82,4 @@ To run WebProtégé using the Docker container
    ```bash
    $ docker-compose up
    ```
-3) Browse to WebProtégé in a Web browser by navigating to ```http://localhost:5000```
+3) Browse to WebProtégé in a Web browser by navigating to [http://localhost:5000](http://localhost:5000)
