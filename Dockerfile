@@ -9,8 +9,7 @@ WORKDIR /webprotege
 
 RUN mkdir -p /data/db \
     && mongod --fork --syslog \
-    && mvn dependency:go-offline \
-    && mvn package
+    && mvn clean package
 
 FROM tomcat:8-jre11-slim
 
@@ -20,7 +19,7 @@ RUN rm -rf /usr/local/tomcat/webapps/* \
 
 WORKDIR /usr/local/tomcat/webapps/ROOT
 
-COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-4.0.0-SNAPSHOT.jar /webprotege-cli.jar
-COPY --from=build /webprotege/webprotege-server/target/webprotege-server-4.0.0-SNAPSHOT.war ./webprotege.war
+COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-4.0.0-beta-3-SNAPSHOT.jar /webprotege-cli.jar
+COPY --from=build /webprotege/webprotege-server/target/webprotege-server-4.0.0-beta-3-SNAPSHOT.war ./webprotege.war
 RUN unzip webprotege.war \
     && rm webprotege.war
