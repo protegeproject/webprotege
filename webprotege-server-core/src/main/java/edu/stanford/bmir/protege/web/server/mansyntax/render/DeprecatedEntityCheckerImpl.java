@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.DeprecatedEntitiesIndex;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
@@ -22,22 +24,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DeprecatedEntityCheckerImpl implements DeprecatedEntityChecker {
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final DeprecatedEntitiesIndex deprecatedEntitiesIndex;
 
     @Inject
-    public DeprecatedEntityCheckerImpl(@RootOntology OWLOntology rootOntology) {
-        this.rootOntology = checkNotNull(rootOntology);
+    public DeprecatedEntityCheckerImpl(@Nonnull DeprecatedEntitiesIndex deprecatedEntitiesIndex) {
+        this.deprecatedEntitiesIndex = checkNotNull(deprecatedEntitiesIndex);
     }
 
     @Override
     public boolean isDeprecated(OWLEntity entity) {
-        if (!rootOntology.containsAnnotationPropertyInSignature(OWLRDFVocabulary.OWL_DEPRECATED.getIRI(), Imports.INCLUDED)) {
-            return false;
-        }
-        var entityIRI = entity.getIRI();
-        return rootOntology.getImportsClosure()
-                .stream()
-                .flatMap(ont -> ont.getAnnotationAssertionAxioms(entityIRI).stream())
-                .anyMatch(OWLAnnotationAssertionAxiom::isDeprecatedIRIAssertion);
+        return deprecatedEntitiesIndex.isDeprecated(entity);
     }
 }
