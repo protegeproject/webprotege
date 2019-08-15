@@ -2,20 +2,16 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,9 +19,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.util.ProtegeStreams.ontologyStream;
 import static java.util.Collections.emptySet;
 
 /**
@@ -33,8 +29,6 @@ import static java.util.Collections.emptySet;
  */
 @AutoFactory
 public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolean> {
-
-    private final OWLOntology rootOntology;
 
     private final OWLDataFactory dataFactory;
 
@@ -46,21 +40,50 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
+    @Nonnull
     private final EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex;
 
+    @Nonnull
+    private final SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex;
+
+    @Nonnull
+    private final SubObjectPropertyAxiomsBySubPropertyIndex subObjectPropertyOfAxiomsIndex;
+
+    @Nonnull
+    private final SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyOfAxiomsIndex;
+
+    @Nonnull
+    private final SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyOfAxiomsIndex;
+
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+
     @Inject
-    public MoveEntityChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
-                                         @Provided @Nonnull OWLOntology rootOntology,
+    public MoveEntityChangeListGenerator(@Nonnull MoveHierarchyNodeAction action,
+                                         @Provided @Nonnull OWLDataFactory dataFactory,
                                          @Provided @Nonnull MessageFormatter msg,
-                                         @Nonnull MoveHierarchyNodeAction action,
                                          @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                         @Provided @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex) {
-        this.rootOntology = rootOntology;
+                                         @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                         @Provided @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
+                                         @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
+                                         @Provided @Nonnull SubObjectPropertyAxiomsBySubPropertyIndex subObjectPropertyOfAxiomsIndex,
+                                         @Provided @Nonnull SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyOfAxiomsIndex,
+                                         @Provided @Nonnull SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyOfAxiomsIndex,
+                                         @Provided @Nonnull OntologyChangeFactory changeFactory) {
         this.dataFactory = dataFactory;
         this.action = checkNotNull(action);
         this.msg = msg;
         this.projectOntologiesIndex = projectOntologiesIndex;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.equivalentClassesAxiomsIndex = equivalentClassesAxiomsIndex;
+        this.subClassOfAxiomsIndex = subClassOfAxiomsIndex;
+        this.subObjectPropertyOfAxiomsIndex = subObjectPropertyOfAxiomsIndex;
+        this.subDataPropertyOfAxiomsIndex = subDataPropertyOfAxiomsIndex;
+        this.subAnnotationPropertyOfAxiomsIndex = subAnnotationPropertyOfAxiomsIndex;
+        this.changeFactory = changeFactory;
     }
 
     private static OntologyChangeList<Boolean> notMoved() {
@@ -95,7 +118,7 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
     public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
         Path<EntityNode> fromPath = action.getFromNodePath();
         Optional<OWLEntity> move = fromPath.getLast().map(EntityNode::getEntity);
-        if (!move.isPresent()) {
+        if (move.isEmpty()) {
             return notMoved();
         }
         Optional<EntityNode> lastPredecessor = fromPath.getLastPredecessor();
@@ -151,7 +174,7 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
                           fromParentClass,
                           toParentClass,
                           dropType,
-                          OWLOntology::getSubClassAxiomsForSubClass,
+                          (ontId, cls) -> subClassOfAxiomsIndex.getSubClassOfAxiomsForSubClass(cls, ontId),
                           ax -> Optional.of(ax.getSuperClass()).equals(fromParentClass),
                           dataFactory::getOWLSubClassOfAxiom
         );
@@ -164,7 +187,8 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
         return moveEntity(moveProperty,
                           fromParent,
                           toParent,
-                          dropType, OWLOntology::getObjectSubPropertyAxiomsForSubProperty,
+                          dropType,
+                          (ontId, prop) -> subObjectPropertyOfAxiomsIndex.getSubPropertyOfAxioms(prop, ontId),
                           ax -> Optional.of(ax.getSuperProperty()).equals(fromParent),
                           dataFactory::getOWLSubObjectPropertyOfAxiom
         );
@@ -177,7 +201,8 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
         return moveEntity(moveProperty,
                           fromParent,
                           toParent,
-                          dropType, OWLOntology::getDataSubPropertyAxiomsForSubProperty,
+                          dropType,
+                          (ontId, prop) -> subDataPropertyOfAxiomsIndex.getSubPropertyOfAxioms(prop, ontId),
                           ax -> Optional.of(ax.getSuperProperty()).equals(fromParent),
                           dataFactory::getOWLSubDataPropertyOfAxiom
         );
@@ -190,7 +215,8 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
         return moveEntity(moveProperty,
                           fromParent,
                           toParent,
-                          dropType, OWLOntology::getSubAnnotationPropertyOfAxioms,
+                          dropType,
+                          (ontId, prop) -> subAnnotationPropertyOfAxiomsIndex.getSubPropertyOfAxioms(prop, ontId),
                           ax -> ax.getSubProperty().equals(moveProperty) && Optional.of(ax.getSuperProperty()).equals(fromParent),
                           dataFactory::getOWLSubAnnotationPropertyOfAxiom
         );
@@ -214,37 +240,52 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
                                            @Nonnull Optional<E> fromParent,
                                            @Nonnull Optional<E> toParent,
                                            @Nonnull DropType dropType,
-                                           @Nonnull BiFunction<OWLOntology, E, Set<A>> axiomExtractor,
+                                           @Nonnull BiFunction<OWLOntologyID, E, Stream<A>> axiomExtractor,
                                            @Nonnull RemoveAxiomFilter<A> axiomFilter,
                                            @Nonnull ReparentingAxiomFactory<A, E> reparentingAxiomFactory
     ) {
         OntologyChangeList.Builder<Boolean> changeList = OntologyChangeList.builder();
         Set<OWLAxiom> removedAxioms = new HashSet<>();
         if (dropType == DropType.MOVE && fromParent.isPresent()) {
-            ontologyStream(rootOntology, Imports.INCLUDED)
-                          .forEach(ont -> {
-                        axiomExtractor.apply(ont, move).stream()
-                                      .filter(axiomFilter::test)
-                                      .forEach(ax -> {
-                                          changeList.removeAxiom(ont, ax);
-                                          removedAxioms.add(ax);
-                                          toParent.ifPresent(par -> {
-                                              A parAx = reparentingAxiomFactory.createReparentingAxiom(move,
-                                                                                                       par,
-                                                                                                       ax.getAnnotations());
-                                              changeList.addAxiom(ont, parAx);
-                                          });
-                                      });
-                    });
+            projectOntologiesIndex.getOntologyIds()
+                          .forEach(ontId -> moveEntityInOntology(ontId, move, toParent,
+                                                                 axiomExtractor,
+                                                                 axiomFilter,
+                                                                 reparentingAxiomFactory,
+                                                                 changeList,
+                                                                 removedAxioms));
         }
         if (removedAxioms.isEmpty()) {
             toParent.ifPresent(par -> {
-                changeList.addAxiom(rootOntology, reparentingAxiomFactory.createReparentingAxiom(move,
-                                                                                                 par,
-                                                                                                 emptySet()));
+                var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+                var reparentingAxiom = reparentingAxiomFactory.createReparentingAxiom(move, par, emptySet());
+                changeList.add(changeFactory.createAddAxiom(defaultOntologyId, reparentingAxiom));
             });
         }
         return changeList.build(!changeList.isEmpty());
+    }
+
+    private <A extends OWLAxiom, E extends OWLEntity>
+    void moveEntityInOntology(@Nonnull OWLOntologyID ontId,
+                              @Nonnull E move,
+                              @Nonnull Optional<E> toParent,
+                              @Nonnull BiFunction<OWLOntologyID, E, Stream<A>> axiomExtractor,
+                              @Nonnull RemoveAxiomFilter<A> axiomFilter,
+                              @Nonnull ReparentingAxiomFactory<A, E> reparentingAxiomFactory,
+                              @Nonnull OntologyChangeList.Builder<Boolean> changeList,
+                              @Nonnull Set<OWLAxiom> removedAxioms) {
+        axiomExtractor.apply(ontId, move)
+                      .filter(axiomFilter::test)
+                      .forEach(ax -> {
+                          changeList.add(changeFactory.createRemoveAxiom(ontId, ax));
+                          removedAxioms.add(ax);
+                          toParent.ifPresent(par -> {
+                              A parAx = reparentingAxiomFactory.createReparentingAxiom(move,
+                                                                                       par,
+                                                                                       ax.getAnnotations());
+                              changeList.add(changeFactory.createAddAxiom(ontId, parAx));
+                          });
+                      });
     }
 
     @Override
