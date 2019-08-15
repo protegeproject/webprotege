@@ -732,4 +732,9 @@ public class ProjectModule {
     DeprecatedEntitiesIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    AxiomsIndex provideAxiomsIndex(AxiomsIndexImpl impl) {
+        return impl;
+    }
 }
