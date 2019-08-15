@@ -81,9 +81,9 @@ public class ProjectChangesManager_IT {
         var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         var ontologyIndex = new OntologyIndexImpl(rootOntology);
         var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
+        var annotationAssertionAxioms = new HasAnnotationAssertionAxiomsImpl(ontologiesIndex, annotationAssertionsIndex);
         WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
-                DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
-                new HasAnnotationAssertionAxiomsImpl(ontologiesIndex, annotationAssertionsIndex),
+                DefaultShortFormAnnotationPropertyIRIs.asImmutableList(), annotationAssertionAxioms,
                 () -> "",
                 new LocalNameExtractor()
         );
@@ -104,7 +104,7 @@ public class ProjectChangesManager_IT {
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
                                                                                                         assertionAxiomsIndex), repo);
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(rootOntology)),
+                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(annotationAssertionAxioms)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
