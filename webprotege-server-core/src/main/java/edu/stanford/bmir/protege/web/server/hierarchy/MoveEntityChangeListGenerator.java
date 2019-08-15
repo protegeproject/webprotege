@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -40,15 +42,25 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
 
     private final MessageFormatter msg;
 
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex;
+
     @Inject
     public MoveEntityChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                          @Provided @Nonnull OWLOntology rootOntology,
                                          @Provided @Nonnull MessageFormatter msg,
-                                         @Nonnull MoveHierarchyNodeAction action) {
+                                         @Nonnull MoveHierarchyNodeAction action,
+                                         @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                         @Provided @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex) {
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
         this.action = checkNotNull(action);
         this.msg = msg;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.equivalentClassesAxiomsIndex = equivalentClassesAxiomsIndex;
     }
 
     private static OntologyChangeList<Boolean> notMoved() {
@@ -242,11 +254,11 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
 
     private boolean isPlacedByEquivalentClassesAxiom(@Nonnull OWLClass subClass,
                                                      @Nonnull OWLClass superClass) {
-        return ontologyStream(rootOntology, Imports.INCLUDED)
-                             .flatMap(o -> o.getEquivalentClassesAxioms(subClass).stream())
-                             .flatMap(ax -> ax.getClassExpressions().stream())
-                             .flatMap(ce -> ce.asConjunctSet().stream())
-                             .anyMatch(ce -> ce.equals(superClass));
+        return projectOntologiesIndex.getOntologyIds()
+                .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(subClass, ontId))
+                .flatMap(ax -> ax.getClassExpressions().stream())
+                .flatMap(ce -> ce.asConjunctSet().stream())
+                .anyMatch(ce -> ce.equals(superClass));
     }
 
 
