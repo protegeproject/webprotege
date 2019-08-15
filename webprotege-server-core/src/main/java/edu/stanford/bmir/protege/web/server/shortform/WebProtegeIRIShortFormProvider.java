@@ -12,6 +12,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -73,7 +75,11 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
         OWLAnnotationValue renderingValue = null;
         // Just ask for the language once (bad coding!)
         final String defaultLanguage = languageProvider.getLang();
-        for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxiomProvider.getAnnotationAssertionAxioms(iri)) {
+        // TODO: REDO as stream
+        List<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = annotationAssertionAxiomProvider
+                .getAnnotationAssertionAxioms(iri)
+                .collect(Collectors.toList());
+        for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxioms) {
             // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
             // object to find the index.
             int index = labellingIRIs.indexOf(ax.getProperty().getIRI());

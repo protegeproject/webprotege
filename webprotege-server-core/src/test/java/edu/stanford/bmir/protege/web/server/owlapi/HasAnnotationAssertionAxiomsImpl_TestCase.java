@@ -16,6 +16,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -65,14 +66,14 @@ public class HasAnnotationAssertionAxiomsImpl_TestCase {
 
     @Test
     public void shouldReturnAssertionsForKnownSubject() {
-        Set<OWLAnnotationAssertionAxiom> result = impl.getAnnotationAssertionAxioms(subject);
+        Set<OWLAnnotationAssertionAxiom> result = impl.getAnnotationAssertionAxioms(subject).collect(Collectors.toSet());
         assertThat(result, containsInAnyOrder(annotationAssertionAxiomA, annotationAssertionAxiomB));
     }
 
 
     @Test
     public void shouldReturnEmptySetForUnknownSubject() {
-        Set<OWLAnnotationAssertionAxiom> result = impl.getAnnotationAssertionAxioms(mock(OWLAnnotationSubject.class));
+        Set<OWLAnnotationAssertionAxiom> result = impl.getAnnotationAssertionAxioms(mock(OWLAnnotationSubject.class)).collect(Collectors.toSet());
         assertThat(result.isEmpty(), is(true));
     }
 

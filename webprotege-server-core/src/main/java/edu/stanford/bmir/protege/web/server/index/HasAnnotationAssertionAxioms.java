@@ -4,6 +4,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
@@ -12,5 +13,5 @@ import java.util.Set;
  */
 public interface HasAnnotationAssertionAxioms {
 
-    Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(OWLAnnotationSubject subject);
+    Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(OWLAnnotationSubject subject);
 }

@@ -8,10 +8,9 @@ import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -34,10 +33,9 @@ public class HasAnnotationAssertionAxiomsImpl implements HasAnnotationAssertionA
     }
 
     @Override
-    public Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject subject) {
+    public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject subject) {
         checkNotNull(subject);
         return ontologiesIndex.getOntologyIds()
-                .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(subject, ontId))
-                .collect(toImmutableSet());
+                .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(subject, ontId));
     }
 }

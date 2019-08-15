@@ -10,6 +10,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.*;
 
+import java.util.stream.Stream;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -58,7 +60,7 @@ public class WebProtegeIRIShortFormProvider_TestCase {
 
         when(annotationProperty.getIRI()).thenReturn(OWLRDFVocabulary.RDFS_LABEL.getIRI());
         when(annotationAssertionAxiomsProvider.getAnnotationAssertionAxioms(iri)).thenReturn(
-                Sets.newHashSet(annotationAssertion));
+                Stream.of(annotationAssertion));
         shortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
                 annotationAssertionAxiomsProvider,

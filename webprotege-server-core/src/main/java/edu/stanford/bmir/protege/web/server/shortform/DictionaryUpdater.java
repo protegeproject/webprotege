@@ -34,7 +34,6 @@ public class DictionaryUpdater {
             dictionary.remove(entity);
             if (dictionary.getLanguage().isAnnotationBased()) {
                 annotationAssertionAxioms.getAnnotationAssertionAxioms(entity.getIRI())
-                        .stream()
                         .filter(ax -> isAxiomForDictionary(ax, dictionary))
                             .forEach(ax -> {
                                 OWLLiteral literal = (OWLLiteral) ax.getValue();
