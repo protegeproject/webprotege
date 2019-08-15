@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -79,9 +78,12 @@ public class ProjectChangesManager_IT {
         ));
         when(repo.findOne(projectId)).thenReturn(Optional.empty());
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
+        var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        var ontologyIndex = new OntologyIndexImpl(rootOntology);
+        var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
         WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
-                new HasAnnotationAssertionAxiomsImpl(rootOntology),
+                new HasAnnotationAssertionAxiomsImpl(ontologiesIndex, annotationAssertionsIndex),
                 () -> "",
                 new LocalNameExtractor()
         );

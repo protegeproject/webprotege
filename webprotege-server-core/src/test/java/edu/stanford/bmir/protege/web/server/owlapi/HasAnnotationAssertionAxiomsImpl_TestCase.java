@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,12 +13,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,32 +37,48 @@ public class HasAnnotationAssertionAxiomsImpl_TestCase {
     private HasAnnotationAssertionAxiomsImpl impl;
 
     @Mock
-    private OWLOntology rootOntology, importedOntology;
-
-    @Mock
     private OWLAnnotationAssertionAxiom annotationAssertionAxiomA, annotationAssertionAxiomB;
 
     @Mock
     private OWLAnnotationSubject subject;
 
+    @Mock
+    private ProjectOntologiesIndex ontologiesIndex;
+
+    @Mock
+    private AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
+
+    @Mock
+    private OWLOntologyID ontologyId;
+
     @Before
     public void setUp() throws Exception {
-        when(rootOntology.getImportsClosure()).thenReturn(Sets.newHashSet(rootOntology, importedOntology));
-        when(rootOntology.getAnnotationAssertionAxioms(subject)).thenReturn(Sets.newHashSet(annotationAssertionAxiomA));
-        when(importedOntology.getAnnotationAssertionAxioms(subject)).thenReturn(Sets.newHashSet(annotationAssertionAxiomB));
-        impl = new HasAnnotationAssertionAxiomsImpl(rootOntology);
+        when(ontologiesIndex.getOntologyIds())
+                .thenReturn(Stream.of(ontologyId));
+
+        when(annotationAssertionsIndex.getAxiomsForSubject(any(), any()))
+                .thenReturn(Stream.empty());
+        when(annotationAssertionsIndex.getAxiomsForSubject(subject, ontologyId))
+                .thenReturn(Stream.of(annotationAssertionAxiomA, annotationAssertionAxiomB));
+        impl = new HasAnnotationAssertionAxiomsImpl(ontologiesIndex, annotationAssertionsIndex);
     }
 
     @Test
-    public void shouldReturnAssertionsInImportsClosure() {
+    public void shouldReturnAssertionsForKnownSubject() {
         Set<OWLAnnotationAssertionAxiom> result = impl.getAnnotationAssertionAxioms(subject);
         assertThat(result, containsInAnyOrder(annotationAssertionAxiomA, annotationAssertionAxiomB));
     }
 
 
     @Test
-    public void shouldReturnEmptySet() {
+    public void shouldReturnEmptySetForUnknownSubject() {
         Set<OWLAnnotationAssertionAxiom> result = impl.getAnnotationAssertionAxioms(mock(OWLAnnotationSubject.class));
         assertThat(result.isEmpty(), is(true));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNpeIfSubjectIsNull() {
+        impl.getAnnotationAssertionAxioms(null);
     }
 }

@@ -6,6 +6,9 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndexImpl;
+import edu.stanford.bmir.protege.web.server.index.OntologyIndexImpl;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndexImpl;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -223,11 +226,13 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
 
     private ShortFormProvider getShortFormProvider(
             final OWLOntology uploadedRootOntology) {
-
+        var ontologiesIndex = new ProjectOntologiesIndexImpl(uploadedRootOntology);
+        var ontologyIndex = new OntologyIndexImpl(uploadedRootOntology);
+        var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
         final ShortFormProvider uploadedOntologyShortFormProvider = new WebProtegeShortFormProvider(
                 new WebProtegeIRIShortFormProvider(
                         DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
-                        new HasAnnotationAssertionAxiomsImpl(uploadedRootOntology), new HasLang() {
+                        new HasAnnotationAssertionAxiomsImpl(ontologiesIndex, annotationAssertionsIndex), new HasLang() {
                     @Override
                     public String getLang() {
                         return hasLang.getLang();

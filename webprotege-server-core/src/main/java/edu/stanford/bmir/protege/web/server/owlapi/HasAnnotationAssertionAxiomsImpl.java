@@ -1,16 +1,17 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -19,19 +20,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class HasAnnotationAssertionAxiomsImpl implements HasAnnotationAssertionAxioms {
 
-    private final OWLOntology rootOntology;
+    @Nonnull
+    private final ProjectOntologiesIndex ontologiesIndex;
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Inject
-    public HasAnnotationAssertionAxiomsImpl(@RootOntology OWLOntology rootOntology) {
-        this.rootOntology = checkNotNull(rootOntology);
+    public HasAnnotationAssertionAxiomsImpl(@Nonnull ProjectOntologiesIndex ontologiesIndex,
+                                            @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
+        this.ontologiesIndex = checkNotNull(ontologiesIndex);
+        this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
     }
 
     @Override
-    public Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(OWLAnnotationSubject subject) {
-        Set<OWLAnnotationAssertionAxiom> result = new HashSet<>();
-        for(OWLOntology ontology : rootOntology.getImportsClosure()) {
-            result.addAll(ontology.getAnnotationAssertionAxioms(subject));
-        }
-        return result;
+    public Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject subject) {
+        checkNotNull(subject);
+        return ontologiesIndex.getOntologyIds()
+                .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(subject, ontId))
+                .collect(toImmutableSet());
     }
 }
