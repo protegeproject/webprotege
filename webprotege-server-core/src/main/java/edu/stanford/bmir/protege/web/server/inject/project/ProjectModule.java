@@ -727,4 +727,9 @@ public class ProjectModule {
     EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(EntitiesInProjectSignatureByIriIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    DeprecatedEntitiesIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesIndexImpl impl) {
+        return impl;
+    }
 }
