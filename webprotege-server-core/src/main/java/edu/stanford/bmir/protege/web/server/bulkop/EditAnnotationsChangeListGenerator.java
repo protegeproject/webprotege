@@ -62,9 +62,9 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
 
     @AutoFactory
     public EditAnnotationsChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
-                                              @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                              @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
-                                              @Nonnull OntologyChangeFactory ontologyChangeFactory,
+                                              @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                              @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
+                                              @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                               @Nonnull ImmutableSet<OWLEntity> entities,
                                               @Nonnull Operation operation,
                                               @Nonnull Optional<OWLAnnotationProperty> matchProperty,
