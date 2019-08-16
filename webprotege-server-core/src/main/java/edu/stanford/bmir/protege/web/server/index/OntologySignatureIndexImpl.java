@@ -27,6 +27,7 @@ public class OntologySignatureIndexImpl implements OntologySignatureIndex {
     @Nonnull
     @Override
     public Stream<OWLEntity> getEntitiesInSignature(@Nonnull OWLOntologyID ontologyID) {
+        checkNotNull(ontologyID);
         return ontologyIndex.getOntology(ontologyID)
                 .stream()
                 .flatMap(ont -> ont.getSignature().stream());

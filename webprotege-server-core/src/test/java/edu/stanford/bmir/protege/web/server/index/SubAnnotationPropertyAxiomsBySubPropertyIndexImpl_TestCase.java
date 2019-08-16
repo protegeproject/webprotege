@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server.index;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.when;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-15
  */
+@RunWith(MockitoJUnitRunner.class)
 public class SubAnnotationPropertyAxiomsBySubPropertyIndexImpl_TestCase {
 
     private SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl;
