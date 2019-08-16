@@ -108,8 +108,10 @@ public class ProjectChangesManager_IT {
                                                                                                             projectAnnotationAssertionsIndex);
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
                                                                                                         assertionAxiomsIndex), repo);
+        var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex, ontologyIndex);
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(annotationAssertionAxioms)),
+                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(annotationAssertionAxioms)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
