@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.change;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityShortFormsParser;
 import org.semanticweb.owlapi.model.*;
@@ -43,13 +44,16 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     private final ImmutableSet<P> parents;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Nonnull
     private final MessageFormatter msg;
+
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     private static Map<String, String> builtInPrefixes = new HashMap<>();
 
@@ -70,23 +74,24 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @param sourceText The set of browser text strings that correspond to short names of the fresh entities that will
      * be created.  Not {@code null}.  May be empty.
      * @param parents The parent entities.  Not {@code null}.
-     * @param msg
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public AbstractCreateEntitiesChangeListGenerator(@Nonnull EntityType<E> entityType,
                                                      @Nonnull String sourceText,
                                                      @Nonnull String langTag,
                                                      @Nonnull ImmutableSet<P> parents,
-                                                     @Nonnull OWLOntology rootOntology,
                                                      @Nonnull OWLDataFactory dataFactory,
-                                                     @Nonnull MessageFormatter msg) {
+                                                     @Nonnull MessageFormatter msg,
+                                                     @Nonnull OntologyChangeFactory changeFactory,
+                                                     @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.entityType = entityType;
         this.sourceText = sourceText;
         this.langTag = langTag;
         this.parents = parents;
-        this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
         this.msg = msg;
+        this.changeFactory = changeFactory;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     @Override
@@ -105,10 +110,12 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
             }
             else {
                 freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText, Optional.of(langTag.trim()));
-                builder.addAxiom(rootOntology, dataFactory.getOWLDeclarationAxiom(freshEntity));
+                var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
+                builder.add(changeFactory.createAddAxiom(ontologyId, dataFactory.getOWLDeclarationAxiom(freshEntity)));
             }
             for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, context, parents)) {
-                builder.addAxiom(rootOntology, axiom);
+                var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
+                builder.add(changeFactory.createAddAxiom(ontologyId, axiom));
             }
             freshEntities.add(freshEntity);
         }
@@ -129,10 +136,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
         for(String prefixName : builtInPrefixes.keySet()) {
             if(browserText.startsWith(prefixName)) {
                 String prefix = builtInPrefixes.get(prefixName);
-                StringBuilder sb = new StringBuilder();
-                sb.append(prefix);
-                sb.append(browserText.substring(prefixName.length()));
-                return sb.toString();
+                return prefix + browserText.substring(prefixName.length());
             }
         }
         return browserText;

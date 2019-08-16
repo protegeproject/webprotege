@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -30,11 +31,12 @@ public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitie
 
     public CreateObjectPropertiesChangeGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                                  @Provided @Nonnull MessageFormatter msg,
-                                                 @Provided @Nonnull OWLOntology rootOntology,
+                                                 @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                                 @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                                  @Nonnull String sourceText,
                                                  @Nonnull String langTag,
                                                  @Nonnull ImmutableSet<OWLObjectProperty> parents) {
-        super(OBJECT_PROPERTY, sourceText, langTag, parents, rootOntology, dataFactory, msg);
+        super(OBJECT_PROPERTY, sourceText, langTag, parents, dataFactory, msg, ontologyChangeFactory, defaultOntologyIdManager);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
