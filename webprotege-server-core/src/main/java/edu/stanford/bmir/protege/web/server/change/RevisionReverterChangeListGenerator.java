@@ -39,18 +39,17 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
     private final RevisionManager revisionManager;
 
     @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
+    private final OntologyChangeRecordTranslator changeFactory;
 
     @Inject
     public RevisionReverterChangeListGenerator(@Nonnull RevisionNumber revisionNumber,
                                                @Provided @Nonnull OWLOntologyChangeDataReverter changeDataReverter,
                                                @Provided @Nonnull RevisionManager revisionManager,
-                                               @Provided @Nonnull @RootOntology OWLOntology rootOntology) {
+                                               @Provided @Nonnull OntologyChangeRecordTranslator changeFactory) {
         this.revisionNumber = checkNotNull(revisionNumber);
         this.changeDataReverter = changeDataReverter;
         this.revisionManager = revisionManager;
-        this.rootOntology = rootOntology;
+        this.changeFactory = changeFactory;
     }
 
     @Override
@@ -61,17 +60,15 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
     @Override
     public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
         Optional<Revision> revision = revisionManager.getRevision(revisionNumber);
-        if(!revision.isPresent()) {
+        if(revision.isEmpty()) {
             return OntologyChangeList.<Boolean>builder().build(false);
         }
-
         List<OWLOntologyChange> changes = new ArrayList<>();
         for(OWLOntologyChangeRecord record : revision.get()) {
-            OWLOntologyChangeData revertingChangeData = changeDataReverter.getRevertingChange(record);
-            OWLOntologyChangeRecord revertingRecord = new OWLOntologyChangeRecord(record.getOntologyID(), revertingChangeData);
-            OWLOntologyManager manager = rootOntology.getOWLOntologyManager();
-            OWLOntologyChange change = revertingRecord.createOntologyChange(manager);
-            changes.add(0, change);
+            var revertingChangeData = changeDataReverter.getRevertingChange(record);
+            var revertingRecord = new OWLOntologyChangeRecord(record.getOntologyID(), revertingChangeData);
+            var ontologyChange = changeFactory.getOntologyChange(revertingRecord);
+            changes.add(0, ontologyChange);
         }
         return OntologyChangeList.<Boolean>builder().addAll(changes).build(true);
     }
