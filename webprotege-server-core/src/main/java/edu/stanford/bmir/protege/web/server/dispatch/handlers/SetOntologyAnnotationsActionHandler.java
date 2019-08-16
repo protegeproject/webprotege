@@ -1,22 +1,20 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -24,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY_ANNOTATIONS;
 import static java.util.Arrays.asList;
@@ -35,16 +35,25 @@ import static java.util.Arrays.asList;
 public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotation>, SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> {
 
     @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
+    private final OntologyChangeFactory changeFactory;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
+    @Nonnull
+    private final OntologyAnnotationsIndex ontologyAnnotationsIndex;
 
     @Inject
     public SetOntologyAnnotationsActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                                @Nonnull HasApplyChanges applyChanges,
-                                               @Nonnull @RootOntology OWLOntology rootOntology) {
+                                               @Nonnull OntologyChangeFactory changeFactory,
+                                               @Nonnull OWLDataFactory dataFactory,
+                                               @Nonnull OntologyAnnotationsIndex ontologyAnnotationsIndex) {
         super(accessManager, eventManager, applyChanges);
-        this.rootOntology = rootOntology;
+        this.changeFactory = checkNotNull(changeFactory);
+        this.dataFactory = checkNotNull(dataFactory);
+        this.ontologyAnnotationsIndex = checkNotNull(ontologyAnnotationsIndex);
     }
 
     @Nonnull
@@ -62,32 +71,45 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
     @Override
     protected ChangeListGenerator<Set<OWLAnnotation>> getChangeListGenerator(SetOntologyAnnotationsAction action,
                                                                              ExecutionContext executionContext) {
-        final Set<PropertyAnnotationValue> fromAnnotations = action.getFromAnnotations();
-        final Set<PropertyAnnotationValue> toAnnotations = action.getToAnnotations();
+        final var fromAnnotations = action.getFromAnnotations();
+        final var toAnnotations = action.getToAnnotations();
+        var ontologyId = action.getOntologyId();
 
         List<OWLOntologyChange> changeList = new ArrayList<>();
 
-        OWLDataFactory dataFactory = rootOntology.getOWLOntologyManager().getOWLDataFactory();
-        for (PropertyAnnotationValue annotation : fromAnnotations) {
-            if (!toAnnotations.contains(annotation)) {
-                annotation.getValue().asAnnotationValue().ifPresent(av -> {
-                    changeList.add(new RemoveOntologyAnnotation(rootOntology,
-                            dataFactory.getOWLAnnotation(
-                                    annotation.getProperty().getEntity().asOWLAnnotationProperty(),
-                                    av
-                            )));
-                });
+        for(PropertyAnnotationValue annotation : fromAnnotations) {
+            if(!toAnnotations.contains(annotation)) {
+                annotation.getValue()
+                          .asAnnotationValue()
+                          .ifPresent(av -> {
+                              var property = annotation.getProperty()
+                                                       .getEntity()
+                                                       .asOWLAnnotationProperty();
+                              var oldAnnotation = dataFactory.getOWLAnnotation(
+                                      property,
+                                      av);
+                              var chg = changeFactory.createRemoveOntologyAnnotation(
+                                      ontologyId,
+                                      oldAnnotation);
+                              changeList.add(chg);
+                          });
             }
         }
-        for (PropertyAnnotationValue annotation : toAnnotations) {
-            if (!fromAnnotations.contains(annotation)) {
-                annotation.getValue().asAnnotationValue().ifPresent(av -> {
-                    changeList.add(new AddOntologyAnnotation(rootOntology,
-                            dataFactory.getOWLAnnotation(
-                                    annotation.getProperty().getEntity().asOWLAnnotationProperty(),
-                                    av
-                            )));
-                });
+        for(PropertyAnnotationValue annotation : toAnnotations) {
+            if(!fromAnnotations.contains(annotation)) {
+                annotation.getValue()
+                          .asAnnotationValue()
+                          .ifPresent(av -> {
+                              var property = annotation.getProperty()
+                                                       .getEntity()
+                                                       .asOWLAnnotationProperty();
+                              var newAnnotation = dataFactory.getOWLAnnotation(
+                                      property,
+                                      av
+                              );
+                              changeList.add(changeFactory.createAddOntologyAnnotation(ontologyId,
+                                                                                       newAnnotation));
+                          });
             }
         }
         return new FixedChangeListGenerator<>(changeList, Collections.emptySet(), "Edited ontology annotations");
@@ -98,6 +120,10 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
                                                               SetOntologyAnnotationsAction action,
                                                               ExecutionContext executionContext,
                                                               EventList<ProjectEvent<?>> eventList) {
-        return new SetOntologyAnnotationsResult(rootOntology.getAnnotations(), eventList);
+        var ontologyId = action.getOntologyId();
+        Set<OWLAnnotation> annotations = ontologyAnnotationsIndex
+                .getOntologyAnnotations(ontologyId)
+                .collect(Collectors.toSet());
+        return new SetOntologyAnnotationsResult(annotations, eventList);
     }
 }
