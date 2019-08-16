@@ -16,29 +16,37 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AnnotationAssertionAxiomsIndexWrapperImpl implements AnnotationAssertionAxiomsIndex {
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
+
+    @Nonnull
+    private final ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Inject
-    public AnnotationAssertionAxiomsIndexWrapperImpl(@Nonnull OWLOntology rootOntology) {
-        this.rootOntology = checkNotNull(rootOntology);
+    public AnnotationAssertionAxiomsIndexWrapperImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                                     @Nonnull AxiomsByTypeIndex axiomsByTypeIndex,
+                                                     @Nonnull ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
+        this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
     }
 
     @Override
     public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms() {
-        return this.rootOntology
-                .getImportsClosure()
-                .stream()
-                .flatMap(ont -> ont.getAxioms(AxiomType.ANNOTATION_ASSERTION).stream());
+        return projectOntologiesIndex.getOntologyIds()
+                .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_ASSERTION, ontId));
     }
 
     @Override
     public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull IRI subject) {
-        return rootOntology.getAnnotationAssertionAxioms(subject).stream();
+        return annotationAssertionsIndex.getAnnotationAssertionAxioms(subject);
     }
 
     @Override
     public Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull IRI subject, @Nonnull OWLAnnotationProperty property) {
-        return rootOntology.getAnnotationAssertionAxioms(subject).stream()
+        return annotationAssertionsIndex.getAnnotationAssertionAxioms(subject)
                            .filter(ax -> ax.getProperty().equals(property));
     }
 
