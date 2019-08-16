@@ -780,5 +780,10 @@ public class ProjectModule {
     OntologySignatureByTypeIndex provideOntologySignatureByTypeIndex(OntologySignatureByTypeIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    OntologyChangeRecordTranslator provideOntologyChangeRecordTranslator(OntologyChangeRecordTranslatorImpl impl) {
+        return impl;
+    }
 }
 
