@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxio
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
@@ -58,8 +59,13 @@ public class WebProtegeIRIShortFormProvider_TestCase {
         when(annotationAssertion.getProperty()).thenReturn(annotationProperty);
 
         when(annotationProperty.getIRI()).thenReturn(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+
+        when(annotationAssertionAxiomsProvider.getAnnotationAssertionAxioms(Matchers.any()))
+                .thenReturn(Stream.empty());
         when(annotationAssertionAxiomsProvider.getAnnotationAssertionAxioms(iri)).thenReturn(
                 Stream.of(annotationAssertion));
+
+
         shortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
                 annotationAssertionAxiomsProvider,
