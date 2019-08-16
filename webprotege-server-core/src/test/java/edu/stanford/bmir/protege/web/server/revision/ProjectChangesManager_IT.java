@@ -81,6 +81,8 @@ public class ProjectChangesManager_IT {
         var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         var ontologyIndex = new OntologyIndexImpl(rootOntology);
         var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
+        var projectAnnotationAssertionsIndex = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex,
+                                                                                                      annotationAssertionsIndex);
         var annotationAssertionAxioms = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
         WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(), annotationAssertionAxioms,
@@ -100,7 +102,10 @@ public class ProjectChangesManager_IT {
                 entityComparator);
         OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
         SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
-        AnnotationAssertionAxiomsIndex assertionAxiomsIndex = new AnnotationAssertionAxiomsIndexCachingImpl(rootOntology);
+        AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl(ontologyIndex);
+        AnnotationAssertionAxiomsIndex assertionAxiomsIndex = new AnnotationAssertionAxiomsIndexWrapperImpl(ontologiesIndex,
+                                                                                                            axiomsByTypeIndex,
+                                                                                                            projectAnnotationAssertionsIndex);
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
                                                                                                         assertionAxiomsIndex), repo);
         RenderingManager renderingManager = new RenderingManager(

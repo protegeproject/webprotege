@@ -591,8 +591,7 @@ public class ProjectModule {
     }
 
     @Provides
-    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexCachingImpl impl) {
-        impl.attachOntologyListener();
+    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexWrapperImpl impl) {
         return impl;
     }
 
