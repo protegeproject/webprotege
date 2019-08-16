@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.viz;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -13,7 +14,6 @@ import edu.stanford.bmir.protege.web.shared.viz.RelationshipEdge;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -38,24 +38,35 @@ public class EntityGraphBuilder {
     private final RenderingManager renderer;
 
     @Nonnull
-    private final OWLOntology ont;
+    private final ProjectOntologiesIndex projectOntologiesIndex;
 
-    @Nullable
-    private ImmutableSet<OWLOntology> ontologies = null;
+    @Nonnull
+    private final ObjectPropertyAssertionAxiomsBySubjectIndex objectPropertyAssertions;
+
+    @Nonnull
+    private final SubClassOfAxiomsBySubClassIndex subClassOfAxioms;
+
+    @Nonnull
+    private final ClassAssertionAxiomsByIndividualIndex classAssertionAxioms;
+
+    @Nonnull
+    private final EquivalentClassesAxiomsIndex equivalentClassesAxioms;
 
     @Inject
     public EntityGraphBuilder(@Nonnull RenderingManager renderer,
-                              @Nonnull OWLOntology ontology) {
+                              @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                              @Nonnull ObjectPropertyAssertionAxiomsBySubjectIndex objectPropertyAssertions,
+                              @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxioms,
+                              @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxioms,
+                              @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxioms) {
         this.renderer = checkNotNull(renderer);
-        this.ont = checkNotNull(ontology);
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.objectPropertyAssertions = objectPropertyAssertions;
+        this.subClassOfAxioms = subClassOfAxioms;
+        this.classAssertionAxioms = classAssertionAxioms;
+        this.equivalentClassesAxioms = equivalentClassesAxioms;
     }
 
-    public Stream<OWLOntology> getOntologies() {
-        if(ontologies == null) {
-            ontologies = ImmutableSet.copyOf(ont.getImportsClosure());
-        }
-        return ontologies.stream();
-    }
 
     @Nonnull
     public EntityGraph createGraph(@Nonnull OWLEntity root) {
@@ -93,8 +104,8 @@ public class EntityGraphBuilder {
                                                         Set<OWLEntity> processed,
                                                         OWLNamedIndividual individual,
                                                         OWLNamedIndividualData individualData) {
-        getOntologies()
-                .flatMap(o -> o.getObjectPropertyAssertionAxioms(individual).stream())
+        projectOntologiesIndex.getOntologyIds()
+                .flatMap(ontId -> objectPropertyAssertions.getObjectPropertyAssertions(individual, ontId))
                 .filter(ax -> isNamedIndividual(ax.getObject()))
                 .filter(ax -> isNamedProperty(ax.getProperty()))
                 .forEach(ax -> {
@@ -110,8 +121,8 @@ public class EntityGraphBuilder {
                                                Set<OWLEntity> processed,
                                                OWLNamedIndividual individual,
                                                OWLNamedIndividualData individualData) {
-        getOntologies()
-                .flatMap(o -> o.getClassAssertionAxioms(individual).stream())
+        projectOntologiesIndex.getOntologyIds()
+                .flatMap(ontId -> classAssertionAxioms.getClassAssertionAxioms(individual, ontId))
                 .filter(ax -> isNotOwlThing(ax.getClassExpression()))
                 .filter(ax -> isNamedClass(ax.getClassExpression()))
                 .forEach(ax -> {
@@ -125,7 +136,9 @@ public class EntityGraphBuilder {
     private void createEdgesForClass(Set<Edge> edges,
                                      Set<OWLEntity> processed,
                                      OWLClass cls) {
-        var subClassAxioms = getOntologies().flatMap(o -> o.getSubClassAxiomsForSubClass(cls).stream().sorted());
+        var subClassAxioms = projectOntologiesIndex.getOntologyIds()
+                                                   .flatMap(ontId -> subClassOfAxioms.getSubClassOfAxiomsForSubClass(cls, ontId)
+                                                                                     .sorted());
         var equivalentClassesAxioms = getEquivalentClassAxiomsAsSubClassOfAxioms(cls);
         var combinedAxioms = Streams.concat(subClassAxioms, equivalentClassesAxioms);
         combinedAxioms
@@ -134,8 +147,8 @@ public class EntityGraphBuilder {
     }
 
     private Stream<OWLSubClassOfAxiom> getEquivalentClassAxiomsAsSubClassOfAxioms(OWLClass cls) {
-        return getOntologies()
-                .flatMap(o -> o.getEquivalentClassesAxioms(cls).stream())
+        return projectOntologiesIndex.getOntologyIds()
+                .flatMap(ontId -> equivalentClassesAxioms.getEquivalentClassesAxioms(cls, ontId))
                 .flatMap(ax -> ax.asOWLSubClassOfAxioms().stream());
     }
 
