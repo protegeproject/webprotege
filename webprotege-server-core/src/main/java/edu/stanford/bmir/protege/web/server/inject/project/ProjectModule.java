@@ -761,5 +761,14 @@ public class ProjectModule {
         return impl;
     }
 
+    @Provides
+    OntologySignatureIndex provideOntologySignatureIndex(OntologySignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectSignatureIndex provideProjectSignatureIndex(ProjectSignatureIndexImpl impl) {
+        return impl;
+    }
 }
 
