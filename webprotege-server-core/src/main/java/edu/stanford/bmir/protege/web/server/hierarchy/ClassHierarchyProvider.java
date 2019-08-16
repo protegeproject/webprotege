@@ -37,19 +37,16 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
 
     private static final Logger logger = LoggerFactory.getLogger(ClassHierarchyProvider.class);
 
+    @Nonnull
     private final ProjectId projectId;
 
-    /*
-     * It is not safe to set the collection of ontologies to a HashSet or TreeSet.
-     * When an ontology changes name it gets a new Hash Code and it is sorted
-     * differently, so these Collections do not work.
-     */
-    //    private final OWLOntology rootOntology;
-
+    @Nonnull
     private final OWLClass root;
 
+    @Nonnull
     private final TerminalElementFinder<OWLClass> rootFinder;
 
+    @Nonnull
     private final Set<OWLClass> nodesToUpdate = new HashSet<>();
 
     @Nonnull
