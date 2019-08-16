@@ -770,5 +770,15 @@ public class ProjectModule {
     ProjectSignatureIndex provideProjectSignatureIndex(ProjectSignatureIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    ProjectSignatureByTypeIndex provideProjectSignatureByTypeIndex(ProjectSignatureByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologySignatureByTypeIndex provideOntologySignatureByTypeIndex(OntologySignatureByTypeIndexImpl impl) {
+        return impl;
+    }
 }
 
