@@ -110,8 +110,10 @@ public class ProjectChangesManager_IT {
                                                                                                         assertionAxiomsIndex), repo);
         var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex, ontologyIndex);
+        var ontologySignatureIndex = new OntologySignatureIndexImpl(ontologyIndex);
+        var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(annotationAssertionAxioms)),
+                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(annotationAssertionAxioms)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
