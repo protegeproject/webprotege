@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.usage;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
@@ -7,6 +9,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -32,9 +35,11 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Inject
+    @AutoFactory
     public ReferencingAxiomVisitor(@Nonnull OWLEntity usageOf,
-                                   @Nonnull OWLOntology rootOntology,
-                                   @Nonnull RenderingManager renderingManager) {
+                                   @Provided @Nonnull OWLOntology rootOntology,
+                                   @Provided @Nonnull RenderingManager renderingManager) {
         this.usageOf = checkNotNull(usageOf);
         this.rootOntology = checkNotNull(rootOntology);
         this.renderingManager = checkNotNull(renderingManager);

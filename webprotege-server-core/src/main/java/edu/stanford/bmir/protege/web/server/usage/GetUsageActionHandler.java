@@ -7,18 +7,18 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByReferenceIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.usage.*;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,26 +32,32 @@ public class GetUsageActionHandler extends AbstractProjectActionHandler<GetUsage
     private final ProjectId projectId;
 
     @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
+    private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final AxiomsByReferenceIndex axiomsByReferenceIndex;
 
     @Nonnull
     private final EntityNodeRenderer entityNodeRenderer;
 
+    @Nonnull
+    private final ReferencingAxiomVisitorFactory referencingAxiomVisitorFactory;
+
+    @Nonnull
+
     @Inject
     public GetUsageActionHandler(@Nonnull AccessManager accessManager,
                                  @Nonnull ProjectId projectId,
-                                 @Nonnull @RootOntology OWLOntology rootOntology,
-                                 @Nonnull RenderingManager renderingManager,
-                                 @Nonnull EntityNodeRenderer entityNodeRenderer) {
+                                 @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                 @Nonnull AxiomsByReferenceIndex axiomsByReferenceIndex,
+                                 @Nonnull EntityNodeRenderer entityNodeRenderer,
+                                 @Nonnull ReferencingAxiomVisitorFactory referencingAxiomVisitorFactory) {
         super(accessManager);
         this.projectId = projectId;
-        this.rootOntology = rootOntology;
-        this.renderingManager = renderingManager;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.axiomsByReferenceIndex = axiomsByReferenceIndex;
         this.entityNodeRenderer = entityNodeRenderer;
+        this.referencingAxiomVisitorFactory = referencingAxiomVisitorFactory;
     }
 
     @Nonnull
@@ -68,101 +74,38 @@ public class GetUsageActionHandler extends AbstractProjectActionHandler<GetUsage
 
     @Nonnull
     @Override
-    public GetUsageResult execute(@Nonnull GetUsageAction action, @Nonnull ExecutionContext executionContext) {
-        List<UsageReference> usage = new ArrayList<>();
-        final OWLEntity subject = action.getSubject();
-        ReferencingAxiomVisitor visitor = new ReferencingAxiomVisitor(subject, rootOntology, renderingManager);
-        final UsageFilter usageFilter = action.getUsageFilter();
-        int totalReferenceCount = 0;
-        int counter = 0;
+    public GetUsageResult execute(@Nonnull GetUsageAction action, @Nonnull ExecutionContext executionContext){
+        var subject = action.getSubject();
+        var referencingAxiomVisitor = referencingAxiomVisitorFactory.create(subject);
+        var usageFilter = action.getUsageFilter();
+        var referencingAxioms = projectOntologiesIndex.getOntologyIds()
+                .flatMap(ontId -> axiomsByReferenceIndex.getReferencingAxioms(Collections.singleton(subject), ontId))
+                         .collect(toImmutableList());
 
-        final IRI subjectIRI = subject.getIRI();
-        for (OWLOntology ont : rootOntology.getImportsClosure()) {
-            Set<OWLAxiom> references = ont.getReferencingAxioms(subject);
-            for (OWLAxiom reference : references) {
-                counter = processAxiom(reference, usageFilter, action, usage, visitor, counter);
-                totalReferenceCount++;
-            }
+        var usageReferences = referencingAxioms
+                .stream()
+                .filter(ax -> usageFilter.isIncluded(ax.getAxiomType()))
+                .flatMap(ax -> ax.accept(referencingAxiomVisitor).stream())
+                .filter(usageReference -> isIncludedBySubject(usageFilter, subject, usageReference))
+                .limit(action.getPageSize())
+                .sorted(new UsageReferenceComparator(subject))
+                .collect(toImmutableList());
 
-
-            final Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ont.getAxioms(AxiomType.ANNOTATION_ASSERTION);
-            for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxioms) {
-                if (ax.getSubject().equals(subjectIRI)) {
-                    counter = processAxiom(ax, usageFilter, action, usage, visitor, counter);
-                    totalReferenceCount++;
-                }
-                if (ax.getProperty().equals(subject)) {
-                    counter = processAxiom(ax, usageFilter, action, usage, visitor, counter);
-                    totalReferenceCount++;
-                }
-                if (ax.getValue().equals(subjectIRI)) {
-                    counter = processAxiom(ax, usageFilter, action, usage, visitor, counter);
-                    totalReferenceCount++;
-                }
-            }
-            final Set<OWLAnnotationPropertyRangeAxiom> annotationPropertyRangeAxioms = ont.getAxioms(AxiomType.ANNOTATION_PROPERTY_RANGE);
-            for (OWLAnnotationPropertyRangeAxiom ax : annotationPropertyRangeAxioms) {
-                if (ax.getProperty().equals(subject)) {
-                    counter = processAxiom(ax, usageFilter, action, usage, visitor, counter);
-                    totalReferenceCount++;
-                }
-                if (ax.getRange().equals(subjectIRI)) {
-                    counter = processAxiom(ax, usageFilter, action, usage, visitor, counter);
-                    totalReferenceCount++;
-                }
-            }
-            final Set<OWLAnnotationPropertyDomainAxiom> annotationPropertyDomainAxioms = ont.getAxioms(AxiomType.ANNOTATION_PROPERTY_DOMAIN);
-            for (OWLAnnotationPropertyDomainAxiom ax : annotationPropertyDomainAxioms) {
-                if (ax.getProperty().equals(subject)) {
-                    counter = processAxiom(ax, usageFilter, action, usage, visitor, counter);
-                    totalReferenceCount++;
-                }
-                if (ax.getDomain().equals(subjectIRI)) {
-                    counter = processAxiom(ax, usageFilter, action, usage, visitor, counter);
-                    totalReferenceCount++;
-                }
-            }
-        }
-
-
-
-
-        usage.sort(new UsageReferenceComparator(subject));
-        EntityNode entityNode = entityNodeRenderer.render(subject);
-        return new GetUsageResult(projectId, entityNode, usage, totalReferenceCount);
+        var entityNode = entityNodeRenderer.render(subject);
+        return new GetUsageResult(projectId, entityNode, usageReferences, referencingAxioms.size());
     }
 
-    private int processAxiom(OWLAxiom reference, UsageFilter usageFilter, GetUsageAction action, List<UsageReference> result, ReferencingAxiomVisitor visitor, int counter) {
-        if (usageFilter.isIncluded(reference.getAxiomType())) {
-            counter++;
-            if (counter <= action.getPageSize()) {
-                final Set<UsageReference> refs = reference.accept(visitor);
-                for (UsageReference ref : refs) {
-                    if (isIncludedBySubject(usageFilter, action, ref)) {
-                        if (counter <= action.getPageSize()) {
-                            result.addAll(refs);
-                        }
-                    }
-                }
-            }
-
-        }
-        return counter;
-    }
-
-    private boolean isIncludedBySubject(UsageFilter usageFilter, GetUsageAction action, UsageReference ref) {
-        if(!ref.getAxiomSubject().isPresent()) {
+    private boolean isIncludedBySubject(UsageFilter usageFilter, OWLEntity subject, UsageReference ref) {
+        if(ref.getAxiomSubject().isEmpty()) {
             return true;
         }
-        final OWLEntity axiomSubject = ref.getAxiomSubject().get();
+        var axiomSubject = ref.getAxiomSubject().get();
         if(!usageFilter.isIncluded(axiomSubject.getEntityType())) {
             return false;
         }
         if(!usageFilter.isShowDefiningAxioms()) {
-            return !action.getSubject().equals(axiomSubject);
+            return !subject.equals(axiomSubject);
         }
         return true;
     }
-
-
 }
