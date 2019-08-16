@@ -2,20 +2,18 @@ package edu.stanford.bmir.protege.web.server.usage;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -29,28 +27,25 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
     private final OWLEntity usageOf;
 
     @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
+    private final RenderingManager renderingManager;
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final EntitiesInProjectSignatureByIriIndex entitiesInSignatureIndex;
 
     @Inject
     @AutoFactory
     public ReferencingAxiomVisitor(@Nonnull OWLEntity usageOf,
-                                   @Provided @Nonnull OWLOntology rootOntology,
-                                   @Provided @Nonnull RenderingManager renderingManager) {
+                                   @Provided @Nonnull RenderingManager renderingManager,
+                                   @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignatureIndex) {
         this.usageOf = checkNotNull(usageOf);
-        this.rootOntology = checkNotNull(rootOntology);
         this.renderingManager = checkNotNull(renderingManager);
+        this.entitiesInSignatureIndex = checkNotNull(entitiesInSignatureIndex);
     }
 
-    private Set<UsageReference> translate(Set<? extends OWLObject> subjects, OWLAxiom axiom) {
-        Set<UsageReference> result = new HashSet<>();
-        for(OWLObject subject : subjects) {
-            result.addAll(translate(subject, axiom));
-        }
-        return result;
+    private Set<UsageReference> translate(Collection<? extends OWLObject> subjects, OWLAxiom axiom) {
+        return subjects.stream()
+                .flatMap(subject -> translate(subject, axiom).stream())
+                .collect(toSet());
     }
 
     private Set<UsageReference> translate(OWLObject subject, OWLAxiom axiom) {
@@ -63,22 +58,22 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
                 return translate(usageOf, axiom);
             }
             else {
-                final Set<OWLEntity> entities = rootOntology.getEntitiesInSignature((IRI) subject,
-                                                                                                 Imports.INCLUDED);
+                var entities = entitiesInSignatureIndex
+                        .getEntityInSignature((IRI) subject)
+                        .collect(toList());
                 return translate(entities, axiom);
             }
 
         }
         else if(subject instanceof SWRLAtom) {
-            SWRLPredicate predicate = ((SWRLAtom) subject).getPredicate();
+            var predicate = ((SWRLAtom) subject).getPredicate();
             if (predicate instanceof OWLEntity) {
                 return translate((OWLEntity) predicate, axiom);
             }
         }
-        final String useageOfBrowserText = renderingManager.getShortForm(usageOf);
-        String rendering = renderingManager.getHTMLBrowserText(axiom, Collections.singleton(useageOfBrowserText));
-        Optional<String> subjectRendering;
-        subjectRendering = axiomSubject.map(renderingManager::getShortForm);
+        var useageOfBrowserText = renderingManager.getShortForm(usageOf);
+        var rendering = renderingManager.getHTMLBrowserText(axiom, Collections.singleton(useageOfBrowserText));
+        var subjectRendering = axiomSubject.map(renderingManager::getShortForm);
         return Collections.singleton(new UsageReference(axiom.getAxiomType(), rendering, axiomSubject, subjectRendering));
     }
 
