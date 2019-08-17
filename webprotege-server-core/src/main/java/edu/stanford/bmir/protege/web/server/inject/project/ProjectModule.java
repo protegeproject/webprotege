@@ -790,5 +790,10 @@ public class ProjectModule {
     EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndexImpl(EntitiesInProjectSignatureIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+        return impl;
+    }
 }
 
