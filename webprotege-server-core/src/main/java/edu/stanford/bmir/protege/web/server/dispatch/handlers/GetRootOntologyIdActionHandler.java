@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdResult;
@@ -29,16 +30,16 @@ public class GetRootOntologyIdActionHandler extends AbstractProjectActionHandler
     private final ProjectId projectId;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
 
 
     @Inject
     public GetRootOntologyIdActionHandler(@Nonnull AccessManager accessManager,
                                           @Nonnull ProjectId projectId,
-                                          @Nonnull @RootOntology OWLOntology rootOntology) {
+                                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         super(accessManager);
         this.projectId = projectId;
-        this.rootOntology = rootOntology;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     /**
@@ -68,7 +69,7 @@ public class GetRootOntologyIdActionHandler extends AbstractProjectActionHandler
     @Nonnull
     @Override
     public GetRootOntologyIdResult execute(@Nonnull GetRootOntologyIdAction action, @Nonnull ExecutionContext executionContext) {
-        final OWLOntologyID result = rootOntology.getOntologyID();
-        return new GetRootOntologyIdResult(projectId, result);
+        var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        return new GetRootOntologyIdResult(projectId, ontologyId);
     }
 }
