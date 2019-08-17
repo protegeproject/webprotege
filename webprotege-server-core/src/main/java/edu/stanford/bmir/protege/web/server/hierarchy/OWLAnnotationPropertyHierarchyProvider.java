@@ -2,23 +2,21 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
 import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
@@ -36,18 +34,36 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
     private final ProjectId projectId;
 
-    private final OWLOntology rootOntology;
-
     private final Set<OWLAnnotationProperty> roots;
 
     private final OWLAnnotationPropertyProvider annotationPropertyProvider;
 
+    private final ProjectSignatureByTypeIndex projectSignatureByTypeIndex;
+
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    private final SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyAxioms;
+
+    private final SubAnnotationPropertyAxiomsBySuperPropertyIndex subAnnotationPropertyAxiomsBySuperPropertyIndex;
+
+    private final EntitiesInProjectSignatureIndex entitiesInSignature;
+
 
     @Inject
-    public OWLAnnotationPropertyHierarchyProvider(ProjectId projectId, @RootOntology OWLOntology rootOntology, OWLAnnotationPropertyProvider annotationPropertyProvider) {
+    public OWLAnnotationPropertyHierarchyProvider(ProjectId projectId,
+                                                  OWLAnnotationPropertyProvider annotationPropertyProvider,
+                                                  ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
+                                                  ProjectOntologiesIndex projectOntologiesIndex,
+                                                  SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyAxioms,
+                                                  SubAnnotationPropertyAxiomsBySuperPropertyIndex subAnnotationPropertyAxiomsBySuperPropertyIndex,
+                                                  EntitiesInProjectSignatureIndex entitiesInSignature) {
         this.projectId = projectId;
+        this.projectSignatureByTypeIndex = projectSignatureByTypeIndex;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.subAnnotationPropertyAxioms = subAnnotationPropertyAxioms;
+        this.subAnnotationPropertyAxiomsBySuperPropertyIndex = subAnnotationPropertyAxiomsBySuperPropertyIndex;
+        this.entitiesInSignature = entitiesInSignature;
         this.roots = new HashSet<>();
-        this.rootOntology = rootOntology;
         this.annotationPropertyProvider = annotationPropertyProvider;
         rebuildRoots();
         fireHierarchyChanged();
@@ -57,29 +73,17 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
         return Collections.unmodifiableSet(roots);
     }
 
-    private Collection<OWLOntology> getOntologies() {
-        return rootOntology.getImportsClosure();
-    }
-
     public boolean containsReference(OWLAnnotationProperty object) {
-        return rootOntology.containsEntityInSignature(object, Imports.INCLUDED);
+        return entitiesInSignature.containsEntityInSignature(object);
     }
 
 
     public Set<OWLAnnotationProperty> getChildren(OWLAnnotationProperty object) {
-        Set<OWLAnnotationProperty> result = new HashSet<>();
-        for (OWLOntology ont : getOntologies()) {
-            for (OWLSubAnnotationPropertyOfAxiom ax : ont.getAxioms(AxiomType.SUB_ANNOTATION_PROPERTY_OF)) {
-                if (ax.getSuperProperty().equals(object)){
-                    OWLAnnotationProperty subProp = ax.getSubProperty();
-                    // prevent cycles
-                    if (!getAncestors(subProp).contains(subProp)) {
-                        result.add(subProp);
-                    }
-                }
-            }
-        }
-        return result;
+        return projectOntologiesIndex.getOntologyIds()
+                              .flatMap(ontId -> subAnnotationPropertyAxiomsBySuperPropertyIndex.getAxiomsForSuperProperty(object, ontId))
+                              .map(OWLSubAnnotationPropertyOfAxiom::getSubProperty)
+                              .filter(prop -> !getAncestors(prop).contains(prop))
+                              .collect(toImmutableSet());
     }
 
 
@@ -99,16 +103,10 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public Set<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
-        Set<OWLAnnotationProperty> result = new HashSet<>();
-        for (OWLOntology ont : getOntologies()) {
-            for (OWLSubAnnotationPropertyOfAxiom ax : ont.getSubAnnotationPropertyOfAxioms(object)){
-                if (ax.getSubProperty().equals(object)){
-                    OWLAnnotationProperty superProp = ax.getSuperProperty();
-                    result.add(superProp);
-                }
-            }
-        }
-        return result;
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> subAnnotationPropertyAxioms.getSubPropertyOfAxioms(object, ontId))
+                                     .map(OWLSubAnnotationPropertyOfAxiom::getSuperProperty)
+                                     .collect(toImmutableSet());
     }
 
 
@@ -182,8 +180,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
         roots.clear();
         logger.info("{} Rebuilding annotation property hierarchy", projectId);
         Stopwatch stopwatch = Stopwatch.createStarted();
-        Collection<OWLAnnotationProperty> annotationProperties = rootOntology.getAnnotationPropertiesInSignature(Imports.INCLUDED);
-        annotationProperties.stream()
+        projectSignatureByTypeIndex.getSignature(EntityType.ANNOTATION_PROPERTY)
                             .filter(this::isRoot)
                             .forEach(roots::add);
         OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS.stream()
