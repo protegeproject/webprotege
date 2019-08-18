@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -90,17 +91,19 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         var parsedIRI = new IRIParser().parseIRI(suppliedName);
         final IRI entityIRI;
         final OWLLiteral labellingLiteral;
+        var dictionaryLanguage = context.getDictionaryLanguage();
         if(parsedIRI.isPresent()) {
             entityIRI = parsedIRI.get();
-            labellingLiteral = getLabellingLiteral(entityIRI.toString(), langTag, context);
+            labellingLiteral = getLabellingLiteral(entityIRI.toString(), langTag, dictionaryLanguage);
         }
         else {
-            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, context.getPrefixedNameExpander());
-            labellingLiteral = getLabellingLiteral(suppliedName, langTag, context);
+            var prefixedNameExpander = context.getPrefixedNameExpander();
+            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, prefixedNameExpander);
+            labellingLiteral = getLabellingLiteral(suppliedName, langTag, dictionaryLanguage);
         }
         var entity = dataFactory.getOWLEntity(entityType, entityIRI);
         builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
-        var dictionaryLanguage = context.getDictionaryLanguage();
+
         var annotationPropertyIri = dictionaryLanguage.getAnnotationPropertyIri();
         if (annotationPropertyIri != null) {
             var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
@@ -127,9 +130,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
 
-    private static OWLLiteral getLabellingLiteral(String suppliedName, Optional<String> langTag, EntityCrudContext context) {
-        var dataFactory = context.getDataFactory();
-        var dictionaryLanguage = context.getDictionaryLanguage();
+    private OWLLiteral getLabellingLiteral(String suppliedName, Optional<String> langTag, DictionaryLanguage dictionaryLanguage) {
         return dataFactory.getOWLLiteral(suppliedName, langTag.orElse(dictionaryLanguage.getLang()));
     }
 
