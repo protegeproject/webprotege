@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud.obo;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
@@ -26,6 +28,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -47,13 +51,20 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     private OBOIdSuffixSettings suffixSettings;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     private final Map<UserId, Long> userId2CurrentIdMap = Maps.newHashMap();
 
     private final Map<UserId, UserIdRange> userId2RangeEndMap;
 
-    public OBOIdSuffixEntityCrudKitHandler(EntityCrudKitPrefixSettings prefixSettings, OBOIdSuffixSettings suffixSettings) {
-        this.prefixSettings = prefixSettings;
-        this.suffixSettings = suffixSettings;
+    @AutoFactory
+    public OBOIdSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                           @Nonnull OBOIdSuffixSettings suffixSettings,
+                                           @Provided @Nonnull OWLDataFactory dataFactory) {
+        this.prefixSettings = checkNotNull(prefixSettings);
+        this.suffixSettings = checkNotNull(suffixSettings);
+        this.dataFactory = dataFactory;
 
         ImmutableMap.Builder<UserId, UserIdRange> builder = ImmutableMap.builder();
         for(UserIdRange range : suffixSettings.getUserIdRanges()) {
@@ -91,7 +102,6 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     @Override
     public <E extends OWLEntity> E create(@Nonnull OBOIdSession session, @Nonnull EntityType<E> entityType, @Nonnull EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull EntityCrudContext context, @Nonnull OntologyChangeList.Builder<E> builder) {
-        OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
         final IRI iri = getNextIRI(session, targetOntology, context.getUserId());
         final E entity = dataFactory.getOWLEntity(entityType, iri);
