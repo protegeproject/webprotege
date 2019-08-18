@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
@@ -13,9 +15,12 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,21 +31,27 @@ import java.util.Optional;
 public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHandler<SuppliedNameSuffixSettings,
         ChangeSetEntityCrudSession> {
 
-    private SuppliedNameSuffixSettings suffixSettings;
+    @Nonnull
+    private final SuppliedNameSuffixSettings suffixSettings;
 
-    private EntityCrudKitPrefixSettings prefixSettings;
+    @Nonnull
+    private final EntityCrudKitPrefixSettings prefixSettings;
 
-    public SuppliedNameSuffixEntityCrudKitHandler() {
-        this(new EntityCrudKitPrefixSettings(), new SuppliedNameSuffixSettings());
-    }
+    @Nonnull
+    private final OWLDataFactory dataFactory;
 
+    @AutoFactory
+    @Inject
     public SuppliedNameSuffixEntityCrudKitHandler(
-            EntityCrudKitPrefixSettings prefixSettings,
-            SuppliedNameSuffixSettings settings) {
-        this.prefixSettings = prefixSettings;
-        this.suffixSettings = settings;
+            @Nonnull EntityCrudKitPrefixSettings prefixSettings,
+            @Nonnull SuppliedNameSuffixSettings settings,
+            @Provided  @Nonnull OWLDataFactory dataFactory) {
+        this.prefixSettings = checkNotNull(prefixSettings);
+        this.suffixSettings = checkNotNull(settings);
+        this.dataFactory = dataFactory;
     }
 
+    @Nonnull
     @Override
     public EntityCrudKitPrefixSettings getPrefixSettings() {
         return prefixSettings;
@@ -51,6 +62,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         return SuppliedNameSuffixKit.getId();
     }
 
+    @Nonnull
     @Override
     public SuppliedNameSuffixSettings getSuffixSettings() {
         return suffixSettings;
@@ -75,7 +87,6 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             @Nonnull OntologyChangeList.Builder<E> changeListBuilder) {
 
         // The supplied name can either be a fully quoted IRI, a prefixed name or some other string
-        final OWLDataFactory dataFactory = context.getDataFactory();
         final IRI iri;
         final String suppliedName = shortForm.getShortForm();
         final String label;

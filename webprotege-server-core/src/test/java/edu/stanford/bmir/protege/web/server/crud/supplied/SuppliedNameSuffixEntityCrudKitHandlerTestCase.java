@@ -26,7 +26,6 @@ import java.util.Optional;
 import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.owlThing;
 import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueAndLang.rdfsLabelWithLexicalValueAndLang;
-import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -83,7 +82,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         when(dictionaryLanguage.getLang()).thenReturn("");
-        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings);
+        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory);
     }
 
     @Test
