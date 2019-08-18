@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
 
-    private DeprecatedEntitiesIndexImpl impl;
+    private DeprecatedEntitiesByEntityIndexImpl impl;
 
     @Mock
     private ProjectOntologiesIndex projectOntologiesIndex;
@@ -44,7 +44,7 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        impl = new DeprecatedEntitiesIndexImpl(projectOntologiesIndex, annotationAssertionsIndex);
+        impl = new DeprecatedEntitiesByEntityIndexImpl(projectOntologiesIndex, annotationAssertionsIndex);
 
         when(projectOntologiesIndex.getOntologyIds())
                 .thenReturn(Stream.of(ontologyId));

@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-15
  */
-public class DeprecatedEntitiesIndexImpl implements DeprecatedEntitiesByEntityIndex {
+public class DeprecatedEntitiesByEntityIndexImpl implements DeprecatedEntitiesByEntityIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -22,8 +22,8 @@ public class DeprecatedEntitiesIndexImpl implements DeprecatedEntitiesByEntityIn
     private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Inject
-    public DeprecatedEntitiesIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                       @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
+    public DeprecatedEntitiesByEntityIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                               @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
     }
