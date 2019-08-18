@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * 2019-08-15
  */
 @ProjectSingleton
-public interface DeprecatedEntitiesIndex {
+public interface DeprecatedEntitiesByEntityIndex {
 
     boolean isDeprecated(@Nonnull OWLEntity entity);
 }

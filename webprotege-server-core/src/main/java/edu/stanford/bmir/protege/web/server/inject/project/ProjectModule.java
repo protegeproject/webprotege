@@ -726,7 +726,7 @@ public class ProjectModule {
     }
 
     @Provides
-    DeprecatedEntitiesIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesIndexImpl impl) {
+    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesIndexImpl impl) {
         return impl;
     }
 

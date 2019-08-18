@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-15
  */
-public class DeprecatedEntitiesIndexImpl implements DeprecatedEntitiesIndex {
+public class DeprecatedEntitiesIndexImpl implements DeprecatedEntitiesByEntityIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;

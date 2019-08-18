@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  * 2019-08-15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DeprecatedEntitiesIndexImpl_TestCase {
+public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
 
     private DeprecatedEntitiesIndexImpl impl;
 

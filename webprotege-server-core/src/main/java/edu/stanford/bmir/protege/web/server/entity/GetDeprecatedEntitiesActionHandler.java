@@ -3,9 +3,8 @@ package edu.stanford.bmir.protege.web.server.entity;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.index.DeprecatedEntitiesIndex;
+import edu.stanford.bmir.protege.web.server.index.DeprecatedEntitiesByEntityIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureByTypeIndex;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.GetDeprecatedEntitiesAction;
@@ -30,7 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
 public class GetDeprecatedEntitiesActionHandler extends AbstractProjectActionHandler<GetDeprecatedEntitiesAction, GetDeprecatedEntitiesResult> {
 
     @Nonnull
-    private final DeprecatedEntitiesIndex deprecatedEntitiesIndex;
+    private final DeprecatedEntitiesByEntityIndex deprecatedEntitiesByEntityIndex;
 
     @Nonnull
     private final RenderingManager renderingManager;
@@ -40,11 +39,11 @@ public class GetDeprecatedEntitiesActionHandler extends AbstractProjectActionHan
 
     @Inject
     public GetDeprecatedEntitiesActionHandler(@Nonnull AccessManager accessManager,
-                                              @Nonnull DeprecatedEntitiesIndex deprecatedEntitiesIndex,
+                                              @Nonnull DeprecatedEntitiesByEntityIndex deprecatedEntitiesByEntityIndex,
                                               @Nonnull RenderingManager renderingManager,
                                               @Nonnull ProjectSignatureByTypeIndex projectSignatureByTypeIndex) {
         super(accessManager);
-        this.deprecatedEntitiesIndex = deprecatedEntitiesIndex;
+        this.deprecatedEntitiesByEntityIndex = deprecatedEntitiesByEntityIndex;
         this.renderingManager = renderingManager;
         this.projectSignatureByTypeIndex = projectSignatureByTypeIndex;
     }
@@ -70,7 +69,7 @@ public class GetDeprecatedEntitiesActionHandler extends AbstractProjectActionHan
                 action.getEntityTypes()
                       .stream()
                       .flatMap(projectSignatureByTypeIndex::getSignature)
-                      .filter(deprecatedEntitiesIndex::isDeprecated)
+                      .filter(deprecatedEntitiesByEntityIndex::isDeprecated)
                       .map(renderingManager::getRendering)
                       .sorted()
                       .collect(toPageNumber(pageRequest.getPageNumber())
