@@ -2,8 +2,16 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.IntoSet;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
+import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
@@ -45,6 +53,7 @@ import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -794,6 +803,32 @@ public class ProjectModule {
     @Provides
     SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
         return impl;
+    }
+
+
+
+    @Provides @IntoSet
+    public EntityCrudKitPlugin<?,?,?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+    @Provides @IntoSet
+    public EntityCrudKitPlugin<?,?,?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+    @Provides @IntoSet
+    public EntityCrudKitPlugin<?,?,?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+
+
+    @Provides
+    @ProjectSingleton
+    public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
+            MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
+        return new ProjectEntityCrudKitSettingsRepository(database, converter);
     }
 }
 

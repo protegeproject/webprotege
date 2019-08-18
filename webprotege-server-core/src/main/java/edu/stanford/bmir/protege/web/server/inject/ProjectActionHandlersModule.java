@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
 import edu.stanford.bmir.protege.web.server.collection.CreateCollectionItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.collection.GetCollectionItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
@@ -54,6 +55,8 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 
@@ -587,6 +590,12 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideGetEntityDotRenderingActionHandler(GetEntityGraphActionHandler handler) {
+        return handler;
+    }
+
+
+    @Provides @IntoSet
+    public ProjectActionHandler<GetEntityCrudKitsAction, GetEntityCrudKitsResult> providesGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
         return handler;
     }
 }

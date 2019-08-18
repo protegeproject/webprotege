@@ -3,11 +3,7 @@ package edu.stanford.bmir.protege.web.client.app;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
-import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializationTask;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -30,17 +26,13 @@ public class WebProtegeInitializer {
 
     private final ReadLoggedInUserInitializationTask readLoggedInUserInitializationTask;
 
-    private final EntityCrudKitManagerInitializationTask entityCrudKitManagerInitializationTask;
-
     @Nonnull
     private final MessageBox messageBox;
 
     @Inject
     protected WebProtegeInitializer(@Nonnull ReadLoggedInUserInitializationTask readLoggedInUserInitializationTask,
-                                    @Nonnull EntityCrudKitManagerInitializationTask entityCrudKitManagerInitializationTask,
                                     @Nonnull MessageBox messageBox) {
         this.readLoggedInUserInitializationTask = readLoggedInUserInitializationTask;
-        this.entityCrudKitManagerInitializationTask = entityCrudKitManagerInitializationTask;
         this.messageBox = messageBox;
     }
 
@@ -75,7 +67,6 @@ public class WebProtegeInitializer {
      */
     private void runInitTasks(final AsyncCallback<Void> callback) {
         List<ApplicationInitManager.ApplicationInitializationTask> initTasks = new ArrayList<>();
-        initTasks.add(entityCrudKitManagerInitializationTask);
         initTasks.add(readLoggedInUserInitializationTask);
         ApplicationInitManager initManager = new ApplicationInitManager(initTasks);
         // Run the tasks and mark proper initalization on finish.

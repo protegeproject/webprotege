@@ -156,9 +156,4 @@ public class ActionHandlersModule {
     public ApplicationActionHandler providesRebuildPermissionsActionHandler(RebuildPermissionsActionHandler handler) {
         return handler;
     }
-
-    @Provides @IntoSet
-    public ApplicationActionHandler providesGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
-        return handler;
-    }
 }

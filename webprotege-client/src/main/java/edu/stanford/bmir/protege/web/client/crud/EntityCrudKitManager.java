@@ -20,11 +20,6 @@ public class EntityCrudKitManager {
     private EntityCrudKitManager() {
     }
 
-    public static EntityCrudKitManager get() {
-        return instance;
-    }
-
-
     public List<EntityCrudKit<?>> getKits() {
         return new ArrayList<EntityCrudKit<?>>(kits);
     }

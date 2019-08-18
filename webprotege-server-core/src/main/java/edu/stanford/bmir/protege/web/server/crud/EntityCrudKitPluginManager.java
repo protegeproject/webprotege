@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlu
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-@ApplicationSingleton
+@ProjectSingleton
 public class EntityCrudKitPluginManager implements HasPlugins<EntityCrudKitPlugin<?,?,?>> {
 
     private final ImmutableList<EntityCrudKitPlugin<?,?,?>> plugins;

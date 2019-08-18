@@ -25,11 +25,14 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -39,7 +42,7 @@ import java.util.Optional;
  */
 public class EntityCrudKitSettingsEditorImpl extends Composite implements EntityCrudKitSettingsEditor, HasInitialFocusable {
 
-    private final List<EntityCrudKit> descriptors;
+    private final List<EntityCrudKit> descriptors = new ArrayList<>();
 
     interface EntityCrudKitSettingsEditorImplUiBinder extends UiBinder<HTMLPanel, EntityCrudKitSettingsEditorImpl> {
 
@@ -70,8 +73,13 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         this.oboIdSuffixSettingsEditorProvider = oboIdSuffixSettingsEditorProvider;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        EntityCrudKitManager kitManager = EntityCrudKitManager.get();
-        descriptors = new ArrayList<EntityCrudKit>(kitManager.getKits());
+    }
+
+    @Override
+    public void setEntityCrudKits(@Nonnull List<EntityCrudKit<?>> crudKits) {
+        checkNotNull(crudKits);
+        descriptors.clear();
+        descriptors.addAll(crudKits);
         for (EntityCrudKit descriptor : descriptors) {
             suffixSelectorListBox.addItem(descriptor.getDisplayName());
             touchedEditors.add(Optional.empty());
