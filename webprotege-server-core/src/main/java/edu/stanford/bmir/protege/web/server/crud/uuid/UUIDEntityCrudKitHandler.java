@@ -1,18 +1,23 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.util.IdUtil;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -31,17 +36,26 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
      */
     private static final String START_CHAR = "R";
 
-    private EntityCrudKitPrefixSettings prefixSettings;
+    private final EntityCrudKitPrefixSettings prefixSettings;
 
-    private UUIDSuffixSettings suffixSettings;
+    private final UUIDSuffixSettings suffixSettings;
 
-    public UUIDEntityCrudKitHandler() {
-        this(new EntityCrudKitPrefixSettings(), new UUIDSuffixSettings());
-    }
+    @Nonnull
+    private final OWLDataFactory dataFactory;
 
-    public UUIDEntityCrudKitHandler(EntityCrudKitPrefixSettings prefixSettings, UUIDSuffixSettings uuidSuffixKitSettings) {
-        this.prefixSettings = prefixSettings;
-        this.suffixSettings = uuidSuffixKitSettings;
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesInSignature;
+
+    @AutoFactory
+    @Inject
+    public UUIDEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                    @Nonnull UUIDSuffixSettings uuidSuffixKitSettings,
+                                    @Provided OWLDataFactory dataFactory,
+                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature) {
+        this.prefixSettings = checkNotNull(prefixSettings);
+        this.suffixSettings = checkNotNull(uuidSuffixKitSettings);
+        this.dataFactory = checkNotNull(dataFactory);
+        this.entitiesInSignature = checkNotNull(entitiesInSignature);
     }
 
     @Override
@@ -71,7 +85,6 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     @Override
     public <E extends OWLEntity> E create(@Nonnull ChangeSetEntityCrudSession session, @Nonnull EntityType<E> entityType, @Nonnull final EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull final EntityCrudContext context, @Nonnull final OntologyChangeList.Builder<E> builder) {
-        OWLDataFactory dataFactory = context.getDataFactory();
         var targetOntology = context.getTargetOntology();
         var suppliedName = shortForm.getShortForm();
         var parsedIRI = new IRIParser().parseIRI(suppliedName);
@@ -82,7 +95,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
             labellingLiteral = getLabellingLiteral(entityIRI.toString(), langTag, context);
         }
         else {
-            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, targetOntology, context.getPrefixedNameExpander());
+            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, context.getPrefixedNameExpander());
             labellingLiteral = getLabellingLiteral(suppliedName, langTag, context);
         }
         var entity = dataFactory.getOWLEntity(entityType, entityIRI);
@@ -96,21 +109,18 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         return entity;
     }
 
-    private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
+    private IRI getIRI(String prefix, String suppliedName, PrefixedNameExpander prefixedNameExpander) {
         var expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
-        return expandedPrefixName.orElseGet(() -> createIRI(prefix, ontology));
+        return expandedPrefixName.orElseGet(() -> createIRI(prefix));
     }
 
 
-    private static IRI createIRI(String base, OWLOntology ontology) {
+    private IRI createIRI(String base) {
         while (true) {
             var base62Fragment = IdUtil.getBase62UUID();
-            var sb = new StringBuilder();
-            sb.append(base);
-            sb.append(START_CHAR);
-            sb.append(base62Fragment);
-            var iri = IRI.create(sb.toString());
-            if(!ontology.containsEntityInSignature(iri)) {
+            var iri = IRI.create(base + START_CHAR + base62Fragment);
+            var inSig = entitiesInSignature.getEntityInSignature(iri).limit(1).count() == 1;
+            if(!inSig) {
                 return iri;
             }
         }
