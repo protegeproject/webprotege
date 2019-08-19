@@ -78,7 +78,6 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Before
     public void setUp() throws Exception {
         when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
-        when(crudContext.getDataFactory()).thenReturn(dataFactory);
         when(crudContext.getTargetOntology()).thenReturn(ontology);
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(dictionaryLanguage.getLang()).thenReturn("en");

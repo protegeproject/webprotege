@@ -64,8 +64,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
 
     protected WhiteSpaceTreatment whiteSpaceTreatment = WhiteSpaceTreatment.TRANSFORM_TO_CAMEL_CASE;
 
-    private OWLDataFactoryImpl dataFactory;
-
     private SuppliedNameSuffixEntityCrudKitHandler handler;
 
     @Mock
@@ -73,10 +71,9 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
 
     @Before
     public void setUp() throws Exception {
-        dataFactory = new OWLDataFactoryImpl();
+        OWLDataFactoryImpl dataFactory = new OWLDataFactoryImpl();
         when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
         when(suffixSettings.getWhiteSpaceTreatment()).thenReturn(whiteSpaceTreatment);
-        when(crudContext.getDataFactory()).thenReturn(dataFactory);
         when(crudContext.getTargetOntology()).thenReturn(ontology);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
@@ -92,7 +89,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, (Matcher) hasItem(is(declarationFor(cls))));
+        assertThat(addedAxioms, hasItem(is(declarationFor(cls))));
     }
 
     @Test
@@ -133,6 +130,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         ArgumentCaptor<OWLAnnotationAssertionAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLAnnotationAssertionAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLAnnotationAssertionAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, (Matcher) hasItem(rdfsLabelWithLexicalValueAndLang(label, lang)));
+        assertThat(addedAxioms, hasItem(rdfsLabelWithLexicalValueAndLang(label, lang)));
     }
 }
