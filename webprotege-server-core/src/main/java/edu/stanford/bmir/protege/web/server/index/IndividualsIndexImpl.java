@@ -1,10 +1,7 @@
-package edu.stanford.bmir.protege.web.server.individuals;
+package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
-import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectSignatureByTypeIndex;
+import edu.stanford.bmir.protege.web.server.individuals.IndividualsQueryResult;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.Scanner;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
