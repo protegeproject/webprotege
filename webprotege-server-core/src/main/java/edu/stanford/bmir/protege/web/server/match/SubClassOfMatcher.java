@@ -8,7 +8,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-
 import java.util.HashSet;
 import java.util.Set;
 

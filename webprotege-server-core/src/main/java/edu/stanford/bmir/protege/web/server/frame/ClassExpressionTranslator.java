@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.frame.*;

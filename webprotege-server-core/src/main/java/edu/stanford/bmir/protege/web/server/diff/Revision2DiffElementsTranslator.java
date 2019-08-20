@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.diff;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
 import org.semanticweb.owlapi.change.*;

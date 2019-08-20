@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

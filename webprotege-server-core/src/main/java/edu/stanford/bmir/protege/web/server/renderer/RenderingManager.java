@@ -3,7 +3,10 @@ package edu.stanford.bmir.protege.web.server.renderer;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.HighlightedEntityChecker;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.ManchesterSyntaxObjectRenderer;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -15,7 +18,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

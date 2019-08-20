@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomSubjectProvider;
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.HasIRI;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

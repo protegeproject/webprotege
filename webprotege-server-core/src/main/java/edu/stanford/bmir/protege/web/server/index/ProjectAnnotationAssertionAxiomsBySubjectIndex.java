@@ -4,7 +4,6 @@ import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**

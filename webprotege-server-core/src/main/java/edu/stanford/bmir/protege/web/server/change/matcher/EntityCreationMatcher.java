@@ -16,7 +16,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toSet;
 import static org.semanticweb.owlapi.model.EntityType.*;
 
 /**

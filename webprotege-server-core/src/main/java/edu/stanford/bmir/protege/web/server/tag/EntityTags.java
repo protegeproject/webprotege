@@ -12,9 +12,7 @@ import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.tag.EntityTags.PROJECT_ID;
-import static edu.stanford.bmir.protege.web.server.tag.EntityTags.ENTITY;
-import static edu.stanford.bmir.protege.web.server.tag.EntityTags.TAGS;
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.*;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

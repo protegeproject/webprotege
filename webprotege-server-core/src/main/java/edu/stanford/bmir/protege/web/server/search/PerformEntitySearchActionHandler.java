@@ -3,17 +3,12 @@ package edu.stanford.bmir.protege.web.server.search;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
-import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -1,19 +1,13 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
-import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectClassAssertionAxiomsByIndividualIndex;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.search.EntitySearcher;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 

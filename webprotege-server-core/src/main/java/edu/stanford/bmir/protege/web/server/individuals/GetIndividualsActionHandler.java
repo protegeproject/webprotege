@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;

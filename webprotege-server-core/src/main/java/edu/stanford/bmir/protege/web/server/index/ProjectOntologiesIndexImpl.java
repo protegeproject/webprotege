@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.checkerframework.checker.nullness.Opt;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -12,8 +12,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.util.EntityDeleter;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.util.OWLEntityRemover;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

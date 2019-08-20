@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.model.UnknownOWLOntologyException;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

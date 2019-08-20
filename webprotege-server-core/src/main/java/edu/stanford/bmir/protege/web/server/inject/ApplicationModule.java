@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracle;
@@ -13,7 +11,6 @@ import edu.stanford.bmir.protege.web.server.api.UserApiKeyStore;
 import edu.stanford.bmir.protege.web.server.api.UserApiKeyStoreImpl;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
-import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
@@ -38,6 +35,7 @@ import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.*;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;

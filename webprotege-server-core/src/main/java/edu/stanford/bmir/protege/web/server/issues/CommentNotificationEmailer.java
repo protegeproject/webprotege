@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.mail.CommentMessageIdGenerator;
 import edu.stanford.bmir.protege.web.server.mail.MessageHeader;

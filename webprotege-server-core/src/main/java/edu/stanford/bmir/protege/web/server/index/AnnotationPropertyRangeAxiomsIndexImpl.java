@@ -6,7 +6,6 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;

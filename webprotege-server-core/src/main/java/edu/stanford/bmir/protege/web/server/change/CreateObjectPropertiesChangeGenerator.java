@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import java.util.Set;

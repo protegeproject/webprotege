@@ -13,17 +13,13 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenResult
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
-import edu.stanford.protege.gwt.graphtree.shared.graph.SuccessorMap;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Comparator;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator.alphaNumerically;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 import static java.util.Comparator.comparing;
 

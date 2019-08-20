@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.tag;
 
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.semanticweb.owlapi.model.OWLEntity;

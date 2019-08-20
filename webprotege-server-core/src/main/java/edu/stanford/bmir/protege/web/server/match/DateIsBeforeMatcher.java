@@ -1,17 +1,12 @@
 package edu.stanford.bmir.protege.web.server.match;
 
-import com.google.gwt.i18n.shared.DateTimeFormat;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 import javax.annotation.Nonnull;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.time.ZonedDateTime.parse;
 
 /**
  * Matthew Horridge

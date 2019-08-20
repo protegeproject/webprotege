@@ -5,7 +5,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.util.OWLOntologyChangeDataVisitorAdapter;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.change.*;
+import org.semanticweb.owlapi.change.AddAxiomData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
+import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
 

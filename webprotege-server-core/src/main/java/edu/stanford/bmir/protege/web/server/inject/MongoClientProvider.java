@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
-import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,11 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;

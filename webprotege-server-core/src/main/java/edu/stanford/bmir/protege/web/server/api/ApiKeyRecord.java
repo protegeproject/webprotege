@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.api.ApiKeyId;
 
 import javax.annotation.Nonnull;
-
 import java.util.Date;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

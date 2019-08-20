@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.stream.Stream;

@@ -6,12 +6,10 @@ import edu.stanford.bmir.protege.web.server.change.description.AddedSameAs;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedSameAs;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 

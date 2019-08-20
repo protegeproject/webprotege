@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -14,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.List;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 

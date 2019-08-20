@@ -9,7 +9,6 @@ import org.semanticweb.owlapi.model.parameters.OntologyCopy;
 import org.semanticweb.owlapi.util.PriorityCollection;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
