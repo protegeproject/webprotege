@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
+import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mongodb.client.MongoDatabase;
@@ -838,6 +839,11 @@ public class ProjectModule {
 
     @Provides
     IndividualsByTypeIndex provideIndividualsByTypeIndex(IndividualsByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInOntologySignatureIndex provideEntitiesInOntologySignatureIndex(EntitiesInOntologySignatureIndexImpl impl) {
         return impl;
     }
 }
