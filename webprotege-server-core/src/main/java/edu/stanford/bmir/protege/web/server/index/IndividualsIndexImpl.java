@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.individuals.IndividualRendering;
 import edu.stanford.bmir.protege.web.server.individuals.IndividualsQueryResult;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.Scanner;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
-import edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator;
 import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
@@ -40,12 +40,6 @@ public class IndividualsIndexImpl implements IndividualsIndex {
     private final ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividual;
 
     @Nonnull
-    private final ClassAssertionAxiomsByClassIndex classAssertionAxiomsByClass;
-
-    @Nonnull
-    private final ProjectSignatureByTypeIndex projectSignatureByTypeIndex;
-
-    @Nonnull
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
@@ -54,21 +48,22 @@ public class IndividualsIndexImpl implements IndividualsIndex {
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final IndividualsByTypeIndex individualsByTypeIndex;
+
     @Inject
     public IndividualsIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                 @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividual,
-                                @Nonnull ClassAssertionAxiomsByClassIndex classAssertionAxiomsByClass,
-                                @Nonnull ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
                                 @Nonnull DictionaryManager dictionaryManager,
                                 @Nonnull ClassHierarchyProvider classHierarchyProvider,
-                                @Nonnull OWLDataFactory dataFactory) {
-        this.projectOntologiesIndex = projectOntologiesIndex;
-        this.classAssertionAxiomsByIndividual = classAssertionAxiomsByIndividual;
-        this.classAssertionAxiomsByClass = classAssertionAxiomsByClass;
-        this.projectSignatureByTypeIndex = projectSignatureByTypeIndex;
+                                @Nonnull OWLDataFactory dataFactory,
+                                @Nonnull IndividualsByTypeIndex individualsByTypeIndex) {
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.classAssertionAxiomsByIndividual = checkNotNull(classAssertionAxiomsByIndividual);
         this.dictionaryManager = checkNotNull(dictionaryManager);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
         this.dataFactory = checkNotNull(dataFactory);
+        this.individualsByTypeIndex = checkNotNull(individualsByTypeIndex);
     }
 
     @Nonnull
@@ -109,42 +104,7 @@ public class IndividualsIndexImpl implements IndividualsIndex {
      */
     private Stream<OWLNamedIndividual> getIndividualsMatching(@Nonnull OWLClass type,
                                                               @Nonnull InstanceRetrievalMode mode) {
-        if(type.isOWLThing()) {
-            if(mode == ALL_INSTANCES) {
-                // Signature
-                return getIndividualsInSignature()
-                        .distinct();
-            }
-            else {
-                return getIndividualsInSignature()
-                        .filter(this::isDirectInstanceOfOWLThing)
-                        .distinct();
-            }
-        }
-        Stream<OWLClass> direct = Stream.of(type);
-        Stream<OWLClass> ancestors;
-        if(mode == ALL_INSTANCES) {
-            // This potentially needs caching
-            ancestors = classHierarchyProvider.getDescendants(type)
-                                              .stream();
-        }
-        else {
-            ancestors = Stream.empty();
-        }
-        Stream<OWLClass> types = Stream.concat(direct, ancestors);
-        Stream<OWLNamedIndividual> individuals =
-                types.flatMap(t -> projectOntologiesIndex.getOntologyIds()
-                                                         .flatMap(ontId -> classAssertionAxiomsByClass.getClassAssertionAxioms(
-                                                                 t,
-                                                                 ontId))
-                                                         .map(OWLClassAssertionAxiom::getIndividual)
-                                                         .filter(OWLIndividual::isNamed)
-                                                         .map(OWLIndividual::asOWLNamedIndividual));
-        return individuals
-                .distinct()
-                .map(this::toIndividualRendering)
-                .sorted()
-                .map(IndividualRendering::getIndividual);
+        return individualsByTypeIndex.getIndividualsByType(type, mode);
     }
 
     private boolean matchesSearchStrings(@Nonnull OWLNamedIndividual i,
@@ -167,18 +127,6 @@ public class IndividualsIndexImpl implements IndividualsIndex {
         return new IndividualRendering(ind,
                                        dictionaryManager.getShortForm(ind)
                                                         .toLowerCase());
-    }
-
-    private Stream<OWLNamedIndividual> getIndividualsInSignature() {
-        return projectSignatureByTypeIndex.getSignature(EntityType.NAMED_INDIVIDUAL);
-    }
-
-    private boolean isDirectInstanceOfOWLThing(OWLNamedIndividual i) {
-        var types = projectOntologiesIndex.getOntologyIds()
-                              .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(i, ontId))
-                              .map(OWLClassAssertionAxiom::getClassExpression)
-                              .collect(toSet());
-        return types.isEmpty() || types.contains(dataFactory.getOWLThing());
     }
 
     @Nonnull
@@ -282,30 +230,4 @@ public class IndividualsIndexImpl implements IndividualsIndex {
                               .map(OWLClassExpression::asOWLClass);
     }
 
-    private static class IndividualRendering implements Comparable<IndividualRendering> {
-
-        private final OWLNamedIndividual individual;
-
-        private final String rendering;
-
-        private final AlphaNumericStringComparator comparator = new AlphaNumericStringComparator();
-
-        public IndividualRendering(OWLNamedIndividual individual, String rendering) {
-            this.individual = individual;
-            this.rendering = rendering;
-        }
-
-        public OWLNamedIndividual getIndividual() {
-            return individual;
-        }
-
-        public String getRendering() {
-            return rendering;
-        }
-
-        @Override
-        public int compareTo(@Nonnull IndividualRendering o) {
-            return comparator.compare(this.rendering, o.rendering);
-        }
-    }
 }

@@ -829,5 +829,16 @@ public class ProjectModule {
             MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
         return new ProjectEntityCrudKitSettingsRepository(database, converter);
     }
+
+    @Provides
+    @ProjectSingleton
+    public ClassAssertionAxiomsByClassIndex provideClassAssertionAxiomsByClassIndex(ClassAssertionAxiomsByClassIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    IndividualsByTypeIndex provideIndividualsByTypeIndex(IndividualsByTypeIndexImpl impl) {
+        return impl;
+    }
 }
 
