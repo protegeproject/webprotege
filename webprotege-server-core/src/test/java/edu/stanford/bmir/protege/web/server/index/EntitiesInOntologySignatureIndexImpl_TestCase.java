@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,6 +45,8 @@ public class EntitiesInOntologySignatureIndexImpl_TestCase {
     @Before
     public void setUp() {
         impl = new EntitiesInOntologySignatureIndexImpl(ontologyIndex);
+        when(ontologyIndex.getOntology(any()))
+                .thenAnswer(invocation -> Optional.empty());
         when(ontologyIndex.getOntology(ontologyId))
                 .thenAnswer(invocation -> Optional.of(ontology));
         when(ontology.containsEntityInSignature(entity))
