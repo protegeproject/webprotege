@@ -25,18 +25,13 @@ import javax.inject.Provider;
  */
 public class UpdateClassFrameActionHandler extends AbstractUpdateFrameHandler<UpdateClassFrameAction, ClassFrame, OWLClassData> {
 
-    @Nonnull
-    private Provider<ClassFrameTranslator> translatorProvider;
-
     @Inject
     public UpdateClassFrameActionHandler(@Nonnull AccessManager accessManager,
-                                         @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory,
                                          @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                          @Nonnull HasApplyChanges applyChanges,
-                                         @Nonnull OWLOntology rootOntology,
-                                         @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
-        super(accessManager, changeDescriptionGeneratorFactory, eventManager, applyChanges, rootOntology);
-        this.translatorProvider = translatorProvider;
+                                         @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory) {
+        super(accessManager, eventManager, applyChanges,
+              frameChangeGeneratorFactory);
     }
 
     /**
@@ -52,15 +47,5 @@ public class UpdateClassFrameActionHandler extends AbstractUpdateFrameHandler<Up
     @Override
     protected Result createResponse(ClassFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
-    }
-
-    @Override
-    protected FrameTranslator<ClassFrame, OWLClassData> createTranslator() {
-        return translatorProvider.get();
-    }
-
-    @Override
-    protected String getChangeDescription(ClassFrame from, ClassFrame to) {
-        return "Edited class";
     }
 }

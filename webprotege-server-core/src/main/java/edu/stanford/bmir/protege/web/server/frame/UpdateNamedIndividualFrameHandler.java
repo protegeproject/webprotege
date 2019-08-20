@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
-import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
@@ -11,11 +10,9 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,18 +22,12 @@ import javax.inject.Provider;
  */
 public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandler<UpdateNamedIndividualFrameAction, NamedIndividualFrame, OWLNamedIndividualData> {
 
-    @Nonnull
-    private final Provider<NamedIndividualFrameTranslator> translatorProvider;
-
     @Inject
     public UpdateNamedIndividualFrameHandler(@Nonnull AccessManager accessManager,
-                                             @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory,
                                              @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                              @Nonnull HasApplyChanges applyChanges,
-                                             @Nonnull OWLOntology rootOntology,
-                                             @Nonnull Provider<NamedIndividualFrameTranslator> translatorProvider) {
-        super(accessManager, changeDescriptionGeneratorFactory, eventManager, applyChanges, rootOntology);
-        this.translatorProvider = translatorProvider;
+                                             @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory) {
+        super(accessManager, eventManager, applyChanges, frameChangeGeneratorFactory);
     }
 
     /**
@@ -52,15 +43,5 @@ public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandle
     @Override
     protected Result createResponse(NamedIndividualFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
-    }
-
-    @Override
-    protected FrameTranslator<NamedIndividualFrame, OWLNamedIndividualData> createTranslator() {
-        return translatorProvider.get();
-    }
-
-    @Override
-    protected String getChangeDescription(NamedIndividualFrame from, NamedIndividualFrame to) {
-        return "Edited individual";
     }
 }
