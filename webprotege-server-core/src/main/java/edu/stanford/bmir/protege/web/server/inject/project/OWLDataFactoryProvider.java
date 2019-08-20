@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;

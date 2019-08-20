@@ -5,10 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge

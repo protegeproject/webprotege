@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
-import edu.stanford.bmir.protege.web.server.index.IndividualsIndexImpl;
 import edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 

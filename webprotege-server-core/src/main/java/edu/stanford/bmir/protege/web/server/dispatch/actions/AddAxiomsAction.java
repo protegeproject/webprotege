@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
 import javax.annotation.Nonnull;
-
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;

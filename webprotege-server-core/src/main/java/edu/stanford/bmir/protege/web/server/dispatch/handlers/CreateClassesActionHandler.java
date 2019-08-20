@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -21,10 +20,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;

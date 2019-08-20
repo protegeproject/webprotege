@@ -12,7 +12,6 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

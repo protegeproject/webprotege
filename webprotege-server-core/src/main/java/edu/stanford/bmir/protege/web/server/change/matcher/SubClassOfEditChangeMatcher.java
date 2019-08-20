@@ -4,7 +4,8 @@ import edu.stanford.bmir.protege.web.server.change.description.EditedRelationshi
 import edu.stanford.bmir.protege.web.server.change.description.SwitchedRelationshipProperty;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import javax.inject.Inject;
 import java.util.List;

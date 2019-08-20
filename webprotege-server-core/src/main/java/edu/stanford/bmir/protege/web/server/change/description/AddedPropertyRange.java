@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.change.description;
 
 import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.checkerframework.checker.units.qual.A;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLProperty;
 

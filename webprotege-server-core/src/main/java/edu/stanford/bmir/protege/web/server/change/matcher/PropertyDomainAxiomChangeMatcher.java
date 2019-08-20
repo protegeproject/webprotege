@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.change.description.AddedPropertyDomain;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedPropertyDomain;
-import edu.stanford.bmir.protege.web.server.change.description.RemovedPropertyRange;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLProperty;
