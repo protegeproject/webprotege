@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.events;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -17,6 +18,8 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -25,27 +28,32 @@ import java.util.stream.Collectors;
  */
 public class HighLevelEventGenerator implements EventTranslator {
 
+    @Nonnull
     private final ProjectId projectId;
 
-    private final OWLOntology rootOntology;
-
+    @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
     private final HasGetRevisionSummary hasGetRevisionSummary;
 
+    @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesByIri;
 
+    @Nonnull
+    private final EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex;
+
     @Inject
-    public HighLevelEventGenerator(ProjectId projectId,
-                                   OWLOntology rootOntology,
-                                   RenderingManager renderingManager,
-                                   EntitiesInProjectSignatureByIriIndex entitiesByIri,
-                                   HasGetRevisionSummary hasGetRevisionSummary) {
-        this.projectId = projectId;
-        this.rootOntology = rootOntology;
-        this.renderingManager = renderingManager;
-        this.entitiesByIri = entitiesByIri;
-        this.hasGetRevisionSummary = hasGetRevisionSummary;
+    public HighLevelEventGenerator(@Nonnull ProjectId projectId,
+                                   @Nonnull RenderingManager renderingManager,
+                                   @Nonnull EntitiesInProjectSignatureByIriIndex entitiesByIri,
+                                   @Nonnull HasGetRevisionSummary hasGetRevisionSummary,
+                                   @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex) {
+        this.projectId = checkNotNull(projectId);
+        this.renderingManager = checkNotNull(renderingManager);
+        this.entitiesByIri = checkNotNull(entitiesByIri);
+        this.hasGetRevisionSummary = checkNotNull(hasGetRevisionSummary);
+        this.entitiesInProjectSignatureIndex = checkNotNull(entitiesInProjectSignatureIndex);
     }
 
     @Override
@@ -97,18 +105,9 @@ public class HighLevelEventGenerator implements EventTranslator {
                 }
 
                 private void handleAxiomChange(OWLAxiom axiom) {
-                    AxiomSubjectProvider p = new AxiomSubjectProvider();
-                    OWLObject subject = p.getSubject(axiom);
-                    Set<OWLEntity> entities;
-                    if(subject instanceof IRI) {
-                        entities = entitiesByIri.getEntityInSignature((IRI) subject).collect(Collectors.toSet());
-                    }
-                    else if (subject instanceof OWLEntity) {
-                        entities = Collections.singleton((OWLEntity) subject);
-                    }
-                    else {
-                        entities = Collections.emptySet();
-                    }
+                    var axiomSubjectProvider = new AxiomSubjectProvider();
+                    var subject = axiomSubjectProvider.getSubject(axiom);
+                    var entities = getEntitiesForSubject(subject);
                     for (OWLEntity e : entities) {
                         if (!changedEntities.contains(e)) {
                             changedEntities.add(e);
@@ -153,36 +152,50 @@ public class HighLevelEventGenerator implements EventTranslator {
                         }
                     }
                 }
+
+                private Set<OWLEntity> getEntitiesForSubject(OWLObject subject) {
+                    Set<OWLEntity> entities;
+                    if(subject instanceof IRI) {
+                        entities = entitiesByIri.getEntityInSignature((IRI) subject).collect(Collectors.toSet());
+                    }
+                    else if (subject instanceof OWLEntity) {
+                        entities = Collections.singleton((OWLEntity) subject);
+                    }
+                    else {
+                        entities = Collections.emptySet();
+                    }
+                    return entities;
+                }
             });
         }
 
 
-        Set<OWLEntityData> changedEntitiesData = new HashSet<>();
-        Object subject = changes.getSubject();
+        var changedEntitiesData = new HashSet<OWLEntityData>();
+        var subject = changes.getSubject();
         if(subject instanceof OWLEntity) {
-            OWLEntity entity = (OWLEntity) subject;
-            if (rootOntology.containsEntityInSignature(entity)) {
+            var entity = (OWLEntity) subject;
+            if (entitiesInProjectSignatureIndex.containsEntityInSignature(entity)) {
                 changedEntitiesData.add(renderingManager.getRendering(entity));
             }
         }
         else if(subject instanceof OWLEntityData) {
-            OWLEntityData entityData = (OWLEntityData) subject;
-            if (rootOntology.containsEntityInSignature(entityData.getEntity())) {
+            var entityData = (OWLEntityData) subject;
+            if (entitiesInProjectSignatureIndex.containsEntityInSignature(entityData.getEntity())) {
                 changedEntitiesData.add(entityData);
             }
         }
         else if(subject instanceof Collection) {
-            Collection<?> collection = (Collection<?>) subject;
+            var collection = (Collection<?>) subject;
             collection.stream()
                       .filter(element -> element instanceof OWLEntity)
                       .map(element -> (OWLEntity) element)
-                      .filter(rootOntology::containsEntityInSignature)
+                      .filter(entitiesInProjectSignatureIndex::containsEntityInSignature)
                       .forEach(entity -> changedEntitiesData.add(renderingManager.getRendering(entity)));
 
         }
-        Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
+        var revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
         if (revisionSummary.isPresent()) {
-            ProjectEvent<?> event = new ProjectChangedEvent(projectId, revisionSummary.get(), changedEntitiesData);
+            var event = new ProjectChangedEvent(projectId, revisionSummary.get(), changedEntitiesData);
             projectEventList.add(event);
         }
     }
