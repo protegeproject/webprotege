@@ -1,38 +1,33 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
+import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectSignatureByTypeIndex;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.Scanner;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator;
-import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import edu.stanford.bmir.protege.web.server.util.Counter;
-import edu.stanford.bmir.protege.web.server.util.ProtegeStreams;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
-import org.semanticweb.owlapi.search.EntitySearcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.pagination.PageCollector.toPage;
 import static edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode.ALL_INSTANCES;
 import static edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode.DIRECT_INSTANCES;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /**
  * Matthew Horridge
@@ -41,15 +36,17 @@ import static java.util.stream.Collectors.toList;
  */
 public class IndividualsIndexImpl implements IndividualsIndex {
 
-    private final Logger logger = LoggerFactory.getLogger(IndividualsIndexImpl.class);
-
-    private final Lock lock = new ReentrantLock();
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
-    private final ProjectId projectId;
+    private final ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividual;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final ClassAssertionAxiomsByClassIndex classAssertionAxiomsByClass;
+
+    @Nonnull
+    private final ProjectSignatureByTypeIndex projectSignatureByTypeIndex;
 
     @Nonnull
     private final DictionaryManager dictionaryManager;
@@ -60,18 +57,18 @@ public class IndividualsIndexImpl implements IndividualsIndex {
     @Nonnull
     private final OWLDataFactory dataFactory;
 
-    private final SetMultimap<OWLClass, OWLClass> classAssertionClassesByAncestors = HashMultimap.create();
-
-    private final SetMultimap<OWLClass, OWLClass> ancestorsByClassAssertionClasses = HashMultimap.create();
-
-    private boolean builtIndex = false;
-
-    private boolean bound = false;
-
     @Inject
-    public IndividualsIndexImpl(@Nonnull ProjectId projectId, @Nonnull OWLOntology rootOntology, @Nonnull DictionaryManager dictionaryManager, @Nonnull ClassHierarchyProvider classHierarchyProvider, @Nonnull OWLDataFactory dataFactory) {
-        this.projectId = checkNotNull(projectId);
-        this.rootOntology = checkNotNull(rootOntology);
+    public IndividualsIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividual,
+                                @Nonnull ClassAssertionAxiomsByClassIndex classAssertionAxiomsByClass,
+                                @Nonnull ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
+                                @Nonnull DictionaryManager dictionaryManager,
+                                @Nonnull ClassHierarchyProvider classHierarchyProvider,
+                                @Nonnull OWLDataFactory dataFactory) {
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.classAssertionAxiomsByIndividual = classAssertionAxiomsByIndividual;
+        this.classAssertionAxiomsByClass = classAssertionAxiomsByClass;
+        this.projectSignatureByTypeIndex = projectSignatureByTypeIndex;
         this.dictionaryManager = checkNotNull(dictionaryManager);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
         this.dataFactory = checkNotNull(dataFactory);
@@ -110,34 +107,115 @@ public class IndividualsIndexImpl implements IndividualsIndex {
                                           mode);
     }
 
+    /**
+     * Returns a stream of distinct individuals that match the specified parameters.
+     */
+    private Stream<OWLNamedIndividual> getIndividualsMatching(@Nonnull OWLClass type,
+                                                              @Nonnull InstanceRetrievalMode mode) {
+        if(type.isOWLThing()) {
+            if(mode == ALL_INSTANCES) {
+                // Signature
+                return getIndividualsInSignature()
+                        .distinct();
+            }
+            else {
+                return getIndividualsInSignature()
+                        .filter(this::isDirectInstanceOfOWLThing)
+                        .distinct();
+            }
+        }
+        Stream<OWLClass> direct = Stream.of(type);
+        Stream<OWLClass> ancestors;
+        if(mode == ALL_INSTANCES) {
+            // This potentially needs caching
+            ancestors = classHierarchyProvider.getDescendants(type)
+                                              .stream();
+        }
+        else {
+            ancestors = Stream.empty();
+        }
+        Stream<OWLClass> types = Stream.concat(direct, ancestors);
+        Stream<OWLNamedIndividual> individuals =
+                types.flatMap(t -> projectOntologiesIndex.getOntologyIds()
+                                                         .flatMap(ontId -> classAssertionAxiomsByClass.getClassAssertionAxioms(
+                                                                 t,
+                                                                 ontId))
+                                                         .map(OWLClassAssertionAxiom::getIndividual)
+                                                         .filter(OWLIndividual::isNamed)
+                                                         .map(OWLIndividual::asOWLNamedIndividual));
+        return individuals
+                .distinct()
+                .map(this::toIndividualRendering)
+                .sorted()
+                .map(IndividualRendering::getIndividual);
+    }
+
+    private boolean matchesSearchStrings(@Nonnull OWLNamedIndividual i,
+                                         @Nonnull List<SearchString> searchStrings) {
+        if(searchStrings.isEmpty()) {
+            return true;
+        }
+        String shortForm = dictionaryManager.getShortForm(i);
+        Scanner scanner = new Scanner(shortForm, shortForm.toLowerCase());
+        for(SearchString searchString : searchStrings) {
+            int index = scanner.indexOf(searchString, 0);
+            if(index == -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private IndividualRendering toIndividualRendering(OWLNamedIndividual ind) {
+        return new IndividualRendering(ind,
+                                       dictionaryManager.getShortForm(ind)
+                                                        .toLowerCase());
+    }
+
+    private Stream<OWLNamedIndividual> getIndividualsInSignature() {
+        return projectSignatureByTypeIndex.getSignature(EntityType.NAMED_INDIVIDUAL);
+    }
+
+    private boolean isDirectInstanceOfOWLThing(OWLNamedIndividual i) {
+        var types = projectOntologiesIndex.getOntologyIds()
+                              .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(i, ontId))
+                              .map(OWLClassAssertionAxiom::getClassExpression)
+                              .collect(toSet());
+        return types.isEmpty() || types.contains(dataFactory.getOWLThing());
+    }
+
     @Nonnull
     @Override
     public IndividualsQueryResult getIndividualsPageContaining(@Nonnull OWLNamedIndividual individual,
-                                                                 @Nonnull Optional<OWLClass> preferredType,
-                                                                 @Nonnull InstanceRetrievalMode preferredMode,
-                                                                 int pageSize) {
+                                                               @Nonnull Optional<OWLClass> preferredType,
+                                                               @Nonnull InstanceRetrievalMode preferredMode,
+                                                               int pageSize) {
 
         OWLClass actualType = null;
         OWLClass matchingDirectType = null;
         OWLClass matchingIndirectType = null;
-        if (preferredType.isPresent()) {
+        if(preferredType.isPresent()) {
             // Search through class assertion axioms in order to find a matching preferred type
             OWLClass thePreferredType = preferredType.get();
-            if (!thePreferredType.isOWLThing()) {
-                for(OWLOntology ontology : rootOntology.getImportsClosure()) {
-                    for(OWLClassAssertionAxiom ax : rootOntology.getClassAssertionAxioms(individual)) {
-                        if (!ax.getClassExpression().isAnonymous()) {
-                            //
-                            OWLClass typeCls = ax.getClassExpression().asOWLClass();
-                            if(ax.getClassExpression().equals(thePreferredType)) {
-                                // Found a direct type that matches the preferred type
-                                matchingDirectType = typeCls;
-                            }
-                            else if(classHierarchyProvider.getAncestors(thePreferredType).contains(typeCls)) {
-                                // Found an indirect type of the preferred type
-                                matchingIndirectType = typeCls;
-                            }
-                        }
+            if(!thePreferredType.isOWLThing()) {
+                var types = projectOntologiesIndex.getOntologyIds()
+                                                  .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(
+                                                          individual,
+                                                          ontId))
+                                                  .map(OWLClassAssertionAxiom::getClassExpression)
+                                                  .filter(OWLClassExpression::isNamed)
+                                                  .map(OWLClassExpression::asOWLClass)
+                                                  .distinct()
+                                                  .collect(Collectors.toList());
+                for(OWLClass type : types) {
+                    // Found a direct type that matches the preferred type
+                    if(type.equals(thePreferredType)) {
+                        matchingDirectType = type;
+                    }
+                    else if(classHierarchyProvider.getAncestors(thePreferredType)
+                                                  .contains(type)) {
+                        // Found an indirect type of the preferred type
+                        matchingIndirectType = type;
                     }
                 }
             }
@@ -149,13 +227,17 @@ public class IndividualsIndexImpl implements IndividualsIndex {
             }
         }
         if(actualType == null) {
+            // No preferred type or preferred type not found
             // Try for a specific type
-            actualType = EntitySearcher.getTypes(individual, rootOntology.getImportsClosure())
-                    .stream()
-                    .filter(ClassExpression::isOWLClass)
-                    .map(ClassExpression::asOWLClass)
-                    .findFirst()
-                    .orElse(dataFactory.getOWLThing());
+            actualType = projectOntologiesIndex.getOntologyIds()
+                                               .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(
+                                                       individual,
+                                                       ontId))
+                                               .map(OWLClassAssertionAxiom::getClassExpression)
+                                               .filter(OWLClassExpression::isNamed)
+                                               .map(OWLClassExpression::asOWLClass)
+                                               .findFirst()
+                                               .orElse(dataFactory.getOWLThing());
         }
         InstanceRetrievalMode actualMode;
         if(preferredMode == ALL_INSTANCES) {
@@ -193,90 +275,14 @@ public class IndividualsIndexImpl implements IndividualsIndex {
                                           actualMode);
     }
 
-    /**
-     * Returns a stream of distinct individuals that match the specified parameters.
-     */
-    private Stream<OWLNamedIndividual> getIndividualsMatching(@Nonnull OWLClass type,
-                                                              @Nonnull InstanceRetrievalMode mode) {
-        if(type.isOWLThing()) {
-            if (mode == ALL_INSTANCES) {
-                // Signature
-                return getIndividualsInSignature()
-                        .distinct();
-            }
-            else {
-                return getIndividualsInSignature()
-                        .filter(this::isDirectInstanceOfOWLThing)
-                        .distinct();
-            }
-        }
-        Stream<OWLClass> direct = Stream.of(type);
-        Stream<OWLClass> ancestors;
-        if (mode == ALL_INSTANCES) {
-            // This potentially needs caching
-            ancestors = classHierarchyProvider.getDescendants(type).stream();
-        }
-        else {
-            ancestors = Stream.empty();
-        }
-        Stream<OWLClass> types = Stream.concat(direct, ancestors);
-        Stream<OWLNamedIndividual> individuals =
-                types.flatMap(t -> rootOntology.getImportsClosure()
-                        .stream()
-                        .flatMap(o -> o.getClassAssertionAxioms(t).stream()))
-                        .map(OWLClassAssertionAxiom::getIndividual)
-                        .filter(OWLIndividual::isNamed)
-                        .map(OWLIndividual::asOWLNamedIndividual);
-        return individuals
-                .distinct()
-                .map(this::toIndividualRendering)
-                .sorted()
-                .map(IndividualRendering::getIndividual);
-    }
-
-    private boolean isDirectInstanceOfOWLThing(OWLNamedIndividual i) {
-        Collection<OWLClassExpression> types = EntitySearcher.getTypes(i, rootOntology.getImportsClosure());
-        return types.isEmpty() || types.contains(dataFactory.getOWLThing());
-    }
-
-    private Stream<OWLNamedIndividual> getIndividualsInSignature() {
-        return rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
-    }
-
-    private static boolean isNamed(@Nonnull OWLClassExpression ce) {
-        return !ce.isAnonymous();
-    }
-
     @Nonnull
     @Override
     public Stream<OWLClass> getTypes(@Nonnull OWLNamedIndividual individual) {
-        return rootOntology.getImportsClosure()
-                .stream()
-                .flatMap(o -> o.getImportsClosure().stream())
-                .flatMap(o -> o.getClassAssertionAxioms(individual).stream())
-                .map(OWLClassAssertionAxiom::getClassExpression)
-                .filter(ce -> !ce.isAnonymous())
-                .map(OWLClassExpression::asOWLClass);
-    }
-
-    private IndividualRendering toIndividualRendering(OWLNamedIndividual ind) {
-        return new IndividualRendering(ind, dictionaryManager.getShortForm(ind).toLowerCase());
-    }
-
-    private boolean matchesSearchStrings(@Nonnull OWLNamedIndividual i,
-                                         @Nonnull List<SearchString> searchStrings) {
-        if (searchStrings.isEmpty()) {
-            return true;
-        }
-        String shortForm = dictionaryManager.getShortForm(i);
-        Scanner scanner = new Scanner(shortForm, shortForm.toLowerCase());
-        for (SearchString searchString : searchStrings) {
-            int index = scanner.indexOf(searchString, 0);
-            if (index == -1) {
-                return false;
-            }
-        }
-        return true;
+        return projectOntologiesIndex.getOntologyIds()
+                              .flatMap(ontId -> classAssertionAxiomsByIndividual.getClassAssertionAxioms(individual, ontId))
+                              .map(OWLClassAssertionAxiom::getClassExpression)
+                              .filter(OWLClassExpression::isNamed)
+                              .map(OWLClassExpression::asOWLClass);
     }
 
     private static class IndividualRendering implements Comparable<IndividualRendering> {
@@ -301,7 +307,7 @@ public class IndividualsIndexImpl implements IndividualsIndex {
         }
 
         @Override
-        public int compareTo(IndividualRendering o) {
+        public int compareTo(@Nonnull IndividualRendering o) {
             return comparator.compare(this.rendering, o.rendering);
         }
     }
