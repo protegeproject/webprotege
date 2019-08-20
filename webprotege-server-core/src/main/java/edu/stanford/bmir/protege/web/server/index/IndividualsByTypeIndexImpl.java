@@ -62,7 +62,7 @@ public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex {
     @Nonnull
     @Override
     public Stream<OWLNamedIndividual> getIndividualsByType(@Nonnull OWLClass type,
-                                                      @Nonnull InstanceRetrievalMode mode) {
+                                                           @Nonnull InstanceRetrievalMode mode) {
         if(type.isOWLThing()) {
             if(mode == ALL_INSTANCES) {
                 // Signature
@@ -70,8 +70,7 @@ public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex {
             }
             else {
                 return projectSignatureByTypeIndex.getSignature(EntityType.NAMED_INDIVIDUAL).distinct()
-                        .filter(this::isDirectInstanceOfOWLThing)
-                        .distinct();
+                                                  .filter(this::isDirectInstanceOfOWLThing);
             }
         }
         Stream<OWLClass> direct = Stream.of(type);
