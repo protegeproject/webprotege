@@ -25,6 +25,8 @@ public class EntitiesInOntologySignatureIndexImpl implements EntitiesInOntologyS
 
     @Override
     public boolean containsEntityInSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
+        checkNotNull(ontologyId);
+        checkNotNull(entity);
         return ontologyIndex.getOntology(ontologyId)
                             .stream()
                             .anyMatch(ont -> ont.containsEntityInSignature(entity));
