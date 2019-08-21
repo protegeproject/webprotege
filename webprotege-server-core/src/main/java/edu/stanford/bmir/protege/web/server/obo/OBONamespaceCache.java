@@ -1,14 +1,18 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
-import org.semanticweb.owlapi.search.EntitySearcher;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -25,7 +29,7 @@ public class OBONamespaceCache {
 
     public static final IRI OBO_NAMESPACE_IRI = Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI();
 
-    private Set<OBONamespace> namespaceCache = new HashSet<>();
+    private ImmutableSet<OBONamespace> namespaceCache = ImmutableSet.of();
 
     private ReadWriteLock READ_WRITE_LOCK = new ReentrantReadWriteLock();
 
@@ -34,61 +38,78 @@ public class OBONamespaceCache {
     private Lock WRITE_LOCK = READ_WRITE_LOCK.writeLock();
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    private OBONamespaceCache(@Nonnull OWLOntology rootOntology) {
-        this.rootOntology = rootOntology;
-    }
+    private final OntologyAnnotationsIndex ontologyAnnotationsIndex;
 
     @Nonnull
-    public static OBONamespaceCache get(@Nonnull OWLOntology rootOntology) {
-        OBONamespaceCache cache = new OBONamespaceCache(rootOntology);
-        cache.rebuildNamespaceCache();
-        return cache;
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
+    @Nonnull
+    private final AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
+
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
+
+    @AutoFactory
+    public OBONamespaceCache(@Provided @Nonnull OntologyAnnotationsIndex ontologyAnnotationsIndex,
+                              @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                              @Provided @Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex,
+                              @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                              @Provided @Nonnull OWLDataFactory dataFactory) {
+        this.ontologyAnnotationsIndex = ontologyAnnotationsIndex;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
+        this.axiomsByEntityReferenceIndex = axiomsByEntityReferenceIndex;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.dataFactory = dataFactory;
     }
 
-    private void rebuildNamespaceCache() {
-        Set<OBONamespace> namespaces = new HashSet<>();
-        for(OWLAnnotation anno : rootOntology.getAnnotations()) {
-            if(isNamespaceAnnotation(anno)) {
-                if(anno.getValue() instanceof OWLLiteral) {
-                    OWLLiteral lit = (OWLLiteral) anno.getValue();
-                    namespaces.add(new OBONamespace(lit.getLiteral()));
-                }
-            }
-        }
-        for(OWLClass cls : rootOntology.getClassesInSignature(Imports.INCLUDED)) {
-            for(OWLAnnotationAssertionAxiom ax : EntitySearcher.getAnnotationAssertionAxioms(cls, rootOntology)) {
-                if(isNamespaceAnnotationProperty(ax)) {
-                    if(ax.getValue() instanceof OWLLiteral) {
-                        OWLLiteral lit = (OWLLiteral) ax.getValue();
-                        namespaces.add(new OBONamespace(lit.getLiteral()));
-                    }
-                }
-            }
-        }
+    public void rebuildNamespaceCache() {
+        var namespacesBuilder = ImmutableSet.<OBONamespace>builder();
+        ontologyAnnotationsIndex.getOntologyAnnotations(defaultOntologyIdManager.getDefaultOntologyId())
+                                .filter(this::isNamespaceAnnotation)
+                                .filter(annotation -> annotation.getValue().isLiteral())
+                                .map(annotation -> (OWLLiteral) annotation.getValue())
+                                .map(OWLLiteral::getLiteral)
+                                .map(OBONamespace::new)
+                                .forEach(namespacesBuilder::add);
+
+        var oboNamespaceProperty = dataFactory.getOWLAnnotationProperty(OBO_NAMESPACE_IRI);
+        projectOntologiesIndex.getOntologyIds().forEach(ontologyId -> {
+            axiomsByEntityReferenceIndex.getReferencingAxioms(oboNamespaceProperty, ontologyId)
+                    .filter(OWLAnnotationAssertionAxiom.class::isInstance)
+                    .map(OWLAnnotationAssertionAxiom.class::cast)
+                    .map(OWLAnnotationAssertionAxiom::getValue)
+                    .filter(OWLLiteral.class::isInstance)
+                    .map(OWLLiteral.class::cast)
+                    .map(OWLLiteral::getLiteral)
+                    .map(OBONamespace::new)
+                    .forEach(namespacesBuilder::add);
+        });
+
         try {
             WRITE_LOCK.lock();
-            namespaceCache.clear();
-            namespaceCache.addAll(namespaces);
+            namespaceCache = namespacesBuilder.build();
         }
         finally {
             WRITE_LOCK.unlock();
         }
     }
 
-    private boolean isNamespaceAnnotationProperty(OWLAnnotationAssertionAxiom ax) {
-        return ax.getProperty().getIRI().equals(OBO_NAMESPACE_IRI);
+    private boolean isNamespaceAnnotationProperty(OWLAnnotationProperty property) {
+        return property.getIRI().equals(OBO_NAMESPACE_IRI);
     }
 
     private boolean isNamespaceAnnotation(OWLAnnotation annotation) {
-        return annotation.getProperty().getIRI().equals(OBO_NAMESPACE_IRI) || annotation.getProperty().getIRI().equals(OBO_NAMESPACE_IRI);
+        return isNamespaceAnnotationProperty(annotation.getProperty());
     }
 
     public Set<OBONamespace> getNamespaces() {
         try {
             READ_LOCK.lock();
-            return new HashSet<>(namespaceCache);
+            return namespaceCache;
         }
         finally {
             READ_LOCK.unlock();
