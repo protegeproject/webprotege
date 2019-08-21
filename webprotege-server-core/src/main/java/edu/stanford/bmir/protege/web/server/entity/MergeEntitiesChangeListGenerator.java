@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
-import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -64,9 +63,6 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     private final MergedEntityTreatment treatment;
 
     @Nonnull
-    private final MessageFormatter msgFormatter;
-
-    @Nonnull
     private final EntityDiscussionThreadRepository discussionThreadRepository;
 
     @Nonnull
@@ -75,7 +71,6 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     public MergeEntitiesChangeListGenerator(@Provided @Nonnull ProjectId projectId,
                                             @Provided @Nonnull OWLOntology rootOntology,
                                             @Provided @Nonnull OWLDataFactory dataFactory,
-                                            @Provided @Nonnull MessageFormatter msgFormatter,
                                             @Nonnull ImmutableSet<OWLEntity> sourceEntities,
                                             @Nonnull OWLEntity targetEntity,
                                             @Nonnull MergedEntityTreatment treatment,
@@ -87,7 +82,6 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
         this.sourceEntities = checkNotNull(sourceEntities);
         this.targetEntity = checkNotNull(targetEntity);
         this.treatment = checkNotNull(treatment);
-        this.msgFormatter = checkNotNull(msgFormatter);
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
         this.commitMessage = checkNotNull(commitMessage);
     }

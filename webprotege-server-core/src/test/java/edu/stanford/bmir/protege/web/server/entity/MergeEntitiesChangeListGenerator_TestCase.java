@@ -101,7 +101,6 @@ public class MergeEntitiesChangeListGenerator_TestCase {
         MergeEntitiesChangeListGenerator gen = new MergeEntitiesChangeListGenerator(projectId,
                                                     rootOntology,
                                                     dataFactory,
-                                                    msgFormatter,
                                                     sourceEntities,
                                                     targetEntity,
                                                     treatment,
