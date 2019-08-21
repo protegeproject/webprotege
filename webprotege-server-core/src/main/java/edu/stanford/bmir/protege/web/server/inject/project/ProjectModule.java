@@ -35,6 +35,8 @@ import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
+import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
+import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
@@ -880,6 +882,11 @@ public class ProjectModule {
 
     @Provides
     OntologyAxiomsIndex provideOntologyAxiomsIndex(OntologyAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TermDefinitionManager provideTermDefinitionManager(TermDefinitionManagerImpl impl) {
         return impl;
     }
 }
