@@ -1,10 +1,14 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
+import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.merge.Diff;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyID;
+
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge
@@ -18,14 +22,15 @@ public class OntologyDiffCalculator {
 
     private AxiomDiffCalculator axiomDiffCalculator;
 
+    @Inject
     public OntologyDiffCalculator(AnnotationDiffCalculator annotationDiffCalculator, AxiomDiffCalculator axiomDiffCalculator) {
         this.annotationDiffCalculator = annotationDiffCalculator;
         this.axiomDiffCalculator = axiomDiffCalculator;
     }
 
-    public OntologyDiff computeDiff(OWLOntology from, OWLOntology to) {
+    public OntologyDiff computeDiff(Ontology from, Ontology to) {
         Diff<OWLAxiom> axiomDiff = axiomDiffCalculator.computeDiff(from, to);
         Diff<OWLAnnotation> annotationDiff = annotationDiffCalculator.computeDiff(from, to);
-        return new OntologyDiff(from.getOntologyID(), to.getOntologyID(), annotationDiff, axiomDiff);
+        return new OntologyDiff(from.getOntologyId(), to.getOntologyId(), annotationDiff, axiomDiff);
     }
 }
