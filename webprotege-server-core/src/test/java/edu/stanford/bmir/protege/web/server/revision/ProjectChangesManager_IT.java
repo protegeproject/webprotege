@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxi
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.object.*;
@@ -80,29 +81,13 @@ public class ProjectChangesManager_IT {
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
         var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         var ontologyIndex = new OntologyIndexImpl(rootOntology);
+
         var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
         var projectAnnotationAssertionsIndex = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex,
                                                                                                       annotationAssertionsIndex);
         var annotationAssertionAxioms = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
-        WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
-                DefaultShortFormAnnotationPropertyIRIs.asImmutableList(), annotationAssertionAxioms,
-                () -> "",
-                new LocalNameExtractor()
-        );
-        WebProtegeShortFormProvider webProtegeShortFormProvider = new WebProtegeShortFormProvider(iriShortFormProvider);
-        WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider = new WebProtegeOntologyIRIShortFormProvider(
-                rootOntology);
-        OWLEntityComparator entityComparator = new OWLEntityComparator(
-                webProtegeShortFormProvider
-        );
-        OWLClassExpressionSelector classExpressionSelector = new OWLClassExpressionSelector(entityComparator);
-        OWLObjectPropertyExpressionSelector objectPropertyExpressionSelector = new OWLObjectPropertyExpressionSelector(
-                entityComparator);
-        OWLDataPropertyExpressionSelector dataPropertyExpressionSelector = new OWLDataPropertyExpressionSelector(
-                entityComparator);
-        OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
-        SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
         AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl(ontologyIndex);
+
         AnnotationAssertionAxiomsIndex assertionAxiomsIndex = new AnnotationAssertionAxiomsIndexWrapperImpl(ontologiesIndex,
                                                                                                             axiomsByTypeIndex,
                                                                                                             projectAnnotationAssertionsIndex);
@@ -112,12 +97,29 @@ public class ProjectChangesManager_IT {
         var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex, ontologyIndex);
         var ontologySignatureIndex = new OntologySignatureIndexImpl(ontologyIndex);
         var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
+
+        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(projectAnnotationAssertionsIndex));
+        DictionaryManager dictionaryManager = new DictionaryManager(languageManager,
+                                                                    multilingualDictionary,
+                                                                    new BuiltInShortFormDictionary(new ShortFormCache(),
+                                                                                                   dataFactory));
+        ShortFormAdapter shortFormAdapter = new ShortFormAdapter(dictionaryManager);
+        OWLEntityComparator entityComparator = new OWLEntityComparator(
+                shortFormAdapter
+        );
+        OWLClassExpressionSelector classExpressionSelector = new OWLClassExpressionSelector(entityComparator);
+        OWLObjectPropertyExpressionSelector objectPropertyExpressionSelector = new OWLObjectPropertyExpressionSelector(
+                entityComparator);
+        OWLDataPropertyExpressionSelector dataPropertyExpressionSelector = new OWLDataPropertyExpressionSelector(
+                entityComparator);
+        OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
+        SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
         RenderingManager renderingManager = new RenderingManager(
                 new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(annotationAssertionAxioms)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
-                        webProtegeShortFormProvider,
+                        shortFormAdapter,
                         new EntityIRICheckerImpl(rootOntology),
                         LiteralStyle.BRACKETED,
                         new DefaultHttpLinkRenderer(),
@@ -144,7 +146,7 @@ public class ProjectChangesManager_IT {
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
-                                                   () -> new Revision2DiffElementsTranslator(ontologyIRIShortFormProvider, rootOntology));
+                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(rootOntology), rootOntology));
 
 
         createChanges(manager, rootOntology, dataFactory, revisionManager);
