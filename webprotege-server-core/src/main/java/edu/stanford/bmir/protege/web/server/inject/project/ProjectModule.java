@@ -257,8 +257,8 @@ public class ProjectModule {
     }
 
     @Provides
-    public IRIShortFormProvider provideIriShortFormProvider(WebProtegeIRIShortFormProvider provider) {
-        return provider;
+    public IRIShortFormProvider provideIriShortFormProvider(IriShortFormAdapter adapter) {
+        return adapter;
     }
 
     @Provides
