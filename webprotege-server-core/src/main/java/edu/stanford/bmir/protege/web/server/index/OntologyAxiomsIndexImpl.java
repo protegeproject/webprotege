@@ -27,6 +27,7 @@ public class OntologyAxiomsIndexImpl implements OntologyAxiomsIndex {
     @Nonnull
     @Override
     public Stream<OWLAxiom> getAxioms(@Nonnull OWLOntologyID ontologyId) {
+        checkNotNull(ontologyId);
         return ontologyIndex.getOntology(ontologyId)
                 .stream()
                 .flatMap(ont -> ont.getAxioms().stream());
