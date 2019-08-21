@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyCheck
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
+import edu.stanford.bmir.protege.web.server.merge.ProjectOntologiesBuilder;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
@@ -158,8 +159,22 @@ public class ProjectModule {
             SameIndividualAxiomChangeMatcher sameIndividualAxiomChangeMatcher,
             EntityCreationMatcher entityCreationMatcher,
             EntityDeletionMatcher entityDeletionMatcher) {
-        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher, propertyDomainAxiomChangeMatcher, propertyRangeAxiomChangeMatcher, editedAnnotationAssertionChangeMatcher, functionalDataPropertyAxiomChangeMatcher, classAssertionAxiomMatcher, subClassOfAxiomMatcher, classMoveChangeMatcher, subClassOfEditChangeMatcher, propertyAssertionAxiomMatcher, sameIndividualAxiomChangeMatcher, entityCreationMatcher, entityDeletionMatcher);
-        return matchers.stream().map(m -> (ChangeMatcher)m).collect(toImmutableSet());
+        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher,
+                                                        propertyDomainAxiomChangeMatcher,
+                                                        propertyRangeAxiomChangeMatcher,
+                                                        editedAnnotationAssertionChangeMatcher,
+                                                        functionalDataPropertyAxiomChangeMatcher,
+                                                        classAssertionAxiomMatcher,
+                                                        subClassOfAxiomMatcher,
+                                                        classMoveChangeMatcher,
+                                                        subClassOfEditChangeMatcher,
+                                                        propertyAssertionAxiomMatcher,
+                                                        sameIndividualAxiomChangeMatcher,
+                                                        entityCreationMatcher,
+                                                        entityDeletionMatcher);
+        return matchers.stream()
+                       .map(m -> (ChangeMatcher) m)
+                       .collect(toImmutableSet());
     }
 
     @Provides
@@ -205,12 +220,12 @@ public class ProjectModule {
     public HasGetAncestors<OWLClass> providesOWLClassAncestors(HierarchyProvider<OWLClass> hierarchyProvider) {
         return hierarchyProvider;
     }
-    
+
     @Provides
     public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(HierarchyProvider<OWLObjectProperty> hierarchyProvider) {
         return hierarchyProvider;
     }
-    
+
     @Provides
     public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(HierarchyProvider<OWLDataProperty> hierarchyProvider) {
         return hierarchyProvider;
@@ -220,7 +235,7 @@ public class ProjectModule {
     public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(HierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
         return hierarchyProvider;
     }
-    
+
     @Provides
     public WatchManager provideWatchManager(WatchManagerImpl impl) {
         // Attach it so that it listens for entity frame changed events
@@ -235,6 +250,7 @@ public class ProjectModule {
         return impl;
     }
 
+    @ProjectSingleton
     @Provides
     public ShortFormProvider provideShortFormProvider(ShortFormAdapter shortFormAdapter) {
         return shortFormAdapter;
@@ -348,7 +364,8 @@ public class ProjectModule {
     }
 
     @Provides
-    ProjectAnnotationAssertionAxiomsBySubjectIndex providesHasAnnotationAssertionAxioms(ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+    ProjectAnnotationAssertionAxiomsBySubjectIndex providesHasAnnotationAssertionAxioms(
+            ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
@@ -482,25 +499,28 @@ public class ProjectModule {
     PropertyValueSubsumptionChecker providePropertyValueSubsumptionChecker(StructuralPropertyValueSubsumptionChecker impl) {
         return impl;
     }
-    
+
     @Provides
     HasHasAncestor<OWLClass, OWLClass> provideClassClassHasAncestor(ClassClassAncestorChecker checker) {
         return checker;
     }
-    
+
     @Provides
-    HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(ObjectPropertyObjectPropertyAncestorChecker checker) {
+    HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(
+            ObjectPropertyObjectPropertyAncestorChecker checker) {
         return checker;
     }
 
 
     @Provides
-    HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(DataPropertyDataPropertyAncestorChecker checker) {
+    HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(
+            DataPropertyDataPropertyAncestorChecker checker) {
         return checker;
     }
 
     @Provides
-    HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(NamedIndividualClassAncestorChecker checker) {
+    HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(
+            NamedIndividualClassAncestorChecker checker) {
         return checker;
     }
 
@@ -577,7 +597,7 @@ public class ProjectModule {
 
     @Provides
     LiteralRenderer provideLiteralRenderer(@Nonnull
-                                           StringFormatterLiteralRendererImpl impl) {
+                                                   StringFormatterLiteralRendererImpl impl) {
         return impl;
     }
 
@@ -648,7 +668,8 @@ public class ProjectModule {
     }
 
     @Provides
-    AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+    AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
+            AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
@@ -693,7 +714,8 @@ public class ProjectModule {
     }
 
     @Provides
-    ClassAssertionAxiomsByIndividualIndex provideClassAssertionAxiomsByIndividualIndex(ClassAssertionAxiomsByIndividualIndexImpl impl) {
+    ClassAssertionAxiomsByIndividualIndex provideClassAssertionAxiomsByIndividualIndex(
+            ClassAssertionAxiomsByIndividualIndexImpl impl) {
         return impl;
     }
 
@@ -703,22 +725,26 @@ public class ProjectModule {
     }
 
     @Provides
-    ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+    ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(
+            ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
     @Provides
-    DataPropertyAssertionAxiomsBySubjectIndex provideDataPropertyAssertionAxiomsBySubjectIndex(DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+    DataPropertyAssertionAxiomsBySubjectIndex provideDataPropertyAssertionAxiomsBySubjectIndex(
+            DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
     @Provides
-    PropertyAssertionAxiomsBySubjectIndex providePropertyAssertionAxiomsBySubjectIndex(PropertyAssertionAxiomsBySubjectIndexImpl impl) {
+    PropertyAssertionAxiomsBySubjectIndex providePropertyAssertionAxiomsBySubjectIndex(
+            PropertyAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
     @Provides
-    AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(AnnotationPropertyDomainAxiomsIndexImpl impl) {
+    AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(
+            AnnotationPropertyDomainAxiomsIndexImpl impl) {
         return impl;
     }
 
@@ -728,7 +754,8 @@ public class ProjectModule {
     }
 
     @Provides
-    EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(EntitiesInProjectSignatureByIriIndexImpl impl) {
+    EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(
+            EntitiesInProjectSignatureByIriIndexImpl impl) {
         return impl;
     }
 
@@ -743,23 +770,27 @@ public class ProjectModule {
     }
 
     @Provides
-    ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
+    ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(
+            ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
         return impl;
     }
-    
+
     @Provides
-    SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
+    SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(
+            SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
         return impl;
     }
-    
-    
+
+
     @Provides
-    SubObjectPropertyAxiomsBySubPropertyIndex provideSubObjectPropertyAxiomsBySubPropertyIndex(SubObjectPropertyAxiomsBySubPropertyIndexImpl impl) {
+    SubObjectPropertyAxiomsBySubPropertyIndex provideSubObjectPropertyAxiomsBySubPropertyIndex(
+            SubObjectPropertyAxiomsBySubPropertyIndexImpl impl) {
         return impl;
     }
-    
+
     @Provides
-    SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
+    SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(
+            SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
         return impl;
     }
 
@@ -799,27 +830,29 @@ public class ProjectModule {
     }
 
     @Provides
-    SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+    SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(
+            SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
         return impl;
     }
 
 
-
-    @Provides @IntoSet
-    public EntityCrudKitPlugin<?,?,?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
+    @Provides
+    @IntoSet
+    public EntityCrudKitPlugin<?, ?, ?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
         return plugin;
     }
 
-    @Provides @IntoSet
-    public EntityCrudKitPlugin<?,?,?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
+    @Provides
+    @IntoSet
+    public EntityCrudKitPlugin<?, ?, ?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
         return plugin;
     }
 
-    @Provides @IntoSet
-    public EntityCrudKitPlugin<?,?,?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
+    @Provides
+    @IntoSet
+    public EntityCrudKitPlugin<?, ?, ?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
         return plugin;
     }
-
 
 
     @Provides
@@ -842,6 +875,11 @@ public class ProjectModule {
 
     @Provides
     EntitiesInOntologySignatureIndex provideEntitiesInOntologySignatureIndex(EntitiesInOntologySignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyAxiomsIndex provideOntologyAxiomsIndex(OntologyAxiomsIndexImpl impl) {
         return impl;
     }
 }
