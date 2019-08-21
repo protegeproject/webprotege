@@ -1,11 +1,15 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.obo.IAOVocabulary;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
-import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.obolibrary.oboformat.parser.OBOFormatConstants;
@@ -30,7 +34,7 @@ import static org.obolibrary.oboformat.parser.OBOFormatConstants.OboFormatTag.TA
  */
 public class TermDefinitionManager {
 
-    private static final OWLAnnotationValueVisitorEx<String> ANNOTATION_VALUE_TO_STRING = new OWLAnnotationValueVisitorEx<String>() {
+    private static final OWLAnnotationValueVisitorEx<String> ANNOTATION_VALUE_TO_STRING = new OWLAnnotationValueVisitorEx<>() {
         @Nonnull
         public String visit(@Nonnull IRI iri) {
             return iri.toString();
@@ -38,7 +42,8 @@ public class TermDefinitionManager {
 
         @Nonnull
         public String visit(@Nonnull OWLAnonymousIndividual individual) {
-            return individual.getID().getID();
+            return individual.getID()
+                             .getID();
         }
 
         @Nonnull
@@ -46,9 +51,6 @@ public class TermDefinitionManager {
             return literal.getLiteral();
         }
     };
-
-    @Nonnull
-    private final OWLOntology rootOntology;
 
     @Nonnull
     private final OWLDataFactory df;
@@ -65,100 +67,129 @@ public class TermDefinitionManager {
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
+
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
     @Inject
-    public TermDefinitionManager(@Nonnull OWLOntology rootOntology,
-                                 @Nonnull OWLDataFactory df,
+    public TermDefinitionManager(@Nonnull OWLDataFactory df,
                                  @Nonnull AnnotationToXRefConverter xRefConverter,
                                  @Nonnull ChangeManager changeManager,
                                  @Nonnull XRefExtractor extractor,
-                                 @Nonnull RenderingManager renderingManager) {
-        this.rootOntology = rootOntology;
+                                 @Nonnull RenderingManager renderingManager,
+                                 @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                 @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
+                                 @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                 @Nonnull OntologyChangeFactory changeFactory) {
         this.df = df;
         this.xRefConverter = xRefConverter;
         this.changeManager = changeManager;
         this.extractor = extractor;
         this.renderingManager = renderingManager;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.annotationAssertionsIndex = annotationAssertionsIndex;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
+        this.changeFactory = changeFactory;
     }
 
     @Nonnull
     public OBOTermDefinition getTermDefinition(@Nonnull OWLEntity term) {
-        if (!(term.isOWLClass())) {
-            return OBOTermDefinition.empty();
+        if(!(term.isOWLClass())) {
+            return emptyOboTermDefinition();
         }
-        OWLAnnotationAssertionAxiom definitionAnnotation = null;
-        for (OWLOntology ontology : rootOntology.getImportsClosure()) {
-            Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(term.getIRI());
-            for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxioms) {
-                OWLAnnotationProperty property = ax.getProperty();
-                if (isOBODefinitionProperty(property)) {
-                    definitionAnnotation = ax;
-                    break;
-                }
-            }
-        }
-
-        if (definitionAnnotation != null) {
-            String value = definitionAnnotation.getValue().accept(ANNOTATION_VALUE_TO_STRING);
-            List<OBOXRef> xrefs = extractor.getXRefs(definitionAnnotation);
-            return new OBOTermDefinition(xrefs, value);
-        }
-        else {
-            return OBOTermDefinition.empty();
-        }
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(term.getIRI(),
+                                                                                                     ontId))
+                                     .filter(this::isOboTermDefinitionAxiom)
+                                     .findFirst()
+                                     .map(this::toOboTermDefinition)
+                                     .orElse(emptyOboTermDefinition());
     }
 
-    public void setTermDefinition(@Nonnull UserId userId,
-                                  @Nonnull OWLEntity term,
-                                  @Nonnull OBOTermDefinition definition) {
-        List<OBOXRef> xRefs = definition.getXRefs();
-        Set<OWLAnnotation> xrefAnnotations = xRefs.stream()
-                                                  .filter(x -> !x.isEmpty())
-                                                  .map(xRefConverter::toAnnotation)
-                                                  .collect(Collectors.toSet());
+    private OBOTermDefinition emptyOboTermDefinition() {
+        return OBOTermDefinition.empty();
+    }
 
-        IRI subject = term.getIRI();
-        final IRI defIRI = getIRI(OBOFormatConstants.OboFormatTag.TAG_DEF);
-        OWLAnnotationProperty defAnnotationProperty = df.getOWLAnnotationProperty(defIRI);
-        OWLLiteral defLiteral = df.getOWLLiteral(definition.getDefinition());
-        OWLAnnotationAssertionAxiom definitionAssertion = df.getOWLAnnotationAssertionAxiom(defAnnotationProperty,
-                                                                                            subject,
-                                                                                            defLiteral,
-                                                                                            xrefAnnotations);
+    private boolean isOboTermDefinitionAxiom(OWLAnnotationAssertionAxiom ax) {
+        return isOBODefinitionProperty(ax.getProperty());
+    }
 
-        List<OWLOntologyChange> changes = new ArrayList<>();
-        for (OWLAnnotationAssertionAxiom existingAx : rootOntology.getAnnotationAssertionAxioms(subject)) {
-            if (existingAx.getProperty().getIRI().equals(defIRI)) {
-                changes.add(new RemoveAxiom(rootOntology, existingAx));
-                Set<OWLAnnotation> nonXRefAnnotations = getAxiomAnnotationsExcludingXRefs(existingAx);
-                OWLAxiom fullyAnnotatedDefinitionAssertion = definitionAssertion.getAnnotatedAxiom(nonXRefAnnotations);
-                changes.add(new AddAxiom(rootOntology, fullyAnnotatedDefinitionAssertion));
-            }
-        }
-        if (changes.isEmpty()) {
-            // New
-            changes.add(new AddAxiom(rootOntology, definitionAssertion));
-        }
-        changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes, term, "Edited the term definition for " + renderingManager
-                                           .getRendering(term)
-                                           .getBrowserText())
-        );
+    private OBOTermDefinition toOboTermDefinition(OWLAnnotationAssertionAxiom ax) {
+        var definition = ax.getValue()
+                           .accept(ANNOTATION_VALUE_TO_STRING);
+        var xrefs = extractor.getXRefs(ax);
+        return new OBOTermDefinition(xrefs, definition);
     }
 
     private boolean isOBODefinitionProperty(OWLAnnotationProperty property) {
         IRI propertyIRI = property.getIRI();
-        IRI defIRI = Obo2OWLConstants.getVocabularyObj(TAG_DEF.getTag()).getIRI();
-        if (propertyIRI.equals(defIRI)) {
+        IRI defIRI = Obo2OWLConstants.getVocabularyObj(TAG_DEF.getTag())
+                                     .getIRI();
+        if(propertyIRI.equals(defIRI)) {
             return true;
         }
         String fragment = propertyIRI.getFragment();
         return fragment.endsWith(IAOVocabulary.DEFINITION.getSuffix());
     }
 
+    public void setTermDefinition(@Nonnull UserId userId,
+                                  @Nonnull OWLEntity term,
+                                  @Nonnull OBOTermDefinition definition) {
+        var xRefs = definition.getXRefs();
+        var xrefsAsAnnotations = xRefs.stream()
+                                      .filter(xRef -> !xRef.isEmpty())
+                                      .map(xRefConverter::toAnnotation)
+                                      .collect(Collectors.toSet());
+
+        var subject = term.getIRI();
+        var defIRI = getIRI(OBOFormatConstants.OboFormatTag.TAG_DEF);
+        var defAnnotationProperty = df.getOWLAnnotationProperty(defIRI);
+        var defLiteral = df.getOWLLiteral(definition.getDefinition());
+        var definitionAssertion = df.getOWLAnnotationAssertionAxiom(defAnnotationProperty,
+                                                                    subject,
+                                                                    defLiteral,
+                                                                    xrefsAsAnnotations);
+
+        List<OWLOntologyChange> changes = new ArrayList<>();
+        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+            annotationAssertionsIndex.getAxiomsForSubject(subject, ontId)
+                                     .filter(this::isOboTermDefinitionAxiom)
+                                     .forEach(ax -> {
+                                         var removeAxiom = changeFactory.createRemoveAxiom(ontId, ax);
+                                         changes.add(removeAxiom);
+                                         var nonXRefAnnotations = getAxiomAnnotationsExcludingXRefs(ax);
+                                         var allAnnotations = Sets.union(nonXRefAnnotations, xrefsAsAnnotations);
+                                         var fullyAnnotatedDefinitionAxiom = definitionAssertion.getAnnotatedAxiom(allAnnotations);
+                                         var addAxiom = changeFactory.createAddAxiom(ontId, fullyAnnotatedDefinitionAxiom);
+                                         changes.add(addAxiom);
+                                     });
+        });
+        if(changes.isEmpty()) {
+            // New
+            var ontId = defaultOntologyIdManager.getDefaultOntologyId();
+            changes.add(changeFactory.createAddAxiom(ontId, definitionAssertion));
+        }
+        changeManager.applyChanges(userId,
+                                   new FixedChangeListGenerator<>(changes,
+                                                                  term,
+                                                                  "Edited the term definition for " + renderingManager
+                                                                          .getRendering(term)
+                                                                          .getBrowserText())
+        );
+    }
+
     private Set<OWLAnnotation> getAxiomAnnotationsExcludingXRefs(OWLAnnotationAssertionAxiom existingAx) {
         Set<OWLAnnotation> annotationsToCopy = new HashSet<>();
-        for (OWLAnnotation existingAnnotation : existingAx.getAnnotations()) {
-            if (!isXRefProperty(existingAnnotation.getProperty())) {
+        for(OWLAnnotation existingAnnotation : existingAx.getAnnotations()) {
+            if(!isXRefProperty(existingAnnotation.getProperty())) {
                 annotationsToCopy.add(existingAnnotation);
             }
         }
