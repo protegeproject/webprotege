@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -32,20 +33,24 @@ public class UploadedOntologiesProcessor {
     private final File uploadsDirectory;
 
     @Nonnull
-    private final UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor;
+    private final Provider<UploadedProjectSourcesExtractor> uploadedProjectSourcesExtractorProvider;
 
     @Inject
     public UploadedOntologiesProcessor(@Nonnull @UploadsDirectory File uploadsDirectory,
-                                       @Nonnull UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor) {
+                                       @Nonnull Provider<UploadedProjectSourcesExtractor> uploadedProjectSourcesExtractorProvider) {
         this.uploadsDirectory = checkNotNull(uploadsDirectory);
-        this.uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractor;
+        this.uploadedProjectSourcesExtractorProvider = uploadedProjectSourcesExtractorProvider;
     }
 
     @Nonnull
     public Collection<Ontology> getUploadedOntologies(@Nonnull DocumentId documentId) throws OWLOntologyCreationException, IOException {
-        // TODO: Cache for a short time
+        return loadOntologies(documentId);
+    }
+
+    private Collection<Ontology> loadOntologies(@Nonnull DocumentId documentId) throws IOException, OWLOntologyCreationException {
         var manager = WebProtegeOWLManager.createOWLOntologyManager();
         var uploadedFile = new File(uploadsDirectory, documentId.getDocumentId());
+        var uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractorProvider.get();
         var rawProjectSources = uploadedProjectSourcesExtractor.extractProjectSources(uploadedFile);
         var loaderConfig = new OWLOntologyLoaderConfiguration();
         var rawProjectSourcesImporter = new RawProjectSourcesImporter(manager, loaderConfig);

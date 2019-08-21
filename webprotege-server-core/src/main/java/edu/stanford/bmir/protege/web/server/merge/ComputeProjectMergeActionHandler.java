@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.inject.project.DaggerUploadedProject
 import edu.stanford.bmir.protege.web.server.inject.project.UploadedProjectModule;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
+import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
 import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
@@ -48,7 +49,7 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
     private final LanguageManager languageManager;
 
     @Nonnull
-    private final UploadedOntologiesProcessor uploadedOntologiesProcessor;
+    private final UploadedOntologiesCache uploadedOntologiesCache;
 
     @Nonnull
     private final ProjectOntologiesBuilder projectOntologiesBuilder;
@@ -58,13 +59,13 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
                                             @Nonnull ProjectId projectId,
                                             @Nonnull Comparator<OWLAxiom> axiomComparator,
                                             @Nonnull LanguageManager languageManager,
-                                            @Nonnull UploadedOntologiesProcessor uploadedOntologiesProcessor,
+                                            @Nonnull UploadedOntologiesCache uploadedOntologiesCache,
                                             @Nonnull ProjectOntologiesBuilder projectOntologiesBuilder) {
         super(accessManager);
         this.projectId = projectId;
         this.axiomComparator = axiomComparator;
         this.languageManager = languageManager;
-        this.uploadedOntologiesProcessor = uploadedOntologiesProcessor;
+        this.uploadedOntologiesCache = uploadedOntologiesCache;
         this.projectOntologiesBuilder = projectOntologiesBuilder;
     }
 
@@ -81,7 +82,7 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
         try {
             var documentId = action.getProjectDocumentId();
 
-            var uploadedOntologies = uploadedOntologiesProcessor.getUploadedOntologies(documentId);
+            var uploadedOntologies = uploadedOntologiesCache.getUploadedOntologies(documentId);
             var projectOntologies = projectOntologiesBuilder.buildProjectOntologies();
 
             var diffs = computeDiff(uploadedOntologies, projectOntologies);

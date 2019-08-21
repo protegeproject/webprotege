@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Ticker;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -34,6 +35,8 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
+import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
+import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
@@ -305,5 +308,21 @@ public class ApplicationModule {
     @ApplicationSingleton
     long providesProjectDormantTime(WebProtegeProperties properties) {
         return properties.getProjectDormantTime();
+    }
+
+    @Provides
+    Ticker provideTicker() {
+        return Ticker.systemTicker();
+    }
+
+    @Provides
+    @ApplicationSingleton
+    UploadedOntologiesCache provideUploadedOntologiesCache(UploadedOntologiesProcessor processor,
+                                                           Ticker ticker,
+                                                           ApplicationDisposablesManager disposableObjectManager) {
+        var cache = new UploadedOntologiesCache(processor, ticker);
+        cache.start();
+        disposableObjectManager.register(cache);
+        return cache;
     }
 }
