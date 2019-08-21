@@ -30,9 +30,6 @@ import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyCheck
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
-import edu.stanford.bmir.protege.web.server.merge.ProjectOntologiesBuilder;
-import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
-import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
@@ -334,11 +331,6 @@ public class ProjectModule {
     @Provides
     @ProjectSingleton
     public RevisionStore provideRevisionStore(RevisionStoreProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    List<MetricCalculator> providesMetricsCaculator(MetricCalculatorsProvider provider) {
         return provider.get();
     }
 
