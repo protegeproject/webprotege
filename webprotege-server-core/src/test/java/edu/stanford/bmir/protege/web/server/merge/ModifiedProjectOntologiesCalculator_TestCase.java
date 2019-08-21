@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.merge;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +29,10 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     private ModifiedProjectOntologiesCalculator calculator;
 
     @Mock
-    private OWLOntology projectOntology;
+    private Ontology projectOntology;
 
     @Mock
-    private OWLOntology externalOntology;
+    private Ontology externalOntology;
 
     @Mock
     private OntologyDiffCalculator diffCalculator;
@@ -41,8 +42,8 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        ImmutableSet<OWLOntology> projectOntologies = ImmutableSet.of(projectOntology);
-        ImmutableSet<OWLOntology> externalOntologies = ImmutableSet.of(externalOntology);
+        var projectOntologies = ImmutableSet.of(projectOntology);
+        var externalOntologies = ImmutableSet.of(externalOntology);
 
         calculator = new ModifiedProjectOntologiesCalculator(projectOntologies, externalOntologies, diffCalculator);
 
@@ -52,9 +53,9 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     @Test
     public void shouldNotPerformDiffForDifferentOntologyIRIs() {
         OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.a")), Optional.absent());
-        when(projectOntology.getOntologyID()).thenReturn(projectOntologyId);
+        when(projectOntology.getOntologyId()).thenReturn(projectOntologyId);
         OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.b")), Optional.absent());
-        when(externalOntology.getOntologyID()).thenReturn(externalOntologyId);
+        when(externalOntology.getOntologyId()).thenReturn(externalOntologyId);
         assertThat(calculator.getModifiedOntologyDiffs(), is(empty()));
     }
 
@@ -62,8 +63,8 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     public void shouldPerformDiffForSameOntologyIRIs() {
         IRI commonIRI = IRI.create("http://ontology.iri");
         OWLOntologyID commonOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.absent());
-        when(projectOntology.getOntologyID()).thenReturn(commonOntologyId);
-        when(externalOntology.getOntologyID()).thenReturn(commonOntologyId);
+        when(projectOntology.getOntologyId()).thenReturn(commonOntologyId);
+        when(externalOntology.getOntologyId()).thenReturn(commonOntologyId);
 
         assertThat(calculator.getModifiedOntologyDiffs(), contains(ontologyDiff));
     }
@@ -72,17 +73,17 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     public void shouldIgnoreVersionIRI() {
         IRI commonIRI = IRI.create("http://ontology.iri");
         OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.of(IRI.create("http://version.iri.a")));
-        when(projectOntology.getOntologyID()).thenReturn(projectOntologyId);
+        when(projectOntology.getOntologyId()).thenReturn(projectOntologyId);
         OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.of(IRI.create("http://version.iri.b")));
-        when(externalOntology.getOntologyID()).thenReturn(externalOntologyId);
+        when(externalOntology.getOntologyId()).thenReturn(externalOntologyId);
 
         assertThat(calculator.getModifiedOntologyDiffs(), contains(ontologyDiff));
     }
 
     @Test
     public void shouldIgnoreAnonymousOntologies() {
-        when(projectOntology.getOntologyID()).thenReturn(new OWLOntologyID());
-        when(externalOntology.getOntologyID()).thenReturn(new OWLOntologyID());
+        when(projectOntology.getOntologyId()).thenReturn(new OWLOntologyID());
+        when(externalOntology.getOntologyId()).thenReturn(new OWLOntologyID());
         assertThat(calculator.getModifiedOntologyDiffs(), is(empty()));
     }
 }
