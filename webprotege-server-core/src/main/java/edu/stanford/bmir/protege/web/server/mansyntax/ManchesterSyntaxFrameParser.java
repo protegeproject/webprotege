@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Lists;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
@@ -13,7 +15,6 @@ import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntaxTokeniz
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
 import javax.inject.Inject;
@@ -28,22 +29,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ManchesterSyntaxFrameParser {
 
-    private final OWLOntology rootOntology;
-
     private final OWLDataFactory dataFactory;
 
     private final OWLOntologyChecker ontologyChecker;
 
     private final DictionaryManager dictionaryManager;
 
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
     @Inject
-    public ManchesterSyntaxFrameParser(@RootOntology OWLOntology rootOntology,
-                                       OWLOntologyChecker ontologyChecker,
-                                       OWLDataFactory dataFactory, DictionaryManager dictionaryManager) {
+    public ManchesterSyntaxFrameParser(OWLOntologyChecker ontologyChecker,
+                                       OWLDataFactory dataFactory,
+                                       DictionaryManager dictionaryManager,
+                                       DefaultOntologyIdManager defaultOntologyIdManager) {
         this.dictionaryManager = checkNotNull(dictionaryManager);
         this.ontologyChecker = ontologyChecker;
         this.dataFactory = dataFactory;
-        this.rootOntology = rootOntology;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     public Set<OntologyAxiomPair> parse(String syntax, HasFreshEntities hasFreshEntities) throws ParserException {
@@ -53,7 +55,8 @@ public class ManchesterSyntaxFrameParser {
         );
         ManchesterOWLSyntaxFramesParser parser = new ManchesterOWLSyntaxFramesParser(dataFactory, entityChecker);
         parser.setOWLOntologyChecker(ontologyChecker);
-        parser.setDefaultOntology(rootOntology);
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        parser.setDefaultOntology(new ShellOwlOntology(defaultOntologyId));
         return parser.parse(syntax);
     }
 
