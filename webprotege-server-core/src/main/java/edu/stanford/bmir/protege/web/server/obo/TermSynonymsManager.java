@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonymScope;
@@ -12,11 +15,13 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static edu.stanford.bmir.protege.web.server.obo.OboUtil.getIRI;
 import static edu.stanford.bmir.protege.web.server.obo.OboUtil.getStringValue;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -24,10 +29,6 @@ import static edu.stanford.bmir.protege.web.server.obo.OboUtil.getStringValue;
  * 22 Jun 2017
  */
 public class TermSynonymsManager {
-
-
-    @Nonnull
-    private final OWLOntology rootOntology;
 
     @Nonnull
     private final OWLDataFactory df;
@@ -41,62 +42,118 @@ public class TermSynonymsManager {
     @Nonnull
     private final ChangeManager changeManager;
 
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
 
     @Inject
-    public TermSynonymsManager(@Nonnull OWLOntology rootOntology,
-                               @Nonnull OWLDataFactory df,
+    public TermSynonymsManager(@Nonnull OWLDataFactory df,
                                @Nonnull AnnotationToXRefConverter xRefConverter,
                                @Nonnull XRefExtractor xRefExtractor,
-                               @Nonnull ChangeManager changeManager) {
-        this.rootOntology = rootOntology;
+                               @Nonnull ChangeManager changeManager,
+                               @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                               @Nonnull OntologyChangeFactory changeFactory,
+                               @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
         this.df = df;
         this.xRefConverter = xRefConverter;
         this.xRefExtractor = xRefExtractor;
         this.changeManager = changeManager;
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.changeFactory = changeFactory;
+        this.annotationAssertionsIndex = annotationAssertionsIndex;
     }
 
     public Collection<OBOTermSynonym> getSynonyms(OWLEntity term) {
-        Set<OBOTermSynonym> result = new HashSet<>();
-        for (OWLOntology ontology : rootOntology.getImportsClosure()) {
-            Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(term.getIRI());
-            for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxioms) {
-                OBOTermSynonymScope synonymScope = getSynonymScope(ax);
-                if (synonymScope != null) {
-                    OBOTermSynonym termSynonym = new OBOTermSynonym(xRefExtractor.getXRefs(ax),
-                                                                    getStringValue(ax),
-                                                                    synonymScope);
-                    result.add(termSynonym);
-                }
+        var subject = term.getIRI();
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(subject, ontId))
+                                     .filter(ax -> getSynonymScope(ax) != null)
+                                     .map(ax -> new OBOTermSynonym(xRefExtractor.getXRefs(ax),
+                                                                   getStringValue(ax),
+                                                                   getSynonymScope(ax)))
+                                     .collect(toSet());
+    }
 
-            }
+    @Nullable
+    private OBOTermSynonymScope getSynonymScope(OWLAnnotationAssertionAxiom ax) {
+        IRI iri = ax.getProperty()
+                    .getIRI();
+
+        if(isExactSynonymIRI(iri)) {
+            return OBOTermSynonymScope.EXACT;
+        }
+        else if(isRelatedSynonymIRI(iri)) {
+            return OBOTermSynonymScope.RELATED;
+        }
+        else if(isNarrowSynonymIRI(iri)) {
+            return OBOTermSynonymScope.NARROWER;
+        }
+        else if(isBroadSynonymIRI(iri)) {
+            return OBOTermSynonymScope.BROADER;
+        }
+        else {
+            return null;
         }
 
-        return result;
+    }
+
+    private boolean isExactSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_EXACT);
+    }
+
+    private boolean isRelatedSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_RELATED);
+    }
+
+    private boolean isNarrowSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_NARROW);
+    }
+
+    private boolean isBroadSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_BROAD);
+    }
+
+    private boolean isOBOIRI(IRI iriToCheck, OBOFormatConstants.OboFormatTag tag) {
+        final Obo2OWLConstants.Obo2OWLVocabulary obo2OWLVocab = Obo2OWLConstants.getVocabularyObj(tag.getTag());
+        return obo2OWLVocab != null && obo2OWLVocab.getIRI()
+                                                   .equals(iriToCheck);
     }
 
     public void setSynonyms(@Nonnull UserId userId,
                             @Nonnull OWLEntity term,
                             @Nonnull Collection<OBOTermSynonym> synonyms) {
-        List<OWLOntologyChange> changes = new ArrayList<>();
-        rootOntology.getAnnotationAssertionAxioms(term.getIRI()).stream()
-                .filter(ax -> getSynonymScope(ax) != null)
-                .map(ax -> new RemoveAxiom(rootOntology, ax))
-                .forEach(changes::add);
 
-        for (OBOTermSynonym synonym : synonyms) {
-            OWLAnnotationProperty synonymProperty = getSynonymAnnoationProperty(df, synonym.getScope());
-            OWLLiteral synonymNameLiteral = df.getOWLLiteral(synonym.getName());
-            Set<OWLAnnotation> synonymXRefs = synonym.getXRefs().stream()
-                    .filter(x -> !x.isEmpty())
-                    .map(xRefConverter::toAnnotation)
-                    .collect(Collectors.toSet());
-            OWLAnnotationAssertionAxiom synonymAnnotationAssertion = df.getOWLAnnotationAssertionAxiom(synonymProperty,
-                                                                                                       term.getIRI(),
-                                                                                                       synonymNameLiteral,
-                                                                                                       synonymXRefs);
-            changes.add(new AddAxiom(rootOntology, synonymAnnotationAssertion));
-        }
+        List<OWLOntologyChange> changes = new ArrayList<>();
+        var subject = term.getIRI();
+        projectOntologiesIndex.getOntologyIds()
+                              .forEach(ontId -> {
+                                  annotationAssertionsIndex.getAxiomsForSubject(subject, ontId)
+                                                           .filter(ax -> getSynonymScope(ax) != null)
+                                                           .map(ax -> changeFactory.createRemoveAxiom(ontId, ax))
+                                                           .forEach(changes::add);
+                                  for(var oboTermSynonym : synonyms) {
+                                      var synonymProperty = getSynonymAnnoationProperty(df, oboTermSynonym.getScope());
+                                      var synonymLiteral = df.getOWLLiteral(oboTermSynonym.getName());
+                                      var synonymXRefs = oboTermSynonym.getXRefs()
+                                                                .stream()
+                                                                .filter(x -> !x.isEmpty())
+                                                                .map(xRefConverter::toAnnotation)
+                                                                .collect(toSet());
+                                      var synonymAxiom = df.getOWLAnnotationAssertionAxiom(synonymProperty,
+                                                                                           term.getIRI(),
+                                                                                           synonymLiteral,
+                                                                                           synonymXRefs);
+                                      changes.add(changeFactory.createAddAxiom(ontId, synonymAxiom));
+                                  }
+                              });
+
         if(!changes.isEmpty()) {
             changeManager.applyChanges(userId,
                                        new FixedChangeListGenerator<>(changes, term, "Edited term synonyms")
@@ -105,7 +162,7 @@ public class TermSynonymsManager {
     }
 
     public OWLAnnotationProperty getSynonymAnnoationProperty(OWLDataFactory df, OBOTermSynonymScope scope) {
-        switch (scope) {
+        switch(scope) {
             case EXACT:
                 return df.getOWLAnnotationProperty(getIRI(OBOFormatConstants.OboFormatTag.TAG_EXACT));
             case NARROWER:
@@ -117,49 +174,5 @@ public class TermSynonymsManager {
             default:
                 throw new RuntimeException("Unknown synonym scope: " + scope);
         }
-    }
-
-
-    @Nullable
-    private OBOTermSynonymScope getSynonymScope(OWLAnnotationAssertionAxiom ax) {
-        IRI iri = ax.getProperty().getIRI();
-
-        if (isExactSynonymIRI(iri)) {
-            return OBOTermSynonymScope.EXACT;
-        }
-        else if (isRelatedSynonymIRI(iri)) {
-            return OBOTermSynonymScope.RELATED;
-        }
-        else if (isNarrowSynonymIRI(iri)) {
-            return OBOTermSynonymScope.NARROWER;
-        }
-        else if (isBroadSynonymIRI(iri)) {
-            return OBOTermSynonymScope.BROADER;
-        }
-        else {
-            return null;
-        }
-
-    }
-
-    private boolean isBroadSynonymIRI(IRI iri) {
-        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_BROAD);
-    }
-
-    private boolean isNarrowSynonymIRI(IRI iri) {
-        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_NARROW);
-    }
-
-    private boolean isRelatedSynonymIRI(IRI iri) {
-        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_RELATED);
-    }
-
-    private boolean isExactSynonymIRI(IRI iri) {
-        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_EXACT);
-    }
-
-    private boolean isOBOIRI(IRI iriToCheck, OBOFormatConstants.OboFormatTag tag) {
-        final Obo2OWLConstants.Obo2OWLVocabulary obo2OWLVocab = Obo2OWLConstants.getVocabularyObj(tag.getTag());
-        return obo2OWLVocab != null && obo2OWLVocab.getIRI().equals(iriToCheck);
     }
 }
