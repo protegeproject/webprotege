@@ -1,21 +1,22 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologySignatureByTypeIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.search.EntitySearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.stream.Collectors.toSet;
 
 
 /**
@@ -24,27 +25,44 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * Bio-Health Informatics Group<br>
  * Date: 23-Jan-2007<br><br>
  */
-public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLPropertyRange, E extends OWLPropertyExpression, P extends E> extends AbstractHierarchyProvider<P> {
+public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty> extends AbstractHierarchyProvider<P> {
 
-    private static Logger logger = LoggerFactory.getLogger(AbstractOWLPropertyHierarchyProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractOWLPropertyHierarchyProvider.class);
 
+    @Nonnull
     private final ProjectId projectId;
 
-    private final OWLOntology rootOntology;
+    @Nonnull
+    private final Set<P> subPropertiesOfRoot = new HashSet<>();
 
-    private Set<P> subPropertiesOfRoot;
+    @Nonnull
+    private final P root;
 
-    private P root;
+    @Nonnull
+    private final EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex;
 
-    public AbstractOWLPropertyHierarchyProvider(ProjectId projectId, @RootOntology OWLOntology rootOntology, P root) {
-        this.projectId = projectId;
-        this.subPropertiesOfRoot = new HashSet<>();
-        this.rootOntology = rootOntology;
-        this.root = root;
-        rebuildRoots();
-        fireHierarchyChanged();
+    @Nonnull
+    private final EntityType<P> entityType;
+
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final OntologySignatureByTypeIndex ontologySignatureByTypeIndex;
+
+    public AbstractOWLPropertyHierarchyProvider(@Nonnull ProjectId projectId,
+                                                @Nonnull P root,
+                                                @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex,
+                                                @Nonnull EntityType<P> entityType,
+                                                @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                                @Nonnull OntologySignatureByTypeIndex ontologySignatureByTypeIndex) {
+        this.projectId = checkNotNull(projectId);
+        this.entitiesInProjectSignatureIndex = checkNotNull(entitiesInProjectSignatureIndex);
+        this.entityType = checkNotNull(entityType);
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.root = checkNotNull(root);
+        this.ontologySignatureByTypeIndex = checkNotNull(ontologySignatureByTypeIndex);
     }
-
 
     public void dispose() {
         super.dispose();
@@ -78,12 +96,16 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
         fireNodeChanged(getRoot());
     }
 
-
-    protected abstract Set<P> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes);
-
-    private Set<OWLOntology> getOntologies() {
-        return rootOntology.getImportsClosure();
+    private Set<P> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes) {
+        return changes.stream()
+                      .map(OWLOntologyChangeRecord::getData)
+                      .map(OWLOntologyChangeData::getSignature)
+                      .flatMap(Collection::stream)
+                      .filter(entity -> entity.isType(entityType))
+                      .map(entity -> (P) entity)
+                      .collect(toSet());
     }
+
 
     private boolean isSubPropertyOfRoot(P prop) {
 
@@ -95,11 +117,9 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
         // or if no named superproperties are asserted
         final Set<P> parents = getParents(prop);
         if (parents.isEmpty() || parents.contains(getRoot())){
-            for (OWLOntology ont : getOntologies()) {
-                if (containsReference(ont, prop)) {
+                if (containsReference(prop)) {
                     return true;
                 }
-            }
         }
         // Additional condition: If we have  P -> Q and Q -> P, then
         // there is no path to the root, so put P and Q as root properties
@@ -109,23 +129,24 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
     }
 
 
-    private void rebuildRoots() {
+    protected void rebuildRoots() {
         logger.info("{} Rebuilding {} hierarchy", projectId, getHierarchyName());
         Stopwatch stopwatch = Stopwatch.createStarted();
         subPropertiesOfRoot.clear();
-        for (OWLOntology ontology : getOntologies()) {
-            for (P prop : getReferencedProperties(ontology)) {
+        projectOntologiesIndex.getOntologyIds().forEach(ontologyId -> {
+            for (P prop : getReferencedProperties(ontologyId)) {
                 if (isSubPropertyOfRoot(prop)) {
                     subPropertiesOfRoot.add(prop);
                 }
             }
-        }
+        });
         logger.info("{} Rebuilt {} hierarchy in {} ms", projectId, getHierarchyName(), stopwatch.elapsed(MILLISECONDS));
     }
 
-
-    protected abstract boolean containsReference(OWLOntology ont, P prop);
-
+    @Override
+    public boolean containsReference(P object) {
+        return object.getEntityType().equals(entityType) && entitiesInProjectSignatureIndex.containsEntityInSignature(object);
+    }
 
     /**
      * Gets the relevant properties in the specified ontology that are contained
@@ -134,12 +155,12 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
      * ontology.
      * @param ont The ontology
      */
-    protected abstract Set<? extends P> getReferencedProperties(OWLOntology ont);
+    protected Set<? extends P> getReferencedProperties(OWLOntologyID ont) {
+        return ontologySignatureByTypeIndex.getSignature(entityType, ont).collect(toSet());
+    }
 
 
-    protected abstract Set<? extends OWLSubPropertyAxiom> getSubPropertyAxiomForRHS(P prop, OWLOntology ont);
-
-
+    @Nonnull
     protected final P getRoot() {
         return root;
     }
@@ -150,108 +171,5 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
      */
     public Set<P> getRoots() {
         return Collections.singleton(getRoot());
-    }
-
-    public boolean containsReference(P object) {
-        for (OWLOntology ont : getOntologies()) {
-            if (getReferencedProperties(ont).contains(object)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public Set<P> getChildren(P object) {
-        if (object.equals(getRoot())){
-            return Collections.unmodifiableSet(subPropertiesOfRoot);
-        }
-
-        final Set<P> result = new HashSet<>();
-        for (E subProp : EntitySearcher.getSubProperties(object, getOntologies())){
-            // Don't add the sub property if it is a parent of
-            // itself - i.e. prevent cycles
-            if (!subProp.isAnonymous() &&
-                    !getAncestors((P)subProp).contains(subProp)) {
-                result.add((P)subProp);
-            }
-        }
-        return result;
-    }
-
-
-    public Set<P> getEquivalents(P object) {
-        Set<P> result = new HashSet<>();
-        Set<P> ancestors = getAncestors(object);
-        if (ancestors.contains(object)) {
-            for (P anc : ancestors) {
-                if (getAncestors(anc).contains(object)) {
-                    result.add(anc);
-                }
-            }
-        }
-
-        for (E prop : EntitySearcher.getEquivalentProperties(object, getOntologies())) {
-            if (!prop.isAnonymous()) {
-                result.add((P)prop);
-            }
-        }
-
-        result.remove(object);
-        return result;
-    }
-
-
-    public Set<P> getParents(P object) {
-        if (object.equals(getRoot())){
-            return Collections.emptySet();
-        }
-
-        Set<P> result = new HashSet<>();
-        for (E prop : EntitySearcher.getSuperProperties(object, getOntologies())) {
-            if (!prop.isAnonymous()) {
-                result.add((P) prop);
-            }
-        }
-        if (result.isEmpty() && isReferenced(object)){
-            result.add(getRoot());
-        }
-
-        return result;
-    }
-
-
-    private boolean isReferenced(P e) {
-        return e.accept(new IsReferencePropertyExpressionVisitor());
-    }
-
-    private class IsReferencePropertyExpressionVisitor implements OWLPropertyExpressionVisitorEx<Boolean> {
-
-        public Boolean visit(OWLObjectProperty property) {
-            return isReferenced(property);
-        }
-
-        public Boolean visit(OWLObjectInverseOf property) {
-            return property.getInverse().accept(this);
-        }
-
-        public Boolean visit(OWLDataProperty property) {
-            return isReferenced(property);
-        }
-
-        @Nonnull
-        @Override
-        public Boolean visit(OWLAnnotationProperty property) {
-            return isReferenced(property);
-        }
-
-        private boolean isReferenced(OWLEntity e) {
-            for (OWLOntology ontology : getOntologies()) {
-                if (ontology.containsEntityInSignature(e)) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

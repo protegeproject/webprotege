@@ -1,17 +1,20 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toSet;
+import static org.semanticweb.owlapi.model.AxiomType.EQUIVALENT_DATA_PROPERTIES;
+import static org.semanticweb.owlapi.model.AxiomType.SUB_DATA_PROPERTY;
 
 
 /**
@@ -21,11 +24,31 @@ import java.util.Set;
  * Date: 23-Jan-2007<br><br>
  */
 @ProjectSingleton
-public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarchyProvider<OWLDataRange, OWLDataPropertyExpression, OWLDataProperty> {
+public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarchyProvider<OWLDataProperty> {
+
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
+
+    @Nonnull
+    private SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyAxiomsBySubPropertyIndex;
 
     @Inject
-    public OWLDataPropertyHierarchyProvider(ProjectId projectId, @RootOntology OWLOntology rootOntology, @DataPropertyHierarchyRoot OWLDataProperty root) {
-        super(projectId, rootOntology, root);
+    public OWLDataPropertyHierarchyProvider(ProjectId projectId,
+                                            @DataPropertyHierarchyRoot OWLDataProperty root,
+                                            @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                            @Nonnull AxiomsByTypeIndex axiomsByTypeIndex,
+                                            @Nonnull OntologySignatureByTypeIndex ontologySignatureByTypeIndex,
+                                            @Nonnull SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyAxiomsBySubPropertyIndex,
+                                            @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex) {
+        super(projectId, root, entitiesInProjectSignatureIndex, EntityType.DATA_PROPERTY, projectOntologiesIndex,
+              ontologySignatureByTypeIndex);
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
+        this.subDataPropertyAxiomsBySubPropertyIndex = checkNotNull(subDataPropertyAxiomsBySubPropertyIndex);
+        rebuildRoots();
     }
 
     @Override
@@ -33,41 +56,41 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
         return "data property";
     }
 
-    protected Set<OWLDataProperty> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes) {
-        Set<OWLDataProperty> result = new HashSet<>();
-        for (OWLOntologyChangeRecord change : changes) {
-            if (change.getData() instanceof AxiomChangeData) {
-                for (OWLEntity entity : change.getData().getSignature()) {
-                    if (entity.isOWLDataProperty()) {
-                        result.add(entity.asOWLDataProperty());
-                    }
-                }
-            }
-        }
-        return result;
+
+
+    @Override
+    public Set<OWLDataProperty> getChildren(OWLDataProperty property) {
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(SUB_DATA_PROPERTY, ontId))
+                                     .filter(ax -> ax.getSuperProperty().equals(property))
+                                     .map(OWLSubDataPropertyOfAxiom::getSubProperty)
+                                     .filter(OWLDataPropertyExpression::isNamed)
+                                     .map(OWLDataPropertyExpression::asOWLDataProperty)
+                                     .collect(toSet());
     }
 
-
-    /**
-     * Gets the relevant properties in the specified ontology that are contained
-     * within the property hierarchy.  For example, for an object property hierarchy
-     * this would constitute the set of referenced object properties in the specified
-     * ontology.
-     * @param ont The ontology
-     */
-    protected Set<? extends OWLDataProperty> getReferencedProperties(OWLOntology ont) {
-        return ont.getDataPropertiesInSignature();
+    @Override
+    public Set<OWLDataProperty> getParents(OWLDataProperty property) {
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
+                                             property,
+                                             ontId))
+                                     .map(OWLSubPropertyAxiom::getSuperProperty)
+                                     .filter(OWLDataPropertyExpression::isNamed)
+                                     .map(OWLDataPropertyExpression::asOWLDataProperty)
+                                     .collect(toSet());
     }
 
-
-    protected boolean containsReference(OWLOntology ont, OWLDataProperty prop) {
-        return ont.containsDataPropertyInSignature(prop.getIRI());
+    @Override
+    public Set<OWLDataProperty> getEquivalents(OWLDataProperty property) {
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(EQUIVALENT_DATA_PROPERTIES,
+                                                                                         ontId))
+                                     .map(OWLEquivalentDataPropertiesAxiom::getProperties)
+                                     .flatMap(Collection::stream)
+                                     .filter(OWLDataPropertyExpression::isNamed)
+                                     .filter(propertyExpression -> !propertyExpression.equals(property))
+                                     .map(OWLDataPropertyExpression::asOWLDataProperty)
+                                     .collect(toSet());
     }
-
-
-    protected Set<? extends OWLSubPropertyAxiom<OWLDataPropertyExpression>> getSubPropertyAxiomForRHS(
-            OWLDataProperty prop, OWLOntology ont) {
-        return ont.getDataSubPropertyAxiomsForSuperProperty(prop);
-    }
-
 }
