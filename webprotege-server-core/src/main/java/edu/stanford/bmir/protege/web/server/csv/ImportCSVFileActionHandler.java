@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
+import com.google.common.base.Charsets;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -71,7 +72,8 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
         try {
             CSVGridParser parser = new CSVGridParser();
             final File file = new File(uploadsDirectory, action.getDocumentId().getDocumentId());
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),
+                                                                                   Charsets.UTF_8));
             CSVGrid grid = parser.readAll(reader);
             reader.close();
             return grid;
