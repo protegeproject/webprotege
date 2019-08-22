@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,8 +24,6 @@ public class EntityCrudContext {
 
     private final ProjectId projectId;
 
-    private final OWLOntology targetOntology;
-
     private final PrefixedNameExpander prefixedNameExpander;
 
     private final UserId userId;
@@ -36,22 +34,20 @@ public class EntityCrudContext {
     @Nullable
     private DictionaryLanguage dictionaryLanguage;
 
+    @Nonnull
+    private OWLOntologyID targetOntologyId;
+
     @AutoFactory
     public EntityCrudContext(@Provided @Nonnull ProjectId projectId,
                              @Nonnull UserId userId,
-                             @Provided @Nonnull OWLOntology targetOntology,
                              @Nonnull PrefixedNameExpander prefixedNameExpander,
-                             @Provided @Nonnull ProjectDetailsRepository projectDetailsRepository) {
+                             @Provided @Nonnull ProjectDetailsRepository projectDetailsRepository,
+                             @Nonnull OWLOntologyID targetOntologyId) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
-        this.targetOntology = checkNotNull(targetOntology);
         this.prefixedNameExpander = checkNotNull(prefixedNameExpander);
         this.projectDetailsRepository = checkNotNull(projectDetailsRepository);
-    }
-
-    @Nonnull
-    public OWLOntology getTargetOntology() {
-        return targetOntology;
+        this.targetOntologyId = checkNotNull(targetOntologyId);
     }
 
     @Nonnull
@@ -62,6 +58,11 @@ public class EntityCrudContext {
     @Nonnull
     public PrefixedNameExpander getPrefixedNameExpander() {
         return prefixedNameExpander;
+    }
+
+    @Nonnull
+    public OWLOntologyID getTargetOntologyId() {
+        return targetOntologyId;
     }
 
     @Nonnull

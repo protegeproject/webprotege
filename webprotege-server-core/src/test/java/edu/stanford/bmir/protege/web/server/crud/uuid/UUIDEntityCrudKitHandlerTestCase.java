@@ -1,15 +1,18 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactoryImpl;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +26,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
@@ -75,16 +79,28 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Mock
     private EntitiesInProjectSignatureByIriIndex entitiesInSignature;
 
+    @Mock
+    private OWLOntologyID ontologyId;
+
+    private OntologyChangeFactory changeFactory;
+
+    @Mock
+    private OntologyIndex ontologyIndex;
+
     @Before
     public void setUp() throws Exception {
         when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
-        when(crudContext.getTargetOntology()).thenReturn(ontology);
+        when(crudContext.getTargetOntologyId()).thenReturn(ontologyId);
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(dictionaryLanguage.getLang()).thenReturn("en");
         when(dictionaryLanguage.getAnnotationPropertyIri()).thenReturn(annotationPropertyIri);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
-        handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
+        changeFactory = new OntologyChangeFactoryImpl(ontologyIndex);
+        when(ontologyIndex.getOntology(ontologyId))
+                .thenReturn(Optional.of(ontology));
+        handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature,
+                                               changeFactory);
         when(entitiesInSignature.getEntityInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());
     }
@@ -93,10 +109,15 @@ public class UUIDEntityCrudKitHandlerTestCase {
     public void shouldAddDeclaration() {
         when(entityShortForm.getShortForm()).thenReturn("A");
         OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
-        ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
-        verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
-        List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, hasItem(is(declarationFor(cls))));
+        var ontologyChangeCaptor = ArgumentCaptor.forClass(OWLOntologyChange.class);
+        verify(builder, atLeast(1)).add(ontologyChangeCaptor.capture());
+        var addedAxioms = ontologyChangeCaptor.getAllValues()
+                                              .stream()
+                                              .map(OWLOntologyChange::getAxiom)
+                                              .filter(ax -> ax instanceof OWLDeclarationAxiom)
+                                              .map(ax -> (OWLDeclarationAxiom) ax)
+                                              .collect(Collectors.toList());
+        assertThat(addedAxioms, hasItem(Matchers.is(declarationFor(cls))));
     }
 
     @Test
@@ -134,9 +155,11 @@ public class UUIDEntityCrudKitHandlerTestCase {
 
 
     private void verifyHasLabelEqualTo(String label, String langTag) {
-        ArgumentCaptor<OWLAnnotationAssertionAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLAnnotationAssertionAxiom.class);
-        verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
-        List<OWLAnnotationAssertionAxiom> addedAxioms = addAxiomCaptor.getAllValues();
+        var addAxiomCaptor = ArgumentCaptor.forClass(OWLOntologyChange.class);
+        verify(builder, atLeast(1)).add(addAxiomCaptor.capture());
+        List<OWLAxiom> addedAxioms = addAxiomCaptor.getAllValues().stream()
+                                                   .map(OWLOntologyChange::getAxiom)
+                                                   .collect(Collectors.toList());
         assertThat(addedAxioms, hasItem(rdfsLabelWithLexicalValueAndLang(label, langTag)));
     }
 

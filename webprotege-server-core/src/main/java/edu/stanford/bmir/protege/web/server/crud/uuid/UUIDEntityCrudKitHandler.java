@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud.uuid;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
@@ -47,16 +48,21 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesInSignature;
 
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
     @AutoFactory
     @Inject
     public UUIDEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
                                     @Nonnull UUIDSuffixSettings uuidSuffixKitSettings,
                                     @Provided OWLDataFactory dataFactory,
-                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature) {
+                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature,
+                                    @Provided @Nonnull OntologyChangeFactory changeFactory) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(uuidSuffixKitSettings);
         this.dataFactory = checkNotNull(dataFactory);
         this.entitiesInSignature = checkNotNull(entitiesInSignature);
+        this.changeFactory = checkNotNull(changeFactory);
     }
 
     @Override
@@ -86,7 +92,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     @Override
     public <E extends OWLEntity> E create(@Nonnull ChangeSetEntityCrudSession session, @Nonnull EntityType<E> entityType, @Nonnull final EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull final EntityCrudContext context, @Nonnull final OntologyChangeList.Builder<E> builder) {
-        var targetOntology = context.getTargetOntology();
+        var targetOntology = context.getTargetOntologyId();
         var suppliedName = shortForm.getShortForm();
         var parsedIRI = new IRIParser().parseIRI(suppliedName);
         final IRI entityIRI;
@@ -102,12 +108,12 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
             labellingLiteral = getLabellingLiteral(suppliedName, langTag, dictionaryLanguage);
         }
         var entity = dataFactory.getOWLEntity(entityType, entityIRI);
-        builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
+        builder.add(changeFactory.createAddAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity)));
 
         var annotationPropertyIri = dictionaryLanguage.getAnnotationPropertyIri();
         if (annotationPropertyIri != null) {
             var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.addAxiom(targetOntology, ax);
+            builder.add(changeFactory.createAddAxiom(targetOntology, ax));
         }
         return entity;
     }

@@ -185,6 +185,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final IndexUpdater indexUpdater;
 
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLOntology rootOntology,
@@ -208,7 +211,8 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,
                          @Nonnull RenameMapFactory renameMapFactory,
                          @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
-                         @Nonnull IndexUpdater indexUpdater) {
+                         @Nonnull IndexUpdater indexUpdater,
+                         @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -232,6 +236,7 @@ public class ChangeManager implements HasApplyChanges {
         this.renameMapFactory = renameMapFactory;
         this.builtInPrefixDeclarations = builtInPrefixDeclarations;
         this.indexUpdater = indexUpdater;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     /**
@@ -377,7 +382,10 @@ public class ChangeManager implements HasApplyChanges {
         builtInPrefixDeclarations.getPrefixDeclarations()
                 .forEach(decl -> prefixNameExpanderBuilder.withPrefixNamePrefix(decl.getPrefixName(), decl.getPrefix()));
         var prefixNameExpander = prefixNameExpanderBuilder.build();
-        return entityCrudContextFactory.create(userId, prefixNameExpander);
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        return entityCrudContextFactory.create(userId,
+                                               prefixNameExpander,
+                                               defaultOntologyId);
     }
 
     @SuppressWarnings("unchecked")
