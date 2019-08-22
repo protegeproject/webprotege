@@ -26,7 +26,7 @@ import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
-import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
+import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
@@ -283,7 +283,7 @@ public class ProjectModule {
     }
 
     @Provides
-    public OWLOntologyChecker provideOntologyChecker(WebProtegeOWLOntologyChecker checker) {
+    public OWLOntologyChecker provideOntologyChecker(ShellOntologyChecker checker) {
         return checker;
     }
 
