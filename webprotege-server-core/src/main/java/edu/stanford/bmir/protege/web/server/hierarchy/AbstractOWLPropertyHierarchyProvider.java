@@ -143,8 +143,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
         logger.info("{} Rebuilt {} hierarchy in {} ms", projectId, getHierarchyName(), stopwatch.elapsed(MILLISECONDS));
     }
 
-    @Override
-    public boolean containsReference(P object) {
+    protected boolean containsReference(P object) {
         return object.getEntityType().equals(entityType) && entitiesInProjectSignatureIndex.containsEntityInSignature(object);
     }
 

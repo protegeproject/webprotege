@@ -31,14 +31,4 @@ public interface HierarchyProvider<N> extends HasGetAncestors<N> {
 
 
     Set<List<N>> getPathsToRoot(N object);
-
-
-    boolean containsReference(N object);
-
-
-    void addListener(OWLObjectHierarchyProviderListener<N> listener);
-
-
-    void removeListener(OWLObjectHierarchyProviderListener<N> listener);
-
 }
