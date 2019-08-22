@@ -1,19 +1,17 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.FindAndReplaceIRIPrefixChangeGenerator;
+import edu.stanford.bmir.protege.web.server.change.FindAndReplaceIRIPrefixChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,19 +38,20 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractProjectAction
     private final HasApplyChanges changeManager;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final FindAndReplaceIRIPrefixChangeGeneratorFactory findAndReplaceIRIPrefixChangeGeneratorFactory;
 
     @Inject
     public SetEntityCrudKitSettingsActionHandler(@Nonnull AccessManager accessManager,
                                                  @Nonnull ProjectId projectId,
                                                  @Nonnull ProjectEntityCrudKitSettingsRepository repository,
                                                  @Nonnull HasApplyChanges changeManager,
-                                                 @Nonnull @RootOntology OWLOntology rootOntology) {
+                                                 @Nonnull FindAndReplaceIRIPrefixChangeGeneratorFactory findAndReplaceIRIPrefixChangeGeneratorFactory) {
         super(accessManager);
         this.projectId = projectId;
         this.repository = repository;
         this.changeManager = changeManager;
-        this.rootOntology = rootOntology;
+        this.findAndReplaceIRIPrefixChangeGeneratorFactory = findAndReplaceIRIPrefixChangeGeneratorFactory;
+
     }
 
     @Nonnull
@@ -68,13 +67,14 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractProjectAction
 
     @Nonnull
     @Override
-    public SetEntityCrudKitSettingsResult execute(@Nonnull SetEntityCrudKitSettingsAction action, @Nonnull ExecutionContext executionContext) {
-        ProjectEntityCrudKitSettings projectSettings = new ProjectEntityCrudKitSettings(projectId, action.getToSettings());
+    public SetEntityCrudKitSettingsResult execute(@Nonnull SetEntityCrudKitSettingsAction action,
+                                                  @Nonnull ExecutionContext executionContext) {
+        var projectSettings = new ProjectEntityCrudKitSettings(projectId, action.getToSettings());
         repository.save(projectSettings);
         if(action.getPrefixUpdateStrategy() == IRIPrefixUpdateStrategy.FIND_AND_REPLACE) {
-            String fromPrefix = action.getFromSettings().getPrefixSettings().getIRIPrefix();
-            String toPrefix = action.getToSettings().getPrefixSettings().getIRIPrefix();
-            FindAndReplaceIRIPrefixChangeGenerator changeGenerator = new FindAndReplaceIRIPrefixChangeGenerator(fromPrefix, toPrefix, rootOntology);
+            var fromPrefix = action.getFromSettings().getPrefixSettings().getIRIPrefix();
+            var toPrefix = action.getToSettings().getPrefixSettings().getIRIPrefix();
+            var changeGenerator = findAndReplaceIRIPrefixChangeGeneratorFactory.create(fromPrefix, toPrefix);
             changeManager.applyChanges(executionContext.getUserId(), changeGenerator);
         }
         return new SetEntityCrudKitSettingsResult();
