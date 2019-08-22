@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.*;
@@ -66,6 +68,12 @@ public class ProjectChangesManager_IT {
     @Mock
     private ProjectDetailsRepository repo;
 
+    @Mock
+    private DefaultOntologyIdManager defaultOntologyIdManager;
+
+    @Mock
+    private OWLOntologyID ontologyId;
+
     @Before
     public void setUp() throws Exception {
         changeHistoryFile = temporaryFolder.newFile();
@@ -77,6 +85,8 @@ public class ProjectChangesManager_IT {
                 changeHistoryFile,
                 dataFactory
         ));
+        when(defaultOntologyIdManager.getDefaultOntologyId())
+                .thenReturn(rootOntology.getOntologyID());
         when(repo.findOne(projectId)).thenReturn(Optional.empty());
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
         var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
@@ -146,7 +156,9 @@ public class ProjectChangesManager_IT {
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
-                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(rootOntology), rootOntology));
+                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(rootOntology),
+                                                                                             defaultOntologyIdManager,
+                                                                                             projectOntologiesIndex));
 
 
         createChanges(manager, rootOntology, dataFactory, revisionManager);
