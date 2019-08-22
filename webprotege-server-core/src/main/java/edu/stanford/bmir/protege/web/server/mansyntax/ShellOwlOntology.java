@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.util.OWLAxiomSearchFilter;
 import javax.annotation.Nonnull;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 import static autovalue.shaded.com.google$.common.base.$MoreObjects.toStringHelper;
@@ -77,13 +78,13 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public <O> O accept(@Nonnull OWLNamedObjectVisitorEx<O> visitor) {
-        return null;
+        throw new RuntimeException("Cannot accept visits");
     }
 
     @Nonnull
     @Override
     public OWLOntologyManager getOWLOntologyManager() {
-        return null;
+        throw new RuntimeException("Cannot provide OWLOntologyManager");
     }
 
     @Override
@@ -99,37 +100,37 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAnnotation> getAnnotations() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<IRI> getDirectImportsDocuments() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLOntology> getDirectImports() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLOntology> getImports() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLOntology> getImportsClosure() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLImportsDeclaration> getImportsDeclarations() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -140,37 +141,37 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAxiom> getTBoxAxioms(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getABoxAxioms(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getRBoxAxioms(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClassAxiom> getGeneralClassAxioms() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLEntity> getSignature() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLEntity> getSignature(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -184,58 +185,58 @@ public class ShellOwlOntology implements OWLOntology {
     }
 
     @Override
-    public void saveOntology() throws OWLOntologyStorageException {
+    public void saveOntology() {
 
     }
 
     @Override
-    public void saveOntology(@Nonnull IRI documentIRI) throws OWLOntologyStorageException {
+    public void saveOntology(@Nonnull IRI documentIRI) {
 
     }
 
     @Override
-    public void saveOntology(@Nonnull OutputStream outputStream) throws OWLOntologyStorageException {
+    public void saveOntology(@Nonnull OutputStream outputStream) {
 
     }
 
     @Override
-    public void saveOntology(@Nonnull OWLDocumentFormat ontologyFormat) throws OWLOntologyStorageException {
-
-    }
-
-    @Override
-    public void saveOntology(@Nonnull OWLDocumentFormat ontologyFormat,
-                             @Nonnull IRI documentIRI) throws OWLOntologyStorageException {
+    public void saveOntology(@Nonnull OWLDocumentFormat ontologyFormat) {
 
     }
 
     @Override
     public void saveOntology(@Nonnull OWLDocumentFormat ontologyFormat,
-                             @Nonnull OutputStream outputStream) throws OWLOntologyStorageException {
-
-    }
-
-    @Override
-    public void saveOntology(@Nonnull OWLOntologyDocumentTarget documentTarget) throws OWLOntologyStorageException {
+                             @Nonnull IRI documentIRI) {
 
     }
 
     @Override
     public void saveOntology(@Nonnull OWLDocumentFormat ontologyFormat,
-                             @Nonnull OWLOntologyDocumentTarget documentTarget) throws OWLOntologyStorageException {
+                             @Nonnull OutputStream outputStream) {
+
+    }
+
+    @Override
+    public void saveOntology(@Nonnull OWLOntologyDocumentTarget documentTarget) {
+
+    }
+
+    @Override
+    public void saveOntology(@Nonnull OWLDocumentFormat ontologyFormat,
+                             @Nonnull OWLOntologyDocumentTarget documentTarget) {
 
     }
 
     @Nonnull
     @Override
     public Set<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIRI) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getAxioms(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -246,7 +247,7 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLLogicalAxiom> getLogicalAxioms(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -258,7 +259,7 @@ public class ShellOwlOntology implements OWLOntology {
     @Override
     public <T extends OWLAxiom> Set<T> getAxioms(@Nonnull AxiomType<T> axiomType,
                                                  @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -277,60 +278,60 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAxiom> getAxiomsIgnoreAnnotations(@Nonnull OWLAxiom axiom, @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getReferencingAxioms(@Nonnull OWLPrimitive owlEntity, @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClassAxiom> getAxioms(@Nonnull OWLClass cls, @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectPropertyAxiom> getAxioms(@Nonnull OWLObjectPropertyExpression property,
                                                  @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataPropertyAxiom> getAxioms(@Nonnull OWLDataProperty property,
                                                @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLIndividualAxiom> getAxioms(@Nonnull OWLIndividual individual,
                                              @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationAxiom> getAxioms(@Nonnull OWLAnnotationProperty property,
                                              @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatypeDefinitionAxiom> getAxioms(@Nonnull OWLDatatype datatype,
                                                      @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getAxioms(boolean b) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -341,7 +342,7 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLLogicalAxiom> getLogicalAxioms(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -352,7 +353,7 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public <T extends OWLAxiom> Set<T> getAxioms(@Nonnull AxiomType<T> axiomType, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -373,50 +374,50 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAxiom> getAxiomsIgnoreAnnotations(@Nonnull OWLAxiom axiom, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getReferencingAxioms(@Nonnull OWLPrimitive owlEntity, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClassAxiom> getAxioms(@Nonnull OWLClass cls, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectPropertyAxiom> getAxioms(@Nonnull OWLObjectPropertyExpression property,
                                                  boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataPropertyAxiom> getAxioms(@Nonnull OWLDataProperty property, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLIndividualAxiom> getAxioms(@Nonnull OWLIndividual individual, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationAxiom> getAxioms(@Nonnull OWLAnnotationProperty property, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatypeDefinitionAxiom> getAxioms(@Nonnull OWLDatatype datatype, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -442,61 +443,61 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAxiom> getAxiomsIgnoreAnnotations(@Nonnull OWLAxiom axiom) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getReferencingAxioms(@Nonnull OWLPrimitive owlEntity) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClassAxiom> getAxioms(@Nonnull OWLClass cls) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectPropertyAxiom> getAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataPropertyAxiom> getAxioms(@Nonnull OWLDataProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLIndividualAxiom> getAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationAxiom> getAxioms(@Nonnull OWLAnnotationProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatypeDefinitionAxiom> getAxioms(@Nonnull OWLDatatype datatype) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAxiom> getAxioms() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public <T extends OWLAxiom> Set<T> getAxioms(@Nonnull AxiomType<T> axiomType) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -507,7 +508,7 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLLogicalAxiom> getLogicalAxioms() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
@@ -516,7 +517,7 @@ public class ShellOwlOntology implements OWLOntology {
                                                  @Nonnull OWLObject entity,
                                                  @Nonnull Imports includeImports,
                                                  @Nonnull Navigation forSubPosition) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
@@ -524,7 +525,7 @@ public class ShellOwlOntology implements OWLOntology {
     public <T extends OWLAxiom> Collection<T> filterAxioms(@Nonnull OWLAxiomSearchFilter filter,
                                                            @Nonnull Object key,
                                                            @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -541,270 +542,270 @@ public class ShellOwlOntology implements OWLOntology {
                                                  @Nonnull OWLObject entity,
                                                  @Nonnull Imports includeImports,
                                                  @Nonnull Navigation forSubPosition) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSubAnnotationPropertyOfAxiom> getSubAnnotationPropertyOfAxioms(@Nonnull OWLAnnotationProperty subProperty) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationPropertyDomainAxiom> getAnnotationPropertyDomainAxioms(@Nonnull OWLAnnotationProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationPropertyRangeAxiom> getAnnotationPropertyRangeAxioms(@Nonnull OWLAnnotationProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDeclarationAxiom> getDeclarationAxioms(@Nonnull OWLEntity subject) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(@Nonnull OWLAnnotationSubject entity) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSubClassOfAxiom> getSubClassAxiomsForSubClass(@Nonnull OWLClass cls) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSubClassOfAxiom> getSubClassAxiomsForSuperClass(@Nonnull OWLClass cls) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLEquivalentClassesAxiom> getEquivalentClassesAxioms(@Nonnull OWLClass cls) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDisjointClassesAxiom> getDisjointClassesAxioms(@Nonnull OWLClass cls) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDisjointUnionAxiom> getDisjointUnionAxioms(@Nonnull OWLClass owlClass) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLHasKeyAxiom> getHasKeyAxioms(@Nonnull OWLClass cls) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSubObjectPropertyOfAxiom> getObjectSubPropertyAxiomsForSubProperty(@Nonnull OWLObjectPropertyExpression subProperty) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSubObjectPropertyOfAxiom> getObjectSubPropertyAxiomsForSuperProperty(@Nonnull OWLObjectPropertyExpression superProperty) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectPropertyDomainAxiom> getObjectPropertyDomainAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectPropertyRangeAxiom> getObjectPropertyRangeAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLInverseObjectPropertiesAxiom> getInverseObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLEquivalentObjectPropertiesAxiom> getEquivalentObjectPropertiesAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDisjointObjectPropertiesAxiom> getDisjointObjectPropertiesAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLFunctionalObjectPropertyAxiom> getFunctionalObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLInverseFunctionalObjectPropertyAxiom> getInverseFunctionalObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSymmetricObjectPropertyAxiom> getSymmetricObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAsymmetricObjectPropertyAxiom> getAsymmetricObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLReflexiveObjectPropertyAxiom> getReflexiveObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLIrreflexiveObjectPropertyAxiom> getIrreflexiveObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLTransitiveObjectPropertyAxiom> getTransitiveObjectPropertyAxioms(@Nonnull OWLObjectPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSubDataPropertyOfAxiom> getDataSubPropertyAxiomsForSubProperty(@Nonnull OWLDataProperty subProperty) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSubDataPropertyOfAxiom> getDataSubPropertyAxiomsForSuperProperty(@Nonnull OWLDataPropertyExpression superProperty) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataPropertyDomainAxiom> getDataPropertyDomainAxioms(@Nonnull OWLDataProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataPropertyRangeAxiom> getDataPropertyRangeAxioms(@Nonnull OWLDataProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLEquivalentDataPropertiesAxiom> getEquivalentDataPropertiesAxioms(@Nonnull OWLDataProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDisjointDataPropertiesAxiom> getDisjointDataPropertiesAxioms(@Nonnull OWLDataProperty property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLFunctionalDataPropertyAxiom> getFunctionalDataPropertyAxioms(@Nonnull OWLDataPropertyExpression property) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClassAssertionAxiom> getClassAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClassAssertionAxiom> getClassAssertionAxioms(@Nonnull OWLClassExpression ce) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataPropertyAssertionAxiom> getDataPropertyAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectPropertyAssertionAxiom> getObjectPropertyAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLNegativeObjectPropertyAssertionAxiom> getNegativeObjectPropertyAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLNegativeDataPropertyAssertionAxiom> getNegativeDataPropertyAssertionAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLSameIndividualAxiom> getSameIndividualAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDifferentIndividualsAxiom> getDifferentIndividualAxioms(@Nonnull OWLIndividual individual) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatypeDefinitionAxiom> getDatatypeDefinitions(@Nonnull OWLDatatype datatype) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClassExpression> getNestedClassExpressions() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
     public void accept(@Nonnull OWLObjectVisitor visitor) {
-
+        throw new RuntimeException("Cannot accept visits");
     }
 
     @Nonnull
     @Override
     public <O> O accept(@Nonnull OWLObjectVisitorEx<O> visitor) {
-        return null;
+        throw new RuntimeException("Cannot accept visits");
     }
 
     @Override
@@ -825,55 +826,55 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLAnnotationProperty> getAnnotationPropertiesInSignature() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnonymousIndividual> getAnonymousIndividuals() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLClass> getClassesInSignature(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectProperty> getObjectPropertiesInSignature(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataProperty> getDataPropertiesInSignature(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLNamedIndividual> getIndividualsInSignature(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnonymousIndividual> getReferencedAnonymousIndividuals(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatype> getDatatypesInSignature(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationProperty> getAnnotationPropertiesInSignature(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -958,12 +959,12 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
     public Set<IRI> getPunnedIRIs(@Nonnull Imports includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -979,43 +980,43 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLClass> getClassesInSignature(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectProperty> getObjectPropertiesInSignature(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDataProperty> getDataPropertiesInSignature(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLNamedIndividual> getIndividualsInSignature(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnonymousIndividual> getReferencedAnonymousIndividuals(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatype> getDatatypesInSignature(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLAnnotationProperty> getAnnotationPropertiesInSignature(boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -1062,7 +1063,7 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, boolean includeImportsClosure) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -1073,7 +1074,7 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLClass> getClassesInSignature() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -1084,24 +1085,24 @@ public class ShellOwlOntology implements OWLOntology {
     @Nonnull
     @Override
     public Set<OWLDataProperty> getDataPropertiesInSignature() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLDatatype> getDatatypesInSignature() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLNamedIndividual> getIndividualsInSignature() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<OWLObjectProperty> getObjectPropertiesInSignature() {
-        return null;
+        return Collections.emptySet();
     }
 }
