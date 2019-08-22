@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
@@ -24,9 +28,6 @@ import static java.util.stream.Collectors.toSet;
 public class TermCrossProductsManager {
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final RenderingManager renderingManager;
 
     @Nonnull
@@ -38,23 +39,41 @@ public class TermCrossProductsManager {
     @Nonnull
     private final RelationshipConverter relationshipConverter;
 
+    @Nonnull
+    private final EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex;
+
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
     @Inject
-    public TermCrossProductsManager(@Nonnull OWLOntology rootOntology,
-                                    @Nonnull RenderingManager renderingManager,
+    public TermCrossProductsManager(@Nonnull RenderingManager renderingManager,
                                     @Nonnull OWLDataFactory df,
                                     @Nonnull ChangeManager changeManager,
-                                    @Nonnull RelationshipConverter relationshipConverter) {
-        this.rootOntology = rootOntology;
+                                    @Nonnull RelationshipConverter relationshipConverter,
+                                    @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
+                                    @Nonnull OntologyChangeFactory changeFactory,
+                                    @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                    @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
         this.renderingManager = renderingManager;
         this.df = df;
         this.changeManager = changeManager;
         this.relationshipConverter = relationshipConverter;
+        this.equivalentClassesAxiomsIndex = equivalentClassesAxiomsIndex;
+        this.changeFactory = changeFactory;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
+        this.projectOntologiesIndex = projectOntologiesIndex;
     }
 
     @Nonnull
     public OBOTermCrossProduct getCrossProduct(@Nonnull OWLClass term) {
         Optional<OWLEquivalentClassesAxiom> axiom = getCrossProductEquivalentClassesAxiom(term);
-        if (!axiom.isPresent()) {
+        if (axiom.isEmpty()) {
             return OBOTermCrossProduct.emptyOBOTermCrossProduct();
         }
         Set<OWLObjectSomeValuesFrom> relationships = new HashSet<>();
@@ -98,31 +117,33 @@ public class TermCrossProductsManager {
     @Nonnull
     private Optional<OWLEquivalentClassesAxiom> getCrossProductEquivalentClassesAxiom(@Nonnull OWLClass cls) {
         Set<OWLEquivalentClassesAxiom> candidates = new TreeSet<>();
-        for (OWLEquivalentClassesAxiom axiom : rootOntology.getEquivalentClassesAxioms(cls)) {
-            Set<OWLClassExpression> equivalentClasses = axiom.getClassExpressionsMinus(cls);
-            int namedCount = 0;
-            int someValuesFromCount = 0;
-            int otherCount = 0;
-            for (OWLClassExpression operand : equivalentClasses) {
-                for (OWLClassExpression ce : operand.asConjunctSet()) {
-                    if (ce instanceof OWLClass) {
-                        namedCount++;
-                    }
-                    else if (ce instanceof OWLObjectSomeValuesFrom) {
-                        OWLObjectSomeValuesFrom svf = (OWLObjectSomeValuesFrom) ce;
-                        if (!svf.getProperty().isAnonymous() && !svf.getFiller().isAnonymous()) {
-                            someValuesFromCount++;
+        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+            equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(cls, ontId).forEach(ax -> {
+                var equivalentClasses = ax.getClassExpressionsMinus(cls);
+                int namedCount = 0;
+                int someValuesFromCount = 0;
+                int otherCount = 0;
+                for (var equivClass : equivalentClasses) {
+                    for (var conjunct : equivClass.asConjunctSet()) {
+                        if (conjunct instanceof OWLClass) {
+                            namedCount++;
+                        }
+                        else if (conjunct instanceof OWLObjectSomeValuesFrom) {
+                            OWLObjectSomeValuesFrom svf = (OWLObjectSomeValuesFrom) conjunct;
+                            if (!svf.getProperty().isAnonymous() && !svf.getFiller().isAnonymous()) {
+                                someValuesFromCount++;
+                            }
+                        }
+                        else {
+                            otherCount++;
                         }
                     }
-                    else {
-                        otherCount++;
-                    }
                 }
-            }
-            if (namedCount <= 1 && someValuesFromCount > 0 && otherCount == 0) {
-                candidates.add(axiom.getAxiomWithoutAnnotations());
-            }
-        }
+                if (namedCount <= 1 && someValuesFromCount > 0 && otherCount == 0) {
+                    candidates.add(ax.getAxiomWithoutAnnotations());
+                }
+            });
+        });
         if (candidates.isEmpty()) {
             return Optional.empty();
         }
@@ -157,8 +178,9 @@ public class TermCrossProductsManager {
         Optional<OWLEquivalentClassesAxiom> existingXPAxiom = getCrossProductEquivalentClassesAxiom(term);
 
         List<OWLOntologyChange> changes = new ArrayList<>();
-        changes.add(new AddAxiom(rootOntology, newXPAxiom));
-        existingXPAxiom.ifPresent(ax -> changes.add(new RemoveAxiom(rootOntology, ax)));
+        var rootOntology = defaultOntologyIdManager.getDefaultOntologyId();
+        changes.add(changeFactory.createAddAxiom(rootOntology, newXPAxiom));
+        existingXPAxiom.ifPresent(ax -> changes.add(changeFactory.createRemoveAxiom(rootOntology, ax)));
         changeManager.applyChanges(userId,
                                    new FixedChangeListGenerator<>(changes, term, "Set cross product values")
         );
