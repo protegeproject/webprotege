@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.csv.*;
 import org.semanticweb.owlapi.model.*;
@@ -22,7 +23,6 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
  * Bio-Medical Informatics Research Group<br>
  * Date: 31/05/2013
  */
-@AutoFactory
 public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Integer>, SilentChangeListGenerator {
 
 
@@ -36,27 +36,34 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     private final CSVImportDescriptor descriptor;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
 
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
+
+    @AutoFactory
     @Inject
     public ImportCSVFileChangeListGenerator(@Nonnull OWLClass importRootClass,
                                             @Nonnull CSVGrid csvGrid,
                                             @Nonnull CSVImportDescriptor descriptor,
-                                            @Provided @Nonnull OWLOntology rootOntology,
-                                            @Provided @Nonnull OWLDataFactory dataFactory) {
+                                            @Provided @Nonnull OWLDataFactory dataFactory,
+                                            @Provided @Nonnull OntologyChangeFactory changeFactory,
+                                            @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.importRootClass = checkNotNull(importRootClass);
         this.csvGrid = checkNotNull(csvGrid);
         this.descriptor = checkNotNull(descriptor);
-        this.rootOntology = checkNotNull(rootOntology);
         this.dataFactory = checkNotNull(dataFactory);
+        this.changeFactory = changeFactory;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     @Override
     public OntologyChangeList<Integer> generateChanges(ChangeGenerationContext context) {
+        var rootOntology = defaultOntologyIdManager.getDefaultOntologyId();
         OntologyChangeList.Builder<Integer> changesBuilder = new OntologyChangeList.Builder<>();
         for (CSVRow row : csvGrid.getRows()) {
             for (CSVColumnDescriptor columnDescriptor : descriptor.getColumnDescriptors()) {
@@ -69,7 +76,11 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                         final OWLObjectProperty property = (OWLObjectProperty) columnDescriptor.getColumnProperty();
                         final Optional<OWLClassExpression> superCls = getColumnValueAsClassExpression(value, property, columnType);
                         if (superCls.isPresent()) {
-                            changesBuilder.addAxiom(rootOntology, getAxiom(displayName, columnDescriptor, superCls.get()));
+                            var addAxiom = changeFactory.createAddAxiom(rootOntology,
+                                                                             getAxiom(displayName,
+                                                                                      columnDescriptor,
+                                                                                      superCls.get()));
+                            changesBuilder.add(addAxiom);
                         }
                     }
                     else {
@@ -78,7 +89,8 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                             final Optional<OWLLiteral> filler = getColumnValueAsLiteral(value, columnType);
                             if (filler.isPresent()) {
                                 final OWLClassExpression superCls = dataFactory.getOWLDataHasValue(property, filler.get());
-                                changesBuilder.addAxiom(rootOntology, getAxiom(displayName, columnDescriptor, superCls));
+                                var addAxiom = changeFactory.createAddAxiom(rootOntology, getAxiom(displayName, columnDescriptor, superCls));
+                                changesBuilder.add(addAxiom);
                             }
                         }
                         else if (columnDescriptor.getColumnProperty().getEntityType() == EntityType.ANNOTATION_PROPERTY) {
@@ -86,12 +98,14 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                             final Optional<? extends OWLAnnotationValue> annotationValue = getColumnValueAsAnnotationValue(value, columnType);
                             if (annotationValue.isPresent()) {
                                 final IRI rowIRI = DataFactory.getFreshOWLEntityIRI(displayName);
-                                changesBuilder.addAxiom(rootOntology, dataFactory.getOWLAnnotationAssertionAxiom(property, rowIRI, annotationValue.get()));
+                                var addAxiom = changeFactory.createAddAxiom(rootOntology, dataFactory.getOWLAnnotationAssertionAxiom(property, rowIRI, annotationValue.get()));
+                                changesBuilder.add(addAxiom);
                             }
                         }
                     }
                     OWLAxiom placementAxiom = getPlacementAxiom(displayName);
-                    changesBuilder.addAxiom(rootOntology, placementAxiom);
+                    var addAxiom = changeFactory.createAddAxiom(rootOntology, placementAxiom);
+                    changesBuilder.add(addAxiom);
                 }
             }
         }
