@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -11,8 +13,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static edu.stanford.bmir.protege.web.server.obo.OboUtil.isXRefProperty;
 
@@ -27,28 +27,38 @@ public class TermXRefsManager {
     private final ChangeManager changeManager;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Nonnull
     private final XRefExtractor xrefExtractor;
 
     @Nonnull
-    private final AnnotationToXRefConverter annotationToXRefConverter;
+    private final AnnotationToXRefConverter xrefConverter;
+
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologies;
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertions;
+
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
 
     @Inject
     public TermXRefsManager(@Nonnull ChangeManager changeManager,
-                            @Nonnull @RootOntology OWLOntology rootOntology,
                             @Nonnull OWLDataFactory dataFactory,
                             @Nonnull XRefExtractor xrefExtractor,
-                            @Nonnull AnnotationToXRefConverter annotationToXRefConverter) {
+                            @Nonnull AnnotationToXRefConverter xrefConverter,
+                            @Nonnull ProjectOntologiesIndex projectOntologies,
+                            @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertions,
+                            @Nonnull OntologyChangeFactory changeFactory) {
         this.changeManager = changeManager;
-        this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
         this.xrefExtractor = xrefExtractor;
-        this.annotationToXRefConverter = annotationToXRefConverter;
+        this.xrefConverter = xrefConverter;
+        this.projectOntologies = projectOntologies;
+        this.annotationAssertions = annotationAssertions;
+        this.changeFactory = changeFactory;
     }
 
     @Nonnull
@@ -57,24 +67,33 @@ public class TermXRefsManager {
     }
 
     public void setXRefs(UserId userId, OWLEntity term, List<OBOXRef> xrefs) {
-        IRI subject = term.getIRI();
-        Set<OWLAnnotation> annotations = xrefs.stream()
-                .map(annotationToXRefConverter::toAnnotation)
-                .collect(Collectors.toSet());
-        List<OWLOntologyChange> changes = new ArrayList<>();
-        // Remove OLD
-        for (OWLAnnotationAssertionAxiom ax : rootOntology.getAnnotationAssertionAxioms(subject)) {
-            if (isXRefProperty(ax.getProperty())) {
-                changes.add(new RemoveAxiom(rootOntology, ax));
-            }
-        }
-        // Add NEW
-        for (OWLAnnotation annotation : annotations) {
-            changes.add(new AddAxiom(rootOntology, dataFactory.getOWLAnnotationAssertionAxiom(subject, annotation)));
-        }
+        var subject = term.getIRI();
+        var changes = new ArrayList<OWLOntologyChange>();
+        projectOntologies.getOntologyIds()
+                         .forEach(ontId -> {
+                             annotationAssertions.getAxiomsForSubject(subject, ontId)
+                                                 .forEach(existingAx -> {
+                                                     if(isXRefProperty(existingAx.getProperty())) {
+                                                         xrefs.stream()
+                                                              .map(xrefConverter::toAnnotation)
+                                                              .map(annotation -> toAnnotationAssertion(subject,
+                                                                                                       annotation))
+                                                              .map(ax -> changeFactory.createAddAxiom(ontId, ax))
+                                                              .forEach(changes::add);
+                                                         var removeAx = changeFactory.createRemoveAxiom(ontId,
+                                                                                                        existingAx);
+                                                         changes.add(removeAx);
+                                                     }
+                                                 });
+                         });
         changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes, term, "Edited term XRefs")
-        );
+                                   new FixedChangeListGenerator<>(changes, term, "Edited term XRefs"));
+    }
+
+    private OWLAnnotationAssertionAxiom toAnnotationAssertion(IRI subject, OWLAnnotation annotation) {
+        return dataFactory.getOWLAnnotationAssertionAxiom(
+                subject,
+                annotation);
     }
 
 }
