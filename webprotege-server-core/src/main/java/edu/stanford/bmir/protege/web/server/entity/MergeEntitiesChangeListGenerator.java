@@ -5,18 +5,19 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.util.ProtegeStreams.ontologyStream;
 import static edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment.DEPRECATE_MERGED_ENTITY;
 import static org.semanticweb.owlapi.vocab.SKOSVocabulary.ALTLABEL;
 import static org.semanticweb.owlapi.vocab.SKOSVocabulary.PREFLABEL;
@@ -38,14 +39,10 @@ import static org.semanticweb.owlapi.vocab.SKOSVocabulary.PREFLABEL;
  *    and original annotations on S are preserved.  If the treatment is deletion then any
  *    discussion threads on S will be copied over to T.
  */
-@AutoFactory
 public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWLEntity> {
 
     @Nonnull
     private final ProjectId projectId;
-
-    @Nonnull
-    private final OWLOntology rootOntology;
 
     @Nonnull
     private final OWLDataFactory dataFactory;
@@ -74,19 +71,27 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
-    public MergeEntitiesChangeListGenerator(@Provided @Nonnull ProjectId projectId,
-                                            @Provided @Nonnull OWLOntology rootOntology,
-                                            @Provided @Nonnull OWLDataFactory dataFactory,
-                                            @Nonnull ImmutableSet<OWLEntity> sourceEntities,
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologies;
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertions;
+
+    @AutoFactory
+    @Inject
+    public MergeEntitiesChangeListGenerator(@Nonnull ImmutableSet<OWLEntity> sourceEntities,
                                             @Nonnull OWLEntity targetEntity,
                                             @Nonnull MergedEntityTreatment treatment,
-                                            @Provided @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
                                             @Nonnull String commitMessage,
+                                            @Provided @Nonnull ProjectId projectId,
+                                            @Provided @Nonnull OWLDataFactory dataFactory,
+                                            @Provided @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
                                             @Provided @Nonnull EntityRenamer entityRenamer,
-                                            @Nonnull OntologyChangeFactory changeFactory,
-                                            @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
+                                            @Provided @Nonnull OntologyChangeFactory changeFactory,
+                                            @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                            @Provided @Nonnull ProjectOntologiesIndex projectOntologies,
+                                            @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertions) {
         this.projectId = checkNotNull(projectId);
-        this.rootOntology = checkNotNull(rootOntology);
         this.dataFactory = checkNotNull(dataFactory);
         this.sourceEntities = checkNotNull(sourceEntities);
         this.targetEntity = checkNotNull(targetEntity);
@@ -94,8 +99,10 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
         this.commitMessage = checkNotNull(commitMessage);
         this.entityRenamer = checkNotNull(entityRenamer);
-        this.changeFactory = changeFactory;
-        this.defaultOntologyIdManager = defaultOntologyIdManager;
+        this.changeFactory = checkNotNull(changeFactory);
+        this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
+        this.projectOntologies = checkNotNull(projectOntologies);
+        this.annotationAssertions = checkNotNull(annotationAssertions);
     }
 
     @Override
@@ -121,7 +128,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
             // Copy over discussion threads if the entity is being deleted so that these
             // will still be accessible.
             sourceEntities.forEach(sourceEntity -> discussionThreadRepository.replaceEntity(projectId, sourceEntity, targetEntity));
-            ;
+
             // TODO:  Name Map Old IRI to new IRI - we don't have this functionality yet
         }
 
@@ -132,15 +139,18 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     private void deprecateSourceEntities(OntologyChangeList.Builder<OWLEntity> builder) {
         sourceEntities.forEach(sourceEntity -> {
             // Add an annotation assertion to deprecate the source entity
-            var deprecatedAx = dataFactory.getDeprecatedOWLAnnotationAssertionAxiom(sourceEntity.getIRI());
+            var sourceEntityIRI = sourceEntity.getIRI();
+            var deprecatedAx = dataFactory.getDeprecatedOWLAnnotationAssertionAxiom(sourceEntityIRI);
             var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
             var addDeprecatedAxiom = changeFactory.createAddAxiom(ontologyId, deprecatedAx);
             builder.add(addDeprecatedAxiom);
 
             // Preserve labels and other annotations on the source entity
-            ontologyStream(rootOntology, Imports.INCLUDED)
-                    .forEach(ont -> ont.getAnnotationAssertionAxioms(sourceEntity.getIRI())
-                            .forEach(ax -> builder.add(changeFactory.createAddAxiom(ont.getOntologyID(), ax))));
+            projectOntologies.getOntologyIds().forEach(ontId -> {
+                annotationAssertions.getAxiomsForSubject(sourceEntityIRI, ontId)
+                                    .map(ax -> changeFactory.createAddAxiom(ontId, ax))
+                                    .forEach(builder::add);
+            });
         });
     }
 
@@ -155,17 +165,17 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
         // Replace rdfs:label with skos:altLabel.
         // Replace skos:prefLabel with skos:altLabel.
         // In both cases, language tags are preserved.
-        ontologyStream(rootOntology, Imports.INCLUDED)
-                .forEach(ont -> {
-                    sourceEntities.forEach(sourceEntity -> {
-                        // Get the annotation assertions that were originally on the source entity
-                        ont.getAnnotationAssertionAxioms(sourceEntity.getIRI()).stream()
-                                // Just deal with explicit rdfs:label and skos:prefLabel annotations
-                                .filter(ax -> isRdfsLabelAnnotation(ax) || isSkosPrefLabelAnnotation(ax))
-                                // Replace on the target entity with skos:altLabel as the property
-                                .forEach(ax -> replaceWithSkosAltLabel(ax, ont, builder));
-                    });
-                });
+        projectOntologies.getOntologyIds().forEach(ontId -> {
+            sourceEntities.forEach(sourceEntity -> {
+                var sourceEntityIRI = sourceEntity.getIRI();
+                // Get the annotation assertions that were originally on the source entity
+                annotationAssertions.getAxiomsForSubject(sourceEntityIRI, ontId)
+                                    // Just deal with explicit rdfs:label and skos:prefLabel annotations
+                                    .filter(ax -> isRdfsLabelAnnotation(ax) || isSkosPrefLabelAnnotation(ax))
+                                    // Replace on the target entity with skos:altLabel as the property
+                                    .forEach(ax -> replaceWithSkosAltLabel(ax, ontId, builder));
+            });
+        });
     }
 
     /**
@@ -174,18 +184,17 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
      *
      * @param ax        The annotation assertion under consideration.  This is the original annotation
      *                  assertion on the source entity (not the target entity).
-     * @param ont        The ontology to make the changes in.
+     * @param ontId        The ontology to make the changes in.
      * @param builder    The builder for adding changes to.
      */
     private void replaceWithSkosAltLabel(@Nonnull OWLAnnotationAssertionAxiom ax,
-                                         @Nonnull OWLOntology ont,
+                                         @Nonnull OWLOntologyID ontId,
                                          @Nonnull OntologyChangeList.Builder<OWLEntity> builder) {
         // Remove the original one (that will be on the target entity by now)
         var origAx = dataFactory.getOWLAnnotationAssertionAxiom(
                 targetEntity.getIRI(),
                 ax.getAnnotation(),
                 ax.getAnnotations());
-        var ontId = ont.getOntologyID();
         builder.add(changeFactory.createRemoveAxiom(ontId, origAx));
 
         // Generate a new annotation with a property of skos:altLabel.
