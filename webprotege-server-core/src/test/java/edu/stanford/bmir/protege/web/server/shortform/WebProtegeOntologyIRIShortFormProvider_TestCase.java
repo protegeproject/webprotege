@@ -37,14 +37,16 @@ public class WebProtegeOntologyIRIShortFormProvider_TestCase {
 
     @Test
     public void shouldReturnStandardShortFormForRootOntology() {
-        WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(rootOntology);
+        WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(rootOntology,
+                                                                                                defaultOntologyIdManager);
         String shortForm = sfp.getShortForm(rootOntology);
         assertThat(shortForm, is(equalTo("root-ontology")));
     }
 
     @Test
     public void shouldReturnStandardShortFormForRootOntologyIRI() {
-        WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(rootOntology);
+        WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(rootOntology,
+                                                                                                defaultOntologyIdManager);
         String shortForm = sfp.getShortForm(iri);
         assertThat(shortForm, is(equalTo("root-ontology")));
     }

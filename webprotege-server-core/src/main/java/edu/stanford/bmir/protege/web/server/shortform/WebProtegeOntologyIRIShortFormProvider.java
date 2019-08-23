@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -17,16 +18,18 @@ public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortForm
 
     public static final String ROOT_ONTOLOGY_SHORT_FORM = "root-ontology";
 
-    private OWLOntology rootOntology;
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Inject
-    public WebProtegeOntologyIRIShortFormProvider(@RootOntology OWLOntology rootOntology) {
-        this.rootOntology = rootOntology;
+    public WebProtegeOntologyIRIShortFormProvider(@Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     @Override
     public String getShortForm(OWLOntology ont) {
-        if(ont.equals(rootOntology)) {
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        if(ont.getOntologyID().equals(defaultOntologyId)) {
             return ROOT_ONTOLOGY_SHORT_FORM;
         }
         return super.getShortForm(ont);
@@ -50,7 +53,7 @@ public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortForm
     @Nonnull
     @Override
     public String getShortForm(IRI iri) {
-        if (Optional.of(iri).equals(rootOntology.getOntologyID().getOntologyIRI())) {
+        if (defaultOntologyIdManager.getDefaultOntologyId().equals(new OWLOntologyID(iri))) {
             return ROOT_ONTOLOGY_SHORT_FORM;
         }
         return super.getShortForm(iri);

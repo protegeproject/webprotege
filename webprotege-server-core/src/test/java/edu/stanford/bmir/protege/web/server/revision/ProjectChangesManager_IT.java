@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.*;
@@ -156,7 +155,8 @@ public class ProjectChangesManager_IT {
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
-                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(rootOntology),
+                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(rootOntology,
+                                                                                                                                        defaultOntologyIdManager),
                                                                                              defaultOntologyIdManager,
                                                                                              projectOntologiesIndex));
 
