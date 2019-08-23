@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.entity;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
@@ -68,6 +69,9 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     @Nonnull
     private final String commitMessage;
 
+    @Nonnull
+    private final EntityRenamer entityRenamer;
+
     public MergeEntitiesChangeListGenerator(@Provided @Nonnull ProjectId projectId,
                                             @Provided @Nonnull OWLOntology rootOntology,
                                             @Provided @Nonnull OWLDataFactory dataFactory,
@@ -75,7 +79,8 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
                                             @Nonnull OWLEntity targetEntity,
                                             @Nonnull MergedEntityTreatment treatment,
                                             @Provided @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
-                                            @Nonnull String commitMessage) {
+                                            @Nonnull String commitMessage,
+                                            @Provided @Nonnull EntityRenamer entityRenamer) {
         this.projectId = checkNotNull(projectId);
         this.rootOntology = checkNotNull(rootOntology);
         this.dataFactory = checkNotNull(dataFactory);
@@ -84,6 +89,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
         this.treatment = checkNotNull(treatment);
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
         this.commitMessage = checkNotNull(commitMessage);
+        this.entityRenamer = checkNotNull(entityRenamer);
     }
 
     @Override
@@ -132,9 +138,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
 
     private void replaceUsage(OntologyChangeList.Builder<OWLEntity> builder) {
         sourceEntities.forEach(sourceEntity -> {
-            OWLEntityRenamer renamer = new OWLEntityRenamer(rootOntology.getOWLOntologyManager(),
-                                                            rootOntology.getImportsClosure());
-            List<OWLOntologyChange> renameChanges = renamer.changeIRI(sourceEntity.getIRI(), targetEntity.getIRI());
+            var renameChanges = entityRenamer.generateChanges(ImmutableMap.of(sourceEntity, targetEntity.getIRI()));
             builder.addAll(renameChanges);
         });
     }

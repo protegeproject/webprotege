@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server.entity;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactoryImpl;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment;
@@ -17,6 +19,8 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
+
+import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment.DELETE_MERGED_ENTITY;
 import static edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment.DEPRECATE_MERGED_ENTITY;
@@ -70,6 +74,8 @@ public class MergeEntitiesChangeListGenerator_TestCase {
 
     private OWLClass sourceEntity;
 
+    private EntityRenamer entityRenamer;
+
     @Before
     public void setUp() throws Exception {
         manager = OWLManager.createOWLOntologyManager();
@@ -94,17 +100,32 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                 AnnotationAssertion(rdfsLabel, sourceEntity.getIRI(), hello),
                                 AnnotationAssertion(skosPrefLabel, sourceEntity.getIRI(), bonjour),
                                 AnnotationAssertion(rdfsComment, sourceEntity.getIRI(), hi));
+        var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        var ontologyIndex = new OntologyIndexImpl(rootOntology);
+        var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(ontologyIndex);
+        var axiomsByIriReference = new AnnotationAxiomsByIriReferenceIndexImpl();
+        var axiomsByTypeIndex = new AxiomsByTypeIndexImpl(ontologyIndex);
+        axiomsByIriReference.load(Stream.of(rootOntology.getOntologyID()), axiomsByTypeIndex);
+        var axiomsByReferenceIndex = new AxiomsByReferenceIndexImpl(axiomsByEntityReference,
+                                                                    axiomsByIriReference);
+
+        var ontologyChangeFactory = new OntologyChangeFactoryImpl(ontologyIndex);
+        entityRenamer = new EntityRenamer(dataFactory,
+                                          projectOntologiesIndex,
+                                          axiomsByReferenceIndex,
+                                          ontologyChangeFactory);
 
     }
 
     private void createGeneratorAndApplyChanges(MergedEntityTreatment treatment) {
         MergeEntitiesChangeListGenerator gen = new MergeEntitiesChangeListGenerator(projectId,
-                                                    rootOntology,
-                                                    dataFactory,
-                                                    sourceEntities,
-                                                    targetEntity,
-                                                    treatment,
-                                                    discussionThreadRepo, "The commit message");
+                                                                                    rootOntology,
+                                                                                    dataFactory,
+                                                                                    sourceEntities,
+                                                                                    targetEntity,
+                                                                                    treatment,
+                                                                                    discussionThreadRepo, "The commit message",
+                                                                                    entityRenamer);
         OntologyChangeList<?> changeList = gen.generateChanges(new ChangeGenerationContext(UserId.getUserId("Bob")));
         manager.applyChanges(changeList.getChanges());
     }
