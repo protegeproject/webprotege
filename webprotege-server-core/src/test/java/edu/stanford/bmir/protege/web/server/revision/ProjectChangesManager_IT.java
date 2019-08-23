@@ -129,7 +129,7 @@ public class ProjectChangesManager_IT {
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
                         shortFormAdapter,
-                        new EntityIRICheckerImpl(rootOntology),
+                        new EntityIRICheckerImpl(rootOntology, entitiesInProjectSignatureIndex),
                         LiteralStyle.BRACKETED,
                         new DefaultHttpLinkRenderer(),
                         new MarkdownLiteralRenderer()

@@ -1,12 +1,15 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import org.semanticweb.owlapi.model.*;
 
-import javax.inject.Inject;
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Matthew Horridge,
@@ -16,28 +19,20 @@ import java.util.Set;
  */
 public class EntityIRICheckerImpl implements EntityIRIChecker {
 
-    private OWLOntology rootOntology;
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex signatureIndex;
 
-    @Inject
-    public EntityIRICheckerImpl(@RootOntology OWLOntology rootOntology) {
-        this.rootOntology = rootOntology;
+    public EntityIRICheckerImpl(@Nonnull EntitiesInProjectSignatureByIriIndex signatureIndex) {
+        this.signatureIndex = checkNotNull(signatureIndex);
     }
 
     @Override
     public boolean isEntityIRI(IRI iri) {
-        return iri.isTopEntity() || iri.isBottomEntity() || rootOntology.containsEntityInSignature(iri, true);
+        return iri.isTopEntity() || iri.isBottomEntity() || signatureIndex.getEntityInSignature(iri).limit(1).count() == 0;
     }
 
     @Override
     public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
-        Set<OWLEntity> result = new HashSet<>();
-        OWLDataFactory dataFactory = rootOntology.getOWLOntologyManager().getOWLDataFactory();
-        for(EntityType<?> entityType : EntityType.values()) {
-            OWLEntity entity = dataFactory.getOWLEntity(entityType, iri);
-            if(rootOntology.containsEntityInSignature(entity, true)) {
-                result.add(entity);
-            }
-        }
-        return result;
+        return signatureIndex.getEntityInSignature(iri).collect(Collectors.toSet());
     }
 }
