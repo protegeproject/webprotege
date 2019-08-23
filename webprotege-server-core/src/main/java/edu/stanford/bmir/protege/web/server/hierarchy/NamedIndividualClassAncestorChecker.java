@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -9,29 +12,31 @@ import javax.inject.Inject;
  */
 public class NamedIndividualClassAncestorChecker implements HasHasAncestor<OWLNamedIndividual, OWLClass> {
 
+    @Nonnull
     private HasHasAncestor<OWLClass, OWLClass> classAncestorChecker;
 
-    private OWLOntology ontology;
+    @Nonnull
+    private final ClassAssertionAxiomsByIndividualIndex axiomsIndex;
+
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Inject
-    public NamedIndividualClassAncestorChecker(OWLOntology ontology,
-                                               HasHasAncestor<OWLClass, OWLClass> classAncestorChecker) {
-        this.ontology = ontology;
+    public NamedIndividualClassAncestorChecker(@Nonnull HasHasAncestor<OWLClass, OWLClass> classAncestorChecker,
+                                               @Nonnull ClassAssertionAxiomsByIndividualIndex axiomsIndex,
+                                               @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
+        this.axiomsIndex = axiomsIndex;
         this.classAncestorChecker = classAncestorChecker;
+        this.projectOntologiesIndex = projectOntologiesIndex;
     }
 
     @Override
     public boolean hasAncestor(OWLNamedIndividual ind, OWLClass cls) {
-        for(OWLOntology ont : ontology.getImportsClosure()) {
-            for(OWLClassAssertionAxiom ax : ont.getClassAssertionAxioms(ind)) {
-                OWLClassExpression type = ax.getClassExpression();
-                if (!type.isAnonymous()) {
-                    if(type.equals(cls) || classAncestorChecker.hasAncestor(type.asOWLClass(), cls)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        return projectOntologiesIndex.getOntologyIds()
+                              .flatMap(ontId -> axiomsIndex.getClassAssertionAxioms(ind, ontId))
+                              .map(OWLClassAssertionAxiom::getClassExpression)
+                              .filter(OWLClassExpression::isNamed)
+                              .map(OWLClassExpression::asOWLClass)
+                              .anyMatch(ce -> ce.equals(cls) || classAncestorChecker.hasAncestor(ce, cls));
     }
 }
