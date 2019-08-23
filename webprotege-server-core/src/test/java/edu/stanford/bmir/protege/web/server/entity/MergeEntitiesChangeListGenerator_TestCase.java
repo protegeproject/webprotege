@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -76,6 +78,10 @@ public class MergeEntitiesChangeListGenerator_TestCase {
 
     private EntityRenamer entityRenamer;
 
+    private OntologyChangeFactoryImpl ontologyChangeFactory;
+
+    private DefaultOntologyIdManager defaultOntologyIdManager;
+
     @Before
     public void setUp() throws Exception {
         manager = OWLManager.createOWLOntologyManager();
@@ -100,6 +106,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                 AnnotationAssertion(rdfsLabel, sourceEntity.getIRI(), hello),
                                 AnnotationAssertion(skosPrefLabel, sourceEntity.getIRI(), bonjour),
                                 AnnotationAssertion(rdfsComment, sourceEntity.getIRI(), hi));
+        defaultOntologyIdManager = new DefaultOntologyIdManagerImpl(rootOntology);
         var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         var ontologyIndex = new OntologyIndexImpl(rootOntology);
         var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(ontologyIndex);
@@ -109,7 +116,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
         var axiomsByReferenceIndex = new AxiomsByReferenceIndexImpl(axiomsByEntityReference,
                                                                     axiomsByIriReference);
 
-        var ontologyChangeFactory = new OntologyChangeFactoryImpl(ontologyIndex);
+        ontologyChangeFactory = new OntologyChangeFactoryImpl(ontologyIndex);
         entityRenamer = new EntityRenamer(dataFactory,
                                           projectOntologiesIndex,
                                           axiomsByReferenceIndex,
@@ -125,7 +132,9 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                                                                     targetEntity,
                                                                                     treatment,
                                                                                     discussionThreadRepo, "The commit message",
-                                                                                    entityRenamer);
+                                                                                    entityRenamer,
+                                                                                    ontologyChangeFactory,
+                                                                                    defaultOntologyIdManager);
         OntologyChangeList<?> changeList = gen.generateChanges(new ChangeGenerationContext(UserId.getUserId("Bob")));
         manager.applyChanges(changeList.getChanges());
     }
