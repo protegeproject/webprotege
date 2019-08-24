@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIr
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +23,7 @@ public class EntityIRICheckerImpl implements EntityIRIChecker {
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex signatureIndex;
 
+    @Inject
     public EntityIRICheckerImpl(@Nonnull EntitiesInProjectSignatureByIriIndex signatureIndex) {
         this.signatureIndex = checkNotNull(signatureIndex);
     }

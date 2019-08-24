@@ -681,6 +681,16 @@ public class ProjectModule {
     }
 
     @Provides
+    EquivalentObjectPropertiesAxiomsIndex provideEquivalentObjectPropertiesAxiomsIndex(EquivalentObjectPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EquivalentDataPropertiesAxiomsIndex provideEquivalentDataPropertiesAxiomsIndex(EquivalentDataPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
     ObjectPropertyDomainAxiomsIndex provideObjectPropertyDomainAxiomsIndex(ObjectPropertyDomainAxiomsIndexImpl impl) {
         return impl;
     }
@@ -885,5 +895,70 @@ public class ProjectModule {
         return impl;
     }
 
+    @Provides
+    DisjointClassesAxiomsIndex provideDisjointClassesAxiomsIndex(DisjointClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+    
+    @Provides
+    DisjointDataPropertiesAxiomsIndex provideDisjointDataPropertiesAxiomsIndex(DisjointDataPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+    
+    @Provides
+    DisjointObjectPropertiesAxiomsIndex provideDisjointObjectPropertiesAxiomsIndex(DisjointObjectPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    InverseObjectPropertyAxiomsIndex provideInverseObjectPropertyAxiomsIndex(InverseObjectPropertyAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DifferentIndividualsAxiomsIndex provideDifferentIndividualsAxiomsIndex(DifferentIndividualsAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationsSectionRenderer provideAnnotationsSectionRenderer(AnnotationAssertionAxiomsBySubjectIndex index) {
+        return new AnnotationsSectionRenderer(index);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLClass> provideAnnotationsSectionRendererOwlClass(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLObjectProperty> provideAnnotationsSectionRendererOwlObjectProperty(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLDataProperty> provideAnnotationsSectionRendererOwlDataProperty(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLAnnotationProperty> provideAnnotationsSectionRendererOwlAnnotationProperty(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLNamedIndividual> provideAnnotationsSectionRendererOwlNamedIndividual(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLDatatype> provideAnnotationsSectionRendererOwlDatatype(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
 }
 

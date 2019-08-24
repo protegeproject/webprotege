@@ -14,6 +14,7 @@ import javax.inject.Inject;
 /**
 * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 19/03/2014
 */
+@SuppressWarnings("Guava")
 public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortFormProvider {
 
     public static final String ROOT_ONTOLOGY_SHORT_FORM = "root-ontology";
@@ -37,6 +38,10 @@ public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortForm
 
     @Nonnull
     public String getShortForm(OWLOntologyID ontologyId) {
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        if(ontologyId.equals(defaultOntologyId)) {
+            return ROOT_ONTOLOGY_SHORT_FORM;
+        }
         var versionIri = ontologyId.getVersionIRI();
         if(versionIri.isPresent()) {
             return getShortForm(versionIri.get());
@@ -53,7 +58,8 @@ public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortForm
     @Nonnull
     @Override
     public String getShortForm(IRI iri) {
-        if (defaultOntologyIdManager.getDefaultOntologyId().equals(new OWLOntologyID(iri))) {
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
+        if (defaultOntologyId.getOntologyIRI().equals(Optional.of(iri))) {
             return ROOT_ONTOLOGY_SHORT_FORM;
         }
         return super.getShortForm(iri);

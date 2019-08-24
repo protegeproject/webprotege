@@ -1,17 +1,37 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import com.google.common.collect.Lists;
+import edu.stanford.bmir.protege.web.server.index.AnnotationPropertyDomainAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/02/2014
  */
 public class AnnotationPropertyDomainSectionRenderer extends AbstractOWLAxiomItemSectionRenderer<OWLAnnotationProperty, OWLAnnotationPropertyDomainAxiom, OWLObject> {
 
+
+    @Nonnull
+    private final AnnotationPropertyDomainAxiomsIndex axiomsIndex;
+
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesByIri;
+
+    @Inject
+    public AnnotationPropertyDomainSectionRenderer(@Nonnull AnnotationPropertyDomainAxiomsIndex axiomsIndex,
+                                                   @Nonnull EntitiesInProjectSignatureByIriIndex entitiesByIri) {
+        this.axiomsIndex = axiomsIndex;
+        this.entitiesByIri = entitiesByIri;
+    }
 
     @Override
     public ManchesterOWLSyntax getSection() {
@@ -20,21 +40,15 @@ public class AnnotationPropertyDomainSectionRenderer extends AbstractOWLAxiomIte
 
     @Override
     protected Set<OWLAnnotationPropertyDomainAxiom> getAxiomsInOntology(OWLAnnotationProperty subject,
-                                                                        OWLOntology ontology) {
-        return ontology.getAnnotationPropertyDomainAxioms(subject);
+                                                                        OWLOntologyID ontologyId) {
+        return axiomsIndex.getAnnotationPropertyDomainAxioms(subject, ontologyId).collect(Collectors.toSet());
     }
 
 
     @Override
     public List<OWLObject> getRenderablesForItem(OWLAnnotationProperty subject,
                                                  OWLAnnotationPropertyDomainAxiom item,
-                                                 OWLOntology ontology) {
-        Set<OWLEntity> domain = ontology.getEntitiesInSignature(item.getDomain(), true);
-        if(domain.isEmpty()) {
-            return Lists.newArrayList(item.getDomain());
-        }
-        else {
-            return Lists.newArrayList(domain);
-        }
+                                                 OWLOntologyID ontologyId) {
+        return entitiesByIri.getEntityInSignature(item.getDomain()).collect(toList());
     }
 }

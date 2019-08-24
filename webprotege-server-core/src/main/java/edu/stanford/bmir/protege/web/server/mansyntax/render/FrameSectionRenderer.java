@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import java.util.Comparator;
@@ -24,9 +24,9 @@ public interface FrameSectionRenderer<E extends OWLObject, I, R> {
 
     Formatting getSectionFormatting();
 
-    List<I> getItemsInOntology(E subject, OWLOntology ontology, ShortFormProvider shortFormProvider, Comparator<OWLObject> objectComparator);
+    List<I> getItemsInOntology(E subject, OWLOntologyID ontologyId, ShortFormProvider shortFormProvider, Comparator<OWLObject> objectComparator);
 
-    List<R> getRenderablesForItem(E subject, I item, OWLOntology ontology);
+    List<R> getRenderablesForItem(E subject, I item, OWLOntologyID ontologyId);
 
     String getSeparatorAfter(int renderableIndex, List<R> renderables);
 

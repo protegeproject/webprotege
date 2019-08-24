@@ -129,7 +129,7 @@ public class ProjectChangesManager_IT {
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
                         shortFormAdapter,
-                        new EntityIRICheckerImpl(rootOntology, entitiesInProjectSignatureIndex),
+                        new EntityIRICheckerImpl(entitiesInSignatureIndex),
                         LiteralStyle.BRACKETED,
                         new DefaultHttpLinkRenderer(),
                         new MarkdownLiteralRenderer()
@@ -155,8 +155,7 @@ public class ProjectChangesManager_IT {
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
-                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(rootOntology,
-                                                                                                                                        defaultOntologyIdManager),
+                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(defaultOntologyIdManager),
                                                                                              defaultOntologyIdManager,
                                                                                              projectOntologiesIndex));
 

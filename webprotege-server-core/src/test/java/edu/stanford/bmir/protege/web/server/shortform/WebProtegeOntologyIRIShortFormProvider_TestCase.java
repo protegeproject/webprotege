@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
  */
+@SuppressWarnings("Guava")
 @RunWith(MockitoJUnitRunner.class)
 public class WebProtegeOntologyIRIShortFormProvider_TestCase {
 
@@ -24,30 +27,32 @@ public class WebProtegeOntologyIRIShortFormProvider_TestCase {
     private IRI iri;
 
     @Mock
-    private OWLOntology rootOntology;
-
     private OWLOntologyID ontologyId;
+
+    @Mock
+    private DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Before
     public void setUp() throws Exception {
-        iri = IRI.create("http://stuff");
-        ontologyId = new OWLOntologyID(iri);
-        when(rootOntology.getOntologyID()).thenReturn(ontologyId);
+        iri = IRI.create("http://stuff.com/OntologyA");
+        when(defaultOntologyIdManager.getDefaultOntologyId()).thenReturn(ontologyId);
+        when(ontologyId.getOntologyIRI())
+                .thenReturn(Optional.of(iri));
+        when(ontologyId.getVersionIRI())
+                .thenReturn(Optional.absent());
     }
 
     @Test
     public void shouldReturnStandardShortFormForRootOntology() {
-        WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(rootOntology,
-                                                                                                defaultOntologyIdManager);
-        String shortForm = sfp.getShortForm(rootOntology);
+        var sfp = new WebProtegeOntologyIRIShortFormProvider(defaultOntologyIdManager);
+        var shortForm = sfp.getShortForm(ontologyId);
         assertThat(shortForm, is(equalTo("root-ontology")));
     }
 
     @Test
     public void shouldReturnStandardShortFormForRootOntologyIRI() {
-        WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(rootOntology,
-                                                                                                defaultOntologyIdManager);
-        String shortForm = sfp.getShortForm(iri);
+        var sfp = new WebProtegeOntologyIRIShortFormProvider(defaultOntologyIdManager);
+        var shortForm = sfp.getShortForm(iri);
         assertThat(shortForm, is(equalTo("root-ontology")));
     }
 }

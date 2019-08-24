@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-22
  */
+@ProjectSingleton
 public interface DisjointClassesAxiomsIndex {
 
     @Nonnull

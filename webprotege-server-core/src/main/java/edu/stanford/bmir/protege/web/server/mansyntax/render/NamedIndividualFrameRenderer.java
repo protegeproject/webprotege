@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import com.google.common.collect.Lists;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -10,14 +12,42 @@ import java.util.List;
  */
 public class NamedIndividualFrameRenderer implements FrameRenderer<OWLNamedIndividual> {
 
+    @Nonnull
+    private final NamedIndividualTypesSectionRenderer namedIndividualTypesSectionRenderer;
+
+    @Nonnull
+    private final AnnotationsSectionRenderer<OWLNamedIndividual> annotationsSectionRenderer;
+
+    @Nonnull
+    private final NamedIndividualFactsSectionRenderer factsSectionRenderer;
+
+    @Nonnull
+    private final NamedIndividualSameAsSectionRenderer sameAsSectionRenderer;
+
+    @Nonnull
+    private final NamedIndividualDifferentFromSectionRenderer differentFromSectionRenderer;
+
+    @Inject
+    public NamedIndividualFrameRenderer(@Nonnull NamedIndividualTypesSectionRenderer namedIndividualTypesSectionRenderer,
+                                        @Nonnull AnnotationsSectionRenderer<OWLNamedIndividual> annotationsSectionRenderer,
+                                        @Nonnull NamedIndividualFactsSectionRenderer factsSectionRenderer,
+                                        @Nonnull NamedIndividualSameAsSectionRenderer sameAsSectionRenderer,
+                                        @Nonnull NamedIndividualDifferentFromSectionRenderer differentFromSectionRenderer) {
+        this.namedIndividualTypesSectionRenderer = namedIndividualTypesSectionRenderer;
+        this.annotationsSectionRenderer = annotationsSectionRenderer;
+        this.factsSectionRenderer = factsSectionRenderer;
+        this.sameAsSectionRenderer = sameAsSectionRenderer;
+        this.differentFromSectionRenderer = differentFromSectionRenderer;
+    }
+
     @Override
     public List<FrameSectionRenderer<OWLNamedIndividual, ?, ?>> getSectionRenderers() {
-        List<FrameSectionRenderer<OWLNamedIndividual, ?, ?>> renderers = Lists.newArrayList();
-        renderers.add(new NamedIndividualTypesSectionRenderer());
-        renderers.add(new AnnotationsSectionRenderer<>());
-        renderers.add(new NamedIndividualFactsSectionRenderer());
-        renderers.add(new NamedIndividualSameAsSectionRenderer());
-        renderers.add(new NamedIndividualDifferentFromSectionRenderer());
+        var renderers = Lists.<FrameSectionRenderer<OWLNamedIndividual, ?, ?>>newArrayList();
+        renderers.add(namedIndividualTypesSectionRenderer);
+        renderers.add(annotationsSectionRenderer);
+        renderers.add(factsSectionRenderer);
+        renderers.add(sameAsSectionRenderer);
+        renderers.add(differentFromSectionRenderer);
         return renderers;
     }
 }
