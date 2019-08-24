@@ -3,14 +3,12 @@ package edu.stanford.bmir.protege.web.server.bulkop;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -28,9 +26,6 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     private final OWLDataFactory dataFactory;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final ImmutableSet<OWLEntity> entities;
 
     @Nonnull
@@ -40,51 +35,75 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     private final OWLAnnotationValue value;
 
     @Nonnull
-    private final MessageFormatter messageFormatter;
-
-    @Nonnull
     private final String commitMessage;
 
-    private OWLLiteral litTrue;
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final EntitiesInOntologySignatureIndex entitiesInSignature;
+
+    @Nonnull
+    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionBySubject;
 
     @AutoFactory
     public SetAnnotationValueActionChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
-                                                       @Provided @Nonnull OWLOntology rootOntology,
-                                                       @Provided @Nonnull MessageFormatter messageFormatter,
                                                        @Nonnull ImmutableSet<OWLEntity> entities,
                                                        @Nonnull OWLAnnotationProperty property,
                                                        @Nonnull OWLAnnotationValue value,
-                                                       @Nonnull String commitMessage) {
+                                                       @Nonnull String commitMessage,
+                                                       @Provided @Nonnull OntologyChangeFactory changeFactory,
+                                                       @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                                       @Provided @Nonnull EntitiesInOntologySignatureIndex entitiesInSignature,
+                                                       @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionBySubject) {
         this.dataFactory = checkNotNull(dataFactory);
-        this.litTrue = dataFactory.getOWLLiteral(true);
-        this.rootOntology = checkNotNull(rootOntology);
         this.entities = checkNotNull(entities);
         this.property = checkNotNull(property);
         this.value = checkNotNull(value);
-        this.messageFormatter = checkNotNull(messageFormatter);
         this.commitMessage = checkNotNull(commitMessage);
+        this.changeFactory = checkNotNull(changeFactory);
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.entitiesInSignature = checkNotNull(entitiesInSignature);
+        this.annotationAssertionBySubject = checkNotNull(annotationAssertionBySubject);
     }
 
     @Override
     public OntologyChangeList<Set<OWLEntity>> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<Set<OWLEntity>> builder = OntologyChangeList.builder();
-        // TODO: Axiom Annotations
-        for(OWLOntology ontology : rootOntology.getImportsClosure()) {
-            for (OWLEntity entity : entities) {
-                if (ontology.containsEntityInSignature(entity, Imports.EXCLUDED)) {
-                    for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI())) {
-                        if (ax.getProperty().equals(property)) {
-                            builder.removeAxiom(ontology, ax);
-                        }
-                    }
-                }
-            }
-        }
-        for(OWLEntity entity : entities) {
-            OWLAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(property, entity.getIRI(), value);
-            builder.addAxiom(rootOntology, ax);
-        }
+        var builder = OntologyChangeList.<Set<OWLEntity>>builder();
+        projectOntologiesIndex.getOntologyIds()
+                              .forEach(ontId -> generateSetAnnotationValueChangesForOntology(builder, ontId));
         return builder.build(entities);
+    }
+
+    private void generateSetAnnotationValueChangesForOntology(OntologyChangeList.Builder<Set<OWLEntity>> builder,
+                                                              OWLOntologyID ontId) {
+        entities.stream()
+                .filter(entity -> entitiesInSignature.containsEntityInSignature(entity, ontId))
+                .map(OWLEntity::getIRI)
+                .flatMap(subject -> annotationAssertionBySubject.getAxiomsForSubject(subject, ontId))
+                .filter(ax -> ax.getProperty()
+                                .equals(property))
+                .forEach(ax -> generateSetAnnotationValueChangesForAxiom(builder, ontId, ax));
+    }
+
+    private void generateSetAnnotationValueChangesForAxiom(OntologyChangeList.Builder<Set<OWLEntity>> builder,
+                                                           OWLOntologyID ontId,
+                                                           OWLAnnotationAssertionAxiom ax) {
+        // Replacement annotations that set the value go into the ontology where the value was originally located
+        var removeAxiom = changeFactory.createRemoveAxiom(ontId, ax);
+        builder.add(removeAxiom);
+        // Copy over axiom annotations
+        var subject = ax.getSubject();
+        var preservedAxiomAnnotations = ax.getAnnotations();
+        var replacementAx = dataFactory.getOWLAnnotationAssertionAxiom(property,
+                                                                       subject,
+                                                                       value,
+                                                                       preservedAxiomAnnotations);
+        var replacementAxiom = changeFactory.createAddAxiom(ontId, replacementAx);
+        builder.add(replacementAxiom);
     }
 
     @Override

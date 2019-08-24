@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,7 +25,7 @@ public class PropertyValueMinimiser {
         this.subsumptionChecker = checkNotNull(subsumptionChecker);
     }
 
-    public List<PropertyValue> minimisePropertyValues(List<PropertyValue> propertyValues) {
+    public Stream<PropertyValue> minimisePropertyValues(List<PropertyValue> propertyValues) {
         List<PropertyValue> result = Lists.newArrayList(propertyValues);
         for (int i = 0; i < propertyValues.size(); i++) {
             for (int j = 0; j < propertyValues.size(); j++) {
@@ -39,6 +40,6 @@ public class PropertyValueMinimiser {
             }
         }
         result.removeIf(Objects::isNull);
-        return result;
+        return result.stream();
     }
 }

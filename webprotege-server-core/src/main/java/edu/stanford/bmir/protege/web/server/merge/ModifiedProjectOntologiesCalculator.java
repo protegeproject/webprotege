@@ -1,11 +1,17 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,25 +24,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ModifiedProjectOntologiesCalculator {
 
-    private final ImmutableSet<OWLOntology> projectOntologies;
+    private final ImmutableSet<Ontology> projectOntologies;
 
-    private final ImmutableSet<OWLOntology> editedOntologies;
+    private final ImmutableSet<Ontology> editedOntologies;
 
     private final OntologyDiffCalculator diffCalculator;
 
-    public ModifiedProjectOntologiesCalculator(ImmutableSet<OWLOntology> projectOntologies,
-                                               ImmutableSet<OWLOntology> editedOntologies,
-                                               OntologyDiffCalculator diffCalculator) {
-        this.projectOntologies = checkNotNull(projectOntologies);
-        this.editedOntologies = checkNotNull(editedOntologies);
+    @AutoFactory
+    @Inject
+    public ModifiedProjectOntologiesCalculator(@Nonnull Collection<Ontology> projectOntologies,
+                                               @Nonnull Collection<Ontology> editedOntologies,
+                                               @Provided @Nonnull OntologyDiffCalculator diffCalculator) {
+        this.projectOntologies = ImmutableSet.copyOf(checkNotNull(projectOntologies));
+        this.editedOntologies = ImmutableSet.copyOf(checkNotNull(editedOntologies));
         this.diffCalculator = checkNotNull(diffCalculator);
     }
 
+    @Nonnull
     public Set<OntologyDiff> getModifiedOntologyDiffs() {
         Set<OntologyDiff> diffs = new HashSet<>();
-        for(OWLOntology projectOntology : projectOntologies) {
-            for(OWLOntology editedOntology : editedOntologies) {
-                if(isDifferentVersionOfOntology(projectOntology, editedOntology)) {
+        for(Ontology projectOntology : projectOntologies) {
+            for(Ontology editedOntology : editedOntologies) {
+                if(isDifferentVersionOfOntology(projectOntology.getOntologyId(), editedOntology.getOntologyId())) {
                     OntologyDiff ontologyDiff = diffCalculator.computeDiff(projectOntology, editedOntology);
                     if (!ontologyDiff.isEmpty()) {
                         diffs.add(ontologyDiff);
@@ -48,15 +57,15 @@ public class ModifiedProjectOntologiesCalculator {
     }
 
 
-    private boolean isDifferentVersionOfOntology(OWLOntology ontology, OWLOntology otherOntology) {
-        if(ontology.getOntologyID().isAnonymous()) {
+    private boolean isDifferentVersionOfOntology(OWLOntologyID ontologyId, OWLOntologyID otherOntologyId) {
+        if(ontologyId.isAnonymous()) {
             return false;
         }
-        if(otherOntology.getOntologyID().isAnonymous()) {
+        if(otherOntologyId.isAnonymous()) {
             return false;
         }
-        Optional<IRI> ontologyIRI = ontology.getOntologyID().getOntologyIRI();
-        Optional<IRI> otherOntologyIRI = otherOntology.getOntologyID().getOntologyIRI();
+        Optional<IRI> ontologyIRI = ontologyId.getOntologyIRI();
+        Optional<IRI> otherOntologyIRI = otherOntologyId.getOntologyIRI();
         return ontologyIRI.equals(otherOntologyIRI);
     }
 }

@@ -1,15 +1,14 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
-import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.inject.Inject;
@@ -27,13 +26,13 @@ public class EntityDeprecatedChangedEventTranslator implements EventTranslator {
 
     private DeprecatedEntityChecker deprecatedEntityChecker;
 
-    private HasGetEntitiesWithIRI hasGetEntitiesWithIRI;
+    private EntitiesInProjectSignatureByIriIndex entitiesByIri;
 
     @Inject
-    public EntityDeprecatedChangedEventTranslator(ProjectId projectId, DeprecatedEntityChecker deprecatedEntityChecker, HasGetEntitiesWithIRI hasGetEntitiesWithIRI) {
+    public EntityDeprecatedChangedEventTranslator(ProjectId projectId, DeprecatedEntityChecker deprecatedEntityChecker, EntitiesInProjectSignatureByIriIndex entitiesByIri) {
         this.projectId = projectId;
         this.deprecatedEntityChecker = deprecatedEntityChecker;
-        this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
+        this.entitiesByIri = entitiesByIri;
     }
 
 
@@ -51,10 +50,12 @@ public class EntityDeprecatedChangedEventTranslator implements EventTranslator {
                     if (axiom.getProperty().isDeprecated()) {
                         if (axiom.getSubject() instanceof IRI) {
                             IRI subject = (IRI) axiom.getSubject();
-                            for (OWLEntity entity : hasGetEntitiesWithIRI.getEntitiesWithIRI(subject)) {
-                                boolean deprecated = deprecatedEntityChecker.isDeprecated(entity);
-                                projectEventList.add(new EntityDeprecatedChangedEvent(projectId, entity, deprecated));
-                            }
+                            entitiesByIri.getEntityInSignature(subject)
+                                    .map(entity -> {
+                                        var deprecated = deprecatedEntityChecker.isDeprecated(entity);
+                                        return new EntityDeprecatedChangedEvent(projectId, entity, deprecated);
+                                    })
+                                    .forEach(projectEventList::add);
                         }
                     }
                 }

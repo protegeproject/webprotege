@@ -1,18 +1,16 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.entity.EntityRenamer;
+import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.parameters.Imports;
-import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,37 +22,48 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerator<Collection<OWLEntity>> {
 
-    private String fromPrefix;
+    @Nonnull
+    private final String fromPrefix;
 
-    private String toPrefix;
+    @Nonnull
+    private final String toPrefix;
 
-    private OWLOntology rootOntology;
+    @Nonnull
+    private final ProjectSignatureIndex projectSignatureIndex;
 
-    public FindAndReplaceIRIPrefixChangeGenerator(String fromPrefix, String toPrefix, OWLOntology rootOntology) {
+    @Nonnull
+    private final EntityRenamer entityRenamer;
+
+    @AutoFactory
+    public FindAndReplaceIRIPrefixChangeGenerator(@Nonnull String fromPrefix,
+                                                  @Nonnull String toPrefix,
+                                                  @Provided @Nonnull ProjectSignatureIndex projectSignatureIndex,
+                                                  @Provided @Nonnull EntityRenamer entityRenamer) {
         this.fromPrefix = checkNotNull(fromPrefix);
         this.toPrefix = checkNotNull(toPrefix);
-        this.rootOntology = checkNotNull(rootOntology);
+        this.projectSignatureIndex = checkNotNull(projectSignatureIndex);
+        this.entityRenamer = checkNotNull(entityRenamer);
     }
 
     @Override
     public OntologyChangeList<Collection<OWLEntity>> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<Collection<OWLEntity>> builder = OntologyChangeList.builder();
-        Map<OWLEntity, IRI> renameMap = new HashMap<>();
-        for(OWLEntity entity : rootOntology.getSignature(Imports.INCLUDED)) {
-            if(!entity.isBuiltIn()) {
-                IRI iri = entity.getIRI();
-                String iriString = iri.toString();
-                if(iriString.startsWith(fromPrefix)) {
-                    IRI toIRI = IRI.create(toPrefix + iri.subSequence(fromPrefix.length(), iri.length()));
-                    renameMap.put(entity, toIRI);
-                }
-            }
-        }
-        OWLEntityRenamer entityRenamer = new OWLEntityRenamer(rootOntology.getOWLOntologyManager(),
-                                                              rootOntology.getImportsClosure());
-        List<OWLOntologyChange> changeList = entityRenamer.changeIRI(renameMap);
+        var builder = OntologyChangeList.<Collection<OWLEntity>>builder();
+        var renameMap = new HashMap<OWLEntity, IRI>();
+        projectSignatureIndex.getSignature()
+                             .filter(entity -> !entity.isBuiltIn())
+                             .filter(this::beginsWithFromPrefix)
+                             .forEach(entity -> {
+                                 var iri = entity.getIRI();
+                                 var toIri = IRI.create(toPrefix + iri.subSequence(fromPrefix.length(), iri.length()));
+                                 renameMap.put(entity, toIri);
+                             });
+        var changeList = entityRenamer.generateChanges(renameMap);
         builder.addAll(changeList);
         return builder.build(renameMap.keySet());
+    }
+
+    private boolean beginsWithFromPrefix(OWLEntity entity) {
+        return entity.getIRI().toString().startsWith(fromPrefix);
     }
 
     @Override

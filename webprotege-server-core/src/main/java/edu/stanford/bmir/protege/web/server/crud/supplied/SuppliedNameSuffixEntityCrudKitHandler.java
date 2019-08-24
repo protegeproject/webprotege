@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import com.google.common.base.Charsets;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
@@ -9,13 +13,14 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import java.io.UnsupportedEncodingException;
+import javax.inject.Inject;
 import java.net.URLEncoder;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,21 +31,32 @@ import java.util.Optional;
 public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHandler<SuppliedNameSuffixSettings,
         ChangeSetEntityCrudSession> {
 
-    private SuppliedNameSuffixSettings suffixSettings;
+    @Nonnull
+    private final SuppliedNameSuffixSettings suffixSettings;
 
-    private EntityCrudKitPrefixSettings prefixSettings;
+    @Nonnull
+    private final EntityCrudKitPrefixSettings prefixSettings;
 
-    public SuppliedNameSuffixEntityCrudKitHandler() {
-        this(new EntityCrudKitPrefixSettings(), new SuppliedNameSuffixSettings());
-    }
+    @Nonnull
+    private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+    @AutoFactory
+    @Inject
     public SuppliedNameSuffixEntityCrudKitHandler(
-            EntityCrudKitPrefixSettings prefixSettings,
-            SuppliedNameSuffixSettings settings) {
-        this.prefixSettings = prefixSettings;
-        this.suffixSettings = settings;
+            @Nonnull EntityCrudKitPrefixSettings prefixSettings,
+            @Nonnull SuppliedNameSuffixSettings settings,
+            @Provided @Nonnull OWLDataFactory dataFactory,
+            @Provided @Nonnull OntologyChangeFactory changeFactory) {
+        this.prefixSettings = checkNotNull(prefixSettings);
+        this.suffixSettings = checkNotNull(settings);
+        this.dataFactory = dataFactory;
+        this.changeFactory = changeFactory;
     }
 
+    @Nonnull
     @Override
     public EntityCrudKitPrefixSettings getPrefixSettings() {
         return prefixSettings;
@@ -51,6 +67,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         return SuppliedNameSuffixKit.getId();
     }
 
+    @Nonnull
     @Override
     public SuppliedNameSuffixSettings getSuffixSettings() {
         return suffixSettings;
@@ -75,12 +92,11 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             @Nonnull OntologyChangeList.Builder<E> changeListBuilder) {
 
         // The supplied name can either be a fully quoted IRI, a prefixed name or some other string
-        final OWLDataFactory dataFactory = context.getDataFactory();
         final IRI iri;
         final String suppliedName = shortForm.getShortForm();
         final String label;
-        Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
-        if (parsedIRI.isPresent()) {
+        var parsedIRI = new IRIParser().parseIRI(suppliedName);
+        if(parsedIRI.isPresent()) {
             // IRI supplied as a quoted IRI
             iri = parsedIRI.get();
             LocalNameExtractor localNameExtractor = new LocalNameExtractor();
@@ -95,13 +111,13 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         }
         else {
             // IRI supplied as a prefixed name
-            PrefixedNameExpander prefixedNameExpander = context.getPrefixedNameExpander();
-            Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(shortForm.getShortForm());
-            if (expandedPrefixName.isPresent()) {
+            var prefixedNameExpander = context.getPrefixedNameExpander();
+            var expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(shortForm.getShortForm());
+            if(expandedPrefixName.isPresent()) {
                 iri = expandedPrefixName.get();
                 // The label is the local name
                 int sepIndex = suppliedName.indexOf(":");
-                if (sepIndex + 1 < suppliedName.length()) {
+                if(sepIndex + 1 < suppliedName.length()) {
                     label = suppliedName.substring(sepIndex + 1);
                 }
                 else {
@@ -115,25 +131,29 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
                 label = suppliedName;
             }
         }
-        E entity = dataFactory.getOWLEntity(entityType, iri);
-        OWLDeclarationAxiom ax = dataFactory.getOWLDeclarationAxiom(entity);
-        changeListBuilder.addAxiom(context.getTargetOntology(), ax);
-        changeListBuilder.addAxiom(context.getTargetOntology(),
-                                   dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(),
-                                                                              iri,
-                                                                              dataFactory.getOWLLiteral(label,
-                                                                                                        langTag.orElse(context.getDictionaryLanguage().getLang()))));
+        var targetOntologyId = context.getTargetOntologyId();
+        var entity = dataFactory.getOWLEntity(entityType, iri);
+        var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
+        changeListBuilder.add(changeFactory.createAddAxiom(targetOntologyId, declarationAxiom));
+        var labellingAxiom = dataFactory.getOWLAnnotationAssertionAxiom(rdfsLabel(),
+                                                                        iri,
+                                                                        dataFactory.getOWLLiteral(
+                                                                                label,
+                                                                                langTag.orElse(
+                                                                                        context.getDictionaryLanguage()
+                                                                                               .getLang())));
+        changeListBuilder.add(changeFactory.createAddAxiom(targetOntologyId, labellingAxiom));
         return entity;
     }
 
     private IRI createEntityIRI(EntityShortForm shortForm) {
-        try {
-            WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
-            String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
-            String escapedShortForm = URLEncoder.encode(transformedShortForm, "UTF-8");
-            return IRI.create(prefixSettings.getIRIPrefix() + escapedShortForm);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UTF-8 is not supported!");
-        }
+        var whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
+        var transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
+        var escapedShortForm = URLEncoder.encode(transformedShortForm, Charsets.UTF_8);
+        return IRI.create(prefixSettings.getIRIPrefix() + escapedShortForm);
+    }
+
+    private OWLAnnotationProperty rdfsLabel() {
+        return dataFactory.getRDFSLabel();
     }
 }

@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
@@ -24,9 +25,14 @@ public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugi
     @Nonnull
     private final SuppliedNameSuffixKit kit;
 
+    @Nonnull
+    private final SuppliedNameSuffixEntityCrudKitHandlerFactory factory;
+
     @Inject
-    public SuppliedNameSuffixEntityCrudKitPlugin(@Nonnull SuppliedNameSuffixKit kit) {
+    public SuppliedNameSuffixEntityCrudKitPlugin(@Nonnull SuppliedNameSuffixKit kit,
+                                                 @Nonnull SuppliedNameSuffixEntityCrudKitHandlerFactory factory) {
         this.kit = checkNotNull(kit);
+        this.factory = checkNotNull(factory);
     }
 
     @Override
@@ -36,12 +42,12 @@ public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugi
 
     @Override
     public EntityCrudKitHandler<SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> getEntityCrudKitHandler() {
-        return new SuppliedNameSuffixEntityCrudKitHandler();
+        return factory.create(new EntityCrudKitPrefixSettings(), new SuppliedNameSuffixSettings());
     }
 
     @Override
     public EntityCrudKitHandler<SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> getEntityCrudKitHandler(EntityCrudKitSettings<SuppliedNameSuffixSettings> settings) {
-        return new SuppliedNameSuffixEntityCrudKitHandler(settings.getPrefixSettings(), settings.getSuffixSettings());
+        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings());
     }
 
     @Override

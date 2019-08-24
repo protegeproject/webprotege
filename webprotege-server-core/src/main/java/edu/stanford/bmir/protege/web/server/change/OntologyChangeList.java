@@ -71,7 +71,7 @@ public class OntologyChangeList<R> implements HasResult<R> {
         public Builder() {
         }
 
-        private void add(@Nonnull OWLOntologyChange change) {
+        public void add(@Nonnull OWLOntologyChange change) {
             listBuilder.add(checkNotNull(change));
         }
 

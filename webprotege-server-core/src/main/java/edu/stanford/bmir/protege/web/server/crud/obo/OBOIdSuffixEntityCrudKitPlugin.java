@@ -24,9 +24,14 @@ public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOId
     @Nonnull
     private final OBOIdSuffixKit kit;
 
+    @Nonnull
+    private final OBOIdSuffixEntityCrudKitHandlerFactory factory;
+
     @Inject
-    public OBOIdSuffixEntityCrudKitPlugin(@Nonnull OBOIdSuffixKit kit) {
+    public OBOIdSuffixEntityCrudKitPlugin(@Nonnull OBOIdSuffixKit kit,
+                                          @Nonnull OBOIdSuffixEntityCrudKitHandlerFactory factory) {
         this.kit = checkNotNull(kit);
+        this.factory = checkNotNull(factory);
     }
 
     @Override
@@ -36,12 +41,12 @@ public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOId
 
     @Override
     public EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler() {
-        return new OBOIdSuffixEntityCrudKitHandler(new EntityCrudKitPrefixSettings(), new OBOIdSuffixSettings());
+        return factory.create(new EntityCrudKitPrefixSettings(), new OBOIdSuffixSettings());
     }
 
     @Override
     public EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler(EntityCrudKitSettings<OBOIdSuffixSettings> settings) {
-        return new OBOIdSuffixEntityCrudKitHandler(settings.getPrefixSettings(), settings.getSuffixSettings());
+        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings());
     }
 
     @Override

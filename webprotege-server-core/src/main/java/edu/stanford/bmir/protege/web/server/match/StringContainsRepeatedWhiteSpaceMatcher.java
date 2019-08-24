@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.match;
 
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
-
 import javax.annotation.Nonnull;
 
 /**

@@ -6,9 +6,7 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import java.util.Comparator;
 
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsLast;
+import static java.util.Comparator.*;
 import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
 
 /**

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.actions;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionDetails;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;

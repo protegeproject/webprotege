@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.description;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 

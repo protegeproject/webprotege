@@ -5,9 +5,14 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.AbstractCreateEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.util.ClassExpression;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,11 +37,12 @@ public class CreateIndividualsChangeListGenerator extends AbstractCreateEntities
     @Inject
     public CreateIndividualsChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                                 @Provided @Nonnull MessageFormatter msg,
-                                                @Provided @Nonnull OWLOntology rootOntology,
+                                                @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                                @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                                 @Nonnull ImmutableSet<OWLClass> parents,
                                                 @Nonnull String sourceText,
                                                 @Nonnull String langTag) {
-        super(NAMED_INDIVIDUAL, sourceText, langTag, parents, rootOntology, dataFactory, msg);
+        super(NAMED_INDIVIDUAL, sourceText, langTag, parents, dataFactory, msg, ontologyChangeFactory, defaultOntologyIdManager);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

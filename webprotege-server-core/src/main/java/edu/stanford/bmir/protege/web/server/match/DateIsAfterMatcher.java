@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.match;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 import javax.annotation.Nonnull;
-
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 

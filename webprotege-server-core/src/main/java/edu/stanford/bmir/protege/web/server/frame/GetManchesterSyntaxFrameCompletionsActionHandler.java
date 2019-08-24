@@ -8,11 +8,10 @@ import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.renderer.ManchesterSyntaxKeywords;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsResult;
@@ -22,7 +21,6 @@ import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -43,6 +41,10 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 
     private static final int SEARCH_LIMIT = 3000;
 
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
     private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
 
     @Nonnull
@@ -52,22 +54,18 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     private final WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
 
     @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
 
     @Inject
     public GetManchesterSyntaxFrameCompletionsActionHandler(@Nonnull AccessManager accessManager,
+                                                            @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                                             @Nonnull DictionaryManager dictionaryManager,
                                                             @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider,
-                                                            @Nonnull @RootOntology OWLOntology rootOntology,
                                                             @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
         super(accessManager);
+        this.projectOntologiesIndex = projectOntologiesIndex;
         this.dictionaryManager = dictionaryManager;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
-        this.rootOntology = rootOntology;
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
     }
 
@@ -143,7 +141,6 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
                                     String shortForm = match.getShortForm();
                                     Optional<EntityNameMatchResult> matchResult = entityNameMatcher.findIn(shortForm);
                                     return matchResult.map(mr -> {
-                                        OWLEntity entity = match.getEntity();
                                         String quotedShortForm = getQuotedShortForm(shortForm);
                                         AutoCompletionChoice choice = new AutoCompletionChoice(quotedShortForm,
                                                                                                shortForm, "",
@@ -162,16 +159,16 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
                                                                             EditorPosition fromPos,
                                                                             EditorPosition toPos,
                                                                             String lastWordPrefix) {
-        List<AutoCompletionChoice> choices = Lists.newArrayList();
         if (e.isOntologyNameExpected()) {
-            for (OWLOntology ont : rootOntology.getImportsClosure()) {
-                String ontologyName = ontologyIRIShortFormProvider.getShortForm(ont);
-                if (lastWordPrefix.isEmpty() || ontologyName.toLowerCase().startsWith(lastWordPrefix)) {
-                    choices.add(new AutoCompletionChoice(ontologyName, ontologyName, "cm-ontology-list", fromPos, toPos));
-                }
-            }
+            return projectOntologiesIndex.getOntologyIds()
+                                  .map(ontologyIRIShortFormProvider::getShortForm)
+                                  .filter(shortForm -> lastWordPrefix.isEmpty() || shortForm.toLowerCase().startsWith(lastWordPrefix))
+                                  .map(shortForm -> new AutoCompletionChoice(shortForm, shortForm, "cm-ontology-list", fromPos, toPos))
+                                  .collect(toList());
         }
-        return choices;
+        else {
+            return Collections.emptyList();
+        }
     }
 
     private List<AutoCompletionChoice> getKeywordAutoCompletionChoices(ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
@@ -187,13 +184,14 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
                 expectedKeywordChoices.add(new AutoCompletionChoice(expectedKeyword, expectedKeyword, style, fromPos, toPos));
             }
         }
-        expectedKeywordChoices.sort(new Comparator<AutoCompletionChoice>() {
+        expectedKeywordChoices.sort(new Comparator<>() {
 
             private ManchesterSyntaxKeywords.KeywordComparator keywordComparator = new ManchesterSyntaxKeywords.KeywordComparator();
 
             @Override
             public int compare(AutoCompletionChoice autoCompletionChoice, AutoCompletionChoice autoCompletionChoice2) {
-                return keywordComparator.compare(autoCompletionChoice.getDisplayText(), autoCompletionChoice2.getDisplayText());
+                return keywordComparator.compare(autoCompletionChoice.getDisplayText(),
+                                                 autoCompletionChoice2.getDisplayText());
 
             }
         });

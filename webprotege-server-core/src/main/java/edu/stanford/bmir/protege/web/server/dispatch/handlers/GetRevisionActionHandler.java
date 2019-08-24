@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.gwt.user.client.rpc.StatusCodeException;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;

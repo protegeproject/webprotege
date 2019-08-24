@@ -1,10 +1,14 @@
 package edu.stanford.bmir.protege.web.server.crud.obo;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -15,7 +19,6 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
@@ -24,7 +27,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -39,21 +45,36 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     private static final IRI CREATION_DATE = IRI.create("http://www.geneontology.org/formats/oboInOwl#creation_date");
 
-    private static final DateTimeFormatter ISO_OFFSET_DATE_TIME = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
     private long currentId = 0;
 
     private EntityCrudKitPrefixSettings prefixSettings;
 
     private OBOIdSuffixSettings suffixSettings;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     private final Map<UserId, Long> userId2CurrentIdMap = Maps.newHashMap();
 
     private final Map<UserId, UserIdRange> userId2RangeEndMap;
 
-    public OBOIdSuffixEntityCrudKitHandler(EntityCrudKitPrefixSettings prefixSettings, OBOIdSuffixSettings suffixSettings) {
-        this.prefixSettings = prefixSettings;
-        this.suffixSettings = suffixSettings;
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex projectSignatureIndex;
+
+    @AutoFactory
+    public OBOIdSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                           @Nonnull OBOIdSuffixSettings suffixSettings,
+                                           @Provided @Nonnull OWLDataFactory dataFactory,
+                                           @Provided @Nonnull OntologyChangeFactory changeFactory,
+                                           @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex) {
+        this.prefixSettings = checkNotNull(prefixSettings);
+        this.suffixSettings = checkNotNull(suffixSettings);
+        this.dataFactory = dataFactory;
+        this.changeFactory = changeFactory;
+        this.projectSignatureIndex = projectSignatureIndex;
 
         ImmutableMap.Builder<UserId, UserIdRange> builder = ImmutableMap.builder();
         for(UserIdRange range : suffixSettings.getUserIdRanges()) {
@@ -91,24 +112,24 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     @Override
     public <E extends OWLEntity> E create(@Nonnull OBOIdSession session, @Nonnull EntityType<E> entityType, @Nonnull EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull EntityCrudContext context, @Nonnull OntologyChangeList.Builder<E> builder) {
-        OWLDataFactory dataFactory = context.getDataFactory();
-        final OWLOntology targetOntology = context.getTargetOntology();
-        final IRI iri = getNextIRI(session, targetOntology, context.getUserId());
-        final E entity = dataFactory.getOWLEntity(entityType, iri);
-        builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
+        var targetOntology = context.getTargetOntologyId();
+        var iri = getNextIRI(session, context.getUserId());
+        var entity = dataFactory.getOWLEntity(entityType, iri);
+        var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
+        builder.add(changeFactory.createAddAxiom(targetOntology, declarationAxiom));
         DictionaryLanguage language = context.getDictionaryLanguage();
         IRI annotationPropertyIri = language.getAnnotationPropertyIri();
         if (annotationPropertyIri != null) {
             final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
-            OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.addAxiom(targetOntology, ax);
+            var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+            builder.add(changeFactory.createAddAxiom(targetOntology, ax));
         }
         OWLAnnotationAssertionAxiom createdByAx = dataFactory.getOWLAnnotationAssertionAxiom(
                 dataFactory.getOWLAnnotationProperty(CREATED_BY),
                 entity.getIRI(),
                 dataFactory.getOWLLiteral(context.getUserId().getUserName())
         );
-        builder.addAxiom(targetOntology, createdByAx);
+        builder.add(changeFactory.createAddAxiom(targetOntology, createdByAx));
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
         String formattedNow = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         OWLAnnotationAssertionAxiom createdAtAx = dataFactory.getOWLAnnotationAssertionAxiom(
@@ -116,13 +137,13 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
                 entity.getIRI(),
                 dataFactory.getOWLLiteral(formattedNow)
         );
-        builder.addAxiom(targetOntology, createdAtAx);
+        builder.add(changeFactory.createAddAxiom(targetOntology, createdAtAx));
         return entity;
     }
 
 
 
-    private synchronized IRI getNextIRI(OBOIdSession session, OWLOntology rootOntology, UserId userId) {
+    private synchronized IRI getNextIRI(OBOIdSession session, UserId userId) {
         StringBuilder formatStringBuilder = new StringBuilder();
         for (int i = 0; i < suffixSettings.getTotalDigits(); i++) {
             formatStringBuilder.append("0");
@@ -134,7 +155,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
             if(!session.isSessionId(currentId)) {
                 String shortName = numberFormat.format(currentId);
                 IRI iri = IRI.create(prefixSettings.getIRIPrefix() + shortName);
-                if (!rootOntology.containsEntityInSignature(iri, Imports.INCLUDED)) {
+                if (projectSignatureIndex.getEntityInSignature(iri).limit(1).count() == 0) {
                     session.addSessionId(currentId);
                     setCurrentId(userId, currentId);
                     return iri;
@@ -145,12 +166,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     private long getCurrentId(UserId userId) {
         Long currentIdForUser = userId2CurrentIdMap.get(userId);
-        if(currentIdForUser != null) {
-            return currentIdForUser;
-        }
-        else {
-            return currentId;
-        }
+        return Objects.requireNonNullElse(currentIdForUser, currentId);
     }
 
     private void setCurrentId(UserId userId, long currentId) {
@@ -167,10 +183,9 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         }
     }
 
-    private static OWLLiteral getLabellingLiteral(EntityShortForm shortForm,
+    private OWLLiteral getLabellingLiteral(EntityShortForm shortForm,
                                                   Optional<String> langTag,
                                                   EntityCrudContext context) {
-        OWLDataFactory dataFactory = context.getDataFactory();
         DictionaryLanguage dictionaryLanguage = context.getDictionaryLanguage();
         return dataFactory.getOWLLiteral(shortForm.getShortForm(), langTag.orElse(dictionaryLanguage.getLang()));
     }

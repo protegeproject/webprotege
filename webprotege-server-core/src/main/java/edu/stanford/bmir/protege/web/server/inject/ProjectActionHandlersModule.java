@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.server.inject;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
-import edu.stanford.bmir.protege.web.server.bulkop.MoveToParentActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.EditAnnotationValuesActionHandler;
+import edu.stanford.bmir.protege.web.server.bulkop.MoveToParentActionHandler;
 import edu.stanford.bmir.protege.web.server.bulkop.SetAnnotationValueActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
 import edu.stanford.bmir.protege.web.server.collection.CreateCollectionItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.collection.GetCollectionItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
@@ -31,7 +32,6 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingA
 import edu.stanford.bmir.protege.web.server.match.GetMatchingEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
-import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.obo.*;
 import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.project.GetProjectInfoActionHandler;
@@ -54,6 +54,8 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 
@@ -214,11 +216,6 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideGetDataPropertyFrameActionHandler(GetDataPropertyFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
-    public ProjectActionHandler provideGetMetricsActionHandler(GetMetricsActionHandler handler) {
         return handler;
     }
 
@@ -587,6 +584,12 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideGetEntityDotRenderingActionHandler(GetEntityGraphActionHandler handler) {
+        return handler;
+    }
+
+
+    @Provides @IntoSet
+    public ProjectActionHandler<GetEntityCrudKitsAction, GetEntityCrudKitsResult> providesGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
         return handler;
     }
 }

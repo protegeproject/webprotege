@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -14,10 +14,7 @@ import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsView;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
-import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
-import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
+import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
@@ -145,10 +142,10 @@ public class ProjectSettingsPresenter {
                                            ProjectSettings projectSettings = result.getProjectDetails();
                                            displayProjectSettings(container, projectSettings, result.getProjectLanguages());
                                        });
-        dispatchServiceManager.execute(new GetEntityCrudKitSettingsAction(projectId),
+        dispatchServiceManager.execute(new GetEntityCrudKitsAction(projectId),
                                        result -> {
-                                           EntityCrudKitSettings<?> settings = result.getSettings();
-                                           entityCrudKitSettingsEditor.setValue(settings);
+                                            entityCrudKitSettingsEditor.setEntityCrudKits(result.getKits());
+                                            entityCrudKitSettingsEditor.setValue(result.getCurrentSettings());
                                        });
         defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
     }

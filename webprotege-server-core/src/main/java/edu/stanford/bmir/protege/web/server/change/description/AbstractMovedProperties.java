@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.change.description;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;

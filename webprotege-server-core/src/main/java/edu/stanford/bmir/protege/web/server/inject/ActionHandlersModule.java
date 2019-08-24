@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
 import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
-import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
@@ -154,11 +153,6 @@ public class ActionHandlersModule {
 
     @Provides @IntoSet
     public ApplicationActionHandler providesRebuildPermissionsActionHandler(RebuildPermissionsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
-    public ApplicationActionHandler providesGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
         return handler;
     }
 }

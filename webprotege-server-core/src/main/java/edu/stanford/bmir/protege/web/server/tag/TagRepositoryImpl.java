@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -22,7 +21,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.Spliterator;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;

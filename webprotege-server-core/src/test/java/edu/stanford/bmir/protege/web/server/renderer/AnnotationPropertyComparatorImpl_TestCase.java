@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
 import edu.stanford.bmir.protege.web.server.mansyntax.render.AnnotationPropertyComparatorImpl;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.IRIIndexProvider;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.IRIOrdinalProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class AnnotationPropertyComparatorImpl_TestCase {
     private ShortFormProvider sfp;
 
     @Mock
-    private IRIIndexProvider iriIndexProvider;
+    private IRIOrdinalProvider iriOrdinalProvider;
 
     @Mock
     private OWLAnnotationProperty indexedPropertyA, indexedPropertyB, otherProperty;
@@ -38,13 +38,13 @@ public class AnnotationPropertyComparatorImpl_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        comparator = new AnnotationPropertyComparatorImpl(sfp, iriIndexProvider);
+        comparator = new AnnotationPropertyComparatorImpl(sfp, iriOrdinalProvider);
 
         when(indexedPropertyA.getIRI()).thenReturn(indexedIRIA);
-        when(iriIndexProvider.getIndex(indexedIRIA)).thenReturn(2);
+        when(iriOrdinalProvider.getIndex(indexedIRIA)).thenReturn(2);
 
         when(indexedPropertyB.getIRI()).thenReturn(indexedIRIB);
-        when(iriIndexProvider.getIndex(indexedIRIB)).thenReturn(3);
+        when(iriOrdinalProvider.getIndex(indexedIRIB)).thenReturn(3);
 
         when(otherProperty.getIRI()).thenReturn(otherPropertyIRI);
     }
@@ -81,7 +81,7 @@ public class AnnotationPropertyComparatorImpl_TestCase {
 
     @Test
     public void shouldCompareByShortFormCaseInsensitiveWhenIndexesAreTied() {
-        when(iriIndexProvider.getIndex(otherPropertyIRI)).thenReturn(2);
+        when(iriOrdinalProvider.getIndex(otherPropertyIRI)).thenReturn(2);
         when(sfp.getShortForm(indexedPropertyB)).thenReturn("B");
         when(sfp.getShortForm(otherProperty)).thenReturn("a");
         assertThat(comparator.compare(otherProperty, indexedPropertyB), is(lessThan(0)));

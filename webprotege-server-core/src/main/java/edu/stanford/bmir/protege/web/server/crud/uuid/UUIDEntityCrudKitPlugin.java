@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud.uuid;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
@@ -24,9 +25,14 @@ public class UUIDEntityCrudKitPlugin implements EntityCrudKitPlugin<UUIDEntityCr
     @Nonnull
     private UUIDSuffixKit kit;
 
+    @Nonnull
+    private final UUIDEntityCrudKitHandlerFactory factory;
+
     @Inject
-    public UUIDEntityCrudKitPlugin(@Nonnull UUIDSuffixKit kit) {
+    public UUIDEntityCrudKitPlugin(@Nonnull UUIDSuffixKit kit,
+                                   @Nonnull UUIDEntityCrudKitHandlerFactory factory) {
         this.kit = checkNotNull(kit);
+        this.factory = checkNotNull(factory);
     }
 
     @Override
@@ -36,7 +42,7 @@ public class UUIDEntityCrudKitPlugin implements EntityCrudKitPlugin<UUIDEntityCr
 
     @Override
     public UUIDEntityCrudKitHandler getEntityCrudKitHandler() {
-        return new UUIDEntityCrudKitHandler();
+        return factory.create(new EntityCrudKitPrefixSettings(), new UUIDSuffixSettings());
     }
 
     @Override
@@ -46,7 +52,7 @@ public class UUIDEntityCrudKitPlugin implements EntityCrudKitPlugin<UUIDEntityCr
 
     @Override
     public UUIDEntityCrudKitHandler getEntityCrudKitHandler(EntityCrudKitSettings<UUIDSuffixSettings> settings) {
-        return new UUIDEntityCrudKitHandler(settings.getPrefixSettings(), settings.getSuffixSettings());
+        return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings());
     }
 }
 

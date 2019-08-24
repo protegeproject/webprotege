@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import org.semanticweb.owlapi.model.HasContainsEntityInSignature;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -14,15 +14,15 @@ import javax.inject.Inject;
  */
 public class HasContainsEntityInSignatureImpl implements HasContainsEntityInSignature {
 
-    private final OWLOntology rootOntology;
+    private final EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex;
 
     @Inject
-    public HasContainsEntityInSignatureImpl(@RootOntology OWLOntology rootOntology) {
-        this.rootOntology = rootOntology;
+    public HasContainsEntityInSignatureImpl(EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex) {
+        this.entitiesInProjectSignatureIndex = entitiesInProjectSignatureIndex;
     }
 
     @Override
-    public boolean containsEntityInSignature(OWLEntity owlEntity) {
-        return rootOntology.containsEntityInSignature(owlEntity, true);
+    public boolean containsEntityInSignature(@Nonnull OWLEntity owlEntity) {
+        return entitiesInProjectSignatureIndex.containsEntityInSignature(owlEntity);
     }
 }

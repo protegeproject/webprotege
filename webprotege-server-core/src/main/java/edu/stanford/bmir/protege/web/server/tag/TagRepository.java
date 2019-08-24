@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
-import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 import java.util.Optional;
 

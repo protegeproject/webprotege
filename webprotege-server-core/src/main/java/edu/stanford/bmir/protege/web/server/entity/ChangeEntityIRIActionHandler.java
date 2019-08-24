@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
@@ -13,16 +14,14 @@ import edu.stanford.bmir.protege.web.shared.entity.ChangeEntityIRIAction;
 import edu.stanford.bmir.protege.web.shared.entity.ChangeEntityIRIResult;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Matthew Horridge
@@ -36,9 +35,6 @@ public class ChangeEntityIRIActionHandler extends AbstractProjectActionHandler<C
     private final ProjectId projectId;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final RenderingManager renderer;
 
     @Nonnull
@@ -48,20 +44,23 @@ public class ChangeEntityIRIActionHandler extends AbstractProjectActionHandler<C
     private final HasApplyChanges applyChanges;
 
     @Nonnull
+    private final EntityRenamer entityRenamer;
+
+    @Nonnull
     private final EntityDiscussionThreadRepository discussionThreadRepository;
 
 
     @Inject
     public ChangeEntityIRIActionHandler(@Nonnull AccessManager accessManager,
                                         @Nonnull ProjectId projectId,
-                                        @Nonnull @RootOntology OWLOntology rootOntology,
                                         @Nonnull RenderingManager renderer,
                                         @Nonnull OWLDataFactory dataFactory,
                                         @Nonnull HasApplyChanges applyChanges,
+                                        @Nonnull EntityRenamer entityRenamer,
                                         @Nonnull EntityDiscussionThreadRepository discussionThreadRepository) {
         super(accessManager);
         this.projectId = projectId;
-        this.rootOntology = rootOntology;
+        this.entityRenamer = entityRenamer;
         this.renderer = renderer;
         this.dataFactory = dataFactory;
         this.applyChanges = applyChanges;
@@ -84,23 +83,29 @@ public class ChangeEntityIRIActionHandler extends AbstractProjectActionHandler<C
     @Override
     public ChangeEntityIRIResult execute(@Nonnull ChangeEntityIRIAction action,
                                          @Nonnull ExecutionContext executionContext) {
-        OWLEntityRenamer renamer = new OWLEntityRenamer(rootOntology.getOWLOntologyManager(),
-                                                        rootOntology.getImportsClosure());
-        List<OWLOntologyChange> changeList = renamer.changeIRI(action.getEntity(), action.getTheNewIri());
-        OWLEntityData oldRendering = renderer.getRendering(action.getEntity());
-        applyChanges.applyChanges(executionContext.getUserId(),
-                             new FixedChangeListGenerator<>(changeList, action.getEntity(), String.format("Changed %s IRI from %s to %s",
-                                                                                                          action.getEntity().getEntityType().getPrintName(),
-                                                                                                          action.getEntity().getIRI(),
-                                                                                                          action.getTheNewIri()))
-        );
-        OWLEntity theNewEntity = dataFactory.getOWLEntity(action.getEntity().getEntityType(),
-                                                          action.getTheNewIri());
+        var entity = action.getEntity();
+        var theNewIri = action.getTheNewIri();
+        var renameMap = ImmutableMap.of(entity, theNewIri);
+        var changeList = entityRenamer.generateChanges(renameMap);
+        var oldRendering = renderer.getRendering(entity);
+        var changeDescription = getChangeDescription(entity, theNewIri);
+        var changeListGenerator = new FixedChangeListGenerator<>(changeList, entity, changeDescription);
+        applyChanges.applyChanges(executionContext.getUserId(), changeListGenerator);
+        var theNewEntity = dataFactory.getOWLEntity(entity.getEntityType(), theNewIri);
 
-        discussionThreadRepository.replaceEntity(projectId, action.getEntity(), theNewEntity);
-        OWLEntityData newRendering = renderer.getRendering(theNewEntity);
+        discussionThreadRepository.replaceEntity(projectId, entity, theNewEntity);
+        // TODO: Mentions of the entity need replacing too
+        // TODO: Replacing in match criteria
+        var newRendering = renderer.getRendering(theNewEntity);
         return new ChangeEntityIRIResult(projectId,
                                          oldRendering,
                                          newRendering);
+    }
+
+    private String getChangeDescription(OWLEntity entity, IRI theNewIri) {
+        return String.format("Changed %s IRI from %s to %s",
+                              entity.getEntityType().getPrintName(),
+                              entity.getIRI(),
+                              theNewIri);
     }
 }

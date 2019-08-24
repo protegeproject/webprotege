@@ -2,52 +2,58 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
-import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.*;
-import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
-import edu.stanford.bmir.protege.web.server.renderer.*;
-import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
-import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
+import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomComparatorImpl;
 import edu.stanford.bmir.protege.web.server.axiom.DefaultAxiomTypeOrdering;
-import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
+import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
-import edu.stanford.bmir.protege.web.server.individuals.IndividualsIndex;
-import edu.stanford.bmir.protege.web.server.individuals.IndividualsIndexImpl;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
+import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
+import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
-import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
+import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
-import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
-import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
-import edu.stanford.bmir.protege.web.server.project.ChangeManager;
-import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
+import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCacheFactory;
+import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
+import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
+import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
+import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
+import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
+import edu.stanford.bmir.protege.web.server.project.*;
+import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
+import edu.stanford.bmir.protege.web.server.project.chg.RootOntologyProvider;
+import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
+import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreProvider;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.*;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
-import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
@@ -155,8 +161,22 @@ public class ProjectModule {
             SameIndividualAxiomChangeMatcher sameIndividualAxiomChangeMatcher,
             EntityCreationMatcher entityCreationMatcher,
             EntityDeletionMatcher entityDeletionMatcher) {
-        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher, propertyDomainAxiomChangeMatcher, propertyRangeAxiomChangeMatcher, editedAnnotationAssertionChangeMatcher, functionalDataPropertyAxiomChangeMatcher, classAssertionAxiomMatcher, subClassOfAxiomMatcher, classMoveChangeMatcher, subClassOfEditChangeMatcher, propertyAssertionAxiomMatcher, sameIndividualAxiomChangeMatcher, entityCreationMatcher, entityDeletionMatcher);
-        return matchers.stream().map(m -> (ChangeMatcher)m).collect(toImmutableSet());
+        ImmutableSet<Object> matchers = ImmutableSet.of(annotationAssertionChangeMatcher,
+                                                        propertyDomainAxiomChangeMatcher,
+                                                        propertyRangeAxiomChangeMatcher,
+                                                        editedAnnotationAssertionChangeMatcher,
+                                                        functionalDataPropertyAxiomChangeMatcher,
+                                                        classAssertionAxiomMatcher,
+                                                        subClassOfAxiomMatcher,
+                                                        classMoveChangeMatcher,
+                                                        subClassOfEditChangeMatcher,
+                                                        propertyAssertionAxiomMatcher,
+                                                        sameIndividualAxiomChangeMatcher,
+                                                        entityCreationMatcher,
+                                                        entityDeletionMatcher);
+        return matchers.stream()
+                       .map(m -> (ChangeMatcher) m)
+                       .collect(toImmutableSet());
     }
 
     @Provides
@@ -202,12 +222,12 @@ public class ProjectModule {
     public HasGetAncestors<OWLClass> providesOWLClassAncestors(HierarchyProvider<OWLClass> hierarchyProvider) {
         return hierarchyProvider;
     }
-    
+
     @Provides
     public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(HierarchyProvider<OWLObjectProperty> hierarchyProvider) {
         return hierarchyProvider;
     }
-    
+
     @Provides
     public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(HierarchyProvider<OWLDataProperty> hierarchyProvider) {
         return hierarchyProvider;
@@ -217,7 +237,7 @@ public class ProjectModule {
     public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(HierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
         return hierarchyProvider;
     }
-    
+
     @Provides
     public WatchManager provideWatchManager(WatchManagerImpl impl) {
         // Attach it so that it listens for entity frame changed events
@@ -232,14 +252,15 @@ public class ProjectModule {
         return impl;
     }
 
+    @ProjectSingleton
     @Provides
     public ShortFormProvider provideShortFormProvider(ShortFormAdapter shortFormAdapter) {
         return shortFormAdapter;
     }
 
     @Provides
-    public IRIShortFormProvider provideIriShortFormProvider(WebProtegeIRIShortFormProvider provider) {
-        return provider;
+    public IRIShortFormProvider provideIriShortFormProvider(IriShortFormAdapter adapter) {
+        return adapter;
     }
 
     @Provides
@@ -264,7 +285,7 @@ public class ProjectModule {
     }
 
     @Provides
-    public OWLOntologyChecker provideOntologyChecker(WebProtegeOWLOntologyChecker checker) {
+    public OWLOntologyChecker provideOntologyChecker(ShellOntologyChecker checker) {
         return checker;
     }
 
@@ -317,11 +338,6 @@ public class ProjectModule {
     }
 
     @Provides
-    List<MetricCalculator> providesMetricsCaculator(MetricCalculatorsProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
     ImmutableList<IRI> providesShortFormOrdering() {
         return DefaultShortFormAnnotationPropertyIRIs.asImmutableList();
     }
@@ -345,17 +361,8 @@ public class ProjectModule {
     }
 
     @Provides
-    HasGetEntitiesWithIRI providesHasGetEntitiesWithIRI(HasGetEntitiesWithIRIImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    HasGetEntitiesInSignature providesHasGetEntitiesInSignature(HasGetEntitiesInSignatureImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    HasAnnotationAssertionAxioms providesHasAnnotationAssertionAxioms(HasAnnotationAssertionAxiomsImpl impl) {
+    ProjectAnnotationAssertionAxiomsBySubjectIndex providesHasAnnotationAssertionAxioms(
+            ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
@@ -438,11 +445,6 @@ public class ProjectModule {
     }
 
     @Provides
-    IRIIndexProvider provideIRIIndexProvider() {
-        return IRIIndexProvider.withDefaultAnnotationPropertyOrdering();
-    }
-
-    @Provides
     Comparator<OWLOntologyChangeRecord> providesOWLOntologyChangeRecordComparator(ChangeRecordComparator comparator) {
         return comparator;
     }
@@ -494,31 +496,36 @@ public class ProjectModule {
     PropertyValueSubsumptionChecker providePropertyValueSubsumptionChecker(StructuralPropertyValueSubsumptionChecker impl) {
         return impl;
     }
-    
+
     @Provides
     HasHasAncestor<OWLClass, OWLClass> provideClassClassHasAncestor(ClassClassAncestorChecker checker) {
         return checker;
     }
-    
+
     @Provides
-    HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(ObjectPropertyObjectPropertyAncestorChecker checker) {
+    HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(
+            ObjectPropertyObjectPropertyAncestorChecker checker) {
         return checker;
     }
 
 
     @Provides
-    HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(DataPropertyDataPropertyAncestorChecker checker) {
+    HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(
+            DataPropertyDataPropertyAncestorChecker checker) {
         return checker;
     }
 
     @Provides
-    HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(NamedIndividualClassAncestorChecker checker) {
+    HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(
+            NamedIndividualClassAncestorChecker checker) {
         return checker;
     }
 
     @Provides
-    OBONamespaceCache providesOboNamespaceCache(@RootOntology OWLOntology rootOntology) {
-        return OBONamespaceCache.get(rootOntology);
+    OBONamespaceCache providesOboNamespaceCache(OBONamespaceCacheFactory factory) {
+        var namespaceCache = factory.create();
+        namespaceCache.rebuildNamespaceCache();
+        return namespaceCache;
     }
 
     @Provides
@@ -543,12 +550,6 @@ public class ProjectModule {
         BuiltInShortFormDictionary dictionary = new BuiltInShortFormDictionary(cache, provider);
         dictionary.load();
         return dictionary;
-    }
-
-    @Provides
-    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexCachingImpl impl) {
-        impl.attachOntologyListener();
-        return impl;
     }
 
     @Provides
@@ -595,7 +596,7 @@ public class ProjectModule {
 
     @Provides
     LiteralRenderer provideLiteralRenderer(@Nonnull
-                                           StringFormatterLiteralRendererImpl impl) {
+                                                   StringFormatterLiteralRendererImpl impl) {
         return impl;
     }
 
@@ -608,4 +609,358 @@ public class ProjectModule {
     LiteralLangTagTransformer provideLangTagTransformer() {
         return langTag -> langTag;
     }
+
+
+    @Provides
+    IRIOrdinalProvider provideIRIIndexProvider() {
+        return IRIOrdinalProvider.withDefaultAnnotationPropertyOrdering();
+    }
+
+    @Provides
+    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexWrapperImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyChangeFactory provideOntologyChangeFactory(OntologyChangeFactoryImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl,
+                                                                         AxiomsByTypeIndexImpl axiomsByTypeIndex,
+                                                                         ProjectOntologiesIndex projectOntologiesIndex,
+                                                                         IndexUpdater indexUpdater) {
+        impl.load(projectOntologiesIndex.getOntologyIds(), axiomsByTypeIndex);
+        indexUpdater.registerIndex(impl);
+        return impl;
+    }
+
+    @Provides
+    AxiomsByReferenceIndex provideAxiomsByReferenceIndex(AxiomsByReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyIndex provideOntologyIndex(OntologyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
+            AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubClassOfAxiomsBySubClassIndex provideSubClassOfAxiomsBySubClassIndex(SubClassOfAxiomsBySubClassIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EquivalentClassesAxiomsIndex provideEquivalentClassesAxiomsIndex(EquivalentClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EquivalentObjectPropertiesAxiomsIndex provideEquivalentObjectPropertiesAxiomsIndex(EquivalentObjectPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EquivalentDataPropertiesAxiomsIndex provideEquivalentDataPropertiesAxiomsIndex(EquivalentDataPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyDomainAxiomsIndex provideObjectPropertyDomainAxiomsIndex(ObjectPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyRangeAxiomsIndex provideObjectPropertyRangeAxiomsIndex(ObjectPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyCharacteristicsIndex provideObjectPropertyCharacteristicsIndex(ObjectPropertyCharacteristicsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyDomainAxiomsIndex provideDataPropertyDomainAxiomsIndex(DataPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyRangeAxiomsIndex provideDataPropertyRangeAxiomsIndex(DataPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyCharacteristicsIndex provideDataPropertyCharacteristicsIndex(DataPropertyCharacteristicsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ClassAssertionAxiomsByIndividualIndex provideClassAssertionAxiomsByIndividualIndex(
+            ClassAssertionAxiomsByIndividualIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SameIndividualAxiomsIndex provideSameIndividualAxiomsIndex(SameIndividualAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(
+            ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyAssertionAxiomsBySubjectIndex provideDataPropertyAssertionAxiomsBySubjectIndex(
+            DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    PropertyAssertionAxiomsBySubjectIndex providePropertyAssertionAxiomsBySubjectIndex(
+            PropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(
+            AnnotationPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationPropertyRangeAxiomsIndex provideAnnotationPropertyRangeAxiomsIndex(AnnotationPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(
+            EntitiesInProjectSignatureByIriIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesByEntityIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AxiomsIndex provideAxiomsIndex(AxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(
+            ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(
+            SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    SubObjectPropertyAxiomsBySubPropertyIndex provideSubObjectPropertyAxiomsBySubPropertyIndex(
+            SubObjectPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(
+            SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DefaultOntologyIdManager provideDefaultOntologyIdManager(DefaultOntologyIdManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologySignatureIndex provideOntologySignatureIndex(OntologySignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectSignatureIndex provideProjectSignatureIndex(ProjectSignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectSignatureByTypeIndex provideProjectSignatureByTypeIndex(ProjectSignatureByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologySignatureByTypeIndex provideOntologySignatureByTypeIndex(OntologySignatureByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyChangeRecordTranslator provideOntologyChangeRecordTranslator(OntologyChangeRecordTranslatorImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndexImpl(EntitiesInProjectSignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(
+            SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    @IntoSet
+    public EntityCrudKitPlugin<?, ?, ?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+    @Provides
+    @IntoSet
+    public EntityCrudKitPlugin<?, ?, ?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+    @Provides
+    @IntoSet
+    public EntityCrudKitPlugin<?, ?, ?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+
+    @Provides
+    @ProjectSingleton
+    public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
+            MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
+        return new ProjectEntityCrudKitSettingsRepository(database, converter);
+    }
+
+    @Provides
+    @ProjectSingleton
+    public ClassAssertionAxiomsByClassIndex provideClassAssertionAxiomsByClassIndex(ClassAssertionAxiomsByClassIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    IndividualsByTypeIndex provideIndividualsByTypeIndex(IndividualsByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInOntologySignatureIndex provideEntitiesInOntologySignatureIndex(EntitiesInOntologySignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyAxiomsIndex provideOntologyAxiomsIndex(OntologyAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TermDefinitionManager provideTermDefinitionManager(TermDefinitionManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DisjointClassesAxiomsIndex provideDisjointClassesAxiomsIndex(DisjointClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+    
+    @Provides
+    DisjointDataPropertiesAxiomsIndex provideDisjointDataPropertiesAxiomsIndex(DisjointDataPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+    
+    @Provides
+    DisjointObjectPropertiesAxiomsIndex provideDisjointObjectPropertiesAxiomsIndex(DisjointObjectPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    InverseObjectPropertyAxiomsIndex provideInverseObjectPropertyAxiomsIndex(InverseObjectPropertyAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DifferentIndividualsAxiomsIndex provideDifferentIndividualsAxiomsIndex(DifferentIndividualsAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationsSectionRenderer provideAnnotationsSectionRenderer(AnnotationAssertionAxiomsBySubjectIndex index) {
+        return new AnnotationsSectionRenderer(index);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLClass> provideAnnotationsSectionRendererOwlClass(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLObjectProperty> provideAnnotationsSectionRendererOwlObjectProperty(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLDataProperty> provideAnnotationsSectionRendererOwlDataProperty(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLAnnotationProperty> provideAnnotationsSectionRendererOwlAnnotationProperty(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLNamedIndividual> provideAnnotationsSectionRendererOwlNamedIndividual(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Provides
+    AnnotationsSectionRenderer<OWLDatatype> provideAnnotationsSectionRendererOwlDatatype(AnnotationsSectionRenderer impl) {
+        return impl;
+    }
 }
+

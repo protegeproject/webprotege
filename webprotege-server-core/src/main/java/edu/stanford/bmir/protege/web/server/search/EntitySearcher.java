@@ -8,8 +8,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
-import edu.stanford.bmir.protege.web.server.shortform.*;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
+import edu.stanford.bmir.protege.web.server.shortform.SearchString;
+import edu.stanford.bmir.protege.web.server.shortform.ShortFormMatch;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -20,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.search.SearchField.displayName;
 import static java.util.Comparator.comparing;
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 
 /**
@@ -119,17 +119,6 @@ public class EntitySearcher {
                                  .map(SearchString::parseSearchString)
                                  .collect(toImmutableList());
         this.tagsManager = checkNotNull(tagsManager);
-    }
-
-    private static Pattern compileSearchPattern(String[] searchWords) {
-        StringBuilder searchWordsPattern = new StringBuilder();
-        for (int i = 0; i < searchWords.length; i++) {
-            searchWordsPattern.append(Pattern.quote(searchWords[i]));
-            if (i < searchWords.length - 1) {
-                searchWordsPattern.append("|");
-            }
-        }
-        return Pattern.compile(searchWordsPattern.toString(), CASE_INSENSITIVE);
     }
 
     /**
@@ -217,7 +206,7 @@ public class EntitySearcher {
                    .peek(entity -> tagsByEntity.putAll(entity, tagsManager.getTags(entity)))
                    .map(entity -> {
                        String rendering = dictionaryManager.getShortForm(entity);
-                       return toSearchResult(entity, rendering, "", 1, ImmutableIntArray.of(0), MatchType.TAG);
+                       return toSearchResult(entity, rendering, "", ImmutableIntArray.of(0), MatchType.TAG);
                    })
                    .sorted(comparing(EntitySearchResult::getFieldRendering))
                    .forEach(results::add);
@@ -247,10 +236,12 @@ public class EntitySearcher {
 
     }
 
+    @SuppressWarnings("unused")
     private void incrementSearchCounter(OWLEntity entity) {
         searchCounter.increment();
     }
 
+    @SuppressWarnings("unused")
     private void incrementMatchCounter(SearchMatch match) {
         matchCounter.increment();
     }
@@ -264,13 +255,12 @@ public class EntitySearcher {
         else {
             displayShortForm = match.getShortForm();
         }
-        return toSearchResult(entity, displayShortForm, match.getShortForm(), match.getMatchCount(), match.getPositions(), match.getMatchType());
+        return toSearchResult(entity, displayShortForm, match.getShortForm(), match.getPositions(), match.getMatchType());
     }
 
     private EntitySearchResult toSearchResult(OWLEntity entity,
                                               String displayShortForm,
                                               String matchedShortForm,
-                                              int matchCount,
                                               ImmutableIntArray positions,
                                               MatchType matchType) {
         StringBuilder highlighted = new StringBuilder();
@@ -336,11 +326,11 @@ public class EntitySearcher {
             if (wordIndex > -1 && wordEnd <= rendering.length()) {
                 if (cur != wordIndex) {
                     highlighted.append("<span style='white-space: pre;'>");
-                    highlighted.append(rendering.substring(cur, wordIndex));
+                    highlighted.append(rendering, cur, wordIndex);
                     highlighted.append("</span>");
                 }
                 highlighted.append("<strong span style='white-space: pre;'>");
-                highlighted.append(rendering.substring(wordIndex, wordEnd));
+                highlighted.append(rendering, wordIndex, wordEnd);
                 highlighted.append("</strong>");
                 cur = wordEnd;
             }
@@ -362,12 +352,11 @@ public class EntitySearcher {
         }
 
         // If we didn't match the rendering then search the IRI remainder
-        IRI entityIri = m.getEntity().getIRI();
         if (matchType == null && !m.getLanguage().isAnnotationBased()) {
             matchType = MatchType.IRI;
         }
         if (matchType != null) {
-            return new SearchMatch(searchWords, m, matchType);
+            return new SearchMatch(m, matchType);
         }
         else {
             return null;
@@ -383,26 +372,18 @@ public class EntitySearcher {
 
     private static class SearchMatch implements Comparable<SearchMatch> {
 
-        private static final int BEFORE = -1;
-
-        private static final int AFTER = 1;
-
         private final static Comparator<SearchMatch> comparator =
                 comparing(SearchMatch::getMatchCount).reversed()
                                                      .thenComparing(
                                                              comparing(SearchMatch::getMatchType)
                                                                      .thenComparing(SearchMatch::getShortFormMatch));
 
-        private final ImmutableList<SearchString> searchWords;
-
         private final ShortFormMatch match;
 
         private final MatchType matchType;
 
-        public SearchMatch(@Nonnull ImmutableList<SearchString> searchWords,
-                           @Nonnull ShortFormMatch match,
+        public SearchMatch(@Nonnull ShortFormMatch match,
                            @Nonnull MatchType matchType) {
-            this.searchWords = checkNotNull(searchWords);
             this.match = checkNotNull(match);
             this.matchType = checkNotNull(matchType);
         }

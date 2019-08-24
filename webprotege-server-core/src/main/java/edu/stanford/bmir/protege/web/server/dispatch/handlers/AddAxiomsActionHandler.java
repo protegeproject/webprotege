@@ -1,14 +1,17 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.project.ChangeManager;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.AddAxiomsAction;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.AddAxiomsResult;
+import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,17 +31,22 @@ public class AddAxiomsActionHandler extends AbstractProjectActionHandler<AddAxio
     private final ChangeManager changeManager;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final OntologyChangeFactory changeFactory;
+
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Inject
     public AddAxiomsActionHandler(@Nonnull AccessManager accessManager,
                                   @Nonnull ProjectId projectId,
                                   @Nonnull ChangeManager changeManager,
-                                  @Nonnull OWLOntology rootOntology) {
+                                  @Nonnull OntologyChangeFactory changeFactory,
+                                  @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         super(accessManager);
         this.projectId = projectId;
         this.changeManager = changeManager;
-        this.rootOntology = rootOntology;
+        this.changeFactory = changeFactory;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     @Nonnull
@@ -56,15 +64,18 @@ public class AddAxiomsActionHandler extends AbstractProjectActionHandler<AddAxio
     @Nonnull
     @Override
     public AddAxiomsResult execute(@Nonnull AddAxiomsAction action, @Nonnull ExecutionContext executionContext) {
-        OntologyChangeList.Builder<String> builder = OntologyChangeList.builder();
-        action.getAxioms().forEach(ax -> builder.addAxiom(rootOntology, ax));
-        OntologyChangeList<String> changeList = builder.build(action.getCommitMessage());
-        FixedChangeListGenerator<String> changeListGenerator = new FixedChangeListGenerator<>(changeList.getChanges(),
-                                                                                              "",
-                                                                                              action.getCommitMessage());
-        ChangeApplicationResult<String> result = changeManager.applyChanges(executionContext.getUserId(),
-                                                                                                   changeListGenerator);
-        int addedAxiomsCount = result.getChangeList().size();
+        var builder = OntologyChangeList.<String>builder();
+        var ontId = defaultOntologyIdManager.getDefaultOntologyId();
+        action.getAxioms()
+              .forEach(ax -> builder.add(changeFactory.createAddAxiom(ontId, ax)));
+        var changeList = builder.build(action.getCommitMessage());
+        var changeListGenerator = new FixedChangeListGenerator<>(changeList.getChanges(),
+                                                                 "",
+                                                                 action.getCommitMessage());
+        var result = changeManager.applyChanges(executionContext.getUserId(),
+                                                changeListGenerator);
+        int addedAxiomsCount = result.getChangeList()
+                                     .size();
         return new AddAxiomsResult(projectId, addedAxiomsCount);
     }
 }

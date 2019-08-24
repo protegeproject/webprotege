@@ -5,7 +5,6 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;

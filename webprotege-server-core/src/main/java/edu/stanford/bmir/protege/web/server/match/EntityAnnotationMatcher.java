@@ -8,7 +8,6 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;

@@ -4,11 +4,11 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,11 +33,12 @@ public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeLi
     @Inject
     public CreateClassesChangeGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                         @Provided @Nonnull MessageFormatter msg,
-                                        @Provided @Nonnull OWLOntology rootOntology,
+                                        @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                        @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                         @Nonnull String sourceText,
                                         @Nonnull String langTag,
                                         @Nonnull ImmutableSet<OWLClass> parent) {
-        super(CLASS, sourceText, langTag, parent, rootOntology, dataFactory, msg);
+        super(CLASS, sourceText, langTag, parent, dataFactory, msg, ontologyChangeFactory, defaultOntologyIdManager);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

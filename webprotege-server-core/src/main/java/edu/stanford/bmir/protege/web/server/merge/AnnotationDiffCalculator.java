@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.merge.Diff;
+import org.semanticweb.owlapi.model.HasAnnotations;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLOntology;
+
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge
@@ -12,7 +16,11 @@ import org.semanticweb.owlapi.model.OWLOntology;
  */
 public class AnnotationDiffCalculator {
 
-    public Diff<OWLAnnotation> computeDiff(OWLOntology from, OWLOntology to) {
+    @Inject
+    public AnnotationDiffCalculator() {
+    }
+
+    public Diff<OWLAnnotation> computeDiff(Ontology from, Ontology to) {
         ImmutableSet.Builder<OWLAnnotation> addedAnnotations = ImmutableSet.builder();
         ImmutableSet.Builder<OWLAnnotation> removedAnnotations = ImmutableSet.builder();
         for(OWLAnnotation anno : to.getAnnotations()) {

@@ -4,7 +4,6 @@ import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
-
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 

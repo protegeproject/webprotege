@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import com.google.common.collect.Lists;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -10,15 +12,36 @@ import java.util.List;
  */
 public class ClassFrameRenderer implements FrameRenderer<OWLClass> {
 
+    @Nonnull
+    private final AnnotationsSectionRenderer<OWLClass> annotationsSectionRenderer;
+
+    @Nonnull
+    private final ClassSubClassOfSectionRenderer subClassOfSectionRenderer;
+
+    @Nonnull
+    private final ClassEquivalentToSectionRenderer equivalentToSectionRenderer;
+
+    @Nonnull
+    private final ClassDisjointWithSectionRenderer disjointWithSectionRenderer;
+
+    @Inject
+    public ClassFrameRenderer(@Nonnull AnnotationsSectionRenderer<OWLClass> annotationsSectionRenderer,
+                              @Nonnull ClassSubClassOfSectionRenderer subClassOfSectionRenderer,
+                              @Nonnull ClassEquivalentToSectionRenderer equivalentToSectionRenderer,
+                              @Nonnull ClassDisjointWithSectionRenderer disjointWithSectionRenderer) {
+        this.annotationsSectionRenderer = annotationsSectionRenderer;
+        this.subClassOfSectionRenderer = subClassOfSectionRenderer;
+        this.equivalentToSectionRenderer = equivalentToSectionRenderer;
+        this.disjointWithSectionRenderer = disjointWithSectionRenderer;
+    }
+
     @Override
     public List<FrameSectionRenderer<OWLClass, ?, ?>> getSectionRenderers() {
         List<FrameSectionRenderer<OWLClass, ?, ?>> renderers = Lists.newArrayList();
-        renderers.add(new AnnotationsSectionRenderer<>());
-        renderers.add(new ClassSubClassOfSectionRenderer());
-        renderers.add(new ClassEquivalentToSectionRenderer());
-        renderers.add(new ClassDisjointWithSectionRenderer());
-//        renderers.add(new ClassDomainOfSectionRenderer());
-//        renderers.add(new ClassRangeOfSectionRenderer());
+        renderers.add(annotationsSectionRenderer);
+        renderers.add(subClassOfSectionRenderer);
+        renderers.add(equivalentToSectionRenderer);
+        renderers.add(disjointWithSectionRenderer);
         return renderers;
 
     }

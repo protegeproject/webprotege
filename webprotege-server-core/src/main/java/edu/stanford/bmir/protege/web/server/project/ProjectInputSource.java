@@ -10,8 +10,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

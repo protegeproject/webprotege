@@ -50,4 +50,19 @@ public class LocalNameExtractor_TestCase {
         assertThat(localName, is("thename"));
     }
 
+    @Test
+    public void shouldExtractDecodedString() {
+        assertThat(extractor.getLocalName(IRI.create("http://other.com/path#gro%C3%9F")), is("groß"));
+    }
+
+    @Test
+    public void shouldExtractDecodedUtf16() {
+        assertThat(extractor.getLocalName(IRI.create("http://other.com/path#%E9%96%80%E7%94%9F")), is("門生"));
+    }
+
+    @Test
+    public void shouldExtractDecodedFragment() {
+        assertThat(extractor.getLocalName(IRI.create("http://other.com/path#With%23Hash")), is("With#Hash"));
+    }
+
 }

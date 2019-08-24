@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.server.diff;
 
-import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
@@ -29,14 +29,20 @@ public class Revision2DiffElementsTranslator {
     private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
 
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @AutoFactory
     @Inject
-    public Revision2DiffElementsTranslator(@Nonnull OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
-                                           @Nonnull OWLOntology rootOntology) {
+    public Revision2DiffElementsTranslator(@Provided @Nonnull OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
+                                           @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                           @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
         this.ontologyIRIShortFormProvider = checkNotNull(ontologyIRIShortFormProvider);
-        this.rootOntology = checkNotNull(rootOntology);
-        changeOperationVisitor = new OWLOntologyChangeDataVisitor<DiffOperation, RuntimeException>() {
+        this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        changeOperationVisitor = new OWLOntologyChangeDataVisitor<>() {
             @Nonnull
             @Override
             public DiffOperation visit(AddAxiomData data) throws RuntimeException {
@@ -95,7 +101,7 @@ public class Revision2DiffElementsTranslator {
             ontologyIRIShortForm = "";
         }
         else {
-            Optional<IRI> ontologyIRI = ontologyID.getOntologyIRI();
+            var ontologyIRI = ontologyID.getOntologyIRI();
             if (ontologyIRI.isPresent()) {
                 ontologyIRIShortForm = ontologyIRIShortFormProvider.getShortForm(ontologyIRI.get());
             }
@@ -111,8 +117,8 @@ public class Revision2DiffElementsTranslator {
     }
 
     private boolean isRootOntologySingleton(@Nonnull OWLOntologyID ontologyId) {
-        return rootOntology.getOntologyID().equals(ontologyId)
-                && rootOntology.getImports().isEmpty();
+        return defaultOntologyIdManager.getDefaultOntologyId().equals(ontologyId)
+                || projectOntologiesIndex.getOntologyIds().count() == 1;
     }
 
     private DiffOperation getDiffOperation(OWLOntologyChangeRecord changeRecord) {

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.match;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.Locale;
 

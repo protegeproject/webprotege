@@ -4,10 +4,8 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
+import edu.stanford.bmir.protege.web.server.index.IndividualsIndex;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -19,14 +17,12 @@ import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
@@ -45,10 +41,6 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     @Nonnull
     private final ProjectId projectId;
 
-
-    @Nonnull
-    private final OWLOntology rootOntology;
-
     @Nonnull
     private final RenderingManager renderingManager;
 
@@ -56,29 +48,18 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     private final EntityNodeRenderer entityNodeRenderer;
 
     @Nonnull
-    private final DictionaryManager dictionaryManager;
-
-    @Nonnull
-    private final LanguageManager languageManager;
-
-    @Nonnull
     private final IndividualsIndex individualsIndex;
 
     @Inject
     public GetIndividualsActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull ProjectId projectId,
-                                       @Nonnull @RootOntology OWLOntology rootOntology,
                                        @Nonnull RenderingManager renderingManager,
                                        @Nonnull EntityNodeRenderer entityNodeRenderer,
-                                       @Nonnull DictionaryManager dictionaryManager,
-                                       @Nonnull LanguageManager languageManager, @Nonnull IndividualsIndex individualsIndex) {
+                                       @Nonnull IndividualsIndex individualsIndex) {
         super(accessManager);
         this.projectId = projectId;
-        this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
         this.entityNodeRenderer = entityNodeRenderer;
-        this.dictionaryManager = dictionaryManager;
-        this.languageManager = languageManager;
         this.individualsIndex = individualsIndex;
     }
 
@@ -119,43 +100,5 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     @Override
     public Class<GetIndividualsAction> getActionClass() {
         return GetIndividualsAction.class;
-    }
-
-    private static class Counter {
-
-        private int count = 0;
-
-        public void increment() {
-            count++;
-        }
-
-        public int getCount() {
-            return count;
-        }
-    }
-
-    private static class IndividualRendering implements Comparable<IndividualRendering> {
-
-        private final OWLNamedIndividual individual;
-
-        private final String rendering;
-
-        public IndividualRendering(OWLNamedIndividual individual, String rendering) {
-            this.individual = individual;
-            this.rendering = rendering;
-        }
-
-        public OWLNamedIndividual getIndividual() {
-            return individual;
-        }
-
-        public String getRendering() {
-            return rendering;
-        }
-
-        @Override
-        public int compareTo(IndividualRendering o) {
-            return this.rendering.compareTo(o.rendering);
-        }
     }
 }

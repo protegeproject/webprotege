@@ -31,27 +31,22 @@ import javax.annotation.Nullable;
 public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, S>, F extends EntityFrame<S>,  S extends OWLEntityData> extends AbstractProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
 
     @Nonnull
-    private final ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory;
-
-    @Nonnull
     private final EventManager<ProjectEvent<?>> eventManager;
 
     @Nonnull
     private final HasApplyChanges applyChanges;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final FrameChangeGeneratorFactory frameChangeGeneratorFactory;
 
     public AbstractUpdateFrameHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory,
                                       @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                       @Nonnull HasApplyChanges applyChanges,
-                                      @Nonnull OWLOntology rootOntology) {
+                                      @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory) {
         super(accessManager);
-        this.changeDescriptionGeneratorFactory = changeDescriptionGeneratorFactory;
         this.eventManager = eventManager;
         this.applyChanges = applyChanges;
-        this.rootOntology = rootOntology;
+        this.frameChangeGeneratorFactory = frameChangeGeneratorFactory;
     }
 
     @Nullable
@@ -71,46 +66,19 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
     @Nonnull
     @Override
     public Result execute(@Nonnull A action, @Nonnull ExecutionContext executionContext) {
-        F from = action.getFrom();
-        F to = action.getTo();
+        var from = action.getFrom();
+        var to = action.getTo();
         final EventTag startTag = eventManager.getCurrentTag();
         if(from.equals(to)) {
             return createResponse(action.getTo(), eventManager.getEventsFromTag(startTag));
         }
-
-        UserId userId = executionContext.getUserId();
-
-        FrameTranslator<F, S> translator = createTranslator();
-
-        final FrameChangeGenerator<F, S> changeGenerator = new FrameChangeGenerator<>(from, to,
-                                                                                      translator,
-                                                                                      rootOntology,
-                                                                                      changeDescriptionGeneratorFactory);
-        ChangeDescriptionGenerator<S> generator = changeDescriptionGeneratorFactory.get("Edited " + from.getSubject().getBrowserText());
+        var userId = executionContext.getUserId();
+        var frameUpdate = FrameUpdate.get(from, to);
+        var changeGenerator = frameChangeGeneratorFactory.create(frameUpdate);
         applyChanges.applyChanges(userId, changeGenerator);
-        EventList<ProjectEvent<?>> events = eventManager.getEventsFromTag(startTag);
+        var events = eventManager.getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);
     }
 
-//    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, F from, F to, UserId userId) {
-//        // Set changes
-//        EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
-//        ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
-//        OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<>();
-//        entityEditorKit.update(session, to.getFrame().getSubject(),
-//                                 EntityShortForm.get(to.getTitle()),
-//                                 project.getEntityCrudContext(executionContext.getUserId()),
-//                                 changeListBuilder);
-//        FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
-//        String typePrintName = from.getFrame().getSubject().getEntityType().getPrintName().toLowerCase();
-//        FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator =
-//                FixedMessageChangeDescriptionGenerator.get("Renamed the " + typePrintName + " " + from.getTitle() + " to " + to.getTitle());
-//        project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
-//    }
-
     protected abstract Result createResponse(F to, EventList<ProjectEvent<?>> events);
-
-    protected abstract FrameTranslator<F, S> createTranslator();
-
-    protected abstract String getChangeDescription(F from, F to);
 }

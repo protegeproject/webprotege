@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.crud.DeleteEntitiesChangeListGenerat
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesResult;

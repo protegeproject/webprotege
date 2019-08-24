@@ -1,22 +1,23 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.shortform.DictionaryPredicates.isAxiomForDictionary;
-import static java.util.Collections.enumeration;
 import static java.util.Collections.singletonList;
 import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
 
@@ -33,13 +34,28 @@ public class DictionaryBuilder {
     private final ProjectId projectId;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
+    @Nonnull
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
+
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesInSignatureIndex;
+
+    @Nonnull
+    private final ProjectSignatureIndex projectSignatureIndex;
 
     @Inject
     public DictionaryBuilder(@Nonnull ProjectId projectId,
-                             @Nonnull OWLOntology rootOntology) {
+                             @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                             @Nonnull AxiomsByTypeIndex axiomsByTypeIndex,
+                             @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignatureIndex,
+                             @Nonnull ProjectSignatureIndex projectSignatureIndex) {
         this.projectId = checkNotNull(projectId);
-        this.rootOntology = checkNotNull(rootOntology);
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
+        this.entitiesInSignatureIndex = checkNotNull(entitiesInSignatureIndex);
+        this.projectSignatureIndex = checkNotNull(projectSignatureIndex);
     }
 
     /**
@@ -71,9 +87,9 @@ public class DictionaryBuilder {
 
     private void buildLocalNameDictionary(Dictionary localNameDictionary) {
         LocalNameExtractor extractor = new LocalNameExtractor();
-        rootOntology.getSignature(Imports.INCLUDED)
+        projectSignatureIndex.getSignature()
                     .forEach(entity -> {
-                        String shortForm = extractor.getLocalName(entity.getIRI());
+                        var shortForm = extractor.getLocalName(entity.getIRI());
                         if (!shortForm.isEmpty()) {
                             localNameDictionary.put(entity, shortForm);
                         }
@@ -85,20 +101,16 @@ public class DictionaryBuilder {
             return;
         }
         Counter counter = new Counter();
-        rootOntology.getImportsClosure().stream()
-                    .flatMap(ont -> ont.getAxioms(ANNOTATION_ASSERTION).stream())
+        projectOntologiesIndex.getOntologyIds()
+                    .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(ANNOTATION_ASSERTION, ontId))
                     .peek(counter::increment)
-                    .forEach(ax -> {
-                        annotationBasedDictionaries.stream()
-                                                   .filter(dictionary -> isAxiomForDictionary(ax, dictionary))
-                                                   .forEach(dictionary -> {
-                                                       IRI iri = (IRI) ax.getSubject();
-                                                       String literal = ((OWLLiteral) ax.getValue()).getLiteral();
-                                                       rootOntology.getEntitiesInSignature(iri, Imports.INCLUDED).forEach(entity -> {
-                                                           dictionary.put(entity, literal);
-                                                       });
-                                                   });
-                    });
+                    .forEach(ax -> annotationBasedDictionaries.stream()
+                                               .filter(dictionary -> isAxiomForDictionary(ax, dictionary))
+                                               .forEach(dictionary -> {
+                                                   var iri = (IRI) ax.getSubject();
+                                                   var literal = ((OWLLiteral) ax.getValue()).getLiteral();
+                                                   entitiesInSignatureIndex.getEntityInSignature(iri).forEach(entity -> dictionary.put(entity, literal));
+                                               }));
         logger.info("{} Processed {} axioms in order to build annotation based dictionaries",
                     projectId,
                     String.format("%,d", counter.getCounter()));

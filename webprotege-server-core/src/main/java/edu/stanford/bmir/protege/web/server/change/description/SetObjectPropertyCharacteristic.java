@@ -4,7 +4,6 @@ import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 

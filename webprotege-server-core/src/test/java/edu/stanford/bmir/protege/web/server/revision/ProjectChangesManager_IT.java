@@ -4,16 +4,17 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
+import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.object.*;
@@ -66,6 +67,12 @@ public class ProjectChangesManager_IT {
     @Mock
     private ProjectDetailsRepository repo;
 
+    @Mock
+    private DefaultOntologyIdManager defaultOntologyIdManager;
+
+    @Mock
+    private OWLOntologyID ontologyId;
+
     @Before
     public void setUp() throws Exception {
         changeHistoryFile = temporaryFolder.newFile();
@@ -77,19 +84,37 @@ public class ProjectChangesManager_IT {
                 changeHistoryFile,
                 dataFactory
         ));
+        when(defaultOntologyIdManager.getDefaultOntologyId())
+                .thenReturn(rootOntology.getOntologyID());
         when(repo.findOne(projectId)).thenReturn(Optional.empty());
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
-        WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
-                DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
-                new HasAnnotationAssertionAxiomsImpl(rootOntology),
-                () -> "",
-                new LocalNameExtractor()
-        );
-        WebProtegeShortFormProvider webProtegeShortFormProvider = new WebProtegeShortFormProvider(iriShortFormProvider);
-        WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider = new WebProtegeOntologyIRIShortFormProvider(
-                rootOntology);
+        var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        var ontologyIndex = new OntologyIndexImpl(rootOntology);
+
+        var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
+        var projectAnnotationAssertionsIndex = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex,
+                                                                                                      annotationAssertionsIndex);
+        var annotationAssertionAxioms = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
+        AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl(ontologyIndex);
+
+        AnnotationAssertionAxiomsIndex assertionAxiomsIndex = new AnnotationAssertionAxiomsIndexWrapperImpl(ontologiesIndex,
+                                                                                                            axiomsByTypeIndex,
+                                                                                                            projectAnnotationAssertionsIndex);
+        LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
+                                                                                                        assertionAxiomsIndex), repo);
+        var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex, ontologyIndex);
+        var ontologySignatureIndex = new OntologySignatureIndexImpl(ontologyIndex);
+        var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
+
+        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(projectAnnotationAssertionsIndex));
+        DictionaryManager dictionaryManager = new DictionaryManager(languageManager,
+                                                                    multilingualDictionary,
+                                                                    new BuiltInShortFormDictionary(new ShortFormCache(),
+                                                                                                   dataFactory));
+        ShortFormAdapter shortFormAdapter = new ShortFormAdapter(dictionaryManager);
         OWLEntityComparator entityComparator = new OWLEntityComparator(
-                webProtegeShortFormProvider
+                shortFormAdapter
         );
         OWLClassExpressionSelector classExpressionSelector = new OWLClassExpressionSelector(entityComparator);
         OWLObjectPropertyExpressionSelector objectPropertyExpressionSelector = new OWLObjectPropertyExpressionSelector(
@@ -98,16 +123,13 @@ public class ProjectChangesManager_IT {
                 entityComparator);
         OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
         SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
-        AnnotationAssertionAxiomsIndex assertionAxiomsIndex = new AnnotationAssertionAxiomsIndexCachingImpl(rootOntology);
-        LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
-                                                                                                        assertionAxiomsIndex), repo);
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(rootOntology)),
+                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(annotationAssertionAxioms)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
-                new DeprecatedEntityCheckerImpl(rootOntology),
+                NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
-                        webProtegeShortFormProvider,
-                        new EntityIRICheckerImpl(rootOntology),
+                        shortFormAdapter,
+                        new EntityIRICheckerImpl(entitiesInSignatureIndex),
                         LiteralStyle.BRACKETED,
                         new DefaultHttpLinkRenderer(),
                         new MarkdownLiteralRenderer()
@@ -133,7 +155,9 @@ public class ProjectChangesManager_IT {
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
-                                                   () -> new Revision2DiffElementsTranslator(ontologyIRIShortFormProvider, rootOntology));
+                                                   () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(defaultOntologyIdManager),
+                                                                                             defaultOntologyIdManager,
+                                                                                             projectOntologiesIndex));
 
 
         createChanges(manager, rootOntology, dataFactory, revisionManager);

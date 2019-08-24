@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.trigger;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.match.EntityFrameMatcher;
 import edu.stanford.bmir.protege.web.server.match.Matcher;
 import org.semanticweb.owlapi.model.OWLEntity;
 

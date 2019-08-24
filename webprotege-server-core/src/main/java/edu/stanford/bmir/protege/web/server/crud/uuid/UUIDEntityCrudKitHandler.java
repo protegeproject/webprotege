@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.util.IdUtil;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
@@ -12,7 +16,10 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -31,17 +38,31 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
      */
     private static final String START_CHAR = "R";
 
-    private EntityCrudKitPrefixSettings prefixSettings;
+    private final EntityCrudKitPrefixSettings prefixSettings;
 
-    private UUIDSuffixSettings suffixSettings;
+    private final UUIDSuffixSettings suffixSettings;
 
-    public UUIDEntityCrudKitHandler() {
-        this(new EntityCrudKitPrefixSettings(), new UUIDSuffixSettings());
-    }
+    @Nonnull
+    private final OWLDataFactory dataFactory;
 
-    public UUIDEntityCrudKitHandler(EntityCrudKitPrefixSettings prefixSettings, UUIDSuffixSettings uuidSuffixKitSettings) {
-        this.prefixSettings = prefixSettings;
-        this.suffixSettings = uuidSuffixKitSettings;
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesInSignature;
+
+    @Nonnull
+    private final OntologyChangeFactory changeFactory;
+
+    @AutoFactory
+    @Inject
+    public UUIDEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                    @Nonnull UUIDSuffixSettings uuidSuffixKitSettings,
+                                    @Provided OWLDataFactory dataFactory,
+                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature,
+                                    @Provided @Nonnull OntologyChangeFactory changeFactory) {
+        this.prefixSettings = checkNotNull(prefixSettings);
+        this.suffixSettings = checkNotNull(uuidSuffixKitSettings);
+        this.dataFactory = checkNotNull(dataFactory);
+        this.entitiesInSignature = checkNotNull(entitiesInSignature);
+        this.changeFactory = checkNotNull(changeFactory);
     }
 
     @Override
@@ -71,55 +92,51 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     @Override
     public <E extends OWLEntity> E create(@Nonnull ChangeSetEntityCrudSession session, @Nonnull EntityType<E> entityType, @Nonnull final EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull final EntityCrudContext context, @Nonnull final OntologyChangeList.Builder<E> builder) {
-        OWLDataFactory dataFactory = context.getDataFactory();
-        final OWLOntology targetOntology = context.getTargetOntology();
-        String suppliedName = shortForm.getShortForm();
-        Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
+        var targetOntology = context.getTargetOntologyId();
+        var suppliedName = shortForm.getShortForm();
+        var parsedIRI = new IRIParser().parseIRI(suppliedName);
         final IRI entityIRI;
         final OWLLiteral labellingLiteral;
+        var dictionaryLanguage = context.getDictionaryLanguage();
         if(parsedIRI.isPresent()) {
             entityIRI = parsedIRI.get();
-            labellingLiteral = getLabellingLiteral(entityIRI.toString(), langTag, context);
+            labellingLiteral = getLabellingLiteral(entityIRI.toString(), langTag, dictionaryLanguage);
         }
         else {
-            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, targetOntology, context.getPrefixedNameExpander());
-            labellingLiteral = getLabellingLiteral(suppliedName, langTag, context);
+            var prefixedNameExpander = context.getPrefixedNameExpander();
+            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, prefixedNameExpander);
+            labellingLiteral = getLabellingLiteral(suppliedName, langTag, dictionaryLanguage);
         }
-        final E entity =  dataFactory.getOWLEntity(entityType, entityIRI);
-        builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
-        DictionaryLanguage language = context.getDictionaryLanguage();
-        IRI annotationPropertyIri = language.getAnnotationPropertyIri();
+        var entity = dataFactory.getOWLEntity(entityType, entityIRI);
+        builder.add(changeFactory.createAddAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity)));
+
+        var annotationPropertyIri = dictionaryLanguage.getAnnotationPropertyIri();
         if (annotationPropertyIri != null) {
-            OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.addAxiom(targetOntology, ax);
+            var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+            builder.add(changeFactory.createAddAxiom(targetOntology, ax));
         }
         return entity;
     }
 
-    private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
-        Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
-        return expandedPrefixName.orElseGet(() -> createIRI(prefix, ontology));
+    private IRI getIRI(String prefix, String suppliedName, PrefixedNameExpander prefixedNameExpander) {
+        var expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
+        return expandedPrefixName.orElseGet(() -> createIRI(prefix));
     }
 
 
-    private static IRI createIRI(String base, OWLOntology ontology) {
+    private IRI createIRI(String base) {
         while (true) {
-            String base62Fragment = IdUtil.getBase62UUID();
-            StringBuilder sb = new StringBuilder();
-            sb.append(base);
-            sb.append(START_CHAR);
-            sb.append(base62Fragment);
-            IRI iri = IRI.create(sb.toString());
-            if(!ontology.containsEntityInSignature(iri)) {
+            var base62Fragment = IdUtil.getBase62UUID();
+            var iri = IRI.create(base + START_CHAR + base62Fragment);
+            var inSig = entitiesInSignature.getEntityInSignature(iri).limit(1).count() == 1;
+            if(!inSig) {
                 return iri;
             }
         }
     }
 
 
-    private static OWLLiteral getLabellingLiteral(String suppliedName, Optional<String> langTag, EntityCrudContext context) {
-        OWLDataFactory dataFactory = context.getDataFactory();
-        DictionaryLanguage dictionaryLanguage = context.getDictionaryLanguage();
+    private OWLLiteral getLabellingLiteral(String suppliedName, Optional<String> langTag, DictionaryLanguage dictionaryLanguage) {
         return dataFactory.getOWLLiteral(suppliedName, langTag.orElse(dictionaryLanguage.getLang()));
     }
 

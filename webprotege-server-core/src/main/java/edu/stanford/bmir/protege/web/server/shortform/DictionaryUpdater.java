@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import org.semanticweb.owlapi.model.*;
+import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.shortform.DictionaryPredicates.isAxiomForDictionary;
@@ -18,14 +19,14 @@ import static edu.stanford.bmir.protege.web.server.shortform.DictionaryPredicate
 public class DictionaryUpdater {
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxioms;
 
     @Nonnull
     private final LocalNameExtractor extractor = new LocalNameExtractor();
 
     @Inject
-    public DictionaryUpdater(@Nonnull OWLOntology rootOntology) {
-        this.rootOntology = checkNotNull(rootOntology);
+    public DictionaryUpdater(@Nonnull ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxioms) {
+        this.annotationAssertionAxioms = checkNotNull(annotationAssertionAxioms);
     }
 
     public void update(@Nonnull Dictionary dictionary,
@@ -33,9 +34,8 @@ public class DictionaryUpdater {
         checkNotNull(entities).forEach(entity -> {
             dictionary.remove(entity);
             if (dictionary.getLanguage().isAnnotationBased()) {
-                rootOntology.getImportsClosure().stream()
-                            .flatMap(ont -> ont.getAnnotationAssertionAxioms(entity.getIRI()).stream())
-                            .filter(ax -> isAxiomForDictionary(ax, dictionary))
+                annotationAssertionAxioms.getAnnotationAssertionAxioms(entity.getIRI())
+                        .filter(ax -> isAxiomForDictionary(ax, dictionary))
                             .forEach(ax -> {
                                 OWLLiteral literal = (OWLLiteral) ax.getValue();
                                 String lexicalValue = literal.getLiteral();

@@ -3,22 +3,26 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyCharacteristicAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 24/02/2014
  */
 public class ObjectPropertyCharacteristicsSectionRenderer extends AbstractOWLAxiomItemSectionRenderer<OWLObjectProperty, OWLObjectPropertyCharacteristicAxiom, String> {
 
-    private static Map<AxiomType<?>, ManchesterOWLSyntax> keywordMap = Maps.newHashMap();
+    private static Map<AxiomType<? extends OWLObjectPropertyCharacteristicAxiom>, ManchesterOWLSyntax> keywordMap = Maps.newHashMap();
 
     static {
         keywordMap.put(AxiomType.FUNCTIONAL_OBJECT_PROPERTY, ManchesterOWLSyntax.FUNCTIONAL);
@@ -30,34 +34,47 @@ public class ObjectPropertyCharacteristicsSectionRenderer extends AbstractOWLAxi
         keywordMap.put(AxiomType.TRANSITIVE_OBJECT_PROPERTY, ManchesterOWLSyntax.TRANSITIVE);
     }
 
+    @Nonnull
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
+
+    @Inject
+    public ObjectPropertyCharacteristicsSectionRenderer(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
+    }
+
     @Override
     public ManchesterOWLSyntax getSection() {
         return ManchesterOWLSyntax.CHARACTERISTICS;
     }
 
     @Override
-    protected Set<OWLObjectPropertyCharacteristicAxiom> getAxiomsInOntology(OWLObjectProperty subject, OWLOntology ontology) {
-        Set<OWLObjectPropertyCharacteristicAxiom> result = Sets.newHashSet();
-        result.addAll(ontology.getFunctionalObjectPropertyAxioms(subject));
-        result.addAll(ontology.getInverseFunctionalObjectPropertyAxioms(subject));
-        result.addAll(ontology.getSymmetricObjectPropertyAxioms(subject));
-        result.addAll(ontology.getAsymmetricObjectPropertyAxioms(subject));
-        result.addAll(ontology.getReflexiveObjectPropertyAxioms(subject));
-        result.addAll(ontology.getIrreflexiveObjectPropertyAxioms(subject));
-        result.addAll(ontology.getTransitiveObjectPropertyAxioms(subject));
-       return result;
+    protected Set<OWLObjectPropertyCharacteristicAxiom> getAxiomsInOntology(OWLObjectProperty subject, OWLOntologyID ontologyId) {
+        // Don't use specific indexes as the number of properties, and thus the number
+        // of property characteristic axioms in an ontology is small
+        return keywordMap.keySet()
+                  .stream()
+                  .flatMap(type -> getAxiom(type, ontologyId, subject))
+                  .collect(toSet());
+    }
+
+    private Stream<? extends OWLObjectPropertyCharacteristicAxiom> getAxiom(AxiomType<? extends OWLObjectPropertyCharacteristicAxiom> type,
+                                                                            OWLOntologyID ontologyId,
+                                                                            OWLObjectProperty subject) {
+        return axiomsByTypeIndex.getAxiomsByType(type, ontologyId)
+                         .filter(ax ->  ax.getProperty().equals(subject));
     }
 
     @Override
     public List<String> getRenderablesForItem(OWLObjectProperty subject,
                                               OWLObjectPropertyCharacteristicAxiom item,
-                                              OWLOntology ontology) {
-        ManchesterOWLSyntax kw = keywordMap.get(item.getAxiomType());
+                                              OWLOntologyID ontologyId) {
+        var axiomType = item.getAxiomType();
+        ManchesterOWLSyntax kw = keywordMap.get(axiomType);
         if(kw != null) {
             return Lists.newArrayList(kw.keyword());
         }
         else {
-            throw new RuntimeException("Missing axiom type rendering " + item.getAxiomType());
+            throw new RuntimeException("Missing axiom type rendering " + axiomType);
         }
     }
 }

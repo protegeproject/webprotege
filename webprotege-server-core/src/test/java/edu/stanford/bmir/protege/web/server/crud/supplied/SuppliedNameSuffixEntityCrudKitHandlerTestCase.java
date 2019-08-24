@@ -1,15 +1,17 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactoryImpl;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
+import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +24,11 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.owlThing;
 import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueAndLang.rdfsLabelWithLexicalValueAndLang;
-import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -65,35 +67,49 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
 
     protected WhiteSpaceTreatment whiteSpaceTreatment = WhiteSpaceTreatment.TRANSFORM_TO_CAMEL_CASE;
 
-    private OWLDataFactoryImpl dataFactory;
-
     private SuppliedNameSuffixEntityCrudKitHandler handler;
 
     @Mock
     private DictionaryLanguage dictionaryLanguage;
 
+    @Mock
+    private OWLOntologyID ontologyId;
+
+    private OntologyChangeFactory changeFactory;
+
+    @Mock
+    private OntologyIndex ontologyIndex;
+
+
     @Before
     public void setUp() throws Exception {
-        dataFactory = new OWLDataFactoryImpl();
+        OWLDataFactoryImpl dataFactory = new OWLDataFactoryImpl();
         when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
         when(suffixSettings.getWhiteSpaceTreatment()).thenReturn(whiteSpaceTreatment);
-        when(crudContext.getDataFactory()).thenReturn(dataFactory);
-        when(crudContext.getTargetOntology()).thenReturn(ontology);
+        when(crudContext.getTargetOntologyId()).thenReturn(ontologyId);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         when(dictionaryLanguage.getLang()).thenReturn("");
-        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings);
+        when(ontologyIndex.getOntology(ontologyId))
+                .thenReturn(Optional.of(ontology));
+        changeFactory = new OntologyChangeFactoryImpl(ontologyIndex);
+        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, changeFactory);
     }
 
     @Test
     public void shouldAddDeclaration() {
         when(entityShortForm.getShortForm()).thenReturn("A");
         OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.empty(), crudContext, builder);
-        ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
-        verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
-        List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, (Matcher) hasItem(is(declarationFor(cls))));
+        var ontologyChangeCaptor = ArgumentCaptor.forClass(OWLOntologyChange.class);
+        verify(builder, atLeast(1)).add(ontologyChangeCaptor.capture());
+        var addedAxioms = ontologyChangeCaptor.getAllValues()
+                .stream()
+                .map(OWLOntologyChange::getAxiom)
+                .filter(ax -> ax instanceof OWLDeclarationAxiom)
+                .map(ax -> (OWLDeclarationAxiom) ax)
+                .collect(Collectors.toList());
+        assertThat(addedAxioms, hasItem(is(declarationFor(cls))));
     }
 
     @Test
@@ -131,9 +147,11 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
 
 
     private void verifyHasLabelEqualTo(String label, String lang) {
-        ArgumentCaptor<OWLAnnotationAssertionAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLAnnotationAssertionAxiom.class);
-        verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
-        List<OWLAnnotationAssertionAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, (Matcher) hasItem(rdfsLabelWithLexicalValueAndLang(label, lang)));
+        var addAxiomCaptor = ArgumentCaptor.forClass(OWLOntologyChange.class);
+        verify(builder, atLeast(1)).add(addAxiomCaptor.capture());
+        List<OWLAxiom> addedAxioms = addAxiomCaptor.getAllValues().stream()
+                                                                      .map(OWLOntologyChange::getAxiom)
+                .collect(Collectors.toList());
+        assertThat(addedAxioms, hasItem(rdfsLabelWithLexicalValueAndLang(label, lang)));
     }
 }

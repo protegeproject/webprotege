@@ -6,7 +6,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 
 /**

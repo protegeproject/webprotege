@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
+import com.google.common.base.Charsets;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -10,11 +11,13 @@ import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
+import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileResult;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -58,16 +61,19 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     protected ChangeListGenerator<Integer> getChangeListGenerator(ImportCSVFileAction action,
                                                                   ExecutionContext executionContext) {
         CSVGrid csvGrid = parseCSVGrid(action);
-        return factory.create(action.getImportRootClass(),
+        var rootClass = action.getImportRootClass();
+        var csvImportDescriptor = action.getDescriptor();
+        return factory.create(rootClass,
                               csvGrid,
-                              action.getDescriptor());
+                              csvImportDescriptor);
     }
 
     private CSVGrid parseCSVGrid(ImportCSVFileAction action) {
         try {
             CSVGridParser parser = new CSVGridParser();
             final File file = new File(uploadsDirectory, action.getDocumentId().getDocumentId());
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),
+                                                                                   Charsets.UTF_8));
             CSVGrid grid = parser.readAll(reader);
             reader.close();
             return grid;

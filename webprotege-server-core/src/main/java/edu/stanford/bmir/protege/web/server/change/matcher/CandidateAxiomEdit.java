@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorAdapter;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAxiom;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;

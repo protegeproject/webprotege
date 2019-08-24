@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.shared.lang.DefaultDisplayNameSettingsFactory;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

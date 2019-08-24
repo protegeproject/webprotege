@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byEntity;
 import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byLastModified;
 import static java.util.Comparator.comparing;
@@ -36,21 +36,20 @@ public class GetCommentedEntitiesActionHandler extends AbstractProjectActionHand
     private final EntityDiscussionThreadRepository repository;
 
     @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
+    private final HasGetRendering renderer;
 
     @Nonnull
-    private final HasGetRendering renderer;
+    private final EntitiesInProjectSignatureIndex entitiesInSignature;
 
     @Inject
     public GetCommentedEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                              @Nonnull EntityDiscussionThreadRepository repository,
-                                             @Nonnull OWLOntology rootOntology,
-                                             @Nonnull HasGetRendering renderer) {
+                                             @Nonnull HasGetRendering renderer,
+                                             @Nonnull EntitiesInProjectSignatureIndex entitiesInSignature) {
         super(accessManager);
-        this.repository = repository;
-        this.rootOntology = rootOntology;
-        this.renderer = renderer;
+        this.repository = checkNotNull(repository);
+        this.renderer = checkNotNull(renderer);
+        this.entitiesInSignature = checkNotNull(entitiesInSignature);
     }
 
     @Nonnull
@@ -73,7 +72,7 @@ public class GetCommentedEntitiesActionHandler extends AbstractProjectActionHand
 
         List<CommentedEntityData> result = new ArrayList<>();
         commentsByEntity.forEach((entity, threads) -> {
-            if (rootOntology.containsEntityInSignature(entity)) {
+            if (entitiesInSignature.containsEntityInSignature(entity)) {
                 int totalThreadCount = threads.size();
                 int openThreadCount = (int) threads.stream()
                                                    .filter(thread -> thread.getStatus().isOpen())

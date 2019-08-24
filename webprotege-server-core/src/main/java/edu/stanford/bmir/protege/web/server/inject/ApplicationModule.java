@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.client.MongoDatabase;
+import com.google.common.base.Ticker;
 import dagger.Module;
 import dagger.Provides;
-import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracle;
@@ -13,18 +12,11 @@ import edu.stanford.bmir.protege.web.server.api.UserApiKeyStore;
 import edu.stanford.bmir.protege.web.server.api.UserApiKeyStoreImpl;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
-import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepositoryImpl;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
-import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
-import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
@@ -43,7 +35,10 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
+import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
+import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.server.user.*;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
@@ -201,13 +196,6 @@ public class ApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
-            MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
-        return new ProjectEntityCrudKitSettingsRepository(database, converter);
-    }
-
-    @Provides
-    @ApplicationSingleton
     public WatchRecordRepository provideWatchRecordRepository(WatchRecordRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
@@ -271,21 +259,6 @@ public class ApplicationModule {
         return manager.getApplicationSettings();
     }
 
-    @Provides @IntoSet
-    public EntityCrudKitPlugin<?,?,?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
-        return plugin;
-    }
-
-    @Provides @IntoSet
-    public EntityCrudKitPlugin<?,?,?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
-        return plugin;
-    }
-
-    @Provides @IntoSet
-    public EntityCrudKitPlugin<?,?,?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
-        return plugin;
-    }
-
     @Provides
     LiteralStyle provideDefaultLiteralStyle() {
         return LiteralStyle.REGULAR;
@@ -335,5 +308,21 @@ public class ApplicationModule {
     @ApplicationSingleton
     long providesProjectDormantTime(WebProtegeProperties properties) {
         return properties.getProjectDormantTime();
+    }
+
+    @Provides
+    Ticker provideTicker() {
+        return Ticker.systemTicker();
+    }
+
+    @Provides
+    @ApplicationSingleton
+    UploadedOntologiesCache provideUploadedOntologiesCache(UploadedOntologiesProcessor processor,
+                                                           Ticker ticker,
+                                                           ApplicationDisposablesManager disposableObjectManager) {
+        var cache = new UploadedOntologiesCache(processor, ticker);
+        cache.start();
+        disposableObjectManager.register(cache);
+        return cache;
     }
 }

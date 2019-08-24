@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
