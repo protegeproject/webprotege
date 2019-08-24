@@ -4,6 +4,7 @@ import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
+import edu.stanford.bmir.protege.web.server.project.OntologyStoreModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -17,7 +18,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 @Subcomponent(
         modules = {
-            ProjectModule.class
+                ProjectModule.class,
+                OntologyStoreModule.class
         }
 )
 @ProjectSingleton

@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHiera
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.index.IndexUpdater;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
@@ -56,62 +55,8 @@ import static java.util.stream.Collectors.toList;
 @ProjectSingleton
 public class ChangeManager implements HasApplyChanges {
 
-    private static final OWLOntologyChangeVisitorEx<Boolean> EFFECTIVE_CHANGE_FILTER = new OWLOntologyChangeVisitorEx<>() {
-        @Nonnull
-        @Override
-        public Boolean visit(@Nonnull AddAxiom addAxiom) {
-            return !addAxiom.getOntology().containsAxiom(addAxiom.getAxiom());
-        }
-
-        @Nonnull
-        @Override
-        public Boolean visit(@Nonnull RemoveAxiom removeAxiom) {
-            return removeAxiom.getOntology().containsAxiom(removeAxiom.getAxiom());
-        }
-
-        @Nonnull
-        @Override
-        public Boolean visit(@Nonnull SetOntologyID setOntologyID) {
-            return false;
-        }
-
-        @Nonnull
-        @Override
-        public Boolean visit(@Nonnull AddImport addImport) {
-            return !addImport.getOntology().getImportsDeclarations().contains(addImport.getImportDeclaration());
-        }
-
-        @Nonnull
-        @Override
-        public Boolean visit(@Nonnull RemoveImport removeImport) {
-            return removeImport.getOntology().getImportsDeclarations().contains(removeImport.getImportDeclaration());
-        }
-
-        @Nonnull
-        @Override
-        public Boolean visit(@Nonnull AddOntologyAnnotation addOntologyAnnotation) {
-            return !addOntologyAnnotation
-                    .getOntology()
-                    .getAnnotations()
-                    .contains(addOntologyAnnotation.getAnnotation());
-        }
-
-        @Nonnull
-        @Override
-        public Boolean visit(@Nonnull RemoveOntologyAnnotation removeOntologyAnnotation) {
-            return removeOntologyAnnotation
-                    .getOntology()
-                    .getAnnotations()
-                    .contains(removeOntologyAnnotation.getAnnotation());
-        }
-    };
-
     @Nonnull
     private final ProjectId projectId;
-
-    @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
 
     @Nonnull
     private final DictionaryUpdatesProcessor dictionaryUpdatesProcessor;
@@ -188,9 +133,11 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
+    @Nonnull
+    private final OntologyStore ontologyStore;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
-                         @Nonnull OWLOntology rootOntology,
                          @Nonnull DictionaryUpdatesProcessor dictionaryUpdatesProcessor,
                          @Nonnull ActiveLanguagesManager activeLanguagesManager,
                          @Nonnull AccessManager accessManager,
@@ -212,9 +159,9 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull RenameMapFactory renameMapFactory,
                          @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
                          @Nonnull IndexUpdater indexUpdater,
-                         @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
+                         @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                         @Nonnull OntologyStore ontologyStore) {
         this.projectId = projectId;
-        this.rootOntology = rootOntology;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
         this.activeLanguagesManager = activeLanguagesManager;
         this.accessManager = accessManager;
@@ -237,6 +184,7 @@ public class ChangeManager implements HasApplyChanges {
         this.builtInPrefixDeclarations = builtInPrefixDeclarations;
         this.indexUpdater = indexUpdater;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
+        this.ontologyStore = ontologyStore;
     }
 
     /**
@@ -265,7 +213,6 @@ public class ChangeManager implements HasApplyChanges {
         // Final check of whether the user can actually edit the project
         throwEditPermissionDeniedIfNecessary(userId);
 
-        final List<OWLOntologyChange> appliedChanges;
         final ChangeApplicationResult<R> changeApplicationResult;
 
 
@@ -337,10 +284,7 @@ public class ChangeManager implements HasApplyChanges {
             final Optional<Revision> revision;
             try {
                 projectChangeWriteLock.lock();
-                var manager = ((ProjectOWLOntologyManager) rootOntology.getOWLOntologyManager());
-                var effectiveChanges = getEffectiveChanges(minimisedChanges);
-                manager.getDelegate().applyChanges(effectiveChanges);
-                appliedChanges = effectiveChanges;
+                var appliedChanges = ontologyStore.applyChanges(minimisedChanges);
                 var renameMap = renameMapFactory.create(tempIri2MintedIri);
                 var renamedResult = getRenamedResult(changeListGenerator, changeList.getResult(), renameMap);
                 changeApplicationResult = new ChangeApplicationResult<>(renamedResult, appliedChanges, renameMap);
@@ -525,10 +469,6 @@ public class ChangeManager implements HasApplyChanges {
         return new ChangeListMinimiser().getMinimisedChanges(allChangesIncludingRenames);
     }
 
-    private List<OWLOntologyChange> getEffectiveChanges(List<OWLOntologyChange> minimisedChanges) {
-        return minimisedChanges.stream().filter(this::isEffectiveChange).collect(toList());
-    }
-
     /**
      * Renames a result if it is present.
      *
@@ -604,9 +544,5 @@ public class ChangeManager implements HasApplyChanges {
                 .map(entity -> (E) entity)
                 .findFirst();
 
-    }
-
-    private boolean isEffectiveChange(OWLOntologyChange chg) {
-        return chg.accept(EFFECTIVE_CHANGE_FILTER);
     }
 }
