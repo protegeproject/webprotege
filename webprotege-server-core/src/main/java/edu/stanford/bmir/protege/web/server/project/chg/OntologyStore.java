@@ -14,5 +14,5 @@ import java.util.List;
 @ProjectSingleton
 abstract class OntologyStore {
 
-    protected abstract List<OWLOntologyChange> applyChanges(@Nonnull List<OWLOntologyChange> changes);
+    abstract List<OWLOntologyChange> applyChanges(@Nonnull List<OWLOntologyChange> changes);
 }

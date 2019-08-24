@@ -26,7 +26,7 @@ class OntologyStoreImpl extends OntologyStore {
 
 
     @Override
-    protected List<OWLOntologyChange> applyChanges(@Nonnull List<OWLOntologyChange> changes) {
+    List<OWLOntologyChange> applyChanges(@Nonnull List<OWLOntologyChange> changes) {
         checkNotNull(changes);
         var manager = ((ProjectOWLOntologyManager) rootOntology.getOWLOntologyManager()).getDelegate();
         return Collections.unmodifiableList(manager.applyChangesAndGetDetails(changes)
