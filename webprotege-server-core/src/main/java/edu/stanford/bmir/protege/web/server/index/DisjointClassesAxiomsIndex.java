@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-22
  */
-public interface DisjointClassesAxiomsByClassIndex {
+public interface DisjointClassesAxiomsIndex {
 
     @Nonnull
     Stream<OWLDisjointClassesAxiom> getDisjointClassesAxioms(@Nonnull OWLClass cls, OWLOntologyID ontologyId);

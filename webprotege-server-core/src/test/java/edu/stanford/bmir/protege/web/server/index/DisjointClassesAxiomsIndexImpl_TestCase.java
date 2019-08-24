@@ -27,9 +27,9 @@ import static org.mockito.Mockito.when;
  * 2019-08-22
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DisjointClassesAxiomsByClassIndexImpl_TestCase {
+public class DisjointClassesAxiomsIndexImpl_TestCase {
 
-    private DisjointClassesAxiomsByClassIndexImpl impl;
+    private DisjointClassesAxiomsIndexImpl impl;
 
     @Mock
     private OntologyIndex ontologyIndex;
@@ -54,7 +54,7 @@ public class DisjointClassesAxiomsByClassIndexImpl_TestCase {
                 .thenReturn(Optional.of(ontology));
         when(ontology.getDisjointClassesAxioms(cls))
                 .thenReturn(Collections.singleton(axiom));
-        impl = new DisjointClassesAxiomsByClassIndexImpl(ontologyIndex);
+        impl = new DisjointClassesAxiomsIndexImpl(ontologyIndex);
     }
 
     @Test

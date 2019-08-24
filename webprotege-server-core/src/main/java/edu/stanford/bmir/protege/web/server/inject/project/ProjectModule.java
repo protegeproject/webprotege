@@ -884,5 +884,6 @@ public class ProjectModule {
     TermDefinitionManager provideTermDefinitionManager(TermDefinitionManagerImpl impl) {
         return impl;
     }
+
 }
 

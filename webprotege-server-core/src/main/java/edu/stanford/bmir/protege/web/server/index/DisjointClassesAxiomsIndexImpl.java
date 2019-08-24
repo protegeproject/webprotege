@@ -15,13 +15,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-22
  */
-public class DisjointClassesAxiomsByClassIndexImpl implements DisjointClassesAxiomsByClassIndex {
+public class DisjointClassesAxiomsIndexImpl implements DisjointClassesAxiomsIndex {
 
     @Nonnull
     private final OntologyIndex ontologyIndex;
 
     @Inject
-    public DisjointClassesAxiomsByClassIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
+    public DisjointClassesAxiomsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
         this.ontologyIndex = checkNotNull(ontologyIndex);
     }
 
