@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.project;
+package edu.stanford.bmir.protege.web.server.project.chg;
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLOntologyChange;

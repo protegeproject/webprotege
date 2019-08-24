@@ -1,6 +1,8 @@
-package edu.stanford.bmir.protege.web.server.project;
+package edu.stanford.bmir.protege.web.server.project.chg;
 
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectOntologyManagerLoader;
+import edu.stanford.bmir.protege.web.server.project.chg.ProjectOWLOntologyManager;
 import org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;

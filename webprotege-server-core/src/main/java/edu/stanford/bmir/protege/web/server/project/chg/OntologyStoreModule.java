@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.project;
+package edu.stanford.bmir.protege.web.server.project.chg;
 
 import dagger.Module;
 import dagger.Provides;
