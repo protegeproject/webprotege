@@ -1,23 +1,23 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.server.util.IriReplacer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.change.AddImportData;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLObjectDuplicator;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLImportsDeclaration;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
-import java.util.Collections;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Matthew Horridge
@@ -36,10 +36,7 @@ public class AddImportChange_TestCase<R> {
     private OWLImportsDeclaration importsDeclaration;
 
     @Mock
-    private Set<OWLEntity> signature = Collections.singleton(mock(OWLEntity.class));
-
-    @Mock
-    private OWLObjectDuplicator duplicator;
+    private IriReplacer iriReplacer;
 
     @Mock
     private OntologyChangeVisitor visitor;
@@ -94,7 +91,7 @@ public class AddImportChange_TestCase<R> {
 
     @Test
     public void shouldReplaceIris() {
-        assertThat(change.replaceIris(duplicator), is(change));
+        assertThat(change.replaceIris(iriReplacer), is(change));
     }
 
     @Test

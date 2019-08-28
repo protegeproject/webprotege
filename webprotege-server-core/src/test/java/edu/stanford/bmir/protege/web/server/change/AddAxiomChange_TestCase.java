@@ -1,14 +1,16 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.server.util.IriReplacer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.change.AddAxiomData;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLObjectDuplicator;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
 import java.util.Set;
@@ -39,7 +41,7 @@ public class AddAxiomChange_TestCase<R> {
     private Set<OWLEntity> signature = Collections.singleton(mock(OWLEntity.class));
 
     @Mock
-    private OWLObjectDuplicator duplicator;
+    private IriReplacer iriReplacer;
 
     @Mock
     private OntologyChangeVisitor visitor;
@@ -55,7 +57,7 @@ public class AddAxiomChange_TestCase<R> {
         when(axiom.getAxiomType())
                 .thenAnswer(invocation -> AxiomType.ANNOTATION_ASSERTION);
 
-        when(duplicator.duplicateObject(axiom))
+        when(iriReplacer.replaceIris(axiom))
                 .thenReturn(axiom);
     }
 
@@ -106,7 +108,7 @@ public class AddAxiomChange_TestCase<R> {
 
     @Test
     public void shouldReplaceIris() {
-        assertThat(change.replaceIris(duplicator), is(change));
+        assertThat(change.replaceIris(iriReplacer), is(change));
     }
 
     @Test

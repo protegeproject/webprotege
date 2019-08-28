@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.value.AutoValue;
+import edu.stanford.bmir.protege.web.server.util.IriReplacer;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 
 import javax.annotation.Nonnull;
 
@@ -29,8 +29,8 @@ public abstract class AddAxiomChange implements AxiomChange {
 
     @Nonnull
     @Override
-    public AddAxiomChange replaceIris(@Nonnull OWLObjectDuplicator duplicator) {
-        OWLAxiom duplicatedAxiom = duplicator.duplicateObject(getAxiom());
+    public AddAxiomChange replaceIris(@Nonnull IriReplacer iriReplacer) {
+        OWLAxiom duplicatedAxiom = iriReplacer.replaceIris(getAxiom());
         return AddAxiomChange.of(getOntologyId(), duplicatedAxiom);
     }
 

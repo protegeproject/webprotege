@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.value.AutoValue;
+import edu.stanford.bmir.protege.web.server.util.IriReplacer;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.change.RemoveOntologyAnnotationData;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 
 import javax.annotation.Nonnull;
 
@@ -24,8 +24,8 @@ public abstract class RemoveOntologyAnnotationChange implements OntologyAnnotati
 
     @Nonnull
     @Override
-    public RemoveOntologyAnnotationChange replaceIris(@Nonnull OWLObjectDuplicator duplicator) {
-        OWLAnnotation duplicatedAnnotation = duplicator.duplicateObject(getAnnotation());
+    public RemoveOntologyAnnotationChange replaceIris(@Nonnull IriReplacer iriReplacer) {
+        OWLAnnotation duplicatedAnnotation = iriReplacer.replaceIris(getAnnotation());
         return RemoveOntologyAnnotationChange.of(getOntologyId(),
                                                  duplicatedAnnotation);
     }

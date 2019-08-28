@@ -1,17 +1,16 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.server.util.IriReplacer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.change.AddOntologyAnnotationData;
 import org.semanticweb.owlapi.change.RemoveOntologyAnnotationData;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 
 import java.util.Collections;
 import java.util.NoSuchElementException;
@@ -20,7 +19,6 @@ import java.util.Set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 /**
  * Matthew Horridge
@@ -42,7 +40,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     private Set<OWLEntity> signature = Collections.singleton(mock(OWLEntity.class));
 
     @Mock
-    private OWLObjectDuplicator duplicator;
+    private IriReplacer iriReplacer;
 
     @Mock
     private OntologyChangeVisitor visitor;
@@ -55,7 +53,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
         change = RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation);
         when(ontologyAnnotation.getSignature())
                 .thenReturn(signature);
-        when(duplicator.duplicateObject(ontologyAnnotation))
+        when(iriReplacer.replaceIris(ontologyAnnotation))
                 .thenReturn(ontologyAnnotation);
     }
 
@@ -102,7 +100,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
 
     @Test
     public void shouldReplaceIris() {
-        assertThat(change.replaceIris(duplicator), is(change));
+        assertThat(change.replaceIris(iriReplacer), is(change));
     }
 
     @Test

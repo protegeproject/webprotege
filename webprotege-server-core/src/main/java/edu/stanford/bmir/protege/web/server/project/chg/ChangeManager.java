@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project.chg;
 
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
@@ -24,6 +25,8 @@ import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdatesProcessor;
+import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import edu.stanford.bmir.protege.web.server.util.IriReplacerFactory;
 import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
@@ -37,7 +40,6 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -142,6 +144,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final OntologyStore ontologyStore;
 
+    @Nonnull
+    private final IriReplacerFactory iriReplacerFactory;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull DictionaryUpdatesProcessor dictionaryUpdatesProcessor,
@@ -166,7 +171,8 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
                          @Nonnull IndexUpdater indexUpdater,
                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                         @Nonnull OntologyStore ontologyStore) {
+                         @Nonnull OntologyStore ontologyStore,
+                         @Nonnull IriReplacerFactory iriReplacerFactory) {
         this.projectId = projectId;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
         this.activeLanguagesManager = activeLanguagesManager;
@@ -191,6 +197,7 @@ public class ChangeManager implements HasApplyChanges {
         this.indexUpdater = indexUpdater;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.ontologyStore = ontologyStore;
+        this.iriReplacerFactory = iriReplacerFactory;
     }
 
     /**
@@ -267,7 +274,7 @@ public class ChangeManager implements HasApplyChanges {
 
 
             var allChangesIncludingRenames = new ArrayList<OntologyChange>();
-            var changeRenamer = new OWLObjectDuplicator(dataFactory, tempIri2MintedIri);
+            var changeRenamer = iriReplacerFactory.create(ImmutableMap.copyOf(tempIri2MintedIri));
             for(var change : changes) {
                 if(changesToBeRenamed.contains(change)) {
                     var replacementChange = getRenamedChange(change, changeRenamer);
@@ -413,12 +420,12 @@ public class ChangeManager implements HasApplyChanges {
      * are specified by a rename map.
      *
      * @param change     The change to copy.
-     * @param duplicator A duplicator used to rename IRIs
+     * @param iriReplacer An IRI replacer used to rename IRIs in OWL objects
      * @return The ontology change with the renamings.
      */
     private OntologyChange getRenamedChange(OntologyChange change,
-                                               final OWLObjectDuplicator duplicator) {
-        return change.replaceIris(duplicator);
+                                            IriReplacer iriReplacer) {
+        return change.replaceIris(iriReplacer);
     }
 
     private List<OntologyChange> getMinimisedChanges(List<OntologyChange> allChangesIncludingRenames) {

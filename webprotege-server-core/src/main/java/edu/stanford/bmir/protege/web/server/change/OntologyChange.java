@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.server.util.IriReplacer;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 
 import javax.annotation.Nonnull;
 import java.util.NoSuchElementException;
@@ -51,7 +51,7 @@ public interface OntologyChange {
     }
 
     @Nonnull
-    OntologyChange replaceIris(@Nonnull OWLObjectDuplicator duplicator);
+    OntologyChange replaceIris(@Nonnull IriReplacer iriReplacer);
 
     @Nonnull
     OWLOntologyChangeRecord toOwlOntologyChangeRecord();
