@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.Set;

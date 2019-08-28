@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.match;
 
-import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

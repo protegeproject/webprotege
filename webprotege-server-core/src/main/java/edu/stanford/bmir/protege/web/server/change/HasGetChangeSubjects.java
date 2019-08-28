@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.Set;
 
@@ -13,5 +12,5 @@ import java.util.Set;
  */
 public interface HasGetChangeSubjects {
 
-    Set<OWLEntity> getChangeSubjects(OWLOntologyChange change);
+    Set<OWLEntity> getChangeSubjects(OntologyChange change);
 }

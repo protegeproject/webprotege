@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.AddedPropertyRange;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedPropertyRange;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLPropertyRangeAxiom;
 
@@ -19,12 +18,9 @@ import java.util.Optional;
  */
 public class PropertyRangeAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPropertyRangeAxiom<?,?>> {
 
-    private final OWLObjectStringFormatter formatter;
-
     @Inject
-    public PropertyRangeAxiomChangeMatcher(OWLObjectStringFormatter formatter) {
+    public PropertyRangeAxiomChangeMatcher() {
         super(new TypeToken<OWLPropertyRangeAxiom<?,?>>(){});
-        this.formatter = formatter;
     }
 
     @Override
@@ -34,7 +30,7 @@ public class PropertyRangeAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPro
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyRangeAxiom<?, ?> axiom,
-                                                                      List<OWLOntologyChangeData> changes) {
+                                                                      List<OntologyChange> changes) {
         return Optional.of(ChangeSummary.get(AddedPropertyRange.get((OWLProperty) axiom.getProperty(),
                                                                     axiom.getRange())));
     }

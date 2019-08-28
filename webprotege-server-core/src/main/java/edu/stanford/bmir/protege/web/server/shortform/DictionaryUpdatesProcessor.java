@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.server.change.HasGetChangeSubjects;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -38,7 +38,7 @@ public class DictionaryUpdatesProcessor {
     /**
      * Updates all dictionaries in response to the specified list of (applied) ontology changes.
      */
-    public void handleChanges(@Nonnull List<OWLOntologyChange> changes) {
+    public void handleChanges(@Nonnull List<OntologyChange> changes) {
         Stream<OWLEntity> sigStream = changes.stream()
                                              .flatMap(chg -> chg.getSignature().stream());
         // Catches annotations

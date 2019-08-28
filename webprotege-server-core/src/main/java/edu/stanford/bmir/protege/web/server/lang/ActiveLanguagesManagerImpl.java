@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguageComparators;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
@@ -12,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +26,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris.isWellKnownLabellingIri;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
 
 /**
  * Matthew Horridge
@@ -100,20 +101,20 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
      * @param changes The changes.
      */
     @Override
-    public synchronized void handleChanges(@Nonnull List<OWLOntologyChange> changes) {
+    public synchronized void handleChanges(@Nonnull List<OntologyChange> changes) {
         if (changes.isEmpty()) {
             return;
         }
         changes.stream()
-               .filter(OWLOntologyChange::isAxiomChange)
-               .filter(chg -> chg.getAxiom() instanceof OWLAnnotationAssertionAxiom)
-               .filter(chg -> isLabellingAnnotation((OWLAnnotationAssertionAxiom) chg.getAxiom()))
+               .filter(chg -> chg.isChangeFor(ANNOTATION_ASSERTION))
+               .filter(chg -> isLabellingAnnotation((OWLAnnotationAssertionAxiom) chg.getAxiomOrThrow()))
                .forEach(chg -> {
+                   var axiom = chg.getAxiomOrThrow();
                    if (chg.isAddAxiom()) {
-                       addAxiom((OWLAnnotationAssertionAxiom) chg.getAxiom());
+                       addAxiom((OWLAnnotationAssertionAxiom) axiom);
                    }
                    else {
-                       removeAxiom((OWLAnnotationAssertionAxiom) chg.getAxiom());
+                       removeAxiom((OWLAnnotationAssertionAxiom) axiom);
                    }
                });
         rebuildSortedLanguages();

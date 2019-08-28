@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLangTagTransformer;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -33,12 +33,12 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
-        if(changeData.size() != 2) {
+    public Optional<ChangeSummary> getDescription(List<OntologyChange> changes) {
+        if(changes.size() != 2) {
             return Optional.empty();
         }
-        OWLOntologyChangeData change0 = changeData.get(0);
-        OWLOntologyChangeData change1 = changeData.get(1);
+        OntologyChange change0 = changes.get(0);
+        OntologyChange change1 = changes.get(1);
         CandidateAxiomEdit<OWLAnnotationAssertionAxiom> edit = new CandidateAxiomEdit<>(change0, change1, AxiomType.ANNOTATION_ASSERTION);
         if(!edit.hasAddAndRemove()) {
             return Optional.empty();

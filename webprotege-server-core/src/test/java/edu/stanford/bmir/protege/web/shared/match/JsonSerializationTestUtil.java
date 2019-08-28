@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.match;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.IOException;
 import java.io.StringReader;

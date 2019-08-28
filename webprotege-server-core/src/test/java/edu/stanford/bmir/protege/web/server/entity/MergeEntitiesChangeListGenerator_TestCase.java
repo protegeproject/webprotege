@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.entity;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactoryImpl;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
@@ -25,10 +25,11 @@ import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment.DELETE_MERGED_ENTITY;
 import static edu.stanford.bmir.protege.web.shared.entity.MergedEntityTreatment.DEPRECATE_MERGED_ENTITY;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.*;
 import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.Class;
+import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.*;
 
 /**
  * Matthew Horridge
@@ -74,8 +75,6 @@ public class MergeEntitiesChangeListGenerator_TestCase {
 
     private EntityRenamer entityRenamer;
 
-    private OntologyChangeFactoryImpl ontologyChangeFactory;
-
     private DefaultOntologyIdManager defaultOntologyIdManager;
 
     private ProjectOntologiesIndex projectOntologiesIndex;
@@ -117,11 +116,9 @@ public class MergeEntitiesChangeListGenerator_TestCase {
         var axiomsByReferenceIndex = new AxiomsByReferenceIndexImpl(axiomsByEntityReference,
                                                                     axiomsByIriReference);
 
-        ontologyChangeFactory = new OntologyChangeFactoryImpl(ontologyIndex);
         entityRenamer = new EntityRenamer(dataFactory,
                                           projectOntologiesIndex,
-                                          axiomsByReferenceIndex,
-                                          ontologyChangeFactory);
+                                          axiomsByReferenceIndex);
 
     }
 
@@ -134,12 +131,11 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                                                                     dataFactory,
                                                                                     discussionThreadRepo,
                                                                                     entityRenamer,
-                                                                                    ontologyChangeFactory,
                                                                                     defaultOntologyIdManager,
                                                                                     projectOntologiesIndex,
                                                                                     annotationAssertionsIndex);
         OntologyChangeList<?> changeList = gen.generateChanges(new ChangeGenerationContext(UserId.getUserId("Bob")));
-        manager.applyChanges(changeList.getChanges());
+        manager.applyChanges(changeList.getChanges().stream().map(OntologyChange::toOwlOntologyChangeRecord).map(chg -> chg.createOntologyChange(manager)).collect(toList()));
     }
 
     @Test

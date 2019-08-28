@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.api;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mongodb.morphia.mapping.MappedField;
 

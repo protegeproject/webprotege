@@ -53,9 +53,6 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     private final MessageFormatter msg;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     private static Map<String, String> builtInPrefixes = new HashMap<>();
@@ -85,7 +82,6 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
                                                      @Nonnull ImmutableSet<P> parents,
                                                      @Nonnull OWLDataFactory dataFactory,
                                                      @Nonnull MessageFormatter msg,
-                                                     @Nonnull OntologyChangeFactory changeFactory,
                                                      @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.entityType = entityType;
         this.sourceText = sourceText;
@@ -93,7 +89,6 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
         this.parents = parents;
         this.dataFactory = dataFactory;
         this.msg = msg;
-        this.changeFactory = changeFactory;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
@@ -114,11 +109,11 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
             else {
                 freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText, Optional.of(langTag.trim()));
                 var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
-                builder.add(changeFactory.createAddAxiom(ontologyId, dataFactory.getOWLDeclarationAxiom(freshEntity)));
+                builder.add(AddAxiomChange.of(ontologyId, dataFactory.getOWLDeclarationAxiom(freshEntity)));
             }
             for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, context, parents)) {
                 var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
-                builder.add(changeFactory.createAddAxiom(ontologyId, axiom));
+                builder.add(AddAxiomChange.of(ontologyId, axiom));
             }
             freshEntities.add(freshEntity);
         }

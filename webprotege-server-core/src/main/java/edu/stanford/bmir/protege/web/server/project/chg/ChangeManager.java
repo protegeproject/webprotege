@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.project.chg;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
-import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
@@ -34,7 +33,10 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 
 import javax.annotation.Nonnull;
@@ -47,9 +49,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -241,11 +243,11 @@ public class ChangeManager implements HasApplyChanges {
 
             var changeSession = getEntityCrudKitHandler().createChangeSetSession();
             // Changes that refer to entities that have temp IRIs
-            var changesToBeRenamed = new HashSet<OWLOntologyChange>();
+            var changesToBeRenamed = new HashSet<OntologyChange>();
             // Changes required to create fresh entities
-            var changesToCreateFreshEntities = new ArrayList<OWLOntologyChange>();
+            var changesToCreateFreshEntities = new ArrayList<OntologyChange>();
             for(var change : changes) {
-                for(var entityInSignature : change.getSignature()) {
+                change.getSignature().forEach(entityInSignature -> {
                     if(isFreshEntity(entityInSignature)) {
                         throwCreatePermissionDeniedIfNecessary(entityInSignature, userId);
                         changesToBeRenamed.add(change);
@@ -260,11 +262,11 @@ public class ChangeManager implements HasApplyChanges {
                             tempIri2MintedIri.put(tempIri, mintedIri);
                         }
                     }
-                }
+                });
             }
 
 
-            var allChangesIncludingRenames = new ArrayList<OWLOntologyChange>();
+            var allChangesIncludingRenames = new ArrayList<OntologyChange>();
             var changeRenamer = new OWLObjectDuplicator(dataFactory, tempIri2MintedIri);
             for(var change : changes) {
                 if(changesToBeRenamed.contains(change)) {
@@ -414,62 +416,12 @@ public class ChangeManager implements HasApplyChanges {
      * @param duplicator A duplicator used to rename IRIs
      * @return The ontology change with the renamings.
      */
-    private OWLOntologyChange getRenamedChange(OWLOntologyChange change,
+    private OntologyChange getRenamedChange(OntologyChange change,
                                                final OWLObjectDuplicator duplicator) {
-        return change.accept(new OWLOntologyChangeVisitorEx<>() {
-
-            @Nonnull
-            @Override
-            public OWLOntologyChange visit(@Nonnull AddAxiom change) {
-                return new AddAxiom(change.getOntology(), duplicate(change.getAxiom()));
-            }
-
-            @SuppressWarnings("unchecked")
-            private <T extends OWLObject> T duplicate(T ax) {
-                OWLObject object = duplicator.duplicateObject(ax);
-                return (T) object;
-            }
-
-            @Nonnull
-            @Override
-            public OWLOntologyChange visit(@Nonnull RemoveAxiom change) {
-                return new RemoveAxiom(change.getOntology(), duplicate(change.getAxiom()));
-            }
-
-            @Nonnull
-            @Override
-            public OWLOntologyChange visit(@Nonnull SetOntologyID change) {
-                return change;
-            }
-
-
-            @Nonnull
-            @Override
-            public OWLOntologyChange visit(@Nonnull AddImport change) {
-                return change;
-            }
-
-            @Nonnull
-            @Override
-            public OWLOntologyChange visit(@Nonnull RemoveImport change) {
-                return change;
-            }
-
-            @Nonnull
-            @Override
-            public OWLOntologyChange visit(@Nonnull AddOntologyAnnotation change) {
-                return new AddOntologyAnnotation(change.getOntology(), duplicate(change.getAnnotation()));
-            }
-
-            @Nonnull
-            @Override
-            public OWLOntologyChange visit(@Nonnull RemoveOntologyAnnotation change) {
-                return new RemoveOntologyAnnotation(change.getOntology(), duplicate(change.getAnnotation()));
-            }
-        });
+        return change.replaceIris(duplicator);
     }
 
-    private List<OWLOntologyChange> getMinimisedChanges(List<OWLOntologyChange> allChangesIncludingRenames) {
+    private List<OntologyChange> getMinimisedChanges(List<OntologyChange> allChangesIncludingRenames) {
         return new ChangeListMinimiser().getMinimisedChanges(allChangesIncludingRenames);
     }
 
@@ -495,12 +447,7 @@ public class ChangeManager implements HasApplyChanges {
         var changes = finalResult.getChangeList();
 
         // Update indexes in response to the changes
-        var changeRecords = finalResult
-                .getChangeList()
-                .stream()
-                .map(OWLOntologyChange::getChangeRecord)
-                .collect(toList());
-        indexUpdater.propagateOntologyChanges(changeRecords);
+        indexUpdater.propagateOntologyChanges(changes);
 
 
         // Update the rendering first so that a proper change message is generated
@@ -510,13 +457,16 @@ public class ChangeManager implements HasApplyChanges {
         // Generate a description for the changes that were actually applied
         var changeDescription = changeList.getMessage(finalResult);
 
+        var changeRecords = changes.stream()
+                                   .map(OntologyChange::toOwlOntologyChangeRecord)
+                                   .collect(toImmutableList());
         // Log the changes
         var revision = changeManager.addRevision(userId, changeRecords, changeDescription);
 
-        classHierarchyProvider.handleChanges(changeRecords);
-        objectPropertyHierarchyProvider.handleChanges(changeRecords);
-        dataPropertyHierarchyProvider.handleChanges(changeRecords);
-        annotationPropertyHierarchyProvider.handleChanges(changeRecords);
+        classHierarchyProvider.handleChanges(changes);
+        objectPropertyHierarchyProvider.handleChanges(changes);
+        dataPropertyHierarchyProvider.handleChanges(changes);
+        annotationPropertyHierarchyProvider.handleChanges(changes);
         return revision;
     }
 

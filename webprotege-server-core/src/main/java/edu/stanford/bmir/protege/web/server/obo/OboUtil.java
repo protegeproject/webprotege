@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
@@ -34,20 +36,15 @@ public class OboUtil {
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
-    @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
     @Inject
     public OboUtil(@Nonnull OWLDataFactory dataFactory,
                    @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
                    @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                   @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                   @Nonnull OntologyChangeFactory changeFactory) {
+                   @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.dataFactory = checkNotNull(dataFactory);
         this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
-        this.changeFactory = checkNotNull(changeFactory);
     }
 
     public static IRI getIRI(OBOFormatConstants.OboFormatTag tag) {
@@ -67,24 +64,24 @@ public class OboUtil {
     }
 
     @Nonnull
-    public List<OWLOntologyChange> replaceStringAnnotationValue(@Nonnull IRI annotationSubject,
+    public List<OntologyChange> replaceStringAnnotationValue(@Nonnull IRI annotationSubject,
                                                                 @Nonnull IRI annotationPropertyIRI,
                                                                 @Nonnull String replaceWith) {
-        List<OWLOntologyChange> changes = new ArrayList<>();
+        List<OntologyChange> changes = new ArrayList<>();
         OWLAnnotationProperty property = dataFactory.getOWLAnnotationProperty(annotationPropertyIRI);
         OWLLiteral value = dataFactory.getOWLLiteral(replaceWith);
         projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
             annotationAssertionsIndex.getAxiomsForSubject(annotationSubject, ontId).forEach(ax -> {
-                changes.add(changeFactory.createRemoveAxiom(ontId, ax));
+                changes.add(RemoveAxiomChange.of(ontId, ax));
                 if (!replaceWith.isEmpty()) {
-                    changes.add(changeFactory.createAddAxiom(ontId, dataFactory.getOWLAnnotationAssertionAxiom(property, annotationSubject, value, ax.getAnnotations())));
+                    changes.add(AddAxiomChange.of(ontId, dataFactory.getOWLAnnotationAssertionAxiom(property, annotationSubject, value, ax.getAnnotations())));
                 }
             });
         });
         if (!replaceWith.isEmpty() && changes.isEmpty()) {
             // No previous value, so set new one
             var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
-            changes.add(changeFactory.createAddAxiom(defaultOntologyId, dataFactory.getOWLAnnotationAssertionAxiom(property, annotationSubject, value)));
+            changes.add(AddAxiomChange.of(defaultOntologyId, dataFactory.getOWLAnnotationAssertionAxiom(property, annotationSubject, value)));
         }
         return changes;
     }

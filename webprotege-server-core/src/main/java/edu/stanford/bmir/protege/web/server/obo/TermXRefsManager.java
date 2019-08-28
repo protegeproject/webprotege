@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
@@ -41,24 +43,19 @@ public class TermXRefsManager {
     @Nonnull
     private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertions;
 
-    @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
     @Inject
     public TermXRefsManager(@Nonnull ChangeManager changeManager,
                             @Nonnull OWLDataFactory dataFactory,
                             @Nonnull XRefExtractor xrefExtractor,
                             @Nonnull AnnotationToXRefConverter xrefConverter,
                             @Nonnull ProjectOntologiesIndex projectOntologies,
-                            @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertions,
-                            @Nonnull OntologyChangeFactory changeFactory) {
+                            @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertions) {
         this.changeManager = changeManager;
         this.dataFactory = dataFactory;
         this.xrefExtractor = xrefExtractor;
         this.xrefConverter = xrefConverter;
         this.projectOntologies = projectOntologies;
         this.annotationAssertions = annotationAssertions;
-        this.changeFactory = changeFactory;
     }
 
     @Nonnull
@@ -68,7 +65,7 @@ public class TermXRefsManager {
 
     public void setXRefs(UserId userId, OWLEntity term, List<OBOXRef> xrefs) {
         var subject = term.getIRI();
-        var changes = new ArrayList<OWLOntologyChange>();
+        var changes = new ArrayList<OntologyChange>();
         projectOntologies.getOntologyIds()
                          .forEach(ontId -> {
                              annotationAssertions.getAxiomsForSubject(subject, ontId)
@@ -78,10 +75,10 @@ public class TermXRefsManager {
                                                               .map(xrefConverter::toAnnotation)
                                                               .map(annotation -> toAnnotationAssertion(subject,
                                                                                                        annotation))
-                                                              .map(ax -> changeFactory.createAddAxiom(ontId, ax))
+                                                              .map(ax -> AddAxiomChange.of(ontId, ax))
                                                               .forEach(changes::add);
-                                                         var removeAx = changeFactory.createRemoveAxiom(ontId,
-                                                                                                        existingAx);
+                                                         var removeAx = RemoveAxiomChange.of(ontId,
+                                                                                             existingAx);
                                                          changes.add(removeAx);
                                                      }
                                                  });

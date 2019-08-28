@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.events;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
@@ -12,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -49,7 +49,7 @@ public class EntityTagsChangedEventComputer implements EventTranslator {
     }
 
     @Override
-    public void prepareForOntologyChanges(List<OWLOntologyChange> submittedChanges) {
+    public void prepareForOntologyChanges(List<OntologyChange> submittedChanges) {
         submittedChanges.forEach(chg -> {
             provider.getChangeSubjects(chg).forEach(entity -> {
                 beforeChangesTags.putAll(entity, tagsManager.getTags(entity));

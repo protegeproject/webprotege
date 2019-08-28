@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.OWLProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
 
     protected abstract String getHierarchyName();
 
-    public void handleChanges(List<OWLOntologyChangeRecord> changes) {
+    public void handleChanges(List<OntologyChange> changes) {
         Set<P> properties = new HashSet<>(getPropertiesReferencedInChange(changes));
         for (P prop : properties) {
             if (isSubPropertyOfRoot(prop)) {
@@ -96,10 +97,9 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
         fireNodeChanged(getRoot());
     }
 
-    private Set<P> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes) {
+    private Set<P> getPropertiesReferencedInChange(List<OntologyChange> changes) {
         return changes.stream()
-                      .map(OWLOntologyChangeRecord::getData)
-                      .map(OWLOntologyChangeData::getSignature)
+                      .map(OntologyChange::getSignature)
                       .flatMap(Collection::stream)
                       .filter(entity -> entity.isType(entityType))
                       .map(entity -> (P) entity)

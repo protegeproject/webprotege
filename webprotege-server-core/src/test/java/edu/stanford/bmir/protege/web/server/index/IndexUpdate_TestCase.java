@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,7 +26,7 @@ public class IndexUpdate_TestCase {
     private RequiresOntologyChangeNotification index;
 
     @Mock
-    private OWLOntologyChangeRecord ontologyChangeRecord;
+    private OntologyChange ontologyChange;
 
     @Before
     public void setUp() {
@@ -38,7 +37,7 @@ public class IndexUpdate_TestCase {
     public void shouldShouldNotAddMultipleListeners() {
         indexUpdater.registerIndex(index);
         indexUpdater.registerIndex(index);
-        var changes = Collections.singletonList(ontologyChangeRecord);
+        var changes = Collections.singletonList(ontologyChange);
         indexUpdater.propagateOntologyChanges(changes);
         verify(index, times(1)).handleOntologyChanges(changes);
     }

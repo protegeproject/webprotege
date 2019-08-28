@@ -2,14 +2,14 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.DeleteAxiomsAction;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.DeleteAxiomsResult;
-import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -31,21 +31,16 @@ public class DeleteAxiomsActionHandler extends AbstractProjectActionHandler<Dele
     private final ChangeManager changeManager;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Inject
     public DeleteAxiomsActionHandler(@Nonnull AccessManager accessManager,
                                      @Nonnull ProjectId projectId,
                                      @Nonnull ChangeManager changeManager,
-                                     @Nonnull OntologyChangeFactory changeFactory,
                                      @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         super(accessManager);
         this.projectId = checkNotNull(projectId);
         this.changeManager = checkNotNull(changeManager);
-        this.changeFactory = checkNotNull(changeFactory);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
     }
 
@@ -61,7 +56,7 @@ public class DeleteAxiomsActionHandler extends AbstractProjectActionHandler<Dele
         var builder = OntologyChangeList.<String>builder();
         var ontId = defaultOntologyIdManager.getDefaultOntologyId();
         action.getAxioms()
-              .forEach(ax -> builder.add(changeFactory.createRemoveAxiom(ontId, ax)));
+              .forEach(ax -> builder.add(RemoveAxiomChange.of(ontId, ax)));
         var changeList = builder.build(action.getCommitMessage());
         var changeListGenerator = new FixedChangeListGenerator<>(changeList.getChanges(),
                                                                  "",

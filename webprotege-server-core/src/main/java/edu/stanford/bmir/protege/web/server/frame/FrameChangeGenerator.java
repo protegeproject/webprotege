@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange.of;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -38,9 +38,6 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
 
     @Nonnull
     private final ReverseEngineeredChangeDescriptionGeneratorFactory factory;
-
-    @Nonnull
-    private final OntologyChangeFactory changeFactory;
 
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
@@ -67,7 +64,6 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     public FrameChangeGenerator(@Nonnull FrameUpdate frameUpdate,
                                 @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                 @Provided @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
-                                @Provided @Nonnull OntologyChangeFactory changeFactory,
                                 @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                                 @Provided @Nonnull AxiomsIndex axiomsIndex,
                                 @Provided @Nonnull ClassFrameTranslator classFrameTranslator,
@@ -78,7 +74,6 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         this.frameUpdate = checkNotNull(frameUpdate);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.factory = checkNotNull(factory);
-        this.changeFactory = checkNotNull(changeFactory);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
         this.axiomsIndex = checkNotNull(axiomsIndex);
         this.classFrameTranslator = checkNotNull(classFrameTranslator);
@@ -145,7 +140,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         }
     }
 
-    public List<OWLOntologyChange> createChanges() {
+    public List<OntologyChange> createChanges() {
         // TODO: Consider axiom annotations!
 
         // TODO: Three way merge incase the frame has been modified "externally" and is different from the original
@@ -186,7 +181,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
 
 
         var mutatedOntologies = Sets.<OWLOntologyID>newLinkedHashSet();
-        List<OWLOntologyChange> changes = Lists.newArrayList();
+        List<OntologyChange> changes = Lists.newArrayList();
         for(OWLAxiom fromAxiom : fromAxioms) {
             for(OWLOntologyID ontologyId : ontologyIds) {
                 if(isContainedInOntology(fromAxiom, ontologyId) && !toAxioms.contains(fromAxiom)) {
@@ -195,7 +190,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
                 // We need to add this here in case an axiom containing fresh entities has been added and then
                 // removed (caused by a re-edit).  The fresh entities will get "grounded" and then the axiom added
                 // hence, ontology.contains() won't work.
-                changes.add(changeFactory.createRemoveAxiom(ontologyId, fromAxiom));
+                changes.add(of(ontologyId, fromAxiom));
             }
         }
 
@@ -206,20 +201,20 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
                 // Fresh axiom to be placed somewhere
                 if(mutatedOntologies.size() == 1) {
                     // Assume edit i.e. replacement of axiom in the same ontology.
-                    changes.add(changeFactory.createAddAxiom(mutatedOntologies.iterator()
+                    changes.add(AddAxiomChange.of(mutatedOntologies.iterator()
                                                                               .next(), toAxiom));
                 }
                 else {
                     // Multiple ontologies were affected.  We now need to place the fresh axiom in the appropriate
                     // ontology
                     OWLOntologyID freshAxiomOntology = getFreshAxiomOntology(fromAxioms, ontologyIds);
-                    changes.add(changeFactory.createAddAxiom(freshAxiomOntology, toAxiom));
+                    changes.add(AddAxiomChange.of(freshAxiomOntology, toAxiom));
                 }
             }
             else {
                 // Ensure it is still in there
                 for(OWLOntologyID ontId : existingLocations) {
-                    changes.add(changeFactory.createAddAxiom(ontId, toAxiom));
+                    changes.add(AddAxiomChange.of(ontId, toAxiom));
                 }
             }
         }

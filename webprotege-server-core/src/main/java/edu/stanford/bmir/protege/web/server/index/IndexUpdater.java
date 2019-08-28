@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class IndexUpdater {
         listeners.add(requiresOntologyChangeNotification);
     }
 
-    public synchronized void propagateOntologyChanges(List<OWLOntologyChangeRecord> changes) {
+    public synchronized void propagateOntologyChanges(List<OntologyChange> changes) {
         listeners.forEach(listener -> {
             try {
                 listener.handleOntologyChanges(changes);

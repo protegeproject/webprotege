@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
@@ -43,9 +45,6 @@ public class TermCrossProductsManager {
     private final EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Nonnull
@@ -57,7 +56,6 @@ public class TermCrossProductsManager {
                                     @Nonnull ChangeManager changeManager,
                                     @Nonnull RelationshipConverter relationshipConverter,
                                     @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
-                                    @Nonnull OntologyChangeFactory changeFactory,
                                     @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                                     @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
         this.renderingManager = renderingManager;
@@ -65,7 +63,6 @@ public class TermCrossProductsManager {
         this.changeManager = changeManager;
         this.relationshipConverter = relationshipConverter;
         this.equivalentClassesAxiomsIndex = equivalentClassesAxiomsIndex;
-        this.changeFactory = changeFactory;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.projectOntologiesIndex = projectOntologiesIndex;
     }
@@ -177,10 +174,10 @@ public class TermCrossProductsManager {
 
         Optional<OWLEquivalentClassesAxiom> existingXPAxiom = getCrossProductEquivalentClassesAxiom(term);
 
-        List<OWLOntologyChange> changes = new ArrayList<>();
+        List<OntologyChange> changes = new ArrayList<>();
         var rootOntology = defaultOntologyIdManager.getDefaultOntologyId();
-        changes.add(changeFactory.createAddAxiom(rootOntology, newXPAxiom));
-        existingXPAxiom.ifPresent(ax -> changes.add(changeFactory.createRemoveAxiom(rootOntology, ax)));
+        changes.add(AddAxiomChange.of(rootOntology, newXPAxiom));
+        existingXPAxiom.ifPresent(ax -> changes.add(RemoveAxiomChange.of(rootOntology, ax)));
         changeManager.applyChanges(userId,
                                    new FixedChangeListGenerator<>(changes, term, "Set cross product values")
         );

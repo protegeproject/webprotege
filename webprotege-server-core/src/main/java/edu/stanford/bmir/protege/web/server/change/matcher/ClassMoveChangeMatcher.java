@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.MovedClasses;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
@@ -26,12 +26,12 @@ public class ClassMoveChangeMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OntologyChange> changeData) {
         if(changeData.size() != 2) {
             return Optional.empty();
         }
-        OWLOntologyChangeData change0 = changeData.get(0);
-        OWLOntologyChangeData change1 = changeData.get(1);
+        OntologyChange change0 = changeData.get(0);
+        OntologyChange change1 = changeData.get(1);
         CandidateAxiomEdit<OWLSubClassOfAxiom> edit = new CandidateAxiomEdit<>(change0, change1, AxiomType.SUBCLASS_OF);
         if (!edit.hasAddAndRemove()) {
             return Optional.empty();

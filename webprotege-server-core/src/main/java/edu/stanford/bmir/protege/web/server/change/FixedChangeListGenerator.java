@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -22,12 +21,12 @@ public class FixedChangeListGenerator<R> implements ChangeListGenerator<R> {
     private final R result;
 
     @Nonnull
-    private final List<OWLOntologyChange> fixedChangeList;
+    private final List<OntologyChange> fixedChangeList;
 
     @Nonnull
     private final String message;
 
-    public FixedChangeListGenerator(@Nonnull List<OWLOntologyChange> fixedChangeList,
+    public FixedChangeListGenerator(@Nonnull List<OntologyChange> fixedChangeList,
                                     @Nonnull R result,
                                     @Nonnull String message) {
         this.result = checkNotNull(result);
@@ -35,7 +34,7 @@ public class FixedChangeListGenerator<R> implements ChangeListGenerator<R> {
         this.message = checkNotNull(message);
     }
 
-    public static <S> FixedChangeListGenerator<S> get(List<OWLOntologyChange> changes,
+    public static <S> FixedChangeListGenerator<S> get(List<OntologyChange> changes,
                                                       @Nonnull S result,
                                                       String message) {
         return new FixedChangeListGenerator<>(changes, result, message);

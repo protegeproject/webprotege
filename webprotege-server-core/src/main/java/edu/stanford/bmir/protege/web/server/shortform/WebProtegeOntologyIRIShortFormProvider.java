@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;

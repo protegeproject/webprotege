@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud.supplied;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.base.Charsets;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
@@ -40,20 +40,15 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     @Nonnull
     private final OWLDataFactory dataFactory;
 
-    @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
     @AutoFactory
     @Inject
     public SuppliedNameSuffixEntityCrudKitHandler(
             @Nonnull EntityCrudKitPrefixSettings prefixSettings,
             @Nonnull SuppliedNameSuffixSettings settings,
-            @Provided @Nonnull OWLDataFactory dataFactory,
-            @Provided @Nonnull OntologyChangeFactory changeFactory) {
+            @Provided @Nonnull OWLDataFactory dataFactory) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(settings);
         this.dataFactory = dataFactory;
-        this.changeFactory = changeFactory;
     }
 
     @Nonnull
@@ -134,7 +129,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         var targetOntologyId = context.getTargetOntologyId();
         var entity = dataFactory.getOWLEntity(entityType, iri);
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
-        changeListBuilder.add(changeFactory.createAddAxiom(targetOntologyId, declarationAxiom));
+        changeListBuilder.add(AddAxiomChange.of(targetOntologyId, declarationAxiom));
         var labellingAxiom = dataFactory.getOWLAnnotationAssertionAxiom(rdfsLabel(),
                                                                         iri,
                                                                         dataFactory.getOWLLiteral(
@@ -142,7 +137,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
                                                                                 langTag.orElse(
                                                                                         context.getDictionaryLanguage()
                                                                                                .getLang())));
-        changeListBuilder.add(changeFactory.createAddAxiom(targetOntologyId, labellingAxiom));
+        changeListBuilder.add(AddAxiomChange.of(targetOntologyId, labellingAxiom));
         return entity;
     }
 

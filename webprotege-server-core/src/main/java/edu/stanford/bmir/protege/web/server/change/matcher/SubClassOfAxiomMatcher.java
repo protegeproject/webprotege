@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.AddedParent;
 import edu.stanford.bmir.protege.web.server.change.description.AddedRelationship;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedParent;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
@@ -31,7 +31,7 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLSubClassOfAxiom axiom,
-                                                                      List<OWLOntologyChangeData> changes) {
+                                                                      List<OntologyChange> changes) {
         var subClass = axiom.getSubClass();
         var superClass = axiom.getSuperClass();
         var propertyFiller = new PropertyFiller(subClass, superClass);

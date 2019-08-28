@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.SubClassOfAxiomsBySubClassIndex;
@@ -43,9 +45,6 @@ public class TermRelationshipsManager {
     private final SubClassOfAxiomsBySubClassIndex subClassAxiomsIndex;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final RenderingManager renderingManager;
 
     @Nonnull
@@ -59,7 +58,6 @@ public class TermRelationshipsManager {
                                     @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                     @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
                                     @Nonnull SubClassOfAxiomsBySubClassIndex subClassAxiomsIndex,
-                                    @Nonnull OntologyChangeFactory changeFactory,
                                     @Nonnull RenderingManager renderingManager,
                                     @Nonnull ChangeManager changeManager,
                                     @Nonnull RelationshipConverter relationshipConverter) {
@@ -67,7 +65,6 @@ public class TermRelationshipsManager {
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.annotationAssertionsIndex = annotationAssertionsIndex;
         this.subClassAxiomsIndex = subClassAxiomsIndex;
-        this.changeFactory = changeFactory;
         this.renderingManager = renderingManager;
         this.changeManager = changeManager;
         this.relationshipConverter = relationshipConverter;
@@ -95,7 +92,7 @@ public class TermRelationshipsManager {
     public void setRelationships(@Nonnull UserId userId,
                                  @Nonnull OWLClass lastEntity,
                                  @Nonnull OBOTermRelationships relationships) {
-        List<OWLOntologyChange> changes = null;
+        List<OntologyChange> changes = null;
         OWLClass cls = null;
         StringBuilder description = null;
         Set<OWLOntologyID> ontologyIds = projectOntologiesIndex.getOntologyIds().collect(Collectors.toSet());
@@ -123,7 +120,7 @@ public class TermRelationshipsManager {
             for (OWLObjectSomeValuesFrom toReplace : existingSuperClsesToReplace) {
                 if (!superClsesToSet.contains(toReplace)) {
                     // Was there but not any longer
-                    changes.add(changeFactory.createRemoveAxiom(ontId, dataFactory.getOWLSubClassOfAxiom(cls, toReplace)));
+                    changes.add(RemoveAxiomChange.of(ontId, dataFactory.getOWLSubClassOfAxiom(cls, toReplace)));
                     description.append("Removed ");
                     description.append(renderingManager.getBrowserText(toReplace.getProperty()));
                     description.append(" relationship to ");
@@ -135,7 +132,7 @@ public class TermRelationshipsManager {
             for (OWLObjectSomeValuesFrom toSet : superClsesToSet) {
                 if (!existingSuperClsesToReplace.contains(toSet)) {
                     // Not already there - we're adding it.
-                    changes.add(changeFactory.createAddAxiom(ontId, dataFactory.getOWLSubClassOfAxiom(cls, toSet)));
+                    changes.add(AddAxiomChange.of(ontId, dataFactory.getOWLSubClassOfAxiom(cls, toSet)));
                     description.append("Added ");
                     description.append(renderingManager.getBrowserText(toSet.getProperty()));
                     description.append(" relationship to ");

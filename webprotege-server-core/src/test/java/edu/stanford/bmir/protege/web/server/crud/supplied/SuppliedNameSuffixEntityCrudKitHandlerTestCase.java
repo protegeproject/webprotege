@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactoryImpl;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
@@ -75,8 +74,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     @Mock
     private OWLOntologyID ontologyId;
 
-    private OntologyChangeFactory changeFactory;
-
     @Mock
     private OntologyIndex ontologyIndex;
 
@@ -93,19 +90,18 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(dictionaryLanguage.getLang()).thenReturn("");
         when(ontologyIndex.getOntology(ontologyId))
                 .thenReturn(Optional.of(ontology));
-        changeFactory = new OntologyChangeFactoryImpl(ontologyIndex);
-        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, changeFactory);
+        handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory);
     }
 
     @Test
     public void shouldAddDeclaration() {
         when(entityShortForm.getShortForm()).thenReturn("A");
         OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.empty(), crudContext, builder);
-        var ontologyChangeCaptor = ArgumentCaptor.forClass(OWLOntologyChange.class);
+        var ontologyChangeCaptor = ArgumentCaptor.forClass(OntologyChange.class);
         verify(builder, atLeast(1)).add(ontologyChangeCaptor.capture());
         var addedAxioms = ontologyChangeCaptor.getAllValues()
                 .stream()
-                .map(OWLOntologyChange::getAxiom)
+                .map(OntologyChange::getAxiomOrThrow)
                 .filter(ax -> ax instanceof OWLDeclarationAxiom)
                 .map(ax -> (OWLDeclarationAxiom) ax)
                 .collect(Collectors.toList());
@@ -147,10 +143,10 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
 
 
     private void verifyHasLabelEqualTo(String label, String lang) {
-        var addAxiomCaptor = ArgumentCaptor.forClass(OWLOntologyChange.class);
+        var addAxiomCaptor = ArgumentCaptor.forClass(OntologyChange.class);
         verify(builder, atLeast(1)).add(addAxiomCaptor.capture());
         List<OWLAxiom> addedAxioms = addAxiomCaptor.getAllValues().stream()
-                                                                      .map(OWLOntologyChange::getAxiom)
+                                                                      .map(OntologyChange::getAxiomOrThrow)
                 .collect(Collectors.toList());
         assertThat(addedAxioms, hasItem(rdfsLabelWithLexicalValueAndLang(label, lang)));
     }

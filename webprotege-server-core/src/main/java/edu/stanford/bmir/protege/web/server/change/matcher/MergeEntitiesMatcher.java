@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.MergedEntities;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.AddAxiomData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
@@ -40,7 +40,7 @@ public class MergeEntitiesMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OntologyChange> changeData) {
         // Don't match simple edits matched by other stuff
         if(changeData.size() < 3) {
             return Optional.empty();

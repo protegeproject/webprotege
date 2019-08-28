@@ -31,11 +31,10 @@ public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitie
     public CreateObjectPropertiesChangeGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                                  @Provided @Nonnull MessageFormatter msg,
                                                  @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                                                 @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                                  @Nonnull String sourceText,
                                                  @Nonnull String langTag,
                                                  @Nonnull ImmutableSet<OWLObjectProperty> parents) {
-        super(OBJECT_PROPERTY, sourceText, langTag, parents, dataFactory, msg, ontologyChangeFactory, defaultOntologyIdManager);
+        super(OBJECT_PROPERTY, sourceText, langTag, parents, dataFactory, msg, defaultOntologyIdManager);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

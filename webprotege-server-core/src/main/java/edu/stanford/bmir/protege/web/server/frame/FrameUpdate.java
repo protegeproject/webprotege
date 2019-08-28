@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.auto.value.AutoValue;
-import edu.stanford.bmir.protege.web.server.jackson.OWLEntityDeserializer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 

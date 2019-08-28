@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.lang;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -37,5 +37,5 @@ public interface ActiveLanguagesManager {
      *
      * @param changes The changes.
      */
-    void handleChanges(@Nonnull List<OWLOntologyChange> changes);
+    void handleChanges(@Nonnull List<OntologyChange> changes);
 }

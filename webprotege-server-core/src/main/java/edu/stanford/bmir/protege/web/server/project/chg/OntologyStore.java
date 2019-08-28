@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project.chg;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -14,5 +14,5 @@ import java.util.List;
 @ProjectSingleton
 abstract class OntologyStore {
 
-    abstract List<OWLOntologyChange> applyChanges(@Nonnull List<OWLOntologyChange> changes);
+    abstract List<OntologyChange> applyChanges(@Nonnull List<OntologyChange> changes);
 }

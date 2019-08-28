@@ -38,7 +38,9 @@ import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
-import edu.stanford.bmir.protege.web.server.project.*;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
+import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.chg.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
@@ -623,11 +625,6 @@ public class ProjectModule {
 
     @Provides
     ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    OntologyChangeFactory provideOntologyChangeFactory(OntologyChangeFactoryImpl impl) {
         return impl;
     }
 

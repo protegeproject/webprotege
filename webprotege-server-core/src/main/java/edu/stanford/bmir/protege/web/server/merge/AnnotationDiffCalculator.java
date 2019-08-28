@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.server.merge;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.merge.Diff;
-import org.semanticweb.owlapi.model.HasAnnotations;
 import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.inject.Inject;
 

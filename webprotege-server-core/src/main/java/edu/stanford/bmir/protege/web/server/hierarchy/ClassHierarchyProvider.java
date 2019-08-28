@@ -1,15 +1,13 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.protege.owlapi.inference.cls.ChildClassExtractor;
 import org.protege.owlapi.inference.cls.ParentClassExtractor;
 import org.protege.owlapi.inference.orphan.TerminalElementFinder;
-import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,15 +143,14 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     public void dispose() {
     }
 
-    public void handleChanges(@Nonnull List<OWLOntologyChangeRecord> changes) {
+    public void handleChanges(@Nonnull List<OntologyChange> changes) {
         Set<OWLClass> oldTerminalElements = new HashSet<>(rootFinder.getTerminalElements());
         Set<OWLClass> changedClasses = new HashSet<>();
         changedClasses.add(root);
-        List<OWLOntologyChangeRecord> filteredChanges = filterIrrelevantChanges(changes);
+        var filteredChanges = filterIrrelevantChanges(changes);
         updateImplicitRoots(filteredChanges);
-        for(OWLOntologyChangeRecord change : filteredChanges) {
-            changedClasses.addAll(change.getData()
-                                        .getSignature()
+        for(OntologyChange change : filteredChanges) {
+            changedClasses.addAll(change.getSignature()
                                         .stream()
                                         .filter(OWLEntity::isOWLClass)
                                         .filter(entity -> !entity.equals(root))
@@ -172,22 +169,22 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         notifyNodeChanges();
     }
 
-    private List<OWLOntologyChangeRecord> filterIrrelevantChanges(List<OWLOntologyChangeRecord> changes) {
+    private List<OntologyChange> filterIrrelevantChanges(List<OntologyChange> changes) {
         return changes.stream()
-                      .filter(ClassHierarchyProvider::isAxiomChange)
+                      .filter(OntologyChange::isAxiomChange)
                       .collect(toList());
     }
 
-    private void updateImplicitRoots(List<OWLOntologyChangeRecord> changes) {
+    private void updateImplicitRoots(List<OntologyChange> changes) {
         Set<OWLClass> possibleTerminalElements = new HashSet<>();
         Set<OWLClass> notInOntologies = new HashSet<>();
 
         // only listen for changes on the appropriate ontologies
         changes.stream()
-               .filter(ClassHierarchyProvider::isAxiomChange)
+               .filter(OntologyChange::isAxiomChange)
                .forEach(change -> {
-                   boolean remove = change.getData() instanceof RemoveAxiomData;
-                   var axiom = ((AxiomChangeData) change.getData()).getItem();
+                   boolean remove = change.isRemoveAxiom();
+                   var axiom = change.getAxiomOrThrow();
                    axiom.getSignature()
                         .stream()
                         .filter(OWLEntity::isOWLClass)
@@ -215,10 +212,6 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     private void notifyNodeChanges() {
         nodesToUpdate.forEach(this::fireNodeChanged);
         nodesToUpdate.clear();
-    }
-
-    private static boolean isAxiomChange(OWLOntologyChangeRecord rec) {
-        return rec.getData() instanceof AxiomChangeData;
     }
 
     public boolean containsReference(OWLClass object) {

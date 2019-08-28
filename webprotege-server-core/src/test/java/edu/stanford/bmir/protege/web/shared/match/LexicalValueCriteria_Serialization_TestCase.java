@@ -5,8 +5,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil.testSerialization;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

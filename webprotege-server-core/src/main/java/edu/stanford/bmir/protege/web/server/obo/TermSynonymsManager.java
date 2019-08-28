@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
@@ -17,7 +19,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static edu.stanford.bmir.protege.web.server.obo.OboUtil.getIRI;
 import static edu.stanford.bmir.protege.web.server.obo.OboUtil.getStringValue;
@@ -46,10 +47,6 @@ public class TermSynonymsManager {
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-
-    @Nonnull
     private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
 
@@ -59,14 +56,12 @@ public class TermSynonymsManager {
                                @Nonnull XRefExtractor xRefExtractor,
                                @Nonnull ChangeManager changeManager,
                                @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                               @Nonnull OntologyChangeFactory changeFactory,
                                @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
         this.df = df;
         this.xRefConverter = xRefConverter;
         this.xRefExtractor = xRefExtractor;
         this.changeManager = changeManager;
         this.projectOntologiesIndex = projectOntologiesIndex;
-        this.changeFactory = changeFactory;
         this.annotationAssertionsIndex = annotationAssertionsIndex;
     }
 
@@ -130,13 +125,13 @@ public class TermSynonymsManager {
                             @Nonnull OWLEntity term,
                             @Nonnull Collection<OBOTermSynonym> synonyms) {
 
-        List<OWLOntologyChange> changes = new ArrayList<>();
+        var changes = new ArrayList<OntologyChange>();
         var subject = term.getIRI();
         projectOntologiesIndex.getOntologyIds()
                               .forEach(ontId -> {
                                   annotationAssertionsIndex.getAxiomsForSubject(subject, ontId)
                                                            .filter(ax -> getSynonymScope(ax) != null)
-                                                           .map(ax -> changeFactory.createRemoveAxiom(ontId, ax))
+                                                           .map(ax -> RemoveAxiomChange.of(ontId, ax))
                                                            .forEach(changes::add);
                                   for(var oboTermSynonym : synonyms) {
                                       var synonymProperty = getSynonymAnnoationProperty(df, oboTermSynonym.getScope());
@@ -150,7 +145,7 @@ public class TermSynonymsManager {
                                                                                            term.getIRI(),
                                                                                            synonymLiteral,
                                                                                            synonymXRefs);
-                                      changes.add(changeFactory.createAddAxiom(ontId, synonymAxiom));
+                                      changes.add(AddAxiomChange.of(ontId, synonymAxiom));
                                   }
                               });
 

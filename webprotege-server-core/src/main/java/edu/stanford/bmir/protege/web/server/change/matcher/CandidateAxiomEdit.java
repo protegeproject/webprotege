@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import org.semanticweb.owlapi.change.*;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeVisitor;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
@@ -22,54 +25,28 @@ public class CandidateAxiomEdit<A extends OWLAxiom> {
 
 
 
-    public CandidateAxiomEdit(OWLOntologyChangeData change0, OWLOntologyChangeData change1, final AxiomType<A> axiomType) {
+    public CandidateAxiomEdit(OntologyChange change0, OntologyChange change1, final AxiomType<A> axiomType) {
         this.axiomType = axiomType;
-        processChanges(change0, change1, axiomType);
+        processChanges(change0, change1);
     }
 
     @SuppressWarnings("unchecked")
-    private void processChanges(OWLOntologyChangeData change0, OWLOntologyChangeData change1, final AxiomType<A> axiomType) {
-        OWLOntologyChangeDataVisitor<Void, RuntimeException> visitor = new OWLOntologyChangeDataVisitor<Void, RuntimeException>() {
-            @Nonnull
+    private void processChanges(OntologyChange change0, OntologyChange change1) {
+        var visitor = new OntologyChangeVisitor() {
             @Override
-            public Void visit(AddAxiomData data) throws RuntimeException {
-                if (data.getAxiom().getAxiomType().equals(axiomType)) {
-                    addAxiom = Optional.of((A) data.getAxiom());
+            public void visit(@Nonnull AddAxiomChange addAxiomChange) {
+                var axiom = addAxiomChange.getAxiom();
+                if (axiom.getAxiomType().equals(axiomType)) {
+                    addAxiom = Optional.of((A) axiom);
                 }
-                return null;
             }
 
             @Override
-            public Void visit(RemoveAxiomData data) throws RuntimeException {
-                if(data.getAxiom().getAxiomType().equals(axiomType)) {
-                    removeAxiom = Optional.of((A) data.getAxiom());
+            public void visit(@Nonnull RemoveAxiomChange removeAxiomChange) {
+                OWLAxiom axiom = removeAxiomChange.getAxiom();
+                if(axiom.getAxiomType().equals(axiomType)) {
+                    removeAxiom = Optional.of((A) axiom);
                 }
-                return null;
-            }
-
-            @Override
-            public Void visit(AddOntologyAnnotationData data) throws RuntimeException {
-                return null;
-            }
-
-            @Override
-            public Void visit(RemoveOntologyAnnotationData data) throws RuntimeException {
-                return null;
-            }
-
-            @Override
-            public Void visit(SetOntologyIDData data) throws RuntimeException {
-                return null;
-            }
-
-            @Override
-            public Void visit(AddImportData data) throws RuntimeException {
-                return null;
-            }
-
-            @Override
-            public Void visit(RemoveImportData data) throws RuntimeException {
-                return null;
             }
         };
         change0.accept(visitor);

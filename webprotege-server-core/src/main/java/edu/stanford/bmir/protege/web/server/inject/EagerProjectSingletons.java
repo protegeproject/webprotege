@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.index.AxiomsIndex;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.inject.Inject;
 

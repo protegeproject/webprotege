@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +16,9 @@ public class OWLEntityCreator<E extends OWLEntity> {
 
     private E entity;
 
-    private List<OWLOntologyChange> changes = new ArrayList<>();
+    private List<OntologyChange> changes = new ArrayList<>();
 
-    public OWLEntityCreator(E entity, List<OWLOntologyChange> changes) {
+    public OWLEntityCreator(E entity, List<OntologyChange> changes) {
         this.entity = entity;
         this.changes.addAll(changes);
     }
@@ -28,7 +28,7 @@ public class OWLEntityCreator<E extends OWLEntity> {
         return entity;
     }
 
-    public List<OWLOntologyChange> getChanges() {
+    public List<OntologyChange> getChanges() {
         return new ArrayList<>(changes);
     }
 }

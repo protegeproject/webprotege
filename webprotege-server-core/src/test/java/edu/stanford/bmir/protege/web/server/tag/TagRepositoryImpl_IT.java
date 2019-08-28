@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.server.tag;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.mongodb.*;
+import com.mongodb.ErrorCategory;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoWriteException;
+import com.mongodb.WriteError;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.color.Color;
@@ -14,7 +17,6 @@ import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.Arrays;
 import java.util.List;

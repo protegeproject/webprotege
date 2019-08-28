@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.match;
 
-import edu.stanford.bmir.protege.web.shared.match.criteria.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.AnyLangTagOrEmptyLangTagCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagIsEmptyCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagMatchesCriteria;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -10,9 +10,7 @@ import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMongoClient;
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMorphia;
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.getTestDbName;
+import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

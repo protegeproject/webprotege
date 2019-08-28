@@ -2,11 +2,10 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -118,7 +117,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
     }
 
 
-    public void handleChanges(List<OWLOntologyChangeRecord> changes) {
+    public void handleChanges(List<OntologyChange> changes) {
         Set<OWLAnnotationProperty> properties = new HashSet<>(getPropertiesReferencedInChange(changes));
         for (OWLAnnotationProperty prop : properties) {
             if (isRoot(prop)) {
@@ -143,11 +142,11 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
     }
 
 
-    private Set<OWLAnnotationProperty> getPropertiesReferencedInChange(List<OWLOntologyChangeRecord> changes){
+    private Set<OWLAnnotationProperty> getPropertiesReferencedInChange(List<OntologyChange> changes){
         final Set<OWLAnnotationProperty> props = new HashSet<>();
-        for (OWLOntologyChangeRecord chg : changes){
-            if(chg.getData() instanceof AxiomChangeData){
-                ((AxiomChangeData) chg.getData()).getAxiom().accept(new OWLAxiomVisitorAdapter(){
+        for (OntologyChange chg : changes){
+            if(chg.isAxiomChange()){
+                chg.getAxiomOrThrow().accept(new OWLAxiomVisitorAdapter(){
                     public void visit(OWLSubAnnotationPropertyOfAxiom owlSubAnnotationPropertyOfAxiom) {
                         props.add(owlSubAnnotationPropertyOfAxiom.getSubProperty());
                         props.add(owlSubAnnotationPropertyOfAxiom.getSuperProperty());

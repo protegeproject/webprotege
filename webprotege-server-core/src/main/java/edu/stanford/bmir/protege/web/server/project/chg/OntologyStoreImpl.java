@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.server.project.chg;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,18 +21,31 @@ class OntologyStoreImpl extends OntologyStore {
 
     private final OWLOntology rootOntology;
 
+    private final OntologyChangeRecordTranslator changeRecordTranslator;
+
     @Inject
-    public OntologyStoreImpl(OWLOntology rootOntology) {
+    public OntologyStoreImpl(OWLOntology rootOntology,
+                             OntologyChangeRecordTranslator changeRecordTranslator) {
         this.rootOntology = checkNotNull(rootOntology);
+        this.changeRecordTranslator = changeRecordTranslator;
     }
 
 
     @Override
-    List<OWLOntologyChange> applyChanges(@Nonnull List<OWLOntologyChange> changes) {
+    List<OntologyChange> applyChanges(@Nonnull List<OntologyChange> changes) {
         checkNotNull(changes);
-        var manager = ((ProjectOWLOntologyManager) rootOntology.getOWLOntologyManager()).getDelegate();
-        return Collections.unmodifiableList(manager.applyChangesAndGetDetails(changes)
-                                                   .getEnactedChanges());
+        var ontologyManager = rootOntology.getOWLOntologyManager();
+        var owlOntologyChanges = changes.stream()
+               .map(OntologyChange::toOwlOntologyChangeRecord)
+               .map(rec -> rec.createOntologyChange(ontologyManager))
+               .collect(Collectors.toList());
+        var manager = ((ProjectOWLOntologyManager) ontologyManager).getDelegate();
+        var appliedOwlOntologyChanges = manager.applyChangesAndGetDetails(owlOntologyChanges)
+                                               .getEnactedChanges();
+        return appliedOwlOntologyChanges.stream()
+                                 .map(OWLOntologyChange::getChangeRecord)
+                                 .map(changeRecordTranslator::getOntologyChange)
+                                 .collect(Collectors.toList());
 
     }
 }

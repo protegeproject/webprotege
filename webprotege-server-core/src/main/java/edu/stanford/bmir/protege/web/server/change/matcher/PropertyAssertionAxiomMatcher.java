@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.AddedRelationship;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedRelationship;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
 
@@ -19,17 +18,14 @@ import java.util.Optional;
  */
 public class PropertyAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLPropertyAssertionAxiom<?,?>> {
 
-    private final OWLObjectStringFormatter formatter;
-
     @Inject
-    public PropertyAssertionAxiomMatcher(OWLObjectStringFormatter formatter) {
+    public PropertyAssertionAxiomMatcher() {
         super(new TypeToken<OWLPropertyAssertionAxiom<?,?>>() {});
-        this.formatter = formatter;
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyAssertionAxiom<?, ?> axiom,
-                                                                      List<OWLOntologyChangeData> changes) {
+                                                                      List<OntologyChange> changes) {
         return Optional.of(ChangeSummary.get(AddedRelationship.get(axiom.getSubject(),
                                                                    (OWLProperty) axiom.getProperty(),
                                                                    axiom.getObject())));

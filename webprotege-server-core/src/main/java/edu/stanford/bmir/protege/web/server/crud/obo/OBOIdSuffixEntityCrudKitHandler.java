@@ -4,7 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
@@ -59,21 +59,16 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     private final Map<UserId, UserIdRange> userId2RangeEndMap;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final EntitiesInProjectSignatureByIriIndex projectSignatureIndex;
 
     @AutoFactory
     public OBOIdSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
                                            @Nonnull OBOIdSuffixSettings suffixSettings,
                                            @Provided @Nonnull OWLDataFactory dataFactory,
-                                           @Provided @Nonnull OntologyChangeFactory changeFactory,
                                            @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(suffixSettings);
         this.dataFactory = dataFactory;
-        this.changeFactory = changeFactory;
         this.projectSignatureIndex = projectSignatureIndex;
 
         ImmutableMap.Builder<UserId, UserIdRange> builder = ImmutableMap.builder();
@@ -116,20 +111,20 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         var iri = getNextIRI(session, context.getUserId());
         var entity = dataFactory.getOWLEntity(entityType, iri);
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
-        builder.add(changeFactory.createAddAxiom(targetOntology, declarationAxiom));
+        builder.add(AddAxiomChange.of(targetOntology, declarationAxiom));
         DictionaryLanguage language = context.getDictionaryLanguage();
         IRI annotationPropertyIri = language.getAnnotationPropertyIri();
         if (annotationPropertyIri != null) {
             final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
             var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.add(changeFactory.createAddAxiom(targetOntology, ax));
+            builder.add(AddAxiomChange.of(targetOntology, ax));
         }
         OWLAnnotationAssertionAxiom createdByAx = dataFactory.getOWLAnnotationAssertionAxiom(
                 dataFactory.getOWLAnnotationProperty(CREATED_BY),
                 entity.getIRI(),
                 dataFactory.getOWLLiteral(context.getUserId().getUserName())
         );
-        builder.add(changeFactory.createAddAxiom(targetOntology, createdByAx));
+        builder.add(AddAxiomChange.of(targetOntology, createdByAx));
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
         String formattedNow = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         OWLAnnotationAssertionAxiom createdAtAx = dataFactory.getOWLAnnotationAssertionAxiom(
@@ -137,7 +132,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
                 entity.getIRI(),
                 dataFactory.getOWLLiteral(formattedNow)
         );
-        builder.add(changeFactory.createAddAxiom(targetOntology, createdAtAx));
+        builder.add(AddAxiomChange.of(targetOntology, createdAtAx));
         return entity;
     }
 

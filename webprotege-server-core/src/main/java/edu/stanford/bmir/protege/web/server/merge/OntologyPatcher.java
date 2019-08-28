@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.diff.OntologyDiff2OntologyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -38,16 +37,16 @@ public class OntologyPatcher {
     public void applyPatch(@Nonnull Collection<OntologyDiff> diffSet,
                            @Nonnull String commitMessage,
                            @Nonnull ExecutionContext executionContext) {
-        var changeList = new ArrayList<OWLOntologyChange>();
+        var changeList = new ArrayList<OntologyChange>();
         for(OntologyDiff diff : diffSet) {
-            List<OWLOntologyChange> changes = ontologyDiff2OntologyChanges.getOntologyChangesFromDiff(diff);
+            List<OntologyChange> changes = ontologyDiff2OntologyChanges.getOntologyChangesFromDiff(diff);
             changeList.addAll(changes);
         }
         applyChanges(commitMessage, changeList, executionContext);
     }
 
     private void applyChanges(String commitMessage,
-                              final List<OWLOntologyChange> changes,
+                              final List<OntologyChange> changes,
                               ExecutionContext executionContext) {
         changeManager.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Boolean>() {
             @Override

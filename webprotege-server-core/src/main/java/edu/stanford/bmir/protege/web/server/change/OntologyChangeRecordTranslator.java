@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 
@@ -13,5 +12,5 @@ import javax.annotation.Nonnull;
 public interface OntologyChangeRecordTranslator {
 
     @Nonnull
-    OWLOntologyChange getOntologyChange(@Nonnull OWLOntologyChangeRecord record);
+    OntologyChange getOntologyChange(@Nonnull OWLOntologyChangeRecord record);
 }

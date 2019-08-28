@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -24,13 +23,13 @@ public class ChangeApplicationResult<S> implements HasSubject<S> {
     private final RenameMap renameMap;
 
     @Nonnull
-    private final List<OWLOntologyChange> changeList;
+    private final List<OntologyChange> changeList;
 
     @Nonnull
     private final S subject;
 
     public ChangeApplicationResult(@Nonnull S subject,
-                                   @Nonnull List<OWLOntologyChange> changeList,
+                                   @Nonnull List<OntologyChange> changeList,
                                    @Nonnull RenameMap renameMap) {
         this.subject = checkNotNull(subject);
         this.changeList = ImmutableList.copyOf(checkNotNull(changeList));
@@ -43,7 +42,7 @@ public class ChangeApplicationResult<S> implements HasSubject<S> {
     }
 
     @Nonnull
-    public List<OWLOntologyChange> getChangeList() {
+    public List<OntologyChange> getChangeList() {
         return Collections.unmodifiableList(changeList);
     }
 

@@ -2,12 +2,11 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.AddedAnnotation;
 import edu.stanford.bmir.protege.web.server.change.description.DeprecatedEntities;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedAnnotation;
 import edu.stanford.bmir.protege.web.server.change.description.UndeprecatedEntities;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 
@@ -22,17 +21,14 @@ import java.util.Optional;
  */
 public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAnnotationAssertionAxiom> {
 
-    private final OWLObjectStringFormatter formatter;
-
     @Inject
-    public AnnotationAssertionChangeMatcher(OWLObjectStringFormatter formatter) {
+    public AnnotationAssertionChangeMatcher() {
         super(new TypeToken<OWLAnnotationAssertionAxiom>(){});
-        this.formatter = formatter;
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom,
-                                                                      List<OWLOntologyChangeData> changes) {
+                                                                      List<OntologyChange> changes) {
         if(!axiom.getSubject().isIRI()) {
             return Optional.empty();
         }

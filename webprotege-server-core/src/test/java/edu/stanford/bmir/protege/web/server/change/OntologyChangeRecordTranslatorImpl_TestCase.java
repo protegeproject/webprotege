@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +49,7 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
 
     @Before
     public void setUp() {
-        impl = new OntologyChangeRecordTranslatorImpl(ontologyIndex);
+        impl = new OntologyChangeRecordTranslatorImpl();
         when(ontologyIndex.getOntology(ontologyId))
                 .thenReturn(Optional.of(ontology));
         when(ontology.getOntologyID())
@@ -60,56 +59,53 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Test
     public void shouldTranslateAddAxiom() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new AddAxiomData(axiom)));
-        assertThat(change.getOntology(), is(ontology));
-        assertThat(change.getAxiom(), is(axiom));
-        assertThat(change, is(instanceOf(AddAxiom.class)));
+        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getAxiomOrThrow(), is(axiom));
+        assertThat(change, is(instanceOf(AddAxiomChange.class)));
     }
 
     @Test
     public void shouldTranslateRemoveAxiom() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new RemoveAxiomData(axiom)));
-        assertThat(change.getOntology(), is(ontology));
-        assertThat(change.getAxiom(), is(axiom));
-        assertThat(change, is(instanceOf(RemoveAxiom.class)));
+        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getAxiomOrThrow(), is(axiom));
+        assertThat(change, is(instanceOf(RemoveAxiomChange.class)));
     }
 
     @Test
     public void shouldTranslateAddOntologyAnnotation() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new AddOntologyAnnotationData(annotation)));
-        assertThat(change.getOntology(), is(ontology));
-        assertThat(change, is(instanceOf(AddOntologyAnnotation.class)));
-        assertThat(((AddOntologyAnnotation) change).getAnnotation(), is(annotation));
+        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change, is(instanceOf(AddOntologyAnnotationChange.class)));
+        assertThat(((AddOntologyAnnotationChange) change).getAnnotation(), is(annotation));
     }
 
     @Test
     public void shouldTranslateRemoveOntologyAnnotation() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new RemoveOntologyAnnotationData(annotation)));
-        assertThat(change.getOntology(), is(ontology));
-        assertThat(change, is(instanceOf(RemoveOntologyAnnotation.class)));
-        assertThat(((RemoveOntologyAnnotation) change).getAnnotation(), is(annotation));
+        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change, is(instanceOf(RemoveOntologyAnnotationChange.class)));
+        assertThat(((RemoveOntologyAnnotationChange) change).getAnnotation(), is(annotation));
     }
 
     @Test
     public void shouldTranslateAddImport() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new AddImportData(importsDeclaration)));
-        assertThat(change.getOntology(), is(ontology));
-        assertThat(change, is(instanceOf(AddImport.class)));
-        assertThat(((AddImport) change).getImportDeclaration(), is(importsDeclaration));
+        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change, is(instanceOf(AddImportChange.class)));
+        assertThat(((AddImportChange) change).getImportsDeclaration(), is(importsDeclaration));
     }
 
     @Test
     public void shouldTranslateRemoveImport() {
         var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new RemoveImportData(importsDeclaration)));
-        assertThat(change.getOntology(), is(ontology));
-        assertThat(change, is(instanceOf(RemoveImport.class)));
-        assertThat(((RemoveImport) change).getImportDeclaration(), is(importsDeclaration));
+        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change, is(instanceOf(RemoveImportChange.class)));
+        assertThat(((RemoveImportChange) change).getImportsDeclaration(), is(importsDeclaration));
     }
 
-    @Test
-    public void shouldTranslateSetOntologyID() {
-        var change = impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new SetOntologyIDData(otherOntologyId)));
-        assertThat(change.getOntology(), is(ontology));
-        assertThat(change, is(instanceOf(SetOntologyID.class)));
-        assertThat(((SetOntologyID) change).getNewOntologyID(), is(otherOntologyId));
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldNotTranslateSetOntologyID() {
+        impl.getOntologyChange(new OWLOntologyChangeRecord(ontologyId, new SetOntologyIDData(otherOntologyId)));
     }
 }

@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.change.AddAxiomData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyRangeAxiomImpl;
 
@@ -16,8 +15,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -90,10 +87,8 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
 
     @Test
     public void shouldHandleAddAnnotationPropertyRangeAxiom() {
-        var addAxiomData = new AddAxiomData(otherAnnotationPropertyRangeAxiom);
-        var changeRecord = new OWLOntologyChangeRecord(ontologyId, addAxiomData);
-
-        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
+        var addAxiom = AddAxiomChange.of(ontologyId, otherAnnotationPropertyRangeAxiom);
+        impl.handleOntologyChanges(ImmutableList.of(addAxiom));
 
         var axioms = impl.getReferencingAxioms(otherRangeIri, ontologyId).collect(toSet());
         assertThat(axioms, hasItems(otherAnnotationPropertyRangeAxiom));
@@ -101,10 +96,8 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
 
     @Test
     public void shouldHandleRemoveAnnotationPropertyRangeAxiom() {
-        var removeAxiomData = new RemoveAxiomData(annotationPropertyRangeAxiom);
-        var changeRecord = new OWLOntologyChangeRecord(ontologyId, removeAxiomData);
-
-        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
+        var removeAxiom = RemoveAxiomChange.of(ontologyId, annotationPropertyRangeAxiom);
+        impl.handleOntologyChanges(ImmutableList.of(removeAxiom));
 
         var axioms = impl.getReferencingAxioms(rangeIri, ontologyId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));

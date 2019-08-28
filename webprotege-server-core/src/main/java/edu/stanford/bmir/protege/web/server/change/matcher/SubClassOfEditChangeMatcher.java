@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.EditedRelationshipValue;
 import edu.stanford.bmir.protege.web.server.change.description.SwitchedRelationshipProperty;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
@@ -18,20 +17,17 @@ import java.util.Optional;
  */
 public class SubClassOfEditChangeMatcher implements ChangeMatcher {
 
-    private final OWLObjectStringFormatter formatter;
-
     @Inject
-    public SubClassOfEditChangeMatcher(OWLObjectStringFormatter formatter) {
-        this.formatter = formatter;
+    public SubClassOfEditChangeMatcher() {
     }
 
     @Override
-    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OntologyChange> changeData) {
         if (changeData.size() != 2) {
             return Optional.empty();
         }
-        OWLOntologyChangeData change0 = changeData.get(0);
-        OWLOntologyChangeData change1 = changeData.get(1);
+        var change0 = changeData.get(0);
+        var change1 = changeData.get(1);
         CandidateAxiomEdit<OWLSubClassOfAxiom> edit = new CandidateAxiomEdit<>(change0, change1, AxiomType.SUBCLASS_OF);
         if (!edit.hasAddAndRemove()) {
             return Optional.empty();
@@ -64,11 +60,6 @@ public class SubClassOfEditChangeMatcher implements ChangeMatcher {
                 )));
             }
         }
-        var msg = formatter.formatString("Changed the value of the %s relationship from %s to %s on %s" ,
-                                addedProp,
-                                removedFiller,
-                                addedFiller,
-                                addAx.getSubClass());
         return Optional.of(ChangeSummary.get(EditedRelationshipValue.get(addAx.getSubClass(),
                                                                          addedProp,
                                                                          removedFiller,

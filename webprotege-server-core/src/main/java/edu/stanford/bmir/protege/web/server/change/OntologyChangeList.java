@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasResult;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -24,7 +25,7 @@ public class OntologyChangeList<R> implements HasResult<R> {
     private final R result;
 
     @Nonnull
-    private final List<OWLOntologyChange> changes;
+    private final List<OntologyChange> changes;
 
     /**
      * Constructs a {@link OntologyChangeList} object which bundles together a list of ontology changes with
@@ -32,7 +33,7 @@ public class OntologyChangeList<R> implements HasResult<R> {
      * @param changes The list of ontology changes.
      * @param result The main result.
      */
-    private OntologyChangeList(@Nonnull List<OWLOntologyChange> changes, @Nonnull R result) {
+    private OntologyChangeList(@Nonnull List<OntologyChange> changes, @Nonnull R result) {
         this.result = checkNotNull(result);
         this.changes = ImmutableList.copyOf(changes);
     }
@@ -42,7 +43,7 @@ public class OntologyChangeList<R> implements HasResult<R> {
      * @return An immutable list of changes.
      */
     @Nonnull
-    public List<OWLOntologyChange> getChanges() {
+    public List<OntologyChange> getChanges() {
         return changes;
     }
 
@@ -66,12 +67,12 @@ public class OntologyChangeList<R> implements HasResult<R> {
      */
     public static class Builder<R> {
 
-        private final ImmutableList.Builder<OWLOntologyChange> listBuilder = ImmutableList.builder();
+        private final ImmutableList.Builder<OntologyChange> listBuilder = ImmutableList.builder();
 
         public Builder() {
         }
 
-        public void add(@Nonnull OWLOntologyChange change) {
+        public void add(@Nonnull OntologyChange change) {
             listBuilder.add(checkNotNull(change));
         }
 
@@ -79,15 +80,15 @@ public class OntologyChangeList<R> implements HasResult<R> {
             return listBuilder.build().isEmpty();
         }
 
-        public void addAxiom(@Nonnull OWLOntology ontology, @Nonnull OWLAxiom axiom) {
-            add(new AddAxiom(checkNotNull(ontology), checkNotNull(axiom)));
+        public void addAxiom(@Nonnull OWLOntologyID ontologyId, @Nonnull OWLAxiom axiom) {
+            add(AddAxiomChange.of(ontologyId, axiom));
         }
 
-        public void removeAxiom(@Nonnull OWLOntology ontology, @Nonnull OWLAxiom axiom) {
-            add(new RemoveAxiom(checkNotNull(ontology), checkNotNull(axiom)));
+        public void removeAxiom(@Nonnull OWLOntologyID ontologyId, @Nonnull OWLAxiom axiom) {
+            add(RemoveAxiomChange.of(ontologyId, checkNotNull(axiom)));
         }
 
-        public Builder<R> addAll(@Nonnull List<? extends OWLOntologyChange> changes) {
+        public Builder<R> addAll(@Nonnull List<? extends OntologyChange> changes) {
             listBuilder.addAll(checkNotNull(changes));
             return this;
         }

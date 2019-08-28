@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
@@ -29,8 +29,8 @@ public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements Change
     }
 
     @Override
-    public final Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
-        List<OWLOntologyChangeData> coreChangeData;
+    public final Optional<ChangeSummary> getDescription(List<OntologyChange> changeData) {
+        List<OntologyChange> coreChangeData;
         if(changeData.size() != 1) {
             var nonDeclarationChangeData = getNonDeclarationChangeData(changeData);
             if(nonDeclarationChangeData.size() != 1) {
@@ -59,16 +59,16 @@ public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements Change
         }
     }
 
-    private List<OWLOntologyChangeData> getNonDeclarationChangeData(List<OWLOntologyChangeData> changeData) {
+    private List<OntologyChange> getNonDeclarationChangeData(List<OntologyChange> changes) {
         // Inline declarations consist of an entity declaration axiom and zero
         // or more annotations assertions with a subject equal to the IRI of the
         // declared entity
         if(allowSignatureDeclarations()) {
             var subjectProvider = new EntityCreationAxiomSubjectProvider();
-            var potentialInlineEntityDeclarationChanges = changeData.stream()
+            var potentialInlineEntityDeclarationChanges = changes.stream()
                     .filter(this::isPotentialInlineDeclarationChange)
                     .collect(groupingBy(data -> {
-                        var axiom = (OWLAxiom) data.getItem();
+                        var axiom = data.getAxiomOrThrow();
                         return subjectProvider.getEntityCreationAxiomSubject(axiom);
                     }));
             var declarationChangeData = potentialInlineEntityDeclarationChanges
@@ -77,22 +77,23 @@ public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements Change
                     .filter(this::containsDeclarationAxiomChange)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toSet());
-            return changeData.stream()
+            return changes.stream()
                     .filter(data -> !declarationChangeData.contains(data))
                     .collect(Collectors.toList());
         }
         else {
-            return changeData;
+            return changes;
         }
     }
 
-    private boolean containsDeclarationAxiomChange(List<OWLOntologyChangeData> dataList) {
+    private boolean containsDeclarationAxiomChange(List<OntologyChange> dataList) {
         return dataList
                 .stream()
-                .anyMatch(data -> data.getItem() instanceof OWLDeclarationAxiom);
+                .filter(OntologyChange::isAxiomChange)
+                .anyMatch(chg -> chg.getAxiomOrThrow() instanceof OWLDeclarationAxiom);
     }
 
-    private boolean isPotentialInlineDeclarationChange(OWLOntologyChangeData data) {
+    private boolean isPotentialInlineDeclarationChange(OntologyChange data) {
         if(data instanceof AddAxiomData) {
             var axiom = ((AddAxiomData) data).getAxiom();
             if(axiom instanceof OWLDeclarationAxiom) {
@@ -106,7 +107,7 @@ public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements Change
     }
 
     protected abstract Optional<ChangeSummary> getDescriptionForAddAxiomChange(A axiom,
-                                                                               List<OWLOntologyChangeData> changes);
+                                                                               List<OntologyChange> changes);
 
     protected abstract Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(A axiom);
 

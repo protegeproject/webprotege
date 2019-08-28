@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -56,7 +55,7 @@ public class HighLevelEventGenerator implements EventTranslator {
     }
 
     @Override
-    public void prepareForOntologyChanges(List<OWLOntologyChange> submittedChanges) {
+    public void prepareForOntologyChanges(List<OntologyChange> submittedChanges) {
     }
 
     @Override
@@ -66,40 +65,35 @@ public class HighLevelEventGenerator implements EventTranslator {
         var changedEntities = new HashSet<OWLEntity>();
         var changedOntologies = new HashSet<OWLOntologyID>();
         changes.getChangeList()
-               .forEach(change -> change.accept(new OWLOntologyChangeVisitor() {
+               .forEach(change -> change.accept(new OntologyChangeVisitor() {
                    @Override
-                   public void visit(@Nonnull AddAxiom change) {
-                       handleAxiomChange(change.getAxiom());
+                   public void visit(@Nonnull AddAxiomChange addAxiomChange) {
+                        handleAxiomChange(addAxiomChange.getAxiom());
                    }
 
                    @Override
-                   public void visit(@Nonnull RemoveAxiom change) {
-                       handleAxiomChange(change.getAxiom());
+                   public void visit(@Nonnull RemoveAxiomChange removeAxiomChange) {
+                        handleAxiomChange(removeAxiomChange.getAxiom());
                    }
 
                    @Override
-                   public void visit(@Nonnull SetOntologyID change) {
-                       handleOntologyFrameChange(change);
+                   public void visit(@Nonnull AddOntologyAnnotationChange addOntologyAnnotationChange) {
+                        handleOntologyFrameChange(addOntologyAnnotationChange);
                    }
 
                    @Override
-                   public void visit(@Nonnull AddImport change) {
-                       handleOntologyFrameChange(change);
+                   public void visit(@Nonnull RemoveOntologyAnnotationChange removeOntologyAnnotationChange) {
+                        handleOntologyFrameChange(removeOntologyAnnotationChange);
                    }
 
                    @Override
-                   public void visit(@Nonnull RemoveImport change) {
-                       handleOntologyFrameChange(change);
+                   public void visit(@Nonnull AddImportChange addImportChange) {
+                        handleOntologyFrameChange(addImportChange);
                    }
 
                    @Override
-                   public void visit(@Nonnull AddOntologyAnnotation change) {
-                       handleOntologyFrameChange(change);
-                   }
-
-                   @Override
-                   public void visit(@Nonnull RemoveOntologyAnnotation change) {
-                       handleOntologyFrameChange(change);
+                   public void visit(@Nonnull RemoveImportChange removeImportChange) {
+                        handleOntologyFrameChange(removeImportChange);
                    }
 
                    private void handleAxiomChange(OWLAxiom axiom) {
@@ -112,8 +106,8 @@ public class HighLevelEventGenerator implements EventTranslator {
                                .forEach(projectEventList::add);
                    }
 
-                   private void handleOntologyFrameChange(OWLOntologyChange change) {
-                       var ontologyId = change.getOntology().getOntologyID();
+                   private void handleOntologyFrameChange(OntologyChange change) {
+                       var ontologyId = change.getOntologyId();
                        if(!changedOntologies.add(ontologyId)) {
                            return;
                        }

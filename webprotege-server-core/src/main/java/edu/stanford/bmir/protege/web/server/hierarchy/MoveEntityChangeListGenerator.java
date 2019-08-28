@@ -57,10 +57,6 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
     @Nonnull
     private final SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyOfAxiomsIndex;
 
-    @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-
     @Inject
     public MoveEntityChangeListGenerator(@Nonnull MoveHierarchyNodeAction action,
                                          @Provided @Nonnull OWLDataFactory dataFactory,
@@ -71,8 +67,7 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
                                          @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
                                          @Provided @Nonnull SubObjectPropertyAxiomsBySubPropertyIndex subObjectPropertyOfAxiomsIndex,
                                          @Provided @Nonnull SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyOfAxiomsIndex,
-                                         @Provided @Nonnull SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyOfAxiomsIndex,
-                                         @Provided @Nonnull OntologyChangeFactory changeFactory) {
+                                         @Provided @Nonnull SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyOfAxiomsIndex) {
         this.dataFactory = dataFactory;
         this.action = checkNotNull(action);
         this.msg = msg;
@@ -83,7 +78,6 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
         this.subObjectPropertyOfAxiomsIndex = subObjectPropertyOfAxiomsIndex;
         this.subDataPropertyOfAxiomsIndex = subDataPropertyOfAxiomsIndex;
         this.subAnnotationPropertyOfAxiomsIndex = subAnnotationPropertyOfAxiomsIndex;
-        this.changeFactory = changeFactory;
     }
 
     private static OntologyChangeList<Boolean> notMoved() {
@@ -259,7 +253,7 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
             toParent.ifPresent(par -> {
                 var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
                 var reparentingAxiom = reparentingAxiomFactory.createReparentingAxiom(move, par, emptySet());
-                changeList.add(changeFactory.createAddAxiom(defaultOntologyId, reparentingAxiom));
+                changeList.add(AddAxiomChange.of(defaultOntologyId, reparentingAxiom));
             });
         }
         return changeList.build(!changeList.isEmpty());
@@ -277,13 +271,13 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
         axiomExtractor.apply(ontId, move)
                       .filter(axiomFilter::test)
                       .forEach(ax -> {
-                          changeList.add(changeFactory.createRemoveAxiom(ontId, ax));
+                          changeList.add(RemoveAxiomChange.of(ontId, ax));
                           removedAxioms.add(ax);
                           toParent.ifPresent(par -> {
                               A parAx = reparentingAxiomFactory.createReparentingAxiom(move,
                                                                                        par,
                                                                                        ax.getAnnotations());
-                              changeList.add(changeFactory.createAddAxiom(ontId, parAx));
+                              changeList.add(AddAxiomChange.of(ontId, parAx));
                           });
                       });
     }

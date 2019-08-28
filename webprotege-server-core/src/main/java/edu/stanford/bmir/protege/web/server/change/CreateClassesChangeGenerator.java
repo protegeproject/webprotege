@@ -34,11 +34,10 @@ public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeLi
     public CreateClassesChangeGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                         @Provided @Nonnull MessageFormatter msg,
                                         @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                                        @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                         @Nonnull String sourceText,
                                         @Nonnull String langTag,
                                         @Nonnull ImmutableSet<OWLClass> parent) {
-        super(CLASS, sourceText, langTag, parent, dataFactory, msg, ontologyChangeFactory, defaultOntologyIdManager);
+        super(CLASS, sourceText, langTag, parent, dataFactory, msg, defaultOntologyIdManager);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

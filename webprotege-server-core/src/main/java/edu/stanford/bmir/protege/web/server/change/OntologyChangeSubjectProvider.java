@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
@@ -25,13 +29,13 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
     }
 
     @Override
-    public Set<OWLEntity> getChangeSubjects(OWLOntologyChange change) {
+    public Set<OWLEntity> getChangeSubjects(OntologyChange change) {
         return change.accept(changeSubjectProvider);
     }
 
 
 
-    private static class ChangeSubjectProvider implements OWLOntologyChangeVisitorEx<Set<OWLEntity>> {
+    private static class ChangeSubjectProvider implements OntologyChangeVisitorEx<Set<OWLEntity>> {
 
         private AxiomEntitySubjectProvider subjectProvider;
 
@@ -40,38 +44,18 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
         }
 
         @Override
-        public Set<OWLEntity> visit(AddAxiom addAxiom) {
-            return subjectProvider.getSubject(addAxiom.getAxiom());
-        }
-
-        @Override
-        public Set<OWLEntity> visit(RemoveAxiom removeAxiom) {
-            return subjectProvider.getSubject(removeAxiom.getAxiom());
-        }
-
-        @Override
-        public Set<OWLEntity> visit(SetOntologyID setOntologyID) {
+        public Set<OWLEntity> getDefaultReturnValue() {
             return Collections.emptySet();
         }
 
         @Override
-        public Set<OWLEntity> visit(AddImport addImport) {
-            return Collections.emptySet();
+        public Set<OWLEntity> visit(@Nonnull AddAxiomChange addAxiomChange) {
+            return subjectProvider.getSubject(addAxiomChange.getAxiom());
         }
 
         @Override
-        public Set<OWLEntity> visit(RemoveImport removeImport) {
-            return Collections.emptySet();
-        }
-
-        @Override
-        public Set<OWLEntity> visit(AddOntologyAnnotation addOntologyAnnotation) {
-            return Collections.emptySet();
-        }
-
-        @Override
-        public Set<OWLEntity> visit(RemoveOntologyAnnotation removeOntologyAnnotation) {
-            return Collections.emptySet();
+        public Set<OWLEntity> visit(@Nonnull RemoveAxiomChange removeAxiomChange) {
+            return subjectProvider.getSubject(removeAxiomChange.getAxiom());
         }
     }
 

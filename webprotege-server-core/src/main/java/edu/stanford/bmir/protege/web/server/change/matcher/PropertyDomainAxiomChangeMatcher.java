@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.AddedPropertyDomain;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedPropertyDomain;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLPropertyDomainAxiom;
 
@@ -19,12 +18,9 @@ import java.util.Optional;
  */
 public class PropertyDomainAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPropertyDomainAxiom<?>> {
 
-    private final OWLObjectStringFormatter formatter;
-
     @Inject
-    public PropertyDomainAxiomChangeMatcher(OWLObjectStringFormatter formatter) {
+    public PropertyDomainAxiomChangeMatcher() {
         super(new TypeToken<OWLPropertyDomainAxiom<?>>(){});
-        this.formatter = formatter;
     }
 
     @Override
@@ -34,14 +30,12 @@ public class PropertyDomainAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPr
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLPropertyDomainAxiom<?> axiom,
-                                                                      List<OWLOntologyChangeData> changes) {
-        var msg = formatter.formatString("Added %s to the domain of %s", axiom.getDomain(), axiom.getProperty());
+                                                                      List<OntologyChange> changes) {
         return Optional.of(ChangeSummary.get(AddedPropertyDomain.get((OWLProperty) axiom.getProperty(), axiom.getDomain())));
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForRemoveAxiomChange(OWLPropertyDomainAxiom<?> axiom) {
-        var msg = formatter.formatString("Removed %s from the domain of %s", axiom.getDomain(), axiom.getProperty());
         return Optional.of(ChangeSummary.get(RemovedPropertyDomain.get((OWLProperty) axiom.getProperty(), axiom.getDomain())));
     }
 }

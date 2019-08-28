@@ -7,12 +7,10 @@ import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -59,7 +57,7 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
         if(revision.isEmpty()) {
             return OntologyChangeList.<Boolean>builder().build(false);
         }
-        List<OWLOntologyChange> changes = new ArrayList<>();
+        var changes = new ArrayList<OntologyChange>();
         for(OWLOntologyChangeRecord record : revision.get()) {
             var revertingChangeData = changeDataReverter.getRevertingChange(record);
             var revertingRecord = new OWLOntologyChangeRecord(record.getOntologyID(), revertingChangeData);

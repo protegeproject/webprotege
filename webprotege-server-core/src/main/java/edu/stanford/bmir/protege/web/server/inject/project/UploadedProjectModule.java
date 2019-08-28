@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import com.google.common.collect.*;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.index.*;
@@ -9,7 +12,9 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
-import edu.stanford.bmir.protege.web.server.shortform.*;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdater;
+import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionary;
+import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionaryImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -19,7 +24,6 @@ import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
 import java.util.stream.Stream;
 

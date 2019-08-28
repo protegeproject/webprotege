@@ -14,13 +14,11 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,9 +33,6 @@ import static java.util.Arrays.asList;
 public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotation>, SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> {
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Nonnull
@@ -47,11 +42,9 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
     public SetOntologyAnnotationsActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                                @Nonnull HasApplyChanges applyChanges,
-                                               @Nonnull OntologyChangeFactory changeFactory,
                                                @Nonnull OWLDataFactory dataFactory,
                                                @Nonnull OntologyAnnotationsIndex ontologyAnnotationsIndex) {
         super(accessManager, eventManager, applyChanges);
-        this.changeFactory = checkNotNull(changeFactory);
         this.dataFactory = checkNotNull(dataFactory);
         this.ontologyAnnotationsIndex = checkNotNull(ontologyAnnotationsIndex);
     }
@@ -75,7 +68,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
         final var toAnnotations = action.getToAnnotations();
         var ontologyId = action.getOntologyId();
 
-        List<OWLOntologyChange> changeList = new ArrayList<>();
+        var changeList = new ArrayList<OntologyChange>();
 
         for(PropertyAnnotationValue annotation : fromAnnotations) {
             if(!toAnnotations.contains(annotation)) {
@@ -88,7 +81,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
                               var oldAnnotation = dataFactory.getOWLAnnotation(
                                       property,
                                       av);
-                              var chg = changeFactory.createRemoveOntologyAnnotation(
+                              var chg = RemoveOntologyAnnotationChange.of(
                                       ontologyId,
                                       oldAnnotation);
                               changeList.add(chg);
@@ -107,7 +100,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
                                       property,
                                       av
                               );
-                              changeList.add(changeFactory.createAddOntologyAnnotation(ontologyId,
+                              changeList.add(AddOntologyAnnotationChange.of(ontologyId,
                                                                                        newAnnotation));
                           });
             }

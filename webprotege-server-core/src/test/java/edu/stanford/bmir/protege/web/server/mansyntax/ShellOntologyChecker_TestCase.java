@@ -11,10 +11,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
-import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;

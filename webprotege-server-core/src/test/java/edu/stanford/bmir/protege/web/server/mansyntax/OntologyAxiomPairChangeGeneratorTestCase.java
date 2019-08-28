@@ -7,11 +7,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -32,16 +31,24 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
     private OWLOntology ont;
 
     @Mock
+    private OWLOntologyID ontologyId;
+
+    @Mock
     private OWLAxiom ax;
 
     private OntologyAxiomPair pair;
+
     private OntologyAxiomPairChangeGenerator generator;
 
     @Before
     public void setUp() throws Exception {
         pair = mock(OntologyAxiomPair.class);
-        when(pair.getOntology()).thenReturn(ont);
-        when(pair.getAxiom()).thenReturn(ax);
+        when(ont.getOntologyID())
+                .thenReturn(ontologyId);
+        when(pair.getOntology())
+                .thenReturn(ont);
+        when(pair.getAxiom())
+                .thenReturn(ax);
         generator = new OntologyAxiomPairChangeGenerator();
     }
 
@@ -49,11 +56,11 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
     public void shouldGenerateAddAxiom() {
         Set<OntologyAxiomPair> from = Collections.emptySet();
         Set<OntologyAxiomPair> to = Collections.singleton(pair);
-        List<OWLOntologyChange> changes = generator.generateChanges(from, to);
+        var changes = generator.generateChanges(from, to);
         assertThat(changes, hasSize(1));
-        OWLOntologyChange change = changes.get(0);
-        assertThat(change.getOntology(), is(equalTo(ont)));
-        assertThat(change.getAxiom(), is(equalTo(ax)));
+        var change = changes.get(0);
+        assertThat(change.getOntologyId(), is(equalTo(ontologyId)));
+        assertThat(change.getAxiomOrThrow(), is(equalTo(ax)));
         assertThat(change.isAddAxiom(), is(true));
     }
 
@@ -62,11 +69,11 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
         Set<OntologyAxiomPair> from = Collections.singleton(pair);
         Set<OntologyAxiomPair> to = Collections.emptySet();
         OntologyAxiomPairChangeGenerator generator = new OntologyAxiomPairChangeGenerator();
-        List<OWLOntologyChange> changes = generator.generateChanges(from, to);
+        var changes = generator.generateChanges(from, to);
         assertThat(changes, hasSize(1));
-        OWLOntologyChange change = changes.get(0);
-        assertThat(change.getOntology(), is(equalTo(ont)));
-        assertThat(change.getAxiom(), is(equalTo(ax)));
+        var change = changes.get(0);
+        assertThat(change.getOntologyId(), is(equalTo(ontologyId)));
+        assertThat(change.getAxiomOrThrow(), is(equalTo(ax)));
         assertThat(change.isRemoveAxiom(), is(true));
     }
 
@@ -75,7 +82,7 @@ public class OntologyAxiomPairChangeGeneratorTestCase {
         Set<OntologyAxiomPair> from = Collections.singleton(pair);
         Set<OntologyAxiomPair> to = Collections.singleton(pair);
         OntologyAxiomPairChangeGenerator generator = new OntologyAxiomPairChangeGenerator();
-        List<OWLOntologyChange> changes = generator.generateChanges(from, to);
+        var changes = generator.generateChanges(from, to);
         assertThat(changes, is(empty()));
     }
 

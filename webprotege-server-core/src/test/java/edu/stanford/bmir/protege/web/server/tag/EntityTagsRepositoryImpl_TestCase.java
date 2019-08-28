@@ -16,11 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMongoClient;
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMorphia;
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.getTestDbName;
+import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Matthew Horridge

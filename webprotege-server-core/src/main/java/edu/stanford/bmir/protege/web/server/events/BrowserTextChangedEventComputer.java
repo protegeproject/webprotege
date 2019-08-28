@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetChangeSubjects;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
@@ -12,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.HasContainsEntityInSignature;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -54,7 +54,7 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
     }
 
     @Override
-    public void prepareForOntologyChanges(List<OWLOntologyChange> submittedChanges) {
+    public void prepareForOntologyChanges(List<OntologyChange> submittedChanges) {
         shortFormMap.clear();
         submittedChanges.stream()
                         .flatMap(change -> changeSubjectsProvider.getChangeSubjects(change).stream())

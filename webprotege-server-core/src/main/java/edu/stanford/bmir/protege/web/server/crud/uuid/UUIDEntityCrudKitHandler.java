@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud.uuid;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
@@ -48,21 +48,16 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesInSignature;
 
-    @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
     @AutoFactory
     @Inject
     public UUIDEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
                                     @Nonnull UUIDSuffixSettings uuidSuffixKitSettings,
                                     @Provided OWLDataFactory dataFactory,
-                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature,
-                                    @Provided @Nonnull OntologyChangeFactory changeFactory) {
+                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(uuidSuffixKitSettings);
         this.dataFactory = checkNotNull(dataFactory);
         this.entitiesInSignature = checkNotNull(entitiesInSignature);
-        this.changeFactory = checkNotNull(changeFactory);
     }
 
     @Override
@@ -108,12 +103,12 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
             labellingLiteral = getLabellingLiteral(suppliedName, langTag, dictionaryLanguage);
         }
         var entity = dataFactory.getOWLEntity(entityType, entityIRI);
-        builder.add(changeFactory.createAddAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity)));
+        builder.add(AddAxiomChange.of(targetOntology, dataFactory.getOWLDeclarationAxiom(entity)));
 
         var annotationPropertyIri = dictionaryLanguage.getAnnotationPropertyIri();
         if (annotationPropertyIri != null) {
             var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.add(changeFactory.createAddAxiom(targetOntology, ax));
+            builder.add(AddAxiomChange.of(targetOntology, ax));
         }
         return entity;
     }

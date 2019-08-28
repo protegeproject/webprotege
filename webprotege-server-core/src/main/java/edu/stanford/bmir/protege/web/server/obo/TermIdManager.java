@@ -1,19 +1,18 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,8 +79,8 @@ public class TermIdManager {
                           @Nonnull OBOTermId termId) {
         OBOTermId existingTermId = getTermId(entity);
         IRI iri = entity.getIRI();
-        List<OWLOntologyChange> changes = new ArrayList<>();
-        StringBuilder description = new StringBuilder();
+        var changes = new ArrayList<OntologyChange>();
+        var description = new StringBuilder();
         if (!existingTermId.getName().equals(termId.getName())) {
             // Update label
             changes.addAll(oboUtil.replaceStringAnnotationValue(iri, OWLRDFVocabulary.RDFS_LABEL.getIRI(), termId.getName()));

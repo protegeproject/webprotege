@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
 import javax.annotation.Nonnull;
@@ -76,7 +75,7 @@ public class ManchesterSyntaxChangeGenerator implements ChangeListGenerator<Opti
         OntologyChangeList.Builder<Optional<ManchesterSyntaxFrameParseError>> builder = OntologyChangeList.builder();
         Optional<ManchesterSyntaxFrameParseError> error;
         try {
-            List<OWLOntologyChange> changes = generateChanges();
+            List<OntologyChange> changes = generateChanges();
             error = Optional.empty();
             builder.addAll(changes);
         } catch (ParserException e) {
@@ -92,7 +91,7 @@ public class ManchesterSyntaxChangeGenerator implements ChangeListGenerator<Opti
     }
 
 
-    private List<OWLOntologyChange> generateChanges() throws ParserException {
+    private List<OntologyChange> generateChanges() throws ParserException {
         Set<OntologyAxiomPair> toPairs = getOntologyAxiomPairs(to, hasFreshEntities);
         Set<OntologyAxiomPair> fromPairs = getOntologyAxiomPairs(from, hasFreshEntities);
         return changeGenerator.generateChanges(fromPairs, toPairs);

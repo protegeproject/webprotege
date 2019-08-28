@@ -39,9 +39,6 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     private final OWLDataFactory dataFactory;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
 
@@ -51,13 +48,11 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                                             @Nonnull CSVGrid csvGrid,
                                             @Nonnull CSVImportDescriptor descriptor,
                                             @Provided @Nonnull OWLDataFactory dataFactory,
-                                            @Provided @Nonnull OntologyChangeFactory changeFactory,
                                             @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.importRootClass = checkNotNull(importRootClass);
         this.csvGrid = checkNotNull(csvGrid);
         this.descriptor = checkNotNull(descriptor);
         this.dataFactory = checkNotNull(dataFactory);
-        this.changeFactory = changeFactory;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
@@ -76,7 +71,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                         final OWLObjectProperty property = (OWLObjectProperty) columnDescriptor.getColumnProperty();
                         final Optional<OWLClassExpression> superCls = getColumnValueAsClassExpression(value, property, columnType);
                         if (superCls.isPresent()) {
-                            var addAxiom = changeFactory.createAddAxiom(rootOntology,
+                            var addAxiom = AddAxiomChange.of(rootOntology,
                                                                              getAxiom(displayName,
                                                                                       columnDescriptor,
                                                                                       superCls.get()));
@@ -89,7 +84,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                             final Optional<OWLLiteral> filler = getColumnValueAsLiteral(value, columnType);
                             if (filler.isPresent()) {
                                 final OWLClassExpression superCls = dataFactory.getOWLDataHasValue(property, filler.get());
-                                var addAxiom = changeFactory.createAddAxiom(rootOntology, getAxiom(displayName, columnDescriptor, superCls));
+                                var addAxiom = AddAxiomChange.of(rootOntology, getAxiom(displayName, columnDescriptor, superCls));
                                 changesBuilder.add(addAxiom);
                             }
                         }
@@ -98,13 +93,13 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                             final Optional<? extends OWLAnnotationValue> annotationValue = getColumnValueAsAnnotationValue(value, columnType);
                             if (annotationValue.isPresent()) {
                                 final IRI rowIRI = DataFactory.getFreshOWLEntityIRI(displayName);
-                                var addAxiom = changeFactory.createAddAxiom(rootOntology, dataFactory.getOWLAnnotationAssertionAxiom(property, rowIRI, annotationValue.get()));
+                                var addAxiom = AddAxiomChange.of(rootOntology, dataFactory.getOWLAnnotationAssertionAxiom(property, rowIRI, annotationValue.get()));
                                 changesBuilder.add(addAxiom);
                             }
                         }
                     }
                     OWLAxiom placementAxiom = getPlacementAxiom(displayName);
-                    var addAxiom = changeFactory.createAddAxiom(rootOntology, placementAxiom);
+                    var addAxiom = AddAxiomChange.of(rootOntology, placementAxiom);
                     changesBuilder.add(addAxiom);
                 }
             }

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,5 +12,5 @@ import java.util.Optional;
  */
 public interface ChangeMatcher {
 
-    Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData);
+    Optional<ChangeSummary> getDescription(List<OntologyChange> changeData);
 }

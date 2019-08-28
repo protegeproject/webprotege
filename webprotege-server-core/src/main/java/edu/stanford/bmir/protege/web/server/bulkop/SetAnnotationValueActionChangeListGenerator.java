@@ -38,9 +38,6 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
     private final String commitMessage;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
@@ -55,7 +52,6 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
                                                        @Nonnull OWLAnnotationProperty property,
                                                        @Nonnull OWLAnnotationValue value,
                                                        @Nonnull String commitMessage,
-                                                       @Provided @Nonnull OntologyChangeFactory changeFactory,
                                                        @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                                        @Provided @Nonnull EntitiesInOntologySignatureIndex entitiesInSignature,
                                                        @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionBySubject) {
@@ -64,7 +60,6 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
         this.property = checkNotNull(property);
         this.value = checkNotNull(value);
         this.commitMessage = checkNotNull(commitMessage);
-        this.changeFactory = checkNotNull(changeFactory);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.entitiesInSignature = checkNotNull(entitiesInSignature);
         this.annotationAssertionBySubject = checkNotNull(annotationAssertionBySubject);
@@ -93,7 +88,7 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
                                                            OWLOntologyID ontId,
                                                            OWLAnnotationAssertionAxiom ax) {
         // Replacement annotations that set the value go into the ontology where the value was originally located
-        var removeAxiom = changeFactory.createRemoveAxiom(ontId, ax);
+        var removeAxiom = RemoveAxiomChange.of(ontId, ax);
         builder.add(removeAxiom);
         // Copy over axiom annotations
         var subject = ax.getSubject();
@@ -102,7 +97,7 @@ public class SetAnnotationValueActionChangeListGenerator implements ChangeListGe
                                                                        subject,
                                                                        value,
                                                                        preservedAxiomAnnotations);
-        var replacementAxiom = changeFactory.createAddAxiom(ontId, replacementAx);
+        var replacementAxiom = AddAxiomChange.of(ontId, replacementAx);
         builder.add(replacementAxiom);
     }
 

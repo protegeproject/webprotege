@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,11 +8,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -31,7 +31,13 @@ public class OntologyAxiomPairOntologySwitchTestCase {
     private OWLOntology ontA;
 
     @Mock
+    private OWLOntologyID ontAId;
+
+    @Mock
     private OWLOntology ontB;
+
+    @Mock
+    private OWLOntologyID ontBId;
 
     @Mock
     private OWLAxiom ax;
@@ -43,6 +49,10 @@ public class OntologyAxiomPairOntologySwitchTestCase {
 
     @Before
     public void setUp() throws Exception {
+        when(ontA.getOntologyID())
+                .thenReturn(ontAId);
+        when(ontB.getOntologyID())
+                .thenReturn(ontBId);
         pairA = mock(OntologyAxiomPair.class);
         when(pairA.getOntology()).thenReturn(ontA);
         when(pairA.getAxiom()).thenReturn(ax);
@@ -58,18 +68,18 @@ public class OntologyAxiomPairOntologySwitchTestCase {
     public void shouldGenerateRemoveThenAdd() {
         Set<OntologyAxiomPair> from = Collections.singleton(pairA);
         Set<OntologyAxiomPair> to = Collections.singleton(pairB);
-        List<OWLOntologyChange> changes = generator.generateChanges(from, to);
+        var changes = generator.generateChanges(from, to);
         assertThat(changes, hasSize(2));
-        OWLOntologyChange change0 = changes.get(0);
+        OntologyChange change0 = changes.get(0);
         assertThat(change0.isRemoveAxiom(), is(true));
-        assertThat(change0.getAxiom(), is(equalTo(ax)));
-        assertThat(change0.getOntology(), is(equalTo(ontA)));
+        assertThat(change0.getAxiomOrThrow(), is(equalTo(ax)));
+        assertThat(change0.getOntologyId(), is(equalTo(ontAId)));
 
 
-        OWLOntologyChange change1 = changes.get(1);
+        OntologyChange change1 = changes.get(1);
         assertThat(change1.isAddAxiom(), is(true));
-        assertThat(change1.getAxiom(), is(equalTo(ax)));
-        assertThat(change1.getOntology(), is(equalTo(ontB)));
+        assertThat(change1.getAxiomOrThrow(), is(equalTo(ax)));
+        assertThat(change1.getOntologyId(), is(equalTo(ontBId)));
     }
 
 }

@@ -37,9 +37,6 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
     private final SubClassOfAxiomsBySubClassIndex subClassAxiomIndex;
 
     @Nonnull
-    private final OntologyChangeFactory ontologyChangeFactory;
-
-    @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Nonnull
@@ -52,13 +49,11 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
                                           @Nonnull String commitMessage,
                                           @Provided @Nonnull ProjectOntologiesIndex projectOntologies,
                                           @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassAxiomIndex,
-                                          @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                           @Provided @Nonnull OWLDataFactory dataFactory) {
         this.childClasses = checkNotNull(childClasses);
         this.targetParent = checkNotNull(targetParent);
         this.projectOntologies = checkNotNull(projectOntologies);
         this.subClassAxiomIndex = checkNotNull(subClassAxiomIndex);
-        this.ontologyChangeFactory = checkNotNull(ontologyChangeFactory);
         this.dataFactory = checkNotNull(dataFactory);
         this.commitMessage = checkNotNull(commitMessage);
     }
@@ -82,10 +77,10 @@ public class MoveClassesChangeListGenerator implements ChangeListGenerator<Boole
                               OWLClass childCls,
                               OWLOntologyID ontId,
                               OntologyChangeList.Builder<Boolean> changeList) {
-        var removeAxiom = ontologyChangeFactory.createRemoveAxiom(ontId, ax);
+        var removeAxiom = RemoveAxiomChange.of(ontId, ax);
         changeList.add(removeAxiom);
         var replacementAx = dataFactory.getOWLSubClassOfAxiom(childCls, targetParent, ax.getAnnotations());
-        var addAxiom = ontologyChangeFactory.createAddAxiom(ontId, replacementAx);
+        var addAxiom = AddAxiomChange.of(ontId, replacementAx);
         changeList.add(addAxiom);
     }
 

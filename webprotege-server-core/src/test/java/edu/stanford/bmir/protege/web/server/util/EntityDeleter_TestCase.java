@@ -1,15 +1,18 @@
 package edu.stanford.bmir.protege.web.server.util;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeFactory;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveOntologyAnnotationChange;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
 import java.util.stream.Stream;
@@ -33,9 +36,6 @@ public class EntityDeleter_TestCase {
     private ReferenceFinder referenceFinder;
 
     @Mock
-    private OntologyChangeFactory ontologyChangeFactory;
-
-    @Mock
     private ProjectOntologiesIndex projectOntologiesIndex;
 
     @Mock
@@ -54,10 +54,10 @@ public class EntityDeleter_TestCase {
     private OWLAnnotation ontologyAnnotation;
 
     @Mock
-    private RemoveAxiom removeAxiom;
+    private RemoveAxiomChange removeAxiom;
 
     @Mock
-    private RemoveOntologyAnnotation removeOntologyAnnotation;
+    private RemoveOntologyAnnotationChange removeOntologyAnnotation;
 
     @Before
     public void setUp() {
@@ -74,14 +74,13 @@ public class EntityDeleter_TestCase {
         when(referenceSet.getReferencingOntologyAnnotations())
                 .thenReturn(ImmutableSet.of(ontologyAnnotation));
 
-        when(ontologyChangeFactory.createRemoveAxiom(ontologyId, axiom))
+        when(RemoveAxiomChange.of(ontologyId, axiom))
                 .thenReturn(removeAxiom);
 
-        when(ontologyChangeFactory.createRemoveOntologyAnnotation(ontologyId, ontologyAnnotation))
+        when(RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation))
                 .thenReturn(removeOntologyAnnotation);
 
         entityDeleter = new EntityDeleter(referenceFinder,
-                                          ontologyChangeFactory,
                                           projectOntologiesIndex);
 
 

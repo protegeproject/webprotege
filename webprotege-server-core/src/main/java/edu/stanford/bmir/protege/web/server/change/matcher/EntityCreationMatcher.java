@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 
@@ -39,12 +39,12 @@ public class EntityCreationMatcher implements ChangeMatcher {
     }
 
     @Override
-    public Optional<ChangeSummary> getDescription(List<OWLOntologyChangeData> changeData) {
+    public Optional<ChangeSummary> getDescription(List<OntologyChange> changes) {
         // Make sure that we only have axiom additions.  Axiom removals indicate something
         // other kind of edit
-        var changeDataContainsNonAxiomAddition = changeData
+        var changeDataContainsNonAxiomAddition = changes
                 .stream()
-                .anyMatch(data -> !((data instanceof AddAxiomData) && isEntityCreationAxiom((OWLAxiom) data.getItem())));
+                .anyMatch(chg -> !(chg.isAddAxiom() && isEntityCreationAxiom(chg.getAxiomOrThrow())));
         if(changeDataContainsNonAxiomAddition) {
             return Optional.empty();
         }
@@ -52,7 +52,7 @@ public class EntityCreationMatcher implements ChangeMatcher {
         //   1) a Declaration axiom
         //   2) possibly a positioning axiom e.g. SubClassOf, Sub*PropertyOf, ClassAssertion
         // First group axioms by their subject
-        var axiomsBySubject = changeData
+        var axiomsBySubject = changes
                 .stream()
                 .filter(data -> data instanceof AddAxiomData)
                 .map(data -> (AddAxiomData) data)
@@ -153,6 +153,7 @@ public class EntityCreationMatcher implements ChangeMatcher {
     @Nullable
     private static OWLEntity getStatedParent(@Nonnull OWLAxiom axiom) {
         return axiom.accept(new OWLAxiomVisitorExAdapter<>(null) {
+            @Nonnull
             @Override
             public OWLEntity visit(OWLSubClassOfAxiom axiom) {
                 var superClass = axiom.getSuperClass();
@@ -164,6 +165,7 @@ public class EntityCreationMatcher implements ChangeMatcher {
                 }
             }
 
+            @Nonnull
             @Override
             public OWLEntity visit(OWLClassAssertionAxiom axiom) {
                 var type = axiom.getClassExpression();
@@ -175,11 +177,13 @@ public class EntityCreationMatcher implements ChangeMatcher {
                 }
             }
 
+            @Nonnull
             @Override
             public OWLEntity visit(OWLSubAnnotationPropertyOfAxiom axiom) {
                 return axiom.getSuperProperty();
             }
 
+            @Nonnull
             @Override
             public OWLEntity visit(OWLSubObjectPropertyOfAxiom axiom) {
                 var superProperty = axiom.getSuperProperty();
@@ -191,6 +195,7 @@ public class EntityCreationMatcher implements ChangeMatcher {
                 }
             }
 
+            @Nonnull
             @Override
             public OWLEntity visit(OWLSubDataPropertyOfAxiom axiom) {
                 var superProperty = axiom.getSuperProperty();

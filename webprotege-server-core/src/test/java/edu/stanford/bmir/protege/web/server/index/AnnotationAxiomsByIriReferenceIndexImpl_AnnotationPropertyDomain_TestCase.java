@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.change.AddAxiomData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyDomainAxiomImpl;
 
@@ -16,7 +15,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -95,8 +93,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
 
     @Test
     public void shouldHandleAddAnnotationPropertyDomainAxiom() {
-        var addAxiomData = new AddAxiomData(otherAnnotationPropertyDomainAxiom);
-        var changeRecord = new OWLOntologyChangeRecord(ontologyId, addAxiomData);
+        var changeRecord = AddAxiomChange.of(ontologyId, otherAnnotationPropertyDomainAxiom);
 
         impl.handleOntologyChanges(ImmutableList.of(changeRecord));
 
@@ -106,8 +103,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
 
     @Test
     public void shouldHandleRemoveAnnotationPropertyDomainAxiom() {
-        var removeAxiomData = new RemoveAxiomData(annotationPropertyDomainAxiom);
-        var changeRecord = new OWLOntologyChangeRecord(ontologyId, removeAxiomData);
+        var changeRecord = RemoveAxiomChange.of(ontologyId, annotationPropertyDomainAxiom);
 
         impl.handleOntologyChanges(ImmutableList.of(changeRecord));
 

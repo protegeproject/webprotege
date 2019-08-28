@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface RequiresOntologyChangeNotification {
 
-    void handleOntologyChanges(@Nonnull List<OWLOntologyChangeRecord> changes);
+    void handleOntologyChanges(@Nonnull List<OntologyChange> changes);
 }

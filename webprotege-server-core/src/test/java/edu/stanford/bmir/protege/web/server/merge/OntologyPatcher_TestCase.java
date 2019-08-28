@@ -1,16 +1,11 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
 import com.google.common.collect.ImmutableList;
-import dagger.Subcomponent;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.diff.OntologyDiff2OntologyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.Collections;
 
@@ -52,7 +46,7 @@ public class OntologyPatcher_TestCase {
     private ExecutionContext executionContext;
 
     @Mock
-    private OWLOntologyChange ontologyChange;
+    private OntologyChange ontologyChange;
 
     @Mock
     private UserId userId;

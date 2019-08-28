@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -24,7 +24,7 @@ public class EventTranslatorManager {
         this.eventTranslators = eventTranslators;
     }
 
-    public void prepareForOntologyChanges(List<OWLOntologyChange> submittedChanges) {
+    public void prepareForOntologyChanges(List<OntologyChange> submittedChanges) {
         for(EventTranslator eventTranslator : eventTranslators) {
             eventTranslator.prepareForOntologyChanges(submittedChanges);
         }

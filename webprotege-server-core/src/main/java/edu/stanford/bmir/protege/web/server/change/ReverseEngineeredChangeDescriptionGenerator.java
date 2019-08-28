@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.change;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeSummary;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -42,9 +40,9 @@ public class ReverseEngineeredChangeDescriptionGenerator<S> implements ChangeDes
 
     @Override
     public String generateChangeDescription(ChangeApplicationResult<S> result) {
-        var changeData = result.getChangeList().stream().map(OWLOntologyChange::getChangeData).collect(toImmutableList());
+        var changes = result.getChangeList();
         for(ChangeMatcher matcher : matchers) {
-            Optional<ChangeSummary> description = matcher.getDescription(changeData);
+            Optional<ChangeSummary> description = matcher.getDescription(changes);
             if(description.isPresent()) {
                 return description.get().getDescription().formatDescription(formatter);
             }

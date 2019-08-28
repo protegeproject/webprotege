@@ -35,9 +35,6 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
     private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Nonnull
-    private final OntologyChangeFactory ontologyChangeFactory;
-
-    @Nonnull
     private final ImmutableSet<OWLEntity> entities;
 
     @Nonnull
@@ -64,7 +61,6 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
     public EditAnnotationsChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                               @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                               @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
-                                              @Provided @Nonnull OntologyChangeFactory ontologyChangeFactory,
                                               @Nonnull ImmutableSet<OWLEntity> entities,
                                               @Nonnull Operation operation,
                                               @Nonnull Optional<OWLAnnotationProperty> matchProperty,
@@ -76,7 +72,6 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
         this.dataFactory = checkNotNull(dataFactory);
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.annotationAssertionsIndex = annotationAssertionsIndex;
-        this.ontologyChangeFactory = ontologyChangeFactory;
         this.entities = checkNotNull(entities);
         this.operation = checkNotNull(operation);
         this.property = checkNotNull(matchProperty);
@@ -152,10 +147,10 @@ public class EditAnnotationsChangeListGenerator implements ChangeListGenerator<B
                                                                newLiteral,
                                                                ax.getAnnotations());
         if(operation == Operation.REPLACE || operation == Operation.DELETE) {
-            builder.add(ontologyChangeFactory.createRemoveAxiom(ontologyId, ax));
+            builder.add(RemoveAxiomChange.of(ontologyId, ax));
         }
         if(operation == Operation.REPLACE || operation == Operation.AUGMENT) {
-            builder.add(ontologyChangeFactory.createAddAxiom(ontologyId, newAx));
+            builder.add(AddAxiomChange.of(ontologyId, newAx));
         }
     }
 

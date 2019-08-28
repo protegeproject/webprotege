@@ -66,9 +66,6 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
     private final EntityRenamer entityRenamer;
 
     @Nonnull
-    private final OntologyChangeFactory changeFactory;
-
-    @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Nonnull
@@ -87,7 +84,6 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
                                             @Provided @Nonnull OWLDataFactory dataFactory,
                                             @Provided @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
                                             @Provided @Nonnull EntityRenamer entityRenamer,
-                                            @Provided @Nonnull OntologyChangeFactory changeFactory,
                                             @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                                             @Provided @Nonnull ProjectOntologiesIndex projectOntologies,
                                             @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertions) {
@@ -99,7 +95,6 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
         this.commitMessage = checkNotNull(commitMessage);
         this.entityRenamer = checkNotNull(entityRenamer);
-        this.changeFactory = checkNotNull(changeFactory);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
         this.projectOntologies = checkNotNull(projectOntologies);
         this.annotationAssertions = checkNotNull(annotationAssertions);
@@ -142,13 +137,13 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
             var sourceEntityIRI = sourceEntity.getIRI();
             var deprecatedAx = dataFactory.getDeprecatedOWLAnnotationAssertionAxiom(sourceEntityIRI);
             var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
-            var addDeprecatedAxiom = changeFactory.createAddAxiom(ontologyId, deprecatedAx);
+            var addDeprecatedAxiom = AddAxiomChange.of(ontologyId, deprecatedAx);
             builder.add(addDeprecatedAxiom);
 
             // Preserve labels and other annotations on the source entity
             projectOntologies.getOntologyIds().forEach(ontId -> {
                 annotationAssertions.getAxiomsForSubject(sourceEntityIRI, ontId)
-                                    .map(ax -> changeFactory.createAddAxiom(ontId, ax))
+                                    .map(ax -> AddAxiomChange.of(ontId, ax))
                                     .forEach(builder::add);
             });
         });
@@ -195,7 +190,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
                 targetEntity.getIRI(),
                 ax.getAnnotation(),
                 ax.getAnnotations());
-        builder.add(changeFactory.createRemoveAxiom(ontId, origAx));
+        builder.add(RemoveAxiomChange.of(ontId, origAx));
 
         // Generate a new annotation with a property of skos:altLabel.
         // Preserve any annotations on the annotation.
@@ -208,7 +203,7 @@ public class MergeEntitiesChangeListGenerator implements ChangeListGenerator<OWL
                 targetEntity.getIRI(),
                 replAnno,
                 ax.getAnnotations());
-        builder.add(changeFactory.createAddAxiom(ontId, replAx));
+        builder.add(AddAxiomChange.of(ontId, replAx));
     }
 
     /**

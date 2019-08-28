@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.description.AddedIndividualType;
 import edu.stanford.bmir.protege.web.server.change.description.AddedRelationship;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedIndividualType;
 import edu.stanford.bmir.protege.web.server.change.description.RemovedRelationship;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.change.AddAxiomData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
@@ -24,17 +23,14 @@ import java.util.Optional;
  */
 public class ClassAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLClassAssertionAxiom> {
 
-    private final OWLObjectStringFormatter formatter;
-
     @Inject
-    public ClassAssertionAxiomMatcher(OWLObjectStringFormatter formatter) {
+    public ClassAssertionAxiomMatcher() {
         super(new TypeToken<OWLClassAssertionAxiom>(){});
-        this.formatter = formatter;
     }
 
     @Override
     protected Optional<ChangeSummary> getDescriptionForAddAxiomChange(OWLClassAssertionAxiom axiom,
-                                                                      List<OWLOntologyChangeData> changes) {
+                                                                      List<OntologyChange> changes) {
         var possibleEntityCreation = changes.stream()
                 .filter(data -> data instanceof AddAxiomData)
                 .map(data -> ((AddAxiomData) data).getAxiom())
