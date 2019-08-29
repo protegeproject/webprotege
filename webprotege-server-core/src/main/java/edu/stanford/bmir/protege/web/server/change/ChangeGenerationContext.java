@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -12,14 +14,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChangeGenerationContext {
 
-    private UserId userId;
+    @Nonnull
+    private final UserId userId;
 
-    public ChangeGenerationContext(UserId userId) {
+    public ChangeGenerationContext(@Nonnull UserId userId) {
         this.userId = checkNotNull(userId);
     }
 
-
-
+    @Nonnull
     public UserId getUserId() {
         return userId;
     }
