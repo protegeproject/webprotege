@@ -81,11 +81,11 @@ public class OntologyChangeList<R> implements HasResult<R> {
         }
 
         public void addAxiom(@Nonnull OWLOntologyID ontologyId, @Nonnull OWLAxiom axiom) {
-            add(AddAxiomChange.of(ontologyId, axiom));
+            add(AddAxiomChange.of(checkNotNull(ontologyId), checkNotNull(axiom)));
         }
 
         public void removeAxiom(@Nonnull OWLOntologyID ontologyId, @Nonnull OWLAxiom axiom) {
-            add(RemoveAxiomChange.of(ontologyId, checkNotNull(axiom)));
+            add(RemoveAxiomChange.of(checkNotNull(ontologyId), checkNotNull(axiom)));
         }
 
         public Builder<R> addAll(@Nonnull List<? extends OntologyChange> changes) {
