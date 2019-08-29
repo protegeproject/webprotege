@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.server.revision;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
-import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;
@@ -20,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/07/2013
  */
-public class Revision implements Iterable<OntologyChange>, Comparable<Revision> {
+public class Revision implements Comparable<Revision> {
 
 
     private final UserId userId;

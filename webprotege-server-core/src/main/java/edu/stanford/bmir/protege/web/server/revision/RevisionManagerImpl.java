@@ -81,7 +81,7 @@ public class RevisionManagerImpl implements RevisionManager {
             for(Revision rev : revisionStore.getRevisions()) {
                 if(rev.getRevisionNumber()
                       .compareTo(revision) <= 0) {
-                    for(OntologyChange record : rev) {
+                    for(OntologyChange record : rev.getChanges()) {
                         // Anonymous ontologies are not handled nicely at all.
                         var normalisedChangeRecord = normaliseChangeRecord(record, singletonOntologyId);
                         var ontologyId = normalisedChangeRecord.getOntologyId();

@@ -54,7 +54,7 @@ public class EntitiesByRevisionCache {
     private ImmutableSet<OWLEntity> getEntitiesInternal(Revision revision) {
         ImmutableSet.Builder<OWLEntity> result = ImmutableSet.builder();
         Set<IRI> iris = new HashSet<>();
-        for (OntologyChange change : revision) {
+        for (OntologyChange change : revision.getChanges()) {
             if (change.isAxiomChange()) {
                 var ax = change.getAxiomOrThrow();
                 java.util.Optional<? extends OWLObject> subject = axiomSubjectProvider.getSubject(ax);
