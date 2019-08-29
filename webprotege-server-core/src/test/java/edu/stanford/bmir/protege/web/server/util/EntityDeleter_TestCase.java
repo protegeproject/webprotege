@@ -53,12 +53,6 @@ public class EntityDeleter_TestCase {
     @Mock
     private OWLAnnotation ontologyAnnotation;
 
-    @Mock
-    private RemoveAxiomChange removeAxiom;
-
-    @Mock
-    private RemoveOntologyAnnotationChange removeOntologyAnnotation;
-
     @Before
     public void setUp() {
         when(projectOntologiesIndex.getOntologyIds())
@@ -74,12 +68,6 @@ public class EntityDeleter_TestCase {
         when(referenceSet.getReferencingOntologyAnnotations())
                 .thenReturn(ImmutableSet.of(ontologyAnnotation));
 
-        when(RemoveAxiomChange.of(ontologyId, axiom))
-                .thenReturn(removeAxiom);
-
-        when(RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation))
-                .thenReturn(removeOntologyAnnotation);
-
         entityDeleter = new EntityDeleter(referenceFinder,
                                           projectOntologiesIndex);
 
@@ -89,7 +77,8 @@ public class EntityDeleter_TestCase {
     @Test
     public void shouldGetOntologyChangesToDeleteEntity() {
         var changes = entityDeleter.getChangesToDeleteEntities(Collections.singleton(entity));
-        assertThat(changes, hasItems(removeAxiom, removeOntologyAnnotation));
+        assertThat(changes, hasItems(RemoveAxiomChange.of(ontologyId, axiom),
+                                     RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
     }
 
     @Test
