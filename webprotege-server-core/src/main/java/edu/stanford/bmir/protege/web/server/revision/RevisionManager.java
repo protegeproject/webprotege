@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import javax.annotation.Nonnull;
@@ -74,7 +74,7 @@ public interface RevisionManager extends HasGetRevisionSummary {
      */
     @Nonnull
     Revision addRevision(@Nonnull UserId userId,
-                         @Nonnull List<? extends OWLOntologyChangeRecord> changes,
+                         @Nonnull List<OntologyChange> changes,
                          @Nonnull String desc);
 
 }

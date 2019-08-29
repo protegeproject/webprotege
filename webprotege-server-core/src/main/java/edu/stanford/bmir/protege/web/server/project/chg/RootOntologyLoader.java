@@ -23,9 +23,14 @@ public class RootOntologyLoader {
     @Nonnull
     private final ProjectOntologyManagerLoader projectOntologyManagerLoader;
 
+    @Nonnull
+    private final ProjectOWLOntologyManager manager;
+
     @Inject
-    public RootOntologyLoader(@Nonnull ProjectOntologyManagerLoader projectOntologyManagerLoader) {
+    public RootOntologyLoader(@Nonnull ProjectOntologyManagerLoader projectOntologyManagerLoader,
+                              @Nonnull ProjectOWLOntologyManager projectOWLOntologyManager) {
         this.projectOntologyManagerLoader = projectOntologyManagerLoader;
+        this.manager = projectOWLOntologyManager;
     }
 
     public OWLOntology loadRootOntology() {
@@ -37,7 +42,6 @@ public class RootOntologyLoader {
         delegateManager.getOntologyStorers().add(new ManchesterSyntaxStorerFactory());
 
         // The wrapper manager
-        ProjectOWLOntologyManager manager = new ProjectOWLOntologyManager();
         manager.setDelegate(delegateManager);
         try {
             OWLOntology rootOntology = projectOntologyManagerLoader.createProjectOntologiesInManager(manager.getDelegate());

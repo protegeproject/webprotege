@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Interners;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
 import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFile;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -30,6 +31,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.revision.RevisionSerializationVocabulary.*;
 
 /**
@@ -57,19 +59,29 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
 
     private ImmutableList<Revision> revisions = ImmutableList.of();
 
+    @Nonnull
+    private final OntologyChangeRecordTranslator changeRecordTranslator;
+
+    private Runnable savedHook = () -> {};
 
     @Inject
     public RevisionStoreImpl(@Nonnull ProjectId projectId,
                              @Nonnull @ChangeHistoryFile File changeHistoryFile,
-                             @Nonnull OWLDataFactory dataFactory) {
+                             @Nonnull OWLDataFactory dataFactory,
+                             @Nonnull OntologyChangeRecordTranslator changeRecordTranslator) {
         this.projectId = checkNotNull(projectId);
         this.dataFactory = checkNotNull(dataFactory);
         this.changeHistoryFile = checkNotNull(changeHistoryFile);
+        this.changeRecordTranslator = changeRecordTranslator;
         changeSerializationExecutor = Executors.newSingleThreadExecutor(runnable -> {
             Thread thread = Executors.defaultThreadFactory().newThread(runnable);
             thread.setName(thread.getName().replace("thread", "change-serializer-thread"));
             return thread;
         });
+    }
+
+    public void setSavedHook(Runnable savedHook) {
+        this.savedHook = checkNotNull(savedHook);
     }
 
     @Nonnull
@@ -162,6 +174,7 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
         try {
             writeLock.lock();
             var revisionSerializationTask = new RevisionSerializationTask(changeHistoryFile, revision);
+            revisionSerializationTask.setSavedHook(savedHook);
             if(revisions.size() != 1) {
                 changeSerializationExecutor.submit(revisionSerializationTask);
             }
@@ -204,7 +217,10 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
                     var description = metadata.getStringAttribute(DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), "");
                     var userId = userIdInterner.intern(UserId.getUserId(userName));
 
-                    var internedChangeRecords = ImmutableList.copyOf(changeRecordList.getChangeRecords());
+                    var internedChangeRecords = changeRecordList.getChangeRecords()
+                            .stream()
+                            .map(changeRecordTranslator::getOntologyChange)
+                            .collect(toImmutableList());
                     var revision = new Revision(userId, revisionNumber, internedChangeRecords, changeRecordList.getTimestamp(), description);
                     revisionsBuilder.add(revision);
                 }, SkipSetting.SKIP_NONE);

@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomSubjectProvider;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -55,9 +54,9 @@ public class EntitiesByRevisionCache {
     private ImmutableSet<OWLEntity> getEntitiesInternal(Revision revision) {
         ImmutableSet.Builder<OWLEntity> result = ImmutableSet.builder();
         Set<IRI> iris = new HashSet<>();
-        for (OWLOntologyChangeRecord change : revision) {
-            if (change.getData() instanceof AxiomChangeData) {
-                OWLAxiom ax = ((AxiomChangeData) change.getData()).getAxiom();
+        for (OntologyChange change : revision) {
+            if (change.isAxiomChange()) {
+                var ax = change.getAxiomOrThrow();
                 java.util.Optional<? extends OWLObject> subject = axiomSubjectProvider.getSubject(ax);
                 if (subject.isPresent()) {
                     if (subject.get() instanceof OWLEntity) {

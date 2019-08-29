@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
@@ -18,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/07/2013
  */
-public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<Revision> {
+public class Revision implements Iterable<OntologyChange>, Comparable<Revision> {
 
 
     private final UserId userId;
@@ -27,12 +29,12 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
 
     private long timestamp;
 
-    private final ImmutableList<OWLOntologyChangeRecord> changes;
+    private final ImmutableList<OntologyChange> changes;
 
     private final String highLevelDescription;
 
     public Revision(UserId userId, RevisionNumber revisionNumber,
-                    ImmutableList<OWLOntologyChangeRecord> changes,
+                    ImmutableList<OntologyChange> changes,
                     long timestamp,
                     String highLevelDescription) {
         this.changes = checkNotNull(changes);
@@ -46,7 +48,7 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return changes.size();
     }
 
-    public ImmutableList<OWLOntologyChangeRecord> getChanges() {
+    public ImmutableList<OntologyChange> getChanges() {
         return changes;
     }
 
@@ -74,7 +76,8 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return highLevelDescription != null ? highLevelDescription : "";
     }
 
-    public Iterator<OWLOntologyChangeRecord> iterator() {
+    @Nonnull
+    public Iterator<OntologyChange> iterator() {
         return changes.iterator();
     }
 

@@ -2,6 +2,8 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
@@ -51,7 +53,7 @@ public class RevisionManagerImpl_TestCase {
     private RevisionNumber revisionNumber, nextRevisionNumber;
 
     @Mock
-    private ImmutableList<OWLOntologyChangeRecord> changes;
+    private ImmutableList<OntologyChange> changes;
 
     @Before
     public void setUp() throws Exception {
@@ -131,7 +133,8 @@ public class RevisionManagerImpl_TestCase {
     @Test
     public void should_addRevision() {
         UserId userId = mock(UserId.class);
-        List<OWLOntologyChangeRecord> changes = Arrays.asList(new OWLOntologyChangeRecord(new OWLOntologyID(), new AddAxiomData(mock(OWLAxiom.class))));
+        List<OntologyChange> changes = Collections.singletonList(AddAxiomChange.of(new OWLOntologyID(),
+                                                                                   mock(OWLAxiom.class)));
         manager.addRevision(userId, changes, HIGHLEVEL_DESC);
         ArgumentCaptor<Revision> revisionCaptor = ArgumentCaptor.forClass(Revision.class);
         verify(revisionStore, times(1)).addRevision(revisionCaptor.capture());

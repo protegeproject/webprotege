@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -28,7 +29,7 @@ public class Revision_TestCase {
     private RevisionNumber revisionNumber;
 
     @Mock
-    private ImmutableList<OWLOntologyChangeRecord> changes;
+    private ImmutableList<OntologyChange> changes;
 
     private long timestamp = 1L;
 

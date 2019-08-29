@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
-import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
+import edu.stanford.bmir.protege.web.server.project.chg.OntologyChangeTranslator;
+import edu.stanford.bmir.protege.web.server.project.chg.OntologyChangeTranslatorVisitor;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
@@ -80,11 +82,12 @@ public class ProjectChangesManager_IT {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology rootOntology = manager.createOntology(IRI.create("http://stuff.com/ont"));
         OWLDataFactory dataFactory = manager.getOWLDataFactory();
+        OntologyChangeRecordTranslator changeRecordTranslator = new OntologyChangeRecordTranslatorImpl();
         RevisionManager revisionManager = new RevisionManagerImpl(new RevisionStoreImpl(
                 projectId,
                 changeHistoryFile,
-                dataFactory
-        ));
+                dataFactory,
+                changeRecordTranslator));
         when(defaultOntologyIdManager.getDefaultOntologyId())
                 .thenReturn(rootOntology.getOntologyID());
         when(repo.findOne(projectId)).thenReturn(Optional.empty());
@@ -152,7 +155,7 @@ public class ProjectChangesManager_IT {
         );
         changesManager = new ProjectChangesManager(projectId, revisionManager,
                                                    renderingManager,
-                                                   new ChangeRecordComparator(
+                                                   new OntologyChangeComparator(
                         axiomComparator,
                         (o1, o2) -> 0
                 ),
@@ -170,13 +173,13 @@ public class ProjectChangesManager_IT {
                        RevisionManager revisionManager) {
         PrefixManager pm = new DefaultPrefixManager();
         pm.setDefaultPrefix("http://stuff.com/" );
-        List<OWLOntologyChange> changeList = new ArrayList<>();
+        List<OntologyChange> changeList = new ArrayList<>();
         for (int i = 0; i < CHANGE_COUNT; i++) {
             OWLClass clsA = dataFactory.getOWLClass(":A" + i, pm);
             OWLClass clsB = dataFactory.getOWLClass(":B" + i, pm);
 
             OWLSubClassOfAxiom ax = dataFactory.getOWLSubClassOfAxiom(clsA, clsB);
-            changeList.add(new AddAxiom(rootOntology, ax));
+            changeList.add(AddAxiomChange.of(rootOntology.getOntologyID(), ax));
 
             OWLAnnotationProperty rdfsLabel = dataFactory.getRDFSLabel();
             IRI annotationSubject = clsA.getIRI();
@@ -185,18 +188,20 @@ public class ProjectChangesManager_IT {
                     annotationSubject,
                     dataFactory.getOWLLiteral("Class A " + i)
             );
-            changeList.add(new AddAxiom(rootOntology, labAxA));
+            changeList.add(AddAxiomChange.of(rootOntology.getOntologyID(), labAxA));
 
             OWLAnnotationAssertionAxiom labAxB = dataFactory.getOWLAnnotationAssertionAxiom(
                     rdfsLabel,
                     annotationSubject,
                     dataFactory.getOWLLiteral("Class B " + i)
             );
-            changeList.add(new AddAxiom(rootOntology, labAxB));
+            changeList.add(AddAxiomChange.of(rootOntology.getOntologyID(), labAxB));
         }
-        manager.applyChanges(changeList);
+        OntologyChangeTranslator translator = new OntologyChangeTranslator(new OntologyChangeTranslatorVisitor(manager));
+
+        manager.applyChanges(changeList.stream().map(translator::toOwlOntologyChange).collect(toList()));
         revisionManager.addRevision(UserId.getUserId("MH" ),
-                                    changeList.stream().map(OWLOntologyChange::getChangeRecord).collect(toList()),
+                                    changeList,
                                     "Adding axioms");
     }
 

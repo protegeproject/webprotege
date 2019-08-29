@@ -38,10 +38,12 @@ import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
+import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
+import edu.stanford.bmir.protege.web.server.project.chg.ProjectOWLOntologyManager;
 import edu.stanford.bmir.protege.web.server.project.chg.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
@@ -62,7 +64,6 @@ import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
@@ -141,6 +142,12 @@ public class ProjectModule {
     @ProjectSingleton
     public OWLOntology provideRootOntology(RootOntologyProvider provider) {
         return provider.get();
+    }
+
+    @Provides
+    @ProjectSingleton
+    public OWLOntologyManager provideProjectOntologyManager(ProjectOWLOntologyManager projectOWLOntologyManager) {
+        return projectOWLOntologyManager;
     }
 
     @Provides
@@ -447,7 +454,7 @@ public class ProjectModule {
     }
 
     @Provides
-    Comparator<OWLOntologyChangeRecord> providesOWLOntologyChangeRecordComparator(ChangeRecordComparator comparator) {
+    Comparator<OntologyChange> providesOWLOntologyChangeRecordComparator(OntologyChangeComparator comparator) {
         return comparator;
     }
 

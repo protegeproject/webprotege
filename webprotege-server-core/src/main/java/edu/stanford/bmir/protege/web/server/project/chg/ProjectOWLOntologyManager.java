@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project.chg;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentTarget;
 import org.semanticweb.owlapi.io.OWLParserFactory;
@@ -9,6 +10,7 @@ import org.semanticweb.owlapi.model.parameters.OntologyCopy;
 import org.semanticweb.owlapi.util.PriorityCollection;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,6 +27,7 @@ import java.util.function.Supplier;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2012
  */
+@ProjectSingleton
 public class ProjectOWLOntologyManager implements OWLOntologyManager {
 
     final private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
@@ -37,6 +40,7 @@ public class ProjectOWLOntologyManager implements OWLOntologyManager {
 
     private boolean sealed = false;
 
+    @Inject
     public ProjectOWLOntologyManager() {
     }
 

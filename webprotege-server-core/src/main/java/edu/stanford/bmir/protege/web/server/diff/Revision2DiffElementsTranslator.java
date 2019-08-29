@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.diff;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
-import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Revision2DiffElementsTranslator {
 
-    private final OWLOntologyChangeDataVisitor<DiffOperation, RuntimeException> changeOperationVisitor;
+    private final OntologyChangeVisitorEx<DiffOperation> changeOperationVisitor;
 
     private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
 
@@ -42,55 +42,55 @@ public class Revision2DiffElementsTranslator {
         this.ontologyIRIShortFormProvider = checkNotNull(ontologyIRIShortFormProvider);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
-        changeOperationVisitor = new OWLOntologyChangeDataVisitor<>() {
+        changeOperationVisitor = new OntologyChangeVisitorEx<DiffOperation>() {
             @Nonnull
             @Override
-            public DiffOperation visit(AddAxiomData data) throws RuntimeException {
+            public DiffOperation visit(@Nonnull AddAxiomChange change) {
                 return DiffOperation.ADD;
             }
 
             @Override
-            public DiffOperation visit(RemoveAxiomData data) throws RuntimeException {
+            public DiffOperation visit(@Nonnull RemoveAxiomChange change) {
                 return DiffOperation.REMOVE;
             }
 
             @Override
-            public DiffOperation visit(AddOntologyAnnotationData data) throws RuntimeException {
+            public DiffOperation visit(@Nonnull AddOntologyAnnotationChange change) {
                 return DiffOperation.ADD;
             }
 
             @Override
-            public DiffOperation visit(RemoveOntologyAnnotationData data) throws RuntimeException {
+            public DiffOperation visit(@Nonnull RemoveOntologyAnnotationChange change) {
                 return DiffOperation.REMOVE;
             }
 
             @Override
-            public DiffOperation visit(SetOntologyIDData data) throws RuntimeException {
+            public DiffOperation visit(@Nonnull AddImportChange change) {
                 return DiffOperation.ADD;
             }
 
             @Override
-            public DiffOperation visit(AddImportData data) throws RuntimeException {
-                return DiffOperation.ADD;
-            }
-
-            @Override
-            public DiffOperation visit(RemoveImportData data) throws RuntimeException {
+            public DiffOperation visit(@Nonnull RemoveImportChange change) {
                 return DiffOperation.REMOVE;
+            }
+
+            @Override
+            public DiffOperation getDefaultReturnValue() {
+                return DiffOperation.ADD;
             }
         };
     }
 
-    public List<DiffElement<String, OWLOntologyChangeRecord>> getDiffElementsFromRevision(List<OWLOntologyChangeRecord> revision) {
-        final List<DiffElement<String, OWLOntologyChangeRecord>> changeRecordElements = new ArrayList<>();
-        for (final OWLOntologyChangeRecord changeRecord : revision) {
-            changeRecordElements.add(toElement(changeRecord));
+    public List<DiffElement<String, OntologyChange>> getDiffElementsFromRevision(List<OntologyChange> revision) {
+        final List<DiffElement<String, OntologyChange>> changeRecordElements = new ArrayList<>();
+        for (final OntologyChange change : revision) {
+            changeRecordElements.add(toElement(change));
         }
         return changeRecordElements;
     }
 
-    private DiffElement<String, OWLOntologyChangeRecord> toElement(OWLOntologyChangeRecord changeRecord) {
-        OWLOntologyID ontologyID = changeRecord.getOntologyID();
+    private DiffElement<String, OntologyChange> toElement(OntologyChange changeRecord) {
+        var ontologyID = changeRecord.getOntologyId();
         final String ontologyIRIShortForm;
         if(isRootOntologySingleton(ontologyID)) {
             ontologyIRIShortForm = "";
@@ -121,7 +121,7 @@ public class Revision2DiffElementsTranslator {
                 || projectOntologiesIndex.getOntologyIds().count() == 1;
     }
 
-    private DiffOperation getDiffOperation(OWLOntologyChangeRecord changeRecord) {
-        return changeRecord.getData().accept(changeOperationVisitor);
+    private DiffOperation getDiffOperation(OntologyChange changeRecord) {
+        return changeRecord.accept(changeOperationVisitor);
     }
 }

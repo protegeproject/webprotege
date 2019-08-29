@@ -464,11 +464,8 @@ public class ChangeManager implements HasApplyChanges {
         // Generate a description for the changes that were actually applied
         var changeDescription = changeList.getMessage(finalResult);
 
-        var changeRecords = changes.stream()
-                                   .map(OntologyChange::toOwlOntologyChangeRecord)
-                                   .collect(toImmutableList());
         // Log the changes
-        var revision = changeManager.addRevision(userId, changeRecords, changeDescription);
+        var revision = changeManager.addRevision(userId, changes, changeDescription);
 
         classHierarchyProvider.handleChanges(changes);
         objectPropertyHierarchyProvider.handleChanges(changes);

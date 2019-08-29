@@ -111,4 +111,14 @@ public class OntologyChangeList_TestCase<R> {
         var changeList = changeListBuilder.build(subject);
         assertThat(changeList.getChanges(), hasItem(change));
     }
+
+    @Test
+    public void shouldBeNonEmpty() {
+        changeListBuilder.add(ontologyChange);
+        assertThat(changeListBuilder.isEmpty(), is(false));
+    }
+    @Test
+    public void shouldBeEmpty() {
+        assertThat(changeListBuilder.isEmpty(), is(true));
+    }
 }

@@ -3,6 +3,10 @@ package edu.stanford.bmir.protege.web.server.revision;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomSubjectProvider;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeVisitorEx;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.HasIRI;
 import org.semanticweb.owlapi.model.IRI;
@@ -29,9 +33,9 @@ public class RevisionDetailsExtractor {
         ImmutableList.Builder<RevisionDetails.ChangeDetails> builder = ImmutableList.builder();
         ImmutableSet.Builder<IRI> subjectsBuilder = ImmutableSet.builder();
         revision.getChanges().stream()
-                .filter(chg -> chg.getData() instanceof AxiomChangeData)
+                .filter(OntologyChange::isAxiomChange)
                 .peek(chg -> {
-                    axiomSubjectProvider.getSubject(((AxiomChangeData) chg.getData()).getAxiom())
+                    axiomSubjectProvider.getSubject(chg.getAxiomOrThrow())
                     .ifPresent(subject -> {
                         if(subject instanceof IRI) {
                             subjectsBuilder.add((IRI) subject);
@@ -54,45 +58,26 @@ public class RevisionDetailsExtractor {
     }
 
 
-    private static RevisionDetails.ChangeDetails toChangeDetails(@Nonnull OWLOntologyChangeRecord record) {
-        return record.getData().accept(MAPPING_VISITOR);
+    private static RevisionDetails.ChangeDetails toChangeDetails(@Nonnull OntologyChange change) {
+        return change.accept(MAPPING_VISITOR);
     }
 
-    private static final OWLOntologyChangeDataVisitor<RevisionDetails.ChangeDetails, RuntimeException> MAPPING_VISITOR = new OWLOntologyChangeDataVisitor<RevisionDetails.ChangeDetails, RuntimeException>() {
+    private static final OntologyChangeVisitorEx<RevisionDetails.ChangeDetails> MAPPING_VISITOR = new OntologyChangeVisitorEx<>() {
+
+        @Override
+        public RevisionDetails.ChangeDetails getDefaultReturnValue() {
+            return null;
+        }
+
         @Nonnull
         @Override
-        public RevisionDetails.ChangeDetails visit(AddAxiomData data) {
-            return new RevisionDetails.ChangeDetails(RevisionDetails.ChangeOperation.ADD, data.getAxiom());
+        public RevisionDetails.ChangeDetails visit(@Nonnull AddAxiomChange change) {
+            return new RevisionDetails.ChangeDetails(RevisionDetails.ChangeOperation.ADD, change.getAxiom());
         }
 
         @Override
-        public RevisionDetails.ChangeDetails visit(RemoveAxiomData data) {
-            return new RevisionDetails.ChangeDetails(RevisionDetails.ChangeOperation.REMOVE, data.getAxiom());
-        }
-
-        @Override
-        public RevisionDetails.ChangeDetails visit(AddOntologyAnnotationData data) {
-            return null;
-        }
-
-        @Override
-        public RevisionDetails.ChangeDetails visit(RemoveOntologyAnnotationData data) {
-            return null;
-        }
-
-        @Override
-        public RevisionDetails.ChangeDetails visit(SetOntologyIDData data) {
-            return null;
-        }
-
-        @Override
-        public RevisionDetails.ChangeDetails visit(AddImportData data) {
-            return null;
-        }
-
-        @Override
-        public RevisionDetails.ChangeDetails visit(RemoveImportData data) {
-            return null;
+        public RevisionDetails.ChangeDetails visit(@Nonnull RemoveAxiomChange change) {
+            return new RevisionDetails.ChangeDetails(RevisionDetails.ChangeOperation.REMOVE, change.getAxiom());
         }
     };
 

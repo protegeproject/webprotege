@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -46,12 +45,13 @@ public class RevisionManagerImpl implements RevisionManager {
     @Nonnull
     @Override
     public Revision addRevision(@Nonnull UserId userId,
-                                @Nonnull List<? extends OWLOntologyChangeRecord> changes,
+                                @Nonnull List<OntologyChange> changes,
                                 @Nonnull String desc) {
         try {
             writeLock.lock();
             long timestamp = System.currentTimeMillis();
-            RevisionNumber revisionNumber = revisionStore.getCurrentRevisionNumber().getNextRevisionNumber();
+            RevisionNumber revisionNumber = revisionStore.getCurrentRevisionNumber()
+                                                         .getNextRevisionNumber();
             final Revision revision = new Revision(
                     userId,
                     revisionNumber,
@@ -78,41 +78,43 @@ public class RevisionManagerImpl implements RevisionManager {
         try {
             OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
             final OWLOntologyID singletonOntologyId = new OWLOntologyID();
-            for (Revision rev : revisionStore.getRevisions()) {
-                if (rev.getRevisionNumber().compareTo(revision) <= 0) {
-                    for (OWLOntologyChangeRecord record : rev) {
+            for(Revision rev : revisionStore.getRevisions()) {
+                if(rev.getRevisionNumber()
+                      .compareTo(revision) <= 0) {
+                    for(OntologyChange record : rev) {
                         // Anonymous ontologies are not handled nicely at all.
-                        OWLOntologyChangeRecord normalisedChangeRecord = normaliseChangeRecord(record,
-                                                                                               singletonOntologyId);
-                        OWLOntologyID ontologyId = normalisedChangeRecord.getOntologyID();
-                        if (!manager.contains(ontologyId)) {
+                        var normalisedChangeRecord = normaliseChangeRecord(record, singletonOntologyId);
+                        var ontologyId = normalisedChangeRecord.getOntologyId();
+                        if(!manager.contains(ontologyId)) {
                             manager.createOntology(ontologyId);
                         }
-
-                        OWLOntologyChange change = normalisedChangeRecord.createOntologyChange(manager);
+                        var change = normalisedChangeRecord
+                                .toOwlOntologyChangeRecord()
+                                .createOntologyChange(manager);
                         manager.applyChange(change);
                     }
                 }
             }
-            if (manager.getOntologies().isEmpty()) {
+            if(manager.getOntologies()
+                      .isEmpty()) {
                 // No revisions exported.  Just create an empty ontology
                 manager.createOntology();
             }
             return manager;
-        } catch (OWLOntologyCreationException e) {
+        } catch(OWLOntologyCreationException e) {
             throw new RuntimeException("Problem creating ontology: " + e);
         }
     }
 
-    private OWLOntologyChangeRecord normaliseChangeRecord(OWLOntologyChangeRecord changeRecord,
-                                                          OWLOntologyID singletonAnonymousId) {
-        OWLOntologyID ontologyID = changeRecord.getOntologyID();
-        if (ontologyID.isAnonymous()) {
-            return new OWLOntologyChangeRecord(singletonAnonymousId, changeRecord.getData());
+    private OntologyChange normaliseChangeRecord(@Nonnull OntologyChange change,
+                                                 @Nonnull OWLOntologyID singletonAnonymousId) {
+        var ontologyID = change.getOntologyId();
+        if(ontologyID.isAnonymous()) {
+            return change.replaceOntologyId(singletonAnonymousId);
         }
         else {
             // As is
-            return changeRecord;
+            return change;
         }
     }
 
@@ -143,21 +145,21 @@ public class RevisionManagerImpl implements RevisionManager {
 
     }
 
-
-    @Nonnull
-    @Override
-    public List<RevisionSummary> getRevisionSummaries() {
-        return revisionStore.getRevisions().stream()
-                            .map(RevisionManagerImpl::toRevisionSummary)
-                            .collect(toList());
-    }
-
     private static RevisionSummary toRevisionSummary(Revision revision) {
         return new RevisionSummary(revision.getRevisionNumber(),
                                    revision.getUserId(),
                                    revision.getTimestamp(),
                                    revision.getSize(),
                                    revision.getHighLevelDescription());
+    }
+
+    @Nonnull
+    @Override
+    public List<RevisionSummary> getRevisionSummaries() {
+        return revisionStore.getRevisions()
+                            .stream()
+                            .map(RevisionManagerImpl::toRevisionSummary)
+                            .collect(toList());
     }
 
 }

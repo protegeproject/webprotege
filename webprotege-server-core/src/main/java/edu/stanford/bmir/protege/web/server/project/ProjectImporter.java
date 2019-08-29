@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFileProvider;
@@ -17,10 +18,6 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
-import org.semanticweb.owlapi.change.AddAxiomData;
-import org.semanticweb.owlapi.change.AddImportData;
-import org.semanticweb.owlapi.change.AddOntologyAnnotationData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +60,8 @@ public class ProjectImporter {
                 new ProjectDirectoryFactory(dataDirectory), projectId).get();
         this.revisionStore = new RevisionStoreImpl(projectId,
                                                    new ChangeHistoryFileProvider(projectDirectory).get(),
-                                                   new OWLDataFactoryImpl());
+                                                   new OWLDataFactoryImpl(),
+                                                   new OntologyChangeRecordTranslatorImpl());
         this.uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractor;
         this.revisionStore.load();
     }
@@ -96,7 +94,7 @@ public class ProjectImporter {
     }
 
     private void generateInitialChanges(UserId owner, OWLOntologyManager rootOntologyManager) {
-        ImmutableList<OWLOntologyChangeRecord> changeRecords = getInitialChangeRecords(rootOntologyManager);
+        ImmutableList<OntologyChange> changeRecords = getInitialChangeRecords(rootOntologyManager);
         logger.info("{} Writing initial revision containing {} change records", projectId, changeRecords.size());
         Stopwatch stopwatch = Stopwatch.createStarted();
         revisionStore.addRevision(
@@ -109,21 +107,20 @@ public class ProjectImporter {
         logger.info("{} Initial revision written in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
-    private ImmutableList<OWLOntologyChangeRecord> getInitialChangeRecords(OWLOntologyManager rootOntologyManager) {
-        ImmutableList.Builder<OWLOntologyChangeRecord> changeRecordList = ImmutableList.builder();
+    private ImmutableList<OntologyChange> getInitialChangeRecords(OWLOntologyManager rootOntologyManager) {
+        ImmutableList.Builder<OntologyChange> changeRecordList = ImmutableList.builder();
         for (OWLOntology ont : rootOntologyManager.getOntologies()) {
             logger.info("{} Processing ontology source ({} axioms)", projectId, ont.getAxiomCount());
             rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
             for (OWLAxiom axiom : ont.getAxioms()) {
-                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddAxiomData(axiom)));
+                changeRecordList.add(AddAxiomChange.of(ont.getOntologyID(), axiom));
             }
             for (OWLAnnotation annotation : ont.getAnnotations()) {
-                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(),
-                                                                 new AddOntologyAnnotationData(annotation)));
+                changeRecordList.add(AddOntologyAnnotationChange.of(ont.getOntologyID(), annotation));
             }
             for (OWLImportsDeclaration importsDeclaration : ont.getImportsDeclarations()) {
-                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(),
-                                                                 new AddImportData(importsDeclaration)));
+                changeRecordList.add(AddImportChange.of(ont.getOntologyID(),
+                                                        importsDeclaration));
             }
         }
         return changeRecordList.build();

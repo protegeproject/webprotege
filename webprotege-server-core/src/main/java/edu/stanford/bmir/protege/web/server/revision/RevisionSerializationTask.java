@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.binaryowl.BinaryOWLOntologyChangeLog;
 import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
@@ -7,6 +8,9 @@ import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,9 +24,15 @@ public class RevisionSerializationTask implements Callable<Integer> {
 
     private final Revision revision;
 
+    private Runnable savedHook = () -> {};
+
     public RevisionSerializationTask(File file, Revision revision) {
         this.file = file;
         this.revision = revision;
+    }
+
+    public void setSavedHook(Runnable savedHook) {
+        this.savedHook = checkNotNull(savedHook);
     }
 
     public Integer call() throws IOException {
@@ -32,7 +42,12 @@ public class RevisionSerializationTask implements Callable<Integer> {
         metadata.setStringAttribute(RevisionSerializationVocabulary.DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), revision.getHighLevelDescription());
         metadata.setStringAttribute(RevisionSerializationVocabulary.REVISION_TYPE_META_DATA_ATTRIBUTE.getVocabularyName(), RevisionType.EDIT.name());
         BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();
-        changeLog.appendChanges(new OntologyChangeRecordList(revision.getTimestamp(), metadata, revision.getChanges()), file);
+        var changeRecords = revision.getChanges()
+                .stream()
+                .map(OntologyChange::toOwlOntologyChangeRecord)
+                .collect(toImmutableList());
+        changeLog.appendChanges(new OntologyChangeRecordList(revision.getTimestamp(), metadata, changeRecords), file);
+        savedHook.run();
         return 0;
     }
 }
