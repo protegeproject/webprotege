@@ -132,7 +132,7 @@ public class RemoveImportChange_TestCase<R> {
 
     @Test
     public void shouldGetRevertingChange() {
-        var revertingChange = change.getRevertingChange();
+        var revertingChange = change.getInverseChange();
         assertThat(revertingChange, is(instanceOf(AddImportChange.class)));
         assertThat(revertingChange.getOntologyId(), is(ontologyId));
         assertThat(revertingChange.getImportsDeclaration(), is(importsDeclaration));

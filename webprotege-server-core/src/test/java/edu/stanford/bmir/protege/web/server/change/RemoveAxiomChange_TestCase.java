@@ -152,7 +152,7 @@ public class RemoveAxiomChange_TestCase<R> {
 
     @Test
     public void shouldGetRevertingChange() {
-        var revertingChange = change.getRevertingChange();
+        var revertingChange = change.getInverseChange();
         assertThat(revertingChange, is(instanceOf(AddAxiomChange.class)));
         assertThat(revertingChange.getOntologyId(), is(ontologyId));
         assertThat(revertingChange.getAxiom(), is(axiom));

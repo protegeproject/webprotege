@@ -65,7 +65,7 @@ public abstract class AddOntologyAnnotationChange implements OntologyAnnotationC
 
     @Nonnull
     @Override
-    public RemoveOntologyAnnotationChange getRevertingChange() {
+    public RemoveOntologyAnnotationChange getInverseChange() {
         return RemoveOntologyAnnotationChange.of(getOntologyId(), getAnnotation());
     }
 }

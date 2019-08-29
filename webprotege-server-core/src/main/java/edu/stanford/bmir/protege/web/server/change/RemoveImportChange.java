@@ -50,7 +50,7 @@ public abstract class RemoveImportChange implements OntologyImportChange {
 
     @Nonnull
     @Override
-    public AddImportChange getRevertingChange() {
+    public AddImportChange getInverseChange() {
         return AddImportChange.of(getOntologyId(), getImportsDeclaration());
     }
 }

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -154,7 +153,7 @@ public class AddAxiomChange_TestCase<R> {
 
     @Test
     public void shouldGetRevertingChange() {
-        var revertingChange = change.getRevertingChange();
+        var revertingChange = change.getInverseChange();
         assertThat(revertingChange, is(instanceOf(RemoveAxiomChange.class)));
         assertThat(revertingChange.getOntologyId(), is(ontologyId));
         assertThat(revertingChange.getAxiom(), is(axiom));

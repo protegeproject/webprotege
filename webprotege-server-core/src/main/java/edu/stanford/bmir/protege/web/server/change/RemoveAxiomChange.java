@@ -47,7 +47,7 @@ public abstract class RemoveAxiomChange implements AxiomChange {
 
     @Nonnull
     @Override
-    public AddAxiomChange getRevertingChange() {
+    public AddAxiomChange getInverseChange() {
         return AddAxiomChange.of(getOntologyId(), getAxiom());
     }
 

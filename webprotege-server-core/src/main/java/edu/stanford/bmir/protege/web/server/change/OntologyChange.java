@@ -79,5 +79,5 @@ public interface OntologyChange {
     }
 
     @Nonnull
-    OntologyChange getRevertingChange();
+    OntologyChange getInverseChange();
 }
