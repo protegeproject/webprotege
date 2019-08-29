@@ -17,8 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -149,5 +148,18 @@ public class AddOntologyAnnotationChange_TestCase<R> {
         assertThat(revertingChange, is(instanceOf(RemoveOntologyAnnotationChange.class)));
         assertThat(revertingChange.getOntologyId(), is(ontologyId));
         assertThat(revertingChange.getAnnotation(), is(ontologyAnnotation));
+    }
+
+    @Test
+    public void shouldReplaceOntologyId() {
+        var otherOntologyId = mock(OWLOntologyID.class);
+        var replaced = change.replaceOntologyId(otherOntologyId);
+        assertThat(replaced.getOntologyId(), is(otherOntologyId));
+    }
+
+    @Test
+    public void shouldReturnSameForSameOntologyId() {
+        var replaced = change.replaceOntologyId(ontologyId);
+        assertThat(replaced, is(sameInstance(change)));
     }
 }
