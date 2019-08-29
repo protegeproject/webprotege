@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
@@ -130,5 +131,22 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
         var changeRecord = change.toOwlOntologyChangeRecord();
         assertThat(changeRecord.getOntologyID(), is(ontologyId));
         assertThat(changeRecord.getData(), is(new RemoveOntologyAnnotationData(ontologyAnnotation)));
+    }
+
+    public void shouldGetAnnotationOrThrow() {
+        assertThat(change.getAnnotation(), is(ontologyAnnotation));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void shouldGetImportsDeclarationOrThrow() {
+        change.getImportsDeclarationOrThrow();
+    }
+
+    @Test
+    public void shouldGetRevertingChange() {
+        var revertingChange = change.getRevertingChange();
+        assertThat(revertingChange, is(instanceOf(AddOntologyAnnotationChange.class)));
+        assertThat(revertingChange.getOntologyId(), is(ontologyId));
+        assertThat(revertingChange.getAnnotation(), is(ontologyAnnotation));
     }
 }

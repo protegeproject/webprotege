@@ -21,4 +21,10 @@ public interface OntologyAnnotationChange extends OntologyChange {
     default Set<OWLEntity> getSignature() {
         return getAnnotation().getSignature();
     }
+
+    @Nonnull
+    @Override
+    default OWLAnnotation getAnnotationOrThrow() {
+        return getAnnotation();
+    }
 }

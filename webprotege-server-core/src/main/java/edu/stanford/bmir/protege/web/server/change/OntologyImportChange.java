@@ -29,4 +29,10 @@ public interface OntologyImportChange extends OntologyChange {
     default Set<OWLEntity> getSignature() {
         return Collections.emptySet();
     }
+
+    @Nonnull
+    @Override
+    default OWLImportsDeclaration getImportsDeclarationOrThrow() {
+        return getImportsDeclaration();
+    }
 }

@@ -36,6 +36,23 @@ public abstract class RemoveAxiomChange implements AxiomChange {
 
     @Nonnull
     @Override
+    public RemoveAxiomChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
+        if(getOntologyId().equals(ontologyId)) {
+            return this;
+        }
+        else {
+            return RemoveAxiomChange.of(ontologyId, getAxiom());
+        }
+    }
+
+    @Nonnull
+    @Override
+    public AddAxiomChange getRevertingChange() {
+        return AddAxiomChange.of(getOntologyId(), getAxiom());
+    }
+
+    @Nonnull
+    @Override
     public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
         return new OWLOntologyChangeRecord(getOntologyId(), new RemoveAxiomData(getAxiom()));
     }

@@ -27,6 +27,17 @@ public abstract class RemoveImportChange implements OntologyImportChange {
         return new OWLOntologyChangeRecord(getOntologyId(), new RemoveImportData(getImportsDeclaration()));
     }
 
+    @Nonnull
+    @Override
+    public RemoveImportChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
+        if(getOntologyId().equals(ontologyId)) {
+            return this;
+        }
+        else {
+            return RemoveImportChange.of(ontologyId, getImportsDeclaration());
+        }
+    }
+
     @Override
     public void accept(@Nonnull OntologyChangeVisitor visitor) {
         visitor.visit(this);
@@ -35,5 +46,11 @@ public abstract class RemoveImportChange implements OntologyImportChange {
     @Override
     public <R> R accept(@Nonnull OntologyChangeVisitorEx<R> visitorEx) {
         return visitorEx.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public AddImportChange getRevertingChange() {
+        return AddImportChange.of(getOntologyId(), getImportsDeclaration());
     }
 }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +14,11 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
@@ -138,5 +141,23 @@ public class AddAxiomChange_TestCase<R> {
         var changeRecord = change.toOwlOntologyChangeRecord();
         assertThat(changeRecord.getOntologyID(), is(ontologyId));
         assertThat(changeRecord.getData(), is(new AddAxiomData(axiom)));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void shouldGetAnnotationOrThrow() {
+        change.getAnnotationOrThrow();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void shouldGetImportsDeclarationOrThrow() {
+        change.getImportsDeclarationOrThrow();
+    }
+
+    @Test
+    public void shouldGetRevertingChange() {
+        var revertingChange = change.getRevertingChange();
+        assertThat(revertingChange, is(instanceOf(RemoveAxiomChange.class)));
+        assertThat(revertingChange.getOntologyId(), is(ontologyId));
+        assertThat(revertingChange.getAxiom(), is(axiom));
     }
 }

@@ -36,6 +36,17 @@ public abstract class AddAxiomChange implements AxiomChange {
 
     @Nonnull
     @Override
+    public AddAxiomChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
+        if(ontologyId.equals(getOntologyId())) {
+            return this;
+        }
+        else {
+            return AddAxiomChange.of(ontologyId, getAxiom());
+        }
+    }
+
+    @Nonnull
+    @Override
     public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
         return new OWLOntologyChangeRecord(getOntologyId(), new AddAxiomData(getAxiom()));
     }
@@ -48,5 +59,11 @@ public abstract class AddAxiomChange implements AxiomChange {
     @Override
     public <R> R accept(@Nonnull OntologyChangeVisitorEx<R> visitorEx) {
         return visitorEx.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public RemoveAxiomChange getRevertingChange() {
+        return RemoveAxiomChange.of(getOntologyId(), getAxiom());
     }
 }

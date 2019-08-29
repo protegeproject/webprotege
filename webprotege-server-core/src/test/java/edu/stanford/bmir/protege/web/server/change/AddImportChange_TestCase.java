@@ -14,8 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -121,5 +120,22 @@ public class AddImportChange_TestCase<R> {
         var changeRecord = change.toOwlOntologyChangeRecord();
         assertThat(changeRecord.getOntologyID(), is(ontologyId));
         assertThat(changeRecord.getData(), is(new AddImportData(importsDeclaration)));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void shouldGetAnnotationOrThrow() {
+        change.getAnnotationOrThrow();
+    }
+
+    public void shouldGetImportsDeclarationOrThrow() {
+        assertThat(change.getImportsDeclarationOrThrow(), is(importsDeclaration));
+    }
+
+    @Test
+    public void shouldGetRevertingChange() {
+        var revertingChange = change.getRevertingChange();
+        assertThat(revertingChange, is(instanceOf(RemoveImportChange.class)));
+        assertThat(revertingChange.getOntologyId(), is(ontologyId));
+        assertThat(revertingChange.getImportsDeclaration(), is(importsDeclaration));
     }
 }

@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import java.util.NoSuchElementException;
@@ -54,6 +51,9 @@ public interface OntologyChange {
     OntologyChange replaceIris(@Nonnull IriReplacer iriReplacer);
 
     @Nonnull
+    OntologyChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId);
+
+    @Nonnull
     OWLOntologyChangeRecord toOwlOntologyChangeRecord();
 
     default boolean isRemoveOntologyAnnotation() {
@@ -67,4 +67,17 @@ public interface OntologyChange {
     void accept(@Nonnull OntologyChangeVisitor visitor);
 
     <R> R accept(@Nonnull OntologyChangeVisitorEx<R> visitorEx);
+
+    @Nonnull
+    default OWLAnnotation getAnnotationOrThrow() {
+        throw new NoSuchElementException();
+    }
+
+    @Nonnull
+    default OWLImportsDeclaration getImportsDeclarationOrThrow() {
+        throw new NoSuchElementException();
+    }
+
+    @Nonnull
+    OntologyChange getRevertingChange();
 }

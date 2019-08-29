@@ -33,6 +33,17 @@ public abstract class AddOntologyAnnotationChange implements OntologyAnnotationC
 
     @Nonnull
     @Override
+    public AddOntologyAnnotationChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
+        if(getOntologyId().equals(ontologyId)) {
+            return this;
+        }
+        else {
+            return AddOntologyAnnotationChange.of(ontologyId, getAnnotation());
+        }
+    }
+
+    @Nonnull
+    @Override
     public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
         return new OWLOntologyChangeRecord(getOntologyId(), new AddOntologyAnnotationData(getAnnotation()));
     }
@@ -50,5 +61,11 @@ public abstract class AddOntologyAnnotationChange implements OntologyAnnotationC
     @Override
     public <R> R accept(@Nonnull OntologyChangeVisitorEx<R> visitorEx) {
         return visitorEx.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public RemoveOntologyAnnotationChange getRevertingChange() {
+        return RemoveOntologyAnnotationChange.of(getOntologyId(), getAnnotation());
     }
 }
