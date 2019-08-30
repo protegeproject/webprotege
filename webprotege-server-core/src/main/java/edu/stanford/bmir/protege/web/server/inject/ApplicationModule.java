@@ -28,6 +28,7 @@ import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
@@ -160,7 +161,7 @@ public class ApplicationModule {
     @ApplicationSingleton
     @ApplicationDataFactory
     public OWLDataFactory provideOWLDataFactory() {
-        return new OWLDataFactoryImpl();
+        return new NonCachingDataFactory(new OWLDataFactoryImpl());
     }
 
     @Provides
