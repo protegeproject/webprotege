@@ -77,14 +77,14 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
         final String emailAddress = action.getResetPasswordData().getEmailAddress();
         try {
             Optional<UserId> userId = userDetailsManager.getUserByUserIdOrEmail(emailAddress);
-            if(!userId.isPresent()) {
+            if(userId.isEmpty()) {
                 return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
             }
             Optional<UserDetails> userDetails = userDetailsManager.getUserDetails(userId.get());
-            if(!userDetails.isPresent()) {
+            if(userDetails.isEmpty()) {
                 return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
             }
-            if(!userDetails.get().getEmailAddress().isPresent()) {
+            if(userDetails.get().getEmailAddress().isEmpty()) {
                 return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
             }
             if(!userDetails.get().getEmailAddress().get().equalsIgnoreCase(emailAddress)) {
