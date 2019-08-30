@@ -47,11 +47,6 @@ public class ChangeApplicationResult<S> implements HasSubject<S> {
     }
 
     @Nonnull
-    public <E extends OWLEntity> E getRenamedEntity(E entity) {
-        return renameMap.getRenamedEntity(entity);
-    }
-
-    @Nonnull
     @Override
     public S getSubject() {
         return subject;
