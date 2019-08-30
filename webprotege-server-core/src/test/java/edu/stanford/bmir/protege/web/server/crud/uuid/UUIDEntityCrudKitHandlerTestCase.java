@@ -34,6 +34,8 @@ import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.owlThing;
 import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueAndLang.rdfsLabelWithLexicalValueAndLang;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -98,6 +100,35 @@ public class UUIDEntityCrudKitHandlerTestCase {
         handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
         when(entitiesInSignature.getEntityInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());
+    }
+
+    @Test
+    public void shouldGetSuppliedPrefixSettings() {
+        assertThat(handler.getPrefixSettings(), is(prefixSettings));
+    }
+
+    @Test
+    public void shouldGetSuppliedSuffixSettings() {
+        assertThat(handler.getSuffixSettings(), is(suffixSettings));
+    }
+
+    @Test
+    public void shouldGetSettings() {
+        var settings = handler.getSettings();
+        assertThat(settings.getPrefixSettings(), is(prefixSettings));
+        assertThat(settings.getSuffixSettings(), is(suffixSettings));
+    }
+
+    @Test
+    public void shouldGetKitId() {
+        var kitId = handler.getKitId();
+        assertThat(kitId, is(suffixSettings.getKitId()));
+    }
+
+    @Test
+    public void shouldCreateSession() {
+        var session = handler.createChangeSetSession();
+        assertThat(session, is(not(nullValue())));
     }
 
     @Test
