@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.project.chg;
 
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
+import edu.stanford.bmir.protege.web.server.change.OwlOntologyChangeTranslator;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,15 +18,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 class OntologyStoreImpl extends OntologyStore {
 
+    @Nonnull
     private final OWLOntology rootOntology;
 
-    private final OntologyChangeRecordTranslator changeRecordTranslator;
+    @Nonnull
+    private final OwlOntologyChangeTranslator owlOntologyChangeTranslator;
+
+    @Nonnull
+    private final OntologyChangeTranslator ontologyChangeTranslator;
 
     @Inject
-    public OntologyStoreImpl(OWLOntology rootOntology,
-                             OntologyChangeRecordTranslator changeRecordTranslator) {
+    public OntologyStoreImpl(@Nonnull OWLOntology rootOntology,
+                             @Nonnull OwlOntologyChangeTranslator owlOntologyChangeTranslator,
+                             @Nonnull OntologyChangeTranslator ontologyChangeTranslator) {
         this.rootOntology = checkNotNull(rootOntology);
-        this.changeRecordTranslator = changeRecordTranslator;
+        this.owlOntologyChangeTranslator = checkNotNull(owlOntologyChangeTranslator);
+        this.ontologyChangeTranslator = checkNotNull(ontologyChangeTranslator);
     }
 
 
@@ -36,15 +42,13 @@ class OntologyStoreImpl extends OntologyStore {
         checkNotNull(changes);
         var ontologyManager = rootOntology.getOWLOntologyManager();
         var owlOntologyChanges = changes.stream()
-               .map(OntologyChange::toOwlOntologyChangeRecord)
-               .map(rec -> rec.createOntologyChange(ontologyManager))
+               .map(ontologyChangeTranslator::toOwlOntologyChange)
                .collect(Collectors.toList());
         var manager = ((ProjectOWLOntologyManager) ontologyManager).getDelegate();
         var appliedOwlOntologyChanges = manager.applyChangesAndGetDetails(owlOntologyChanges)
                                                .getEnactedChanges();
         return appliedOwlOntologyChanges.stream()
-                                 .map(OWLOntologyChange::getChangeRecord)
-                                 .map(changeRecordTranslator::getOntologyChange)
+                                 .map(owlOntologyChangeTranslator::toOntologyChange)
                                  .collect(Collectors.toList());
 
     }
