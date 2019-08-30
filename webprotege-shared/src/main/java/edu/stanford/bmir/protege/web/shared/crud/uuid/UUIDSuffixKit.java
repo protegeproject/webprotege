@@ -17,7 +17,7 @@ import java.util.Optional;
  * Date: 13/08/2013
  */
 @ApplicationSingleton
-public final class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
+public class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
 
     public static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";
 
