@@ -340,7 +340,7 @@ public class ChangeManager implements HasApplyChanges {
     }
 
     @SuppressWarnings("unchecked")
-    public <S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getEntityCrudKitHandler() {
+    private <S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getEntityCrudKitHandler() {
         return (EntityCrudKitHandler<S, C>) entityCrudKitHandlerCache.getHandler();
     }
 
