@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
-import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.project.RawProjectSourcesImporter;
@@ -13,7 +12,6 @@ import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -30,15 +28,15 @@ import static java.util.stream.Collectors.toList;
 public class UploadedOntologiesProcessor {
 
     @Nonnull
-    private final File uploadsDirectory;
+    private final DocumentResolver documentResolver;
 
     @Nonnull
     private final Provider<UploadedProjectSourcesExtractor> uploadedProjectSourcesExtractorProvider;
 
     @Inject
-    public UploadedOntologiesProcessor(@Nonnull @UploadsDirectory File uploadsDirectory,
+    public UploadedOntologiesProcessor(@Nonnull DocumentResolver documentResolver,
                                        @Nonnull Provider<UploadedProjectSourcesExtractor> uploadedProjectSourcesExtractorProvider) {
-        this.uploadsDirectory = checkNotNull(uploadsDirectory);
+        this.documentResolver = checkNotNull(documentResolver);
         this.uploadedProjectSourcesExtractorProvider = uploadedProjectSourcesExtractorProvider;
     }
 
@@ -49,7 +47,7 @@ public class UploadedOntologiesProcessor {
 
     private Collection<Ontology> loadOntologies(@Nonnull DocumentId documentId) throws IOException, OWLOntologyCreationException {
         var manager = WebProtegeOWLManager.createOWLOntologyManager();
-        var uploadedFile = new File(uploadsDirectory, documentId.getDocumentId());
+        var uploadedFile = documentResolver.resolve(documentId).toFile();
         var uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractorProvider.get();
         var rawProjectSources = uploadedProjectSourcesExtractor.extractProjectSources(uploadedFile);
         var loaderConfig = new OWLOntologyLoaderConfiguration();
@@ -63,6 +61,7 @@ public class UploadedOntologiesProcessor {
 
     private Ontology toOntology(OWLOntology ont) {
         return Ontology.get(ont.getOntologyID(),
+                            ont.getImportsDeclarations(),
                             ont.getAnnotations(),
                             ont.getAxioms());
     }

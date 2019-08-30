@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLImportsDeclaration;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,9 +34,13 @@ public class Ontology_TestCase {
     @Mock
     private OWLAxiom axiom;
 
+    @Mock
+    private OWLImportsDeclaration importsDeclaration;
+
     @Before
     public void setUp() {
         ontology = Ontology.get(ontologyId,
+                                ImmutableSet.of(importsDeclaration),
                                 ImmutableSet.of(annotation),
                                 ImmutableSet.of(axiom));
     }
@@ -43,6 +48,11 @@ public class Ontology_TestCase {
     @Test
     public void shouldGetSuppliedOntologyId() {
         assertThat(ontology.getOntologyId(), is(ontologyId));
+    }
+
+    @Test
+    public void shouldGetSuppliedImportsDeclaration() {
+        assertThat(ontology.getImportsDeclarations(), contains(importsDeclaration));
     }
 
     @Test
@@ -54,4 +64,5 @@ public class Ontology_TestCase {
     public void shouldGetSuppliedAxioms() {
         assertThat(ontology.getAxioms(), contains(axiom));
     }
+
 }

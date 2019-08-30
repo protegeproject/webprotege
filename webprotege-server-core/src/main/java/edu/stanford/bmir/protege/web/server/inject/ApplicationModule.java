@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
@@ -35,6 +37,8 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
+import edu.stanford.bmir.protege.web.server.upload.DocumentResolver;
+import edu.stanford.bmir.protege.web.server.upload.DocumentResolverImpl;
 import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
 import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.server.user.*;
@@ -324,5 +328,16 @@ public class ApplicationModule {
         cache.start();
         disposableObjectManager.register(cache);
         return cache;
+    }
+
+    @Provides
+    DocumentResolver provideDocumentResolver(DocumentResolverImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    OntologyChangeRecordTranslator provideOntologyChangeRecordTranslator(OntologyChangeRecordTranslatorImpl impl) {
+        return impl;
     }
 }

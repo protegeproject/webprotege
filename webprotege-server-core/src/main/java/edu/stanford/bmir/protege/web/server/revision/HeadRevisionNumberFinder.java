@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
-import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFileProvider;
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
+import edu.stanford.bmir.protege.web.server.inject.ChangeHistoryFileFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.binaryowl.BinaryOWLChangeLogHandler;
@@ -28,11 +27,11 @@ import static org.semanticweb.binaryowl.chunk.SkipSetting.SKIP_DATA;
 public class HeadRevisionNumberFinder {
 
     @Nonnull
-    private final ProjectDirectoryFactory projectDirectoryFactory;
+    private final ChangeHistoryFileFactory changeHistoryFileFactory;
 
     @Inject
-    public HeadRevisionNumberFinder(@Nonnull ProjectDirectoryFactory projectDirectoryFactory) {
-        this.projectDirectoryFactory = checkNotNull(projectDirectoryFactory);
+    public HeadRevisionNumberFinder(@Nonnull ChangeHistoryFileFactory changeHistoryFileFactory) {
+        this.changeHistoryFileFactory = checkNotNull(changeHistoryFileFactory);
     }
 
     /**
@@ -47,9 +46,7 @@ public class HeadRevisionNumberFinder {
             This method works fairly well, even for large
             projects, but it is only intended to be a stopgap and needs replacing.
          */
-        File projectDir = projectDirectoryFactory.getProjectDirectory(projectId);
-        ChangeHistoryFileProvider changeHistoryFileProvider = new ChangeHistoryFileProvider(projectDir);
-        File changeHistoryFile = changeHistoryFileProvider.get();
+        File changeHistoryFile = changeHistoryFileFactory.getChangeHistoryFile(projectId);
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(changeHistoryFile.toPath()))) {
             BinaryOWLOntologyChangeLog log = new BinaryOWLOntologyChangeLog();
             RevisionExtractor extractor = new RevisionExtractor();

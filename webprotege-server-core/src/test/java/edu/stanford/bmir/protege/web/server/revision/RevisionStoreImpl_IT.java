@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslatorImpl;
+import edu.stanford.bmir.protege.web.server.inject.ChangeHistoryFileFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -12,6 +13,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mock;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -23,6 +25,7 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.SubClassOf;
 
 /**
@@ -51,12 +54,17 @@ public class RevisionStoreImpl_IT {
 
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
+    @Mock
+    private ChangeHistoryFileFactory changeHistoryFileFactory;
+
     @Before
     public void setUp() throws IOException {
         temporaryFolder.create();
         projectId = ProjectId.get(UUID.randomUUID()
                                           .toString());
         changeHistoryFile = temporaryFolder.newFile();
+        when(changeHistoryFileFactory.getChangeHistoryFile(projectId))
+                .thenReturn(changeHistoryFile);
         dataFactory = new OWLDataFactoryImpl();
         changeRecordTranslator = new OntologyChangeRecordTranslatorImpl();
 
@@ -66,7 +74,7 @@ public class RevisionStoreImpl_IT {
         axiom = SubClassOf(clsA, clsB);
 
         store = new RevisionStoreImpl(projectId,
-                                      changeHistoryFile,
+                                      changeHistoryFileFactory,
                                       dataFactory,
                                       changeRecordTranslator);
     }
@@ -147,7 +155,7 @@ public class RevisionStoreImpl_IT {
     public void shouldLoadSavedRevision() {
         var revision = createRevision();
         store.addRevision(revision);
-        var otherStore = new RevisionStoreImpl(projectId, changeHistoryFile, dataFactory, changeRecordTranslator);
+        var otherStore = new RevisionStoreImpl(projectId, changeHistoryFileFactory, dataFactory, changeRecordTranslator);
         otherStore.load();
         var revisions = store.getRevisions();
         assertThat(revisions, contains(revision));

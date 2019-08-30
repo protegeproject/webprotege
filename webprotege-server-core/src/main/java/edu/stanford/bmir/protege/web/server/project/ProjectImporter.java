@@ -1,33 +1,28 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
-import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
-import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFileProvider;
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryProvider;
-import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
-import edu.stanford.bmir.protege.web.server.revision.RevisionStoreImpl;
+import edu.stanford.bmir.protege.web.server.revision.RevisionStoreFactory;
+import edu.stanford.bmir.protege.web.server.upload.DocumentResolver;
+import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.apache.commons.io.FileUtils;
-import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -41,62 +36,52 @@ public class ProjectImporter {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectImporter.class);
 
-    private final File uploadsDirectory;
+    @Nonnull
+    private final UploadedOntologiesProcessor uploadedOntologiesProcessor;
 
+    @Nonnull
+    private final DocumentResolver documentResolver;
+
+    @Nonnull
     private final ProjectId projectId;
 
-    private final RevisionStoreImpl revisionStore;
+    @Nonnull
+    private final RevisionStoreFactory revisionStoreFactory;
 
-    private final UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor;
-
+    @AutoFactory
     @Inject
     public ProjectImporter(ProjectId projectId,
-                           @Nonnull @UploadsDirectory File uploadsDirectory,
-                           @Nonnull @DataDirectory File dataDirectory,
-                           UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor) {
-        this.projectId = projectId;
-        this.uploadsDirectory = checkNotNull(uploadsDirectory);
-        File projectDirectory = new ProjectDirectoryProvider(
-                new ProjectDirectoryFactory(dataDirectory), projectId).get();
-        this.revisionStore = new RevisionStoreImpl(projectId,
-                                                   new ChangeHistoryFileProvider(projectDirectory).get(),
-                                                   new OWLDataFactoryImpl(),
-                                                   new OntologyChangeRecordTranslatorImpl());
-        this.uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractor;
-        this.revisionStore.load();
+                           @Provided @Nonnull UploadedOntologiesProcessor uploadedOntologiesProcessor,
+                           @Provided @Nonnull DocumentResolver documentResolver,
+                           @Provided @Nonnull RevisionStoreFactory revisionStoreFactory) {
+        this.projectId = checkNotNull(projectId);
+        this.uploadedOntologiesProcessor = checkNotNull(uploadedOntologiesProcessor);
+        this.documentResolver = checkNotNull(documentResolver);
+        this.revisionStoreFactory = checkNotNull(revisionStoreFactory);
     }
 
 
     public void createProjectFromSources(DocumentId sourcesId,
                                          UserId owner) throws IOException, OWLOntologyCreationException {
-        var uploadedFile = new File(uploadsDirectory, sourcesId.getDocumentId());
-        if(!uploadedFile.exists()) {
-            throw new FileNotFoundException(uploadedFile.getAbsolutePath());
-        }
-        var rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
-        var projectSources = uploadedProjectSourcesExtractor.extractProjectSources(uploadedFile);
-        var loaderConfig = new OWLOntologyLoaderConfiguration()
-                .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
-
         logger.info("{} Creating project from sources", projectId);
         var stopwatch = Stopwatch.createStarted();
-        var rawProjectSourcesImporter = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
-        rawProjectSourcesImporter.importRawProjectSources(projectSources);
+        var uploadedOntologies = uploadedOntologiesProcessor.getUploadedOntologies(sourcesId);
         logger.info("{} Loaded sources in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
         var memoryMonitor = new MemoryMonitor(logger);
         memoryMonitor.logMemoryUsage();
         logger.info("{} Writing change log", projectId);
-        generateInitialChanges(owner, rootOntologyManager);
-        deleteSourceFile(uploadedFile);
+        generateInitialChanges(owner, uploadedOntologies);
+        deleteSourceFile(sourcesId);
         logger.info("{} Project creation from sources complete in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
         memoryMonitor.logMemoryUsage();
 
     }
 
-    private void generateInitialChanges(UserId owner, OWLOntologyManager rootOntologyManager) {
-        ImmutableList<OntologyChange> changeRecords = getInitialChangeRecords(rootOntologyManager);
+    private void generateInitialChanges(UserId owner, Collection<Ontology> uploadedOntologies) {
+        ImmutableList<OntologyChange> changeRecords = getInitialChangeRecords(uploadedOntologies);
         logger.info("{} Writing initial revision containing {} change records", projectId, changeRecords.size());
         Stopwatch stopwatch = Stopwatch.createStarted();
+        var revisionStore = revisionStoreFactory.createRevisionStore(projectId);
         revisionStore.addRevision(
                 new Revision(
                         owner,
@@ -107,26 +92,30 @@ public class ProjectImporter {
         logger.info("{} Initial revision written in {} ms", projectId, stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
-    private ImmutableList<OntologyChange> getInitialChangeRecords(OWLOntologyManager rootOntologyManager) {
+    private ImmutableList<OntologyChange> getInitialChangeRecords(Collection<Ontology> ontologies) {
         ImmutableList.Builder<OntologyChange> changeRecordList = ImmutableList.builder();
-        for (OWLOntology ont : rootOntologyManager.getOntologies()) {
-            logger.info("{} Processing ontology source ({} axioms)", projectId, ont.getAxiomCount());
-            rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
-            for (OWLAxiom axiom : ont.getAxioms()) {
-                changeRecordList.add(AddAxiomChange.of(ont.getOntologyID(), axiom));
+        for (var ont : ontologies) {
+            var axioms = ont.getAxioms();
+            logger.info("{} Processing ontology source ({} axioms)", projectId, axioms.size());
+            for (var axiom : ont.getAxioms()) {
+                changeRecordList.add(AddAxiomChange.of(ont.getOntologyId(), axiom));
             }
-            for (OWLAnnotation annotation : ont.getAnnotations()) {
-                changeRecordList.add(AddOntologyAnnotationChange.of(ont.getOntologyID(), annotation));
+            for (var annotation : ont.getAnnotations()) {
+                changeRecordList.add(AddOntologyAnnotationChange.of(ont.getOntologyId(), annotation));
             }
-            for (OWLImportsDeclaration importsDeclaration : ont.getImportsDeclarations()) {
-                changeRecordList.add(AddImportChange.of(ont.getOntologyID(),
-                                                        importsDeclaration));
+            for (var importsDeclaration : ont.getImportsDeclarations()) {
+                changeRecordList.add(AddImportChange.of(ont.getOntologyId(), importsDeclaration));
             }
         }
         return changeRecordList.build();
     }
 
-    private void deleteSourceFile(File sourceFile) {
-        FileUtils.deleteQuietly(sourceFile);
+    private void deleteSourceFile(DocumentId sourceFileId) {
+        var sourceFilePath = documentResolver.resolve(sourceFileId);
+        try {
+            Files.deleteIfExists(sourceFilePath);
+        } catch(IOException e) {
+            logger.info("Could not delete uploaded file: {} Cause: {}", sourceFilePath, e.getMessage());
+        }
     }
 }

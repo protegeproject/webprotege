@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
@@ -56,6 +57,7 @@ public class ProjectOntologiesBuilder {
         var axioms = axiomsIndex.getAxioms(ontId)
                                 .collect(toImmutableSet());
         return Ontology.get(ontId,
+                            ImmutableSet.of(),
                             annotations, axioms);
     }
 }

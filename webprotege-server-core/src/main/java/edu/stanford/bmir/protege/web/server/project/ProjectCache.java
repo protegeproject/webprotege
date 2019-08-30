@@ -202,7 +202,7 @@ public class ProjectCache implements HasDispose {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
         Optional<DocumentId> sourceDocumentId = newProjectSettings.getSourceDocumentId();
         if(sourceDocumentId.isPresent()) {
-            ProjectImporter importer = projectImporterFactory.getProjectImporter(projectId);
+            ProjectImporter importer = projectImporterFactory.create(projectId);
             importer.createProjectFromSources(sourceDocumentId.get(), newProjectSettings.getProjectOwner());
         }
         return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER).getProjectId();

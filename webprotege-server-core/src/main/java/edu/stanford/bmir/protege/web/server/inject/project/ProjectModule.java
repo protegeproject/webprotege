@@ -833,11 +833,6 @@ public class ProjectModule {
     }
 
     @Provides
-    OntologyChangeRecordTranslator provideOntologyChangeRecordTranslator(OntologyChangeRecordTranslatorImpl impl) {
-        return impl;
-    }
-
-    @Provides
     EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndexImpl(EntitiesInProjectSignatureIndexImpl impl) {
         return impl;
     }

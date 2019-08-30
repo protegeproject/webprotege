@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeRecordTranslator;
-import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFile;
+import edu.stanford.bmir.protege.web.server.inject.ChangeHistoryFileFactory;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -18,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
@@ -51,11 +52,14 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
 
     private final Lock writeLock = readWriteLock.writeLock();
 
+    @Nonnull
     private final ProjectId projectId;
 
-    private final OWLDataFactory dataFactory;
+    @Nonnull
+    private final ChangeHistoryFileFactory changeHistoryFileFactory;
 
-    private final File changeHistoryFile;
+    @Nonnull
+    private final OWLDataFactory dataFactory;
 
     private ImmutableList<Revision> revisions = ImmutableList.of();
 
@@ -66,12 +70,12 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
 
     @Inject
     public RevisionStoreImpl(@Nonnull ProjectId projectId,
-                             @Nonnull @ChangeHistoryFile File changeHistoryFile,
+                             @Nonnull ChangeHistoryFileFactory changeHistoryFileFactory,
                              @Nonnull OWLDataFactory dataFactory,
                              @Nonnull OntologyChangeRecordTranslator changeRecordTranslator) {
         this.projectId = checkNotNull(projectId);
+        this.changeHistoryFileFactory = changeHistoryFileFactory;
         this.dataFactory = checkNotNull(dataFactory);
-        this.changeHistoryFile = checkNotNull(changeHistoryFile);
         this.changeRecordTranslator = changeRecordTranslator;
         changeSerializationExecutor = Executors.newSingleThreadExecutor(runnable -> {
             Thread thread = Executors.defaultThreadFactory().newThread(runnable);
@@ -173,6 +177,7 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
     private void persistChanges(Revision revision) {
         try {
             writeLock.lock();
+            var changeHistoryFile = changeHistoryFileFactory.getChangeHistoryFile(projectId);
             var revisionSerializationTask = new RevisionSerializationTask(changeHistoryFile, revision);
             revisionSerializationTask.setSavedHook(savedHook);
             if(revisions.size() != 1) {
@@ -196,6 +201,7 @@ public class RevisionStoreImpl implements RevisionStore, HasDispose {
     public void load() {
         try {
             writeLock.lock();
+            var changeHistoryFile = changeHistoryFileFactory.getChangeHistoryFile(projectId);
             if(!changeHistoryFile.exists()) {
                 changeHistoryFile.getParentFile().mkdirs();
                 return;

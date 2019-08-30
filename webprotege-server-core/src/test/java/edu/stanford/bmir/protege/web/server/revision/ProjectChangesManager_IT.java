@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.inject.ChangeHistoryFileFactory;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -74,18 +75,20 @@ public class ProjectChangesManager_IT {
     private DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Mock
-    private OWLOntologyID ontologyId;
+    private ChangeHistoryFileFactory changeHistoryFileFactory;
 
     @Before
     public void setUp() throws Exception {
         changeHistoryFile = temporaryFolder.newFile();
+        when(changeHistoryFileFactory.getChangeHistoryFile(projectId))
+                .thenReturn(changeHistoryFile);
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology rootOntology = manager.createOntology(IRI.create("http://stuff.com/ont"));
         OWLDataFactory dataFactory = manager.getOWLDataFactory();
         OntologyChangeRecordTranslator changeRecordTranslator = new OntologyChangeRecordTranslatorImpl();
         RevisionManager revisionManager = new RevisionManagerImpl(new RevisionStoreImpl(
                 projectId,
-                changeHistoryFile,
+                changeHistoryFileFactory,
                 dataFactory,
                 changeRecordTranslator));
         when(defaultOntologyIdManager.getDefaultOntologyId())
