@@ -38,7 +38,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -51,7 +50,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
@@ -96,8 +94,6 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final RevisionManager changeManager;
 
-    @Nonnull
-    private final OWLDataFactory dataFactory;
 
     @Nonnull
     private final DictionaryManager dictionaryManager;
@@ -159,7 +155,6 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull Provider<EventTranslatorManager> eventTranslatorManagerProvider,
                          @Nonnull ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache,
                          @Nonnull RevisionManager changeManager,
-                         @Nonnull OWLDataFactory dataFactory,
                          @Nonnull DictionaryManager dictionaryManager,
                          @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
@@ -184,7 +179,6 @@ public class ChangeManager implements HasApplyChanges {
         this.eventTranslatorManagerProvider = eventTranslatorManagerProvider;
         this.entityCrudKitHandlerCache = entityCrudKitHandlerCache;
         this.changeManager = changeManager;
-        this.dataFactory = dataFactory;
         this.dictionaryManager = dictionaryManager;
         this.classHierarchyProvider = classHierarchyProvider;
         this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
@@ -263,7 +257,7 @@ public class ChangeManager implements HasApplyChanges {
                             var shortName = extractShortNameFromFreshEntity(entityInSignature);
                             var langTag = extractLangTagFromFreshEntity(entityInSignature);
                             var entityType = extractEntityTypeFromFreshEntity(entityInSignature);
-                            var creator = getEntityCreator(changeSession, crudContext, userId, shortName, langTag, entityType);
+                            var creator = getEntityCreator(changeSession, crudContext, shortName, langTag, entityType);
                             changesToCreateFreshEntities.addAll(creator.getChanges());
                             var mintedIri = creator.getEntity().getIRI();
                             tempIri2MintedIri.put(tempIri, mintedIri);
@@ -398,7 +392,6 @@ public class ChangeManager implements HasApplyChanges {
 
     private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session,
                                                                        EntityCrudContext context,
-                                                                       UserId userId,
                                                                        String shortName,
                                                                        Optional<String> langTag,
                                                                        EntityType<E> entityType) {
