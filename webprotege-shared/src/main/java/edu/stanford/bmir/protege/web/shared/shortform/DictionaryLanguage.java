@@ -55,7 +55,7 @@ public abstract class DictionaryLanguage {
     @Nonnull
     public static DictionaryLanguage create(@Nullable @JsonProperty(PROPERTY_IRI) IRI annotationPropertyIri,
                                             @Nonnull @JsonProperty(LANG) String lang) {
-        return new AutoValue_DictionaryLanguage(annotationPropertyIri, lang.toLowerCase());
+        return new AutoValue_DictionaryLanguage(annotationPropertyIri, lowerCaseLangTag(lang));
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class DictionaryLanguage {
             normalisedLang = "";
         }
         else {
-            normalisedLang = lang.toLowerCase();
+            normalisedLang = lowerCaseLangTag(lang);
         }
         return new AutoValue_DictionaryLanguage(annotationPropertyIri, normalisedLang);
     }
@@ -117,5 +117,15 @@ public abstract class DictionaryLanguage {
 
     private boolean matchesAnnotationProperty(@Nonnull IRI annotationPropertyIri) {
         return Objects.equal(this.getAnnotationPropertyIri(), annotationPropertyIri);
+    }
+
+    public static String lowerCaseLangTag(String langTag) {
+        for(int i = 0; i < langTag.length(); i++) {
+            char ch = langTag.charAt(i);
+            if((ch < 'a' || ch > 'z') && ch != '-') {
+                return langTag.toLowerCase();
+            }
+        }
+        return langTag;
     }
 }
