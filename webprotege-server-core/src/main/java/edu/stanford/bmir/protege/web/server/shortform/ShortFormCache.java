@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
+import com.google.common.collect.*;
 import com.google.common.primitives.ImmutableIntArray;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -47,10 +44,9 @@ public class ShortFormCache {
 
     private ShortFormCache(int capacity) {
         this.entity2ShortFormMap = new ConcurrentHashMap<>(DEFAULT_CAPACITY);
-        // It might be wasteful to build this map up front.  It's only really used if
-        // users edit the project.  With large ontologies there could be an unfortable delay
-        // after project load though.
-        this.shortForm2EntityMap = Multimaps.synchronizedMultimap(HashMultimap.create(capacity, 1));
+        // There is likely to be one short form per entity.  Hash Multimaps are wasteful here
+        // so we're using a list multi-map with a capacity of one.
+        this.shortForm2EntityMap = Multimaps.synchronizedMultimap(ArrayListMultimap.create(capacity, 1));
 
     }
 
