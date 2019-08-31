@@ -65,6 +65,12 @@ public enum WellKnownLabellingIris {
     }
 
     public static boolean isWellKnownLabellingIri(@Nonnull IRI iri) {
-        return BY_IRI.containsKey(iri);
+        WellKnownLabellingIris[] values = values();
+        for(WellKnownLabellingIris knownLabellingIri : values) {
+            if(knownLabellingIri.getIri().equals(iri)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
