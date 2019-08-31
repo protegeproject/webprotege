@@ -5,22 +5,26 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguageComparators;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris.isWellKnownLabellingIri;
@@ -42,16 +46,22 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
 
     private final ProjectId projectId;
 
-    private final AnnotationAssertionAxiomsIndex annotationAssertions;
+    private final AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
 
     private final Multiset<DictionaryLanguage> activeLangs = HashMultiset.create();
 
     private ImmutableList<DictionaryLanguage> sortedLanguages = null;
 
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
+
     @Inject
-    public ActiveLanguagesManagerImpl(ProjectId projectId, AnnotationAssertionAxiomsIndex annotationAssertions) {
+    public ActiveLanguagesManagerImpl(@Nonnull ProjectId projectId,
+                                      @Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex,
+                                      @Nonnull ProjectOntologiesIndex projectOntologiesIndex) {
         this.projectId = projectId;
-        this.annotationAssertions = annotationAssertions;
+        this.axiomsByEntityReferenceIndex = axiomsByEntityReferenceIndex;
+        this.projectOntologiesIndex = projectOntologiesIndex;
     }
 
     private static boolean isLabellingAnnotation(OWLAnnotationAssertionAxiom ax) {
@@ -123,9 +133,15 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
     private void rebuild() {
         activeLangs.clear();
         Stopwatch stopwatch = Stopwatch.createStarted();
-        annotationAssertions.getAnnotationAssertionAxioms()
-                    .filter(ActiveLanguagesManagerImpl::isLabellingAnnotation)
-                    .forEach(this::addAxiom);
+        projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+            Stream.of(WellKnownLabellingIris.values())
+                  .map(labellingIri -> new OWLAnnotationPropertyImpl(labellingIri.getIri()))
+                  .flatMap(prop -> axiomsByEntityReferenceIndex.getReferencingAxioms(prop, ontId))
+                  .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
+                  .map(ax -> (OWLAnnotationAssertionAxiom) ax)
+                  .filter(ax -> ax.getValue().isLiteral())
+                  .forEach(this::addAxiom);
+        });
         stopwatch.stop();
         logger.info("{} Extracted {} languages in {} ms", projectId, activeLangs.elementSet().size(), stopwatch.elapsed(MILLISECONDS));
         rebuildSortedLanguages();

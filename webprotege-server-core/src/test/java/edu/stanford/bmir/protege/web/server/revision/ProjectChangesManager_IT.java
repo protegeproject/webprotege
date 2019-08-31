@@ -104,12 +104,12 @@ public class ProjectChangesManager_IT {
         var annotationAssertionAxioms = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
         AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl(ontologyIndex);
 
-        AnnotationAssertionAxiomsIndex assertionAxiomsIndex = new AnnotationAssertionAxiomsIndexWrapperImpl(ontologiesIndex,
-                                                                                                            axiomsByTypeIndex,
-                                                                                                            projectAnnotationAssertionsIndex);
-        LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
-                                                                                                        assertionAxiomsIndex), repo);
+        var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(ontologyIndex);
         var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
+                                                                                                        axiomsByEntityReference,
+                                                                                                        projectOntologiesIndex), repo);
+
         var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex, ontologyIndex);
         var ontologySignatureIndex = new OntologySignatureIndexImpl(ontologyIndex);
         var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
