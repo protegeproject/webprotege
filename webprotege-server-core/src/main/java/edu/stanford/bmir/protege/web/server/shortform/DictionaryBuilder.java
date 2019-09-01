@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
-import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,25 +36,30 @@ public class DictionaryBuilder {
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
-    private final AxiomsByTypeIndex axiomsByTypeIndex;
+    private final AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
 
     @Nonnull
-    private final EntitiesInProjectSignatureByIriIndex entitiesInSignatureIndex;
+    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     @Nonnull
     private final ProjectSignatureIndex projectSignatureIndex;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     @Inject
     public DictionaryBuilder(@Nonnull ProjectId projectId,
                              @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                             @Nonnull AxiomsByTypeIndex axiomsByTypeIndex,
-                             @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignatureIndex,
-                             @Nonnull ProjectSignatureIndex projectSignatureIndex) {
+                             @Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex,
+                             @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
+                             @Nonnull ProjectSignatureIndex projectSignatureIndex,
+                             @Nonnull OWLDataFactory dataFactory) {
         this.projectId = checkNotNull(projectId);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
-        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
-        this.entitiesInSignatureIndex = checkNotNull(entitiesInSignatureIndex);
+        this.axiomsByEntityReferenceIndex = checkNotNull(axiomsByEntityReferenceIndex);
+        this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
         this.projectSignatureIndex = checkNotNull(projectSignatureIndex);
+        this.dataFactory = checkNotNull(dataFactory);
     }
 
     /**
@@ -100,17 +104,33 @@ public class DictionaryBuilder {
         if (annotationBasedDictionaries.isEmpty()) {
             return;
         }
-        Counter counter = new Counter();
-        projectOntologiesIndex.getOntologyIds()
-                    .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(ANNOTATION_ASSERTION, ontId))
-                    .peek(counter::increment)
-                    .forEach(ax -> annotationBasedDictionaries.stream()
-                                               .filter(dictionary -> isAxiomForDictionary(ax, dictionary))
-                                               .forEach(dictionary -> {
-                                                   var iri = (IRI) ax.getSubject();
-                                                   var literal = ((OWLLiteral) ax.getValue()).getLiteral();
-                                                   entitiesInSignatureIndex.getEntityInSignature(iri).forEach(entity -> dictionary.put(entity, literal));
-                                               }));
+
+        var counter = new Counter();
+        annotationBasedDictionaries
+                .stream()
+                .filter(dictionary -> dictionary.getLanguage().isAnnotationBased())
+                .forEach(dictionary -> {
+                    var dictionaryLanguage = dictionary.getLanguage();
+                    var propertyIri = dictionaryLanguage.getAnnotationPropertyIri();
+                    var annotationProperty = dataFactory.getOWLAnnotationProperty(propertyIri);
+                    projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
+                        axiomsByEntityReferenceIndex.getReferencingAxioms(annotationProperty, ontId)
+                                                    .peek(counter::increment)
+                                                    .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
+                                                    .map(ax -> (OWLAnnotationAssertionAxiom) ax)
+                                                    .filter(ax -> ax.getValue().isLiteral())
+                                                    .filter(ax -> ax.getSubject().isIRI())
+                                                    .forEach(ax -> {
+                                                        var iri = (IRI) ax.getSubject();
+                                                        var literal = ((OWLLiteral) ax.getValue()).getLiteral();
+                                                        entitiesInProjectSignatureByIriIndex.getEntityInSignature(iri)
+                                                                                            .forEach(entity -> {
+                                                                                                dictionary.put(entity, literal);
+                                                                                            });
+
+                                                    });
+                    });
+        });
         logger.info("{} Processed {} axioms in order to build annotation based dictionaries",
                     projectId,
                     String.format("%,d", counter.getCounter()));

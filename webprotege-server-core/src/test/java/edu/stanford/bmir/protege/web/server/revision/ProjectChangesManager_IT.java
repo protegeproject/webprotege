@@ -114,7 +114,11 @@ public class ProjectChangesManager_IT {
         var ontologySignatureIndex = new OntologySignatureIndexImpl(ontologyIndex);
         var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
 
-        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(projectAnnotationAssertionsIndex));
+        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex,
+                                                                                                     axiomsByEntityReference,
+                                                                                                     entitiesInSignatureIndex,
+                                                                                                     projectSignatureIndex,
+                                                                                                     dataFactory), new DictionaryUpdater(projectAnnotationAssertionsIndex));
         DictionaryManager dictionaryManager = new DictionaryManager(languageManager,
                                                                     multilingualDictionary,
                                                                     new BuiltInShortFormDictionary(new ShortFormCache(),
@@ -131,8 +135,7 @@ public class ProjectChangesManager_IT {
         OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
         SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex, axiomsByTypeIndex, entitiesInSignatureIndex, projectSignatureIndex), new DictionaryUpdater(annotationAssertionAxioms)),
-                                      new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
+                new DictionaryManager(languageManager, multilingualDictionary, new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
                         shortFormAdapter,
