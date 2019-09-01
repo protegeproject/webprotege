@@ -77,10 +77,14 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
     @Override
     @Nonnull
     public synchronized ImmutableList<DictionaryLanguage> getLanguagesRankedByUsage() {
+        buildIfNecessary();
+        return sortedLanguages;
+    }
+
+    private void buildIfNecessary() {
         if (sortedLanguages == null) {
             rebuild();
         }
-        return sortedLanguages;
     }
 
     /**
@@ -115,6 +119,7 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
         if (changes.isEmpty()) {
             return;
         }
+        buildIfNecessary();
         changes.stream()
                .filter(chg -> chg.isChangeFor(ANNOTATION_ASSERTION))
                .filter(chg -> isLabellingAnnotation((OWLAnnotationAssertionAxiom) chg.getAxiomOrThrow()))
