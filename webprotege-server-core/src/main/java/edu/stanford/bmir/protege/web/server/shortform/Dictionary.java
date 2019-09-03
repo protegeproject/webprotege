@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -68,6 +69,10 @@ public class Dictionary {
     public void put(@Nonnull OWLEntity entity,
                     @Nonnull String shortForm) {
         shortFormCache.put(checkNotNull(entity), checkNotNull(shortForm));
+    }
+
+    public void putAll(@Nonnull Map<OWLEntity, String> map) {
+        shortFormCache.putAll(checkNotNull(map));
     }
 
     /**

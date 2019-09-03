@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import com.google.common.collect.ImmutableSet;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,11 +62,11 @@ public class EntitiesInProjectSignatureByIriIndexImpl_TestCase {
         when(ontologyIndex.getOntology(ontBId))
                 .thenReturn(Optional.of(ontB));
 
-        when(ontA.getEntitiesInSignature(iri, Imports.EXCLUDED))
-                .thenReturn(ImmutableSet.of(entityCls, entityIndividual));
+        when(ontA.getEntitiesInSignature(iri))
+                .thenAnswer(inv -> Stream.of(entityCls, entityIndividual));
 
-        when(ontB.getEntitiesInSignature(iri, Imports.EXCLUDED))
-                .thenReturn(ImmutableSet.of(entityCls));
+        when(ontB.getEntitiesInSignature(iri))
+                .thenAnswer(inv -> Stream.of(entityCls));
 
         impl = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex,
                                                             ontologyIndex);

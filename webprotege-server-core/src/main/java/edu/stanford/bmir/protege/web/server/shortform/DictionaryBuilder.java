@@ -3,22 +3,18 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.shortform.DictionaryPredicates.isAxiomForDictionary;
 import static java.util.Collections.singletonList;
-import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
 
 /**
  * Matthew Horridge
@@ -45,7 +41,7 @@ public class DictionaryBuilder {
     private final ProjectSignatureIndex projectSignatureIndex;
 
     @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final OWLEntityProvider entityProvider;
 
     @Inject
     public DictionaryBuilder(@Nonnull ProjectId projectId,
@@ -53,13 +49,13 @@ public class DictionaryBuilder {
                              @Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex,
                              @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
                              @Nonnull ProjectSignatureIndex projectSignatureIndex,
-                             @Nonnull OWLDataFactory dataFactory) {
+                             @Nonnull OWLEntityProvider entityProvider) {
         this.projectId = checkNotNull(projectId);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.axiomsByEntityReferenceIndex = checkNotNull(axiomsByEntityReferenceIndex);
-        this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
+        this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
         this.projectSignatureIndex = checkNotNull(projectSignatureIndex);
-        this.dataFactory = checkNotNull(dataFactory);
+        this.entityProvider = checkNotNull(entityProvider);
     }
 
     /**
@@ -109,30 +105,35 @@ public class DictionaryBuilder {
         annotationBasedDictionaries
                 .stream()
                 .filter(dictionary -> dictionary.getLanguage().isAnnotationBased())
-                .forEach(dictionary -> {
-                    var dictionaryLanguage = dictionary.getLanguage();
-                    var propertyIri = dictionaryLanguage.getAnnotationPropertyIri();
-                    var annotationProperty = dataFactory.getOWLAnnotationProperty(propertyIri);
-                    projectOntologiesIndex.getOntologyIds().forEach(ontId -> {
-                        axiomsByEntityReferenceIndex.getReferencingAxioms(annotationProperty, ontId)
-                                                    .peek(counter::increment)
-                                                    .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
-                                                    .map(ax -> (OWLAnnotationAssertionAxiom) ax)
-                                                    .filter(ax -> ax.getValue().isLiteral())
-                                                    .filter(ax -> ax.getSubject().isIRI())
-                                                    .forEach(ax -> {
-                                                        var iri = (IRI) ax.getSubject();
-                                                        var literal = ((OWLLiteral) ax.getValue()).getLiteral();
-                                                        entitiesInProjectSignatureByIriIndex.getEntityInSignature(iri)
-                                                                                            .forEach(entity -> {
-                                                                                                dictionary.put(entity, literal);
-                                                                                            });
-
-                                                    });
-                    });
-        });
+                .forEach(this::buildAnnotationBasedDictionary);
         logger.info("{} Processed {} axioms in order to build annotation based dictionaries",
                     projectId,
                     String.format("%,d", counter.getCounter()));
+    }
+
+    private void buildAnnotationBasedDictionary(Dictionary dictionary) {
+        projectOntologiesIndex.getOntologyIds().forEach(ontId -> buildDictionaryForOntology(dictionary, ontId));
+    }
+
+    private void buildDictionaryForOntology(Dictionary dictionary, OWLOntologyID ontId) {
+        var dictionaryLanguage = dictionary.getLanguage();
+        var propertyIri = dictionaryLanguage.getAnnotationPropertyIri();
+        var annotationProperty = entityProvider.getOWLAnnotationProperty(propertyIri);
+        var tempMap = new HashMap<OWLEntity, String>();
+        axiomsByEntityReferenceIndex.getReferencingAxioms(annotationProperty, ontId)
+                                    .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
+                                    .map(ax -> (OWLAnnotationAssertionAxiom) ax)
+                                    .filter(ax -> ax.getValue().isLiteral())
+                                    .filter(ax -> ax.getSubject().isIRI())
+                                    .forEach(ax -> {
+                                        var iri = (IRI) ax.getSubject();
+                                        var literal = ((OWLLiteral) ax.getValue()).getLiteral();
+                                        entitiesInProjectSignatureByIriIndex.getEntityInSignature(iri)
+                                                                            .forEach(entity -> {
+                                                                                tempMap.put(entity, literal);
+                                                                            });
+
+                                    });
+        dictionary.putAll(tempMap);
     }
 }

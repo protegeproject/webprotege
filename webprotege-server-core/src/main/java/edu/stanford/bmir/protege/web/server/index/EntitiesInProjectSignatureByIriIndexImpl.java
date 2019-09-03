@@ -2,10 +2,11 @@ package edu.stanford.bmir.protege.web.server.index;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,9 +36,12 @@ public class EntitiesInProjectSignatureByIriIndexImpl implements EntitiesInProje
     public Stream<OWLEntity> getEntityInSignature(@Nonnull IRI entityIri) {
         checkNotNull(entityIri);
         return projectOntologiesIndex.getOntologyIds()
-                .flatMap(ontId -> ontologyIndex.getOntology(ontId).stream())
-                .flatMap(ont -> ont.getEntitiesInSignature(entityIri, Imports.EXCLUDED).stream())
-                .distinct();
+                                     .map(ontId -> ontologyIndex.getOntology(ontId))
+                                     .flatMap(Optional::stream)
+                                     .flatMap(ont -> getEntitiesInSignature(ont, entityIri));
+    }
 
+    private Stream<OWLEntity> getEntitiesInSignature(OWLOntology ont, IRI entityIri) {
+        return ont.getEntitiesInSignature(entityIri).stream();
     }
 }
