@@ -141,6 +141,15 @@ public class UploadedProjectModule {
 
     @Provides
     @ProjectSingleton
+    AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex() {
+        return (entity, ontologyId) -> ontologies.stream()
+                                         .filter(ontology -> ontology.getOntologyId().equals(ontologyId))
+                                         .flatMap(ontology ->  ontology.getAxioms().stream())
+                                         .filter(ax -> ax.containsEntityInSignature(entity));
+    }
+
+    @Provides
+    @ProjectSingleton
     ProjectSignatureIndex provideProjectSignatureIndex(Multimap<IRI, OWLEntity> iri2EntityMap) {
         return new ProjectSignatureIndex() {
             @Nonnull
