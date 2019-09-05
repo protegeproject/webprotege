@@ -1,11 +1,22 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.*;
+import com.google.inject.Key;
+import edu.stanford.bmir.protege.web.server.change.*;
+import org.checkerframework.checker.units.qual.K;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,14 +26,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-09
  */
-public class AnnotationAssertionAxiomsBySubjectIndexImpl implements AnnotationAssertionAxiomsBySubjectIndex {
+public class AnnotationAssertionAxiomsBySubjectIndexImpl implements AnnotationAssertionAxiomsBySubjectIndex, RequiresOntologyChangeNotification {
 
-    @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private final Lock readLock = readWriteLock.readLock();
+
+    private final Lock writeLock = readWriteLock.writeLock();
+
+    private final Multimap<Key, OWLAnnotationAssertionAxiom> index = ArrayListMultimap.create(1000, 4);
+
+    private final AxiomChangeHandler changeHandler = new AxiomChangeHandler();
 
     @Inject
-    public AnnotationAssertionAxiomsBySubjectIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public AnnotationAssertionAxiomsBySubjectIndexImpl() {
+        changeHandler.setAxiomChangeConsumer(this::handleChange);
     }
 
     @Override
@@ -30,8 +48,52 @@ public class AnnotationAssertionAxiomsBySubjectIndexImpl implements AnnotationAs
                                                                    @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(subject);
         checkNotNull(ontologyId);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getAnnotationAssertionAxioms(subject).stream());
+        try {
+            readLock.lock();
+            var key = Key.get(ontologyId, subject);
+            return ImmutableList.copyOf(index.get(key)).stream();
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    @Override
+    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+        try {
+            writeLock.lock();
+            changeHandler.handleOntologyChanges(changes);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    private void handleChange(@Nonnull AxiomChange axiomChange) {
+        var axiom = axiomChange.getAxiom();
+        if(!(axiom instanceof OWLAnnotationAssertionAxiom)) {
+            return;
+        }
+        var annotationAssertionAxiom = (OWLAnnotationAssertionAxiom) axiom;
+        var key = Key.get(axiomChange.getOntologyId(),
+                          annotationAssertionAxiom.getSubject());
+        if(axiomChange.isAddAxiom()) {
+            index.put(key, annotationAssertionAxiom);
+        }
+        else {
+            index.remove(key, annotationAssertionAxiom);
+        }
+    }
+
+    @AutoValue
+    public static abstract class Key {
+
+        public static Key get(@Nonnull OWLOntologyID ontologyId,
+                              @Nonnull OWLAnnotationSubject subject) {
+            return new AutoValue_AnnotationAssertionAxiomsBySubjectIndexImpl_Key(ontologyId, subject);
+        }
+
+        public abstract OWLOntologyID getOntologyId();
+
+        public abstract OWLAnnotationSubject getAnnotationSubject();
+
     }
 }

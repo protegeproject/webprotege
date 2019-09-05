@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -32,13 +34,7 @@ public class AnnotationAssertionAxiomsBySubjectIndexImpl_TestCase {
     private AnnotationAssertionAxiomsBySubjectIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
-
-    @Mock
-    private OWLOntology ontology;
 
     @Mock
     private OWLAnnotationSubject subject;
@@ -48,17 +44,10 @@ public class AnnotationAssertionAxiomsBySubjectIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
-
-        when(ontology.getAnnotationAssertionAxioms(any()))
-                .thenReturn(Collections.emptySet());
-        when(ontology.getAnnotationAssertionAxioms(subject))
-                .thenReturn(Collections.singleton(axiom));
-
-        impl = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
+        when(axiom.getSubject())
+                .thenReturn(subject);
+        impl = new AnnotationAssertionAxiomsBySubjectIndexImpl();
+        impl.handleOntologyChanges(singletonList(AddAxiomChange.of(ontologyId, axiom)));
     }
 
     @Test
