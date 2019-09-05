@@ -1,5 +1,11 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.server.change.AxiomChange;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -7,6 +13,8 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -20,32 +28,73 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-07
  */
 @ProjectSingleton
-public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex {
+public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, RequiresOntologyChangeNotification {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final Lock writeLock = readWriteLock.writeLock();
 
-    @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private Multimap<Key, OWLAxiom> index;
+
+    private AxiomChangeHandler axiomChangeHandler = new AxiomChangeHandler();
 
     @Inject
-    public AxiomsByTypeIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public AxiomsByTypeIndexImpl() {
+        index = HashMultimap.create();
+        axiomChangeHandler.setAxiomChangeConsumer(this::handleAxiomChange);
     }
 
+    private void handleAxiomChange(AxiomChange change) {
+        var ontId = change.getOntologyId();
+        var axiom = change.getAxiom();
+        var axiomType = axiom.getAxiomType();
+        var key = Key.get(ontId, axiomType);
+        try {
+            writeLock.lock();
+            if(change.isAddAxiom()) {
+                index.put(key, axiom);
+            }
+            else {
+                index.remove(key, axiom);
+            }
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends OWLAxiom> Stream<T> getAxiomsByType(AxiomType<T> axiomType,
                                                           OWLOntologyID ontologyId) {
         checkNotNull(axiomType);
         checkNotNull(ontologyId);
+        var key = Key.get(ontologyId, axiomType);
         try {
-            writeLock.lock();
-            return ontologyIndex.getOntology(ontologyId)
-                    .stream()
-                    .flatMap(ont -> ont.getAxioms(axiomType).stream());
+            readWriteLock.readLock()
+                         .lock();
+            return ImmutableList.copyOf((Collection<T>) index.get(key))
+                                .stream();
         } finally {
-            writeLock.unlock();
+            readWriteLock.readLock()
+                         .unlock();
         }
+    }
+
+    @Override
+    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+        axiomChangeHandler.handleOntologyChanges(changes);
+    }
+
+    @AutoValue
+    protected abstract static class Key {
+
+        public static Key get(@Nonnull OWLOntologyID ontologyID,
+                              @Nonnull AxiomType axiomType) {
+            return new AutoValue_AxiomsByTypeIndexImpl_Key(ontologyID, axiomType);
+        }
+
+        public abstract OWLOntologyID getOntologyId();
+
+        public abstract AxiomType getAxiomType();
     }
 }
