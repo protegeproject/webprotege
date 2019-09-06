@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyDomainAxiomsIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -18,12 +20,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DataPropertyDomainAxiomsIndexImpl implements DataPropertyDomainAxiomsIndex {
 
+
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Inject
-    public DataPropertyDomainAxiomsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public DataPropertyDomainAxiomsIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
     @Nonnull
@@ -32,8 +35,7 @@ public class DataPropertyDomainAxiomsIndexImpl implements DataPropertyDomainAxio
                                                                           @Nonnull OWLOntologyID ontologyID) {
         checkNotNull(dataProperty);
         checkNotNull(ontologyID);
-        return ontologyIndex.getOntology(ontologyID)
-                .stream()
-                .flatMap(ont -> ont.getDataPropertyDomainAxioms(dataProperty).stream());
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DATA_PROPERTY_DOMAIN, ontologyID)
+                .filter(ax -> ax.getProperty().equals(dataProperty));
     }
 }
