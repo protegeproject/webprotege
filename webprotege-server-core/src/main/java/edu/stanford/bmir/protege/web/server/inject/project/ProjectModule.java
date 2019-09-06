@@ -646,7 +646,6 @@ public class ProjectModule {
                                                                          AxiomsByTypeIndexImpl axiomsByTypeIndex,
                                                                          ProjectOntologiesIndex projectOntologiesIndex,
                                                                          IndexUpdater indexUpdater) {
-        impl.load(projectOntologiesIndex.getOntologyIds(), axiomsByTypeIndex);
         indexUpdater.registerIndex(impl);
         return impl;
     }
