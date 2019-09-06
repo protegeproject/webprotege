@@ -1,12 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.base.Stopwatch;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -238,7 +232,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
 
     public boolean containsReference(OWLClass object) {
         return entitiesInProjectSignatureByIriIndex
-                .getEntityInSignature(object.getIRI())
+                .getEntitiesInSignature(object.getIRI())
                 .anyMatch(entity -> entity.equals(object));
     }
 

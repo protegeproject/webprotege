@@ -51,6 +51,6 @@ public class AnnotationPropertyRangeSectionRenderer extends AbstractOWLAxiomItem
     public List<OWLObject> getRenderablesForItem(OWLAnnotationProperty subject,
                                                  OWLAnnotationPropertyRangeAxiom item,
                                                  OWLOntologyID ontologyId) {
-        return entitiesByIri.getEntityInSignature(item.getRange()).collect(toList());
+        return entitiesByIri.getEntitiesInSignature(item.getRange()).collect(toList());
     }
 }

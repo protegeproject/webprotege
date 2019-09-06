@@ -51,6 +51,6 @@ public class AnnotationPropertyDomainSectionRenderer extends AbstractOWLAxiomIte
     public List<OWLObject> getRenderablesForItem(OWLAnnotationProperty subject,
                                                  OWLAnnotationPropertyDomainAxiom item,
                                                  OWLOntologyID ontologyId) {
-        return entitiesByIri.getEntityInSignature(item.getDomain()).collect(toList());
+        return entitiesByIri.getEntitiesInSignature(item.getDomain()).collect(toList());
     }
 }

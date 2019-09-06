@@ -113,15 +113,15 @@ public class ClassHierarchyProvider_TestCase {
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsE, ontologyId))
                 .thenReturn(Stream.of(clsA2EquivalentToClsDandClsE));
 
-        when(entitiesInProjectSignatureByIriIndex.getEntityInSignature(clsAIri))
+        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsAIri))
                 .thenReturn(Stream.of(clsA));
-        when(entitiesInProjectSignatureByIriIndex.getEntityInSignature(clsBIri))
+        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsBIri))
                 .thenReturn(Stream.of(clsB));
-        when(entitiesInProjectSignatureByIriIndex.getEntityInSignature(clsCIri))
+        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsCIri))
                 .thenReturn(Stream.of(clsC));
-        when(entitiesInProjectSignatureByIriIndex.getEntityInSignature(clsDIri))
+        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsDIri))
                 .thenReturn(Stream.of(clsD));
-        when(entitiesInProjectSignatureByIriIndex.getEntityInSignature(clsEIri))
+        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsEIri))
                 .thenReturn(Stream.of(clsE));
 
         classHierarchyProvider = new ClassHierarchyProvider(projectId,

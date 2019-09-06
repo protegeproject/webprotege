@@ -62,7 +62,7 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
             }
             else {
                 var entities = entitiesInSignatureIndex
-                        .getEntityInSignature((IRI) subject)
+                        .getEntitiesInSignature((IRI) subject)
                         .collect(toList());
                 return translate(entities, axiom);
             }

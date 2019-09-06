@@ -29,11 +29,11 @@ public class EntityIRICheckerImpl implements EntityIRIChecker {
 
     @Override
     public boolean isEntityIRI(IRI iri) {
-        return iri.isTopEntity() || iri.isBottomEntity() || signatureIndex.getEntityInSignature(iri).limit(1).count() == 0;
+        return iri.isTopEntity() || iri.isBottomEntity() || signatureIndex.getEntitiesInSignature(iri).limit(1).count() == 0;
     }
 
     @Override
     public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
-        return signatureIndex.getEntityInSignature(iri).collect(Collectors.toSet());
+        return signatureIndex.getEntitiesInSignature(iri).collect(Collectors.toSet());
     }
 }

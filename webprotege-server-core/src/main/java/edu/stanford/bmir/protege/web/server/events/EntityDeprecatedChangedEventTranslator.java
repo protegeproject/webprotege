@@ -56,7 +56,7 @@ public class EntityDeprecatedChangedEventTranslator implements EventTranslator {
                         .isDeprecated()) {
                     if(annotationAssertion.getSubject() instanceof IRI) {
                         IRI subject = (IRI) annotationAssertion.getSubject();
-                        entitiesByIri.getEntityInSignature(subject)
+                        entitiesByIri.getEntitiesInSignature(subject)
                                      .map(entity -> {
                                          var deprecated = deprecatedEntityChecker.isDeprecated(entity);
                                          return new EntityDeprecatedChangedEvent(projectId, entity, deprecated);

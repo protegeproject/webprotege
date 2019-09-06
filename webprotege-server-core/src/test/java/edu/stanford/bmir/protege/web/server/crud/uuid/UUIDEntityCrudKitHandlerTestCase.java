@@ -98,7 +98,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
         when(ontologyIndex.getOntology(ontologyId))
                 .thenReturn(Optional.of(ontology));
         handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
-        when(entitiesInSignature.getEntityInSignature(any()))
+        when(entitiesInSignature.getEntitiesInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());
     }
 

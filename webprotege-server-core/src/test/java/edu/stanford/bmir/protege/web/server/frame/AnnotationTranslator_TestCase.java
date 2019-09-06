@@ -98,7 +98,7 @@ public class AnnotationTranslator_TestCase {
 
     @Test
     public void shouldTranslateIriNotInSignature() {
-        when(entitiesIndex.getEntityInSignature(iri))
+        when(entitiesIndex.getEntitiesInSignature(iri))
                 .thenReturn(Stream.empty());
         var annotation = new OWLAnnotationImpl(property, iri, Collections.emptySet());
         Set<PropertyValue> propertyValues =  translator.translate(annotation, State.ASSERTED);
@@ -107,7 +107,7 @@ public class AnnotationTranslator_TestCase {
 
     @Test
     public void shouldTranslateIriInSignature() {
-        when(entitiesIndex.getEntityInSignature(iri))
+        when(entitiesIndex.getEntitiesInSignature(iri))
                 .thenReturn(Stream.of(cls));
         var annotation = new OWLAnnotationImpl(property, iri, Collections.emptySet());
         Set<PropertyValue> propertyValues =  translator.translate(annotation, State.ASSERTED);

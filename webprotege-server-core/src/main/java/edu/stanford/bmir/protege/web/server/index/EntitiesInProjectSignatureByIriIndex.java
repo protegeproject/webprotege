@@ -21,6 +21,6 @@ public interface EntitiesInProjectSignatureByIriIndex {
      * the project ontologies.
      */
     @Nonnull
-    Stream<OWLEntity> getEntityInSignature(@Nonnull IRI entityIri);
+    Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIri);
 
 }

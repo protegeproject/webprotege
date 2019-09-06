@@ -123,7 +123,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         while (true) {
             var base62Fragment = IdUtil.getBase62UUID();
             var iri = IRI.create(base + START_CHAR + base62Fragment);
-            var inSig = entitiesInSignature.getEntityInSignature(iri).limit(1).count() == 1;
+            var inSig = entitiesInSignature.getEntitiesInSignature(iri).limit(1).count() == 1;
             if(!inSig) {
                 return iri;
             }

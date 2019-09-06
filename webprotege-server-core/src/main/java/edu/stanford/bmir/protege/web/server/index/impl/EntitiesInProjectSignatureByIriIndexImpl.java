@@ -34,7 +34,7 @@ public class EntitiesInProjectSignatureByIriIndexImpl implements EntitiesInProje
 
     @Nonnull
     @Override
-    public Stream<OWLEntity> getEntityInSignature(@Nonnull IRI entityIri) {
+    public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIri) {
         checkNotNull(entityIri);
         return projectOntologiesIndex.getOntologyIds()
                                      .flatMap(ontId -> entitiesInOntologySignatureByIriIndex.getEntitiesInSignature(entityIri, ontId))

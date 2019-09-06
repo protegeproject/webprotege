@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.EntitiesInProjectSignatureByIriIndexImpl;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,19 +65,19 @@ public class EntitiesInProjectSignatureByIriIndexImpl_TestCase {
 
     @Test
     public void shouldReturnDistinctEntitiesInSignature() {
-        var entities = impl.getEntityInSignature(iri).collect(Collectors.toList());
+        var entities = impl.getEntitiesInSignature(iri).collect(Collectors.toList());
         assertThat(entities, Matchers.containsInAnyOrder(entityCls, entityIndividual));
     }
 
     @Test
     public void shouldReturnEmptyStreamForUnknownIri() {
-        var entities = impl.getEntityInSignature(mock(IRI.class)).collect(toSet());
+        var entities = impl.getEntitiesInSignature(mock(IRI.class)).collect(toSet());
         assertThat(entities.isEmpty(), is(true));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfIriIsNull() {
-        impl.getEntityInSignature(null);
+        impl.getEntitiesInSignature(null);
     }
 }

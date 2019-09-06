@@ -44,7 +44,7 @@ public class AnnotationTranslator {
     public Set<PropertyValue> translate(@Nonnull OWLAnnotation annotation,
                                         @Nonnull State state) {
         if(annotation.getValue() instanceof IRI) {
-            var entities = entitiesIndex.getEntityInSignature((IRI) annotation.getValue()).collect(Collectors.toSet());
+            var entities = entitiesIndex.getEntitiesInSignature((IRI) annotation.getValue()).collect(Collectors.toSet());
             if(!entities.isEmpty()) {
                 return entities
                         .stream()

@@ -128,7 +128,7 @@ public class DictionaryBuilder {
                                     .forEach(ax -> {
                                         var iri = (IRI) ax.getSubject();
                                         var literal = ((OWLLiteral) ax.getValue()).getLiteral();
-                                        entitiesInProjectSignatureByIriIndex.getEntityInSignature(iri)
+                                        entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri)
                                                                             .forEach(entity -> {
                                                                                 tempMap.put(entity, literal);
                                                                             });

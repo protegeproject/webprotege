@@ -74,7 +74,7 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
                 return Collections.singleton((OWLEntity) subject);
             }
             else if(subject instanceof IRI) {
-                return entitiesByIri.getEntityInSignature((IRI) subject).collect(Collectors.toSet());
+                return entitiesByIri.getEntitiesInSignature((IRI) subject).collect(Collectors.toSet());
             }
             else {
                 return Collections.emptySet();

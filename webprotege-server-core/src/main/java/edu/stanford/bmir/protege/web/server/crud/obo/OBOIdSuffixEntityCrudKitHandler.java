@@ -150,7 +150,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
             if(!session.isSessionId(currentId)) {
                 String shortName = numberFormat.format(currentId);
                 IRI iri = IRI.create(prefixSettings.getIRIPrefix() + shortName);
-                if (projectSignatureIndex.getEntityInSignature(iri).limit(1).count() == 0) {
+                if (projectSignatureIndex.getEntitiesInSignature(iri).limit(1).count() == 0) {
                     session.addSessionId(currentId);
                     setCurrentId(userId, currentId);
                     return iri;

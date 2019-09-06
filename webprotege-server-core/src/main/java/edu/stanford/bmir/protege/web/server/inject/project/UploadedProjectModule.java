@@ -132,7 +132,7 @@ public class UploadedProjectModule {
         return new EntitiesInProjectSignatureByIriIndex() {
             @Nonnull
             @Override
-            public Stream<OWLEntity> getEntityInSignature(@Nonnull IRI entityIri) {
+            public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIri) {
                 return iri2EntityMap.get(entityIri)
                                     .stream();
             }

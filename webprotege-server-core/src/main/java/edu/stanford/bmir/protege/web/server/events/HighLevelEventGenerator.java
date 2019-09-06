@@ -151,7 +151,7 @@ public class HighLevelEventGenerator implements EventTranslator {
     private Set<OWLEntity> getEntitiesForSubject(OWLObject subject) {
         Set<OWLEntity> entities;
         if(subject instanceof IRI) {
-            entities = entitiesByIri.getEntityInSignature((IRI) subject)
+            entities = entitiesByIri.getEntitiesInSignature((IRI) subject)
                                     .collect(Collectors.toSet());
         }
         else if(subject instanceof OWLEntity) {

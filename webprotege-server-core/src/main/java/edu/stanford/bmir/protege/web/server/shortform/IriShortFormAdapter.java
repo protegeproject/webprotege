@@ -30,7 +30,7 @@ public class IriShortFormAdapter implements IRIShortFormProvider {
     @Nonnull
     @Override
     public String getShortForm(@Nonnull IRI iri) {
-        return entitesByIri.getEntityInSignature(iri)
+        return entitesByIri.getEntitiesInSignature(iri)
                 .sorted()
                 .map(dictionaryManager::getShortForm)
                 .findFirst()

@@ -110,7 +110,7 @@ public class IndexCore implements SubClassOfAxiomsBySubClassIndex, AxiomsByEntit
 
     @Nonnull
     @Override
-    public Stream<OWLEntity> getEntityInSignature(@Nonnull IRI entityIri) {
+    public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIri) {
         return getEntitiesInSignatureWithIri(entityIri);
     }
 
