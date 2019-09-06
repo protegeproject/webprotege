@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationPropertyRangeAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -19,11 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AnnotationPropertyRangeAxiomsIndexImpl implements AnnotationPropertyRangeAxiomsIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Inject
-    public AnnotationPropertyRangeAxiomsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public AnnotationPropertyRangeAxiomsIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
     @Nonnull
@@ -32,8 +34,7 @@ public class AnnotationPropertyRangeAxiomsIndexImpl implements AnnotationPropert
                                                                                       @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(property);
         checkNotNull(ontologyId);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getAnnotationPropertyRangeAxioms(property).stream());
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_RANGE, ontologyId)
+                                .filter(ax -> ax.getProperty().equals(property));
     }
 }
