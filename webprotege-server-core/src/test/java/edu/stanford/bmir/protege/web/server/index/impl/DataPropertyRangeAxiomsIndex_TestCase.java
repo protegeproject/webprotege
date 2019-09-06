@@ -1,19 +1,14 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.impl.DataPropertyRangeAxiomsIndexImpl;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
-import java.util.Collections;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,13 +29,7 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
     private DataPropertyRangeAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
-    private OWLOntologyID ontologyID;
+    private OWLOntologyID ontologyId;
 
     @Mock
     private OWLDataProperty property;
@@ -48,20 +37,23 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
     @Mock
     private OWLDataPropertyRangeAxiom axiom;
 
+    @Mock
+    private AxiomsByTypeIndex axiomsByTypeIndex;
+
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getDataPropertyRangeAxioms(property))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new DataPropertyRangeAxiomsIndexImpl(ontologyIndex);
+        when(axiom.getProperty())
+                .thenReturn(property);
+        when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
+                .thenAnswer(invocation -> Stream.of());
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.DATA_PROPERTY_RANGE, ontologyId))
+                .thenAnswer(invocation -> Stream.of(axiom));
+        impl = new DataPropertyRangeAxiomsIndexImpl(axiomsByTypeIndex);
     }
 
     @Test
     public void shouldGetDataPropertyRangeAxiomForProperty() {
-        var axioms = impl.getDataPropertyRangeAxioms(property, ontologyID).collect(toSet());
+        var axioms = impl.getDataPropertyRangeAxioms(property, ontologyId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
@@ -73,7 +65,7 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
 
     @Test
     public void shouldGetEmptySetForUnknownClass() {
-        var axioms = impl.getDataPropertyRangeAxioms(mock(OWLDataProperty.class), ontologyID).collect(toSet());
+        var axioms = impl.getDataPropertyRangeAxioms(mock(OWLDataProperty.class), ontologyId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -86,6 +78,6 @@ public class DataPropertyRangeAxiomsIndex_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullProperty() {
-        impl.getDataPropertyRangeAxioms(null, ontologyID);
+        impl.getDataPropertyRangeAxioms(null, ontologyId);
     }
 }
