@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyCharacteristicsIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -17,11 +19,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DataPropertyCharacteristicsIndexImpl implements DataPropertyCharacteristicsIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Inject
-    public DataPropertyCharacteristicsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public DataPropertyCharacteristicsIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
     @Override
@@ -29,10 +31,7 @@ public class DataPropertyCharacteristicsIndexImpl implements DataPropertyCharact
                                 @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(dataProperty);
         checkNotNull(ontologyId);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getFunctionalDataPropertyAxioms(dataProperty).stream())
-                .findFirst()
-                .isPresent();
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.FUNCTIONAL_DATA_PROPERTY, ontologyId)
+                .anyMatch(axiom -> axiom.getProperty().equals(dataProperty));
     }
 }
