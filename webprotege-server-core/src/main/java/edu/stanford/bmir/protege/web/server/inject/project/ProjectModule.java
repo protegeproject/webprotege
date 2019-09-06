@@ -656,11 +656,6 @@ public class ProjectModule {
     }
 
     @Provides
-    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
     AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex(AxiomsByEntityReferenceIndexImpl impl) {
         return impl;
     }
@@ -970,7 +965,7 @@ public class ProjectModule {
     }
 
     @Provides
-    OntologyAnnotationsSignatureIndex provideOntologyAnnotationsSignatureIndex(@Nonnull OntologyAnnotationsSignatureIndexImpl impl) {
+    OntologyAnnotationsSignatureIndex provideOntologyAnnotationsSignatureIndex(@Nonnull OntologyAnnotationsIndexImpl impl) {
         return impl;
     }
 

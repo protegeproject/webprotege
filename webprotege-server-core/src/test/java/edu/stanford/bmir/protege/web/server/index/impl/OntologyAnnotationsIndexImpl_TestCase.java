@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
+import edu.stanford.bmir.protege.web.server.change.AddOntologyAnnotationChange;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyAnnotationsIndexImpl;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import org.hamcrest.Matchers;
@@ -13,10 +15,12 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -33,30 +37,23 @@ public class OntologyAnnotationsIndexImpl_TestCase {
     private OntologyAnnotationsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
 
-    @Mock
-    private OWLOntology ontology;
 
     @Mock
     private OWLAnnotation ontologyAnnotation;
 
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any())).thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyId)).thenReturn(Optional.of(ontology));
-        when(ontology.getAnnotations()).thenReturn(Collections.singleton(ontologyAnnotation));
-        impl = new OntologyAnnotationsIndexImpl(ontologyIndex);
+        impl = new OntologyAnnotationsIndexImpl();
+        impl.handleOntologyChanges(List.of(AddOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
     }
 
     @Test
     public void shouldGetOntologyAnnotations() {
         var ontologyAnnotationsStream = impl.getOntologyAnnotations(ontologyId);
         var ontologyAnnotations = ontologyAnnotationsStream.collect(toSet());
-        assertThat(ontologyAnnotations, Matchers.contains(ontologyAnnotation));
+        assertThat(ontologyAnnotations, contains(ontologyAnnotation));
     }
 
     @Test
