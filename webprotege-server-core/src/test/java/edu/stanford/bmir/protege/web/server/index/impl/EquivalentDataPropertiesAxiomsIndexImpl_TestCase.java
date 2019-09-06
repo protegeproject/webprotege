@@ -1,19 +1,19 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.impl.EquivalentDataPropertiesAxiomsIndexImpl;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,13 +34,7 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
     private EquivalentDataPropertiesAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
-    private OWLOntologyID ontologyID;
+    private OWLOntologyID ontologyId;
 
     @Mock
     private OWLDataProperty property;
@@ -48,20 +42,23 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
     @Mock
     private OWLEquivalentDataPropertiesAxiom axiom;
 
+    @Mock
+    private AxiomsByTypeIndex axiomsByTypeIndex;
+
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getEquivalentDataPropertiesAxioms(property))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new EquivalentDataPropertiesAxiomsIndexImpl(ontologyIndex);
+        when(axiom.getProperties())
+                .thenReturn(Collections.singleton(property));
+        when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
+                .thenAnswer(invocation -> Stream.of());
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.EQUIVALENT_DATA_PROPERTIES, ontologyId))
+                .thenAnswer(invocation -> Stream.of(axiom));
+        impl = new EquivalentDataPropertiesAxiomsIndexImpl(axiomsByTypeIndex);
     }
 
     @Test
     public void shouldGetEquivalentDataPropertiesAxiomForDataProperty() {
-        var axioms = impl.getEquivalentDataPropertiesAxioms(property, ontologyID).collect(toSet());
+        var axioms = impl.getEquivalentDataPropertiesAxioms(property, ontologyId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
@@ -73,7 +70,7 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetEmptySetForUnknownDataProperty() {
-        var axioms = impl.getEquivalentDataPropertiesAxioms(mock(OWLDataProperty.class), ontologyID).collect(toSet());
+        var axioms = impl.getEquivalentDataPropertiesAxioms(mock(OWLDataProperty.class), ontologyId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -86,7 +83,7 @@ public class EquivalentDataPropertiesAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullDataProperty() {
-        impl.getEquivalentDataPropertiesAxioms(null, ontologyID);
+        impl.getEquivalentDataPropertiesAxioms(null, ontologyId);
     }
     
 }
