@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
@@ -45,15 +45,25 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     private final OWLEntityCollectionContainerCollector signatureCollector = new OWLEntityCollectionContainerCollector(
             signatureBuffer);
 
-    private final Multimap<ClassKey, OWLAxiom> byClass = ArrayListMultimap.create();
+    private final Multimap<ClassKey, OWLAxiom> byClass = MultimapBuilder.hashKeys(1000)
+                                                                        .arrayListValues(2)
+                                                                        .build();
 
-    private final Multimap<ObjectPropertyKey, OWLAxiom> byObjectProperty = ArrayListMultimap.create();
+    private final Multimap<ObjectPropertyKey, OWLAxiom> byObjectProperty = MultimapBuilder.hashKeys(20)
+                                                                                          .arrayListValues()
+                                                                                          .build();
 
-    private final Multimap<DataPropertyKey, OWLAxiom> byDataProperty = ArrayListMultimap.create();
+    private final Multimap<DataPropertyKey, OWLAxiom> byDataProperty = MultimapBuilder.hashKeys(20)
+                                                                                      .arrayListValues()
+                                                                                      .build();
 
-    private final Multimap<AnnotationPropertyKey, OWLAxiom> byAnnotationProperty = ArrayListMultimap.create();
+    private final Multimap<AnnotationPropertyKey, OWLAxiom> byAnnotationProperty = MultimapBuilder.hashKeys(20)
+                                                                                                  .arrayListValues()
+                                                                                                  .build();
 
-    private final Multimap<NamedIndividualKey, OWLAxiom> byIndividual = ArrayListMultimap.create();
+    private final Multimap<NamedIndividualKey, OWLAxiom> byIndividual = MultimapBuilder.hashKeys(10)
+                                                                                       .arrayListValues()
+                                                                                       .build();
 
     private final AxiomsByReferenceVisitor referenceVisitor = new AxiomsByReferenceVisitor();
 
