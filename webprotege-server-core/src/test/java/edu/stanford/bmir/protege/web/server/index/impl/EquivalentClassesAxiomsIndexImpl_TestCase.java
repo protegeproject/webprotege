@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.EquivalentClassesAxiomsIndexImpl;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,12 +36,6 @@ public class EquivalentClassesAxiomsIndexImpl_TestCase {
     private EquivalentClassesAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
     private OWLOntologyID ontologyID;
 
     @Mock
@@ -48,15 +44,16 @@ public class EquivalentClassesAxiomsIndexImpl_TestCase {
     @Mock
     private OWLEquivalentClassesAxiom axiom;
 
+    @Mock
+    private AxiomsByEntityReferenceIndex axiomsByEntityReference;
+
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getEquivalentClassesAxioms(cls))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new EquivalentClassesAxiomsIndexImpl(ontologyIndex);
+        when(axiomsByEntityReference.getReferencingAxioms(any(), any()))
+                .thenAnswer(invocation -> Stream.of());
+        when(axiomsByEntityReference.getReferencingAxioms(cls, ontologyID))
+                .thenAnswer(invocation -> Stream.of(axiom));
+        impl = new EquivalentClassesAxiomsIndexImpl(axiomsByEntityReference);
     }
 
     @Test

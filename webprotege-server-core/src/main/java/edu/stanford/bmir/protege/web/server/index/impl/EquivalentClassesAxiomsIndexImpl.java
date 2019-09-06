@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -19,11 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxiomsIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
 
     @Inject
-    public EquivalentClassesAxiomsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public EquivalentClassesAxiomsIndexImpl(@Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex) {
+        this.axiomsByEntityReferenceIndex = checkNotNull(axiomsByEntityReferenceIndex);
     }
 
     @Nonnull
@@ -32,8 +34,8 @@ public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxioms
                                                                         @Nonnull OWLOntologyID ontologyID) {
         checkNotNull(cls);
         checkNotNull(ontologyID);
-        return ontologyIndex.getOntology(ontologyID)
-                .stream()
-                .flatMap(ont -> ont.getEquivalentClassesAxioms(cls).stream());
+        return axiomsByEntityReferenceIndex.getReferencingAxioms(cls, ontologyID)
+                                    .filter(OWLEquivalentClassesAxiom.class::isInstance)
+                                    .map(OWLEquivalentClassesAxiom.class::cast);
     }
 }
