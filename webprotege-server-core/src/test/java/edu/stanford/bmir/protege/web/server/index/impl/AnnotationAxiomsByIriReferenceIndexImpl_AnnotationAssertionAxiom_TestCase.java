@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.AnnotationAxiomsByIriReferenceIndexImpl;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +13,8 @@ import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationAssertionAxiomImpl;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,9 +30,6 @@ import static org.mockito.Mockito.when;
 public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_TestCase {
 
     private AnnotationAxiomsByIriReferenceIndexImpl impl;
-
-    @Mock
-    private AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Mock
     private OWLOntologyID ontologyId;
@@ -70,15 +65,8 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
                                                                             otherValueIri,
                                                                             axiomAnnotations());
 
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId))
-                .thenReturn(Stream.empty());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_RANGE, ontologyId))
-                .thenReturn(Stream.empty());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_ASSERTION, ontologyId))
-                .thenReturn(Stream.of(annotationAssertionAxiom));
-
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.load(Stream.of(ontologyId), axiomsByTypeIndex);
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, annotationAssertionAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {

@@ -108,12 +108,9 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                 AnnotationAssertion(rdfsComment, sourceEntity.getIRI(), hi));
         defaultOntologyIdManager = new DefaultOntologyIdManagerImpl(rootOntology);
         projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
-        var ontologyIndex = new OntologyIndexImpl(rootOntology);
         annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl();
         var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
         var axiomsByIriReference = new AnnotationAxiomsByIriReferenceIndexImpl();
-        var axiomsByTypeIndex = new AxiomsByTypeIndexImpl();
-        axiomsByIriReference.load(Stream.of(rootOntology.getOntologyID()), axiomsByTypeIndex);
         var axiomsByReferenceIndex = new AxiomsByReferenceIndexImpl(axiomsByEntityReference,
                                                                     axiomsByIriReference);
 

@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyDomainAxiomImpl;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -72,7 +73,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId)).thenReturn(Stream.of(annotationPropertyDomainAxiom));
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.load(Stream.of(ontologyId), axiomsByTypeIndex);
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, annotationPropertyDomainAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {

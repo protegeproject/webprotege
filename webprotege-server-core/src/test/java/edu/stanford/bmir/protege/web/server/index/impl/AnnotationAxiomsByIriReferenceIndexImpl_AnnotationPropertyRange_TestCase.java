@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyRangeAxiomImpl;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -31,9 +32,6 @@ import static org.mockito.Mockito.when;
 public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_TestCase {
 
     private AnnotationAxiomsByIriReferenceIndexImpl impl;
-
-    @Mock
-    private AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Mock
     private OWLOntologyID ontologyId;
@@ -55,18 +53,11 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
     @Before
     public void setUp() {
 
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_ASSERTION, ontologyId))
-                .thenReturn(Stream.empty());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId))
-                .thenReturn(Stream.empty());
-
-
         annotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, rangeIri, axiomAnnotations());
         otherAnnotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, otherRangeIri, axiomAnnotations());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_RANGE, ontologyId)).thenReturn(Stream.of(annotationPropertyRangeAxiom));
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.load(Stream.of(ontologyId), axiomsByTypeIndex);
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, annotationPropertyRangeAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {
