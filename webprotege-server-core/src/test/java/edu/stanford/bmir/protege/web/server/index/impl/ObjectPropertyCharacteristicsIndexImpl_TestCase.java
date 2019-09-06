@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.ObjectPropertyCharacteristicsIndexImpl;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
@@ -12,6 +13,7 @@ import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.semanticweb.owlapi.model.AxiomType.*;
 
 /**
  * Matthew Horridge
@@ -31,30 +34,33 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
     private ObjectPropertyCharacteristicsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
-
-    @Mock
-    private OWLOntology ontology;
 
     @Mock
     private OWLObjectProperty property;
 
+    @Mock
+    private AxiomsByTypeIndex axiomsByTypeIndex;
+
     @Before
     public void setUp() {
-        impl = new ObjectPropertyCharacteristicsIndexImpl(ontologyIndex);
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
+        when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
+                .thenAnswer(invocation -> Stream.empty());
+        impl = new ObjectPropertyCharacteristicsIndexImpl(axiomsByTypeIndex);
+    }
+
+    private <A extends OWLObjectPropertyCharacteristicAxiom> Stream<A> mockAxiom(Class<A> cls) {
+        A ax = mock(cls);
+        when(ax.getProperty())
+                .thenReturn(property);
+        return Stream.of(ax);
     }
 
     @Test
     public void shouldReturnTrueForFunctional() {
-        when(ontology.getFunctionalObjectPropertyAxioms(property))
-                .thenReturn(Collections.singleton(mock(OWLFunctionalObjectPropertyAxiom.class)));
+        when(axiomsByTypeIndex.getAxiomsByType(FUNCTIONAL_OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> mockAxiom(OWLFunctionalObjectPropertyAxiom.class));
+
         assertHasCharacteristic(ObjectPropertyCharacteristic.FUNCTIONAL, true);
     }
 
@@ -71,8 +77,9 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForInverseFunctional() {
-        when(ontology.getInverseFunctionalObjectPropertyAxioms(property))
-                .thenReturn(Collections.singleton(mock(OWLInverseFunctionalObjectPropertyAxiom.class)));
+        when(axiomsByTypeIndex.getAxiomsByType(INVERSE_FUNCTIONAL_OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> mockAxiom(OWLInverseFunctionalObjectPropertyAxiom.class));
+
         assertHasCharacteristic(ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL, true);
     }
 
@@ -83,8 +90,8 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForSymmetric() {
-        when(ontology.getSymmetricObjectPropertyAxioms(property))
-                .thenReturn(Collections.singleton(mock(OWLSymmetricObjectPropertyAxiom.class)));
+        when(axiomsByTypeIndex.getAxiomsByType(SYMMETRIC_OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> mockAxiom(OWLSymmetricObjectPropertyAxiom.class));
         assertHasCharacteristic(ObjectPropertyCharacteristic.SYMMETRIC, true);
     }
 
@@ -95,8 +102,8 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForAsymmetric() {
-        when(ontology.getAsymmetricObjectPropertyAxioms(property))
-                .thenReturn(Collections.singleton(mock(OWLAsymmetricObjectPropertyAxiom.class)));
+        when(axiomsByTypeIndex.getAxiomsByType(ASYMMETRIC_OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> mockAxiom(OWLAsymmetricObjectPropertyAxiom.class));
         assertHasCharacteristic(ASYMMETRIC, true);
     }
 
@@ -107,8 +114,8 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForReflexive() {
-        when(ontology.getReflexiveObjectPropertyAxioms(property))
-                .thenReturn(Collections.singleton(mock(OWLReflexiveObjectPropertyAxiom.class)));
+        when(axiomsByTypeIndex.getAxiomsByType(REFLEXIVE_OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> mockAxiom(OWLReflexiveObjectPropertyAxiom.class));
         assertHasCharacteristic(REFLEXIVE, true);
     }
 
@@ -119,8 +126,8 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForIrreflexive() {
-        when(ontology.getIrreflexiveObjectPropertyAxioms(property))
-                .thenReturn(Collections.singleton(mock(OWLIrreflexiveObjectPropertyAxiom.class)));
+        when(axiomsByTypeIndex.getAxiomsByType(IRREFLEXIVE_OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> mockAxiom(OWLIrreflexiveObjectPropertyAxiom.class));
         assertHasCharacteristic(IRREFLEXIVE, true);
     }
 
@@ -131,8 +138,8 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
 
     @Test
     public void shouldReturnTrueForTransitive() {
-        when(ontology.getTransitiveObjectPropertyAxioms(property))
-                .thenReturn(Collections.singleton(mock(OWLTransitiveObjectPropertyAxiom.class)));
+        when(axiomsByTypeIndex.getAxiomsByType(TRANSITIVE_OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> mockAxiom(OWLTransitiveObjectPropertyAxiom.class));
         assertHasCharacteristic(TRANSITIVE, true);
     }
 

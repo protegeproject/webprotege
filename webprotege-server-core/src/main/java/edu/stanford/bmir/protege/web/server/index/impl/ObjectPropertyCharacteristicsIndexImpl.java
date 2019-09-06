@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.ObjectPropertyCharacteristicsIndex;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyCharacteristicAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
@@ -18,11 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ObjectPropertyCharacteristicsIndexImpl implements ObjectPropertyCharacteristicsIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Inject
-    public ObjectPropertyCharacteristicsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public ObjectPropertyCharacteristicsIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
     @Override
@@ -32,46 +35,28 @@ public class ObjectPropertyCharacteristicsIndexImpl implements ObjectPropertyCha
         checkNotNull(property);
         checkNotNull(characteristic);
         checkNotNull(ontologyId);
-        var ontology = ontologyIndex.getOntology(ontologyId);
-        var ontologyStream = ontology.stream();
+        var axiomType = getAxiomType(characteristic);
+        return axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyId)
+                                .anyMatch(ax -> ax.getProperty()
+                                                  .equals(property));
+    }
+
+    private AxiomType<? extends OWLObjectPropertyCharacteristicAxiom> getAxiomType(ObjectPropertyCharacteristic characteristic) {
         switch(characteristic) {
             case FUNCTIONAL:
-                return ontologyStream
-                        .flatMap(ont -> ont.getFunctionalObjectPropertyAxioms(property).stream())
-                        .findFirst()
-                        .isPresent();
+                return AxiomType.FUNCTIONAL_OBJECT_PROPERTY;
             case INVERSE_FUNCTIONAL:
-                return ontologyStream
-                        .flatMap(ont -> ont.getInverseFunctionalObjectPropertyAxioms(property).stream())
-                        .findFirst()
-                        .isPresent();
+                return AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY;
             case SYMMETRIC:
-                return ontologyStream
-                        .flatMap(ont -> ont.getSymmetricObjectPropertyAxioms(property).stream())
-                        .findFirst()
-                        .isPresent();
+                return AxiomType.SYMMETRIC_OBJECT_PROPERTY;
             case ASYMMETRIC:
-                return ontologyStream
-                        .flatMap(ont -> ont.getAsymmetricObjectPropertyAxioms(property).stream())
-                        .findFirst()
-                        .isPresent();
+                return AxiomType.ASYMMETRIC_OBJECT_PROPERTY;
             case REFLEXIVE:
-                return ontologyStream
-                        .flatMap(ont -> ont.getReflexiveObjectPropertyAxioms(property).stream())
-                        .findFirst()
-                        .isPresent();
+                return AxiomType.REFLEXIVE_OBJECT_PROPERTY;
             case IRREFLEXIVE:
-                return ontology
-                        .stream()
-                        .flatMap(ont -> ont.getIrreflexiveObjectPropertyAxioms(property).stream())
-                        .findFirst()
-                        .isPresent();
+                return AxiomType.IRREFLEXIVE_OBJECT_PROPERTY;
             case TRANSITIVE:
-                return ontology
-                        .stream()
-                        .flatMap(ont -> ont.getTransitiveObjectPropertyAxioms(property).stream())
-                        .findFirst()
-                        .isPresent();
+                return AxiomType.TRANSITIVE_OBJECT_PROPERTY;
             default:
                 throw new RuntimeException("Unknown characteristic: " + characteristic);
         }
