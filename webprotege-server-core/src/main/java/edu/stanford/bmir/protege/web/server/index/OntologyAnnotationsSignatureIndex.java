@@ -12,6 +12,6 @@ import javax.annotation.Nonnull;
  */
 public interface OntologyAnnotationsSignatureIndex {
 
-    boolean containsEntityInSignature(@Nonnull OWLEntity entity,
-                                      @Nonnull OWLOntologyID ontologyId);
+    boolean containsEntityInOntologyAnnotationsSignature(@Nonnull OWLEntity entity,
+                                                         @Nonnull OWLOntologyID ontologyId);
 }

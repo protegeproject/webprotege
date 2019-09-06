@@ -27,7 +27,7 @@ public class OntologyAnnotationsSignatureIndexImpl implements OntologyAnnotation
     }
 
     @Override
-    public boolean containsEntityInSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
+    public boolean containsEntityInOntologyAnnotationsSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
         if(entity.isOWLAnnotationProperty()) {
             return false;
         }

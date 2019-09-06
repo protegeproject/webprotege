@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.EntitiesInOntologySignatureIndexImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +43,7 @@ public class EntitiesInOntologySignatureIndexImpl_TestCase {
         impl = new EntitiesInOntologySignatureIndexImpl(ontologyAxiomsSignatureIndex, ontologyAnnotationsSignatureIndex);
         when(ontologyAxiomsSignatureIndex.containsEntityInOntologyAxiomsSignature(entity, ontologyId))
                 .thenReturn(true);
-        when(ontologyAnnotationsSignatureIndex.containsEntityInSignature(entity, ontologyId))
+        when(ontologyAnnotationsSignatureIndex.containsEntityInOntologyAnnotationsSignature(entity, ontologyId))
                 .thenReturn(true);
     }
 

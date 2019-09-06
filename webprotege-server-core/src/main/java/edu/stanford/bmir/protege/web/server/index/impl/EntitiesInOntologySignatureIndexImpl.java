@@ -40,7 +40,7 @@ public class EntitiesInOntologySignatureIndexImpl implements EntitiesInOntologyS
             return true;
         }
         if(entity.isOWLAnnotationProperty()) {
-            return ontologyAnnotationsSignatureIndex.containsEntityInSignature(entity, ontologyId);
+            return ontologyAnnotationsSignatureIndex.containsEntityInOntologyAnnotationsSignature(entity, ontologyId);
         }
         return false;
 
