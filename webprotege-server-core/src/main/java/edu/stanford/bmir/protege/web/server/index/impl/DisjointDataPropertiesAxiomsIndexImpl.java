@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.DisjointDataPropertiesAxiomsIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -19,11 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DisjointDataPropertiesAxiomsIndexImpl implements DisjointDataPropertiesAxiomsIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Inject
-    public DisjointDataPropertiesAxiomsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public DisjointDataPropertiesAxiomsIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
 
@@ -33,8 +35,7 @@ public class DisjointDataPropertiesAxiomsIndexImpl implements DisjointDataProper
                                                                                   @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(ontologyId);
         checkNotNull(property);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getDisjointDataPropertiesAxioms(property).stream());
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.DISJOINT_DATA_PROPERTIES, ontologyId)
+                .filter(ax -> ax.getProperties().contains(property));
     }
 }
