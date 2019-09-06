@@ -74,4 +74,56 @@ public class OntologyAxiomsIndexImpl_TestCase {
     public void shouldThrowNpeIfOntologyIdIsNull() {
         impl.getAxioms(null);
     }
+
+    @Test
+    public void shouldContainAxiom() {
+        when(ontology.containsAxiom(axiom))
+                .thenReturn(true);
+        assertThat(impl.containsAxiom(axiom, ontologyId), is(true));
+    }
+
+    @Test
+    public void shouldContainAxiomWithoutAnnotationsIgnoreAnnotations() {
+        when(ontology.containsAxiom(axiom))
+                .thenReturn(true);
+        assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyId), is(true));
+    }
+
+    @Test
+    public void shouldContainAxiomIgnoreAnnotations() {
+        when(ontology.containsAxiom(axiom))
+                .thenReturn(false);
+        when(ontology.containsAxiomIgnoreAnnotations(axiom))
+                .thenReturn(true);
+        assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyId), is(true));
+    }
+
+    @Test
+    public void shouldNotContainAxiomInUnknownOntology() {
+        assertThat(impl.containsAxiom(axiom, mock(OWLOntologyID.class)), is(false));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNpeIfOntologyIsNullInContainsAxiom() {
+        impl.containsAxiom(axiom, null);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNpeIfAxiomIsNullInContainsAxiom() {
+        impl.containsAxiom(null, ontologyId);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNpeIfOntologyIsNullInContainsAxiomIgnoreAnnotations() {
+        impl.containsAxiomIgnoreAnnotations(axiom, null);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNpeIfAxiomIsNullInContainsAxiomIgnoreAnnotations() {
+        impl.containsAxiomIgnoreAnnotations(null, ontologyId);
+    }
 }

@@ -42,6 +42,8 @@ public class EntitiesInOntologySignatureIndexImpl_TestCase {
     @Before
     public void setUp() {
         impl = new EntitiesInOntologySignatureIndexImpl(ontologyAxiomsSignatureIndex, ontologyAnnotationsSignatureIndex);
+        when(ontologyAxiomsSignatureIndex.containsEntityInOntologyAxiomsSignature(entity, ontologyId))
+                .thenReturn(true);
         when(ontologyAnnotationsSignatureIndex.containsEntityInSignature(entity, ontologyId))
                 .thenReturn(true);
     }

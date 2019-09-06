@@ -33,4 +33,24 @@ public class OntologyAxiomsIndexImpl implements OntologyAxiomsIndex {
                 .stream()
                 .flatMap(ont -> ont.getAxioms().stream());
     }
+
+    @Override
+    public boolean containsAxiom(@Nonnull OWLAxiom axiom,
+                                 @Nonnull OWLOntologyID ontologyId) {
+        checkNotNull(axiom);
+        checkNotNull(ontologyId);
+        return ontologyIndex.getOntology(ontologyId)
+                            .map(ont -> ont.containsAxiom(axiom))
+                            .orElse(false);
+    }
+
+    @Override
+    public boolean containsAxiomIgnoreAnnotations(@Nonnull OWLAxiom axiom,
+                                                  @Nonnull OWLOntologyID ontologyId) {
+        return containsAxiom(axiom, ontologyId)
+                ||
+                ontologyIndex.getOntology(ontologyId)
+                             .map(ont -> ont.containsAxiomIgnoreAnnotations(axiom))
+                             .orElse(false);
+    }
 }

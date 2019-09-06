@@ -6,7 +6,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.index.AxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
@@ -43,7 +43,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Nonnull
-    private final AxiomsIndex axiomsIndex;
+    private final OntologyAxiomsIndex axiomsIndex;
 
     @Nonnull
     private final ClassFrameTranslator classFrameTranslator;
@@ -65,7 +65,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
                                 @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                 @Provided @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
                                 @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                                @Provided @Nonnull AxiomsIndex axiomsIndex,
+                                @Provided @Nonnull OntologyAxiomsIndex axiomsIndex,
                                 @Provided @Nonnull ClassFrameTranslator classFrameTranslator,
                                 @Provided @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                 @Provided @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,

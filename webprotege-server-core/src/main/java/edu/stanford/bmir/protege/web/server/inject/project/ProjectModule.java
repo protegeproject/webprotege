@@ -781,11 +781,6 @@ public class ProjectModule {
     }
 
     @Provides
-    AxiomsIndex provideAxiomsIndex(AxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
     ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(
             ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
         return impl;

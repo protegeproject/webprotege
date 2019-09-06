@@ -15,6 +15,12 @@ import java.util.stream.Stream;
 @ProjectSingleton
 public interface OntologyAxiomsIndex {
 
+    boolean containsAxiom(@Nonnull OWLAxiom axiom,
+                          @Nonnull OWLOntologyID ontologyId);
+
+    boolean containsAxiomIgnoreAnnotations(@Nonnull OWLAxiom axiom,
+                                           @Nonnull OWLOntologyID ontologyId);
+
     @Nonnull
     Stream<OWLAxiom> getAxioms(@Nonnull OWLOntologyID ontologyId);
 }
