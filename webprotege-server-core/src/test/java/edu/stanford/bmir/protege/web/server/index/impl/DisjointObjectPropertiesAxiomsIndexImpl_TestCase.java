@@ -1,19 +1,15 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.impl.DisjointObjectPropertiesAxiomsIndexImpl;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,13 +30,7 @@ public class DisjointObjectPropertiesAxiomsIndexImpl_TestCase {
     private DisjointObjectPropertiesAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
-    private OWLOntologyID ontologyID;
+    private OWLOntologyID ontologyId;
 
     @Mock
     private OWLObjectProperty property;
@@ -48,20 +38,23 @@ public class DisjointObjectPropertiesAxiomsIndexImpl_TestCase {
     @Mock
     private OWLDisjointObjectPropertiesAxiom axiom;
 
+    @Mock
+    private AxiomsByTypeIndex axiomsByTypeIndex;
+
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getDisjointObjectPropertiesAxioms(property))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new DisjointObjectPropertiesAxiomsIndexImpl(ontologyIndex);
+        when(axiom.getProperties())
+                .thenReturn(Collections.singleton(property));
+        when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
+                .thenAnswer(invocation -> Stream.of());
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.DISJOINT_OBJECT_PROPERTIES, ontologyId))
+                .thenAnswer(invocation -> Stream.of(axiom));
+        impl = new DisjointObjectPropertiesAxiomsIndexImpl(axiomsByTypeIndex);
     }
 
     @Test
     public void shouldGetDisjointObjectPropertiesAxiomForObjectProperty() {
-        var axioms = impl.getDisjointObjectPropertiesAxioms(property, ontologyID).collect(toSet());
+        var axioms = impl.getDisjointObjectPropertiesAxioms(property, ontologyId).collect(toSet());
         assertThat(axioms, hasItem(axiom));
     }
 
@@ -73,7 +66,7 @@ public class DisjointObjectPropertiesAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldGetEmptySetForUnknownObjectProperty() {
-        var axioms = impl.getDisjointObjectPropertiesAxioms(mock(OWLObjectProperty.class), ontologyID).collect(toSet());
+        var axioms = impl.getDisjointObjectPropertiesAxioms(mock(OWLObjectProperty.class), ontologyId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));
     }
 
@@ -86,6 +79,6 @@ public class DisjointObjectPropertiesAxiomsIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullObjectProperty() {
-        impl.getDisjointObjectPropertiesAxioms(null, ontologyID);
+        impl.getDisjointObjectPropertiesAxioms(null, ontologyId);
     }
 }
