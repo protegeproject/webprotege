@@ -1,12 +1,17 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.base.Stopwatch;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.protege.owlapi.inference.cls.ChildClassExtractor;
-import org.protege.owlapi.inference.cls.ParentClassExtractor;
 import org.protege.owlapi.inference.orphan.TerminalElementFinder;
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
@@ -82,11 +87,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         this.projectSignatureByTypeIndex = projectSignatureByTypeIndex;
         this.axiomsByEntityReferenceIndex = axiomsByEntityReferenceIndex;
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
-        rootFinder = new TerminalElementFinder<>(cls -> {
-            Collection<OWLClass> parents = getParents(cls);
-            parents.remove(root);
-            return parents;
-        });
+        rootFinder = new TerminalElementFinder<>(this::getParents);
         nodesToUpdate.clear();
         rebuildImplicitRoots();
         fireHierarchyChanged();
@@ -99,26 +100,47 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
             return Collections.emptySet();
         }
 
-        var subClassOfAxioms =
+        var subClassOfAxiomsParents =
                 projectOntologiesIndex.getOntologyIds()
                                       .flatMap(ontId -> subClassOfAxiomsIndex.getSubClassOfAxiomsForSubClass(object,
-                                                                                                             ontId));
+                                                                                                             ontId))
+                                      .map(OWLSubClassOfAxiom::getSuperClass)
+                                      .flatMap(this::asConjunctSet)
+                                      .filter(OWLClassExpression::isNamed)
+                                      .map(OWLClassExpression::asOWLClass);
 
-        var equivalentClassesAxioms =
+
+        var equivalentClassesAxiomsParents =
                 projectOntologiesIndex.getOntologyIds()
                                       .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(
                                               object,
-                                              ontId));
+                                              ontId))
+                                      .flatMap(ax -> ax.getClassExpressions()
+                                                       .stream())
+                                      .filter(ce -> !ce.equals(object))
+                                      .flatMap(this::asConjunctSet)
+                                      .filter(OWLClassExpression::isNamed)
+                                      .map(OWLClassExpression::asOWLClass);
 
-        var axioms = Stream.concat(subClassOfAxioms, equivalentClassesAxioms);
-        var parents = axioms.flatMap(ax -> extractParents(object, ax))
-                            .collect(toSet());
+        var parentsCombined = Stream.concat(subClassOfAxiomsParents, equivalentClassesAxiomsParents);
+        var parents = parentsCombined.collect(toSet());
         // Thing if the object is a root class
         if(rootFinder.getTerminalElements()
                      .contains(object)) {
             parents.add(root);
         }
         return parents;
+    }
+
+    private Stream<OWLClassExpression> asConjunctSet(@Nonnull OWLClassExpression cls) {
+        if(cls instanceof OWLObjectIntersectionOf) {
+            return ((OWLObjectIntersectionOf) cls).getOperandsAsList()
+                                           .stream()
+                                           .flatMap(this::asConjunctSet);
+        }
+        else {
+            return Stream.of(cls);
+        }
     }
 
     private void rebuildImplicitRoots() {
@@ -132,13 +154,13 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         logger.info("{} Rebuilt class hierarchy in {} ms", projectId, stopwatch.elapsed(MILLISECONDS));
     }
 
-    private static Stream<OWLClass> extractParents(OWLClass object, OWLAxiom ax) {
-        var parentClassExtractor = new ParentClassExtractor();
-        parentClassExtractor.setCurrentClass(object);
-        ax.accept(parentClassExtractor);
-        return parentClassExtractor.getResult()
-                                   .stream();
-    }
+    //    private static Stream<OWLClass> extractParents(OWLClass object, OWLAxiom ax) {
+    //        var parentClassExtractor = new ParentClassExtractor();
+    //        parentClassExtractor.setCurrentClass(object);
+    //        ax.accept(parentClassExtractor);
+    //        return parentClassExtractor.getResult()
+    //                                   .stream();
+    //    }
 
     public void dispose() {
     }

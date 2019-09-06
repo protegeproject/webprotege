@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.index.impl.*;
 import edu.stanford.bmir.protege.web.server.inject.ChangeHistoryFileFactory;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
@@ -98,20 +99,21 @@ public class ProjectChangesManager_IT {
         var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         var ontologyIndex = new OntologyIndexImpl(rootOntology);
 
-        var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
+        var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl();
         var projectAnnotationAssertionsIndex = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex,
                                                                                                       annotationAssertionsIndex);
         var annotationAssertionAxioms = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
-        AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl(ontologyIndex);
+        AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl();
 
-        var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(ontologyIndex);
+        var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
         var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
                                                                                                         axiomsByEntityReference,
                                                                                                         projectOntologiesIndex), repo);
 
+        var entitiesInOntologySignatureByIri = new EntitiesInOntologySignatureByIriIndexImpl(axiomsByEntityReference);
         var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex,
-                                                                                    ontologyIndex);
+                                                                                    entitiesInOntologySignatureByIri);
         var ontologySignatureIndex = new OntologySignatureIndexImpl(ontologyIndex);
         var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
 

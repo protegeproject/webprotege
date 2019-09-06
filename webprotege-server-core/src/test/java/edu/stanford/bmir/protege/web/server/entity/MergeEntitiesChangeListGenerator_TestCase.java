@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.index.impl.*;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
@@ -108,10 +109,10 @@ public class MergeEntitiesChangeListGenerator_TestCase {
         defaultOntologyIdManager = new DefaultOntologyIdManagerImpl(rootOntology);
         projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
         var ontologyIndex = new OntologyIndexImpl(rootOntology);
-        annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl(ontologyIndex);
-        var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(ontologyIndex);
+        annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl();
+        var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
         var axiomsByIriReference = new AnnotationAxiomsByIriReferenceIndexImpl();
-        var axiomsByTypeIndex = new AxiomsByTypeIndexImpl(ontologyIndex);
+        var axiomsByTypeIndex = new AxiomsByTypeIndexImpl();
         axiomsByIriReference.load(Stream.of(rootOntology.getOntologyID()), axiomsByTypeIndex);
         var axiomsByReferenceIndex = new AxiomsByReferenceIndexImpl(axiomsByEntityReference,
                                                                     axiomsByIriReference);

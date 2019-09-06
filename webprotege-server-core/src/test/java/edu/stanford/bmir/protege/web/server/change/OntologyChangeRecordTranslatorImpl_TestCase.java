@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.index.OntologyIndex;
+import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

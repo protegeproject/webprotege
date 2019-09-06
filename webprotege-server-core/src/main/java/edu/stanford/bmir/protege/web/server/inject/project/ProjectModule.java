@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecke
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.index.impl.*;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
@@ -38,7 +39,6 @@ import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
@@ -636,7 +636,8 @@ public class ProjectModule {
     }
 
     @Provides
-    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl) {
+    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl, IndexUpdater indexUpdater) {
+        indexUpdater.registerIndex(impl);
         return impl;
     }
 
@@ -672,7 +673,9 @@ public class ProjectModule {
 
     @Provides
     AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
-            AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+            AnnotationAssertionAxiomsBySubjectIndexImpl impl,
+            IndexUpdater updater) {
+        updater.registerIndex(impl);
         return impl;
     }
 
@@ -808,6 +811,11 @@ public class ProjectModule {
     }
 
     @Provides
+    OntologyAxiomsSignatureIndex provideOntologyAxiomsSignatureIndex(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
     DefaultOntologyIdManager provideDefaultOntologyIdManager(DefaultOntologyIdManagerImpl impl) {
         return impl;
     }
@@ -887,6 +895,11 @@ public class ProjectModule {
     }
 
     @Provides
+    EntitiesInOntologySignatureByIriIndex provideEntitiesInOntologySignatureByIriIndex(EntitiesInOntologySignatureByIriIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
     OntologyAxiomsIndex provideOntologyAxiomsIndex(OntologyAxiomsIndexImpl impl) {
         return impl;
     }
@@ -961,5 +974,11 @@ public class ProjectModule {
     AnnotationsSectionRenderer<OWLDatatype> provideAnnotationsSectionRendererOwlDatatype(AnnotationsSectionRenderer impl) {
         return impl;
     }
+
+    @Provides
+    OntologyAnnotationsSignatureIndex provideOntologyAnnotationsSignatureIndex(@Nonnull OntologyAnnotationsSignatureIndexImpl impl) {
+        return impl;
+    }
+
 }
 
