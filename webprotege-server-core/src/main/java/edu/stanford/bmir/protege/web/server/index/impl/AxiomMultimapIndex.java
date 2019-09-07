@@ -43,9 +43,9 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
 
 
 
-    public AxiomMultimapIndex(@Nonnull Multimap<Key<V>, A> backingMap,
+    public AxiomMultimapIndex(@Nonnull Class<A> axiomCls,
                               @Nonnull KeyValueExtractor<V, A> keyValueExtractor,
-                              @Nonnull Class<A> axiomCls) {
+                              @Nonnull Multimap<Key<V>, A> backingMap) {
         this.backingMap = checkNotNull(backingMap);
         this.keyValueExtractor = checkNotNull(keyValueExtractor);
         this.axiomCls = checkNotNull(axiomCls);

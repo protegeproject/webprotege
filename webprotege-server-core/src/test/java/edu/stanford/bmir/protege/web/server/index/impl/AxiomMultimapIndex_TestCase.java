@@ -52,9 +52,8 @@ public class AxiomMultimapIndex_TestCase {
 
     @Before
     public void setUp() {
-        index = new AxiomMultimapIndex<>(backingMap,
-                                         extractor,
-                                         OWLSubClassOfAxiom.class);
+        index = new AxiomMultimapIndex<>(OWLSubClassOfAxiom.class, extractor, backingMap
+        );
         when(axiom.getSubClass())
                 .thenReturn(subCls);
 
