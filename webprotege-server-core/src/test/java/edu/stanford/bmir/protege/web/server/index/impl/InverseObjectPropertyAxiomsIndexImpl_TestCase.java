@@ -44,6 +44,8 @@ public class InverseObjectPropertyAxiomsIndexImpl_TestCase {
     public void setUp() {
         when(axiom.getFirstProperty())
                 .thenReturn(property);
+        when(axiom.getSecondProperty())
+                .thenReturn(property);
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.of());
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.INVERSE_OBJECT_PROPERTIES, ontologyId))
