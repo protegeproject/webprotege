@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.MultimapBuilder;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.SubAnnotationPropertyAxiomsBySuperPropertyIndex;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -8,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,14 +20,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-17
  */
-public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubAnnotationPropertyAxiomsBySuperPropertyIndex {
+public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubAnnotationPropertyAxiomsBySuperPropertyIndex, RequiresOntologyChangeNotification {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomMultimapIndex<OWLAnnotationProperty, OWLSubAnnotationPropertyOfAxiom> index;
 
     @Inject
-    public SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl() {
+        index = new AxiomMultimapIndex<>(OWLSubAnnotationPropertyOfAxiom.class,
+                                       OWLSubAnnotationPropertyOfAxiom::getSuperProperty,
+                                         MultimapBuilder.hashKeys().arrayListValues().build());
     }
 
     @Nonnull
@@ -33,9 +38,11 @@ public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubA
                                                                              @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(ontologyId);
         checkNotNull(property);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getAxioms(AxiomType.SUB_ANNOTATION_PROPERTY_OF).stream())
-                .filter(ax -> ax.getSuperProperty().equals(property));
+        return index.getAxioms(property, ontologyId);
+    }
+
+    @Override
+    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+        index.handleOntologyChanges(changes);
     }
 }

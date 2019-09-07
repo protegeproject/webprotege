@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
@@ -31,13 +33,7 @@ public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl_TestCase {
     private SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
-
-    @Mock
-    private OWLOntology ontology;
 
     @Mock
     private OWLSubAnnotationPropertyOfAxiom axiom;
@@ -47,21 +43,10 @@ public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-
-        impl = new SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl(ontologyIndex);
-
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
-
-        when(ontology.getAxioms(AxiomType.SUB_ANNOTATION_PROPERTY_OF))
-                .thenReturn(Collections.singleton(axiom));
-
         when(axiom.getSuperProperty())
                 .thenReturn(property);
-
+        impl = new SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl();
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, axiom)));
     }
 
     @Test
