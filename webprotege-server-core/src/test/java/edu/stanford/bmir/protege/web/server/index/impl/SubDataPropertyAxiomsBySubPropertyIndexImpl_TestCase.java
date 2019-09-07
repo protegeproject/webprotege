@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.SubDataPropertyAxiomsBySubPropertyIndexImpl;
 import org.junit.Before;
@@ -7,13 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,15 +47,18 @@ public class SubDataPropertyAxiomsBySubPropertyIndexImpl_TestCase {
     @Mock
     private OWLSubDataPropertyOfAxiom axiom;
 
+    @Mock
+    private AxiomsByTypeIndex axiomsByTypeIndex;
+
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getDataSubPropertyAxiomsForSubProperty(property))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new SubDataPropertyAxiomsBySubPropertyIndexImpl(ontologyIndex);
+        when(axiom.getSubProperty())
+                .thenReturn(property);
+        when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
+                .thenAnswer(invocation -> Stream.empty());
+        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_DATA_PROPERTY, ontologyID))
+                .thenAnswer(invocation -> Stream.of(axiom));
+        impl = new SubDataPropertyAxiomsBySubPropertyIndexImpl(axiomsByTypeIndex);
     }
 
     @Test
