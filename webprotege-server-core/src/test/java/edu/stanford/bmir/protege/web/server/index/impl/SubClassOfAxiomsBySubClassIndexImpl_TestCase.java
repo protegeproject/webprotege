@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.SubClassOfAxiomsBySubClassIndexImpl;
 import org.junit.Before;
@@ -7,12 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
@@ -22,6 +22,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.Class;
+import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.SubClassOf;
 
 /**
  * Matthew Horridge
@@ -34,29 +36,21 @@ public class SubClassOfAxiomsBySubClassIndexImpl_TestCase {
     private SubClassOfAxiomsBySubClassIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
     private OWLOntologyID ontologyID;
 
-    @Mock
     private OWLClass cls;
 
-    @Mock
     private OWLSubClassOfAxiom axiom;
+
+    @Mock
+    private OWLClassExpression superCls;
 
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getSubClassAxiomsForSubClass(cls))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new SubClassOfAxiomsBySubClassIndexImpl(ontologyIndex);
+        cls = Class(mock(IRI.class));
+        axiom = SubClassOf(cls, superCls);
+        impl = new SubClassOfAxiomsBySubClassIndexImpl();
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test
