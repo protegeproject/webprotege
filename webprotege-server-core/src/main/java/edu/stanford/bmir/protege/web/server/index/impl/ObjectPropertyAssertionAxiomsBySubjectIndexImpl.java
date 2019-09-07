@@ -1,12 +1,16 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.MultimapBuilder;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ObjectPropertyAssertionAxiomsBySubjectIndex;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,14 +20,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-12
  */
-public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPropertyAssertionAxiomsBySubjectIndex {
+public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPropertyAssertionAxiomsBySubjectIndex, RequiresOntologyChangeNotification {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomMultimapIndex<OWLIndividual, OWLObjectPropertyAssertionAxiom> index;
 
     @Inject
-    public ObjectPropertyAssertionAxiomsBySubjectIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public ObjectPropertyAssertionAxiomsBySubjectIndexImpl() {
+        this.index = new AxiomMultimapIndex<>(
+                OWLObjectPropertyAssertionAxiom.class,
+                OWLPropertyAssertionAxiom::getSubject,
+                MultimapBuilder.hashKeys().arrayListValues().build()
+        );
+    }
+
+    private OWLIndividual extractSubject(@Nonnull OWLObjectPropertyAssertionAxiom axiom) {
+        return axiom.getObject();
+    }
+
+    @Override
+    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+        index.handleOntologyChanges(changes);
     }
 
     @Nonnull
@@ -32,8 +49,6 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPr
                                                                                @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(subject);
         checkNotNull(ontologyId);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getObjectPropertyAssertionAxioms(subject).stream());
+        return index.getAxioms(subject, ontologyId);
     }
 }
