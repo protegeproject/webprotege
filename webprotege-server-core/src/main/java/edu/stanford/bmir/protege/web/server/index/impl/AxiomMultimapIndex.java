@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -82,7 +83,11 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
             writeLock.lock();
             if(change.isAddAxiom()) {
                 // Backing map may/may not be a set
-                if(!backingMap.containsEntry(key, ax)) {
+                // If it is a set then we just added the key/axiom pair
+                // If it is not a set, we don't want duplicates so we must
+                // check to see if it contains the key/axiom pair
+                var shouldAdd = backingMap instanceof SetMultimap || !backingMap.containsEntry(key, ax);
+                if(shouldAdd) {
                     backingMap.put(key, ax);
                 }
             }
