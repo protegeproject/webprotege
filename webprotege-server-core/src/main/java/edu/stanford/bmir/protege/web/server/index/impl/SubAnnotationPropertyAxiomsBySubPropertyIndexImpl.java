@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.SubAnnotationPropertyAxiomsBySubPropertyIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
@@ -19,11 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SubAnnotationPropertyAxiomsBySubPropertyIndexImpl implements SubAnnotationPropertyAxiomsBySubPropertyIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Inject
-    public SubAnnotationPropertyAxiomsBySubPropertyIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public SubAnnotationPropertyAxiomsBySubPropertyIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
     @Nonnull
@@ -32,8 +34,8 @@ public class SubAnnotationPropertyAxiomsBySubPropertyIndexImpl implements SubAnn
                                                                           @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(ontologyId);
         checkNotNull(property);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ontology -> ontology.getSubAnnotationPropertyOfAxioms(property).stream());
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_ANNOTATION_PROPERTY_OF, ontologyId)
+                                .filter(ax -> ax.getSubProperty()
+                                                .equals(property));
     }
 }
