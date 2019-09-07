@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.SubObjectPropertyAxiomsBySubPropertyIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
@@ -19,11 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SubObjectPropertyAxiomsBySubPropertyIndexImpl implements SubObjectPropertyAxiomsBySubPropertyIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndex axiomsByTypeIndex;
 
     @Inject
-    public SubObjectPropertyAxiomsBySubPropertyIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public SubObjectPropertyAxiomsBySubPropertyIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
     @Nonnull
@@ -32,8 +34,7 @@ public class SubObjectPropertyAxiomsBySubPropertyIndexImpl implements SubObjectP
                                                                       @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(ontologyId);
         checkNotNull(property);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getObjectSubPropertyAxiomsForSubProperty(property).stream());
+        return axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_OBJECT_PROPERTY, ontologyId)
+                         .filter(ax -> ax.getSubProperty().equals(property));
     }
 }
