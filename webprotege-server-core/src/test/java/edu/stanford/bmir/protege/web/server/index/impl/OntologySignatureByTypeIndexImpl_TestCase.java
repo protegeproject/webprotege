@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologySignatureByTypeIndexImpl;
+import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,16 +9,17 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.Collections;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.semanticweb.owlapi.model.EntityType.*;
 
 /**
  * Matthew Horridge
@@ -31,13 +32,7 @@ public class OntologySignatureByTypeIndexImpl_TestCase {
     private OntologySignatureByTypeIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
-
-    @Mock
-    private OWLOntology ontology;
 
     @Mock
     private OWLClass cls;
@@ -52,81 +47,92 @@ public class OntologySignatureByTypeIndexImpl_TestCase {
     private OWLAnnotationProperty annotationProperty;
 
     @Mock
+    private OWLAnnotationProperty annotationProperty2;
+
+    @Mock
     private OWLNamedIndividual individual;
 
     @Mock
     private OWLDatatype datatype;
 
+    @Mock
+    private OntologyAxiomsSignatureIndex ontologyAxiomsSignatureIndex;
+
+    @Mock
+    private OntologyAnnotationsSignatureIndex ontologyAnnotationsSignatureIndex;
+
     @Before
     public void setUp() {
-        impl = new OntologySignatureByTypeIndexImpl(ontologyIndex);
+        impl = new OntologySignatureByTypeIndexImpl(ontologyAxiomsSignatureIndex,
+                                                    ontologyAnnotationsSignatureIndex);
 
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
 
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(any(), any()))
+                .thenAnswer(invocation -> Stream.empty());
 
-        when(ontology.getClassesInSignature())
-                .thenReturn(Collections.singleton(cls));
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(CLASS, ontologyId))
 
-        when(ontology.getObjectPropertiesInSignature())
-                .thenReturn(Collections.singleton(objectProperty));
+                .thenAnswer(invocation -> Stream.of(cls));
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> Stream.of(objectProperty));
 
-        when(ontology.getDataPropertiesInSignature())
-                .thenReturn(Collections.singleton(dataProperty));
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(DATA_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> Stream.of(dataProperty));
 
-        when(ontology.getAnnotationPropertiesInSignature())
-                .thenReturn(Collections.singleton(annotationProperty));
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(ANNOTATION_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> Stream.of(annotationProperty));
 
-        when(ontology.getIndividualsInSignature())
-                .thenReturn(Collections.singleton(individual));
+        when(ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId))
+                .thenAnswer(invocation -> Stream.of(annotationProperty2));
 
-        when(ontology.getDatatypesInSignature())
-                .thenReturn(Collections.singleton(datatype));
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(NAMED_INDIVIDUAL, ontologyId))
+                .thenAnswer(invocation -> Stream.of(individual));
+
+        when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(DATATYPE, ontologyId))
+                .thenAnswer(invocation -> Stream.of(datatype));
     }
 
     @Test
     public void shouldGetClassesInSignature() {
-        var signature = impl.getSignature(EntityType.CLASS, ontologyId).collect(toSet());
+        var signature = impl.getSignature(CLASS, ontologyId).collect(toSet());
         assertThat(signature, hasItem(cls));
     }
 
 
     @Test
     public void shouldGetDatatypesInSignature() {
-        var signature = impl.getSignature(EntityType.DATATYPE, ontologyId).collect(toSet());
+        var signature = impl.getSignature(DATATYPE, ontologyId).collect(toSet());
         assertThat(signature, hasItem(datatype));
     }
 
     @Test
     public void shouldGetObjectPropertiesInSignature() {
-        var signature = impl.getSignature(EntityType.OBJECT_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getSignature(OBJECT_PROPERTY, ontologyId).collect(toSet());
         assertThat(signature, hasItem(objectProperty));
     }
 
     @Test
     public void shouldGetDataPropertiesInSignature() {
-        var signature = impl.getSignature(EntityType.DATA_PROPERTY, ontologyId).collect(toSet());
+        var signature = impl.getSignature(DATA_PROPERTY, ontologyId).collect(toSet());
         assertThat(signature, hasItem(dataProperty));
     }
 
     @Test
     public void shouldGetAnnotationPropertiesInSignature() {
-        var signature = impl.getSignature(EntityType.ANNOTATION_PROPERTY, ontologyId).collect(toSet());
-        assertThat(signature, hasItem(annotationProperty));
+        var signature = impl.getSignature(ANNOTATION_PROPERTY, ontologyId).collect(toSet());
+        assertThat(signature, hasItems(annotationProperty, annotationProperty2));
     }
 
 
     @Test
     public void shouldGetIndividualsInSignature() {
-        var signature = impl.getSignature(EntityType.NAMED_INDIVIDUAL, ontologyId).collect(toSet());
+        var signature = impl.getSignature(NAMED_INDIVIDUAL, ontologyId).collect(toSet());
         assertThat(signature, hasItem(individual));
     }
 
     @Test
     public void shouldGetEmptyStreamForUnknownOntology() {
-        var signature = impl.getSignature(EntityType.CLASS, mock(OWLOntologyID.class)).collect(toSet());
+        var signature = impl.getSignature(CLASS, mock(OWLOntologyID.class)).collect(toSet());
         assertThat(signature.isEmpty(), is(true));
     }
 
@@ -139,6 +145,6 @@ public class OntologySignatureByTypeIndexImpl_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeForNullOntologyId() {
-        impl.getSignature(EntityType.CLASS, null);
+        impl.getSignature(CLASS, null);
     }
 }

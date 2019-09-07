@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureByTypeIndex;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -20,22 +22,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class OntologySignatureByTypeIndexImpl implements OntologySignatureByTypeIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final OntologyAxiomsSignatureIndex ontologyAxiomsSignatureIndex;
+
+    @Nonnull
+    private final OntologyAnnotationsSignatureIndex ontologyAnnotationsSignatureIndex;
 
     @Inject
-    public OntologySignatureByTypeIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public OntologySignatureByTypeIndexImpl(@Nonnull OntologyAxiomsSignatureIndex ontologyAxiomsSignatureIndex,
+                                            @Nonnull OntologyAnnotationsSignatureIndex ontologyAnnotationsSignatureIndex) {
+        this.ontologyAxiomsSignatureIndex = checkNotNull(ontologyAxiomsSignatureIndex);
+        this.ontologyAnnotationsSignatureIndex = checkNotNull(ontologyAnnotationsSignatureIndex);
     }
 
+    @SuppressWarnings("unchecked")
     @Nonnull
     @Override
     public <E extends OWLEntity> Stream<E> getSignature(@Nonnull EntityType<E> type,
                                                         @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(type);
         checkNotNull(ontologyId);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> getStreamOfType(type, ont));
+        if(type.equals(EntityType.ANNOTATION_PROPERTY)) {
+            return Stream.<E>concat(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(type, ontologyId),
+                                    (Stream<E>) ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId));
+        }
+        else {
+            return ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(type, ontologyId);
+        }
     }
 
     @SuppressWarnings("unchecked")

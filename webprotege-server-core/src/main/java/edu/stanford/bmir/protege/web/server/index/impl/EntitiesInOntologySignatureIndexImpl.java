@@ -31,6 +31,7 @@ public class EntitiesInOntologySignatureIndexImpl implements EntitiesInOntologyS
         this.ontologyAnnotationsSignatureIndex = checkNotNull(ontologyAnnotationsSignatureIndex);
     }
 
+
     @Override
     public boolean containsEntityInSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(ontologyId);

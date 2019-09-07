@@ -35,6 +35,19 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
         return ImmutableList.copyOf(annotationsMap.get(ontologyID)).stream();
     }
 
+    @Nonnull
+    @Override
+    public Stream<OWLAnnotationProperty> getOntologyAnnotationsSignature(@Nonnull OWLOntologyID ontologyId) {
+        var annos = ImmutableList.copyOf(annotationsMap.get(ontologyId));
+        return getAnnos(annos.stream())
+                .map(OWLAnnotation::getProperty);
+    }
+
+    private Stream<OWLAnnotation> getAnnos(@Nonnull Stream<OWLAnnotation> annos) {
+        return Stream.concat(annos.flatMap(an -> getAnnos(an.getAnnotations().stream())),
+                             annos);
+    }
+
     @Override
     public boolean containsEntityInOntologyAnnotationsSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
         if(entity.isOWLAnnotationProperty()) {
