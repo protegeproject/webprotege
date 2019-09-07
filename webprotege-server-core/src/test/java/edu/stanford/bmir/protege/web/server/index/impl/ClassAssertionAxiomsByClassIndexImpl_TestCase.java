@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.impl.ClassAssertionAxiomsByClassIndexImpl;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,17 +8,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
-import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,12 +30,6 @@ public class ClassAssertionAxiomsByClassIndexImpl_TestCase {
     private ClassAssertionAxiomsByClassIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
     private OWLOntologyID ontologyID;
 
     @Mock
@@ -50,13 +40,10 @@ public class ClassAssertionAxiomsByClassIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getClassAssertionAxioms(cls))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new ClassAssertionAxiomsByClassIndexImpl(ontologyIndex);
+        when(axiom.getClassExpression())
+                .thenReturn(cls);
+        impl = new ClassAssertionAxiomsByClassIndexImpl();
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test
