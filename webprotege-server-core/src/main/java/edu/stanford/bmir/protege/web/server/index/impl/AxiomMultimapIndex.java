@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
-import org.checkerframework.checker.units.qual.K;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -53,8 +52,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         axiomChangeHandler.setAxiomChangeConsumer(this::handleChange);
     }
 
-    public Stream<A> getAxioms(@Nonnull OWLOntologyID ontologyId,
-                               @Nonnull V value) {
+    public Stream<A> getAxioms(@Nonnull V value, @Nonnull OWLOntologyID ontologyId) {
         var key = Key.get(ontologyId, value);
         try {
             readLock.lock();

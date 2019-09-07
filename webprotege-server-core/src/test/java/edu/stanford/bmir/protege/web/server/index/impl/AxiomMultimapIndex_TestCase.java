@@ -37,7 +37,7 @@ public class AxiomMultimapIndex_TestCase {
 
     @Mock
     private OWLClass subCls;
-    
+
     @Mock
     private OWLSubClassOfAxiom axiom;
 
@@ -68,18 +68,18 @@ public class AxiomMultimapIndex_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfOntologyIdIsNull() {
-        index.getAxioms(null, subCls);
+        index.getAxioms(subCls, null);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNpeIfValueIsNull() {
-        index.getAxioms(ontologyId, null);
+        index.getAxioms(null, ontologyId);
     }
 
     @Test
     public void shouldGetEmptyStreamBeforeAnyChange() {
-        var axiomsStream = index.getAxioms(ontologyId, subCls);
+        var axiomsStream = index.getAxioms(subCls, ontologyId);
         assertThat(axiomsStream.count(), is(0L));
     }
 
@@ -124,7 +124,7 @@ public class AxiomMultimapIndex_TestCase {
     public void shouldIgnoreIrrelevantChanges() {
         var otherAxiom = mock(OWLClassAssertionAxiom.class);
         index.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, otherAxiom)));
-        assertThat(index.getAxioms(ontologyId, subCls)
+        assertThat(index.getAxioms(subCls, ontologyId)
                         .count(), is(0L));
     }
 }
