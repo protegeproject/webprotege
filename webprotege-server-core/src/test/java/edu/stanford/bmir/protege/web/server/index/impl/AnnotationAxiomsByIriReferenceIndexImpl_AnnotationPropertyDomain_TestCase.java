@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.AnnotationAxiomsByIriReferenceIndexImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +72,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId)).thenReturn(Stream.of(annotationPropertyDomainAxiom));
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, annotationPropertyDomainAxiom)));
+        impl.applyChanges(List.of(AddAxiomChange.of(ontologyId, annotationPropertyDomainAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {
@@ -99,7 +98,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
     public void shouldHandleAddAnnotationPropertyDomainAxiom() {
         var changeRecord = AddAxiomChange.of(ontologyId, otherAnnotationPropertyDomainAxiom);
 
-        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
+        impl.applyChanges(ImmutableList.of(changeRecord));
 
         var axioms = impl.getReferencingAxioms(otherDomainIri, ontologyId).collect(toSet());
         assertThat(axioms, hasItems(otherAnnotationPropertyDomainAxiom));
@@ -109,7 +108,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
     public void shouldHandleRemoveAnnotationPropertyDomainAxiom() {
         var changeRecord = RemoveAxiomChange.of(ontologyId, annotationPropertyDomainAxiom);
 
-        impl.handleOntologyChanges(ImmutableList.of(changeRecord));
+        impl.applyChanges(ImmutableList.of(changeRecord));
 
         var axioms = impl.getReferencingAxioms(domainIri, ontologyId).collect(toSet());
         assertThat(axioms.isEmpty(), is(true));

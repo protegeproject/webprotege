@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
-import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
-import edu.stanford.bmir.protege.web.server.index.impl.RequiresOntologyChangeNotification;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +39,7 @@ public class IndexUpdate_TestCase {
         indexUpdater.registerIndex(index);
         var changes = Collections.singletonList(ontologyChange);
         indexUpdater.propagateOntologyChanges(changes);
-        verify(index, times(1)).handleOntologyChanges(changes);
+        verify(index, times(1)).applyChanges(changes);
     }
 
     @SuppressWarnings("ConstantConditions")

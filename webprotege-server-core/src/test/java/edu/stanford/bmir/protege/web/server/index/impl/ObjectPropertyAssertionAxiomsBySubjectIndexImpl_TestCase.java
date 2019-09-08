@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.impl.ObjectPropertyAssertionAxiomsBySubjectIndexImpl;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,12 +8,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +44,7 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
         when(axiom.getSubject())
                 .thenReturn(subject);
         impl = new ObjectPropertyAssertionAxiomsBySubjectIndexImpl();
-        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

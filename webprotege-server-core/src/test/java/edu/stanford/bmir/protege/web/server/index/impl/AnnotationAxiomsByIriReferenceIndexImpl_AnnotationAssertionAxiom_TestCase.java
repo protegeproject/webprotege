@@ -66,7 +66,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
                                                                             axiomAnnotations());
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, annotationAssertionAxiom)));
+        impl.applyChanges(List.of(AddAxiomChange.of(ontologyId, annotationAssertionAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {
@@ -97,7 +97,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
     @Test
     public void shouldHandleAddAnnotationAssertionAxiom() {
         var addAxiom = AddAxiomChange.of(ontologyId, otherAnnotationAssertionAxiom);
-        impl.handleOntologyChanges(ImmutableList.of(addAxiom));
+        impl.applyChanges(ImmutableList.of(addAxiom));
 
         var axiomsBySubjectIri = impl.getReferencingAxioms(otherSubjectIri, ontologyId).collect(toSet());
         assertThat(axiomsBySubjectIri, hasItems(otherAnnotationAssertionAxiom));
@@ -109,7 +109,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
     @Test
     public void shouldHandleRemoveAnnotationAssertionAxiom() {
         var removeAxiom = RemoveAxiomChange.of(ontologyId, annotationAssertionAxiom);
-        impl.handleOntologyChanges(ImmutableList.of(removeAxiom));
+        impl.applyChanges(ImmutableList.of(removeAxiom));
 
         var axiomsBySubjectIri = impl.getReferencingAxioms(subjectIri, ontologyId).collect(toSet());
         assertThat(axiomsBySubjectIri.isEmpty(), is(true));

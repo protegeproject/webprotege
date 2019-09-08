@@ -43,7 +43,7 @@ public class ClassAssertionAxiomsByClassIndexImpl_TestCase {
         when(axiom.getClassExpression())
                 .thenReturn(cls);
         impl = new ClassAssertionAxiomsByClassIndexImpl();
-        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.impl.DisjointClassesAxiomsIndexImpl;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,12 +8,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +45,7 @@ public class DisjointClassesAxiomsIndexImpl_TestCase {
         when(axiom.getClassExpressions())
                 .thenReturn(Collections.singleton(cls));
         impl = new DisjointClassesAxiomsIndexImpl();
-        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

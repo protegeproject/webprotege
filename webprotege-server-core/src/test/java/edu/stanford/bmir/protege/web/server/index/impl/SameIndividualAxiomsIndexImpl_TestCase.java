@@ -1,21 +1,17 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.SameIndividualAxiomsIndexImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +45,7 @@ public class SameIndividualAxiomsIndexImpl_TestCase {
         when(axiom.getIndividuals())
                 .thenReturn(Collections.singleton(individual));
         impl = new SameIndividualAxiomsIndexImpl();
-        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

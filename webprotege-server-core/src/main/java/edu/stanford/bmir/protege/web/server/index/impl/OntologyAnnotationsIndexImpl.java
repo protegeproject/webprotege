@@ -76,7 +76,7 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
     }
 
     @Override
-    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull List<OntologyChange> changes) {
         changes.forEach(change -> change.accept(new OntologyChangeVisitor() {
             @Override
             public void visit(@Nonnull AddOntologyAnnotationChange addOntologyAnnotationChange) {

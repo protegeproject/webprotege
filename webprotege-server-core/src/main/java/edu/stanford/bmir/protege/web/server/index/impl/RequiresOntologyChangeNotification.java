@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface RequiresOntologyChangeNotification {
 
-    void handleOntologyChanges(@Nonnull List<OntologyChange> changes);
+    void applyChanges(@Nonnull List<OntologyChange> changes);
 }

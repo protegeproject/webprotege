@@ -40,7 +40,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
     public AnnotationAxiomsByIriReferenceIndexImpl() {
     }
 
-    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull List<OntologyChange> changes) {
         try {
             writeLock.lock();
             changes.stream()

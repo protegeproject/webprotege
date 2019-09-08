@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
-import edu.stanford.bmir.protege.web.server.index.impl.AxiomsByEntityReferenceIndexImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +43,7 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
     @Before
     public void setUp() {
         impl = new AxiomsByEntityReferenceIndexImpl(entityProvider);
-        impl.handleOntologyChanges(singletonList(AddAxiomChange.of(ontologyId, axiom)));
+        impl.applyChanges(singletonList(AddAxiomChange.of(ontologyId, axiom)));
     }
 
     @Test

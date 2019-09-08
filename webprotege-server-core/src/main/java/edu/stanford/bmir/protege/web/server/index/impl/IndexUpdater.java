@@ -36,7 +36,7 @@ public class IndexUpdater {
     public synchronized void propagateOntologyChanges(List<OntologyChange> changes) {
         listeners.forEach(listener -> {
             try {
-                listener.handleOntologyChanges(changes);
+                listener.applyChanges(changes);
             } catch(Exception e) {
                 logger.error("Index threw exception while updating", e  );
             }
