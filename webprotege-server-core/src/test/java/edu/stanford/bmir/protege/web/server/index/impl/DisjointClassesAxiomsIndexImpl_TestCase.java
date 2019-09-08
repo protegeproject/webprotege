@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.impl.DisjointClassesAxiomsIndexImpl;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
@@ -34,12 +36,6 @@ public class DisjointClassesAxiomsIndexImpl_TestCase {
     private DisjointClassesAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
     private OWLOntologyID ontologyID;
 
     @Mock
@@ -50,13 +46,10 @@ public class DisjointClassesAxiomsIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getDisjointClassesAxioms(cls))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new DisjointClassesAxiomsIndexImpl(ontologyIndex);
+        when(axiom.getClassExpressions())
+                .thenReturn(Collections.singleton(cls));
+        impl = new DisjointClassesAxiomsIndexImpl();
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test
