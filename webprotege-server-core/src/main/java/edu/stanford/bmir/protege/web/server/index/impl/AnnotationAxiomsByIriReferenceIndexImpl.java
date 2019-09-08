@@ -117,8 +117,6 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
         private int size = 0;
 
         public void reset() {
-            subjectValueIris[0] = null;
-            subjectValueIris[1] = null;
             size  = 0;
             index = 0;
         }
