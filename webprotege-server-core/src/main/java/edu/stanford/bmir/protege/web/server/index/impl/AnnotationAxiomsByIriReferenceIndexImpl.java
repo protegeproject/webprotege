@@ -1,24 +1,16 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAxiomsByIriReferenceIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
+import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.*;
 import java.util.stream.Stream;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -28,178 +20,83 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ProjectSingleton
 public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxiomsByIriReferenceIndex, RequiresOntologyChangeNotification {
 
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    @Nonnull
+    private final AxiomMultimapIndex<IRI, OWLAnnotationAxiom> index;
 
-    private final Lock readLock = readWriteLock.readLock();
+    private final OWLAxiomVisitorExAdapter<Iterable<IRI>> keyExtractor = new OWLAxiomVisitorExAdapter<>(ImmutableList.of()) {
 
-    private final Lock writeLock = readWriteLock.writeLock();
+        // Not thread safe
+        private final List<IRI> result = new ArrayList<>(2);
 
-    private final Multimap<Key, OWLAnnotationAxiom> cache = ArrayListMultimap.create();
+        @Nonnull
+        @Override
+        public Iterable<IRI> visit(OWLAnnotationAssertionAxiom axiom) {
+            result.clear();
+            if(axiom.getSubject() instanceof IRI) {
+                result.add((IRI) axiom.getSubject());
+            }
+            if(axiom.getValue() instanceof IRI) {
+                result.add((IRI) axiom.getValue());
+            }
+            return result;
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<IRI> visit(OWLAnnotationPropertyDomainAxiom axiom) {
+            return ImmutableList.of(axiom.getDomain());
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<IRI> visit(OWLAnnotationPropertyRangeAxiom axiom) {
+            return ImmutableList.of(axiom.getRange());
+        }
+    };
 
     @Inject
     public AnnotationAxiomsByIriReferenceIndexImpl() {
+        index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(OWLAnnotationAxiom.class,
+                                                                   this::extractIris,
+                                                                   MultimapBuilder.hashKeys().hashSetValues().build());
+    }
+
+    @Override
+    public Stream<OWLAnnotationAxiom> getReferencingAxioms(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyID) {
+        return index.getAxioms(iri, ontologyID);
+    }
+
+    private Iterable<IRI> extractIris(OWLAnnotationAxiom axiom) {
+        var irisInAxiomAnnotations = new ArrayList<IRI>(4);
+        getAnnotationValues(axiom, irisInAxiomAnnotations);
+        var axiomIris = axiom.accept(keyExtractor);
+        if(irisInAxiomAnnotations.isEmpty()) {
+            return axiomIris;
+        }
+        else {
+            return Iterables.concat(axiomIris, irisInAxiomAnnotations);
+        }
+    }
+
+    private void getAnnotationValues(@Nonnull HasAnnotations hasAnnotations,
+                                    @Nonnull Collection<IRI> result) {
+        var annotations = getAnnotationsFromHasAnnotations(hasAnnotations);
+        if(annotations.isEmpty()) {
+            return;
+        }
+        for(var annotation : annotations) {
+            if(annotation.getValue() instanceof IRI) {
+                result.add((IRI) annotation.getValue());
+            }
+            getAnnotationValues(annotation, result);
+        }
+    }
+
+    private Collection<OWLAnnotation> getAnnotationsFromHasAnnotations(@Nonnull HasAnnotations hasAnnotations) {
+        return hasAnnotations.getAnnotations();
     }
 
     public void applyChanges(@Nonnull List<OntologyChange> changes) {
-        try {
-            writeLock.lock();
-            changes.stream()
-                   .filter(OntologyChange::isAxiomChange)
-                   .filter(chg -> chg.getAxiomOrThrow() instanceof OWLAnnotationAxiom)
-                   .forEach(chg -> {
-                       var ontologyId = chg.getOntologyId();
-                       if(chg.isAddAxiom()) {
-                           handleAddAxiomChange(chg.getAxiomOrThrow(), ontologyId);
-                       }
-                       else {
-                           handleRemoveAxiomChange(chg.getAxiomOrThrow(), ontologyId);
-                       }
-                   });
-        } finally {
-            writeLock.unlock();
-        }
-    }
-
-    private void addAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom ax, OWLOntologyID ontologyId) {
-        if(ax.getSubject() instanceof IRI) {
-            var key = Key.get(ontologyId, (IRI) ax.getSubject());
-            addToIndex(key, ax);
-        }
-        if(ax.getValue() instanceof IRI) {
-            var key = Key.get(ontologyId, (IRI) ax.getValue());
-            addToIndex(key, ax);
-        }
-    }
-
-    private void addAnnotationPropertyDomainAxiom(OWLAnnotationPropertyDomainAxiom ax, OWLOntologyID ontologyId) {
-        var key = Key.get(ontologyId, ax.getDomain());
-        addToIndex(key, ax);
-    }
-
-    private void remove(OWLAnnotationAssertionAxiom ax, OWLOntologyID ontologyId) {
-        if(ax.getSubject() instanceof IRI) {
-            var key = Key.get(ontologyId, (IRI) ax.getSubject());
-            removeFromIndex(key, ax);
-        }
-        if(ax.getValue() instanceof IRI) {
-            var key = Key.get(ontologyId, (IRI) ax.getValue());
-            removeFromIndex(key, ax);
-        }
-    }
-
-    private void remove(OWLAnnotationPropertyDomainAxiom ax, OWLOntologyID ontologyId) {
-        var key = Key.get(ontologyId, ax.getDomain());
-        removeFromIndex(key, ax);
-    }
-
-    private void remove(OWLAnnotationPropertyRangeAxiom ax, OWLOntologyID ontologyId) {
-        var key = Key.get(ontologyId, ax.getRange());
-        removeFromIndex(key, ax);
-    }
-
-    private void addAnnotationPropertyRangeAxiom(OWLAnnotationPropertyRangeAxiom ax, OWLOntologyID ontologyId) {
-        var key = Key.get(ontologyId, ax.getRange());
-        addToIndex(key, ax);
-    }
-
-    private void addToIndex(Key key, OWLAnnotationAxiom ax) {
-        cache.put(key, ax);
-        indexAgainstAnnotations(key.getOntologyId(), ax, ax);
-    }
-
-    private void removeFromIndex(Key key, OWLAnnotationAxiom ax) {
-        cache.remove(key, ax);
-        clearIndexAgainstAnnotations(key.getOntologyId(), ax, ax);
-    }
-
-
-    private void indexAgainstAnnotations(OWLOntologyID ontologyId,
-                                         OWLAnnotationAxiom rootAxiom,
-                                         HasAnnotations hasAnnotations) {
-        for(OWLAnnotation annotation : hasAnnotations.getAnnotations()) {
-            if(annotation.getValue() instanceof IRI) {
-                var iri = (IRI) annotation.getValue();
-                cache.put(Key.get(ontologyId, iri), rootAxiom);
-            }
-            indexAgainstAnnotations(ontologyId, rootAxiom, annotation);
-        }
-    }
-
-    private void clearIndexAgainstAnnotations(OWLOntologyID ontologyId,
-                                              OWLAnnotationAxiom rootAxiom,
-                                              HasAnnotations hasAnnotations) {
-        for(OWLAnnotation annotation : hasAnnotations.getAnnotations()) {
-            if(annotation.getValue() instanceof IRI) {
-                IRI iri = (IRI) annotation.getValue();
-                cache.remove(Key.get(ontologyId, iri), rootAxiom);
-            }
-            clearIndexAgainstAnnotations(ontologyId, rootAxiom, annotation);
-        }
-    }
-
-
-    @Override
-    public Stream<OWLAnnotationAxiom> getReferencingAxioms(@Nonnull IRI iri,
-                                                           @Nonnull OWLOntologyID ontologyID) {
-        var key = Key.get(ontologyID, iri);
-        try {
-            readLock.lock();
-            return ImmutableList.copyOf(cache.get(key)).stream();
-        } finally {
-            readLock.unlock();
-        }
-    }
-
-
-    public void handleAddAxiomChange(OWLAxiom axiom, OWLOntologyID ontologyID) throws RuntimeException {
-        axiom.accept(new OWLAxiomVisitorAdapter() {
-            @Override
-            public void visit(OWLAnnotationAssertionAxiom axiom) {
-                addAnnotationAssertionAxiom(axiom, ontologyID);
-            }
-
-            @Override
-            public void visit(OWLAnnotationPropertyDomainAxiom axiom) {
-                addAnnotationPropertyDomainAxiom(axiom, ontologyID);
-            }
-
-            @Override
-            public void visit(OWLAnnotationPropertyRangeAxiom axiom) {
-                addAnnotationPropertyRangeAxiom(axiom, ontologyID);
-            }
-        });
-    }
-
-
-    private void handleRemoveAxiomChange(OWLAxiom axiom, OWLOntologyID ontologyID) {
-        axiom.accept(new OWLAxiomVisitorAdapter() {
-            @Override
-            public void visit(OWLAnnotationAssertionAxiom axiom) {
-                remove(axiom, ontologyID);
-            }
-
-            @Override
-            public void visit(OWLAnnotationPropertyDomainAxiom axiom) {
-                remove(axiom, ontologyID);
-            }
-
-            @Override
-            public void visit(OWLAnnotationPropertyRangeAxiom axiom) {
-                remove(axiom, ontologyID);
-            }
-        });
-    }
-
-
-    @AutoValue
-    public static abstract class Key {
-
-        public static Key get(@Nonnull OWLOntologyID ontologyId,
-                              @Nonnull IRI iri) {
-            return new AutoValue_AnnotationAxiomsByIriReferenceIndexImpl_Key(ontologyId, iri);
-        }
-
-        public abstract OWLOntologyID getOntologyId();
-        public abstract IRI getIri();
+        index.applyChanges(changes);
     }
 }

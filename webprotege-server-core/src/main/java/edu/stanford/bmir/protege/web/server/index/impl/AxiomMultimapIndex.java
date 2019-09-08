@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Null;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -137,5 +138,9 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
 
     public void applyChanges(@Nonnull List<OntologyChange> changes) {
         axiomChangeHandler.handleOntologyChanges(changes);
+    }
+
+    public void dumpStats(PrintStream out) {
+        Stats.dump("AnnotationAxiomsByIriReferenceIndex", backingMap, out);
     }
 }
