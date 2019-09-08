@@ -23,36 +23,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
     @Nonnull
     private final AxiomMultimapIndex<IRI, OWLAnnotationAxiom> index;
 
-    private final OWLAxiomVisitorExAdapter<Iterable<IRI>> keyExtractor = new OWLAxiomVisitorExAdapter<>(ImmutableList.of()) {
-
-        // Not thread safe
-        private final List<IRI> result = new ArrayList<>(2);
-
-        @Nonnull
-        @Override
-        public Iterable<IRI> visit(OWLAnnotationAssertionAxiom axiom) {
-            result.clear();
-            if(axiom.getSubject() instanceof IRI) {
-                result.add((IRI) axiom.getSubject());
-            }
-            if(axiom.getValue() instanceof IRI) {
-                result.add((IRI) axiom.getValue());
-            }
-            return result;
-        }
-
-        @Nonnull
-        @Override
-        public Iterable<IRI> visit(OWLAnnotationPropertyDomainAxiom axiom) {
-            return ImmutableList.of(axiom.getDomain());
-        }
-
-        @Nonnull
-        @Override
-        public Iterable<IRI> visit(OWLAnnotationPropertyRangeAxiom axiom) {
-            return ImmutableList.of(axiom.getRange());
-        }
-    };
+    private final KeyExtractorVisitor keyExtractor = new KeyExtractorVisitor();
 
     @Inject
     public AnnotationAxiomsByIriReferenceIndexImpl() {
@@ -98,5 +69,81 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
 
     public void applyChanges(@Nonnull List<OntologyChange> changes) {
         index.applyChanges(changes);
+    }
+
+    private static class KeyExtractorVisitor extends OWLAxiomVisitorExAdapter<Iterable<IRI>> {
+
+        private final AssertionIrisIterable assertionIrisIterable = new AssertionIrisIterable();
+
+        public KeyExtractorVisitor() {
+            super(Collections.emptyList());
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<IRI> visit(OWLAnnotationAssertionAxiom axiom) {
+            assertionIrisIterable.reset();
+            if(axiom.getSubject() instanceof IRI) {
+                assertionIrisIterable.put((IRI) axiom.getSubject());
+            }
+            if(axiom.getValue() instanceof IRI) {
+                assertionIrisIterable.put((IRI) axiom.getValue());
+            }
+            return assertionIrisIterable;
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<IRI> visit(OWLAnnotationPropertyDomainAxiom axiom) {
+            return ImmutableList.of(axiom.getDomain());
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<IRI> visit(OWLAnnotationPropertyRangeAxiom axiom) {
+            return ImmutableList.of(axiom.getRange());
+        }
+
+    }
+
+
+    private static class AssertionIrisIterable implements Iterable<IRI>, Iterator<IRI> {
+
+        // Not thread safe
+        private final IRI [] subjectValueIris = new IRI [2];
+
+        private int index;
+
+        private int size = 0;
+
+        public void reset() {
+            subjectValueIris[0] = null;
+            subjectValueIris[1] = null;
+            size  = 0;
+            index = 0;
+        }
+
+        public void put(@Nonnull IRI iri) {
+            subjectValueIris[size] = iri;
+            size++;
+        }
+
+        @Nonnull
+        @Override
+        public Iterator<IRI> iterator() {
+            return this;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < size;
+        }
+
+        @Override
+        public IRI next() {
+            var iri = subjectValueIris[index];
+            index++;
+            return iri;
+        }
     }
 }
