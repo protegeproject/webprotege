@@ -47,6 +47,9 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
     @Nonnull
     private final Class<A> axiomCls;
 
+    private boolean lazy = false;
+
+
     private AxiomMultimapIndex(@Nonnull Class<A> axiomCls,
                                @Nullable KeyValueExtractor<V, A> unaryKeyValueExtractor,
                                @Nullable KeyValueExtractor<Iterable<V>, A> naryKeyValueExtractor,
@@ -137,7 +140,12 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
     }
 
     public void applyChanges(@Nonnull List<OntologyChange> changes) {
-        axiomChangeHandler.handleOntologyChanges(changes);
+        try {
+            writeLock.lock();
+            axiomChangeHandler.handleOntologyChanges(changes);
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public void dumpStats(PrintStream out) {
