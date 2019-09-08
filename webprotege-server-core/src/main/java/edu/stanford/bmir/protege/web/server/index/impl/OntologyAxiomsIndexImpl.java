@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -18,20 +20,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class OntologyAxiomsIndexImpl implements OntologyAxiomsIndex {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomsByTypeIndexImpl axiomsByTypeIndex;
 
     @Inject
-    public OntologyAxiomsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public OntologyAxiomsIndexImpl(@Nonnull AxiomsByTypeIndexImpl axiomsByTypeIndex) {
+        this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
     }
 
     @Nonnull
     @Override
     public Stream<OWLAxiom> getAxioms(@Nonnull OWLOntologyID ontologyId) {
         checkNotNull(ontologyId);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getAxioms().stream());
+        var streamsBuilder = Stream.<Stream<? extends OWLAxiom>>builder();
+        AxiomType.AXIOM_TYPES.forEach(axiomType -> {
+            streamsBuilder.add(axiomsByTypeIndex.getAxiomsByType(axiomType, ontologyId));
+        });
+        return streamsBuilder.build().flatMap(s -> s);
     }
 
     @Override
@@ -39,18 +43,12 @@ public class OntologyAxiomsIndexImpl implements OntologyAxiomsIndex {
                                  @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(axiom);
         checkNotNull(ontologyId);
-        return ontologyIndex.getOntology(ontologyId)
-                            .map(ont -> ont.containsAxiom(axiom))
-                            .orElse(false);
+        return axiomsByTypeIndex.containsAxiom(axiom, ontologyId);
     }
 
     @Override
     public boolean containsAxiomIgnoreAnnotations(@Nonnull OWLAxiom axiom,
                                                   @Nonnull OWLOntologyID ontologyId) {
-        return containsAxiom(axiom, ontologyId)
-                ||
-                ontologyIndex.getOntology(ontologyId)
-                             .map(ont -> ont.containsAxiomIgnoreAnnotations(axiom))
-                             .orElse(false);
+        return containsAxiom(axiom, ontologyId);
     }
 }

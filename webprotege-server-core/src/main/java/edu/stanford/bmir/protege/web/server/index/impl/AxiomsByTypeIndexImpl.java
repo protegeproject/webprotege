@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.validation.constraints.Null;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -78,6 +79,17 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, RequiresOntolog
         } finally {
             readWriteLock.readLock()
                          .unlock();
+        }
+    }
+
+    public boolean containsAxiom(@Nonnull OWLAxiom axiom,
+                                 @Nonnull OWLOntologyID ontologyId) {
+        try {
+            readWriteLock.readLock().lock();
+            var key = Key.get(ontologyId, axiom.getAxiomType());
+            return index.containsEntry(key, axiom);
+        } finally {
+            readWriteLock.readLock().unlock();
         }
     }
 

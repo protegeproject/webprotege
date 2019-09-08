@@ -8,11 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,28 +35,24 @@ public class OntologyAxiomsIndexImpl_TestCase {
     private OntologyAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
-
-    @Mock
-    private OWLOntology ontology;
 
     @Mock
     private OWLAxiom axiom;
 
+    @Mock
+    private AxiomsByTypeIndexImpl axiomsByTypeIndexImpl;
+
     @Before
     public void setUp() {
-        impl = new OntologyAxiomsIndexImpl(ontologyIndex);
+        impl = new OntologyAxiomsIndexImpl(axiomsByTypeIndexImpl);
 
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
 
-        when(ontology.getAxioms())
-                .thenReturn(ImmutableSet.of(axiom));
+        when(axiomsByTypeIndexImpl.getAxiomsByType(any(), any()))
+                .thenAnswer(invocation -> Stream.empty());
+        when(axiomsByTypeIndexImpl.getAxiomsByType(AxiomType.CLASS_ASSERTION, ontologyId))
+                .thenAnswer(invocation -> Stream.of(axiom));
+
     }
 
     @Test
@@ -77,23 +75,23 @@ public class OntologyAxiomsIndexImpl_TestCase {
 
     @Test
     public void shouldContainAxiom() {
-        when(ontology.containsAxiom(axiom))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
                 .thenReturn(true);
         assertThat(impl.containsAxiom(axiom, ontologyId), is(true));
     }
 
     @Test
     public void shouldContainAxiomWithoutAnnotationsIgnoreAnnotations() {
-        when(ontology.containsAxiom(axiom))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
                 .thenReturn(true);
         assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyId), is(true));
     }
 
     @Test
     public void shouldContainAxiomIgnoreAnnotations() {
-        when(ontology.containsAxiom(axiom))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
                 .thenReturn(false);
-        when(ontology.containsAxiomIgnoreAnnotations(axiom))
+        when(axiomsByTypeIndexImpl.containsAxiom(axiom, ontologyId))
                 .thenReturn(true);
         assertThat(impl.containsAxiomIgnoreAnnotations(axiom, ontologyId), is(true));
     }
