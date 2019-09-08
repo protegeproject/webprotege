@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.SameIndividualAxiomsIndexImpl;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toSet;
@@ -34,12 +36,6 @@ public class SameIndividualAxiomsIndexImpl_TestCase {
     private SameIndividualAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
     private OWLOntologyID ontologyID;
 
     @Mock
@@ -50,13 +46,10 @@ public class SameIndividualAxiomsIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyID))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getSameIndividualAxioms(individual))
-                .thenReturn(Collections.singleton(axiom));
-        impl = new SameIndividualAxiomsIndexImpl(ontologyIndex);
+        when(axiom.getIndividuals())
+                .thenReturn(Collections.singleton(individual));
+        impl = new SameIndividualAxiomsIndexImpl();
+        impl.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test
