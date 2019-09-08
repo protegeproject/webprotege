@@ -28,21 +28,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ClassAssertionAxiomsByIndividualIndexImpl implements ClassAssertionAxiomsByIndividualIndex, RequiresOntologyChangeNotification {
 
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
-    private final Lock readLock = readWriteLock.readLock();
-
-    private final Lock writeLock = readWriteLock.writeLock();
-
-    private final AxiomChangeHandler axiomChangeHandler = new AxiomChangeHandler();
-
-    private final Multimap<Key, OWLClassAssertionAxiom> index = MultimapBuilder.hashKeys()
-                                                                               .arrayListValues()
-                                                                               .build();
+    @Nonnull
+    private final AxiomMultimapIndex<OWLIndividual, OWLClassAssertionAxiom> index;
 
     @Inject
     public ClassAssertionAxiomsByIndividualIndexImpl() {
-        axiomChangeHandler.setAxiomChangeConsumer(this::handleOntologyChange);
+        index = AxiomMultimapIndex.create(OWLClassAssertionAxiom.class,
+                                          OWLClassAssertionAxiom::getIndividual,
+                                          MultimapBuilder.hashKeys().arrayListValues().build());
     }
 
     @Override
@@ -50,53 +43,11 @@ public class ClassAssertionAxiomsByIndividualIndexImpl implements ClassAssertion
                                                                   @Nonnull OWLOntologyID ontologyID) {
         checkNotNull(individual);
         checkNotNull(ontologyID);
-        var key = Key.get(ontologyID, individual);
-        try {
-            readLock.lock();
-            return ImmutableList.copyOf(index.get(key)).stream();
-        } finally {
-            readLock.unlock();
-        }
+        return index.getAxioms(individual, ontologyID);
     }
 
     @Override
     public void applyChanges(@Nonnull List<OntologyChange> changes) {
-        try {
-            writeLock.lock();
-            axiomChangeHandler.handleOntologyChanges(changes);
-        } finally {
-            writeLock.unlock();
-        }
-    }
-
-    private void handleOntologyChange(@Nonnull AxiomChange change) {
-        var axiom = change.getAxiom();
-        if(!(axiom instanceof OWLClassAssertionAxiom)) {
-            return;
-        }
-        var classAssertionAxiom = (OWLClassAssertionAxiom) axiom;
-        var key = Key.get(change.getOntologyId(),
-                          classAssertionAxiom.getIndividual());
-        if(change.isAddAxiom()) {
-            index.put(key, classAssertionAxiom);
-        }
-        else {
-            index.remove(key, classAssertionAxiom);
-        }
-    }
-
-
-    @AutoValue
-    public static abstract class Key {
-
-        public static Key get(@Nonnull OWLOntologyID ontologyId,
-                              @Nonnull OWLIndividual individual) {
-            return new AutoValue_ClassAssertionAxiomsByIndividualIndexImpl_Key(ontologyId,
-                                                                               individual);
-        }
-
-        public abstract OWLOntologyID getOntologyId();
-
-        public abstract OWLIndividual getIndividual();
+        index.applyChanges(changes);
     }
 }
