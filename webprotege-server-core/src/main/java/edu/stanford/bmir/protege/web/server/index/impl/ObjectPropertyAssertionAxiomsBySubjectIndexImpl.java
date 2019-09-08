@@ -41,7 +41,7 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPr
 
     @Override
     public void applyChanges(@Nonnull List<OntologyChange> changes) {
-        index.handleOntologyChanges(changes);
+        index.applyChanges(changes);
     }
 
     @Nonnull

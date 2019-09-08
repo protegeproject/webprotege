@@ -57,6 +57,6 @@ public class SubClassOfAxiomsBySubClassIndexImpl implements SubClassOfAxiomsBySu
 
     @Override
     public void applyChanges(@Nonnull List<OntologyChange> changes) {
-        index.handleOntologyChanges(changes);
+        index.applyChanges(changes);
     }
 }

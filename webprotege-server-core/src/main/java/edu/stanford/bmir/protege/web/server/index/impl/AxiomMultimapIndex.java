@@ -135,7 +135,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         }
     }
 
-    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull List<OntologyChange> changes) {
         axiomChangeHandler.handleOntologyChanges(changes);
     }
 }

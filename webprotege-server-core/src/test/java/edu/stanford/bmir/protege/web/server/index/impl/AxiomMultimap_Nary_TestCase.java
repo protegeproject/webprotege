@@ -80,24 +80,24 @@ public class AxiomMultimap_Nary_TestCase {
     @Test
     public void shouldContainAxiomInBackingMapAfterAdd() {
         var chg = AddAxiomChange.of(ontologyId, axiom);
-        index.handleOntologyChanges(List.of(chg));
+        index.applyChanges(List.of(chg));
         assertThat(backingMap.values(), hasItem(axiom));
     }
 
     @Test
     public void shouldNotContainAxiomInBackingMapAfterRemove() {
         var chg = AddAxiomChange.of(ontologyId, axiom);
-        index.handleOntologyChanges(List.of(chg));
+        index.applyChanges(List.of(chg));
         assertThat(backingMap.values(), hasItem(axiom));
         var remChg = RemoveAxiomChange.of(ontologyId, axiom);
-        index.handleOntologyChanges(List.of(remChg));
+        index.applyChanges(List.of(remChg));
         assertThat(backingMap.values(), not(hasItem(axiom)));
     }
 
     @Test
     public void shouldNotAddDuplicates() {
         var chg = AddAxiomChange.of(ontologyId, axiom);
-        index.handleOntologyChanges(List.of(chg, chg));
+        index.applyChanges(List.of(chg, chg));
         assertThat(backingMap.size(), is(2));
     }
 
@@ -105,7 +105,7 @@ public class AxiomMultimap_Nary_TestCase {
     @Test
     public void shouldContainAllKeyValues() {
         var chg = AddAxiomChange.of(ontologyId, axiom);
-        index.handleOntologyChanges(List.of(chg));
+        index.applyChanges(List.of(chg));
         assertThat(backingMap.keys(), containsInAnyOrder(Key.get(ontologyId, indA), Key.get(ontologyId, indB)));
     }
 
@@ -117,14 +117,14 @@ public class AxiomMultimap_Nary_TestCase {
                 .thenReturn(otherCls);
         when(otherCls.isAnonymous())
                 .thenReturn(true);
-        index.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, subClassOfAxiom)));
+        index.applyChanges(List.of(AddAxiomChange.of(ontologyId, subClassOfAxiom)));
         assertThat(backingMap.size(), is(0));
     }
 
     @Test
     public void shouldIgnoreIrrelevantChanges() {
         var otherAxiom = mock(OWLClassAssertionAxiom.class);
-        index.handleOntologyChanges(List.of(AddAxiomChange.of(ontologyId, otherAxiom)));
+        index.applyChanges(List.of(AddAxiomChange.of(ontologyId, otherAxiom)));
         assertThat(index.getAxioms(indA, ontologyId)
                         .count(), is(0L));
     }
