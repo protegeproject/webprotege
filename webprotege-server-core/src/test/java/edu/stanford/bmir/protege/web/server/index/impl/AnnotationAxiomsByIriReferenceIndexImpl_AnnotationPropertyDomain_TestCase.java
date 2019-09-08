@@ -72,7 +72,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId)).thenReturn(Stream.of(annotationPropertyDomainAxiom));
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyId, annotationPropertyDomainAxiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationPropertyDomainAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {

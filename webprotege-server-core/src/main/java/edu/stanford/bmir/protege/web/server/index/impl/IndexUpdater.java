@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class IndexUpdater {
     public synchronized void propagateOntologyChanges(List<OntologyChange> changes) {
         listeners.forEach(listener -> {
             try {
-                listener.applyChanges(changes);
+                listener.applyChanges(ImmutableList.copyOf(changes));
             } catch(Exception e) {
                 logger.error("Index threw exception while updating", e  );
             }

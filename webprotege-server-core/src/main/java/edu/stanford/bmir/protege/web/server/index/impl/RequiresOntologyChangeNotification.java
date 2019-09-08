@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Matthew Horridge
@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface RequiresOntologyChangeNotification {
 
-    void applyChanges(@Nonnull List<OntologyChange> changes);
+    void applyChanges(@Nonnull ImmutableList<OntologyChange> changes);
 }

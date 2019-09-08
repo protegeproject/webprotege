@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class ClassAssertionAxiomsByClassIndexImpl_TestCase {
         when(axiom.getClassExpression())
                 .thenReturn(cls);
         impl = new ClassAssertionAxiomsByClassIndexImpl();
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

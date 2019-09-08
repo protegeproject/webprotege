@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MultimapBuilder;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ObjectPropertyAssertionAxiomsBySubjectIndex;
@@ -10,7 +11,6 @@ import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,7 +40,7 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPr
     }
 
     @Override
-    public void applyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         index.applyChanges(changes);
     }
 

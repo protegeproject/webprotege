@@ -12,10 +12,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Null;
 import java.io.PrintStream;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,12 +24,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-09-07
  */
 public class AxiomMultimapIndex<V, A extends OWLAxiom> {
-
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
-    private final Lock readLock = readWriteLock.readLock();
-
-    private final Lock writeLock = readWriteLock.writeLock();
 
     private final AxiomChangeHandler axiomChangeHandler = new AxiomChangeHandler();
 
@@ -47,7 +39,9 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
     @Nonnull
     private final Class<A> axiomCls;
 
-    private boolean lazy = false;
+    private final Queue<ImmutableList<OntologyChange>> changeQueue = new ArrayDeque<>();
+
+    private volatile boolean lazy = true;
 
 
     private AxiomMultimapIndex(@Nonnull Class<A> axiomCls,
@@ -85,19 +79,14 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         }
     }
 
+    private boolean isNaryKeyValue() {
+        return naryKeyValueExtractor != null;
+    }
+
     @Null
     private Iterable<V> getNaryKeyValueExtractor(A ax) {
         checkNotNull(naryKeyValueExtractor);
         return naryKeyValueExtractor.extractValue(ax);
-    }
-
-    private V getUnaryKeyValueExtractor(A ax) {
-        checkNotNull(unaryKeyValueExtractor);
-        return unaryKeyValueExtractor.extractValue(ax);
-    }
-
-    private boolean isNaryKeyValue() {
-        return naryKeyValueExtractor != null;
     }
 
     private void handleOntologyChange(@Nonnull AxiomChange change, Key<V> key, A ax) {
@@ -116,6 +105,11 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         }
     }
 
+    private V getUnaryKeyValueExtractor(A ax) {
+        checkNotNull(unaryKeyValueExtractor);
+        return unaryKeyValueExtractor.extractValue(ax);
+    }
+
     public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> create(@Nonnull Class<A> axiomCls,
                                                                           @Nonnull KeyValueExtractor<V, A> keyValueExtractor,
                                                                           @Nonnull Multimap<Key<V>, A> backingMap) {
@@ -128,23 +122,23 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         return new AxiomMultimapIndex<>(axiomCls, null, keyValueExtractor, backingMap);
     }
 
-    public Stream<A> getAxioms(@Nonnull V value, @Nonnull OWLOntologyID ontologyId) {
+    public synchronized Stream<A> getAxioms(@Nonnull V value, @Nonnull OWLOntologyID ontologyId) {
         var key = Key.get(ontologyId, value);
-        try {
-            readLock.lock();
-            return ImmutableList.copyOf(backingMap.get(key))
-                                .stream();
-        } finally {
-            readLock.unlock();
+        if(!changeQueue.isEmpty()) {
+            applyQueuedChanges();
         }
+        return ImmutableList.copyOf(backingMap.get(key))
+                            .stream();
     }
 
-    public void applyChanges(@Nonnull List<OntologyChange> changes) {
-        try {
-            writeLock.lock();
-            axiomChangeHandler.handleOntologyChanges(changes);
-        } finally {
-            writeLock.unlock();
+    private void applyQueuedChanges() {
+        changeQueue.forEach(axiomChangeHandler::handleOntologyChanges);
+    }
+
+    public synchronized void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
+        changeQueue.add(changes);
+        if(!lazy) {
+            applyQueuedChanges();
         }
     }
 

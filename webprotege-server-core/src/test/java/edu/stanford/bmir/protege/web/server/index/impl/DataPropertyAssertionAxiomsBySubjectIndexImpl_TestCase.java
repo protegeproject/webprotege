@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class DataPropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
         when(axiom.getSubject())
                 .thenReturn(subject);
         impl = new DataPropertyAssertionAxiomsBySubjectIndexImpl();
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

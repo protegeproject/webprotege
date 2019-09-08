@@ -14,9 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.validation.constraints.Null;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -94,7 +92,7 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, RequiresOntolog
     }
 
     @Override
-    public void applyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         axiomChangeHandler.handleOntologyChanges(changes);
     }
 

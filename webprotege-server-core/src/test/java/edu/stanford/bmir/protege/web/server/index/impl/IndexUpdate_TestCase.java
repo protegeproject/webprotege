@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class IndexUpdate_TestCase {
     public void shouldShouldNotAddMultipleListeners() {
         indexUpdater.registerIndex(index);
         indexUpdater.registerIndex(index);
-        var changes = Collections.singletonList(ontologyChange);
+        var changes = ImmutableList.of(ontologyChange);
         indexUpdater.propagateOntologyChanges(changes);
         verify(index, times(1)).applyChanges(changes);
     }

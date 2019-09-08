@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
@@ -13,10 +10,6 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -47,7 +40,7 @@ public class ClassAssertionAxiomsByIndividualIndexImpl implements ClassAssertion
     }
 
     @Override
-    public void applyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         index.applyChanges(changes);
     }
 }

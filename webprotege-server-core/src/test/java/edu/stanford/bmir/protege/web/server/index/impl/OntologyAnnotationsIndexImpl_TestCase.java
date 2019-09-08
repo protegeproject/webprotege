@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddOntologyAnnotationChange;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class OntologyAnnotationsIndexImpl_TestCase {
     @Before
     public void setUp() {
         impl = new OntologyAnnotationsIndexImpl();
-        impl.applyChanges(List.of(AddOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
+        impl.applyChanges(ImmutableList.of(AddOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
     }
 
     @Test

@@ -250,7 +250,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     }
 
     @Override
-    public void applyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         try {
             writeLock.lock();
             axiomChangeHandler.handleOntologyChanges(changes);

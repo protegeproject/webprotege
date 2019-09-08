@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import org.junit.Before;
@@ -45,7 +46,7 @@ public class AxiomsByTypeIndexImpl_TestCase {
                 .thenReturn((AxiomType) AxiomType.SUBCLASS_OF);
         when(axiom2.getAxiomType())
                 .thenReturn((AxiomType) AxiomType.SUBCLASS_OF);
-        impl.applyChanges(singletonList(AddAxiomChange.of(ontologyId, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
     }
 
     @Test
@@ -64,14 +65,14 @@ public class AxiomsByTypeIndexImpl_TestCase {
 
     @Test
     public void shouldHandleAddAxiom() {
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyId, axiom2)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom2)));
         var axioms = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyId).collect(toSet());
         assertThat(axioms, hasItem(axiom2));
     }
 
     @Test
     public void shouldHandleRemoveAxiom() {
-        impl.applyChanges(List.of(RemoveAxiomChange.of(ontologyId, axiom)));
+        impl.applyChanges(ImmutableList.of(RemoveAxiomChange.of(ontologyId, axiom)));
         var axioms = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, ontologyId).collect(toSet());
         assertThat(axioms, not(hasItem(axiom)));
     }

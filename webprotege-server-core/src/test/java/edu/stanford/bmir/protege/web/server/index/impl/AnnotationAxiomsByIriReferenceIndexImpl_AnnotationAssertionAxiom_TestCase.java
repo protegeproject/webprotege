@@ -66,7 +66,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationAssertionAxiom_Te
                                                                             axiomAnnotations());
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyId, annotationAssertionAxiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationAssertionAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {

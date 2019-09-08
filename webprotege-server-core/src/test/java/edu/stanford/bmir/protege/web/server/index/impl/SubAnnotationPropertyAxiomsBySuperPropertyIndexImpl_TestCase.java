@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl_TestCase {
         when(axiom.getSuperProperty())
                 .thenReturn(property);
         impl = new SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl();
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyId, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
     }
 
     @Test

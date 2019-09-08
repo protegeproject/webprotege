@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class DifferentIndividualsAxiomsIndexImpl_TestCase {
         when(axiom.getIndividuals())
                 .thenReturn(Collections.singleton(individual));
         impl = new DifferentIndividualsAxiomsIndexImpl();
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyID, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

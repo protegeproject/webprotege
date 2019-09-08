@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class AxiomsByEntityReferenceIndexImpl_TestCase {
     @Before
     public void setUp() {
         impl = new AxiomsByEntityReferenceIndexImpl(entityProvider);
-        impl.applyChanges(singletonList(AddAxiomChange.of(ontologyId, axiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, axiom)));
     }
 
     @Test

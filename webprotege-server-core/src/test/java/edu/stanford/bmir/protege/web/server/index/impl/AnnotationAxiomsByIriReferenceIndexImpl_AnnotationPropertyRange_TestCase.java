@@ -54,7 +54,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyRange_Tes
         otherAnnotationPropertyRangeAxiom = new OWLAnnotationPropertyRangeAxiomImpl(property, otherRangeIri, axiomAnnotations());
 
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
-        impl.applyChanges(List.of(AddAxiomChange.of(ontologyId, annotationPropertyRangeAxiom)));
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationPropertyRangeAxiom)));
     }
 
     private Set<OWLAnnotation> axiomAnnotations() {

@@ -13,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -76,7 +75,7 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
     }
 
     @Override
-    public void applyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         changes.forEach(change -> change.accept(new OntologyChangeVisitor() {
             @Override
             public void visit(@Nonnull AddOntologyAnnotationChange addOntologyAnnotationChange) {

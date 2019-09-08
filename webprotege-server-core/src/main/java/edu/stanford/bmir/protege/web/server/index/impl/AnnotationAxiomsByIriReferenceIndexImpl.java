@@ -67,7 +67,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
         return hasAnnotations.getAnnotations();
     }
 
-    public void applyChanges(@Nonnull List<OntologyChange> changes) {
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         index.applyChanges(changes);
     }
 
