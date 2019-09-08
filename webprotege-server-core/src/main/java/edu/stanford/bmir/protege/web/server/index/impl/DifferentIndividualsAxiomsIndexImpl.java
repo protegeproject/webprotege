@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.MultimapBuilder;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.DifferentIndividualsAxiomsIndex;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
@@ -7,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,14 +19,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-24
  */
-public class DifferentIndividualsAxiomsIndexImpl implements DifferentIndividualsAxiomsIndex {
+public class DifferentIndividualsAxiomsIndexImpl implements DifferentIndividualsAxiomsIndex, RequiresOntologyChangeNotification {
 
     @Nonnull
-    private final OntologyIndex ontologyIndex;
+    private final AxiomMultimapIndex<OWLIndividual, OWLDifferentIndividualsAxiom> index;
 
     @Inject
-    public DifferentIndividualsAxiomsIndexImpl(@Nonnull OntologyIndex ontologyIndex) {
-        this.ontologyIndex = checkNotNull(ontologyIndex);
+    public DifferentIndividualsAxiomsIndexImpl() {
+        this.index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(
+                OWLDifferentIndividualsAxiom.class,
+                OWLDifferentIndividualsAxiom::getIndividuals,
+                MultimapBuilder.hashKeys().arrayListValues().build()
+        );
     }
 
     @Nonnull
@@ -32,8 +39,11 @@ public class DifferentIndividualsAxiomsIndexImpl implements DifferentIndividuals
                                                                               @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(ontologyId);
         checkNotNull(individual);
-        return ontologyIndex.getOntology(ontologyId)
-                .stream()
-                .flatMap(ont -> ont.getDifferentIndividualAxioms(individual).stream());
+        return index.getAxioms(individual, ontologyId);
+    }
+
+    @Override
+    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+        index.handleOntologyChanges(changes);
     }
 }
