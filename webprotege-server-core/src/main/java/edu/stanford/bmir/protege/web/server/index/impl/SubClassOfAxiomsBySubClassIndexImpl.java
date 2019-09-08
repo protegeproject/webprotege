@@ -27,9 +27,11 @@ public class SubClassOfAxiomsBySubClassIndexImpl implements SubClassOfAxiomsBySu
 
     @Inject
     public SubClassOfAxiomsBySubClassIndexImpl() {
-        index = new AxiomMultimapIndex<>(OWLSubClassOfAxiom.class, this::extractSubClassFromAxiom, MultimapBuilder.hashKeys()
-                                                                                                                  .arrayListValues(1)
-                                                                                                                  .build()
+        index = AxiomMultimapIndex.create(OWLSubClassOfAxiom.class,
+                                          this::extractSubClassFromAxiom,
+                                          MultimapBuilder.hashKeys()
+                                                         .arrayListValues(1)
+                                                         .build()
         );
 
     }

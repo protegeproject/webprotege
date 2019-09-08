@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
  * 2019-09-07
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AxiomMultimapIndex_TestCase {
+public class AxiomMultimapIndex_UnaryKey_TestCase {
 
     private final KeyValueExtractor<OWLClass, OWLSubClassOfAxiom> extractor = this::extractSubClassIfNamed;
 
@@ -52,8 +52,7 @@ public class AxiomMultimapIndex_TestCase {
 
     @Before
     public void setUp() {
-        index = new AxiomMultimapIndex<>(OWLSubClassOfAxiom.class, extractor, backingMap
-        );
+        index = AxiomMultimapIndex.create(OWLSubClassOfAxiom.class, extractor, backingMap);
         when(axiom.getSubClass())
                 .thenReturn(subCls);
 

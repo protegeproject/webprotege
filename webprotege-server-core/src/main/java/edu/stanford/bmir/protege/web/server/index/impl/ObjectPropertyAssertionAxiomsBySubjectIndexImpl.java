@@ -27,10 +27,11 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPr
 
     @Inject
     public ObjectPropertyAssertionAxiomsBySubjectIndexImpl() {
-        this.index = new AxiomMultimapIndex<>(
-                OWLObjectPropertyAssertionAxiom.class,
-                OWLPropertyAssertionAxiom::getSubject,
-                MultimapBuilder.hashKeys().arrayListValues().build()
+        this.index = AxiomMultimapIndex.create(OWLObjectPropertyAssertionAxiom.class,
+                                               OWLPropertyAssertionAxiom::getSubject,
+                                               MultimapBuilder.hashKeys()
+                                                              .arrayListValues()
+                                                              .build()
         );
     }
 

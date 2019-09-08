@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.common.collect.*;
-import edu.stanford.bmir.protege.web.server.change.*;
+import com.google.common.collect.MultimapBuilder;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
@@ -26,9 +26,11 @@ public class AnnotationAssertionAxiomsBySubjectIndexImpl implements AnnotationAs
 
     @Inject
     public AnnotationAssertionAxiomsBySubjectIndexImpl() {
-        index = new AxiomMultimapIndex<>(OWLAnnotationAssertionAxiom.class,
-                                         OWLAnnotationAssertionAxiom::getSubject,
-                                         MultimapBuilder.hashKeys().arrayListValues().build());
+        index = AxiomMultimapIndex.create(OWLAnnotationAssertionAxiom.class,
+                                          OWLAnnotationAssertionAxiom::getSubject,
+                                          MultimapBuilder.hashKeys()
+                                                         .arrayListValues()
+                                                         .build());
     }
 
     @Override

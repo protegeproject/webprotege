@@ -4,7 +4,6 @@ import com.google.common.collect.MultimapBuilder;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.DataPropertyAssertionAxiomsBySubjectIndex;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -21,16 +20,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-12
  */
 public class DataPropertyAssertionAxiomsBySubjectIndexImpl implements DataPropertyAssertionAxiomsBySubjectIndex,
-RequiresOntologyChangeNotification {
+        RequiresOntologyChangeNotification {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLIndividual, OWLDataPropertyAssertionAxiom> index;
 
     @Inject
     public DataPropertyAssertionAxiomsBySubjectIndexImpl() {
-        index = new AxiomMultimapIndex<>(OWLDataPropertyAssertionAxiom.class,
-                                         OWLDataPropertyAssertionAxiom::getSubject,
-                                         MultimapBuilder.hashKeys().arrayListValues().build());
+        index = AxiomMultimapIndex.create(OWLDataPropertyAssertionAxiom.class,
+                                          OWLDataPropertyAssertionAxiom::getSubject,
+                                          MultimapBuilder.hashKeys()
+                                                         .arrayListValues()
+                                                         .build());
     }
 
     @Nonnull

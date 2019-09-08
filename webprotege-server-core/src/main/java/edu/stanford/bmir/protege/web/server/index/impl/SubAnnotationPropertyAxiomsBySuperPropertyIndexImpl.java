@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.MultimapBuilder;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.SubAnnotationPropertyAxiomsBySuperPropertyIndex;
-import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
@@ -27,9 +26,11 @@ public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubA
 
     @Inject
     public SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl() {
-        index = new AxiomMultimapIndex<>(OWLSubAnnotationPropertyOfAxiom.class,
-                                       OWLSubAnnotationPropertyOfAxiom::getSuperProperty,
-                                         MultimapBuilder.hashKeys().arrayListValues().build());
+        index = AxiomMultimapIndex.create(OWLSubAnnotationPropertyOfAxiom.class,
+                                          OWLSubAnnotationPropertyOfAxiom::getSuperProperty,
+                                          MultimapBuilder.hashKeys()
+                                                         .arrayListValues()
+                                                         .build());
     }
 
     @Nonnull

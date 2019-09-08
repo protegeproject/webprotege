@@ -9,7 +9,8 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -36,35 +37,24 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
     @Nonnull
     private final Multimap<Key<V>, A> backingMap;
 
-    @Nonnull
-    private final KeyValueExtractor<V, A> keyValueExtractor;
+    @Nullable
+    private final KeyValueExtractor<V, A> unaryKeyValueExtractor;
+
+    @Nullable
+    private final KeyValueExtractor<Iterable<V>, A> naryKeyValueExtractor;
 
     @Nonnull
     private final Class<A> axiomCls;
 
-
-
-    public AxiomMultimapIndex(@Nonnull Class<A> axiomCls,
-                              @Nonnull KeyValueExtractor<V, A> keyValueExtractor,
-                              @Nonnull Multimap<Key<V>, A> backingMap) {
+    private AxiomMultimapIndex(@Nonnull Class<A> axiomCls,
+                               @Nullable KeyValueExtractor<V, A> unaryKeyValueExtractor,
+                               @Nullable KeyValueExtractor<Iterable<V>, A> naryKeyValueExtractor,
+                               @Nonnull Multimap<Key<V>, A> backingMap) {
         this.backingMap = checkNotNull(backingMap);
-        this.keyValueExtractor = checkNotNull(keyValueExtractor);
+        this.unaryKeyValueExtractor = unaryKeyValueExtractor;
+        this.naryKeyValueExtractor = naryKeyValueExtractor;
         this.axiomCls = checkNotNull(axiomCls);
         axiomChangeHandler.setAxiomChangeConsumer(this::handleChange);
-    }
-
-    public Stream<A> getAxioms(@Nonnull V value, @Nonnull OWLOntologyID ontologyId) {
-        var key = Key.get(ontologyId, value);
-        try {
-            readLock.lock();
-            return ImmutableList.copyOf(backingMap.get(key)).stream();
-        } finally {
-            readLock.unlock();
-        }
-    }
-
-    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
-        axiomChangeHandler.handleOntologyChanges(changes);
     }
 
     private void handleChange(@Nonnull AxiomChange change) {
@@ -73,31 +63,79 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
             return;
         }
         var ax = axiomCls.cast(axiom);
-        var keyValue = keyValueExtractor.extractValue(ax);
-        if(keyValue == null) {
-            return;
+        if(isNaryKeyValue()) {
+            var values = getNaryKeyValueExtractor(ax);
+            values.forEach(val -> {
+                var key = Key.get(change.getOntologyId(), val);
+                handleOntologyChange(change, key, ax);
+            });
         }
-        var key = Key.get(change.getOntologyId(),
-                          keyValue);
-        try {
-            writeLock.lock();
-            if(change.isAddAxiom()) {
-                // Backing map may/may not be a set
-                // If it is a set then we just added the key/axiom pair
-                // If it is not a set, we don't want duplicates so we must
-                // check to see if it contains the key/axiom pair
-                var shouldAdd = backingMap instanceof SetMultimap || !backingMap.containsEntry(key, ax);
-                if(shouldAdd) {
-                    backingMap.put(key, ax);
-                }
+        else {
+            var keyValue = getUnaryKeyValueExtractor(ax);
+            if(keyValue == null) {
+                return;
             }
-            else {
-                backingMap.remove(key, ax);
-            }
-        } finally {
-            writeLock.unlock();
+            var key = Key.get(change.getOntologyId(),
+                              keyValue);
+            handleOntologyChange(change, key, ax);
         }
     }
 
+    @Null
+    private Iterable<V> getNaryKeyValueExtractor(A ax) {
+        checkNotNull(naryKeyValueExtractor);
+        return naryKeyValueExtractor.extractValue(ax);
+    }
 
+    private V getUnaryKeyValueExtractor(A ax) {
+        checkNotNull(unaryKeyValueExtractor);
+        return unaryKeyValueExtractor.extractValue(ax);
+    }
+
+    private boolean isNaryKeyValue() {
+        return naryKeyValueExtractor != null;
+    }
+
+    private void handleOntologyChange(@Nonnull AxiomChange change, Key<V> key, A ax) {
+        if(change.isAddAxiom()) {
+            // Backing map may/may not be a set
+            // If it is a set then we just added the key/axiom pair
+            // If it is not a set, we don't want duplicates so we must
+            // check to see if it contains the key/axiom pair
+            var shouldAdd = backingMap instanceof SetMultimap || !backingMap.containsEntry(key, ax);
+            if(shouldAdd) {
+                backingMap.put(key, ax);
+            }
+        }
+        else {
+            backingMap.remove(key, ax);
+        }
+    }
+
+    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> create(@Nonnull Class<A> axiomCls,
+                                                                          @Nonnull KeyValueExtractor<V, A> keyValueExtractor,
+                                                                          @Nonnull Multimap<Key<V>, A> backingMap) {
+        return new AxiomMultimapIndex<>(axiomCls, keyValueExtractor, null, backingMap);
+    }
+
+    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> createWithNaryKeyValueExtractor(@Nonnull Class<A> axiomCls,
+                                                                                                   @Nonnull KeyValueExtractor<Iterable<V>, A> keyValueExtractor,
+                                                                                                   @Nonnull Multimap<Key<V>, A> backingMap) {
+        return new AxiomMultimapIndex<>(axiomCls, null, keyValueExtractor, backingMap);
+    }
+
+    public Stream<A> getAxioms(@Nonnull V value, @Nonnull OWLOntologyID ontologyId) {
+        var key = Key.get(ontologyId, value);
+        try {
+            readLock.lock();
+            return ImmutableList.copyOf(backingMap.get(key))
+                                .stream();
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    public void handleOntologyChanges(@Nonnull List<OntologyChange> changes) {
+        axiomChangeHandler.handleOntologyChanges(changes);
+    }
 }
