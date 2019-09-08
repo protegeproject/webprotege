@@ -2,23 +2,23 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.OntologySignatureIndexImpl;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,34 +33,51 @@ public class OntologySignatureIndexImpl_TestCase {
     private OntologySignatureIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
 
     @Mock
-    private OWLOntology ontology;
+    private AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceImpl;
 
     @Mock
-    private OWLEntity entity;
+    private OWLClass cls;
+
+    @Mock
+    private OWLObjectProperty objectProperty;
+
+    @Mock
+    private OWLDataProperty dataProperty;
+
+    @Mock
+    private OWLAnnotationProperty annotationProperty;
+
+    @Mock
+    private OWLNamedIndividual individual;
+
+    @Mock
+    private OWLDatatype datatype;
+
 
     @Before
     public void setUp() {
-        impl = new OntologySignatureIndexImpl(ontologyIndex);
-
-        when(ontologyIndex.getOntology(any()))
-                .thenReturn(Optional.empty());
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
-
-        when(ontology.getSignature())
-                .thenReturn(Collections.singleton(entity));
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.CLASS, ontologyId))
+                .thenAnswer(invocation -> Stream.of(cls));
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.OBJECT_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> Stream.of(objectProperty));
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.DATA_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> Stream.of(dataProperty));
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.ANNOTATION_PROPERTY, ontologyId))
+                .thenAnswer(invocation -> Stream.of(annotationProperty));
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.NAMED_INDIVIDUAL, ontologyId))
+                .thenAnswer(invocation -> Stream.of(individual));
+        when(axiomsByEntityReferenceImpl.getOntologyAxiomsSignature(EntityType.DATATYPE, ontologyId))
+                .thenAnswer(invocation -> Stream.of(datatype));
+        impl = new OntologySignatureIndexImpl(axiomsByEntityReferenceImpl);
     }
 
     @Test
     public void shouldGetSignatureOfKnownOntology() {
         var signature = impl.getEntitiesInSignature(ontologyId).collect(toSet());
-        assertThat(signature, hasItem(entity));
+        assertThat(signature, hasItems(cls, objectProperty, dataProperty, annotationProperty, individual, datatype));
     }
 
     @Test

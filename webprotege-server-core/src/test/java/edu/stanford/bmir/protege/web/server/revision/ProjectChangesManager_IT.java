@@ -114,7 +114,7 @@ public class ProjectChangesManager_IT {
         var entitiesInOntologySignatureByIri = new EntitiesInOntologySignatureByIriIndexImpl(axiomsByEntityReference);
         var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex,
                                                                                     entitiesInOntologySignatureByIri);
-        var ontologySignatureIndex = new OntologySignatureIndexImpl(ontologyIndex);
+        var ontologySignatureIndex = new OntologySignatureIndexImpl(axiomsByEntityReference);
         var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
 
         var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex,
