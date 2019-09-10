@@ -132,7 +132,10 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
     }
 
     private void applyQueuedChanges() {
-        changeQueue.forEach(axiomChangeHandler::handleOntologyChanges);
+        while(!changeQueue.isEmpty()) {
+            var changes = changeQueue.poll();
+            axiomChangeHandler.handleOntologyChanges(changes);
+        }
     }
 
     public synchronized void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
