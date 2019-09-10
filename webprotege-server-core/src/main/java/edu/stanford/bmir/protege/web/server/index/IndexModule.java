@@ -1,0 +1,308 @@
+package edu.stanford.bmir.protege.web.server.index;
+
+import dagger.Module;
+import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.index.impl.*;
+import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+
+import javax.annotation.Nonnull;
+
+/**
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 2019-09-10
+ */
+@Module
+public class IndexModule {
+
+    @Provides
+    AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
+            AnnotationAssertionAxiomsBySubjectIndexImpl impl,
+            IndexUpdater updater) {
+        updater.registerIndex(impl);
+        return impl;
+    }
+
+    @Provides
+    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexWrapperImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(
+            AnnotationPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationPropertyRangeAxiomsIndex provideAnnotationPropertyRangeAxiomsIndex(AnnotationPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl,
+                                                                         IndexUpdater indexUpdater) {
+        indexUpdater.registerIndex(impl);
+        return impl;
+    }
+
+    @Provides
+    AxiomsByReferenceIndex provideAxiomsByReferenceIndex(AxiomsByReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl, IndexUpdater indexUpdater) {
+        indexUpdater.registerIndex(impl);
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public ClassAssertionAxiomsByClassIndex provideClassAssertionAxiomsByClassIndex(ClassAssertionAxiomsByClassIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ClassAssertionAxiomsByIndividualIndex provideClassAssertionAxiomsByIndividualIndex(
+            ClassAssertionAxiomsByIndividualIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyAssertionAxiomsBySubjectIndex provideDataPropertyAssertionAxiomsBySubjectIndex(
+            DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyCharacteristicsIndex provideDataPropertyCharacteristicsIndex(DataPropertyCharacteristicsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyDomainAxiomsIndex provideDataPropertyDomainAxiomsIndex(DataPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DataPropertyRangeAxiomsIndex provideDataPropertyRangeAxiomsIndex(DataPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DefaultOntologyIdManager provideDefaultOntologyIdManager(DefaultOntologyIdManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesByEntityIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DifferentIndividualsAxiomsIndex provideDifferentIndividualsAxiomsIndex(DifferentIndividualsAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DisjointClassesAxiomsIndex provideDisjointClassesAxiomsIndex(DisjointClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DisjointDataPropertiesAxiomsIndex provideDisjointDataPropertiesAxiomsIndex(DisjointDataPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DisjointObjectPropertiesAxiomsIndex provideDisjointObjectPropertiesAxiomsIndex(
+            DisjointObjectPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInOntologySignatureByIriIndex provideEntitiesInOntologySignatureByIriIndex(
+            EntitiesInOntologySignatureByIriIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInOntologySignatureIndex provideEntitiesInOntologySignatureIndex(EntitiesInOntologySignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(
+            EntitiesInProjectSignatureByIriIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndexImpl(EntitiesInProjectSignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EquivalentClassesAxiomsIndex provideEquivalentClassesAxiomsIndex(EquivalentClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EquivalentDataPropertiesAxiomsIndex provideEquivalentDataPropertiesAxiomsIndex(
+            EquivalentDataPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EquivalentObjectPropertiesAxiomsIndex provideEquivalentObjectPropertiesAxiomsIndex(
+            EquivalentObjectPropertiesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    IndividualsByTypeIndex provideIndividualsByTypeIndex(IndividualsByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    IndividualsIndex provideIndividualsIndex(IndividualsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    InverseObjectPropertyAxiomsIndex provideInverseObjectPropertyAxiomsIndex(InverseObjectPropertyAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(
+            ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyCharacteristicsIndex provideObjectPropertyCharacteristicsIndex(ObjectPropertyCharacteristicsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyDomainAxiomsIndex provideObjectPropertyDomainAxiomsIndex(ObjectPropertyDomainAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPropertyRangeAxiomsIndex provideObjectPropertyRangeAxiomsIndex(ObjectPropertyRangeAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl,
+                                                             IndexUpdater indexUpdater) {
+        indexUpdater.registerIndex(impl);
+        return impl;
+    }
+
+    @Provides
+    OntologyAnnotationsSignatureIndex provideOntologyAnnotationsSignatureIndex(@Nonnull OntologyAnnotationsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyAxiomsIndex provideOntologyAxiomsIndex(OntologyAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologyAxiomsSignatureIndex provideOntologyAxiomsSignatureIndex(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologySignatureByTypeIndex provideOntologySignatureByTypeIndex(OntologySignatureByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OntologySignatureIndex provideOntologySignatureIndex(OntologySignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(
+            ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectSignatureByTypeIndex provideProjectSignatureByTypeIndex(ProjectSignatureByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectSignatureIndex provideProjectSignatureIndex(ProjectSignatureIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    PropertyAssertionAxiomsBySubjectIndex providePropertyAssertionAxiomsBySubjectIndex(
+            PropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SameIndividualAxiomsIndex provideSameIndividualAxiomsIndex(SameIndividualAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(
+            SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(
+            SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubClassOfAxiomsBySubClassIndex provideSubClassOfAxiomsBySubClassIndex(SubClassOfAxiomsBySubClassIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(
+            SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SubObjectPropertyAxiomsBySubPropertyIndex provideSubObjectPropertyAxiomsBySubPropertyIndex(
+            SubObjectPropertyAxiomsBySubPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectAnnotationAssertionAxiomsBySubjectIndex providesHasAnnotationAssertionAxioms(
+            ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+}

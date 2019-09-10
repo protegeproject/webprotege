@@ -37,10 +37,7 @@ import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCacheFactory;
 import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManager;
 import edu.stanford.bmir.protege.web.server.obo.TermDefinitionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
-import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
-import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ProjectOWLOntologyManager;
@@ -86,7 +83,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  *         A  module for a project.  The module ensures that any object graph contains project specific objects for the
  *         specified project (e.g. root ontology, short form provider etc.)
  */
-@Module(includes = ProjectActionHandlersModule.class)
+@Module(includes = {ProjectActionHandlersModule.class, IndexModule.class})
 public class ProjectModule {
 
     private final ProjectId projectId;
@@ -369,11 +366,6 @@ public class ProjectModule {
         return provider.get();
     }
 
-    @Provides
-    ProjectAnnotationAssertionAxiomsBySubjectIndex providesHasAnnotationAssertionAxioms(
-            ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
-        return impl;
-    }
 
     @Provides
     HasApplyChanges providesHasApplyChanges(ChangeManager manager) {
@@ -591,12 +583,6 @@ public class ProjectModule {
         return rep;
     }
 
-    @Provides
-    @ProjectSingleton
-    IndividualsIndex provideIndividualsIndex(IndividualsIndexImpl impl) {
-        return impl;
-    }
-
     @ProjectSingleton
     @Provides
     ProjectDisposablesManager provideProjectDisposableObjectManager(DisposableObjectManager disposableObjectManager) {
@@ -618,228 +604,6 @@ public class ProjectModule {
     LiteralLangTagTransformer provideLangTagTransformer() {
         return langTag -> langTag;
     }
-
-
-    @Provides
-    IRIOrdinalProvider provideIRIIndexProvider() {
-        return IRIOrdinalProvider.withDefaultAnnotationPropertyOrdering();
-    }
-
-    @Provides
-    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexWrapperImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl, IndexUpdater indexUpdater) {
-        indexUpdater.registerIndex(impl);
-        return impl;
-    }
-
-    @Provides
-    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl,
-                                                                         AxiomsByTypeIndexImpl axiomsByTypeIndex,
-                                                                         ProjectOntologiesIndex projectOntologiesIndex,
-                                                                         IndexUpdater indexUpdater) {
-        indexUpdater.registerIndex(impl);
-        return impl;
-    }
-
-    @Provides
-    AxiomsByReferenceIndex provideAxiomsByReferenceIndex(AxiomsByReferenceIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex(AxiomsByEntityReferenceIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    OntologyIndex provideOntologyIndex(OntologyIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
-            AnnotationAssertionAxiomsBySubjectIndexImpl impl,
-            IndexUpdater updater) {
-        updater.registerIndex(impl);
-        return impl;
-    }
-
-    @Provides
-    SubClassOfAxiomsBySubClassIndex provideSubClassOfAxiomsBySubClassIndex(SubClassOfAxiomsBySubClassIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    EquivalentClassesAxiomsIndex provideEquivalentClassesAxiomsIndex(EquivalentClassesAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    EquivalentObjectPropertiesAxiomsIndex provideEquivalentObjectPropertiesAxiomsIndex(EquivalentObjectPropertiesAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    EquivalentDataPropertiesAxiomsIndex provideEquivalentDataPropertiesAxiomsIndex(EquivalentDataPropertiesAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ObjectPropertyDomainAxiomsIndex provideObjectPropertyDomainAxiomsIndex(ObjectPropertyDomainAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ObjectPropertyRangeAxiomsIndex provideObjectPropertyRangeAxiomsIndex(ObjectPropertyRangeAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ObjectPropertyCharacteristicsIndex provideObjectPropertyCharacteristicsIndex(ObjectPropertyCharacteristicsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DataPropertyDomainAxiomsIndex provideDataPropertyDomainAxiomsIndex(DataPropertyDomainAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DataPropertyRangeAxiomsIndex provideDataPropertyRangeAxiomsIndex(DataPropertyRangeAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DataPropertyCharacteristicsIndex provideDataPropertyCharacteristicsIndex(DataPropertyCharacteristicsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ClassAssertionAxiomsByIndividualIndex provideClassAssertionAxiomsByIndividualIndex(
-            ClassAssertionAxiomsByIndividualIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    SameIndividualAxiomsIndex provideSameIndividualAxiomsIndex(SameIndividualAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(
-            ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DataPropertyAssertionAxiomsBySubjectIndex provideDataPropertyAssertionAxiomsBySubjectIndex(
-            DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    PropertyAssertionAxiomsBySubjectIndex providePropertyAssertionAxiomsBySubjectIndex(
-            PropertyAssertionAxiomsBySubjectIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(
-            AnnotationPropertyDomainAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    AnnotationPropertyRangeAxiomsIndex provideAnnotationPropertyRangeAxiomsIndex(AnnotationPropertyRangeAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(
-            EntitiesInProjectSignatureByIriIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesByEntityIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(
-            ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(
-            SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
-        return impl;
-    }
-
-
-    @Provides
-    SubObjectPropertyAxiomsBySubPropertyIndex provideSubObjectPropertyAxiomsBySubPropertyIndex(
-            SubObjectPropertyAxiomsBySubPropertyIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(
-            SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    OntologyAxiomsSignatureIndex provideOntologyAxiomsSignatureIndex(AxiomsByEntityReferenceIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DefaultOntologyIdManager provideDefaultOntologyIdManager(DefaultOntologyIdManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    OntologySignatureIndex provideOntologySignatureIndex(OntologySignatureIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ProjectSignatureIndex provideProjectSignatureIndex(ProjectSignatureIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ProjectSignatureByTypeIndex provideProjectSignatureByTypeIndex(ProjectSignatureByTypeIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    OntologySignatureByTypeIndex provideOntologySignatureByTypeIndex(OntologySignatureByTypeIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndexImpl(EntitiesInProjectSignatureIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(
-            SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
-        return impl;
-    }
-
 
     @Provides
     @IntoSet
@@ -868,58 +632,7 @@ public class ProjectModule {
     }
 
     @Provides
-    @ProjectSingleton
-    public ClassAssertionAxiomsByClassIndex provideClassAssertionAxiomsByClassIndex(ClassAssertionAxiomsByClassIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    IndividualsByTypeIndex provideIndividualsByTypeIndex(IndividualsByTypeIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    EntitiesInOntologySignatureIndex provideEntitiesInOntologySignatureIndex(EntitiesInOntologySignatureIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    EntitiesInOntologySignatureByIriIndex provideEntitiesInOntologySignatureByIriIndex(EntitiesInOntologySignatureByIriIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    OntologyAxiomsIndex provideOntologyAxiomsIndex(OntologyAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
     TermDefinitionManager provideTermDefinitionManager(TermDefinitionManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DisjointClassesAxiomsIndex provideDisjointClassesAxiomsIndex(DisjointClassesAxiomsIndexImpl impl) {
-        return impl;
-    }
-    
-    @Provides
-    DisjointDataPropertiesAxiomsIndex provideDisjointDataPropertiesAxiomsIndex(DisjointDataPropertiesAxiomsIndexImpl impl) {
-        return impl;
-    }
-    
-    @Provides
-    DisjointObjectPropertiesAxiomsIndex provideDisjointObjectPropertiesAxiomsIndex(DisjointObjectPropertiesAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    InverseObjectPropertyAxiomsIndex provideInverseObjectPropertyAxiomsIndex(InverseObjectPropertyAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    DifferentIndividualsAxiomsIndex provideDifferentIndividualsAxiomsIndex(DifferentIndividualsAxiomsIndexImpl impl) {
         return impl;
     }
 
@@ -965,16 +678,13 @@ public class ProjectModule {
     }
 
     @Provides
-    OntologyAnnotationsSignatureIndex provideOntologyAnnotationsSignatureIndex(@Nonnull OntologyAnnotationsIndexImpl impl) {
+    OntologyIndex provideOntologyIndex(OntologyIndexImpl impl) {
         return impl;
     }
 
-    @ProjectSingleton
     @Provides
-    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl,
-                                                             IndexUpdater indexUpdater) {
-        indexUpdater.registerIndex(impl);
-        return impl;
+    IRIOrdinalProvider provideIRIIndexProvider() {
+        return IRIOrdinalProvider.withDefaultAnnotationPropertyOrdering();
     }
 
 }
