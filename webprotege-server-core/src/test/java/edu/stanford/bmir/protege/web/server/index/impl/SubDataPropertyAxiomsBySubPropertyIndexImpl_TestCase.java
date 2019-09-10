@@ -33,12 +33,6 @@ public class SubDataPropertyAxiomsBySubPropertyIndexImpl_TestCase {
     private SubDataPropertyAxiomsBySubPropertyIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
     private OWLOntologyID ontologyID;
 
     @Mock

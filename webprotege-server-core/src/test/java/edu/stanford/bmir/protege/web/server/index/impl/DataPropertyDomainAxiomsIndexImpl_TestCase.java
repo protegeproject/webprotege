@@ -29,12 +29,6 @@ public class DataPropertyDomainAxiomsIndexImpl_TestCase {
     private DataPropertyDomainAxiomsIndexImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
-    private OWLOntology ontology;
-
-    @Mock
     private OWLOntologyID ontologyId;
 
     @Mock

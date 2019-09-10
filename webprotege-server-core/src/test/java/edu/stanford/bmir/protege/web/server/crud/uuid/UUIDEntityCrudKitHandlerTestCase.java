@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
@@ -83,9 +82,6 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Mock
     private OWLOntologyID ontologyId;
 
-    @Mock
-    private OntologyIndex ontologyIndex;
-
     @Before
     public void setUp() throws Exception {
         when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
@@ -95,8 +91,6 @@ public class UUIDEntityCrudKitHandlerTestCase {
         when(dictionaryLanguage.getAnnotationPropertyIri()).thenReturn(annotationPropertyIri);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
         handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
         when(entitiesInSignature.getEntitiesInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());

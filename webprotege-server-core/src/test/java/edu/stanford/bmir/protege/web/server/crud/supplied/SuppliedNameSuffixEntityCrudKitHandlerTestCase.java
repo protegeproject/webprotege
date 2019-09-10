@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
@@ -74,10 +73,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     @Mock
     private OWLOntologyID ontologyId;
 
-    @Mock
-    private OntologyIndex ontologyIndex;
-
-
     @Before
     public void setUp() throws Exception {
         OWLDataFactoryImpl dataFactory = new OWLDataFactoryImpl();
@@ -88,8 +83,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         when(dictionaryLanguage.getLang()).thenReturn("");
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
         handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory);
     }
 
