@@ -969,5 +969,13 @@ public class ProjectModule {
         return impl;
     }
 
+    @ProjectSingleton
+    @Provides
+    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl,
+                                                             IndexUpdater indexUpdater) {
+        indexUpdater.registerIndex(impl);
+        return impl;
+    }
+
 }
 
