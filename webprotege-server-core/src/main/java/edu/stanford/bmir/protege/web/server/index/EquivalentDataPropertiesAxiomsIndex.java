@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-22
  */
 @ProjectSingleton
-public interface EquivalentDataPropertiesAxiomsIndex {
+public interface EquivalentDataPropertiesAxiomsIndex extends Index {
 
     @Nonnull
     Stream<OWLEquivalentDataPropertiesAxiom> getEquivalentDataPropertiesAxioms(@Nonnull OWLDataProperty property,

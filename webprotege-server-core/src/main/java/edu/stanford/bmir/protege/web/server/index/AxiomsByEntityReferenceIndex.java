@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-07
  */
 @ProjectSingleton
-public interface AxiomsByEntityReferenceIndex {
+public interface AxiomsByEntityReferenceIndex extends Index {
 
     Stream<OWLAxiom> getReferencingAxioms(@Nonnull
                                           OWLEntity entity,

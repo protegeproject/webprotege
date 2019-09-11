@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project.chg;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.index.RootIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
@@ -94,6 +96,8 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final RevisionManager changeManager;
 
+    @Nonnull
+    private final RootIndex rootIndex;
 
     @Nonnull
     private final DictionaryManager dictionaryManager;
@@ -138,9 +142,6 @@ public class ChangeManager implements HasApplyChanges {
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Nonnull
-    private final OntologyStore ontologyStore;
-
-    @Nonnull
     private final IriReplacerFactory iriReplacerFactory;
 
     @Inject
@@ -155,6 +156,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull Provider<EventTranslatorManager> eventTranslatorManagerProvider,
                          @Nonnull ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache,
                          @Nonnull RevisionManager changeManager,
+                         @Nonnull RootIndex rootIndex,
                          @Nonnull DictionaryManager dictionaryManager,
                          @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
@@ -166,7 +168,6 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations,
                          @Nonnull IndexUpdater indexUpdater,
                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                         @Nonnull OntologyStore ontologyStore,
                          @Nonnull IriReplacerFactory iriReplacerFactory) {
         this.projectId = projectId;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -179,6 +180,7 @@ public class ChangeManager implements HasApplyChanges {
         this.eventTranslatorManagerProvider = eventTranslatorManagerProvider;
         this.entityCrudKitHandlerCache = entityCrudKitHandlerCache;
         this.changeManager = changeManager;
+        this.rootIndex = rootIndex;
         this.dictionaryManager = dictionaryManager;
         this.classHierarchyProvider = classHierarchyProvider;
         this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
@@ -190,7 +192,6 @@ public class ChangeManager implements HasApplyChanges {
         this.builtInPrefixDeclarations = builtInPrefixDeclarations;
         this.indexUpdater = indexUpdater;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
-        this.ontologyStore = ontologyStore;
         this.iriReplacerFactory = iriReplacerFactory;
     }
 
@@ -291,7 +292,7 @@ public class ChangeManager implements HasApplyChanges {
             final Optional<Revision> revision;
             try {
                 projectChangeWriteLock.lock();
-                var appliedChanges = ontologyStore.applyChanges(minimisedChanges);
+                var appliedChanges = rootIndex.filterEffectiveChanges(minimisedChanges);
                 var renameMap = renameMapFactory.create(tempIri2MintedIri);
                 var renamedResult = getRenamedResult(changeListGenerator, changeList.getResult(), renameMap);
                 changeApplicationResult = new ChangeApplicationResult<>(renamedResult, appliedChanges, renameMap);
@@ -447,7 +448,7 @@ public class ChangeManager implements HasApplyChanges {
         var changes = finalResult.getChangeList();
 
         // Update indexes in response to the changes
-        indexUpdater.propagateOntologyChanges(changes);
+        indexUpdater.updateIndexes(ImmutableList.copyOf(changes));
 
 
         // Update the rendering first so that a proper change message is generated

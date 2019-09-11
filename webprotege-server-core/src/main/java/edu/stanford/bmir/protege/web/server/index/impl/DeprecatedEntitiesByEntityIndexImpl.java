@@ -9,6 +9,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collection;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -16,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-15
  */
-public class DeprecatedEntitiesByEntityIndexImpl implements DeprecatedEntitiesByEntityIndex {
+public class DeprecatedEntitiesByEntityIndexImpl implements DeprecatedEntitiesByEntityIndex, DependentIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -29,6 +32,13 @@ public class DeprecatedEntitiesByEntityIndexImpl implements DeprecatedEntitiesBy
                                                @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
+    }
+
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(projectOntologiesIndex, annotationAssertionsIndex);
     }
 
     @Override

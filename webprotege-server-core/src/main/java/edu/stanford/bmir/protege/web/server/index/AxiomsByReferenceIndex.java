@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
  * 2019-08-06
  */
 @ProjectSingleton
-public interface AxiomsByReferenceIndex {
+public interface AxiomsByReferenceIndex extends Index {
 
     /**
      * Gets the axioms that reference one or more of the specified entities.  This includes logical and non-logical

@@ -8,6 +8,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-13
  */
-public class EntitiesInProjectSignatureByIriIndexImpl implements EntitiesInProjectSignatureByIriIndex {
+public class EntitiesInProjectSignatureByIriIndexImpl implements EntitiesInProjectSignatureByIriIndex, DependentIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -30,6 +32,12 @@ public class EntitiesInProjectSignatureByIriIndexImpl implements EntitiesInProje
                                                     @Nonnull EntitiesInOntologySignatureByIriIndex entitiesInOntologySignatureByIriIndex) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.entitiesInOntologySignatureByIriIndex = checkNotNull(entitiesInOntologySignatureByIriIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(projectOntologiesIndex, entitiesInOntologySignatureByIriIndex);
     }
 
     @Nonnull

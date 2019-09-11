@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.server.individuals.IndividualsQueryResult;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
  * 14 Sep 2018
  */
 @ProjectSingleton
-public interface IndividualsIndex {
+public interface IndividualsIndex extends Index {
 
     /**
      * Get individuals that have a display name that matches the specified search string

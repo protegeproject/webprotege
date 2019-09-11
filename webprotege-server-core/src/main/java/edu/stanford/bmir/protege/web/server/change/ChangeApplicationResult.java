@@ -43,7 +43,7 @@ public class ChangeApplicationResult<S> implements HasSubject<S> {
 
     @Nonnull
     public List<OntologyChange> getChangeList() {
-        return Collections.unmodifiableList(changeList);
+        return changeList;
     }
 
     @Nonnull

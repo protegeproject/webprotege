@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-15
  */
-public interface OntologySignatureIndex {
+public interface OntologySignatureIndex extends Index {
 
     /**
      * Gets the entities in the signature of the specified ontology.

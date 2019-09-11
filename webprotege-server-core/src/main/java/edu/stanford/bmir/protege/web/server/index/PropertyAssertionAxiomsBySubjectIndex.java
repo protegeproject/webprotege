@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-12
  */
-public interface PropertyAssertionAxiomsBySubjectIndex {
+public interface PropertyAssertionAxiomsBySubjectIndex extends Index {
 
     @Nonnull
     Stream<OWLAxiom> getPropertyAssertions(@Nonnull

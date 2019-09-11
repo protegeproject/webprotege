@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -23,18 +24,18 @@ public class EagerProjectSingletons {
 
     private final RevisionManager revisionManager;
 
-    private final OntologyAxiomsIndex axiomsIndex;
+    private final IndexUpdater indexUpdater;
 
     private final ProjectActionHandlerRegistry projectActionHandlerRegistry;
 
     @Inject
     public EagerProjectSingletons(ProjectId projectId,
                                   RevisionManager revisionManager,
-                                  OntologyAxiomsIndex axiomsIndex,
+                                  IndexUpdater indexUpdater,
                                   ProjectActionHandlerRegistry projectActionHandlerRegistry) {
         this.projectId = projectId;
         this.revisionManager = revisionManager;
-        this.axiomsIndex = axiomsIndex;
+        this.indexUpdater = indexUpdater;
         this.projectActionHandlerRegistry = projectActionHandlerRegistry;
     }
 }

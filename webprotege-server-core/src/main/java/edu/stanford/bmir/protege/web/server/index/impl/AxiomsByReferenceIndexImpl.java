@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-06
  */
-public class AxiomsByReferenceIndexImpl implements AxiomsByReferenceIndex {
+public class AxiomsByReferenceIndexImpl implements AxiomsByReferenceIndex, DependentIndex {
 
     @Nonnull
     private final AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
@@ -33,6 +34,12 @@ public class AxiomsByReferenceIndexImpl implements AxiomsByReferenceIndex {
                                       @Nonnull AnnotationAxiomsByIriReferenceIndex axiomsByIriReferenceIndex) {
         this.axiomsByEntityReferenceIndex = checkNotNull(axiomsByEntityReferenceIndex);
         this.axiomsByIriReferenceIndex = checkNotNull(axiomsByIriReferenceIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(axiomsByIriReferenceIndex, axiomsByEntityReferenceIndex);
     }
 
     @Nonnull

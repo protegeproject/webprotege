@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,16 +26,10 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     private OntologyChangeRecordTranslatorImpl impl;
 
     @Mock
-    private OntologyIndex ontologyIndex;
-
-    @Mock
     private OWLOntologyID ontologyId;
 
     @Mock
     private OWLAxiom axiom;
-
-    @Mock
-    private OWLOntology ontology;
 
     @Mock
     private OWLAnnotation annotation;
@@ -50,10 +43,6 @@ public class OntologyChangeRecordTranslatorImpl_TestCase {
     @Before
     public void setUp() {
         impl = new OntologyChangeRecordTranslatorImpl();
-        when(ontologyIndex.getOntology(ontologyId))
-                .thenReturn(Optional.of(ontology));
-        when(ontology.getOntologyID())
-                .thenReturn(ontologyId);
     }
 
     @Test

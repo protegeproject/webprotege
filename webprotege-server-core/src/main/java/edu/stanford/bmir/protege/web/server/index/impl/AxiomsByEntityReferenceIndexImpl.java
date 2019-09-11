@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLEntityCollectionContainerCollector;
 
@@ -29,6 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-07
  */
+@ProjectSingleton
 public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReferenceIndex, OntologyAxiomsSignatureIndex, ProjectAxiomsSignatureIndex, RequiresOntologyChangeNotification {
 
 

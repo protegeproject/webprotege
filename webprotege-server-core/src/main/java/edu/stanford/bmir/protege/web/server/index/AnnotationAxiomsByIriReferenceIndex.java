@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAxiom;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-07
  */
 @ProjectSingleton
-public interface AnnotationAxiomsByIriReferenceIndex {
+public interface AnnotationAxiomsByIriReferenceIndex extends Index {
 
     /**
      * Returns a stream of axioms from the specified ontology, where:

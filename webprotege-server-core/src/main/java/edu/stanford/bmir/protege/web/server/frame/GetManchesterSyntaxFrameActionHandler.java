@@ -25,10 +25,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectActionHandler<GetManchesterSyntaxFrameAction, GetManchesterSyntaxFrameResult> {
 
     @Nonnull
-    @RootOntology
-    private final HasImportsClosure importsClosure;
-
-    @Nonnull
     private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
 
     @Nonnull
@@ -39,12 +35,10 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectAction
 
     @Inject
     public GetManchesterSyntaxFrameActionHandler(@Nonnull AccessManager accessManager,
-                                                 @Nonnull HasImportsClosure importsClosure,
                                                  @Nonnull OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
                                                  @Nonnull DictionaryManager dictionaryManager,
                                                  @Nonnull RenderingManager renderingManager) {
         super(accessManager);
-        this.importsClosure = checkNotNull(importsClosure);
         this.ontologyIRIShortFormProvider = checkNotNull(ontologyIRIShortFormProvider);
         this.dictionaryManager = checkNotNull(dictionaryManager);
         this.renderingManager = checkNotNull(renderingManager);
@@ -54,15 +48,16 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectAction
     @Override
     public GetManchesterSyntaxFrameResult execute(@Nonnull GetManchesterSyntaxFrameAction action,
                                                   @Nonnull ExecutionContext executionContext) {
-        var writer = new StringWriter();
-        var escapingShortFormProvider = new EscapingShortFormProvider(dictionaryManager);
-        var frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(),
-                                                                 writer, escapingShortFormProvider);
-        frameRenderer.setOntologyIRIShortFormProvider(ontologyIRIShortFormProvider);
-        frameRenderer.setRenderExtensions(true);
-        frameRenderer.writeFrame(action.getSubject());
-        var frameSubject = renderingManager.getRendering(action.getSubject());
-        return GetManchesterSyntaxFrameResult.get(frameSubject, writer.getBuffer().toString());
+//        var writer = new StringWriter();
+//        var escapingShortFormProvider = new EscapingShortFormProvider(dictionaryManager);
+//        var frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(),
+//                                                                 writer, escapingShortFormProvider);
+//        frameRenderer.setOntologyIRIShortFormProvider(ontologyIRIShortFormProvider);
+//        frameRenderer.setRenderExtensions(true);
+//        frameRenderer.writeFrame(action.getSubject());
+//        var frameSubject = renderingManager.getRendering(action.getSubject());
+//        return GetManchesterSyntaxFrameResult.get(frameSubject, writer.getBuffer().toString());
+        throw new RuntimeException();
     }
 
     @Nonnull

@@ -9,6 +9,8 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-15
  */
-public class OntologySignatureIndexImpl implements OntologySignatureIndex {
+public class OntologySignatureIndexImpl implements OntologySignatureIndex, DependentIndex {
 
     @Nonnull
     private final AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceIndex;
@@ -26,6 +28,12 @@ public class OntologySignatureIndexImpl implements OntologySignatureIndex {
     @Inject
     public OntologySignatureIndexImpl(@Nonnull AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceIndex) {
         this.axiomsByEntityReferenceIndex = checkNotNull(axiomsByEntityReferenceIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(axiomsByEntityReferenceIndex);
     }
 
     @Nonnull

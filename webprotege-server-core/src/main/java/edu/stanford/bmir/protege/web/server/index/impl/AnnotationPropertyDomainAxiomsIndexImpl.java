@@ -9,6 +9,9 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-13
  */
-public class AnnotationPropertyDomainAxiomsIndexImpl implements AnnotationPropertyDomainAxiomsIndex {
+public class AnnotationPropertyDomainAxiomsIndexImpl implements AnnotationPropertyDomainAxiomsIndex, DependentIndex {
 
     @Nonnull
     private final AxiomsByTypeIndex axiomsByTypeIndex;
@@ -27,6 +30,12 @@ public class AnnotationPropertyDomainAxiomsIndexImpl implements AnnotationProper
     public AnnotationPropertyDomainAxiomsIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
         // Perform an index scan on property domain axioms (there's likely to be few)
         this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(axiomsByTypeIndex);
     }
 
     @Nonnull

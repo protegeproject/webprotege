@@ -19,6 +19,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 14 Sep 2018
  */
-public class IndividualsIndexImpl implements IndividualsIndex {
+public class IndividualsIndexImpl implements IndividualsIndex, DependentIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -68,6 +69,12 @@ public class IndividualsIndexImpl implements IndividualsIndex {
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
         this.dataFactory = checkNotNull(dataFactory);
         this.individualsByTypeIndex = checkNotNull(individualsByTypeIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(projectOntologiesIndex, classAssertionAxiomsByIndividual);
     }
 
     @Nonnull

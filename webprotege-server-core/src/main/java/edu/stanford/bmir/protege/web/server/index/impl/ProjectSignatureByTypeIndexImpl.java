@@ -6,6 +6,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-16
  */
-public class ProjectSignatureByTypeIndexImpl implements ProjectSignatureByTypeIndex {
+public class ProjectSignatureByTypeIndexImpl implements ProjectSignatureByTypeIndex, DependentIndex {
 
     @Nonnull
     private final AxiomsByEntityReferenceIndexImpl delegate;
@@ -23,6 +25,12 @@ public class ProjectSignatureByTypeIndexImpl implements ProjectSignatureByTypeIn
     @Inject
     public ProjectSignatureByTypeIndexImpl(@Nonnull AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceIndex) {
         this.delegate = checkNotNull(axiomsByEntityReferenceIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(delegate);
     }
 
     @Nonnull

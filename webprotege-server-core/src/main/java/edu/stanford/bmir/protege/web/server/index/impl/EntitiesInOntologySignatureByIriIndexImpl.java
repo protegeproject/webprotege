@@ -7,6 +7,8 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -14,7 +16,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-09-05
  */
-public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOntologySignatureByIriIndex {
+public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOntologySignatureByIriIndex, DependentIndex {
 
     @Nonnull
     private final AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceIndex;
@@ -28,5 +30,11 @@ public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOnto
     @Override
     public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
         return axiomsByEntityReferenceIndex.getEntitiesInSignature(iri, ontologyId);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(axiomsByEntityReferenceIndex);
     }
 }

@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.ObjectPropertyCharacteristicsIndexImpl;
-import edu.stanford.bmir.protege.web.server.index.impl.OntologyIndex;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic.*;

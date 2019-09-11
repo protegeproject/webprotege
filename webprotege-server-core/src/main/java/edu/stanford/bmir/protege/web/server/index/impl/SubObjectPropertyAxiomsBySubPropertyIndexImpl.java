@@ -9,6 +9,8 @@ import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-15
  */
-public class SubObjectPropertyAxiomsBySubPropertyIndexImpl implements SubObjectPropertyAxiomsBySubPropertyIndex {
+public class SubObjectPropertyAxiomsBySubPropertyIndexImpl implements SubObjectPropertyAxiomsBySubPropertyIndex, DependentIndex {
 
     @Nonnull
     private final AxiomsByTypeIndex axiomsByTypeIndex;
@@ -26,6 +28,12 @@ public class SubObjectPropertyAxiomsBySubPropertyIndexImpl implements SubObjectP
     @Inject
     public SubObjectPropertyAxiomsBySubPropertyIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
         this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(axiomsByTypeIndex);
     }
 
     @Nonnull

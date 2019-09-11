@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 17 Jun 2018
  */
 @ProjectSingleton
-public interface AnnotationAssertionAxiomsIndex {
+public interface AnnotationAssertionAxiomsIndex extends Index {
 
     Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms();
 

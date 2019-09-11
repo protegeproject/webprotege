@@ -8,6 +8,8 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-12
  */
-public class PropertyAssertionAxiomsBySubjectIndexImpl implements PropertyAssertionAxiomsBySubjectIndex {
+public class PropertyAssertionAxiomsBySubjectIndexImpl implements PropertyAssertionAxiomsBySubjectIndex, DependentIndex {
 
     @Nonnull
     private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubject;
@@ -35,6 +37,14 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl implements PropertyAssert
         this.annotationAssertionAxiomsBySubject = checkNotNull(annotationAssertionAxiomsBySubject);
         this.objectPropertyAssertionAxiomsBySubject = checkNotNull(objectPropertyAssertionAxiomsBySubject);
         this.dataPropertyAssertionAxiomsBySubject = checkNotNull(dataPropertyAssertionAxiomsBySubject);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(annotationAssertionAxiomsBySubject,
+                       objectPropertyAssertionAxiomsBySubject,
+                       dataPropertyAssertionAxiomsBySubject);
     }
 
     @Nonnull

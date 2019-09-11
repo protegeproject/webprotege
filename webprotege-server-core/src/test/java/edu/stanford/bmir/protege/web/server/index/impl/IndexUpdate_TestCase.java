@@ -31,21 +31,5 @@ public class IndexUpdate_TestCase {
 
     @Before
     public void setUp() {
-        indexUpdater = new IndexUpdater();
-    }
-
-    @Test
-    public void shouldShouldNotAddMultipleListeners() {
-        indexUpdater.registerIndex(index);
-        indexUpdater.registerIndex(index);
-        var changes = ImmutableList.of(ontologyChange);
-        indexUpdater.propagateOntologyChanges(changes);
-        verify(index, times(1)).applyChanges(changes);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNpeIfIndexIsNull() {
-        indexUpdater.registerIndex(null);
     }
 }

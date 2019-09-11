@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-16
  */
-public interface OntologySignatureByTypeIndex {
+public interface OntologySignatureByTypeIndex extends Index {
 
     @Nonnull
     <E extends OWLEntity> Stream<E> getSignature(@Nonnull EntityType<E> type,

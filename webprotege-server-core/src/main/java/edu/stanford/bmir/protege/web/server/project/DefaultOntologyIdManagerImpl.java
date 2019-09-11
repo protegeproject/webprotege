@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -17,16 +18,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ProjectSingleton
 public class DefaultOntologyIdManagerImpl implements DefaultOntologyIdManager {
 
-    private final OWLOntology rootOntology;
+    @Nonnull
+    private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Inject
-    public DefaultOntologyIdManagerImpl(OWLOntology rootOntology) {
-        this.rootOntology = checkNotNull(rootOntology);
+    public DefaultOntologyIdManagerImpl(ProjectOntologiesIndex projectOntologiesIndex) {
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
     }
 
     @Nonnull
     @Override
     public OWLOntologyID getDefaultOntologyId() {
-        return rootOntology.getOntologyID();
+        return projectOntologiesIndex.getOntologyIds().iterator().next();
     }
 }

@@ -42,7 +42,7 @@ public class ProjectOntologiesIndexImpl_TestCase {
         when(rootOntology.getOWLOntologyManager()).thenReturn(manager);
         when(manager.getOntologies()).thenReturn(Collections.singleton(rootOntology));
         when(manager.getOntology(rootOntologyId)).thenReturn(rootOntology);
-        impl = new ProjectOntologiesIndexImpl(rootOntology);
+        impl = new ProjectOntologiesIndexImpl();
     }
 
     @Test

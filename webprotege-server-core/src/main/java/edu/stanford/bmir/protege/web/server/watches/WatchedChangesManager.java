@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
+import edu.stanford.bmir.protege.web.server.index.ProjectClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.revision.EntitiesByRevisionCache;
 import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
@@ -10,10 +11,9 @@ import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.search.EntitySearcher;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,13 +37,13 @@ public class WatchedChangesManager {
 
     private final HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider;
 
-    private final HasImportsClosure rootOntologyImportsClosureProvider;
-
     private final RevisionManager changeManager;
 
     private final ProjectChangesManager projectChangesManager;
 
     private final EntitiesByRevisionCache entitiesByRevisionCache;
+
+    private final ProjectClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex;
 
     @Inject
     public WatchedChangesManager(ProjectChangesManager projectChangesManager,
@@ -51,15 +51,15 @@ public class WatchedChangesManager {
                                  HierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider,
                                  HierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider,
                                  HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider,
-                                 HasImportsClosure rootOntologyImportsClosureProvider,
                                  RevisionManager changeManager,
-                                 EntitiesByRevisionCache entitiesByRevisionCache) {
+                                 EntitiesByRevisionCache entitiesByRevisionCache,
+                                 ProjectClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex) {
         this.projectChangesManager = checkNotNull(projectChangesManager);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
         this.objectPropertyHierarchyProvider = checkNotNull(objectPropertyHierarchyProvider);
         this.dataPropertyHierarchyProvider = checkNotNull(dataPropertyHierarchyProvider);
         this.annotationPropertyHierarchyProvider = checkNotNull(annotationPropertyHierarchyProvider);
-        this.rootOntologyImportsClosureProvider = checkNotNull(rootOntologyImportsClosureProvider);
+        this.classAssertionAxiomsByIndividualIndex = classAssertionAxiomsByIndividualIndex;
         this.changeManager = checkNotNull(changeManager);
         this.entitiesByRevisionCache = checkNotNull(entitiesByRevisionCache);
     }
@@ -110,44 +110,50 @@ public class WatchedChangesManager {
 
 
     private Boolean isWatchedByAncestor(final Set<OWLEntity> watchedAncestors, OWLEntity entity) {
-        return entity.accept(new OWLEntityVisitorEx<Boolean>() {
+        return entity.accept(new OWLEntityVisitorEx<>() {
+            @Nonnull
             @Override
-            public Boolean visit(OWLClass cls) {
+            public Boolean visit(@Nonnull OWLClass cls) {
                 final Set<? extends OWLEntity> ancestors = classHierarchyProvider.getAncestors(cls);
                 return isWatchedByAncestor(ancestors);
             }
 
 
+            @Nonnull
             @Override
-            public Boolean visit(OWLObjectProperty property) {
+            public Boolean visit(@Nonnull OWLObjectProperty property) {
                 return isWatchedByAncestor(objectPropertyHierarchyProvider.getAncestors(property));
             }
 
+            @Nonnull
             @Override
-            public Boolean visit(OWLDataProperty property) {
+            public Boolean visit(@Nonnull OWLDataProperty property) {
                 return isWatchedByAncestor(dataPropertyHierarchyProvider.getAncestors(property));
             }
 
+            @Nonnull
             @Override
-            public Boolean visit(OWLNamedIndividual individual) {
-                final Collection<OWLClassExpression> types = EntitySearcher.getTypes(individual, rootOntologyImportsClosureProvider.getImportsClosure());
-                for (OWLClassExpression ce : types) {
-                    if (!ce.isAnonymous()) {
-                        if (isWatchedByAncestor(classHierarchyProvider.getAncestors(ce.asOWLClass()))) {
-                            return true;
-                        }
-                    }
-                }
+            public Boolean visit(@Nonnull OWLNamedIndividual individual) {
+                return classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(individual)
+                        .map(OWLClassAssertionAxiom::getClassExpression)
+                        .filter(OWLClassExpression::isNamed)
+                        .map(OWLClassExpression::asOWLClass)
+                        .anyMatch(this::isWatchedByAncestor);
+            }
+
+            private Boolean isWatchedByAncestor(OWLClass cls) {
+                return isWatchedByAncestor(classHierarchyProvider.getAncestors(cls));
+            }
+
+            @Nonnull
+            @Override
+            public Boolean visit(@Nonnull OWLDatatype datatype) {
                 return false;
             }
 
+            @Nonnull
             @Override
-            public Boolean visit(OWLDatatype datatype) {
-                return false;
-            }
-
-            @Override
-            public Boolean visit(OWLAnnotationProperty property) {
+            public Boolean visit(@Nonnull OWLAnnotationProperty property) {
                 return isWatchedByAncestor(annotationPropertyHierarchyProvider.getAncestors(property));
             }
 

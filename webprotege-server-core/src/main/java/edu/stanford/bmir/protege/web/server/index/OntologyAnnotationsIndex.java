@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
  * 2019-08-06
  */
 @ProjectSingleton
-public interface OntologyAnnotationsIndex {
+public interface OntologyAnnotationsIndex extends Index {
 
     /**
      * Gets the ontology annotations for the specified ontology Id
@@ -23,4 +24,7 @@ public interface OntologyAnnotationsIndex {
      */
     @Nonnull
     Stream<OWLAnnotation> getOntologyAnnotations(@Nonnull OWLOntologyID ontologyID);
+
+    boolean containsAnnotation(@Nonnull OWLAnnotation annotation,
+                               @Nonnull OWLOntologyID ontologyId);
 }

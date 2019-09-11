@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-22
  */
 @ProjectSingleton
-public interface DifferentIndividualsAxiomsIndex {
+public interface DifferentIndividualsAxiomsIndex extends Index {
 
     @Nonnull
     Stream<OWLDifferentIndividualsAxiom> getDifferentIndividualsAxioms(@Nonnull OWLIndividual individual,

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-13
  */
-public interface EntitiesInProjectSignatureByIriIndex {
+public interface EntitiesInProjectSignatureByIriIndex extends Index {
 
     /**
      * Gets the entities that are contained in the signature of project ontologies

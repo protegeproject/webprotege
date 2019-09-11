@@ -41,7 +41,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendere
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ProjectOWLOntologyManager;
-import edu.stanford.bmir.protege.web.server.project.chg.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
@@ -131,13 +130,6 @@ public class ProjectModule {
     @Provides
     @ProjectSpecificUiConfigurationDataDirectory
     public File provideProjectSpecificUiConfigurationDataDirectory(ProjectSpecificUiConfigurationDataDirectoryProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @RootOntology
-    @ProjectSingleton
-    public OWLOntology provideRootOntology(RootOntologyProvider provider) {
         return provider.get();
     }
 
@@ -360,11 +352,11 @@ public class ProjectModule {
         return impl;
     }
 
-    @Provides
-    @ProjectSingleton
-    HasImportsClosure providesHasImportsClosure(RootOntologyProvider provider) {
-        return provider.get();
-    }
+//    @Provides
+//    @ProjectSingleton
+//    HasImportsClosure providesHasImportsClosure(RootOntologyProvider provider) {
+//        return provider.get();
+//    }
 
 
     @Provides
@@ -674,11 +666,6 @@ public class ProjectModule {
     @SuppressWarnings("unchecked")
     @Provides
     AnnotationsSectionRenderer<OWLDatatype> provideAnnotationsSectionRendererOwlDatatype(AnnotationsSectionRenderer impl) {
-        return impl;
-    }
-
-    @Provides
-    OntologyIndex provideOntologyIndex(OntologyIndexImpl impl) {
         return impl;
     }
 

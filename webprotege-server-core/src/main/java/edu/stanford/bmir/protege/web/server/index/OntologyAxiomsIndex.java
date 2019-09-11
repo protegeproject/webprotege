@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
  * 2019-08-20
  */
 @ProjectSingleton
-public interface OntologyAxiomsIndex {
+public interface OntologyAxiomsIndex extends Index {
 
     boolean containsAxiom(@Nonnull OWLAxiom axiom,
                           @Nonnull OWLOntologyID ontologyId);

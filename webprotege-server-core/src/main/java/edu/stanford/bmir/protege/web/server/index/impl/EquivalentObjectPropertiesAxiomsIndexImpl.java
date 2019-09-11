@@ -9,6 +9,8 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-24
  */
-public class EquivalentObjectPropertiesAxiomsIndexImpl implements EquivalentObjectPropertiesAxiomsIndex {
+public class EquivalentObjectPropertiesAxiomsIndexImpl implements EquivalentObjectPropertiesAxiomsIndex, DependentIndex {
 
     @Nonnull
     private final AxiomsByTypeIndex axiomsByTypeIndex;
@@ -27,6 +29,12 @@ public class EquivalentObjectPropertiesAxiomsIndexImpl implements EquivalentObje
     public EquivalentObjectPropertiesAxiomsIndexImpl(@Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
         // Use AxiomsByType because there are few ontologies with many EquivalentObjectProperties axioms
         this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(axiomsByTypeIndex);
     }
 
     @Nonnull

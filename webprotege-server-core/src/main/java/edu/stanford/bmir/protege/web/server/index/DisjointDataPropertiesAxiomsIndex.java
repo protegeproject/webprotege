@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-23
  */
 @ProjectSingleton
-public interface DisjointDataPropertiesAxiomsIndex {
+public interface DisjointDataPropertiesAxiomsIndex extends Index {
 
     @Nonnull
     Stream<OWLDisjointDataPropertiesAxiom> getDisjointDataPropertiesAxioms(@Nonnull OWLDataProperty subject,

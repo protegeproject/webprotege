@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.index.impl.*;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
@@ -20,9 +21,7 @@ public class IndexModule {
 
     @Provides
     AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
-            AnnotationAssertionAxiomsBySubjectIndexImpl impl,
-            IndexUpdater updater) {
-        updater.registerIndex(impl);
+            AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
@@ -48,9 +47,7 @@ public class IndexModule {
     }
 
     @Provides
-    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl,
-                                                                         IndexUpdater indexUpdater) {
-        indexUpdater.registerIndex(impl);
+    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl) {
         return impl;
     }
 
@@ -60,8 +57,7 @@ public class IndexModule {
     }
 
     @Provides
-    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl, IndexUpdater indexUpdater) {
-        indexUpdater.registerIndex(impl);
+    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl) {
         return impl;
     }
 
@@ -207,9 +203,7 @@ public class IndexModule {
 
     @ProjectSingleton
     @Provides
-    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl,
-                                                             IndexUpdater indexUpdater) {
-        indexUpdater.registerIndex(impl);
+    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl) {
         return impl;
     }
 
@@ -305,4 +299,108 @@ public class IndexModule {
         return impl;
     }
 
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideAnnotationAssertionAxiomsBySubjectIndexImplIntoSet(AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideAnnotationAxiomsByIriReferenceIndexImplIntoSet(AnnotationAxiomsByIriReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideAxiomsByEntityReferenceIndexImplIntoSet(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideAxiomsByTypeIndexImplIntoSet(AxiomsByTypeIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideClassAssertionAxiomsByClassIndexImplIntoSet(ClassAssertionAxiomsByClassIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideClassAssertionAxiomsByIndividualIndexImplIntoSet(ClassAssertionAxiomsByIndividualIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideDataPropertyAssertionAxiomsBySubjectIndexImplIntoSet(DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideDifferentIndividualsAxiomsIndexImplIntoSet(DifferentIndividualsAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideDisjointClassesAxiomsIndexImplIntoSet(DisjointClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideObjectPropertyAssertionAxiomsBySubjectIndexImplIntoSet(ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideOntologyAnnotationsIndexImplIntoSet(OntologyAnnotationsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideSameIndividualAxiomsIndexImplIntoSet(SameIndividualAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideSubAnnotationPropertyAxiomsBySuperPropertyIndexImplIntoSet(SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideSubClassOfAxiomsBySubClassIndexImplIntoSet(SubClassOfAxiomsBySubClassIndexImpl impl) {
+        return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    IndexUpdater provideIndexUpdater(IndexUpdaterFactory factory) {
+        var updater = factory.create();
+        updater.buildIndexes();
+        return updater;
+    }
+
+    @ProjectSingleton
+    @Provides
+    RootIndex provideRootIndex(RootIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @IntoSet
+    RequiresOntologyChangeNotification provideProjectOntologiesIndexIntoSet(ProjectOntologiesIndexImpl impl) {
+        return impl;
+    }
 }

@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multiset;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -13,6 +17,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -20,28 +25,36 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * 2019-08-06
  */
 @ProjectSingleton
-public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex {
+public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, RequiresOntologyChangeNotification {
 
     @Nonnull
-    private final OWLOntologyManager projectOntologyManager;
+    private final Multiset<OWLOntologyID> ontologyIds = HashMultiset.create();
 
     @Nonnull
     private ImmutableList<OWLOntologyID> cache = ImmutableList.of();
 
     @Inject
-    public ProjectOntologiesIndexImpl(@Nonnull OWLOntology rootOntology) {
-        this.projectOntologyManager = checkNotNull(checkNotNull(rootOntology).getOWLOntologyManager());
+    public ProjectOntologiesIndexImpl() {
     }
 
     @Nonnull
     @Override
     public synchronized Stream<OWLOntologyID> getOntologyIds() {
         if(cache.isEmpty()) {
-            cache = projectOntologyManager.getOntologies()
-                                          .stream()
-                                          .map(OWLOntology::getOntologyID)
-                                          .collect(toImmutableList());
+            cache = ImmutableList.copyOf(ontologyIds.elementSet());
         }
         return cache.stream();
+    }
+
+    @Override
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
+        for(var ontologyChange : changes) {
+            if(ontologyChange.isAddAxiom() || ontologyChange.isAddOntologyAnnotation()) {
+                ontologyIds.add(ontologyChange.getOntologyId());
+            }
+            else if(ontologyChange.isRemoveAxiom() || ontologyChange.isRemoveOntologyAnnotation()) {
+                ontologyIds.remove(ontologyChange.getOntologyId());
+            }
+        }
     }
 }

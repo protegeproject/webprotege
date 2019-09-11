@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-09-05
  */
-public interface EntitiesInOntologySignatureByIriIndex {
+public interface EntitiesInOntologySignatureByIriIndex extends Index {
 
     @Nonnull
     Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri,

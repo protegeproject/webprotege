@@ -96,8 +96,7 @@ public class ProjectChangesManager_IT {
                 .thenReturn(rootOntology.getOntologyID());
         when(repo.findOne(projectId)).thenReturn(Optional.empty());
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
-        var ontologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
-        var ontologyIndex = new OntologyIndexImpl(rootOntology);
+        var ontologiesIndex = new ProjectOntologiesIndexImpl();
 
         var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl();
         var projectAnnotationAssertionsIndex = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex,
@@ -106,7 +105,7 @@ public class ProjectChangesManager_IT {
         AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl();
 
         var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
-        var projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        var projectOntologiesIndex = new ProjectOntologiesIndexImpl();
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
                                                                                                         axiomsByEntityReference,
                                                                                                         projectOntologiesIndex), repo);

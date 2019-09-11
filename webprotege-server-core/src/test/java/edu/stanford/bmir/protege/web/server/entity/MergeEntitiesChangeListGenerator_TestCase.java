@@ -106,8 +106,9 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                 AnnotationAssertion(rdfsLabel, sourceEntity.getIRI(), hello),
                                 AnnotationAssertion(skosPrefLabel, sourceEntity.getIRI(), bonjour),
                                 AnnotationAssertion(rdfsComment, sourceEntity.getIRI(), hi));
-        defaultOntologyIdManager = new DefaultOntologyIdManagerImpl(rootOntology);
-        projectOntologiesIndex = new ProjectOntologiesIndexImpl(rootOntology);
+        var projectOntologiesIndex = new ProjectOntologiesIndexImpl();
+        defaultOntologyIdManager = new DefaultOntologyIdManagerImpl(projectOntologiesIndex);
+        this.projectOntologiesIndex = projectOntologiesIndex;
         annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl();
         var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
         var axiomsByIriReference = new AnnotationAxiomsByIriReferenceIndexImpl();
@@ -115,7 +116,7 @@ public class MergeEntitiesChangeListGenerator_TestCase {
                                                                     axiomsByIriReference);
 
         entityRenamer = new EntityRenamer(dataFactory,
-                                          projectOntologiesIndex,
+                                          this.projectOntologiesIndex,
                                           axiomsByReferenceIndex);
 
     }

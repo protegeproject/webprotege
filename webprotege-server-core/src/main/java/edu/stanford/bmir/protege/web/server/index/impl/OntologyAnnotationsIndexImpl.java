@@ -75,6 +75,11 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
     }
 
     @Override
+    public boolean containsAnnotation(@Nonnull OWLAnnotation annotation, @Nonnull OWLOntologyID ontologyId) {
+        return annotationsMap.containsEntry(ontologyId, annotation);
+    }
+
+    @Override
     public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         changes.forEach(change -> change.accept(new OntologyChangeVisitor() {
             @Override

@@ -11,6 +11,8 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jun 2018
  */
-public class AnnotationAssertionAxiomsIndexWrapperImpl implements AnnotationAssertionAxiomsIndex {
+public class AnnotationAssertionAxiomsIndexWrapperImpl implements AnnotationAssertionAxiomsIndex, DependentIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -38,6 +40,12 @@ public class AnnotationAssertionAxiomsIndexWrapperImpl implements AnnotationAsse
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
         this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return Arrays.asList(projectOntologiesIndex, axiomsByTypeIndex);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-19
  */
 @ProjectSingleton
-public interface IndividualsByTypeIndex {
+public interface IndividualsByTypeIndex extends Index {
 
     /**
      * Retrieve individuals that have the specified direct or indirect asserted type

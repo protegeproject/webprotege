@@ -9,6 +9,8 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode.ALL_INSTANCES;
@@ -19,7 +21,7 @@ import static java.util.stream.Collectors.toSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-19
  */
-public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex {
+public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex, DependentIndex {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -58,6 +60,12 @@ public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex {
         this.classHierarchyProvider = classHierarchyProvider;
         this.dictionaryManager = dictionaryManager;
         this.dataFactory = dataFactory;
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Index> getDependencies() {
+        return List.of(projectOntologiesIndex, projectSignatureByTypeIndex);
     }
 
     @Nonnull

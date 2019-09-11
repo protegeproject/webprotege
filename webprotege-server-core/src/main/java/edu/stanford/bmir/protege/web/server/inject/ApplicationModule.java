@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryI
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
+import edu.stanford.bmir.protege.web.server.index.IndexUpdatingService;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -72,6 +73,7 @@ public class ApplicationModule {
 
     private static final int MAX_FILE_DOWNLOAD_THREADS = 5;
 
+    private static final int INDEX_UPDATING_THREADS = 5;
 
 
     @ApplicationSingleton
@@ -236,6 +238,16 @@ public class ApplicationModule {
         return Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName(thread.getName().replace("thread", "Download-Streamer"));
+            return thread;
+        });
+    }
+
+    @Provides
+    @IndexUpdatingService
+    public ExecutorService provideIndexUpdatingExecutorService() {
+        return Executors.newFixedThreadPool(INDEX_UPDATING_THREADS, r -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(r);
+            thread.setName(thread.getName().replace("thread", "Index-Updater"));
             return thread;
         });
     }

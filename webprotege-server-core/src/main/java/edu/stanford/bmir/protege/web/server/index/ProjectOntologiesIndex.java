@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
  * 2019-08-06
  */
 @ProjectSingleton
-public interface ProjectOntologiesIndex {
+public interface ProjectOntologiesIndex extends Index {
 
     /**
      * Gets the ontology Ids of project ontologies

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-22
  */
 @ProjectSingleton
-public interface DisjointClassesAxiomsIndex {
+public interface DisjointClassesAxiomsIndex extends Index {
 
     @Nonnull
     Stream<OWLDisjointClassesAxiom> getDisjointClassesAxioms(@Nonnull OWLClass cls, OWLOntologyID ontologyId);

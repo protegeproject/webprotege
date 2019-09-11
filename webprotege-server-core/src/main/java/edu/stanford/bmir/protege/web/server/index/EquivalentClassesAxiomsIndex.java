@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  * 2019-08-09
  */
 @ProjectSingleton
-public interface EquivalentClassesAxiomsIndex {
+public interface EquivalentClassesAxiomsIndex extends Index {
 
     @Nonnull
     Stream<OWLEquivalentClassesAxiom> getEquivalentClassesAxioms(@Nonnull
