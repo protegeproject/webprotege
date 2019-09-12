@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,14 +42,11 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Requi
     @Nonnull
     @Override
     public synchronized Stream<OWLOntologyID> getOntologyIds() {
-        if(cache.isEmpty()) {
-            cache = ImmutableList.copyOf(ontologyIds.elementSet());
-        }
         return cache.stream();
     }
 
     @Override
-    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
+    public synchronized void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         for(var ontologyChange : changes) {
             if(ontologyChange.isAddAxiom() || ontologyChange.isAddOntologyAnnotation()) {
                 ontologyIds.add(ontologyChange.getOntologyId());
@@ -56,5 +55,6 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Requi
                 ontologyIds.remove(ontologyChange.getOntologyId());
             }
         }
+        cache = ImmutableList.copyOf(ontologyIds.elementSet());
     }
 }

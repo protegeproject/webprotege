@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 
@@ -17,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27/01/15
  */
+@ProjectSingleton
 public class ProjectAnnotationAssertionAxiomsBySubjectIndexImpl implements ProjectAnnotationAssertionAxiomsBySubjectIndex {
 
     @Nonnull

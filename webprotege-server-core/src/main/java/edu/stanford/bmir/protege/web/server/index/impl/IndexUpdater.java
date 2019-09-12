@@ -4,9 +4,9 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.IndexUpdatingService;
+import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -16,10 +16,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -37,26 +38,49 @@ public class IndexUpdater {
     @Nonnull
     private final RevisionManager revisionManager;
 
-    private final Set<RequiresOntologyChangeNotification> indexes;
+    @Nonnull
+    private final ProjectOntologiesIndexImpl projectOntologiesIndex;
+
+    private final Collection<RequiresOntologyChangeNotification> indexes;
 
     @Nonnull
     private final ExecutorService indexUpdaterService;
 
-    private boolean builtIndexes = false;
-
     @Nonnull
     private final ProjectId projectId;
+
+    private boolean builtIndexes = false;
 
     @AutoFactory
     @Inject
     public IndexUpdater(@Provided @Nonnull RevisionManager revisionManager,
+                        @Provided @Nonnull ProjectOntologiesIndexImpl projectOntologiesIndex,
                         @Provided @Nonnull Set<RequiresOntologyChangeNotification> indexes,
                         @Provided @Nonnull @IndexUpdatingService ExecutorService indexUpdaterService,
                         @Provided @Nonnull ProjectId projectId) {
         this.revisionManager = checkNotNull(revisionManager);
-        this.indexes = ImmutableSet.copyOf(indexes);
+        this.projectOntologiesIndex = projectOntologiesIndex;
+        this.indexes = sortedIndexes(projectId, indexes);
         this.indexUpdaterService = checkNotNull(indexUpdaterService);
         this.projectId = checkNotNull(projectId);
+    }
+
+    private static ImmutableList<RequiresOntologyChangeNotification> sortedIndexes(
+            @Nonnull ProjectId projectId,
+            @Nonnull Collection<RequiresOntologyChangeNotification> indexes) {
+        var comparator = Comparator.comparing(index -> index instanceof DependentIndex)
+                                   .reversed()
+                                   .thenComparing(index -> index instanceof ProjectOntologiesIndex)
+                                   .reversed();
+
+        return indexes.stream()
+                      .sorted(comparator)
+                      .peek(index -> logger.info("{} Index {}",
+                                                 projectId,
+                                                 index.getClass()
+                                                      .getSimpleName()))
+                      .collect(toImmutableList());
+
     }
 
     public synchronized void buildIndexes() {
@@ -66,8 +90,8 @@ public class IndexUpdater {
         builtIndexes = true;
         var revisions = revisionManager.getRevisions();
         var revisionChanges = revisions.stream()
-                             .map(Revision::getChanges)
-                             .collect(toImmutableList());
+                                       .map(Revision::getChanges)
+                                       .collect(toImmutableList());
         updateIndexesWithRevisions(revisionChanges);
     }
 
@@ -78,16 +102,20 @@ public class IndexUpdater {
             indexes.forEach(index -> buildIndex(index, revisions, countDownLatch));
             countDownLatch.await();
             stopwatch.stop();
-            logger.info("{} Built indexes in {} ms", projectId, stopwatch.elapsed().toMillis());
+            logger.info("{} Built indexes in {} ms",
+                        projectId,
+                        stopwatch.elapsed()
+                                 .toMillis());
         } catch(InterruptedException e) {
             logger.error("{} Interrupted while building indexes", projectId);
         }
     }
 
     private void buildIndex(@Nonnull RequiresOntologyChangeNotification index,
-                            @Nonnull ImmutableList<ImmutableList<OntologyChange>> revisions, @Nonnull CountDownLatch countDownLatch) {
-        var updaterTask = new IndexUpdaterTask(index, revisions, countDownLatch);
-        indexUpdaterService.submit(updaterTask);
+                            @Nonnull ImmutableList<ImmutableList<OntologyChange>> revisions,
+                            @Nonnull CountDownLatch countDownLatch) {
+        var updaterTask = new IndexUpdaterTask(projectId, index, revisions, countDownLatch);
+        updaterTask.run();
     }
 
     public synchronized void updateIndexes(ImmutableList<OntologyChange> changes) {
@@ -96,6 +124,10 @@ public class IndexUpdater {
 
 
     private static class IndexUpdaterTask implements Runnable {
+
+        private static final Logger logger = LoggerFactory.getLogger(IndexUpdaterTask.class);
+
+        private final ProjectId projectId;
 
         @Nonnull
         private final RequiresOntologyChangeNotification index;
@@ -106,9 +138,11 @@ public class IndexUpdater {
         @Nonnull
         private final CountDownLatch countDownLatch;
 
-        public IndexUpdaterTask(RequiresOntologyChangeNotification index,
-                                    @Nonnull ImmutableList<ImmutableList<OntologyChange>> revisions,
-                                    @Nonnull CountDownLatch countDownLatch) {
+        public IndexUpdaterTask(ProjectId projectId,
+                                RequiresOntologyChangeNotification index,
+                                @Nonnull ImmutableList<ImmutableList<OntologyChange>> revisions,
+                                @Nonnull CountDownLatch countDownLatch) {
+            this.projectId = checkNotNull(projectId);
             this.index = checkNotNull(index);
             this.revisions = checkNotNull(revisions);
             this.countDownLatch = countDownLatch;
@@ -116,8 +150,16 @@ public class IndexUpdater {
 
         @Override
         public void run() {
+            var stopwatch = Stopwatch.createStarted();
             revisions.forEach(index::applyChanges);
             countDownLatch.countDown();
+            stopwatch.stop();
+            logger.info("{}    Built {} in {} ms",
+                        projectId,
+                        index.getClass()
+                             .getSimpleName(),
+                        stopwatch.elapsed()
+                                 .toMillis());
         }
     }
 

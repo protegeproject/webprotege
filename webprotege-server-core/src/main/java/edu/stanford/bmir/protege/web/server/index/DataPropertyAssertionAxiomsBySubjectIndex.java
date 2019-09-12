@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import edu.stanford.bmir.protege.web.server.index.impl.Index;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-12
  */
+@ProjectSingleton
 public interface DataPropertyAssertionAxiomsBySubjectIndex extends Index {
 
     @Nonnull

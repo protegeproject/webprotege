@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -17,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-16
  */
+@ProjectSingleton
 public class ProjectSignatureByTypeIndexImpl implements ProjectSignatureByTypeIndex, DependentIndex {
 
     @Nonnull

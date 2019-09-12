@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureByTypeIndex;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -21,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-16
  */
+@ProjectSingleton
 public class OntologySignatureByTypeIndexImpl implements OntologySignatureByTypeIndex, DependentIndex {
 
     @Nonnull

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureByIriIndex;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-09-05
  */
+@ProjectSingleton
 public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOntologySignatureByIriIndex, DependentIndex {
 
     @Nonnull

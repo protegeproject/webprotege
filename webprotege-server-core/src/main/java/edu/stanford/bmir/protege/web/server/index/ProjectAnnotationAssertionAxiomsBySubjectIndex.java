@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 
@@ -11,6 +12,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 27/01/15
  */
+@ProjectSingleton
 public interface ProjectAnnotationAssertionAxiomsBySubjectIndex {
 
     /**

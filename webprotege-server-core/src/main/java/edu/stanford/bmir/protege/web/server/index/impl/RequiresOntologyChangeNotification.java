@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-09
  */
-public interface RequiresOntologyChangeNotification {
+public interface RequiresOntologyChangeNotification extends Index {
 
     void applyChanges(@Nonnull ImmutableList<OntologyChange> changes);
 }
