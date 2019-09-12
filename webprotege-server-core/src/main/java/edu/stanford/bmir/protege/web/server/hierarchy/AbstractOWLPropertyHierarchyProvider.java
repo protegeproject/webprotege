@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureByTypeIndex;
@@ -106,6 +107,9 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
                       .collect(toSet());
     }
 
+    protected Set<P> getChildrenOfRoot() {
+        return ImmutableSet.copyOf(subPropertiesOfRoot);
+    }
 
     private boolean isSubPropertyOfRoot(P prop) {
 

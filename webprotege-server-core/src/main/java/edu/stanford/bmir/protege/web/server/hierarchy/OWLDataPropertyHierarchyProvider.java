@@ -60,6 +60,9 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
 
     @Override
     public Set<OWLDataProperty> getChildren(OWLDataProperty property) {
+        if(getRoot().equals(property)) {
+            return getChildrenOfRoot();
+        }
         return projectOntologiesIndex.getOntologyIds()
                                      .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(SUB_DATA_PROPERTY, ontId))
                                      .filter(ax -> ax.getSuperProperty().equals(property))
