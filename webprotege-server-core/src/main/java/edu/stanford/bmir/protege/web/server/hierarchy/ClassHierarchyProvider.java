@@ -182,7 +182,6 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
                            .filter(cls -> !rootFinder.getTerminalElements()
                                                      .contains(cls))
                            .forEach(this::registerNodeChanged);
-        stale = true;
         notifyNodeChanges();
     }
 
