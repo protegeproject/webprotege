@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-07
  */
 @ProjectSingleton
-public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReferenceIndex, OntologyAxiomsSignatureIndex, ProjectAxiomsSignatureIndex, RequiresOntologyChangeNotification {
+public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReferenceIndex, OntologyAxiomsSignatureIndex, ProjectAxiomsSignatureIndex, UpdatableIndex {
 
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();

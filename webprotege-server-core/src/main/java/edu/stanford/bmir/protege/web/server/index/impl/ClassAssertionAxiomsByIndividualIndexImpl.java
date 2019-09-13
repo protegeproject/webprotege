@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-10
  */
 @ProjectSingleton
-public class ClassAssertionAxiomsByIndividualIndexImpl implements ClassAssertionAxiomsByIndividualIndex, RequiresOntologyChangeNotification {
+public class ClassAssertionAxiomsByIndividualIndexImpl implements ClassAssertionAxiomsByIndividualIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLIndividual, OWLClassAssertionAxiom> index;

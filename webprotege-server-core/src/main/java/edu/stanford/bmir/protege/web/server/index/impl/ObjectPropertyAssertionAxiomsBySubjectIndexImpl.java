@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-12
  */
 @ProjectSingleton
-public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPropertyAssertionAxiomsBySubjectIndex, RequiresOntologyChangeNotification {
+public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPropertyAssertionAxiomsBySubjectIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLIndividual, OWLObjectPropertyAssertionAxiom> index;

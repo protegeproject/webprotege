@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-24
  */
 @ProjectSingleton
-public class DifferentIndividualsAxiomsIndexImpl implements DifferentIndividualsAxiomsIndex, RequiresOntologyChangeNotification {
+public class DifferentIndividualsAxiomsIndexImpl implements DifferentIndividualsAxiomsIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLIndividual, OWLDifferentIndividualsAxiom> index;

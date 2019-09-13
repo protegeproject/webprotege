@@ -302,91 +302,91 @@ public class IndexModule {
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideAnnotationAssertionAxiomsBySubjectIndexImplIntoSet(AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+    public UpdatableIndex provideAnnotationAssertionAxiomsBySubjectIndexImplIntoSet(AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideAnnotationAxiomsByIriReferenceIndexImplIntoSet(AnnotationAxiomsByIriReferenceIndexImpl impl) {
+    public UpdatableIndex provideAnnotationAxiomsByIriReferenceIndexImplIntoSet(AnnotationAxiomsByIriReferenceIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideAxiomsByEntityReferenceIndexImplIntoSet(AxiomsByEntityReferenceIndexImpl impl) {
+    public UpdatableIndex provideAxiomsByEntityReferenceIndexImplIntoSet(AxiomsByEntityReferenceIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideAxiomsByTypeIndexImplIntoSet(AxiomsByTypeIndexImpl impl) {
+    public UpdatableIndex provideAxiomsByTypeIndexImplIntoSet(AxiomsByTypeIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideClassAssertionAxiomsByClassIndexImplIntoSet(ClassAssertionAxiomsByClassIndexImpl impl) {
+    public UpdatableIndex provideClassAssertionAxiomsByClassIndexImplIntoSet(ClassAssertionAxiomsByClassIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideClassAssertionAxiomsByIndividualIndexImplIntoSet(ClassAssertionAxiomsByIndividualIndexImpl impl) {
+    public UpdatableIndex provideClassAssertionAxiomsByIndividualIndexImplIntoSet(ClassAssertionAxiomsByIndividualIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideDataPropertyAssertionAxiomsBySubjectIndexImplIntoSet(DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+    public UpdatableIndex provideDataPropertyAssertionAxiomsBySubjectIndexImplIntoSet(DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideDifferentIndividualsAxiomsIndexImplIntoSet(DifferentIndividualsAxiomsIndexImpl impl) {
+    public UpdatableIndex provideDifferentIndividualsAxiomsIndexImplIntoSet(DifferentIndividualsAxiomsIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideDisjointClassesAxiomsIndexImplIntoSet(DisjointClassesAxiomsIndexImpl impl) {
+    public UpdatableIndex provideDisjointClassesAxiomsIndexImplIntoSet(DisjointClassesAxiomsIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideObjectPropertyAssertionAxiomsBySubjectIndexImplIntoSet(ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+    public UpdatableIndex provideObjectPropertyAssertionAxiomsBySubjectIndexImplIntoSet(ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideOntologyAnnotationsIndexImplIntoSet(OntologyAnnotationsIndexImpl impl) {
+    public UpdatableIndex provideOntologyAnnotationsIndexImplIntoSet(OntologyAnnotationsIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideSameIndividualAxiomsIndexImplIntoSet(SameIndividualAxiomsIndexImpl impl) {
+    public UpdatableIndex provideSameIndividualAxiomsIndexImplIntoSet(SameIndividualAxiomsIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideSubAnnotationPropertyAxiomsBySuperPropertyIndexImplIntoSet(SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+    public UpdatableIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndexImplIntoSet(SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideSubClassOfAxiomsBySubClassIndexImplIntoSet(SubClassOfAxiomsBySubClassIndexImpl impl) {
+    public UpdatableIndex provideSubClassOfAxiomsBySubClassIndexImplIntoSet(SubClassOfAxiomsBySubClassIndexImpl impl) {
         return impl;
     }
 
     @Provides
     @IntoSet
-    public RequiresOntologyChangeNotification provideEquivalentClassesAxiomsIndexIntoSet(EquivalentClassesAxiomsIndexImpl impl) {
+    public UpdatableIndex provideEquivalentClassesAxiomsIndexIntoSet(EquivalentClassesAxiomsIndexImpl impl) {
         return impl;
     }
 
@@ -406,7 +406,7 @@ public class IndexModule {
 
     @Provides
     @IntoSet
-    RequiresOntologyChangeNotification provideProjectOntologiesIndexIntoSet(ProjectOntologiesIndexImpl impl) {
+    UpdatableIndex provideProjectOntologiesIndexIntoSet(ProjectOntologiesIndexImpl impl) {
         return impl;
     }
 }

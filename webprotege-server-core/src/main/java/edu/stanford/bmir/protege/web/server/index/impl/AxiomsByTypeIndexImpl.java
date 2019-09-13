@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-07
  */
 @ProjectSingleton
-public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, RequiresOntologyChangeNotification {
+public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, UpdatableIndex {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 

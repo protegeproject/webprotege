@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * 2019-08-07
  */
 @ProjectSingleton
-public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxiomsByIriReferenceIndex, RequiresOntologyChangeNotification {
+public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxiomsByIriReferenceIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<IRI, OWLAnnotationAxiom> index;

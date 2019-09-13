@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  * 2019-09-05
  */
 @ProjectSingleton
-public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatureIndex, OntologyAnnotationsIndex, RequiresOntologyChangeNotification {
+public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatureIndex, OntologyAnnotationsIndex, UpdatableIndex {
 
     private Multimap<OWLOntologyID, OWLAnnotation> annotationsMap = ArrayListMultimap.create();
 

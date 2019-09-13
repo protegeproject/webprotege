@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-09
  */
 @ProjectSingleton
-public class SubClassOfAxiomsBySubClassIndexImpl implements SubClassOfAxiomsBySubClassIndex, RequiresOntologyChangeNotification {
+public class SubClassOfAxiomsBySubClassIndexImpl implements SubClassOfAxiomsBySubClassIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLClass, OWLSubClassOfAxiom> index;

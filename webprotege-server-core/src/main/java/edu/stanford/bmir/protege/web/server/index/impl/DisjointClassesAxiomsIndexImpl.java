@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-22
  */
 @ProjectSingleton
-public class DisjointClassesAxiomsIndexImpl implements DisjointClassesAxiomsIndex, RequiresOntologyChangeNotification {
+public class DisjointClassesAxiomsIndexImpl implements DisjointClassesAxiomsIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLClassExpression, OWLDisjointClassesAxiom> index;

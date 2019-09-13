@@ -3,18 +3,14 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MultimapBuilder;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
-import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-09
  */
 @ProjectSingleton
-public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxiomsIndex, RequiresOntologyChangeNotification {
+public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxiomsIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLClass, OWLEquivalentClassesAxiom> index;

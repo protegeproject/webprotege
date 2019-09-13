@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-17
  */
 @ProjectSingleton
-public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubAnnotationPropertyAxiomsBySuperPropertyIndex, RequiresOntologyChangeNotification {
+public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubAnnotationPropertyAxiomsBySuperPropertyIndex, UpdatableIndex {
 
     @Nonnull
     private final AxiomMultimapIndex<OWLAnnotationProperty, OWLSubAnnotationPropertyOfAxiom> index;
