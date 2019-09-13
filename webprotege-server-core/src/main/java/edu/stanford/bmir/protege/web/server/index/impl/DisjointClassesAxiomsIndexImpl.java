@@ -32,6 +32,8 @@ public class DisjointClassesAxiomsIndexImpl implements DisjointClassesAxiomsInde
         index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(OWLDisjointClassesAxiom.class,
                                                                    OWLDisjointClassesAxiom::getClassExpressions,
                                                                    MultimapBuilder.hashKeys().arrayListValues().build());
+
+        index.setLazy(true);
     }
 
     @Nonnull

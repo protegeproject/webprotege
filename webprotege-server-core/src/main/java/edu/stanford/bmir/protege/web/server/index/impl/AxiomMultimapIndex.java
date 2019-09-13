@@ -41,7 +41,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
 
     private final Queue<ImmutableList<OntologyChange>> changeQueue = new ArrayDeque<>();
 
-    private volatile boolean lazy = true;
+    private volatile boolean lazy = false;
 
 
     private AxiomMultimapIndex(@Nonnull Class<A> axiomCls,
@@ -53,6 +53,10 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         this.naryKeyValueExtractor = naryKeyValueExtractor;
         this.axiomCls = checkNotNull(axiomCls);
         axiomChangeHandler.setAxiomChangeConsumer(this::handleChange);
+    }
+
+    public void setLazy(boolean lazy) {
+        this.lazy = lazy;
     }
 
     private void handleChange(@Nonnull AxiomChange change) {

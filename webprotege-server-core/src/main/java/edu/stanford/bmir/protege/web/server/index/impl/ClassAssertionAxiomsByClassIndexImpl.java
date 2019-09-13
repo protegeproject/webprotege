@@ -34,6 +34,7 @@ public class ClassAssertionAxiomsByClassIndexImpl implements ClassAssertionAxiom
                                           MultimapBuilder.hashKeys()
                                                          .arrayListValues()
                                                          .build());
+        index.setLazy(true);
     }
 
     @Nonnull

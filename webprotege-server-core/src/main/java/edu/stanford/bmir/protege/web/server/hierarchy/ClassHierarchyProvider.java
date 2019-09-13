@@ -64,6 +64,8 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
+    private boolean stale = true;
+
     @Inject
     public ClassHierarchyProvider(ProjectId projectId,
                                   @Nonnull @ClassHierarchyRoot OWLClass rootCls,
@@ -83,11 +85,10 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
         rootFinder = new TerminalElementFinder<>(this::getParents);
         nodesToUpdate.clear();
-        rebuildImplicitRoots();
-        fireHierarchyChanged();
     }
 
-    public Set<OWLClass> getParents(OWLClass object) {
+    public synchronized Set<OWLClass> getParents(OWLClass object) {
+        rebuildIfNecessary();
         // If the object is thing then there are no
         // parents
         if(object.equals(root)) {
@@ -126,6 +127,12 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         return parents;
     }
 
+    private void rebuildIfNecessary() {
+        if(stale) {
+            rebuildImplicitRoots();
+        }
+    }
+
     private Stream<OWLClassExpression> asConjunctSet(@Nonnull OWLClassExpression cls) {
         if(cls instanceof OWLObjectIntersectionOf) {
             return ((OWLObjectIntersectionOf) cls).getOperandsAsList()
@@ -138,6 +145,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     }
 
     private void rebuildImplicitRoots() {
+        stale = false;
         Stopwatch stopwatch = Stopwatch.createStarted();
         logger.info("{} Rebuilding class hierarchy", projectId);
         rootFinder.clear();
@@ -148,18 +156,10 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         logger.info("{} Rebuilt class hierarchy in {} ms", projectId, stopwatch.elapsed(MILLISECONDS));
     }
 
-    //    private static Stream<OWLClass> extractParents(OWLClass object, OWLAxiom ax) {
-    //        var parentClassExtractor = new ParentClassExtractor();
-    //        parentClassExtractor.setCurrentClass(object);
-    //        ax.accept(parentClassExtractor);
-    //        return parentClassExtractor.getResult()
-    //                                   .stream();
-    //    }
-
     public void dispose() {
     }
 
-    public void handleChanges(@Nonnull List<OntologyChange> changes) {
+    public synchronized void handleChanges(@Nonnull List<OntologyChange> changes) {
         Set<OWLClass> oldTerminalElements = new HashSet<>(rootFinder.getTerminalElements());
         Set<OWLClass> changedClasses = new HashSet<>();
         changedClasses.add(root);
@@ -182,6 +182,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
                            .filter(cls -> !rootFinder.getTerminalElements()
                                                      .contains(cls))
                            .forEach(this::registerNodeChanged);
+        stale = true;
         notifyNodeChanges();
     }
 
@@ -230,17 +231,20 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         nodesToUpdate.clear();
     }
 
-    public boolean containsReference(OWLClass object) {
+    public synchronized boolean containsReference(OWLClass object) {
+        rebuildImplicitRoots();
         return entitiesInProjectSignatureByIriIndex
                 .getEntitiesInSignature(object.getIRI())
                 .anyMatch(entity -> entity.equals(object));
     }
 
-    public Set<OWLClass> getRoots() {
+    public synchronized Set<OWLClass> getRoots() {
+        rebuildIfNecessary();
         return Collections.singleton(root);
     }
 
-    public Set<OWLClass> getChildren(OWLClass object) {
+    public synchronized Set<OWLClass> getChildren(OWLClass object) {
+        rebuildIfNecessary();
         Set<OWLClass> result;
         if(object.equals(root)) {
             result = new HashSet<>();
@@ -267,7 +271,8 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         return childClassExtractor.getResult();
     }
 
-    public Set<OWLClass> getEquivalents(OWLClass object) {
+    public synchronized Set<OWLClass> getEquivalents(OWLClass object) {
+        rebuildIfNecessary();
         Set<OWLClass> result = new HashSet<>();
         projectOntologiesIndex
                 .getOntologyIds()
