@@ -36,11 +36,6 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPr
                                                               .build()
         );
     }
-
-    private OWLIndividual extractSubject(@Nonnull OWLObjectPropertyAssertionAxiom axiom) {
-        return axiom.getObject();
-    }
-
     @Override
     public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         index.applyChanges(changes);

@@ -68,6 +68,11 @@ public class OntologySignatureIndexImpl_TestCase {
     }
 
     @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(axiomsByEntityReferenceImpl));
+    }
+
+    @Test
     public void shouldGetSignatureOfKnownOntology() {
         var signature = impl.getEntitiesInSignature(ontologyId).collect(toSet());
         assertThat(signature, hasItems(cls, objectProperty, dataProperty, annotationProperty, individual, datatype));

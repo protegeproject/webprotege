@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.index.OntologySignatureByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.AxiomsByEntityReferenceIndexImpl;
 import edu.stanford.bmir.protege.web.server.index.impl.ProjectSignatureByTypeIndexImpl;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -75,7 +77,11 @@ public class ProjectSignatureByTypeIndexImpl_TestCase {
         when(axiomsByEntityReferenceImpl.getProjectAxiomsSignature(EntityType.NAMED_INDIVIDUAL))
                 .thenAnswer(invocation -> Stream.of(individual));
         impl = new ProjectSignatureByTypeIndexImpl(axiomsByEntityReferenceImpl);
+    }
 
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(axiomsByEntityReferenceImpl));
     }
 
     @Test

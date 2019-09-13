@@ -12,8 +12,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,6 +48,11 @@ public class SubAnnotationPropertyAxiomsBySubPropertyIndexImpl_TestCase {
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_ANNOTATION_PROPERTY_OF, ontologyID))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new SubAnnotationPropertyAxiomsBySubPropertyIndexImpl(axiomsByTypeIndex);
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(axiomsByTypeIndex));
     }
 
     @Test

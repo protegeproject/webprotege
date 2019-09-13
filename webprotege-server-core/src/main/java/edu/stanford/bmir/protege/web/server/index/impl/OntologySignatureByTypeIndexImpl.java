@@ -59,28 +59,4 @@ public class OntologySignatureByTypeIndexImpl implements OntologySignatureByType
             return ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(type, ontologyId);
         }
     }
-
-    @SuppressWarnings("unchecked")
-    private <E extends OWLEntity> Stream<? extends E> getStreamOfType(@Nonnull EntityType<E> type,
-                                                                      @Nonnull OWLOntology ont) {
-        if(type.equals(EntityType.CLASS)) {
-            return (Stream<E>) ont.getClassesInSignature().stream();
-        }
-        if(type.equals(EntityType.DATATYPE)) {
-            return (Stream<E>) ont.getDatatypesInSignature().stream();
-        }
-        if(type.equals(EntityType.OBJECT_PROPERTY)) {
-            return (Stream<E>) ont.getObjectPropertiesInSignature().stream();
-        }
-        if(type.equals(EntityType.DATA_PROPERTY)) {
-            return (Stream<E>) ont.getDataPropertiesInSignature().stream();
-        }
-        if(type.equals(EntityType.ANNOTATION_PROPERTY)) {
-            return (Stream<E>) ont.getAnnotationPropertiesInSignature().stream();
-        }
-        if(type.equals(EntityType.NAMED_INDIVIDUAL)) {
-            return (Stream<E>) ont.getIndividualsInSignature().stream();
-        }
-        throw new RuntimeException("Unknown Entity Type: " + type);
-    }
 }

@@ -13,8 +13,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -50,6 +49,11 @@ public class EquivalentObjectPropertiesAxiomsIndexImpl_TestCase {
         when(axiom.getProperties())
                 .thenReturn(Collections.singleton(property));
         impl = new EquivalentObjectPropertiesAxiomsIndexImpl(axiomsByTypeIndex);
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(axiomsByTypeIndex));
     }
 
     @Test

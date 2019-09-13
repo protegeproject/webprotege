@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -43,6 +45,11 @@ public class ObjectPropertyCharacteristicsIndexImpl_TestCase {
         when(axiomsByTypeIndex.getAxiomsByType(any(), any()))
                 .thenAnswer(invocation -> Stream.empty());
         impl = new ObjectPropertyCharacteristicsIndexImpl(axiomsByTypeIndex);
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(axiomsByTypeIndex));
     }
 
     private <A extends OWLObjectPropertyCharacteristicAxiom> Stream<A> mockAxiom(Class<A> cls) {

@@ -55,6 +55,11 @@ public class ProjectSignatureIndexImpl_TestCase {
     }
 
     @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex, ontologySignatureIndex));
+    }
+
+    @Test
     public void shouldGetSignatureInProjectOntologies() {
         var signature = impl.getSignature().collect(Collectors.toSet());
         assertThat(signature, containsInAnyOrder(entityA, entityB));

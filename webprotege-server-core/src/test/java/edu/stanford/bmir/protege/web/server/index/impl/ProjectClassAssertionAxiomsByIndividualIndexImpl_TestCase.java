@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -57,6 +58,11 @@ public class ProjectClassAssertionAxiomsByIndividualIndexImpl_TestCase {
                 .thenReturn(Stream.empty());
         when(classAssertionAxiomsIndex.getClassAssertionAxioms(individual, ontologyId))
                 .thenReturn(Stream.of(classAssertionAxiom));
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(projectOntologiesIndex, classAssertionAxiomsIndex));
     }
 
     @Test

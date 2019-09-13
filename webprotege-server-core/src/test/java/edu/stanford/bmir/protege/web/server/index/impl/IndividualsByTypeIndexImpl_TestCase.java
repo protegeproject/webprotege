@@ -129,6 +129,14 @@ public class IndividualsByTypeIndexImpl_TestCase {
     }
 
     @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex,
+                                                              projectSignatureIndex,
+                                                              classAssertionsByIndividual,
+                                                              classAssertionsByClass));
+    }
+
+    @Test
     public void shouldGetUntypedIndividualsAsDirectInstancesOfOwlThing() {
         var inds = impl.getIndividualsByType(owlThing, InstanceRetrievalMode.DIRECT_INSTANCES).collect(toSet());
         assertThat(inds, contains(indB));

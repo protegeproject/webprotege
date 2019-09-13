@@ -14,7 +14,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +48,11 @@ public class EntitiesInProjectSignatureIndexImpl_TestCase {
                 .thenReturn(Stream.of(ontologyId));
         when(entitiesInOntologySignatureIndex.containsEntityInSignature(entity, ontologyId))
                 .thenReturn(true);
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex, entitiesInOntologySignatureIndex));
     }
 
     @Test

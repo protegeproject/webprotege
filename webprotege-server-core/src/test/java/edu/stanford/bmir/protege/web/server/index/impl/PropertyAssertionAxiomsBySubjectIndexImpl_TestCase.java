@@ -82,6 +82,13 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
     }
 
     @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), containsInAnyOrder(annotationAssertionAxiomsBySubject,
+                                                              dataPropertyAssertionAxiomsBySubject,
+                                                              objectPropertyAssertionAxiomsBySubject));
+    }
+
+    @Test
     public void shouldGetAssertionsForNamedIndividual() {
         var axioms = impl.getPropertyAssertions(individual, ontologyId).collect(toSet());
         assertThat(axioms, containsInAnyOrder(annotationAssertion, objectPropertyAssertion, dataPropertyAssertion));

@@ -47,7 +47,11 @@ public class OntologyAxiomsIndexImpl_TestCase {
                 .thenAnswer(invocation -> Stream.empty());
         when(axiomsByTypeIndexImpl.getAxiomsByType(AxiomType.CLASS_ASSERTION, ontologyId))
                 .thenAnswer(invocation -> Stream.of(axiom));
+    }
 
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(axiomsByTypeIndexImpl));
     }
 
     @Test

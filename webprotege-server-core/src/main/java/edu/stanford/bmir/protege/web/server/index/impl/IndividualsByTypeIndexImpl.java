@@ -65,7 +65,7 @@ public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex, Depen
     @Nonnull
     @Override
     public Collection<Index> getDependencies() {
-        return List.of(projectOntologiesIndex, projectSignatureByTypeIndex);
+        return List.of(projectOntologiesIndex, projectSignatureByTypeIndex, classAssertionAxiomsByClass, classAssertionAxiomsByIndividual);
     }
 
     @Nonnull

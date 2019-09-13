@@ -17,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -62,6 +63,11 @@ public class DeprecatedEntitiesByEntityIndexImpl_TestCase {
 
         when(entity.getIRI())
                 .thenReturn(entityIri);
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), containsInAnyOrder(projectOntologiesIndex, annotationAssertionsIndex));
     }
 
     @Test

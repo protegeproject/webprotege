@@ -13,8 +13,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -90,6 +89,12 @@ public class OntologySignatureByTypeIndexImpl_TestCase {
 
         when(ontologyAxiomsSignatureIndex.getOntologyAxiomsSignature(DATATYPE, ontologyId))
                 .thenAnswer(invocation -> Stream.of(datatype));
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), containsInAnyOrder(ontologyAxiomsSignatureIndex,
+                                                    ontologyAnnotationsSignatureIndex));
     }
 
     @Test

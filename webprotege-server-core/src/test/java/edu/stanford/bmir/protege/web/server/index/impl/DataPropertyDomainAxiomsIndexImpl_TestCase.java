@@ -12,8 +12,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,6 +48,11 @@ public class DataPropertyDomainAxiomsIndexImpl_TestCase {
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.DATA_PROPERTY_DOMAIN, ontologyId))
                 .thenAnswer(invocation -> Stream.of(axiom));
         impl = new DataPropertyDomainAxiomsIndexImpl(axiomsByTypeIndex);
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), contains(axiomsByTypeIndex));
     }
 
     @Test

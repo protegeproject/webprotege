@@ -15,8 +15,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -60,6 +59,11 @@ public class AxiomsByReferenceIndexImpl_TestCase {
         when(axiomsByIriReferenceIndex.getReferencingAxioms(any(), any())).thenReturn(Stream.empty());
         when(axiomsByIriReferenceIndex.getReferencingAxioms(entityIri, ontologyId)).thenReturn(Stream.of(iriRefAxiom));
         impl = new AxiomsByReferenceIndexImpl(axiomsByEntityReferenceIndex, axiomsByIriReferenceIndex);
+    }
+
+    @Test
+    public void shouldGetDependencies() {
+        assertThat(impl.getDependencies(), containsInAnyOrder(axiomsByEntityReferenceIndex, axiomsByIriReferenceIndex));
     }
 
     @Test
