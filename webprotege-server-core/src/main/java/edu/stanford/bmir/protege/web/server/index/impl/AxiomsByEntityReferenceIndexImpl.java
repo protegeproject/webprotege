@@ -128,31 +128,36 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
     }
 
     public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
-        checkNotNull(iri);
-        checkNotNull(ontologyId);
-        var builder = Stream.<OWLEntity>builder();
-        if(byClass.containsKey(ClassKey.get(ontologyId, iri))) {
-            var cls = entityProvider.getOWLClass(iri);
-            builder.add(cls);
+        try {
+            readLock.lock();
+            checkNotNull(iri);
+            checkNotNull(ontologyId);
+            var builder = Stream.<OWLEntity>builder();
+            if(byClass.containsKey(ClassKey.get(ontologyId, iri))) {
+                var cls = entityProvider.getOWLClass(iri);
+                builder.add(cls);
+            }
+            if(byObjectProperty.containsKey(ObjectPropertyKey.get(ontologyId, iri))) {
+                var property = entityProvider.getOWLObjectProperty(iri);
+                builder.add(property);
+            }
+            if(byDataProperty.containsKey(DataPropertyKey.get(ontologyId, iri))) {
+                var property = entityProvider.getOWLDataProperty(iri);
+                builder.add(property);
+            }
+            if(byAnnotationProperty.containsKey(AnnotationPropertyKey.get(ontologyId, iri))) {
+                var property = entityProvider.getOWLAnnotationProperty(iri);
+                builder.add(property);
+            }
+            if(byIndividual.containsKey(NamedIndividualKey.get(ontologyId, iri))) {
+                var individual = entityProvider.getOWLNamedIndividual(iri);
+                builder.add(individual);
+            }
+            // Data types won't be here
+            return builder.build();
+        } finally {
+            readLock.unlock();
         }
-        if(byObjectProperty.containsKey(ObjectPropertyKey.get(ontologyId, iri))) {
-            var property = entityProvider.getOWLObjectProperty(iri);
-            builder.add(property);
-        }
-        if(byDataProperty.containsKey(DataPropertyKey.get(ontologyId, iri))) {
-            var property = entityProvider.getOWLDataProperty(iri);
-            builder.add(property);
-        }
-        if(byAnnotationProperty.containsKey(AnnotationPropertyKey.get(ontologyId, iri))) {
-            var property = entityProvider.getOWLAnnotationProperty(iri);
-            builder.add(property);
-        }
-        if(byIndividual.containsKey(NamedIndividualKey.get(ontologyId, iri))) {
-            var individual = entityProvider.getOWLNamedIndividual(iri);
-            builder.add(individual);
-        }
-        // Data types won't be here
-        return builder.build();
     }
 
     @Nonnull
@@ -206,33 +211,38 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
                                                                Predicate<Key> filter,
                                                                Function<IRI, OWLEntity> iri2Entity) {
 
-        if(type.equals(EntityType.DATATYPE)) {
-            return Stream.empty();
+        readLock.lock();
+        try {
+            if(type.equals(EntityType.DATATYPE)) {
+                return Stream.empty();
+            }
+            final Multimap<? extends Key, OWLAxiom> keys;
+            if(type.equals(EntityType.CLASS)) {
+                keys = byClass;
+            }
+            else if(type.equals(EntityType.OBJECT_PROPERTY)) {
+                keys = byObjectProperty;
+            }
+            else if(type.equals(EntityType.DATA_PROPERTY)) {
+                keys = byDataProperty;
+            }
+            else if(type.equals(EntityType.ANNOTATION_PROPERTY)) {
+                keys = byAnnotationProperty;
+            }
+            else if(type.equals(EntityType.NAMED_INDIVIDUAL)) {
+                keys = byIndividual;
+            }
+            else {
+                throw new RuntimeException("Unknown Entity Type: " + type);
+            }
+            return (Stream<E>) ImmutableList.copyOf(keys.keySet())
+                                .stream()
+                                .filter(filter)
+                                            .map(Key::getIri)
+                                .map(iri2Entity);
+        } finally {
+            readLock.unlock();
         }
-        final Multimap<? extends Key, OWLAxiom> keys;
-        if(type.equals(EntityType.CLASS)) {
-            keys = byClass;
-        }
-        else if(type.equals(EntityType.OBJECT_PROPERTY)) {
-            keys = byObjectProperty;
-        }
-        else if(type.equals(EntityType.DATA_PROPERTY)) {
-            keys = byDataProperty;
-        }
-        else if(type.equals(EntityType.ANNOTATION_PROPERTY)) {
-            keys = byAnnotationProperty;
-        }
-        else if(type.equals(EntityType.NAMED_INDIVIDUAL)) {
-            keys = byIndividual;
-        }
-        else {
-            throw new RuntimeException("Unknown Entity Type: " + type);
-        }
-        return (Stream<E>) ImmutableList.copyOf(keys.keySet())
-                            .stream()
-                            .filter(filter)
-                            .map(Key::getIri)
-                            .map(iri2Entity);
     }
 
     @Override
@@ -240,8 +250,8 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
                                                  @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(entity);
         checkNotNull(ontologyId);
+        readLock.lock();
         try {
-            readLock.lock();
             referenceVisitor.setOntologyId(ontologyId);
             var axioms = entity.accept(referenceVisitor);
             return ImmutableList.copyOf(axioms)
