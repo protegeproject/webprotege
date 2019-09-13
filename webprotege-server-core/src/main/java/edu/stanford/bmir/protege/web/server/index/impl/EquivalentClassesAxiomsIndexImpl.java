@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.MultimapBuilder;
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -22,20 +25,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-08-09
  */
 @ProjectSingleton
-public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxiomsIndex, DependentIndex {
+public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxiomsIndex, RequiresOntologyChangeNotification {
 
     @Nonnull
-    private final AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex;
+    private final AxiomMultimapIndex<OWLClass, OWLEquivalentClassesAxiom> index;
 
     @Inject
-    public EquivalentClassesAxiomsIndexImpl(@Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex) {
-        this.axiomsByEntityReferenceIndex = checkNotNull(axiomsByEntityReferenceIndex);
-    }
-
-    @Nonnull
-    @Override
-    public Collection<Index> getDependencies() {
-        return List.of(axiomsByEntityReferenceIndex);
+    public EquivalentClassesAxiomsIndexImpl() {
+        index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(OWLEquivalentClassesAxiom.class,
+                                                                   OWLEquivalentClassesAxiom::getNamedClasses,
+                                                                   MultimapBuilder.hashKeys().arrayListValues().build());
     }
 
     @Nonnull
@@ -44,8 +43,11 @@ public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxioms
                                                                         @Nonnull OWLOntologyID ontologyID) {
         checkNotNull(cls);
         checkNotNull(ontologyID);
-        return axiomsByEntityReferenceIndex.getReferencingAxioms(cls, ontologyID)
-                                    .filter(OWLEquivalentClassesAxiom.class::isInstance)
-                                    .map(OWLEquivalentClassesAxiom.class::cast);
+        return index.getAxioms(cls, ontologyID);
+    }
+
+    @Override
+    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
+        index.applyChanges(changes);
     }
 }

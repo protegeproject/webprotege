@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +12,8 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
@@ -39,16 +43,12 @@ public class EquivalentClassesAxiomsIndexImpl_TestCase {
     @Mock
     private OWLEquivalentClassesAxiom axiom;
 
-    @Mock
-    private AxiomsByEntityReferenceIndex axiomsByEntityReference;
-
     @Before
     public void setUp() {
-        when(axiomsByEntityReference.getReferencingAxioms(any(), any()))
-                .thenAnswer(invocation -> Stream.of());
-        when(axiomsByEntityReference.getReferencingAxioms(cls, ontologyID))
-                .thenAnswer(invocation -> Stream.of(axiom));
-        impl = new EquivalentClassesAxiomsIndexImpl(axiomsByEntityReference);
+        when(axiom.getNamedClasses())
+                .thenReturn(Collections.singleton(cls));
+        impl = new EquivalentClassesAxiomsIndexImpl();
+        impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyID, axiom)));
     }
 
     @Test

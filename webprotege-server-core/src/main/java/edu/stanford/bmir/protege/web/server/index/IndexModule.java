@@ -384,6 +384,12 @@ public class IndexModule {
         return impl;
     }
 
+    @Provides
+    @IntoSet
+    public RequiresOntologyChangeNotification provideEquivalentClassesAxiomsIndexIntoSet(EquivalentClassesAxiomsIndexImpl impl) {
+        return impl;
+    }
+
     @ProjectSingleton
     @Provides
     IndexUpdater provideIndexUpdater(IndexUpdaterFactory factory) {
