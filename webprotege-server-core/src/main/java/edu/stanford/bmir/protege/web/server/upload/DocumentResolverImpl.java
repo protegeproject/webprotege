@@ -17,12 +17,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DocumentResolverImpl implements DocumentResolver {
 
-    @UploadsDirectory
+
     @Nonnull
     private final File uploadsDirectory;
 
     @Inject
-    public DocumentResolverImpl(@Nonnull File uploadsDirectory) {
+    public DocumentResolverImpl(@UploadsDirectory @Nonnull File uploadsDirectory) {
         this.uploadsDirectory = checkNotNull(uploadsDirectory);
     }
 
