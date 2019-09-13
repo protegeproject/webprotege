@@ -73,7 +73,7 @@ public class ApplicationModule {
 
     private static final int MAX_FILE_DOWNLOAD_THREADS = 5;
 
-    private static final int INDEX_UPDATING_THREADS = 5;
+    private static final int INDEX_UPDATING_THREADS = 10;
 
 
     @ApplicationSingleton
