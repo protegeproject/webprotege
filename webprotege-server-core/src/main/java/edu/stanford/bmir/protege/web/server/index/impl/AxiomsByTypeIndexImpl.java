@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.change.AxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
@@ -34,13 +33,27 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, UpdatableIndex 
 
     private final Lock writeLock = readWriteLock.writeLock();
 
-    private Multimap<Key, OWLAxiom> index;
+    /**
+     * A list of ontology to axiom maps.  Each item in the list corresponds to a particular
+     * axiom type – the index is equal to the axiom type index.
+     */
+    @Nonnull
+    private final ImmutableList<SetMultimap<OWLOntologyID, OWLAxiom>> axiomTypeList;
 
     private AxiomChangeHandler axiomChangeHandler = new AxiomChangeHandler();
 
     @Inject
     public AxiomsByTypeIndexImpl() {
-        index = HashMultimap.create();
+        var listBuilder = ImmutableList.<SetMultimap<OWLOntologyID, OWLAxiom>>builder();
+        AxiomType.AXIOM_TYPES.forEach(
+                axiomType -> {
+                    var axiomsByOntologyMap = MultimapBuilder.hashKeys(1)
+                                                             .hashSetValues()
+                            .<OWLOntologyID, OWLAxiom>build();
+                    listBuilder.add(axiomsByOntologyMap);
+                }
+        );
+        axiomTypeList = listBuilder.build();
         axiomChangeHandler.setAxiomChangeConsumer(this::handleAxiomChange);
     }
 
@@ -48,17 +61,39 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, UpdatableIndex 
         var ontId = change.getOntologyId();
         var axiom = change.getAxiom();
         var axiomType = axiom.getAxiomType();
-        var key = Key.get(ontId, axiomType);
+        var ont2Axioms = getAxiomsByOntologyMap(axiomType);
+        if(change.isAddAxiom()) {
+            ont2Axioms.put(ontId, axiom);
+        }
+        else {
+            ont2Axioms.remove(ontId, axiom);
+        }
+    }
+
+    private SetMultimap<OWLOntologyID, OWLAxiom> getAxiomsByOntologyMap(AxiomType<? extends OWLAxiom> axiomType) {
+        return axiomTypeList.get(axiomType.getIndex());
+    }
+
+    @Override
+    public synchronized void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         try {
             writeLock.lock();
-            if(change.isAddAxiom()) {
-                index.put(key, axiom);
-            }
-            else {
-                index.remove(key, axiom);
-            }
+            axiomChangeHandler.handleOntologyChanges(changes);
         } finally {
             writeLock.unlock();
+        }
+    }
+
+    public boolean containsAxiom(@Nonnull OWLAxiom axiom,
+                                 @Nonnull OWLOntologyID ontologyId) {
+        try {
+            readWriteLock.readLock()
+                         .lock();
+            var ont2Axioms = getAxiomsByOntologyMap(axiom.getAxiomType());
+            return ont2Axioms.containsEntry(ontologyId, axiom);
+        } finally {
+            readWriteLock.readLock()
+                         .unlock();
         }
     }
 
@@ -68,44 +103,15 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, UpdatableIndex 
                                                           OWLOntologyID ontologyId) {
         checkNotNull(axiomType);
         checkNotNull(ontologyId);
-        var key = Key.get(ontologyId, axiomType);
         try {
             readWriteLock.readLock()
                          .lock();
-            return ImmutableList.copyOf((Collection<T>) index.get(key))
-                                .stream();
+            var ont2Axioms = getAxiomsByOntologyMap(axiomType);
+            var axioms = (Collection<T>) ont2Axioms.get(ontologyId);
+            return ImmutableList.copyOf(axioms).stream();
         } finally {
             readWriteLock.readLock()
                          .unlock();
         }
-    }
-
-    public boolean containsAxiom(@Nonnull OWLAxiom axiom,
-                                 @Nonnull OWLOntologyID ontologyId) {
-        try {
-            readWriteLock.readLock().lock();
-            var key = Key.get(ontologyId, axiom.getAxiomType());
-            return index.containsEntry(key, axiom);
-        } finally {
-            readWriteLock.readLock().unlock();
-        }
-    }
-
-    @Override
-    public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
-        axiomChangeHandler.handleOntologyChanges(changes);
-    }
-
-    @AutoValue
-    protected abstract static class Key {
-
-        public static Key get(@Nonnull OWLOntologyID ontologyID,
-                              @Nonnull AxiomType axiomType) {
-            return new AutoValue_AxiomsByTypeIndexImpl_Key(ontologyID, axiomType);
-        }
-
-        public abstract OWLOntologyID getOntologyId();
-
-        public abstract AxiomType getAxiomType();
     }
 }
