@@ -57,6 +57,34 @@ public class AxiomsByTypeIndexImpl_TestCase {
     }
 
     @Test
+    public void shouldContainAxiom() {
+        var containsAxioms = impl.containsAxiom(axiom, ontologyId);
+        assertThat(containsAxioms, is(true));
+    }
+
+    @Test
+    public void shouldNotContainAxiom() {
+        var subClassOfAxiom = mock(OWLSubClassOfAxiom.class);
+        when(subClassOfAxiom.getAxiomType())
+                .thenReturn((AxiomType) AxiomType.SUBCLASS_OF);
+        var containsAxiom = impl.containsAxiom(subClassOfAxiom, ontologyId);
+        assertThat(containsAxiom, is(false));
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNpeIfContainsAxiom_Axiom_IsNull() {
+        impl.containsAxiom(null, ontologyId);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNpeIfContainsAxiom_OntologyId_IsNull() {
+        impl.containsAxiom(axiom, null);
+    }
+
+    @Test
     public void shouldReturnEmptyStreamIfForUnknownOntologyId() {
         var axiomsStream = impl.getAxiomsByType(AxiomType.SUBCLASS_OF, mock(OWLOntologyID.class));
         var axioms = axiomsStream.collect(toSet());

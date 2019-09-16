@@ -86,6 +86,8 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, UpdatableIndex 
 
     public boolean containsAxiom(@Nonnull OWLAxiom axiom,
                                  @Nonnull OWLOntologyID ontologyId) {
+        checkNotNull(axiom);
+        checkNotNull(ontologyId);
         try {
             readWriteLock.readLock()
                          .lock();
