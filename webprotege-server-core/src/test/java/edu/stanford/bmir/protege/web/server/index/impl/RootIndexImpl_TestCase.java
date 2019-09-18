@@ -118,7 +118,32 @@ public class RootIndexImpl_TestCase {
         assertThat(effectiveChanges, is(empty()));
     }
 
+    @Test
+    public void shouldFilterOutDuplicateChanges() {
+        var otherAxiom = mock(OWLAxiom.class);
+        var firstChange = AddAxiomChange.of(ontologyId, otherAxiom);
+        var secondChange = AddAxiomChange.of(ontologyId, otherAxiom);
+        var changes = ImmutableList.<OntologyChange>of(
+                firstChange,
+                secondChange
+        );
+        var effectiveChanges = impl.getEffectiveChanges(changes);
+        assertThat(effectiveChanges, contains(firstChange));
+        assertThat(effectiveChanges.size(), is(1));
+    }
 
+    @Test
+    public void shouldFilterOutCancellingChanges() {
+        var otherAxiom = mock(OWLAxiom.class);
+        var firstChange = AddAxiomChange.of(ontologyId, otherAxiom);
+        var secondChange = RemoveAxiomChange.of(ontologyId, otherAxiom);
+        var changes = ImmutableList.<OntologyChange>of(
+                firstChange,
+                secondChange
+        );
+        var effectiveChanges = impl.getEffectiveChanges(changes);
+        assertThat(effectiveChanges, is(empty()));
+    }
 
     private List<OntologyChange> getEffectiveChanges(OntologyChange change) {
         var changes = getChangeList(change);
