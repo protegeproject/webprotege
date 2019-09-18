@@ -1,16 +1,11 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -39,19 +34,21 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
     @Nonnull
     @Override
     public Stream<OWLAnnotationProperty> getOntologyAnnotationsSignature(@Nonnull OWLOntologyID ontologyId) {
-        var annos = ImmutableList.copyOf(annotationsMap.get(ontologyId));
-        return getAnnos(annos.stream())
-                .map(OWLAnnotation::getProperty);
+        var resultBuilder = ImmutableList.<OWLAnnotationProperty>builder();
+        annotationsMap.get(ontologyId)
+                      .forEach(anno -> collectAnnotationProperties(anno, resultBuilder));
+        return resultBuilder.build().stream().distinct();
     }
 
-    private Stream<OWLAnnotation> getAnnos(@Nonnull Stream<OWLAnnotation> annos) {
-        return Stream.concat(annos.flatMap(an -> getAnnos(an.getAnnotations().stream())),
-                             annos);
+    private void collectAnnotationProperties(OWLAnnotation anno,
+                                             ImmutableCollection.Builder<OWLAnnotationProperty> resultBuilder) {
+        resultBuilder.add(anno.getProperty());
+        anno.getAnnotations().forEach(a -> collectAnnotationProperties(a, resultBuilder));
     }
 
     @Override
     public boolean containsEntityInOntologyAnnotationsSignature(@Nonnull OWLEntity entity, @Nonnull OWLOntologyID ontologyId) {
-        if(entity.isOWLAnnotationProperty()) {
+        if(!entity.isOWLAnnotationProperty()) {
             return false;
         }
         return contains(entity.asOWLAnnotationProperty(),

@@ -2,22 +2,22 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddOntologyAnnotationChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveOntologyAnnotationChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
-import java.util.List;
+import java.util.Collections;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
+import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.Annotation;
+import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.AnnotationProperty;
 
 /**
  * Matthew Horridge
@@ -32,14 +32,46 @@ public class OntologyAnnotationsIndexImpl_TestCase {
     @Mock
     private OWLOntologyID ontologyId;
 
-
     @Mock
+    private OWLAnnotationValue annotationValue;
+
     private OWLAnnotation ontologyAnnotation;
+
+    private OWLAnnotation annotationAnnotation;
+
+    private OWLAnnotationProperty property, otherProperty;
 
     @Before
     public void setUp() {
+        property = AnnotationProperty(mock(IRI.class));
+        otherProperty = AnnotationProperty(mock(IRI.class));
+        annotationAnnotation = Annotation(otherProperty, annotationValue);
+        ontologyAnnotation = Annotation(property,
+                                        annotationValue)
+                .getAnnotatedAnnotation(Collections.singleton(annotationAnnotation));
         impl = new OntologyAnnotationsIndexImpl();
         impl.applyChanges(ImmutableList.of(AddOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
+    }
+
+    @Test
+    public void shouldContainAnnotation() {
+        assertThat(impl.containsAnnotation(ontologyAnnotation, ontologyId), is(true));
+    }
+
+    @Test
+    public void shouldContainEntityInSignature() {
+        assertThat(impl.containsEntityInOntologyAnnotationsSignature(property, ontologyId), is(true));
+    }
+
+    @Test
+    public void shouldContainAnnotationOnAnnotationInSignature() {
+        assertThat(impl.containsEntityInOntologyAnnotationsSignature(otherProperty, ontologyId), is(true));
+    }
+
+    @Test
+    public void shouldGetEmptyStreamForUnknownOntology() {
+        var ontologyAnnotationsStream = impl.getOntologyAnnotations(mock(OWLOntologyID.class));
+        assertThat(ontologyAnnotationsStream.count(), is(0L));
     }
 
     @Test
@@ -50,8 +82,20 @@ public class OntologyAnnotationsIndexImpl_TestCase {
     }
 
     @Test
-    public void shouldGetEmptyStreamForUnknownOntology() {
-        var ontologyAnnotationsStream = impl.getOntologyAnnotations(mock(OWLOntologyID.class));
-        assertThat(ontologyAnnotationsStream.count(), is(0L));
+    public void shouldGetOntologyAnnotationsSignature() {
+        var signature = impl.getOntologyAnnotationsSignature(ontologyId)
+                            .collect(toSet());
+        assertThat(signature, containsInAnyOrder(property, otherProperty));
+    }
+
+    @Test
+    public void shouldNotContainEntityInSignature() {
+        assertThat(impl.containsEntityInOntologyAnnotationsSignature(mock(OWLEntity.class), ontologyId), is(false));
+    }
+
+    @Test
+    public void shouldRemoveAnnotation() {
+        impl.applyChanges(ImmutableList.of(RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation)));
+        assertThat(impl.getOntologyAnnotations(ontologyId).count(), is(0L));
     }
 }
