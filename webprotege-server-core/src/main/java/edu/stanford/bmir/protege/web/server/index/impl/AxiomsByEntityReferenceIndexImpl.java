@@ -67,6 +67,10 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
                                                                                        .arrayListValues()
                                                                                        .build();
 
+    private final Multimap<DatatypeKey, OWLAxiom> byDatatype = MultimapBuilder.hashKeys()
+            .hashSetValues()
+            .build();
+
     private final AxiomsByReferenceVisitor referenceVisitor = new AxiomsByReferenceVisitor();
 
     private final ReferenceCheckVisitor referenceCheckVisitor = new ReferenceCheckVisitor();
@@ -127,11 +131,11 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         }
     }
 
-    public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
+    public Stream<OWLEntity> getEntitiesInSignatureWithIri(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
+        checkNotNull(iri);
+        checkNotNull(ontologyId);
         try {
             readLock.lock();
-            checkNotNull(iri);
-            checkNotNull(ontologyId);
             var builder = Stream.<OWLEntity>builder();
             if(byClass.containsKey(ClassKey.get(ontologyId, iri))) {
                 var cls = entityProvider.getOWLClass(iri);
@@ -153,7 +157,10 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
                 var individual = entityProvider.getOWLNamedIndividual(iri);
                 builder.add(individual);
             }
-            // Data types won't be here
+            if(byDatatype.containsKey(DatatypeKey.get(ontologyId, iri))) {
+                var datatype = entityProvider.getOWLDatatype(iri);
+                builder.add(datatype);
+            }
             return builder.build();
         } finally {
             readLock.unlock();
@@ -194,7 +201,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
             return entityProvider::getOWLNamedIndividual;
         }
         else if(type.equals(EntityType.DATATYPE)) {
-            return entityProvider::getOWLDataProperty;
+            return entityProvider::getOWLDatatype;
         }
         else {
             throw new RuntimeException("Unsupported Entity Type: " + type);
@@ -213,11 +220,11 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
         readLock.lock();
         try {
-            if(type.equals(EntityType.DATATYPE)) {
-                return Stream.empty();
-            }
             final Multimap<? extends Key, OWLAxiom> keys;
-            if(type.equals(EntityType.CLASS)) {
+            if(type.equals(EntityType.DATATYPE)) {
+                keys = byDatatype;
+            }
+            else if(type.equals(EntityType.CLASS)) {
                 keys = byClass;
             }
             else if(type.equals(EntityType.OBJECT_PROPERTY)) {
@@ -343,6 +350,17 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         }
     }
 
+    @AutoValue
+    public static abstract class DatatypeKey implements Key {
+        public static DatatypeKey get(OWLOntologyID ontologyId, OWLDatatype datatype) {
+            return get(ontologyId, datatype.getIRI());
+        }
+
+        public static DatatypeKey get(OWLOntologyID ontologyId, IRI individualIri) {
+            return new AutoValue_AxiomsByEntityReferenceIndexImpl_DatatypeKey(ontologyId, individualIri);
+        }
+    }
+
     private class IndexingVisitor implements OWLEntityVisitor {
 
         private OWLOntologyID ontologyId;
@@ -379,7 +397,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
         @Override
         public void visit(@Nonnull OWLDatatype datatype) {
-            // Don't index by datatype... too many axioms because of literals in annotations
+            byDatatype.put(DatatypeKey.get(ontologyId, datatype), axiom);
         }
 
         @Override
@@ -424,7 +442,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
 
         @Override
         public void visit(@Nonnull OWLDatatype datatype) {
-            // No need to de-index here
+            byDatatype.remove(DatatypeKey.get(ontologyId, datatype), axiom);
         }
 
         @Override
@@ -469,8 +487,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         @Nonnull
         @Override
         public Collection<OWLAxiom> visit(@Nonnull OWLDatatype datatype) {
-            // Nothing to return here
-            return Collections.emptyList();
+            return byDatatype.get(DatatypeKey.get(ontologyId, datatype));
         }
 
         @Nonnull
@@ -515,8 +532,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         @Nonnull
         @Override
         public Boolean visit(@Nonnull OWLDatatype datatype) {
-            // Nothing to return here
-            return Boolean.FALSE;
+            return byDatatype.containsKey(DatatypeKey.get(ontologyId, datatype));
         }
 
         @Nonnull

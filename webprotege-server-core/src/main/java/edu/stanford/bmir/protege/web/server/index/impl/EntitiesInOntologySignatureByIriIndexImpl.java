@@ -42,7 +42,7 @@ public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOnto
     public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(iri);
         checkNotNull(ontologyId);
-        var axiomsSignature = axiomsByEntityReferenceIndex.getEntitiesInSignature(iri, ontologyId);
+        var axiomsSignature = axiomsByEntityReferenceIndex.getEntitiesInSignatureWithIri(iri, ontologyId);
         var ontologyAnnotationsSignature = ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId)
                 .filter(entity -> entity.getIRI().equals(iri));
         return Streams.concat(axiomsSignature, ontologyAnnotationsSignature);

@@ -54,9 +54,9 @@ public class EntitiesInOntologySignatureByIriIndexImpl_TestCase {
     @Before
     public void setUp() {
         impl = new EntitiesInOntologySignatureByIriIndexImpl(axiomByEntityReference, ontologyAnnotationsSignatureIndex);
-        when(axiomByEntityReference.getEntitiesInSignature(any(), any()))
+        when(axiomByEntityReference.getEntitiesInSignatureWithIri(any(), any()))
                 .thenAnswer(inv -> Stream.empty());
-        when(axiomByEntityReference.getEntitiesInSignature(iri, ontologyId))
+        when(axiomByEntityReference.getEntitiesInSignatureWithIri(iri, ontologyId))
                 .thenAnswer(inv -> Stream.of(entity));
         when(entity.getIRI())
                 .thenReturn(iri);
