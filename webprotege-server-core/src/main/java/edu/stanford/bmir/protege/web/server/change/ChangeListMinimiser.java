@@ -15,8 +15,8 @@ public class ChangeListMinimiser {
 
     public List<OntologyChange> getMinimisedChanges(List<OntologyChange> changes) {
 
-        final Set<OntologyAxiomPair> additions = new HashSet<>(changes.size());
-        final Set<OntologyAxiomPair> removals = new HashSet<>(changes.size());
+        var additions = new HashSet<OntologyAxiomPair>(changes.size());
+        var removals = new HashSet<OntologyAxiomPair>(changes.size());
 
         for (OntologyChange change : changes) {
             if (change.isAddAxiom()) {
@@ -38,14 +38,14 @@ public class ChangeListMinimiser {
         var minimisedChanges = new ArrayList<OntologyChange>();
         for (OntologyChange change : changes) {
             if (change.isAddAxiom()) {
-                OntologyAxiomPair pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
+                var pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
                 if (additions.contains(pair)) {
                     minimisedChanges.add(change);
                     additions.remove(pair);
                 }
             }
             else if (change.isRemoveAxiom()) {
-                OntologyAxiomPair pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
+                var pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
                 if (removals.contains(pair)) {
                     minimisedChanges.add(change);
                     removals.remove(pair);
