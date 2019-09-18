@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -31,6 +33,8 @@ public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOnto
     @Nonnull
     @Override
     public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
+        checkNotNull(iri);
+        checkNotNull(ontologyId);
         return axiomsByEntityReferenceIndex.getEntitiesInSignature(iri, ontologyId);
     }
 
