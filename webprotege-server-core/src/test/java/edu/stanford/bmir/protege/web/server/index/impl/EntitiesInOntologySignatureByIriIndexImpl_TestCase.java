@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureByIriIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -41,19 +42,42 @@ public class EntitiesInOntologySignatureByIriIndexImpl_TestCase {
     @Mock
     private OWLEntity entity;
 
+    @Mock
+    private OntologyAnnotationsSignatureIndex ontologyAnnotationsSignatureIndex;
+
+    @Mock
+    private OWLAnnotationProperty otherEntity;
+
+    @Mock
+    private IRI otherIri;
+
     @Before
     public void setUp() {
-        impl = new EntitiesInOntologySignatureByIriIndexImpl(axiomByEntityReference);
-//        when(impl.getEntitiesInSignature(any(), any()))
-//                .thenAnswer(inv -> Stream.empty());
-        when(impl.getEntitiesInSignature(iri, ontologyId))
+        impl = new EntitiesInOntologySignatureByIriIndexImpl(axiomByEntityReference, ontologyAnnotationsSignatureIndex);
+        when(axiomByEntityReference.getEntitiesInSignature(any(), any()))
+                .thenAnswer(inv -> Stream.empty());
+        when(axiomByEntityReference.getEntitiesInSignature(iri, ontologyId))
                 .thenAnswer(inv -> Stream.of(entity));
+        when(entity.getIRI())
+                .thenReturn(iri);
+        when(otherEntity.getIRI())
+                .thenReturn(otherIri);
+        when(ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(any()))
+                .thenAnswer(inv -> Stream.empty());
+        when(ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId))
+                .thenAnswer(inv -> Stream.of(otherEntity));
     }
 
     @Test
-    public void shouldGetEntitiesInSignature() {
+    public void shouldGetEntitiesInAxiomSignature() {
         var sig = impl.getEntitiesInSignature(iri, ontologyId).collect(toSet());
         assertThat(sig, contains(entity));
+    }
+
+    @Test
+    public void shouldGetEntitiesInOntologyAnnotationsSignature() {
+        var sig = impl.getEntitiesInSignature(otherIri, ontologyId).collect(toSet());
+        assertThat(sig, contains(otherEntity));
     }
 
     @SuppressWarnings("ConstantConditions")

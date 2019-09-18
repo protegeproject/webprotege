@@ -110,7 +110,8 @@ public class ProjectChangesManager_IT {
                                                                                                         axiomsByEntityReference,
                                                                                                         projectOntologiesIndex), repo);
 
-        var entitiesInOntologySignatureByIri = new EntitiesInOntologySignatureByIriIndexImpl(axiomsByEntityReference);
+        var entitiesInOntologySignatureByIri = new EntitiesInOntologySignatureByIriIndexImpl(axiomsByEntityReference,
+                                                                                             new OntologyAnnotationsIndexImpl());
         var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex,
                                                                                     entitiesInOntologySignatureByIri);
         var ontologySignatureIndex = new OntologySignatureIndexImpl(axiomsByEntityReference);

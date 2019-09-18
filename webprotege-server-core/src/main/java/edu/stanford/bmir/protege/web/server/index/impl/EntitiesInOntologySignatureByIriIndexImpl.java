@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInOntologySignatureByIriIndex;
+import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -25,9 +27,14 @@ public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOnto
     @Nonnull
     private final AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceIndex;
 
+    @Nonnull
+    private final OntologyAnnotationsSignatureIndex ontologyAnnotationsSignatureIndex;
+
     @Inject
-    public EntitiesInOntologySignatureByIriIndexImpl(@Nonnull AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceIndex) {
+    public EntitiesInOntologySignatureByIriIndexImpl(@Nonnull AxiomsByEntityReferenceIndexImpl axiomsByEntityReferenceIndex,
+                                                     @Nonnull OntologyAnnotationsSignatureIndex ontologyAnnotationsSignatureIndex) {
         this.axiomsByEntityReferenceIndex = axiomsByEntityReferenceIndex;
+        this.ontologyAnnotationsSignatureIndex = ontologyAnnotationsSignatureIndex;
     }
 
     @Nonnull
@@ -35,7 +42,10 @@ public class EntitiesInOntologySignatureByIriIndexImpl implements EntitiesInOnto
     public Stream<OWLEntity> getEntitiesInSignature(@Nonnull IRI iri, @Nonnull OWLOntologyID ontologyId) {
         checkNotNull(iri);
         checkNotNull(ontologyId);
-        return axiomsByEntityReferenceIndex.getEntitiesInSignature(iri, ontologyId);
+        var axiomsSignature = axiomsByEntityReferenceIndex.getEntitiesInSignature(iri, ontologyId);
+        var ontologyAnnotationsSignature = ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(ontologyId)
+                .filter(entity -> entity.getIRI().equals(iri));
+        return Streams.concat(axiomsSignature, ontologyAnnotationsSignature);
     }
 
     @Nonnull
