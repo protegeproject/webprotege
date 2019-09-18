@@ -1,17 +1,15 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAnnotationsIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -38,14 +36,21 @@ public class RootIndexImpl implements RootIndex {
 
     @Nonnull
     @Override
-    public List<OntologyChange> filterEffectiveChanges(@Nonnull List<OntologyChange> changes) {
-        var resultBuilder = ImmutableList.<OntologyChange>builder();
-        for(var chg : changes) {
-            if(chg.accept(changeFilter).equals(Boolean.TRUE)) {
-                resultBuilder.add(chg);
-            }
-        }
-        return resultBuilder.build();
+    public List<OntologyChange> getEffectiveChanges(@Nonnull List<OntologyChange> changes) {
+        var minimizedChanges = getMinimizedChanges(changes);
+        return minimizedChanges.stream()
+                               .filter(this::isEffectiveChange)
+                               .collect(toImmutableList());
+    }
+
+    private List<OntologyChange> getMinimizedChanges(@Nonnull List<OntologyChange> changes) {
+        var changeListMinimizer = new ChangeListMinimiser();
+        return changeListMinimizer.getMinimisedChanges(changes);
+    }
+
+    private boolean isEffectiveChange(OntologyChange chg) {
+        return chg.accept(changeFilter)
+                          .equals(Boolean.TRUE);
     }
 
     private class ChangeFilter implements OntologyChangeVisitorEx<Boolean> {

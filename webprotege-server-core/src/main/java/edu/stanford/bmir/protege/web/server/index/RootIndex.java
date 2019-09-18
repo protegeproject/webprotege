@@ -12,6 +12,12 @@ import java.util.List;
  */
 public interface RootIndex {
 
+    /**
+     * Minimizes and filters the specified list of changes to changes that actually
+     * result in mutation of project ontologies.
+     * @param changes The list of desired changes.
+     * @return A list of changes that will have an effect on project ontologies.
+     */
     @Nonnull
-    List<OntologyChange> filterEffectiveChanges(@Nonnull List<OntologyChange> changes);
+    List<OntologyChange> getEffectiveChanges(@Nonnull List<OntologyChange> changes);
 }
