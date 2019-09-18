@@ -9,7 +9,9 @@ import javax.annotation.Nonnull;
  */
 public interface OntologyChangeVisitorEx<R> {
 
-    R getDefaultReturnValue();
+    default R getDefaultReturnValue() {
+        return null;
+    }
 
     default R visit(@Nonnull AddAxiomChange addAxiomChange) {
         return getDefaultReturnValue();

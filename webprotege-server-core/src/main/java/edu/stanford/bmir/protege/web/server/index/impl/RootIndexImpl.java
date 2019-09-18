@@ -56,11 +56,6 @@ public class RootIndexImpl implements RootIndex {
     private class ChangeFilter implements OntologyChangeVisitorEx<Boolean> {
 
         @Override
-        public Boolean getDefaultReturnValue() {
-            return Boolean.FALSE;
-        }
-
-        @Override
         public Boolean visit(@Nonnull AddAxiomChange addAxiomChange) {
             var axiom = addAxiomChange.getAxiom();
             var ontologyId = addAxiomChange.getOntologyId();
