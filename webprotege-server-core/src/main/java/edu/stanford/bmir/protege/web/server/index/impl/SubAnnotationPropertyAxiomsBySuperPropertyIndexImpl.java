@@ -29,10 +29,7 @@ public class SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl implements SubA
     @Inject
     public SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl() {
         index = AxiomMultimapIndex.create(OWLSubAnnotationPropertyOfAxiom.class,
-                                          OWLSubAnnotationPropertyOfAxiom::getSuperProperty,
-                                          MultimapBuilder.hashKeys()
-                                                         .arrayListValues()
-                                                         .build());
+                                          OWLSubAnnotationPropertyOfAxiom::getSuperProperty);
     }
 
     @Nonnull

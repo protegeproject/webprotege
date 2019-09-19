@@ -29,8 +29,7 @@ public class EquivalentClassesAxiomsIndexImpl implements EquivalentClassesAxioms
     @Inject
     public EquivalentClassesAxiomsIndexImpl() {
         index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(OWLEquivalentClassesAxiom.class,
-                                                                   OWLEquivalentClassesAxiom::getNamedClasses,
-                                                                   MultimapBuilder.hashKeys().arrayListValues().build());
+                                                                   OWLEquivalentClassesAxiom::getNamedClasses);
     }
 
     @Nonnull

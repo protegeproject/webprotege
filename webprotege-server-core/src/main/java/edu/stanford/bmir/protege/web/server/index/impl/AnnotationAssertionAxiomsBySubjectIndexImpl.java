@@ -29,10 +29,7 @@ public class AnnotationAssertionAxiomsBySubjectIndexImpl implements AnnotationAs
     @Inject
     public AnnotationAssertionAxiomsBySubjectIndexImpl() {
         index = AxiomMultimapIndex.create(OWLAnnotationAssertionAxiom.class,
-                                          OWLAnnotationAssertionAxiom::getSubject,
-                                          MultimapBuilder.hashKeys()
-                                                         .arrayListValues()
-                                                         .build());
+                                          OWLAnnotationAssertionAxiom::getSubject);
     }
 
     @Override

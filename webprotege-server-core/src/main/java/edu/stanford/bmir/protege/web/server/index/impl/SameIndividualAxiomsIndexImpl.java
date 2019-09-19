@@ -29,10 +29,7 @@ public class SameIndividualAxiomsIndexImpl implements SameIndividualAxiomsIndex,
     @Inject
     public SameIndividualAxiomsIndexImpl() {
         index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(OWLSameIndividualAxiom.class,
-                                                                   OWLSameIndividualAxiom::getIndividuals,
-                                                                   MultimapBuilder.hashKeys()
-                                                                                  .arrayListValues()
-                                                                                  .build());
+                                                                   OWLSameIndividualAxiom::getIndividuals);
     }
 
     @Nonnull

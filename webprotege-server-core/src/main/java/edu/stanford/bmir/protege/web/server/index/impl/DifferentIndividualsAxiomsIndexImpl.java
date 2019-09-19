@@ -30,9 +30,7 @@ public class DifferentIndividualsAxiomsIndexImpl implements DifferentIndividuals
     public DifferentIndividualsAxiomsIndexImpl() {
         this.index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(
                 OWLDifferentIndividualsAxiom.class,
-                OWLDifferentIndividualsAxiom::getIndividuals,
-                MultimapBuilder.hashKeys().arrayListValues().build()
-        );
+                OWLDifferentIndividualsAxiom::getIndividuals);
     }
 
     @Nonnull

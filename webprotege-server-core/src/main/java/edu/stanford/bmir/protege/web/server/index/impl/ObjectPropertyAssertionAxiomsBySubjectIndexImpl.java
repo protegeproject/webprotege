@@ -30,11 +30,7 @@ public class ObjectPropertyAssertionAxiomsBySubjectIndexImpl implements ObjectPr
     @Inject
     public ObjectPropertyAssertionAxiomsBySubjectIndexImpl() {
         this.index = AxiomMultimapIndex.create(OWLObjectPropertyAssertionAxiom.class,
-                                               OWLPropertyAssertionAxiom::getSubject,
-                                               MultimapBuilder.hashKeys()
-                                                              .arrayListValues()
-                                                              .build()
-        );
+                                               OWLPropertyAssertionAxiom::getSubject);
     }
     @Override
     public void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {

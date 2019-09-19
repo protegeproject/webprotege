@@ -30,10 +30,7 @@ public class DataPropertyAssertionAxiomsBySubjectIndexImpl implements DataProper
     @Inject
     public DataPropertyAssertionAxiomsBySubjectIndexImpl() {
         index = AxiomMultimapIndex.create(OWLDataPropertyAssertionAxiom.class,
-                                          OWLDataPropertyAssertionAxiom::getSubject,
-                                          MultimapBuilder.hashKeys()
-                                                         .arrayListValues()
-                                                         .build());
+                                          OWLDataPropertyAssertionAxiom::getSubject);
     }
 
     @Nonnull

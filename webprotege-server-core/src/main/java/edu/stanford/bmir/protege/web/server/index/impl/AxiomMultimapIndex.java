@@ -43,6 +43,28 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
 
     private volatile boolean lazy = false;
 
+    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> create(@Nonnull Class<A> axiomCls,
+                                                                          @Nonnull KeyValueExtractor<V, A> keyValueExtractor,
+                                                                          @Nonnull Multimap<Key<V>, A> backingMap) {
+        return new AxiomMultimapIndex<>(axiomCls, keyValueExtractor, null, backingMap);
+    }
+    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> create(@Nonnull Class<A> axiomCls,
+                                                                          @Nonnull KeyValueExtractor<V, A> keyValueExtractor) {
+        var backingMap = IndexedSetMultimaps.<V, A>create();
+        return new AxiomMultimapIndex<>(axiomCls, keyValueExtractor, null, backingMap);
+    }
+
+    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> createWithNaryKeyValueExtractor(@Nonnull Class<A> axiomCls,
+                                                                                                   @Nonnull KeyValueExtractor<Iterable<V>, A> keyValueExtractor) {
+        var backingMap = IndexedSetMultimaps.<V, A>create();
+        return new AxiomMultimapIndex<>(axiomCls, null, keyValueExtractor, backingMap);
+    }
+
+    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> createWithNaryKeyValueExtractor(@Nonnull Class<A> axiomCls,
+                                                                                                   @Nonnull KeyValueExtractor<Iterable<V>, A> keyValueExtractor,
+                                                                                                   @Nonnull Multimap<Key<V>, A> backingMap) {
+        return new AxiomMultimapIndex<>(axiomCls, null, keyValueExtractor, backingMap);
+    }
 
     private AxiomMultimapIndex(@Nonnull Class<A> axiomCls,
                                @Nullable KeyValueExtractor<V, A> unaryKeyValueExtractor,
@@ -112,18 +134,6 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
     private V getUnaryKeyValueExtractor(A ax) {
         checkNotNull(unaryKeyValueExtractor);
         return unaryKeyValueExtractor.extractValue(ax);
-    }
-
-    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> create(@Nonnull Class<A> axiomCls,
-                                                                          @Nonnull KeyValueExtractor<V, A> keyValueExtractor,
-                                                                          @Nonnull Multimap<Key<V>, A> backingMap) {
-        return new AxiomMultimapIndex<>(axiomCls, keyValueExtractor, null, backingMap);
-    }
-
-    public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> createWithNaryKeyValueExtractor(@Nonnull Class<A> axiomCls,
-                                                                                                   @Nonnull KeyValueExtractor<Iterable<V>, A> keyValueExtractor,
-                                                                                                   @Nonnull Multimap<Key<V>, A> backingMap) {
-        return new AxiomMultimapIndex<>(axiomCls, null, keyValueExtractor, backingMap);
     }
 
     public synchronized Stream<A> getAxioms(@Nonnull V value, @Nonnull OWLOntologyID ontologyId) {

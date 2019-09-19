@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.Multimaps;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -101,14 +102,10 @@ public class DictionaryBuilder {
             return;
         }
 
-        var counter = new Counter();
         annotationBasedDictionaries
                 .stream()
                 .filter(dictionary -> dictionary.getLanguage().isAnnotationBased())
                 .forEach(this::buildAnnotationBasedDictionary);
-        logger.info("{} Processed {} axioms in order to build annotation based dictionaries",
-                    projectId,
-                    String.format("%,d", counter.getCounter()));
     }
 
     private void buildAnnotationBasedDictionary(Dictionary dictionary) {

@@ -29,8 +29,7 @@ public class ClassAssertionAxiomsByIndividualIndexImpl implements ClassAssertion
     @Inject
     public ClassAssertionAxiomsByIndividualIndexImpl() {
         index = AxiomMultimapIndex.create(OWLClassAssertionAxiom.class,
-                                          OWLClassAssertionAxiom::getIndividual,
-                                          MultimapBuilder.hashKeys().arrayListValues().build());
+                                          OWLClassAssertionAxiom::getIndividual);
 
         index.setLazy(true);
     }

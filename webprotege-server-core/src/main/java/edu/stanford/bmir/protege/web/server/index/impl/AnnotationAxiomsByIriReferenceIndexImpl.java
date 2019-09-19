@@ -28,8 +28,7 @@ public class AnnotationAxiomsByIriReferenceIndexImpl implements AnnotationAxioms
     @Inject
     public AnnotationAxiomsByIriReferenceIndexImpl() {
         index = AxiomMultimapIndex.createWithNaryKeyValueExtractor(OWLAnnotationAxiom.class,
-                                                                   this::extractIris,
-                                                                   MultimapBuilder.hashKeys().hashSetValues().build());
+                                                                   this::extractIris);
         index.setLazy(true);
     }
 
