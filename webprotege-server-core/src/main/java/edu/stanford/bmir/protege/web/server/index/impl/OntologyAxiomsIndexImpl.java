@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.AxiomType;

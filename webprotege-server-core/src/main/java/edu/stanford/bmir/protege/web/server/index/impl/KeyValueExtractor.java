@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 
+import org.semanticweb.owlapi.model.OWLAxiom;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.semanticweb.owlapi.model.OWLAxiom;
 
 /**
  * Matthew Horridge

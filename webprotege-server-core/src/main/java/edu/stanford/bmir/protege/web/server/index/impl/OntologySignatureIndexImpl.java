@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
-import edu.stanford.bmir.protege.web.server.index.AxiomsByTypeIndex;
 import edu.stanford.bmir.protege.web.server.index.OntologySignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.EntityType;

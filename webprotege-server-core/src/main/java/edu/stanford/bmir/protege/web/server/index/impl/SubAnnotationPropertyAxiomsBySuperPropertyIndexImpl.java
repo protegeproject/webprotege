@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.MultimapBuilder;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.SubAnnotationPropertyAxiomsBySuperPropertyIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;

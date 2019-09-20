@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAxiomsByIriReferenceIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -9,7 +10,10 @@ import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**

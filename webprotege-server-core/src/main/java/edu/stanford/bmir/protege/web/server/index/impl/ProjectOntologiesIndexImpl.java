@@ -12,8 +12,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.stream.Stream;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

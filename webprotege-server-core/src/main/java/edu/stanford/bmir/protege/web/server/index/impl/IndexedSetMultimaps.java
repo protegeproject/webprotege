@@ -2,9 +2,6 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import org.checkerframework.checker.units.qual.K;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationAxiom;
 
 import java.util.Collection;
 import java.util.HashMap;
