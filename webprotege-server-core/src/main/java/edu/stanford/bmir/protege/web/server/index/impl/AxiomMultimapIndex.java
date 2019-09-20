@@ -43,6 +43,8 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
 
     private volatile boolean lazy = false;
 
+    private boolean allowDuplicates = true;
+
     public static <V, A extends OWLAxiom> AxiomMultimapIndex<V, A> create(@Nonnull Class<A> axiomCls,
                                                                           @Nonnull KeyValueExtractor<V, A> keyValueExtractor,
                                                                           @Nonnull Multimap<Key<V>, A> backingMap) {
@@ -77,8 +79,14 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         axiomChangeHandler.setAxiomChangeConsumer(this::handleChange);
     }
 
+
+
     public void setLazy(boolean lazy) {
         this.lazy = lazy;
+    }
+
+    public void setAllowDuplicates(boolean allowDuplicates) {
+        this.allowDuplicates = allowDuplicates;
     }
 
     private void handleChange(@Nonnull AxiomChange change) {
@@ -121,7 +129,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
             // If it is a set then we just added the key/axiom pair
             // If it is not a set, we don't want duplicates so we must
             // check to see if it contains the key/axiom pair
-            var shouldAdd = backingMap instanceof SetMultimap || !backingMap.containsEntry(key, ax);
+            var shouldAdd = allowDuplicates || backingMap instanceof SetMultimap || !backingMap.containsEntry(key, ax);
             if(shouldAdd) {
                 backingMap.put(key, ax);
             }

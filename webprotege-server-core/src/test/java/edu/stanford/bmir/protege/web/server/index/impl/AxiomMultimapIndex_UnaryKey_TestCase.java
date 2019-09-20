@@ -101,8 +101,16 @@ public class AxiomMultimapIndex_UnaryKey_TestCase {
     }
 
     @Test
-    public void shouldNotAddDuplicates() {
+    public void shouldDuplicatesByDefault() {
         var chg = AddAxiomChange.of(ontologyId, axiom);
+        index.applyChanges(ImmutableList.of(chg, chg));
+        assertThat(backingMap.size(), is(2));
+    }
+
+    @Test
+    public void shouldNotAddDuplicatesIfFlagIsSet() {
+        var chg = AddAxiomChange.of(ontologyId, axiom);
+        index.setAllowDuplicates(false);
         index.applyChanges(ImmutableList.of(chg, chg));
         assertThat(backingMap.size(), is(1));
     }
