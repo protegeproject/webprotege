@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
@@ -94,7 +94,6 @@ public class ProjectChangesManager_IT {
                 changeRecordTranslator));
         when(defaultOntologyIdManager.getDefaultOntologyId())
                 .thenReturn(rootOntology.getOntologyID());
-        when(repo.findOne(projectId)).thenReturn(Optional.empty());
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
         var ontologiesIndex = new ProjectOntologiesIndexImpl();
 

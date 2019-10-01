@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
@@ -68,15 +68,25 @@ public class ResetPasswordActionHandler_TestCase {
     @Mock
     private UserDetails userDetails;
 
+    @Mock
+    private SaltedPasswordDigest passwordDigest;
+
+    @Mock
+    private Salt salt;
+
     @Before
     public void setUp() throws Exception {
         handler = new ResetPasswordActionHandler(userDetailsManager,
                 authenticationManager,
                 saltProvider, passwordDigestAlgorithm, mailer);
 
+        when(passwordDigestAlgorithm.getDigestOfSaltedPassword(anyString(),
+                                                               any()))
+                .thenReturn(passwordDigest);
+        when(saltProvider.get())
+                .thenReturn(salt);
         when(action.getResetPasswordData()).thenReturn(data);
         when(data.getEmailAddress()).thenReturn(EMAIL_ADDRESS);
-        when(context.getUserId()).thenReturn(userId);
     }
 
 
@@ -143,9 +153,12 @@ public class ResetPasswordActionHandler_TestCase {
 
     @Test
     public void shouldNotSendEmailOnException() {
-        when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
-        when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(Optional.of(EMAIL_ADDRESS));
+        when(userDetailsManager.getUserByUserIdOrEmail(any(String.class)))
+                .thenReturn(Optional.of(userId));
+        when(userDetailsManager.getUserDetails(userId))
+                .thenReturn(Optional.of(userDetails));
+        when(userDetails.getEmailAddress())
+                .thenReturn(Optional.of(EMAIL_ADDRESS));
         doThrow(new RuntimeException()).when(authenticationManager).setDigestedPassword(
                 any(UserId.class),
                 any(SaltedPasswordDigest.class),

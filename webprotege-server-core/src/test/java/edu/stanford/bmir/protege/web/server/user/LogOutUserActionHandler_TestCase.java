@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.*;
 
@@ -55,10 +55,6 @@ public class LogOutUserActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         when(userInSessionFactory.getUserInSession(UserId.getGuest())).thenReturn(guestUserInSession);
-        when(guestUserInSession.getUserDetails()).thenReturn(UserDetails.getGuestUserDetails());
-        when(userInSessionFactory.getUserInSession(userId)).thenReturn(userInSession);
-        when(userInSession.getUserDetails()).thenReturn(userDetails);
-        when(userDetails.getUserId()).thenReturn(userId);
         when(executionContext.getSession()).thenReturn(session);
         when(session.getUserInSession()).thenReturn(userId);
         actionHandler = new LogOutUserActionHandler(activityManager, userInSessionFactory);

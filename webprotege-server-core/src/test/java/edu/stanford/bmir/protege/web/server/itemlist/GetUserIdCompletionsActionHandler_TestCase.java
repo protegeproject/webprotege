@@ -21,7 +21,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class GetUserIdCompletionsActionHandler_TestCase {
 
     private GetUserIdCompletionsActionHandler actionHandler;
@@ -41,8 +41,6 @@ public class GetUserIdCompletionsActionHandler_TestCase {
     public void setUp() {
         actionHandler = new GetUserIdCompletionsActionHandler(userDetailsManager);
         userIds = Arrays.asList(johnSmith, janeDoe);
-        when(johnSmith.getUserName()).thenReturn("John Smith");
-        when(janeDoe.getUserName()).thenReturn("Jane Doe");
         when(userDetailsManager.getUserIdsContainingIgnoreCase(anyString(), anyInt())).thenReturn(userIds);
     }
 

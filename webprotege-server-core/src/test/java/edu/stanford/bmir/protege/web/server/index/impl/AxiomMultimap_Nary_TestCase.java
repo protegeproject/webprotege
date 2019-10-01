@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Set;
@@ -119,12 +119,7 @@ public class AxiomMultimap_Nary_TestCase {
 
     @Test
     public void shouldNotAddAxiomsWithNullKeyValue() {
-        var otherCls = mock(OWLClassExpression.class);
         var subClassOfAxiom = mock(OWLSubClassOfAxiom.class);
-        when(subClassOfAxiom.getSubClass())
-                .thenReturn(otherCls);
-        when(otherCls.isAnonymous())
-                .thenReturn(true);
         index.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, subClassOfAxiom)));
         assertThat(backingMap.size(), is(0));
     }

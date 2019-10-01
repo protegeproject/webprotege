@@ -79,6 +79,9 @@ public class PerformLoginActionHandler_TestCase {
     @Mock
     private UserInSession userInSession;
 
+    @Mock
+    private ChallengeMessage challengeMessage;
+
     @Before
     public void setUp() throws Exception {
         handler = new PerformLoginActionHandler(activityManager,
@@ -87,15 +90,14 @@ public class PerformLoginActionHandler_TestCase {
                                                 responseChecker,
                                                 userInSessionFactory);
         when(action.getUserId()).thenReturn(userId);
-        Optional<UserDetails> userDetailsOpt = Optional.of(userDetails);
         when(userInSessionFactory.getUserInSession(any())).thenReturn(userInSession);
-        when(userInSession.getUserDetails()).thenReturn(userDetails);
         when(action.getChapSessionId()).thenReturn(chapSessionId);
         when(action.getChapResponse()).thenReturn(chapResponse);
-        when(sessionManager.retrieveChallengeMessage(chapSessionId)).thenReturn(Optional.of(chapSession));
-
+        when(sessionManager.retrieveChallengeMessage(chapSessionId))
+                .thenReturn(Optional.of(chapSession));
+        when(chapSession.getChallengeMessage())
+                .thenReturn(challengeMessage);
         when(authenticationManager.getSaltedPasswordDigest(userId)).thenReturn(Optional.of(passwordDigest));
-        when(executionContext.getUserId()).thenReturn(userId);
         when(executionContext.getSession()).thenReturn(webProtegeSession);
     }
 
@@ -123,7 +125,8 @@ public class PerformLoginActionHandler_TestCase {
         when(responseChecker.isExpectedResponse(
                 Mockito.any(ChapResponse.class),
                 Mockito.any(ChallengeMessage.class),
-                Mockito.any(SaltedPasswordDigest.class))).thenReturn(true);
+                Mockito.any(SaltedPasswordDigest.class)))
+                .thenReturn(true);
         PerformLoginResult result = handler.execute(action, executionContext);
         assertThat(result.getResponse(), is(AuthenticationResponse.SUCCESS));
 

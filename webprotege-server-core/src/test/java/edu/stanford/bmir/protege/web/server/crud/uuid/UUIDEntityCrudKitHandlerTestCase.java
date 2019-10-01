@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -90,7 +90,6 @@ public class UUIDEntityCrudKitHandlerTestCase {
         when(dictionaryLanguage.getLang()).thenReturn("en");
         when(dictionaryLanguage.getAnnotationPropertyIri()).thenReturn(annotationPropertyIri);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
-        when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
         when(entitiesInSignature.getEntitiesInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());

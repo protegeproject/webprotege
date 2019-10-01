@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -36,7 +36,6 @@ public class UserIsSignedInValidator_TestCase<A extends Action<?>> {
     @Before
     public void setUp() throws Exception {
         validator = new UserIsSignedInValidator(userId);
-        when(requestContext.getUserId()).thenReturn(userId);
     }
 
     @Test

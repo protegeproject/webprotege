@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLSubAnnotationPropertyOfAxiomImpl;
@@ -19,6 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.createAnnotationProperty;
 
 /**
  * Matthew Horridge
@@ -48,8 +49,11 @@ public class OWLAnnotationPropertyHierarchyProvider_TestCase {
     @Mock
     private EntitiesInProjectSignatureIndex entitiesInSignature;
 
-    @Mock
-    private OWLAnnotationProperty propertyA, propertyB, propertyC, propertyD;
+    private OWLAnnotationProperty
+            propertyA = createAnnotationProperty(),
+            propertyB = createAnnotationProperty(),
+            propertyC = createAnnotationProperty(),
+            propertyD = createAnnotationProperty();
 
     @Mock
     private OWLOntologyID ontologyId;
@@ -88,10 +92,6 @@ public class OWLAnnotationPropertyHierarchyProvider_TestCase {
         when(subPropertyAxiomsBySuperPropertyIndex.getAxiomsForSuperProperty(propertyB, ontologyId))
                 .thenAnswer(invocation -> Stream.of(propertyASubPropertyOfB));
 
-        when(entitiesInSignature.containsEntityInSignature(propertyA))
-                .thenReturn(true);
-        when(entitiesInSignature.containsEntityInSignature(propertyB))
-                .thenReturn(true);
         when(entitiesInSignature.containsEntityInSignature(propertyC))
                 .thenReturn(true);
         when(entitiesInSignature.containsEntityInSignature(propertyD))

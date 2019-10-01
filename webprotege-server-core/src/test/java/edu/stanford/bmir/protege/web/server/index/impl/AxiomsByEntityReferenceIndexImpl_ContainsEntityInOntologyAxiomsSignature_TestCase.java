@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -52,10 +52,6 @@ public class AxiomsByEntityReferenceIndexImpl_ContainsEntityInOntologyAxiomsSign
 
     @Before
     public void setUp() {
-        when(entityProvider.getOWLClass(subClsIri))
-                .thenReturn(subCls);
-        when(entityProvider.getOWLClass(superClsIri))
-                .thenReturn(superCls);
         subCls = Class(subClsIri);
         superCls = Class(superClsIri);
         var axiom = SubClassOf(subCls, superCls);

@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,10 +40,5 @@ public class IriLexicalValueMatcher_TestCase {
     public void shouldMatchLexicalValue() {
         when(lexicalValueMatcher.matches(lexicalValue)).thenReturn(true);
         assertThat(matcher.matches(iri), is(true));
-    }
-
-    @Test
-    public void shouldNotMatchLexicalValue() {
-        when(lexicalValueMatcher.matches(lexicalValue)).thenReturn(false);
     }
 }

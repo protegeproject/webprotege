@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -58,8 +58,6 @@ public class EntitiesInOntologySignatureByIriIndexImpl_TestCase {
                 .thenAnswer(inv -> Stream.empty());
         when(axiomByEntityReference.getEntitiesInSignatureWithIri(iri, ontologyId))
                 .thenAnswer(inv -> Stream.of(entity));
-        when(entity.getIRI())
-                .thenReturn(iri);
         when(otherEntity.getIRI())
                 .thenReturn(otherIri);
         when(ontologyAnnotationsSignatureIndex.getOntologyAnnotationsSignature(any()))

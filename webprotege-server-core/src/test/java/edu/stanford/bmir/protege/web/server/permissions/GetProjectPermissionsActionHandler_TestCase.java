@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -44,8 +44,6 @@ public class GetProjectPermissionsActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new GetProjectPermissionsActionHandler(accessManager);
-        when(action.getUserId()).thenReturn(userId);
-        when(action.getProjectId()).thenReturn(projectId);
     }
 
     @Test
@@ -57,7 +55,6 @@ public class GetProjectPermissionsActionHandler_TestCase {
     @Test
     public void shouldAllowAnyOneToRetrievePermissions() {
         RequestContext requestContext = mock(RequestContext.class);
-        when(requestContext.getUserId()).thenReturn(UserId.getGuest());
         RequestValidator validator = handler.getRequestValidator(action, requestContext);
         assertThat(validator.validateAction().isValid(), is(true));
 

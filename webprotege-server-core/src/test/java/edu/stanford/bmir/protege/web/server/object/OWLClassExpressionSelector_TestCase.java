@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 
@@ -66,8 +66,6 @@ public class OWLClassExpressionSelector_TestCase {
 
     @Test
     public void shouldSelectSmallerOWLClass() {
-        when(cls1.compareTo(cls2)).thenReturn(BEFORE);
-        when(cls2.compareTo(cls1)).thenReturn(AFTER);
         List<OWLClassExpression> input = Arrays.asList(cls2, cls1, clsExpression1);
         assertThat(selector.selectOne(input),
                 is(Optional.empty()));

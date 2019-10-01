@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -66,8 +66,6 @@ public class OWLIndividualSelector_TestCase {
 
     @Test
     public void shouldSelectSmallerOWLObjectProperty() {
-        when(namedIndividual1.compareTo(namedIndividual2)).thenReturn(BEFORE);
-        when(namedIndividual2.compareTo(namedIndividual1)).thenReturn(AFTER);
         List<OWLIndividual> input = Arrays.asList(individual2, namedIndividual2, namedIndividual1);
         assertThat(selector.selectOne(input),
                 is(Optional.empty()));

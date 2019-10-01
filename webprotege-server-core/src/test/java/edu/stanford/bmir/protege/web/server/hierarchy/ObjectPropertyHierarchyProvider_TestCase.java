@@ -6,10 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import java.util.Collections;
 import java.util.Set;
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,12 +32,6 @@ public class ObjectPropertyHierarchyProvider_TestCase {
 
     @Mock
     private ProjectId projectId;
-
-    @Mock
-    private OWLObjectPropertyProvider objectPropertyProvider;
-
-    @Mock
-    private ProjectSignatureByTypeIndex projectSignatureIndex;
 
     @Mock
     private ProjectOntologiesIndex projectOntologiesIndex;
@@ -72,12 +65,6 @@ public class ObjectPropertyHierarchyProvider_TestCase {
     @Before
     public void setUp() {
 
-        when(objectPropertyProvider.getOWLObjectProperty(any()))
-                .then(invocation -> new OWLObjectPropertyImpl((IRI) invocation.getArguments()[0]));
-
-        when(projectSignatureIndex.getSignature(EntityType.OBJECT_PROPERTY))
-                .thenAnswer(invocation -> Stream.of(propertyA, propertyB, propertyC, propertyD));
-
         when(projectOntologiesIndex.getOntologyIds())
                 .thenAnswer(invocation -> Stream.of(ontologyId));
 
@@ -97,10 +84,6 @@ public class ObjectPropertyHierarchyProvider_TestCase {
         when(subPropertyAxiomsIndex.getSubPropertyOfAxioms(propertyB, ontologyId))
                 .thenAnswer(invocation -> Stream.of(propertyBSubPropertyOfC));
 
-        when(entitiesInSignature.containsEntityInSignature(propertyA))
-                .thenReturn(true);
-        when(entitiesInSignature.containsEntityInSignature(propertyB))
-                .thenReturn(true);
         when(entitiesInSignature.containsEntityInSignature(propertyC))
                 .thenReturn(true);
         when(entitiesInSignature.containsEntityInSignature(propertyD))

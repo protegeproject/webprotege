@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.util.ShortFormProvider;
@@ -69,21 +69,17 @@ public class AnnotationPropertyComparatorImpl_TestCase {
 
     @Test
     public void shouldPlaceAnnotationPropertyWithShortFormContainingLabelFirst() {
-        when(sfp.getShortForm(otherProperty)).thenReturn("myLabel");
         assertThat(comparator.compare(otherProperty, indexedPropertyA), is(lessThan(0)));
     }
 
     @Test
     public void shouldPlaceAnnotationPropertyWithShortFormContainingDefinitionFirst() {
-        when(sfp.getShortForm(otherProperty)).thenReturn("myDefinition");
         assertThat(comparator.compare(otherProperty, indexedPropertyA), is(lessThan(0)));
     }
 
     @Test
     public void shouldCompareByShortFormCaseInsensitiveWhenIndexesAreTied() {
         when(iriOrdinalProvider.getIndex(otherPropertyIRI)).thenReturn(2);
-        when(sfp.getShortForm(indexedPropertyB)).thenReturn("B");
-        when(sfp.getShortForm(otherProperty)).thenReturn("a");
         assertThat(comparator.compare(otherProperty, indexedPropertyB), is(lessThan(0)));
         assertThat(comparator.compare(indexedPropertyB, otherProperty), is(greaterThan(0)));
     }

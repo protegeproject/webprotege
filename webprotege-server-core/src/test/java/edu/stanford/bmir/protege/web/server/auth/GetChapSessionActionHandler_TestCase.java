@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
@@ -58,10 +58,8 @@ public class GetChapSessionActionHandler_TestCase {
     public void setUp() throws Exception {
         handler = new GetChapSessionActionHandler(sessionManager, authenticationManager);
         when(authenticationManager.getSalt(userId)).thenReturn(java.util.Optional.of(salt));
-        when(authenticationManager.getSaltedPasswordDigest(userId)).thenReturn(java.util.Optional.of(saltedPasswordDigest));
         when(sessionManager.getSession(salt)).thenReturn(chapSession);
 
-        when(chapSession.getId()).thenReturn(chapSessionId);
         when(chapSession.getSalt()).thenReturn(salt);
 
         when(action.getUserId()).thenReturn(userId);

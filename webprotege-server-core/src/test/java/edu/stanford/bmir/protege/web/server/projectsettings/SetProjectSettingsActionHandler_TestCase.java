@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.*;
 
@@ -49,7 +49,6 @@ public class SetProjectSettingsActionHandler_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        when(projectSettings.getProjectId()).thenReturn(projectId);
         when(action.getProjectId()).thenReturn(projectId);
         when(action.getProjectSettings()).thenReturn(projectSettings);
         when(detailsManager.getProjectSettings(projectId)).thenReturn(projectSettings);

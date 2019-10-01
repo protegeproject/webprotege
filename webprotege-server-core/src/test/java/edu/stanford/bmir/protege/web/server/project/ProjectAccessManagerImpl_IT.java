@@ -18,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class ProjectAccessManagerImpl_IT {
 
     public static final long TIMESTAMP_A = 33L;

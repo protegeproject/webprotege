@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyDomainAxiomImpl;
 
@@ -59,18 +59,8 @@ public class AnnotationAxiomsByIriReferenceIndexImpl_AnnotationPropertyDomain_Te
 
     @Before
     public void setUp() {
-        when(projectOntologiesIndex.getOntologyIds()).thenReturn(Stream.of(ontologyId));
-
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_ASSERTION, ontologyId))
-                .thenReturn(Stream.empty());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_RANGE, ontologyId))
-                .thenReturn(Stream.empty());
-
-
         annotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, domainIri, axiomAnnotations());
         otherAnnotationPropertyDomainAxiom = new OWLAnnotationPropertyDomainAxiomImpl(property, otherDomainIri, axiomAnnotations());
-        when(axiomsByTypeIndex.getAxiomsByType(AxiomType.ANNOTATION_PROPERTY_DOMAIN, ontologyId)).thenReturn(Stream.of(annotationPropertyDomainAxiom));
-
         impl = new AnnotationAxiomsByIriReferenceIndexImpl();
         impl.applyChanges(ImmutableList.of(AddAxiomChange.of(ontologyId, annotationPropertyDomainAxiom)));
     }

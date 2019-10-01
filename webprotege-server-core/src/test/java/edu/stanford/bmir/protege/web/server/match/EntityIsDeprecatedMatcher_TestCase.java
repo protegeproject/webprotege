@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.HashSet;
@@ -84,7 +84,6 @@ public class EntityIsDeprecatedMatcher_TestCase {
     @Test
     public void shouldNotMatchIsDeprecatedForBooleanFalse() {
         when(property.isDeprecated()).thenReturn(true);
-        when(datatype.isBoolean()).thenReturn(true);
         when(value.getLiteral()).thenReturn("false");
         assertThat(matcher.matches(entity), is(false));
     }

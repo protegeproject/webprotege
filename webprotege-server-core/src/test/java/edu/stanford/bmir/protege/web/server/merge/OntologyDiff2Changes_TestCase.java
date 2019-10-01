@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -65,8 +65,7 @@ public class OntologyDiff2Changes_TestCase {
         when(ontologyDiff.getFromOntologyId())
                 .thenReturn(ontologyId);
 
-        when(ontologyDiff.getToOntologyId())
-                .thenReturn(ontologyId);
+
 
         when(axiomDiff.getAdded())
                 .thenReturn(ImmutableSet.of(addedAxiom));

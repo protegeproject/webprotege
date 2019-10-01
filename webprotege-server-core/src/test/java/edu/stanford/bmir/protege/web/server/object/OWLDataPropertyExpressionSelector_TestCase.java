@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 
@@ -66,8 +66,6 @@ public class OWLDataPropertyExpressionSelector_TestCase {
 
     @Test
     public void shouldSelectSmallerOWLDataProperty() {
-        when(property1.compareTo(property2)).thenReturn(BEFORE);
-        when(property2.compareTo(property1)).thenReturn(AFTER);
         List<OWLDataPropertyExpression> input = Arrays.asList(property2, property1, propertyExpression1);
         assertThat(selector.selectOne(input),
                 is(Optional.empty()));

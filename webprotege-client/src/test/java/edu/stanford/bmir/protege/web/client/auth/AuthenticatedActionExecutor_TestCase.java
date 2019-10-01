@@ -12,6 +12,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -118,7 +119,8 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
     @Test
     public void shouldExecute_GetChapSession_ForUserId() {
         protocol.execute(userId, clearTextPassword, actionFactory, callback);
-        verify(dispatchServiceManager, atLeastOnce()).execute(argThat(isAGetChapSessionAction()), anyGetChapSessionResultCallback());
+        verify(dispatchServiceManager, atLeastOnce())
+                .execute(argThat(isAGetChapSessionAction()), anyGetChapSessionResultCallback());
     }
 
     @Test
@@ -127,18 +129,8 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
         verify(dispatchServiceManager).execute(eq(action), Matchers.<DispatchServiceCallback<R>>any());
     }
 
-    private Matcher<GetChapSessionAction> isAGetChapSessionAction() {
-        return new TypeSafeMatcher<GetChapSessionAction>() {
-            @Override
-            protected boolean matchesSafely(GetChapSessionAction item) {
-                return item.getUserId().equals(userId);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("GetChapSessionAction with userId " + userId);
-            }
-        };
+    private ArgumentMatcher<GetChapSessionAction> isAGetChapSessionAction() {
+        return argument -> argument.getUserId().equals(userId);
     }
 
 

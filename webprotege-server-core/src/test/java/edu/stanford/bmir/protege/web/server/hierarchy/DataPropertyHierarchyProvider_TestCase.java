@@ -75,12 +75,6 @@ public class DataPropertyHierarchyProvider_TestCase {
     @Before
     public void setUp() {
 
-        when(dataPropertyProvider.getOWLDataProperty(any()))
-                .then(invocation -> new OWLDataPropertyImpl((IRI) invocation.getArguments()[0]));
-
-        when(projectSignatureIndex.getSignature(EntityType.OBJECT_PROPERTY))
-                .thenAnswer(invocation -> Stream.of(propertyA, propertyB, propertyC, propertyD));
-
         when(projectOntologiesIndex.getOntologyIds())
                 .thenAnswer(invocation -> Stream.of(ontologyId));
 
@@ -100,10 +94,6 @@ public class DataPropertyHierarchyProvider_TestCase {
         when(subPropertyAxiomsIndex.getSubPropertyOfAxioms(propertyB, ontologyId))
                 .thenAnswer(invocation -> Stream.of(propertyBSubPropertyOfC));
 
-        when(entitiesInSignature.containsEntityInSignature(propertyA))
-                .thenReturn(true);
-        when(entitiesInSignature.containsEntityInSignature(propertyB))
-                .thenReturn(true);
         when(entitiesInSignature.containsEntityInSignature(propertyC))
                 .thenReturn(true);
         when(entitiesInSignature.containsEntityInSignature(propertyD))

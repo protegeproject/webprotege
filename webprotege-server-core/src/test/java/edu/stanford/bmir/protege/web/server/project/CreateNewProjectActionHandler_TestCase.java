@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -92,11 +92,8 @@ public class CreateNewProjectActionHandler_TestCase {
                                                     userInSessionFactory);
         when(projectManager.createNewProject(this.newProjectSettings)).thenReturn(projectId);
         when(executionContext.getUserId()).thenReturn(userId);
-        when(userId.getUserName()).thenReturn("User_Name");
         when(userInSessionFactory.getUserInSession(any())).thenReturn(userInSession);
         when(projectDetailsManager.getProjectDetails(projectId)).thenReturn(projectDetails);
-        when(projectDetails.withDefaultLanguage(any())).thenReturn(projectDetails);
-        when(projectDetails.withDefaultDisplayNameSettings(any())).thenReturn(projectDetails);
         when(requestContext.getUserId()).thenReturn(userId);
         setPermission(true);
 
@@ -107,10 +104,6 @@ public class CreateNewProjectActionHandler_TestCase {
                 Mockito.any(Subject.class),
                 Mockito.any(Resource.class),
                 Mockito.any(BuiltInAction.class))).thenReturn(allowed);
-        when(accessManager.hasPermission(
-                Mockito.any(Subject.class),
-                Mockito.any(Resource.class),
-                Mockito.any(ActionId.class))).thenReturn(allowed);
     }
 
     private void executeCreateNewProject() {

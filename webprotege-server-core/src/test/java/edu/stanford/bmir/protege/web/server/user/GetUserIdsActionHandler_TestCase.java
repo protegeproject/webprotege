@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Set;
 
@@ -41,9 +41,6 @@ public class GetUserIdsActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new GetUserIdsActionHandler(hasUserIds);
-        when(userA.getUserName()).thenReturn("User A");
-        when(userB.getUserName()).thenReturn("User B");
-        when(userC.getUserName()).thenReturn("User C");
         Set<UserId> users = Sets.newHashSet();
         users.add(userA);
         users.add(userB);

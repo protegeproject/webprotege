@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -102,27 +102,14 @@ public class ClassHierarchyProvider_TestCase {
                 .thenReturn(Stream.empty());
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsA, ontologyId))
                 .thenReturn(Stream.of(clsASubClassOfClsB));
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsA2, ontologyId))
-                .thenReturn(Stream.of(clsA2EquivalentToClsDandClsE));
+
+
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsB, ontologyId))
                 .thenReturn(Stream.of(clsASubClassOfClsB, clsBSubClassOfClsC));
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsC, ontologyId))
                 .thenReturn(Stream.of(clsBSubClassOfClsC));
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsD, ontologyId))
                 .thenReturn(Stream.of(clsA2EquivalentToClsDandClsE));
-        when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsE, ontologyId))
-                .thenReturn(Stream.of(clsA2EquivalentToClsDandClsE));
-
-        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsAIri))
-                .thenReturn(Stream.of(clsA));
-        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsBIri))
-                .thenReturn(Stream.of(clsB));
-        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsCIri))
-                .thenReturn(Stream.of(clsC));
-        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsDIri))
-                .thenReturn(Stream.of(clsD));
-        when(entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(clsEIri))
-                .thenReturn(Stream.of(clsE));
 
         classHierarchyProvider = new ClassHierarchyProvider(projectId,
                                                             owlThing,

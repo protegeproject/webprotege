@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
@@ -113,19 +113,13 @@ public class IndividualsByTypeIndexImpl_TestCase {
         when(classAssertionsByClass.getClassAssertionAxioms(clsA, ontologyId))
                 .thenAnswer(invocation -> Stream.of(indATypeClsA));
 
-        when(classHierarchyProvider.getDescendants(owlThing))
-                .thenAnswer(invocation -> ImmutableSet.of(clsA, clsB));
+
+
         when(classHierarchyProvider.getDescendants(clsB))
                 .thenAnswer(invocation -> Collections.singleton(clsA));
 
-        when(dictionaryManager.getShortForm(clsA))
-                .thenReturn("ClsA");
-        when(dictionaryManager.getShortForm(clsB))
-                .thenReturn("ClsB");
         when(dictionaryManager.getShortForm(indA))
                 .thenReturn("indA");
-        when(dictionaryManager.getShortForm(indB))
-                .thenReturn("indB");
     }
 
     @Test

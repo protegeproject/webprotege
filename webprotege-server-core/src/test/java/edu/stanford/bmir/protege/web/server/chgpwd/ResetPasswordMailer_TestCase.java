@@ -14,7 +14,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Map;
 
@@ -40,6 +41,8 @@ public class ResetPasswordMailer_TestCase {
     private static final String THE_POPULATED_TEMPLATE = "The populated template";
 
     private static final String THE_APP_NAME = "TheAppName";
+
+    private static final String TEMPLATE = "Template";
 
     private ResetPasswordMailer mailer;
 
@@ -68,10 +71,16 @@ public class ResetPasswordMailer_TestCase {
     @Before
     public void setUp() throws Exception {
         mailer = new ResetPasswordMailer(sendMailImpl, templateEngine, templateFile, placeUrl, appNameSupplier);
-        when(userId.getUserName()).thenReturn(THE_USER_NAME);
-        when(placeUrl.getApplicationUrl()).thenReturn(THE_APPLICATION_URL);
-        when(templateEngine.populateTemplate(anyString(), anyMap())).thenReturn(THE_POPULATED_TEMPLATE);
-        when(appNameSupplier.get()).thenReturn(THE_APP_NAME);
+        when(templateFile.getContents())
+                .thenReturn(TEMPLATE);
+        when(userId.getUserName())
+                .thenReturn(THE_USER_NAME);
+        when(placeUrl.getApplicationUrl())
+                .thenReturn(THE_APPLICATION_URL);
+        when(templateEngine.populateTemplate(anyString(), anyMap()))
+                .thenReturn(THE_POPULATED_TEMPLATE);
+        when(appNameSupplier.get())
+                .thenReturn(THE_APP_NAME);
     }
 
     @Test

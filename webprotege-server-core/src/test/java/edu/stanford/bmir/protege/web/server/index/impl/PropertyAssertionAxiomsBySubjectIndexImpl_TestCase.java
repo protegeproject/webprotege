@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.stream.Stream;
@@ -58,7 +58,6 @@ public class PropertyAssertionAxiomsBySubjectIndexImpl_TestCase {
 
     @Before
     public void setUp() {
-        when(individual.isNamed()).thenReturn(true);
         when(individual.getIRI()).thenReturn(iri);
 
         when(annotationAssertionAxiomsBySubject.getAxiomsForSubject(any(), any()))

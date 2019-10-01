@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -42,8 +42,6 @@ public class EntitiesInOntologySignatureIndexImpl_TestCase {
     public void setUp() {
         impl = new EntitiesInOntologySignatureIndexImpl(ontologyAxiomsSignatureIndex, ontologyAnnotationsSignatureIndex);
         when(ontologyAxiomsSignatureIndex.containsEntityInOntologyAxiomsSignature(entity, ontologyId))
-                .thenReturn(true);
-        when(ontologyAnnotationsSignatureIndex.containsEntityInOntologyAnnotationsSignature(entity, ontologyId))
                 .thenReturn(true);
     }
 

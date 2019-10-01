@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.semanticweb.owlapi.model.*;
 
@@ -89,8 +89,6 @@ public class AxiomIRISubjectProvider_TestCase {
         iriOptional = Optional.of(iri);
         provider = new AxiomIRISubjectProvider(iriComparator);
 
-        when(iriComparator.compare(iriB, iri)).thenReturn(1);
-        when(iriComparator.compare(iri, iriB)).thenReturn(-1);
         absent = Optional.empty();
         anonymousIndividual = mock(OWLAnonymousIndividual.class);
     }

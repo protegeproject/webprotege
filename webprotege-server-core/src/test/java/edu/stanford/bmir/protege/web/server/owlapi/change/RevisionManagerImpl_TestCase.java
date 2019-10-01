@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -63,7 +63,6 @@ public class RevisionManagerImpl_TestCase {
         when(revisionStore.getRevisions()).thenReturn(ImmutableList.of(revision));
         when(revisionNumber.getNextRevisionNumber()).thenReturn(nextRevisionNumber);
         when(revision.getUserId()).thenReturn(userId);
-        when(revision.getChanges()).thenReturn(changes);
         when(revision.getHighLevelDescription()).thenReturn(HIGHLEVEL_DESC);
         when(revision.getSize()).thenReturn(1);
         when(revision.getTimestamp()).thenReturn(TIME_STAMP);

@@ -17,7 +17,7 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class Revision_TestCase {
 
     private Revision revision;

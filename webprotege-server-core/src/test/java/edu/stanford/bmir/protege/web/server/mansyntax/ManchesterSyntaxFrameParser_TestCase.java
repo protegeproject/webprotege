@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
@@ -72,9 +72,6 @@ public class ManchesterSyntaxFrameParser_TestCase {
 
         when(defaultOntologyIdManager.getDefaultOntologyId())
                 .thenReturn(defaultOntologyId);
-
-        when(projectOntologiesIndex.getOntologyIds())
-                .then(invocation -> Stream.of(defaultOntologyId, theOntologyId));
 
         when(dictionaryManager.getEntities("A"))
                 .thenAnswer(invocation -> Stream.of(clsA));

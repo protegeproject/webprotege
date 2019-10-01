@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -43,14 +43,12 @@ public class OrMatcher_TestCase<T> {
     @Test
     public void shouldMatchAtLeastOne() {
         when(matcherA.matches(value)).thenReturn(true);
-        when(matcherB.matches(value)).thenReturn(false);
         assertThat(matcher.matches(value), is(true));
     }
 
     @Test
     public void shouldMatchAll() {
         when(matcherA.matches(value)).thenReturn(true);
-        when(matcherB.matches(value)).thenReturn(true);
         assertThat(matcher.matches(value), is(true));
     }
 }

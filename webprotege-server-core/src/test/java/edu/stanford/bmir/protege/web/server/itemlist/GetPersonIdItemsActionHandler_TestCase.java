@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class GetPersonIdItemsActionHandler_TestCase {
 
     private GetPersonIdItemsActionHandler actionHandler;
@@ -42,7 +42,6 @@ public class GetPersonIdItemsActionHandler_TestCase {
     {
         actionHandler = new GetPersonIdItemsActionHandler(userDetailsManager);
         when(userDetailsManager.getUserDetails(johnSmith_UpperCase)).thenReturn(Optional.of(mock(UserDetails.class)));
-        when(userDetailsManager.getUserDetails(johnSmith_LowerCase)).thenReturn(Optional.of(mock(UserDetails.class)));
     }
 
     @Test(expected = java.lang.NullPointerException.class)

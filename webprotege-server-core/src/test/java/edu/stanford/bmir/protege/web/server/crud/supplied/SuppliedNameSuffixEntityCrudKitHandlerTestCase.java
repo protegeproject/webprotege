@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -81,7 +81,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getTargetOntologyId()).thenReturn(ontologyId);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
-        when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         when(dictionaryLanguage.getLang()).thenReturn("");
         handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory);
     }

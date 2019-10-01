@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -38,8 +38,6 @@ public class LiteralAnnotationValueMatcher_TestCase {
     @Before
     public void setUp() throws Exception {
         matcher = new LiteralAnnotationValueMatcher(literalMatcher);
-
-        when(literal.isLiteral()).thenReturn(true);
 
         when(literalMatcher.matches(literal)).thenReturn(true);
 

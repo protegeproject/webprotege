@@ -18,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 public class UserDetailsManagerImpl_TestCase {
 
     private UserDetailsManagerImpl userDetailsManagerImpl;
@@ -43,7 +43,6 @@ public class UserDetailsManagerImpl_TestCase {
     {
         userRecords.clear();
 
-        when(userId.getUserName()).thenReturn(userName);
         when(userRecord.getUserId()).thenReturn(userId);
         when(userRecord.getEmailAddress()).thenReturn(email);
         userRecords.add(userRecord);

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +35,6 @@ public class CommentParticipantsExtractor_TestCase {
     @Mock
     private MentionParser mentionParser;
 
-    private List<ParsedMention> parsedMentions;
-
     @Mock
     private ParsedMention parsedMention;
 
@@ -51,10 +49,13 @@ public class CommentParticipantsExtractor_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        when(userMention.getMentionedUserId()).thenReturn(Optional.of(mentionedUserId));
+        var parsedMentions = Collections.singletonList(parsedMention);
+        when(mentionParser.parseMentions(USER_COMMENT)).thenReturn(parsedMentions);
+
         when(parsedMention.getParsedMention()).thenReturn(userMention);
-        parsedMentions = Collections.singletonList(parsedMention);
-        when(mentionParser.parseMentions(anyString())).thenReturn(parsedMentions);
+        when(userMention.getMentionedUserId()).thenReturn(Optional.of(mentionedUserId));
+
+        when(comment.getBody()).thenReturn(USER_COMMENT);
         when(comment.getCreatedBy()).thenReturn(creatorId);
         extractor = new CommentParticipantsExtractor(mentionParser);
     }

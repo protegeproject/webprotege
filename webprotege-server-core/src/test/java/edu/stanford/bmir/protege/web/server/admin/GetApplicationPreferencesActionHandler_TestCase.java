@@ -24,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
-@RunWith(value = org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(value = org.mockito.junit.MockitoJUnitRunner.class)
 public class GetApplicationPreferencesActionHandler_TestCase {
 
     private GetApplicationSettingsActionHandler handler;
@@ -59,7 +59,6 @@ public class GetApplicationPreferencesActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new GetApplicationSettingsActionHandler(accessManager, applicationSettingsManager);
-        when(executionContext.getUserId()).thenReturn(userId);
         when(requestContext.getUserId()).thenReturn(userId);
         when(applicationSettingsManager.getApplicationSettings()).thenReturn(applicationSettings);
     }

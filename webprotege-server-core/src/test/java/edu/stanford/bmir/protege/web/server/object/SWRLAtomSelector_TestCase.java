@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.SWRLAtom;
 
 import java.util.*;
@@ -54,7 +54,6 @@ public class SWRLAtomSelector_TestCase {
     @Test
     public void shouldReturnTheSmallestAtom() {
         when(comparator.compare(atom1, atom2)).thenReturn(BEFORE);
-        when(comparator.compare(atom2, atom1)).thenReturn(AFTER);
         List<SWRLAtom> input = Arrays.asList(atom2, atom1);
         assertThat(selector.selectOne(input),
                 is(Optional.of(atom1)));
