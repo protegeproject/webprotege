@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.*;
@@ -324,6 +325,65 @@ public class EntityGraphBuilder_TestCase {
         var graph = graphBuilder.createGraph(subjectInd);
         var edges = graph.getEdges();
         assertThat(edges, contains(edge(subjectData, objectData)));
+    }
+
+    @Test
+    public void shouldHandleSubClassOfCycles() {
+        var clsA = createClass();
+        var clsB = createClass();
+        var clsASubClassOfClsB = SubClassOf(clsA, clsB);
+        var clsBSubClassOfClsA = SubClassOf(clsB, clsA);
+        when(subClassOfAxiomIndex.getSubClassOfAxiomsForSubClass(clsA, ontId))
+                .thenAnswer(inv -> Stream.of(clsASubClassOfClsB));
+        when(subClassOfAxiomIndex.getSubClassOfAxiomsForSubClass(clsB, ontId))
+                .thenAnswer(inv -> Stream.of(clsBSubClassOfClsA));
+
+        var clsAData = mock(OWLClassData.class);
+        when(renderingManager.getRendering(clsA))
+                .thenReturn(clsAData);
+        when(renderingManager.getClassData(clsA))
+                .thenReturn(clsAData);
+        var clsBData = mock(OWLClassData.class);
+        when(renderingManager.getClassData(clsB))
+                .thenReturn(clsBData);
+
+        var graph = graphBuilder.createGraph(clsA);
+        var edges = graph.getEdges();
+        assertThat(edges, contains(
+                edge(clsAData, clsBData),
+                edge(clsBData, clsAData)
+        ));
+    }
+
+    @Test
+    public void shouldHandleObjectPropertyAssertionCycles() {
+        var indA = createIndividual();
+        var indB = createIndividual();
+        var property = createObjectProperty();
+        var firstAssertion = ObjectPropertyAssertion(property, indA, indB);
+        var secondAssertion = ObjectPropertyAssertion(property, indB, indA);
+        when(objectPropertyAssertionsIndex.getObjectPropertyAssertions(indA, ontId))
+                .thenAnswer(inv -> Stream.of(firstAssertion));
+        when(objectPropertyAssertionsIndex.getObjectPropertyAssertions(indB, ontId))
+                .thenAnswer(inv -> Stream.of(secondAssertion));
+
+        var indAData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getRendering(indA))
+                .thenReturn(indAData);
+        when(renderingManager.getIndividualData(indA))
+                .thenReturn(indAData);
+        var indBData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getIndividualData(indB))
+                .thenReturn(indBData);
+        when(renderingManager.getObjectPropertyData(property))
+                .thenReturn(mock(OWLObjectPropertyData.class));
+
+        var graph = graphBuilder.createGraph(indA);
+        var edges = graph.getEdges();
+        assertThat(edges, contains(
+                edge(indAData, indBData),
+                edge(indBData, indAData)
+        ));
     }
 
     private static Matcher<Edge> edge(@Nonnull OWLEntityData tail,
