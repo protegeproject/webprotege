@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.viz.Edge;
 import org.hamcrest.Description;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
@@ -60,11 +62,8 @@ public class EntityGraphBuilder_TestCase {
     @Mock
     private OWLOntologyID ontId;
 
-    private OWLClass subCls;
-
     @Before
     public void setUp() {
-        subCls = createClass();
         graphBuilder = new EntityGraphBuilder(renderingManager,
                                               projectOntologiesIndex,
                                               objectPropertyAssertionsIndex,
@@ -77,6 +76,7 @@ public class EntityGraphBuilder_TestCase {
 
     @Test
     public void shouldAddEdgeForSubClassOfClassName() {
+        var subCls = createClass();
         var superCls = createClass();
         var subClassOfAxiom = SubClassOf(subCls, superCls);
 
@@ -103,7 +103,7 @@ public class EntityGraphBuilder_TestCase {
 
     @Test
     public void shouldAddEdgeForSubClassOfObjectSomeValuesFrom() {
-
+        var subCls = createClass();
         var property = createObjectProperty();
         var fillerCls = createClass();
         var objectSomeValuesFrom = ObjectSomeValuesFrom(property, fillerCls);
@@ -130,8 +130,61 @@ public class EntityGraphBuilder_TestCase {
         assertThat(edges, contains(edge(subClsData, fillerClsData)));
     }
 
+
+    @Test
+    public void shouldAddEdgeForSubClassOfObjectHasValue() {
+        var subCls = createClass();
+        var property = createObjectProperty();
+        var fillerInd = createIndividual();
+        var objectHasValue = ObjectHasValue(property, fillerInd);
+        var subClassOfAxiom = SubClassOf(subCls, objectHasValue);
+
+        var subClsData = mock(OWLClassData.class);
+        var fillerIndData = mock(OWLNamedIndividualData.class);
+
+        when(renderingManager.getRendering(subCls))
+                .thenReturn(subClsData);
+        when(renderingManager.getClassData(subCls))
+                .thenReturn(subClsData);
+        when(renderingManager.getIndividualData(fillerInd))
+                .thenReturn(fillerIndData);
+        var propertyData = mock(OWLObjectPropertyData.class);
+        when(renderingManager.getObjectPropertyData(property))
+                .thenReturn(propertyData);
+
+        when(subClassOfAxiomIndex.getSubClassOfAxiomsForSubClass(subCls, ontId))
+                .thenAnswer(inv -> Stream.of(subClassOfAxiom));
+
+        var graph = graphBuilder.createGraph(subCls);
+        var edges = graph.getEdges();
+        assertThat(edges, contains(edge(subClsData, fillerIndData)));
+    }
+
+
+    @Test
+    public void shouldAddEdgeForClassAssertionWithClassName() {
+        var cls = createClass();
+        var ind = createIndividual();
+        var clsAssertion = ClassAssertion(cls, ind);
+        var indData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getRendering(ind))
+                .thenReturn(indData);
+        when(renderingManager.getIndividualData(ind))
+                .thenReturn(indData);
+        var clsData = mock(OWLClassData.class);
+        when(renderingManager.getClassData(cls))
+                .thenReturn(clsData);
+
+        when(classAssertionAxiomsIndex.getClassAssertionAxioms(ind, ontId))
+                .thenAnswer(inv -> Stream.of(clsAssertion));
+
+        var graph = graphBuilder.createGraph(ind);
+        var edges = graph.getEdges();
+        assertThat(edges, contains(edge(indData, clsData)));
+    }
+
     private static Matcher<Edge> edge(@Nonnull OWLEntityData tail,
-                               @Nonnull OWLEntityData head) {
+                                      @Nonnull OWLEntityData head) {
         return new TypeSafeMatcher<>() {
             @Override
             protected boolean matchesSafely(Edge item) {
