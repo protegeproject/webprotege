@@ -253,6 +253,32 @@ public class EntityGraphBuilder_TestCase {
 
 
     @Test
+    public void shouldAddEdgeForClassAssertionWithObjectHasValue() {
+        var ind = createIndividual();
+        var filler = createIndividual();
+        var property = createObjectProperty();
+        var clsAssertion = ClassAssertion(ObjectHasValue(property, filler), ind);
+        var indData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getRendering(ind))
+                .thenReturn(indData);
+        when(renderingManager.getIndividualData(ind))
+                .thenReturn(indData);
+        when(renderingManager.getObjectPropertyData(property))
+                .thenReturn(mock(OWLObjectPropertyData.class));
+        var fillerData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getIndividualData(filler))
+                .thenReturn(fillerData);
+
+        when(classAssertionAxiomsIndex.getClassAssertionAxioms(ind, ontId))
+                .thenAnswer(inv -> Stream.of(clsAssertion));
+
+        var graph = graphBuilder.createGraph(ind);
+        var edges = graph.getEdges();
+        assertThat(edges, contains(edge(indData, fillerData)));
+    }
+
+
+    @Test
     public void shouldNotAddEdgeForClassAssertionWithObjectSomeValuesFromWithPropertyInverse() {
         var ind = createIndividual();
         var filler = createClass();
