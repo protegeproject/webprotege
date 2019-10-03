@@ -252,6 +252,26 @@ public class EntityGraphBuilder_TestCase {
     }
 
 
+    @Test
+    public void shouldNotAddEdgeForClassAssertionWithObjectSomeValuesFromWithPropertyInverse() {
+        var ind = createIndividual();
+        var filler = createClass();
+        var property = createObjectProperty();
+        var clsAssertion = ClassAssertion(ObjectSomeValuesFrom(ObjectInverseOf(property), filler), ind);
+        var indData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getRendering(ind))
+                .thenReturn(indData);
+        when(renderingManager.getIndividualData(ind))
+                .thenReturn(indData);
+        when(classAssertionAxiomsIndex.getClassAssertionAxioms(ind, ontId))
+                .thenAnswer(inv -> Stream.of(clsAssertion));
+
+        var graph = graphBuilder.createGraph(ind);
+        var edges = graph.getEdges();
+        assertThat(edges.size(), is(0));
+    }
+
+
 
     private static Matcher<Edge> edge(@Nonnull OWLEntityData tail,
                                       @Nonnull OWLEntityData head) {
