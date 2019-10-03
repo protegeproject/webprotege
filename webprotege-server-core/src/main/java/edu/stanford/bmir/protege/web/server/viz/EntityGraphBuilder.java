@@ -172,14 +172,77 @@ public class EntityGraphBuilder {
         projectOntologiesIndex.getOntologyIds()
                               .flatMap(ontId -> classAssertionAxioms.getClassAssertionAxioms(individual, ontId))
                               .filter(ax -> isNotOwlThing(ax.getClassExpression()))
-                              .filter(ax -> isNamedClass(ax.getClassExpression()))
                               .forEach(ax -> {
-                                  var cls = ax.getClassExpression()
-                                              .asOWLClass();
-                                  var clsData = renderer.getClassData(cls);
-                                  edges.add(IsAEdge.get(individualData, clsData));
-                                  createEdgesForClass(edges, processed, cls);
+                                  var ce = ax.getClassExpression();
+                                  addEdgeToInstanceOf(edges, processed, individualData, ce);
                               });
+    }
+
+    private void addEdgeToInstanceOf(Set<Edge> edges,
+                                     Set<OWLEntity> processed,
+                                     OWLNamedIndividualData individualData,
+                                     OWLClassExpression ce) {
+        if(ce.isNamed()) {
+            addInstanceOfToClassName(edges, processed, individualData, ce.asOWLClass());
+        }
+        else {
+            addInstanceOfToComplexClassExpression(edges, processed, individualData, ce);
+        }
+    }
+
+    private void addInstanceOfToClassName(Set<Edge> edges,
+                                          Set<OWLEntity> processed,
+                                          OWLNamedIndividualData individualData, OWLClass cls) {
+        var clsData = renderer.getClassData(cls);
+        edges.add(IsAEdge.get(individualData, clsData));
+        createGraph(cls, edges, processed);
+    }
+
+    private void addInstanceOfToComplexClassExpression(Set<Edge> edges,
+                                          Set<OWLEntity> processed,
+                                          OWLNamedIndividualData individualData, OWLClassExpression ce) {
+        if(ce instanceof OWLObjectSomeValuesFrom) {
+            addInstanceOfObjectSomeValuesFrom(edges, processed, individualData, (OWLObjectSomeValuesFrom) ce);
+        }
+        else if(ce instanceof OWLObjectHasValue) {
+            addInstanceOfObjectHasValue(edges, processed, individualData, (OWLObjectHasValue) ce);
+        }
+    }
+
+    private void addInstanceOfObjectHasValue(Set<Edge> edges,
+                                             Set<OWLEntity> processed,
+                                             OWLNamedIndividualData individualData,
+                                             OWLObjectHasValue ce) {
+        var property = ce.getProperty();
+        if(property.isAnonymous()) {
+            return;
+        }
+        var individual = ce.getFiller();
+        if(individual.isAnonymous()) {
+            return;
+        }
+        var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
+        var fillerData = renderer.getIndividualData(individual.asOWLNamedIndividual());
+        edges.add(RelationshipEdge.get(individualData, fillerData, propertyData));
+        createGraph(individual.asOWLNamedIndividual(), edges, processed);
+    }
+
+    private void addInstanceOfObjectSomeValuesFrom(Set<Edge> edges,
+                                                   Set<OWLEntity> processed,
+                                                   OWLNamedIndividualData individualData,
+                                                   OWLObjectSomeValuesFrom ce) {
+        var property = ce.getProperty();
+        if(property.isAnonymous()) {
+            return;
+        }
+        var fillerCls = ce.getFiller();
+        if(fillerCls.isAnonymous()) {
+            return;
+        }
+        var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
+        var fillerData = renderer.getClassData(fillerCls.asOWLClass());
+        edges.add(RelationshipEdge.get(individualData, fillerData, propertyData));
+        createGraph(fillerCls.asOWLClass(), edges, processed);
     }
 
     private void createEdgesForIndividual(Set<Edge> edges,

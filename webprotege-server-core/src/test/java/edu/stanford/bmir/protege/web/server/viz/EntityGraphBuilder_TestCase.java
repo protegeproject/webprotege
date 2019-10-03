@@ -106,8 +106,7 @@ public class EntityGraphBuilder_TestCase {
         var subCls = createClass();
         var property = createObjectProperty();
         var fillerCls = createClass();
-        var objectSomeValuesFrom = ObjectSomeValuesFrom(property, fillerCls);
-        var subClassOfAxiom = SubClassOf(subCls, objectSomeValuesFrom);
+        var subClassOfAxiom = SubClassOf(subCls, ObjectSomeValuesFrom(property, fillerCls));
 
         var subClsData = mock(OWLClassData.class);
         var fillerClsData = mock(OWLClassData.class);
@@ -118,9 +117,8 @@ public class EntityGraphBuilder_TestCase {
                 .thenReturn(subClsData);
         when(renderingManager.getClassData(fillerCls))
                 .thenReturn(fillerClsData);
-        var propertyData = mock(OWLObjectPropertyData.class);
         when(renderingManager.getObjectPropertyData(property))
-                .thenReturn(propertyData);
+                .thenReturn(mock(OWLObjectPropertyData.class));
 
         when(subClassOfAxiomIndex.getSubClassOfAxiomsForSubClass(subCls, ontId))
                 .thenAnswer(inv -> Stream.of(subClassOfAxiom));
@@ -182,6 +180,33 @@ public class EntityGraphBuilder_TestCase {
         var edges = graph.getEdges();
         assertThat(edges, contains(edge(indData, clsData)));
     }
+
+    @Test
+    public void shouldAddEdgeForClassAssertionWithObjectSomeValuesFrom() {
+        var ind = createIndividual();
+        var filler = createClass();
+        var property = createObjectProperty();
+        var clsAssertion = ClassAssertion(ObjectSomeValuesFrom(property, filler), ind);
+        var indData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getRendering(ind))
+                .thenReturn(indData);
+        when(renderingManager.getIndividualData(ind))
+                .thenReturn(indData);
+        when(renderingManager.getObjectPropertyData(property))
+                .thenReturn(mock(OWLObjectPropertyData.class));
+        var fillerData = mock(OWLClassData.class);
+        when(renderingManager.getClassData(filler))
+                .thenReturn(fillerData);
+
+        when(classAssertionAxiomsIndex.getClassAssertionAxioms(ind, ontId))
+                .thenAnswer(inv -> Stream.of(clsAssertion));
+
+        var graph = graphBuilder.createGraph(ind);
+        var edges = graph.getEdges();
+        assertThat(edges, contains(edge(indData, fillerData)));
+    }
+
+
 
     private static Matcher<Edge> edge(@Nonnull OWLEntityData tail,
                                       @Nonnull OWLEntityData head) {
