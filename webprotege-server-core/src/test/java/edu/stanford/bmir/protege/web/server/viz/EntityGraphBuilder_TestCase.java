@@ -271,7 +271,34 @@ public class EntityGraphBuilder_TestCase {
         assertThat(edges.size(), is(0));
     }
 
+    @Test
+    public void shouldAddEdgeForObjectPropertyAssertion() {
+        var subjectInd = createIndividual();
+        var property = createObjectProperty();
+        var objectInd = createIndividual();
+        var axiom = ObjectPropertyAssertion(property, subjectInd, objectInd);
 
+        var subjectData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getRendering(subjectInd))
+                .thenReturn(subjectData);
+        when(renderingManager.getIndividualData(subjectInd))
+                .thenReturn(subjectData);
+        
+        var objectData = mock(OWLNamedIndividualData.class);
+        when(renderingManager.getIndividualData(objectInd))
+                .thenReturn(objectData);
+
+        var propertyData = mock(OWLObjectPropertyData.class);
+        when(renderingManager.getObjectPropertyData(property))
+                .thenReturn(propertyData);
+
+        when(objectPropertyAssertionsIndex.getObjectPropertyAssertions(subjectInd, ontId))
+                .thenAnswer(inv -> Stream.of(axiom));
+
+        var graph = graphBuilder.createGraph(subjectInd);
+        var edges = graph.getEdges();
+        assertThat(edges, contains(edge(subjectData, objectData)));
+    }
 
     private static Matcher<Edge> edge(@Nonnull OWLEntityData tail,
                                       @Nonnull OWLEntityData head) {
