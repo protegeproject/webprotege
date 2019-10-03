@@ -180,6 +180,30 @@ public class EntityGraphBuilder_TestCase {
     }
 
 
+
+    @Test
+    public void shouldNotAddEdgeForSubClassOfObjectHasValueWithInverseProperty() {
+        var subCls = createClass();
+        var property = createObjectProperty();
+        var fillerInd = createIndividual();
+        var subClassOfAxiom = SubClassOf(subCls, ObjectHasValue(ObjectInverseOf(property), fillerInd));
+
+        var subClsData = mock(OWLClassData.class);
+
+        when(renderingManager.getRendering(subCls))
+                .thenReturn(subClsData);
+        when(renderingManager.getClassData(subCls))
+                .thenReturn(subClsData);
+
+        when(subClassOfAxiomIndex.getSubClassOfAxiomsForSubClass(subCls, ontId))
+                .thenAnswer(inv -> Stream.of(subClassOfAxiom));
+
+        var graph = graphBuilder.createGraph(subCls);
+        var edges = graph.getEdges();
+        assertThat(edges.isEmpty(), is(true));
+    }
+
+
     @Test
     public void shouldAddEdgeForClassAssertionWithClassName() {
         var cls = createClass();
