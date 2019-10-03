@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.viz.Edge;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.*;
@@ -126,6 +126,27 @@ public class EntityGraphBuilder_TestCase {
         var graph = graphBuilder.createGraph(subCls);
         var edges = graph.getEdges();
         assertThat(edges, contains(edge(subClsData, fillerClsData)));
+    }
+
+    @Test
+    public void shouldNotAddEdgeForSubClassOfObjectSomeValuesFromWithInverseProperties() {
+        var subCls = createClass();
+        var property = createObjectProperty();
+        var fillerCls = createClass();
+        var subClassOfAxiom = SubClassOf(subCls, ObjectSomeValuesFrom(ObjectInverseOf(property), fillerCls));
+
+        var subClsData = mock(OWLClassData.class);
+
+        when(renderingManager.getRendering(subCls))
+                .thenReturn(subClsData);
+        when(renderingManager.getClassData(subCls))
+                .thenReturn(subClsData);
+        when(subClassOfAxiomIndex.getSubClassOfAxiomsForSubClass(subCls, ontId))
+                .thenAnswer(inv -> Stream.of(subClassOfAxiom));
+
+        var graph = graphBuilder.createGraph(subCls);
+        var edges = graph.getEdges();
+        assertThat(edges.size(), is(0));
     }
 
 
