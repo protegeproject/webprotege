@@ -41,7 +41,7 @@ public class EntityGraph2Graph {
                     EdgeDetails edgeDetails = toEdgeDetails(edge);
                     String tailId = toNodeId(edge.getTail());
                     String headId = toNodeId(edge.getHead());
-                    g.setEdge(tailId, headId, edgeDetails);
+                    g.setEdge(tailId, headId, edgeDetails, Graph.getEdgeName(edgeDetails));
                 });
         return g;
     }

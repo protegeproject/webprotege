@@ -1,14 +1,16 @@
 package edu.stanford.bmir.protege.web.client.graphlib;
 
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.dagre.Dagre;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.viz.Edge;
 import jsinterop.annotations.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -23,9 +25,14 @@ public class Graph {
 
     private Graph() {}
 
+    private Graph(Object opts) {
+    }
+
     @JsOverlay
     public static Graph create() {
-        Graph g = new Graph();
+        Map<String, Object> opts = new HashMap<>();
+        opts.put("multigraph", true);
+        Graph g = new Graph(opts);
         g.setGraphLabel(new GraphDetails());
         return g;
     }
@@ -154,7 +161,16 @@ public class Graph {
     public final void addEdge(@Nonnull NodeDetails tailNode,
                               @Nonnull NodeDetails headNode,
                               @Nonnull EdgeDetails edge) {
-        setEdge(tailNode.getId(), headNode.getId(), edge);
+        setEdge(tailNode.getId(), headNode.getId(), edge, getEdgeName(edge));
+    }
+
+    @JsOverlay
+    public static String getEdgeName(EdgeDetails edgeDetails) {
+        return edgeDetails.getTailId() + edgeDetails.getHeadId() + edgeDetails.getRelation()
+                .map(OWLEntityData::getEntity)
+                .map(OWLEntity::getIRI)
+                .map(IRI::toString)
+                .orElse("ISA");
     }
 
     @JsOverlay
@@ -221,10 +237,16 @@ public class Graph {
     @JsMethod
     public native void setNode(@Nonnull String id, NodeDetails n);
 
+//    @JsMethod
+//    public native void setEdge(@Nonnull String tailNodeId,
+//                               @Nonnull String headNodeId,
+//                               @Nonnull EdgeDetails edge)
+            ;
     @JsMethod
     public native void setEdge(@Nonnull String tailNodeId,
                                @Nonnull String headNodeId,
-                               @Nonnull EdgeDetails edge);
+                               @Nonnull EdgeDetails edge,
+                               @Nonnull String name);
 
     @JsMethod
     private native String [] nodes();

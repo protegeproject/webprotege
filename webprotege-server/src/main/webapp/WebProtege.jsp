@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
 
     <script src="https://dagrejs.github.io/project/graphlib/v2.1.2/graphlib.js"></script>
-    <script src="https://dagrejs.github.io/project/dagre/latest/dagre.js"></script>
+    <script src="js/dagre/dagre.js"></script>
     <script src="js/polyfill/pathseg/pathseg.js"></script>
 
     <script src="https://d3js.org/d3.v5.js"></script>

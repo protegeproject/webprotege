@@ -3534,7 +3534,7 @@ THE SOFTWARE.
 
         function Graph(opts) {
             this._isDirected = _.has(opts, "directed") ? opts.directed : true;
-            this._isMultigraph = _.has(opts, "multigraph") ? opts.multigraph : false;
+            this._isMultigraph = _.has(opts, "multigraph") ? opts.multigraph : true;
             this._isCompound = _.has(opts, "compound") ? opts.compound : false;
 
             // Label for the graph itself
