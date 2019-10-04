@@ -55,8 +55,10 @@ public class DefaultOntologyIdManagerImpl_TestCase {
         assertThat(impl.getDefaultOntologyId(), is(ontologyId));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void shouldThrowNoSuchElementExceptionOnEmptyIdList() {
-        impl.getDefaultOntologyId();
+        var ontologyId = impl.getDefaultOntologyId();
+        var ontologyIri = ontologyId.getOntologyIRI().toJavaUtil().orElseThrow();
+        assertThat(ontologyIri.toString().matches("urn:webprotege:ontology:" + UUIDUtil.UUID_PATTERN), is(true));
     }
 }

@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.Index;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,6 +28,8 @@ public class DefaultOntologyIdManagerImpl implements DefaultOntologyIdManager, D
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
+    private OWLOntologyID freshOntologyId;
+
     @Inject
     public DefaultOntologyIdManagerImpl(ProjectOntologiesIndex projectOntologiesIndex) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
@@ -39,8 +43,17 @@ public class DefaultOntologyIdManagerImpl implements DefaultOntologyIdManager, D
 
     @Nonnull
     @Override
-    public OWLOntologyID getDefaultOntologyId() {
+    public synchronized OWLOntologyID getDefaultOntologyId() {
         Stream<OWLOntologyID> ontologyIds = projectOntologiesIndex.getOntologyIds();
-        return ontologyIds.findFirst().orElseThrow();
+        return ontologyIds.findFirst()
+                .orElseGet(this::createFreshOntologyId);
+    }
+
+    private OWLOntologyID createFreshOntologyId() {
+        if(freshOntologyId == null) {
+            var ontologyIri = "urn:webprotege:ontology:" + UUID.randomUUID().toString();
+            freshOntologyId = new OWLOntologyID(IRI.create(ontologyIri));
+        }
+        return freshOntologyId;
     }
 }
