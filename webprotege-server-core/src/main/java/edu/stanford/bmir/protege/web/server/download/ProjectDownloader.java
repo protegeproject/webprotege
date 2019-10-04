@@ -112,8 +112,9 @@ public class ProjectDownloader {
                     Map<String, String> prefixes = prefixDeclarationsStore.find(projectId).getPrefixes();
                     prefixes.forEach(prefixDocumentFormat::setPrefix);
                 }
-                String ontologyShortForm = getOntologyShortForm(ontology);
-                ZipEntry zipEntry = new ZipEntry(baseFolder + "/" + ontologyShortForm + "." + format.getExtension());
+                var ontologyShortForm = getOntologyShortForm(ontology);
+                var ontologyDocumentFileName = ontologyShortForm.replace(":", "_");
+                ZipEntry zipEntry = new ZipEntry(baseFolder + "/" + ontologyDocumentFileName + "." + format.getExtension());
                 zipOutputStream.putNextEntry(zipEntry);
                 ontology.getOWLOntologyManager().saveOntology(ontology, documentFormat, zipOutputStream);
                 zipOutputStream.closeEntry();
@@ -130,7 +131,6 @@ public class ProjectDownloader {
     }
 
     private String getOntologyShortForm(OWLOntology ontology) {
-        OntologyIRIShortFormProvider sfp = new OntologyIRIShortFormProvider();
-        return sfp.getShortForm(ontology);
+        return new OntologyIRIShortFormProvider().getShortForm(ontology);
     }
 }
