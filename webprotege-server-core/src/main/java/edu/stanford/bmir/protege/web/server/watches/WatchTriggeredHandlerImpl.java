@@ -105,6 +105,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                 TemplateObjectsBuilder.builder()
                                       .withUserId(byUser)
                                       .withEntity(modifiedEntityData)
+                                      .withEntityUrl(placeUrl.getEntityUrl(projectId, modifiedEntity))
                                       .withProjectDetails(projectDetailsManager.getProjectDetails(projectId))
                                       .withApplicationName(applicationNameSupplier.get())
                                       .withProjectUrl(placeUrl.getProjectUrl(projectId))
