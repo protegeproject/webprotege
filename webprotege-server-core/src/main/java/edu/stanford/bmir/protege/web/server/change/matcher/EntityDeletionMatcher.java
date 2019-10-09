@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.description.DeletedEntities;
 import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
@@ -34,7 +35,7 @@ public class EntityDeletionMatcher implements ChangeMatcher {
         var removedEntities = changes
                 .stream()
                 .filter(OntologyChange::isRemoveAxiom)
-                .map(data -> ((RemoveAxiomData) data).getAxiom())
+                .map(data -> ((RemoveAxiomChange) data).getAxiom())
                 .filter(ax -> ax instanceof OWLDeclarationAxiom)
                 .map(ax -> ((OWLDeclarationAxiom) ax).getEntity())
                 .collect(toImmutableSet());
