@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
+import edu.stanford.bmir.protege.web.server.shortform.Dictionary;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
@@ -24,6 +26,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -206,7 +209,7 @@ public class EntitySearcher {
                    .peek(entity -> tagsByEntity.putAll(entity, tagsManager.getTags(entity)))
                    .map(entity -> {
                        String rendering = dictionaryManager.getShortForm(entity);
-                       return toSearchResult(entity, rendering, "", ImmutableIntArray.of(0), MatchType.TAG);
+                       return toSearchResult(entity, rendering, "", ImmutableIntArray.of(0), MatchType.TAG, DictionaryLanguage.localName());
                    })
                    .sorted(comparing(EntitySearchResult::getFieldRendering))
                    .forEach(results::add);
@@ -255,17 +258,18 @@ public class EntitySearcher {
         else {
             displayShortForm = match.getShortForm();
         }
-        return toSearchResult(entity, displayShortForm, match.getShortForm(), match.getPositions(), match.getMatchType());
+        return toSearchResult(entity, displayShortForm, match.getShortForm(), match.getPositions(), match.getMatchType(), match.language);
     }
 
     private EntitySearchResult toSearchResult(OWLEntity entity,
                                               String displayShortForm,
                                               String matchedShortForm,
                                               ImmutableIntArray positions,
-                                              MatchType matchType) {
+                                              MatchType matchType,
+                                              DictionaryLanguage dictionaryLanguage) {
         StringBuilder highlighted = new StringBuilder();
         if (!displayShortForm.isEmpty() && displayShortForm.equals(matchedShortForm)) {
-            highlightSearchResult(displayShortForm, positions, highlighted);
+            highlightSearchResult(displayShortForm, positions, highlighted, dictionaryLanguage);
         }
         else {
             highlighted.append(displayShortForm);
@@ -276,7 +280,7 @@ public class EntitySearcher {
             highlighted.append("<div style='color: #b4b4b4; margin-left: 5px;'>");
             String oboId = matcher.group(1) + ":" + matcher.group(2);
             if (matchType == MatchType.IRI) {
-                highlightSearchResult(oboId, positions, highlighted);
+                highlightSearchResult(oboId, positions, highlighted, dictionaryLanguage);
             }
             else {
                 highlighted.append(oboId);
@@ -288,7 +292,7 @@ public class EntitySearcher {
             highlighted.append("<div style='color: #b4b4b4; margin-left: 5px;'>");
             IRI iri = entity.getIRI();
             highlighted.append(iri.subSequence(0, iri.length() - localName.length()));
-            highlightSearchResult(localName, positions, highlighted);
+            highlightSearchResult(localName, positions, highlighted, dictionaryLanguage);
             highlighted.append("</div>");
         }
 
@@ -304,6 +308,7 @@ public class EntitySearcher {
                 }
             }
         }
+        highlighted.append("</div>");
         return new EntitySearchResult(DataFactory.getOWLEntityData(entity,
                                                                    displayShortForm,
                                                                    dictionaryManager.getShortForms(entity)),
@@ -312,7 +317,7 @@ public class EntitySearcher {
     }
 
 
-    private void highlightSearchResult(String rendering, ImmutableIntArray matchPositions, StringBuilder highlighted) {
+    private void highlightSearchResult(String rendering, ImmutableIntArray matchPositions, StringBuilder highlighted, DictionaryLanguage dictionaryLanguage) {
         Map<Integer, String> sortedSearchWords = new TreeMap<>();
         for (int i = 0; i < matchPositions.length(); i++) {
             sortedSearchWords.put(matchPositions.get(i), searchWords.get(i).getSearchString());
@@ -340,6 +345,18 @@ public class EntitySearcher {
             highlighted.append(rendering.substring(cur));
             highlighted.append("</span>");
         }
+
+        if(dictionaryLanguage.isAnnotationBased()) {
+            var propRendering = dictionaryManager.getShortForm(new OWLAnnotationPropertyImpl(dictionaryLanguage.getAnnotationPropertyIri()));
+            highlighted.append("&nbsp;<span style=\"color: #b4b4b4;\"> ");
+            highlighted.append(propRendering);
+            String lang = dictionaryLanguage.getLang();
+            if(!lang.isEmpty()) {
+                highlighted.append(" @");
+                highlighted.append(lang);
+            }
+            highlighted.append("</span>");
+        }
     }
 
 
@@ -356,7 +373,7 @@ public class EntitySearcher {
             matchType = MatchType.IRI;
         }
         if (matchType != null) {
-            return new SearchMatch(m, matchType);
+            return new SearchMatch(m, matchType, m.getLanguage());
         }
         else {
             return null;
@@ -382,10 +399,14 @@ public class EntitySearcher {
 
         private final MatchType matchType;
 
+        private final DictionaryLanguage language;
+
         public SearchMatch(@Nonnull ShortFormMatch match,
-                           @Nonnull MatchType matchType) {
+                           @Nonnull MatchType matchType,
+                           DictionaryLanguage language) {
             this.match = checkNotNull(match);
             this.matchType = checkNotNull(matchType);
+            this.language = checkNotNull(language);
         }
 
         private ShortFormMatch getShortFormMatch() {
