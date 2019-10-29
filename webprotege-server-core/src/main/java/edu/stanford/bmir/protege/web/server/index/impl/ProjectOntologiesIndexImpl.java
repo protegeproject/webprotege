@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,11 +22,15 @@ import java.util.stream.Stream;
 @ProjectSingleton
 public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, UpdatableIndex {
 
+    private static Logger logger = LoggerFactory.getLogger(ProjectOntologiesIndexImpl.class);
+
     @Nonnull
     private final Multiset<OWLOntologyID> ontologyIds = HashMultiset.create();
 
     @Nonnull
     private ImmutableList<OWLOntologyID> cache = ImmutableList.of();
+
+    private boolean initialized = false;
 
     @Inject
     public ProjectOntologiesIndexImpl() {
@@ -33,6 +39,9 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Updat
     @Nonnull
     @Override
     public synchronized Stream<OWLOntologyID> getOntologyIds() {
+        if(!initialized) {
+            throw new RuntimeException("Index not initialized");
+        }
         return cache.stream();
     }
 
@@ -47,5 +56,6 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Updat
             }
         }
         cache = ImmutableList.copyOf(ontologyIds.elementSet());
+        initialized = true;
     }
 }
