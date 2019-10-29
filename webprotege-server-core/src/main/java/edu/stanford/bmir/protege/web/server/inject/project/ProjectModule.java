@@ -82,7 +82,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  *         A  module for a project.  The module ensures that any object graph contains project specific objects for the
  *         specified project (e.g. root ontology, short form provider etc.)
  */
-@Module(includes = {ProjectActionHandlersModule.class, IndexModule.class})
+@Module(includes = {IndexModule.class, ProjectActionHandlersModule.class})
 public class ProjectModule {
 
     private final ProjectId projectId;
@@ -529,7 +529,7 @@ public class ProjectModule {
     @Provides
     MultiLingualDictionary provideDictionary(MultiLingualDictionaryImpl dictionary, LanguageManager languageManager) {
         // Preload existing languages to avoid delays after loading in the UI
-        dictionary.loadLanguages(languageManager.getActiveLanguages());
+//        dictionary.loadLanguages(languageManager.getActiveLanguages());
         return dictionary;
     }
 
