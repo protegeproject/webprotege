@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.shortform.DictionaryPredicates.isAxiomForDictionary;
 import static java.util.Collections.singletonList;
 
 /**
@@ -120,8 +121,8 @@ public class DictionaryBuilder {
         axiomsByEntityReferenceIndex.getReferencingAxioms(annotationProperty, ontId)
                                     .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
                                     .map(ax -> (OWLAnnotationAssertionAxiom) ax)
-                                    .filter(ax -> ax.getValue().isLiteral())
                                     .filter(ax -> ax.getSubject().isIRI())
+                                    .filter(ax -> isAxiomForDictionary(ax, dictionary))
                                     .forEach(ax -> {
                                         var iri = (IRI) ax.getSubject();
                                         var literal = ((OWLLiteral) ax.getValue()).getLiteral();
