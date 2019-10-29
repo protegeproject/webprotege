@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,7 +15,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 02/06/15
  */
-public class RevisionStoreProvider implements Provider<RevisionStore> {
+@ProjectSingleton
+public class RevisionStoreProvider {
 
     @Nonnull
     private final RevisionStoreImpl revisionStore;
@@ -30,7 +33,6 @@ public class RevisionStoreProvider implements Provider<RevisionStore> {
         this.disposablesManager = checkNotNull(disposablesManager);
     }
 
-    @Override
     public synchronized RevisionStore get() {
         if(!loaded) {
             revisionStore.load();
