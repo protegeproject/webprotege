@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguageComparators;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -40,6 +41,7 @@ import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
  * Builds and maintains a list of active languages that are used in a project.  The
  * list can be kept up to date in response to ontology changes.
  */
+@ProjectSingleton
 public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
 
     private static final Logger logger = LoggerFactory.getLogger(ActiveLanguagesManagerImpl.class);
