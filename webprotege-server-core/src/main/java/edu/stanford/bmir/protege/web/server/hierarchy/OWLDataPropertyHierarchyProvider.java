@@ -48,7 +48,6 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.axiomsByTypeIndex = checkNotNull(axiomsByTypeIndex);
         this.subDataPropertyAxiomsBySubPropertyIndex = checkNotNull(subDataPropertyAxiomsBySubPropertyIndex);
-        rebuildRoots();
     }
 
     @Override
@@ -60,6 +59,7 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
 
     @Override
     public Set<OWLDataProperty> getChildren(OWLDataProperty property) {
+        rebuildIfNecessary();
         if(getRoot().equals(property)) {
             return getChildrenOfRoot();
         }
@@ -74,6 +74,7 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
 
     @Override
     public Set<OWLDataProperty> getParents(OWLDataProperty property) {
+        rebuildIfNecessary();
         return projectOntologiesIndex.getOntologyIds()
                                      .flatMap(ontId -> subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(
                                              property,
@@ -86,6 +87,7 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
 
     @Override
     public Set<OWLDataProperty> getEquivalents(OWLDataProperty property) {
+        rebuildIfNecessary();
         return projectOntologiesIndex.getOntologyIds()
                                      .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(EQUIVALENT_DATA_PROPERTIES,
                                                                                          ontId))

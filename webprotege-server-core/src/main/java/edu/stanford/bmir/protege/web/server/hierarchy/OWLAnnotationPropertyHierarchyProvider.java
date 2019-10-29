@@ -50,6 +50,8 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
     private final EntitiesInProjectSignatureIndex entitiesInSignature;
 
+    private boolean stale = true;
+
 
     @Inject
     public OWLAnnotationPropertyHierarchyProvider(ProjectId projectId,
@@ -67,11 +69,16 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
         this.entitiesInSignature = entitiesInSignature;
         this.roots = new HashSet<>();
         this.annotationPropertyProvider = annotationPropertyProvider;
-        rebuildRoots();
-        fireHierarchyChanged();
+    }
+
+    private void rebuildIfNecessary() {
+        if(this.stale) {
+            rebuildRoots();
+        }
     }
 
     public Set<OWLAnnotationProperty> getRoots() {
+        rebuildIfNecessary();
         return Collections.unmodifiableSet(roots);
     }
 
@@ -81,6 +88,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public Set<OWLAnnotationProperty> getChildren(OWLAnnotationProperty object) {
+        rebuildIfNecessary();
         return projectOntologiesIndex.getOntologyIds()
                               .flatMap(ontId -> subAnnotationPropertyAxiomsBySuperPropertyIndex.getAxiomsForSuperProperty(object, ontId))
                               .map(OWLSubAnnotationPropertyOfAxiom::getSubProperty)
@@ -90,6 +98,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public Set<OWLAnnotationProperty> getEquivalents(OWLAnnotationProperty object) {
+        rebuildIfNecessary();
         Set<OWLAnnotationProperty> result = new HashSet<>();
         Set<OWLAnnotationProperty> ancestors = getAncestors(object);
         if (ancestors.contains(object)) {
@@ -105,6 +114,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public Set<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
+        rebuildIfNecessary();
         return projectOntologiesIndex.getOntologyIds()
                                      .flatMap(ontId -> subAnnotationPropertyAxioms.getSubPropertyOfAxioms(object, ontId))
                                      .map(OWLSubAnnotationPropertyOfAxiom::getSuperProperty)
@@ -179,6 +189,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     private void rebuildRoots() {
+        this.stale = false;
         roots.clear();
         logger.info("{} Rebuilding annotation property hierarchy", projectId);
         Stopwatch stopwatch = Stopwatch.createStarted();

@@ -52,6 +52,8 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
     @Nonnull
     private final OntologySignatureByTypeIndex ontologySignatureByTypeIndex;
 
+    private boolean stale = true;
+
     public AbstractOWLPropertyHierarchyProvider(@Nonnull ProjectId projectId,
                                                 @Nonnull P root,
                                                 @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex,
@@ -68,6 +70,13 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
 
     public void dispose() {
         super.dispose();
+    }
+
+    protected void rebuildIfNecessary() {
+        if(!this.stale) {
+            return;
+        }
+        rebuildRoots();
     }
 
     protected abstract String getHierarchyName();
@@ -108,6 +117,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
     }
 
     protected Set<P> getChildrenOfRoot() {
+        rebuildIfNecessary();
         return ImmutableSet.copyOf(subPropertiesOfRoot);
     }
 
@@ -133,7 +143,8 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
     }
 
 
-    protected void rebuildRoots() {
+    private void rebuildRoots() {
+        this.stale = false;
         logger.info("{} Rebuilding {} hierarchy", projectId, getHierarchyName());
         Stopwatch stopwatch = Stopwatch.createStarted();
         subPropertiesOfRoot.clear();
@@ -173,6 +184,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
      * Gets the objects that represent the roots of the hierarchy.
      */
     public Set<P> getRoots() {
+        rebuildIfNecessary();
         return Collections.singleton(getRoot());
     }
 }
