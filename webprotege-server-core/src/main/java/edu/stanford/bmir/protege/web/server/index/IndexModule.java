@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.index.impl.*;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;
@@ -239,7 +240,9 @@ public class IndexModule {
     }
 
     @Provides
-    ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl) {
+    ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl,
+                                                         RevisionManager revisionManager) {
+        impl.init(revisionManager);
         return impl;
     }
 

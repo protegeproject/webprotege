@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.slf4j.Logger;
@@ -43,6 +44,15 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Updat
             throw new RuntimeException("Index not initialized");
         }
         return cache.stream();
+    }
+
+    public synchronized void init(RevisionManager revisionManager) {
+        if(initialized) {
+            return;
+        }
+        revisionManager.getRevisions()
+                       .forEach(rev -> applyChanges(rev.getChanges()));
+        initialized = true;
     }
 
     @Override
