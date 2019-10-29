@@ -80,7 +80,7 @@ public class ProjectCache implements HasDispose {
     }
 
     public ProjectActionHandlerRegistry getActionHandlerRegistry(ProjectId projectId) {
-        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.LAZY).getActionHandlerRegistry();
+        return getProjectInternal(projectId, AccessMode.NORMAL, InstantiationMode.EAGER).getActionHandlerRegistry();
     }
 
 
