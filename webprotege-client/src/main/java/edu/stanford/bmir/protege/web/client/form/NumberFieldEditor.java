@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange;
@@ -74,12 +75,18 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
             clearValue();
             return;
         }
-        if (!((FormDataPrimitive) object).isNumber()) {
-            clearValue();
-            return;
+        FormDataPrimitive primitive = (FormDataPrimitive) object;
+        if (primitive.isNumber()) {
+            double v = primitive.getValueAsDouble();
+            numberField.setText(format.format(v));
         }
-        double v = ((FormDataPrimitive) object).getValueAsDouble();
-        numberField.setText(format.format(v));
+        else if(primitive.asLiteral().isPresent()) {
+            double v = primitive.asLiteral().get().parseDouble();
+            numberField.setText(format.format(v));
+        }
+        else {
+            clearValue();
+        }
         validate();
     }
 
