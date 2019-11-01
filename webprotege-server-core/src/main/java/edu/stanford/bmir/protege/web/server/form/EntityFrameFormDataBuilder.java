@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.entity.BasicEntityProvider;
+import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
+import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
@@ -16,9 +20,11 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -29,30 +35,38 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 public class EntityFrameFormDataBuilder {
 
+    private final ClassFrameTranslator classFrameTranslator;
+
+    private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
+
     @Nonnull
-    private final ImmutableSet<OWLProperty> properties;
+    private final OWLEntityProvider entityProvider;
 
-    private EntityFrameFormDataBuilder(@Nonnull ImmutableSet<OWLProperty> properties) {
-        this.properties = properties;
-
+    @AutoFactory
+    @Inject
+    public EntityFrameFormDataBuilder(@Nonnull @Provided ClassFrameTranslator classFrameTranslator,
+                                      @Nonnull @Provided NamedIndividualFrameTranslator namedIndividualFrameTranslator,
+                                      @Nonnull @Provided OWLEntityProvider entityProvider) {
+        this.classFrameTranslator = classFrameTranslator;
+        this.namedIndividualFrameTranslator = namedIndividualFrameTranslator;
+        this.entityProvider = entityProvider;
     }
 
-    public static EntityFrameFormDataBuilder getBuilderForForm(@Nonnull FormDescriptor formDescriptor) {
-        var dataFactory = new BasicEntityProvider();
-        var properties = formDescriptor.getElements()
-                      .stream()
-                      .map(FormElementDescriptor::getId)
-                      .flatMap(elementId -> EntityFormElementId.toProperty(elementId, dataFactory).stream())
-                      .collect(toImmutableSet());
-        return new EntityFrameFormDataBuilder(properties);
-    }
-
-    public FormData getFormDataFromPropertyValues(HasPropertyValues propertyValues) {
+    @Nonnull
+    public FormData getFormData(@Nonnull OWLEntity entity,
+                                @Nonnull FormDescriptor formDescriptor) {
+        var formProperties = formDescriptor.getElements()
+                                           .stream()
+                                           .map(FormElementDescriptor::getId)
+                                           .map(this::toOwlProperty)
+                                           .flatMap(Optional::stream)
+                                           .collect(toImmutableSet());
         var map = HashMultimap.<FormElementId, FormDataValue>create();
-        propertyValues
+        getPropertyValues(entity)
                 .getPropertyValues()
                 .stream()
-                .filter(this::isFormProperty)
+                .filter(propertyValue -> formProperties.contains(propertyValue.getProperty()
+                                                                              .getEntity()))
                 .forEach(propertyValue -> {
                     var formElementId = toFormElementId(propertyValue);
                     var formDataValue = toFormDataValue(propertyValue);
@@ -62,9 +76,51 @@ public class EntityFrameFormDataBuilder {
         return new FormData(formDataValues);
     }
 
-    private boolean isFormProperty(PropertyValue propertyValue) {
-        return properties.contains(propertyValue.getProperty()
-                                                .getEntity());
+    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
+        return EntityFormElementId.toProperty(formElementId,
+                                              entityProvider);
+    }
+
+    private HasPropertyValues getPropertyValues(OWLEntity entity) {
+        return entity.accept(new OWLEntityVisitorEx<>() {
+            @Nonnull
+            @Override
+            public HasPropertyValues visit(@Nonnull OWLClass cls) {
+                return classFrameTranslator.getFrame(OWLClassData.get(cls, "", ImmutableMap.of()));
+            }
+
+            @Nonnull
+            @Override
+            public HasPropertyValues visit(@Nonnull OWLObjectProperty property) {
+                return ImmutableSet::of;
+            }
+
+            @Nonnull
+            @Override
+            public HasPropertyValues visit(@Nonnull OWLDataProperty property) {
+                return ImmutableSet::of;
+            }
+
+            @Nonnull
+            @Override
+            public HasPropertyValues visit(@Nonnull OWLNamedIndividual individual) {
+                return namedIndividualFrameTranslator.getFrame(OWLNamedIndividualData.get(individual,
+                                                                                          "",
+                                                                                          ImmutableMap.of()));
+            }
+
+            @Nonnull
+            @Override
+            public HasPropertyValues visit(@Nonnull OWLDatatype datatype) {
+                return ImmutableSet::of;
+            }
+
+            @Nonnull
+            @Override
+            public HasPropertyValues visit(@Nonnull OWLAnnotationProperty property) {
+                return ImmutableSet::of;
+            }
+        });
     }
 
     private static FormElementId toFormElementId(PropertyValue propertyValue) {
@@ -73,7 +129,8 @@ public class EntityFrameFormDataBuilder {
     }
 
     private static FormDataValue toFormDataValue(PropertyValue propertyValue) {
-        return propertyValue.getValue().accept(new PrimitiveDataConverter());
+        return propertyValue.getValue()
+                            .accept(new PrimitiveDataConverter());
     }
 
     private Map<FormElementId, FormDataValue> toFlatMap(HashMultimap<FormElementId, FormDataValue> map) {

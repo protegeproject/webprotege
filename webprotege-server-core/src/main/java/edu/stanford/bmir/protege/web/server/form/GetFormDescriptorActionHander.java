@@ -89,39 +89,24 @@ public class GetFormDescriptorActionHander extends AbstractProjectActionHandler<
 
 
 
-        try {
-            InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/amino-acid-form.json");
-
-            ObjectMapper mapper = new ObjectMapper();
-            SimpleModule module = new SimpleModule();
-            module.addDeserializer(FormDataValue.class, new FormDataValueDeserializer(dataFactory));
-            mapper.registerModule(module);
-            mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
-            FormDescriptor formDescriptor = mapper.readerFor(FormDescriptor.class)
-                                     .readValue(new BufferedInputStream(is));
-
-
-            is.close();
-
-
-
-            var dataBuilder = EntityFrameFormDataBuilder.getBuilderForForm(formDescriptor);
-            var iri = IRI.create(elementId.getName());
-            var cls = dataFactory.getOWLClass(iri);
-            var clsFrame = translator.getFrame(OWLClassData.get(cls, "", ImmutableMap.of()));
-            var formData = dataBuilder.getFormDataFromPropertyValues(clsFrame);
-
-
-            return new GetFormDescriptorResult(
-                    projectId,
-                    collectionId,
-                    elementId,
-                    formDescriptor.getId(),
-                    formDescriptor,
-                    formData);
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//
+//
+//            var collectionItemData = repository.find(collectionId, elementId);
+//
+//            var formData = collectionItemData.getFormData().orElse(FormData.empty());
+//
+//            return new GetFormDescriptorResult(
+//                    projectId,
+//                    collectionId,
+//                    elementId,
+//                    formDescriptor.getId(),
+//                    formDescriptor,
+//                    formData);
+//        } catch(IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        throw new RuntimeException();
     }
 
     @Nonnull

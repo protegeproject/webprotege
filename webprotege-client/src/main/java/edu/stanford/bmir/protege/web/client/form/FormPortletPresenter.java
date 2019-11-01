@@ -76,7 +76,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
         currentSubject = Optional.of(entity);
         CollectionItem item = CollectionItem.get(entity.getIRI().toString());
-        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, CollectionId.get("12345678-1234-1234-1234-123456789abc"), new FormId("MyForm"), item),
+        dispatchServiceManager.execute(new GetEntityFormAction(projectId, entity),
                                        this::displayFormResult);
     }
 
@@ -90,9 +90,15 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         });
     }
 
-    private void displayFormResult(GetFormDescriptorResult result) {
+    private void displayFormResult(GetEntityFormResult result) {
         GWT.log("[FormPortletPresenter] Display form result: " + result);
-        formPresenter.displayForm(result.getFormDescriptor(), result.getFormData());
+        Optional<FormDescriptor> formDescriptor = result.getFormDescriptor();
+        if(formDescriptor.isPresent()) {
+            formPresenter.displayForm(formDescriptor.get(), result.getFormData());
+        }
+        else {
+            formPresenter.clear();
+        }
     }
 
 }
