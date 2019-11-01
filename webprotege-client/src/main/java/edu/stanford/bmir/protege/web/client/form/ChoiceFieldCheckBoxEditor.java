@@ -88,7 +88,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
                 }
             }
         }
-        selectDefaultChoices();
+//        selectDefaultChoices();
     }
 
     private void selectDefaultChoices() {
