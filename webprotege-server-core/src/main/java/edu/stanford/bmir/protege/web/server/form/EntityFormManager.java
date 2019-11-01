@@ -45,6 +45,7 @@ public class EntityFormManager {
             is.close();
             return Optional.of(formDescriptor);
         } catch(IOException e) {
+            e.printStackTrace();
             return Optional.empty();
         }
     }

@@ -10,6 +10,16 @@
       },
       "required" : "Optional"
     },
+    {
+      "id" : "AnnotationProperty(<http://www.w3.org/2004/02/skos/core#definition>)",
+      "label" : "Description",
+      "fieldDescriptor" : {
+        "type" : "Text",
+        "placeholder" : "Enter description",
+        "lineMode" : "MultiLine"
+      },
+      "required" : "Required"
+    },
 
     {
       "id" : "AnnotationProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#shortName>)",
