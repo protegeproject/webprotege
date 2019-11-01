@@ -12,18 +12,19 @@
         }
         .language-field {
             flex-grow: 0;
+            max-width: 40px;
         }
         .main textarea {
             border-left: 1px solid transparent;
             border-right: 1px solid transparent;
             border-top: 1px solid transparent;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid transparent;
         }
         .main input {
             border-left: 1px solid transparent;
             border-right: 1px solid transparent;
             border-top: 1px solid transparent;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid transparent;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
