@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.stanford.bmir.protege.web.shared.form.FormData;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -71,6 +72,15 @@ public class FormDataList extends FormDataValue {
         list.add(value);
         Collections.addAll(list, values);
         return new FormDataList(list);
+    }
+
+    public static FormDataList of(List<FormDataValue> values) {
+        if(values.isEmpty()) {
+            return FormDataList.empty();
+        }
+        else {
+            return new FormDataList(values);
+        }
     }
 
     @Override
