@@ -16,6 +16,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +62,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
 
     @AutoFactory
+    @Inject
     public FrameChangeGenerator(@Nonnull FrameUpdate frameUpdate,
                                 @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                 @Provided @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,

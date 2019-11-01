@@ -26,7 +26,7 @@ public class FormViewImpl extends Composite implements FormView {
     private static FormViewImplUiBinder ourUiBinder = GWT.create(FormViewImplUiBinder.class);
 
     @UiField
-    FlowPanel holder;
+    HTMLPanel holder;
 
     @Inject
     public FormViewImpl() {

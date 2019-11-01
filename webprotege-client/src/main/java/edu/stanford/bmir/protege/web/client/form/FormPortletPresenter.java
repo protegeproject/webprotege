@@ -4,11 +4,14 @@ import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -22,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-//@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
+@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
 public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
 
@@ -68,17 +71,28 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private void setSubject(@Nonnull final OWLEntity entity) {
         checkNotNull(entity);
-        FormData formData = formPresenter.getFormData();
-//        currentSubject.ifPresent(subject -> {
-//            dispatchServiceManager.execute(new SetFormDataAction(projectId,
-//                                                                 new FormId("MyForm"),
-//                                                                 subject,
-//                                                                 formData),
-//                                           result -> {});
-//        });
+        if(formPresenter.isDirty()) {
+            saveCurrentFormData();
+        }
         currentSubject = Optional.of(entity);
-//        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, new FormId("MyForm"), entity),
-//                                       result -> formPresenter.displayForm(result.getFormDescriptor(), result.getFormData()));
+        CollectionItem item = CollectionItem.get(entity.getIRI().toString());
+        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, CollectionId.get("12345678-1234-1234-1234-123456789abc"), new FormId("MyForm"), item),
+                                       this::displayFormResult);
+    }
+
+    private void saveCurrentFormData() {
+        currentSubject.ifPresent(subject -> {
+            FormData formData = formPresenter.getFormData();
+            dispatchServiceManager.execute(new SetEntityFormDataAction(projectId,
+                                                                       subject,
+                                                                       formData),
+                                           result -> {});
+        });
+    }
+
+    private void displayFormResult(GetFormDescriptorResult result) {
+        GWT.log("[FormPortletPresenter] Display form result: " + result);
+        formPresenter.displayForm(result.getFormDescriptor(), result.getFormData());
     }
 
 }

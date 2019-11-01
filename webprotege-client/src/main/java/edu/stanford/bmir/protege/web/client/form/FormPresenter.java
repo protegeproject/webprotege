@@ -40,6 +40,8 @@ public class FormPresenter {
     @Nonnull
     private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
 
+    private boolean dirty;
+
 
     @Inject
     public FormPresenter(@Nonnull FormView formView,
@@ -68,6 +70,7 @@ public class FormPresenter {
                             @Nonnull FormData formData) {
         checkNotNull(formDescriptor);
         checkNotNull(formData);
+        clearDirty();
         if (!currentFormDescriptor.equals(Optional.of(formDescriptor))) {
             createFormAndSetFormData(formDescriptor, formData);
         }
@@ -75,6 +78,10 @@ public class FormPresenter {
             setFormData(formData);
         }
         currentFormDescriptor = Optional.of(formDescriptor);
+    }
+
+    public boolean isDirty() {
+        return dirty;
     }
 
     /**
@@ -95,6 +102,7 @@ public class FormPresenter {
     }
 
     public void clearData() {
+        clearDirty();
         for(FormElementView view : formView.getElementViews()) {
             view.getEditor().clearValue();
             updateRequiredValuePresent(view);
@@ -114,6 +122,10 @@ public class FormPresenter {
             Optional<FormDataValue> dataValue = formData.getFormElementData(elementDescriptor.getId());
             createFormEditor(elementDescriptor, dataValue);
         }
+    }
+
+    private void clearDirty() {
+        this.dirty = false;
     }
 
     private void setFormData(@Nonnull FormData formData) {
@@ -151,6 +163,7 @@ public class FormPresenter {
         elementView.setRequired(elementDescriptor.getRequired());
         // Update the required value missing display when the value changes
         editor.addValueChangeHandler(event -> {
+            this.dirty = true;
             updateRequiredValuePresent(elementView);
         });
         if (formData.isPresent()) {

@@ -3,13 +3,13 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .container {
-            width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-            overflow: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.container}">
-        <g:FlowPanel ui:field="holder" addStyleNames="{wp.style.form} {style.container}"/>
+    <g:HTMLPanel ui:field="holder" addStyleNames="{style.container} {wp.style.form}">
     </g:HTMLPanel>
 </ui:UiBinder>

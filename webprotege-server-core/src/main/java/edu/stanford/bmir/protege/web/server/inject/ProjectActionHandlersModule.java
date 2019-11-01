@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.server.entity.GetDeprecatedEntitiesActionHa
 import edu.stanford.bmir.protege.web.server.entity.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.MergeEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
+import edu.stanford.bmir.protege.web.server.form.SetEntityFormDataActionHandler;
 import edu.stanford.bmir.protege.web.server.form.SetFormDataActionHandler;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
@@ -591,6 +592,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler providesGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesSetEntityFormDataActionHandler(SetEntityFormDataActionHandler handler) {
         return handler;
     }
 }
