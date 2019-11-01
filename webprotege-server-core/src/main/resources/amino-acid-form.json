@@ -3,7 +3,7 @@
   "elements" : [
 
     {
-      "id" : "longName",
+      "id" : "AnnotationProperty(<http://www.w3.org/2000/01/rdf-schema#label>)",
       "label" : "Long name",
       "fieldDescriptor" : {
         "type" : "Text"
@@ -12,7 +12,7 @@
     },
 
     {
-      "id" : "shortName",
+      "id" : "AnnotationProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#shortName>)",
       "label" : "Short name",
       "fieldDescriptor" : {
         "type" : "Text",
@@ -22,7 +22,7 @@
     },
 
     {
-      "id" : "singleLetterName",
+      "id" : "AnnotationProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#singleLetterName>)",
       "label" : "Single letter name",
       "fieldDescriptor" : {
         "type" : "Text",
@@ -31,7 +31,7 @@
     },
 
     {
-      "id" : "formula",
+      "id" : "AnnotationProperty(<http://webprotege.stanford.edu/R9ENHntQpePgTUlhJDCK5v2>)",
       "label" : "Formula",
       "fieldDescriptor" : {
         "type" : "Text"
@@ -39,7 +39,7 @@
     },
 
     {
-      "id" : "structure",
+      "id" : "AnnotationProperty(<http://webprotege.stanford.edu/R7g5fF2EbK62U6GSiV2kHTM>)",
       "label" : "Structure",
       "fieldDescriptor" : {
         "type" : "Image"
@@ -47,7 +47,7 @@
     },
 
     {
-      "id" : "mass",
+      "id" : "DataProperty(<http://webprotege.stanford.edu/RBk7usscgj8ZnYBcqQJcxnD>)",
       "label" : "Molar Mass (g/mol)",
       "fieldDescriptor" : {
         "type" : "Number",
@@ -62,7 +62,7 @@
 
 
     {
-      "id" : "charge",
+      "id" : "ObjectProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#hasCharge>)",
       "label" : "Charge",
       "fieldDescriptor" : {
         "type" : "Choice",
@@ -70,22 +70,31 @@
         "choices" : [
           {
             "label" : "Neutral",
-            "value" : "Neutral"
+            "value" : {
+                "type" : "Class",
+                "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Neutral"
+            }
           },
           {
             "label" : "Negative",
-            "value" : "Negative"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Negative"
+            }
           },
           {
             "label" : "Positive",
-            "value" : "Positive"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Positive"
+            }
           }
         ]
       }
     },
 
     {
-      "id" : "hydrophobicity",
+      "id" : "ObjectProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#hasHydrophobicity>)",
       "label" : "Hydrophobicity",
       "fieldDescriptor" : {
         "type" : "Choice",
@@ -93,18 +102,24 @@
         "choices" : [
           {
             "label" : "Hydrophilic",
-            "value" : "Hydrophilic"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Hydrophilic"
+            }
           },
           {
             "label" : "Hydrophobic",
-            "value" : "Hydrophobic"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Hydrophobic"
+            }
           }
         ]
       }
     },
 
     {
-      "id" : "polarity",
+      "id" : "ObjectProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#hasPolarity>)",
       "label" : "Polarity",
       "fieldDescriptor" : {
         "type" : "Choice",
@@ -112,18 +127,24 @@
         "choices" : [
           {
             "label" : "Polar",
-            "value" : "Polar"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Polar"
+            }
           },
           {
             "label" : "Non-Polar",
-            "value" : "Non-Polar"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Non-Polar"
+            }
           }
         ]
       }
     },
 
     {
-      "id" : "sideChainStructure",
+      "id" : "ObjectProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#hasSideChainStructure>)",
       "label" : "Side Chain Structure",
       "fieldDescriptor" : {
         "type" : "Choice",
@@ -131,18 +152,24 @@
         "choices" : [
           {
             "label" : "Aromatic",
-            "value" : "Aromatic"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Aromatic"
+            }
           },
           {
             "label" : "Aliphatic",
-            "value" : "Aliphatic"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Aliphatic"
+            }
           }
         ]
       }
     },
 
     {
-      "id" : "size",
+      "id" : "ObjectProperty(<http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#hasSize>)",
       "label" : "Size",
       "fieldDescriptor" : {
         "type" : "Choice",
@@ -150,22 +177,31 @@
         "choices" : [
           {
             "label" : "Large",
-            "value" : "Large"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Large"
+            }
           },
           {
             "label" : "Small",
-            "value" : "Small"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Small"
+            }
           },
           {
             "label" : "Tiny",
-            "value" : "Tiny"
+            "value" : {
+              "type" : "Class",
+              "iri"  : "http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#Tiny"
+            }
           }
         ]
       }
     },
 
     {
-      "id" : "seeAlso",
+      "id" : "AnnotationProperty(<http://www.w3.org/2000/01/rdf-schema#seeAlso>)",
       "label" : "Wikipedia Page",
       "fieldDescriptor" : {
         "type" : "Text"
