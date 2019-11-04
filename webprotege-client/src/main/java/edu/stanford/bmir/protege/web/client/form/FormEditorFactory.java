@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.LocaleInfo;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
@@ -188,17 +190,17 @@ public class FormEditorFactory {
     private Optional<ValueEditorFactory<FormDataValue>> getTextFieldEditorFactory(TextFieldDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
+                    String localeName = LocaleInfo.getCurrentLocale().getLocaleName();
                     TextFieldEditor textFieldEditor = textFieldEditorProvider.get();
-                    textFieldEditor.setPlaceholder(formFieldDescriptor.getPlaceholder());
+                    textFieldEditor.setPlaceholder(formFieldDescriptor.getPlaceholder().get(localeName));
                     textFieldEditor.setLineMode(formFieldDescriptor.getLineMode());
                     textFieldEditor.setStringType(formFieldDescriptor.getStringType());
                     if (!formFieldDescriptor.getPattern().isEmpty()) {
                         textFieldEditor.setPattern(formFieldDescriptor.getPattern());
-                        textFieldEditor.setPatternViolationErrorMessage(formFieldDescriptor.getPatternViolationErrorMessage());
+                        textFieldEditor.setPatternViolationErrorMessage(formFieldDescriptor.getPatternViolationErrorMessage().get(localeName));
                     }
                     return textFieldEditor;
                 }
         );
     }
-
 }

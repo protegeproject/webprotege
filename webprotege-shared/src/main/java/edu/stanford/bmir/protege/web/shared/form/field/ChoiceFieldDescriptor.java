@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName(ChoiceFieldDescriptor.TYPE)
 public class ChoiceFieldDescriptor implements FormFieldDescriptor {
 
-    protected static final String TYPE = "Choice";
+    protected static final String TYPE = "CHOICE";
 
     private ChoiceFieldType widgetType = ChoiceFieldType.COMBO_BOX;
 

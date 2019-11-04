@@ -2,15 +2,14 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
+import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -19,6 +18,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent.CLASS_FRAME_CHANGED;
 
 /**
  * Matthew Horridge
@@ -45,7 +45,8 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     public FormPortletPresenter(SelectionModel selectionModel,
                                 @Nonnull ProjectId projectId,
                                 @Nonnull FormPresenter formPresenter,
-                                @Nonnull DispatchServiceManager dispatchServiceManager, DisplayNameRenderer displayNameRenderer) {
+                                @Nonnull DispatchServiceManager dispatchServiceManager,
+                                DisplayNameRenderer displayNameRenderer) {
         super(selectionModel, projectId, displayNameRenderer);
         this.projectId = projectId;
         this.formPresenter = formPresenter;
@@ -53,14 +54,9 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     @Override
-    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        formPresenter.start(portletUi);
-    }
-
-    @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         GWT.log("[FormPortletPresenter] handleAfterSetEntity " + entityData);
-        if (entityData.isPresent()) {
+        if(entityData.isPresent()) {
             setSubject(entityData.get());
         }
         else {
@@ -68,6 +64,20 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
     }
 
+    @Override
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        formPresenter.start(portletUi);
+        eventBus.addProjectEventHandler(projectId, CLASS_FRAME_CHANGED, this::handleClassFrameChanged);
+    }
+
+    private void handleClassFrameChanged(ClassFrameChangedEvent event) {
+        GWT.log("[FormPortletPresenter] handleClassFrameChanged");
+        if(currentSubject.equals(Optional.of(event.getEntity()))) {
+            if(!formPresenter.isDirty()) {
+                setSubject(event.getEntity());
+            }
+        }
+    }
 
     private void setSubject(@Nonnull final OWLEntity entity) {
         checkNotNull(entity);
@@ -75,7 +85,6 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
             saveCurrentFormData();
         }
         currentSubject = Optional.of(entity);
-        CollectionItem item = CollectionItem.get(entity.getIRI().toString());
         dispatchServiceManager.execute(new GetEntityFormAction(projectId, entity),
                                        this::displayFormResult);
     }
@@ -86,7 +95,8 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
             dispatchServiceManager.execute(new SetEntityFormDataAction(projectId,
                                                                        subject,
                                                                        formData),
-                                           result -> {});
+                                           result -> {
+                                           });
         });
     }
 
@@ -99,6 +109,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         else {
             formPresenter.clear();
         }
+
     }
 
 }

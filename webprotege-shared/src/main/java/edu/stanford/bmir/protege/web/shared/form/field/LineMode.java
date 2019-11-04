@@ -9,9 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public enum LineMode {
 
-    @JsonProperty("SingleLine")
     SINGLE_LINE,
 
-    @JsonProperty("MultiLine")
     MULTI_LINE
 }

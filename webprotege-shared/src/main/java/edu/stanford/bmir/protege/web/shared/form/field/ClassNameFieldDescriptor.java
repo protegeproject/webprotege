@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName(ClassNameFieldDescriptor.TYPE)
 public class ClassNameFieldDescriptor implements FormFieldDescriptor {
 
-    protected static final String TYPE = "ClassName";
+    protected static final String TYPE = "CLASS_NAME";
 
     private Set<OWLClass> filteringSuperClasses = ImmutableSet.of();
 

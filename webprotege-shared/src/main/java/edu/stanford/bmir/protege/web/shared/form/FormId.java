@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
@@ -18,12 +19,14 @@ public class FormId implements Serializable, IsSerializable {
     private String id;
 
     private FormId() {
+        id = "<NOTINIT>";
     }
 
     public FormId(String id) {
         this.id = checkNotNull(id);
     }
 
+    @JsonProperty("formId")
     public String getId() {
         return id;
     }

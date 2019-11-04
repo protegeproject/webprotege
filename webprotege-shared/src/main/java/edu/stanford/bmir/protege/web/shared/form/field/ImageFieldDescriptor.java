@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 @JsonTypeName(ImageFieldDescriptor.TYPE)
 public class ImageFieldDescriptor implements FormFieldDescriptor {
 
-    protected static final String TYPE = "Image";
+    protected static final String TYPE = "IMAGE";
 
     @Nonnull
     @Override

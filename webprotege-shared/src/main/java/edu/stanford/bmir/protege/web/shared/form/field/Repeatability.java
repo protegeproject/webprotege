@@ -9,13 +9,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public enum Repeatability {
 
-    @JsonProperty("NonRepeatable")
     NON_REPEATABLE,
 
-    @JsonProperty("RepeatableVertically")
     REPEATABLE_VERTICALLY,
 
-    @JsonProperty("RepeatableHorizontally")
     REPEATABLE_HORIZONTALLY,
 
 }

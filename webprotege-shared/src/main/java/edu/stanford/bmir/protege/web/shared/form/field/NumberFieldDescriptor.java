@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName(NumberFieldDescriptor.TYPE)
 public class NumberFieldDescriptor implements FormFieldDescriptor {
 
-    protected static final String TYPE = "Number";
+    protected static final String TYPE = "NUMBER";
 
     @Nonnull
     private String numberFormat = "#######";

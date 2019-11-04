@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class TextFieldDescriptor_TestCase {
 
     private TextFieldDescriptor textFieldDescriptor;
 
-    private String placeholder = "The placeholder";
+    private LanguageMap placeholder = LanguageMap.of("en", "The placeholder");
 
     private StringType stringType = StringType.SIMPLE_STRING;
 
@@ -24,7 +25,7 @@ public class TextFieldDescriptor_TestCase {
 
     private String pattern = "The pattern";
 
-    private String patternViolationErrorMessage = "The patternViolationErrorMessage";
+    private LanguageMap patternViolationErrorMessage = LanguageMap.of("en", "The patternViolationErrorMessage");
 
     @Before
     public void setUp()
@@ -106,7 +107,7 @@ public class TextFieldDescriptor_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_placeholder() {
-        assertThat(textFieldDescriptor, is(not(new TextFieldDescriptor("String-1a3f1304-8c2f-48b2-8c60-3407b27d579f", stringType, lineMode, pattern, patternViolationErrorMessage))));
+        assertThat(textFieldDescriptor, is(not(new TextFieldDescriptor(LanguageMap.of("en", "String-1a3f1304-8c2f-48b2-8c60-3407b27d579f"), stringType, lineMode, pattern, patternViolationErrorMessage))));
     }
 
     @Test
@@ -126,7 +127,7 @@ public class TextFieldDescriptor_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_patternViolationErrorMessage() {
-        assertThat(textFieldDescriptor, is(not(new TextFieldDescriptor(placeholder, stringType, lineMode, pattern, "String-1abd718d-0eb4-4530-b465-02aed8dd66a2"))));
+        assertThat(textFieldDescriptor, is(not(new TextFieldDescriptor(placeholder, stringType, lineMode, pattern, LanguageMap.of("en", "String-1abd718d-0eb4-4530-b465-02aed8dd66a2")))));
     }
 
     @Test
@@ -141,12 +142,12 @@ public class TextFieldDescriptor_TestCase {
 
     @Test
     public void should_getAssociatedType() {
-        assertThat(textFieldDescriptor.getAssociatedType(), is("Text"));
+        assertThat(textFieldDescriptor.getAssociatedType(), is("TEXT"));
     }
 
     @Test
     public void should_getType() {
-        assertThat(TextFieldDescriptor.getType(), is("Text"));
+        assertThat(TextFieldDescriptor.getType(), is("TEXT"));
     }
 
 }

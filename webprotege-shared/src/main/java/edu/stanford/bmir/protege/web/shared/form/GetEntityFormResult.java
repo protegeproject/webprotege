@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import javax.annotation.Nonnull;
@@ -38,5 +39,14 @@ public class GetEntityFormResult implements Result {
     @Nonnull
     public FormData getFormData() {
         return formData;
+    }
+
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper("GetEntityFormResult")
+                .addValue(formDescriptor)
+                .addValue(formData)
+                .toString();
     }
 }

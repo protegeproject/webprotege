@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -56,9 +57,10 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
         comboBox.clear();
         choiceDescriptors.clear();
         comboBox.addItem("");
+        String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
         for(ChoiceDescriptor descriptor : choices) {
             choiceDescriptors.add(descriptor);
-            comboBox.addItem(descriptor.getLabel());
+            comboBox.addItem(descriptor.getLabel().get(langTag));
         }
         selectDefaultChoice();
     }

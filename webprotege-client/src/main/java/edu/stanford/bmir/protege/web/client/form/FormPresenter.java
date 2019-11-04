@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.form.field.Required.REQUIRED;
+import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIRED;
 
 /**
  * Matthew Horridge
@@ -156,11 +157,13 @@ public class FormPresenter {
         }
         FormElementEditor editor = elementEditor.get();
 
+        LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
+        String langTag = localeInfo.getLocaleName();
         FormElementView elementView = formElementViewProvider.get();
         elementView.setId(elementDescriptor.getId());
-        elementView.setFormLabel(elementDescriptor.getLabel());
+        elementView.setFormLabel(elementDescriptor.getLabel().get(langTag));
         elementView.setEditor(editor);
-        elementView.setRequired(elementDescriptor.getRequired());
+        elementView.setRequired(elementDescriptor.getOptionality());
         // Update the required value missing display when the value changes
         editor.addValueChangeHandler(event -> {
             this.dirty = true;

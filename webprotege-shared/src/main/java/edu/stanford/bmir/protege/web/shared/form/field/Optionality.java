@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Stanford Center for Biomedical Informatics Research
  * 12/04/16
  */
-public enum Required {
+public enum Optionality {
 
-    @JsonProperty("Required")
     REQUIRED,
 
-    @JsonProperty("Optional")
     OPTIONAL
 }

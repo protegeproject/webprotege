@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -53,8 +54,9 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     public void setChoices(List<ChoiceDescriptor> choices) {
         container.clear();
         checkBoxes.clear();
+        String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
         for(ChoiceDescriptor choiceDescriptor : choices) {
-            CheckBox checkBox = new CheckBox(new SafeHtmlBuilder().appendHtmlConstant(choiceDescriptor.getLabel()).toSafeHtml());
+            CheckBox checkBox = new CheckBox(new SafeHtmlBuilder().appendHtmlConstant(choiceDescriptor.getLabel().get(langTag)).toSafeHtml());
             checkBoxes.put(checkBox, choiceDescriptor);
             container.add(checkBox);
             checkBox.getElement().getStyle().setDisplay(Style.Display.BLOCK);

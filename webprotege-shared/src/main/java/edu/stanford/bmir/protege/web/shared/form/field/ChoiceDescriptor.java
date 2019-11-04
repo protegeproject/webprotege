@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -14,7 +15,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class ChoiceDescriptor implements IsSerializable {
 
-    private String label;
+    private LanguageMap label = LanguageMap.empty();
 
     @JsonUnwrapped
     private FormDataValue value;
@@ -22,16 +23,16 @@ public class ChoiceDescriptor implements IsSerializable {
     private ChoiceDescriptor() {
     }
 
-    private ChoiceDescriptor(String label, FormDataValue value) {
+    private ChoiceDescriptor(LanguageMap label, FormDataValue value) {
         this.label = label;
         this.value = value;
     }
 
-    public static ChoiceDescriptor choice(String label, FormDataValue value) {
+    public static ChoiceDescriptor choice(LanguageMap label, FormDataValue value) {
         return new ChoiceDescriptor(label, value);
     }
 
-    public String getLabel() {
+    public LanguageMap getLabel() {
         return label;
     }
 
@@ -56,7 +57,6 @@ public class ChoiceDescriptor implements IsSerializable {
         return this.label.equals(other.label)
                 && this.value.equals(other.value);
     }
-
 
     @Override
     public String toString() {

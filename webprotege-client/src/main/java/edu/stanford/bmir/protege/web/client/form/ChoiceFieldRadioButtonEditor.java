@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -57,8 +58,9 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
         container.clear();
         choiceButtons.clear();
         nameCounter++;
+        String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
         for(ChoiceDescriptor descriptor : choices) {
-            RadioButton radioButton = new RadioButton("Choice" + nameCounter, new SafeHtmlBuilder().appendHtmlConstant(descriptor.getLabel()).toSafeHtml());
+            RadioButton radioButton = new RadioButton("Choice" + nameCounter, new SafeHtmlBuilder().appendHtmlConstant(descriptor.getLabel().get(langTag)).toSafeHtml());
             radioButton.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
             radioButton.addValueChangeHandler(radioButtonValueChangedHandler);
             radioButton.addFocusHandler(event -> {

@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
+import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 
@@ -17,9 +19,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName(TextFieldDescriptor.TYPE)
 public class TextFieldDescriptor implements FormFieldDescriptor {
 
-    protected static final String TYPE = "Text";
+    protected static final String TYPE = "TEXT";
 
-    private String placeholder = "";
+    private LanguageMap placeholder = LanguageMap.empty();
 
     private StringType stringType = StringType.SIMPLE_STRING;
 
@@ -27,16 +29,16 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
 
     private String pattern = "";
 
-    private String patternViolationErrorMessage = "";
+    private LanguageMap patternViolationErrorMessage = LanguageMap.empty();
 
     private TextFieldDescriptor() {
     }
 
-    public TextFieldDescriptor(@Nonnull String placeholder,
+    public TextFieldDescriptor(@Nonnull LanguageMap placeholder,
                                @Nonnull StringType stringType,
                                @Nonnull LineMode lineMode,
                                @Nonnull String pattern,
-                               @Nonnull String patternViolationErrorMessage) {
+                               @Nonnull LanguageMap patternViolationErrorMessage) {
         this.placeholder = checkNotNull(placeholder);
         this.stringType = checkNotNull(stringType);
         this.lineMode = checkNotNull(lineMode);
@@ -57,7 +59,7 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
-    public String getPlaceholder() {
+    public LanguageMap getPlaceholder() {
         return placeholder;
     }
 
@@ -72,7 +74,7 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
-    public String getPatternViolationErrorMessage() {
+    public LanguageMap getPatternViolationErrorMessage() {
         return patternViolationErrorMessage;
     }
 
@@ -88,6 +90,7 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
 
     @Override
     public boolean equals(Object obj) {
+        GWT.log("TEXT FIELD EQUALS: " + toString());
         if (obj == this) {
             return true;
         }

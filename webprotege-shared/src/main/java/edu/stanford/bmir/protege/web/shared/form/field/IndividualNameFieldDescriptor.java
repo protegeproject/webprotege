@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @JsonTypeName(IndividualNameFieldDescriptor.TYPE)
 public class IndividualNameFieldDescriptor implements FormFieldDescriptor {
 
-    protected static final String TYPE = "IndividualName";
+    protected static final String TYPE = "INDIVIDUAL_NAME";
 
     private ImmutableSet<OWLClass> filteringTypes;
 

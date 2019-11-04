@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class CompositeFieldDescriptor implements FormFieldDescriptor {
 
-    private static final String COMPOSITE_FIELD = "CompositeField";
+    private static final String COMPOSITE_FIELD = "COMPOSITE";
 
     public static String getFieldTypeId() {
         return COMPOSITE_FIELD;

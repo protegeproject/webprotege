@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-import edu.stanford.bmir.protege.web.shared.form.field.Required;
+import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class FormElementViewImpl extends Composite implements FormElementView {
 
     private FormElementId formElementId = null;
 
-    private Required required = Required.OPTIONAL;
+    private Optionality required = Optionality.OPTIONAL;
 
     @UiField
     Label label;
@@ -49,12 +49,12 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     }
 
     @Override
-    public void setRequired(Required required) {
+    public void setRequired(Optionality required) {
         this.required = checkNotNull(required);
     }
 
     @Override
-    public Required getRequired() {
+    public Optionality getRequired() {
         return required;
     }
 

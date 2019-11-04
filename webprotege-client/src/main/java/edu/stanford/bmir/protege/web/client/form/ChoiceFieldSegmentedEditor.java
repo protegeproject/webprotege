@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -80,8 +81,9 @@ public class ChoiceFieldSegmentedEditor extends Composite implements ChoiceField
         choiceWidgets.clear();
         this.choices.clear();
         this.selectedIndex = -1;
+        String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
         for(ChoiceDescriptor choice : choices) {
-            InlineLabel label = new InlineLabel(choice.getLabel());
+            InlineLabel label = new InlineLabel(choice.getLabel().get(langTag));
             segmentContainer.add(label);
             this.choices.add(choice.getValue());
             this.choiceWidgets.add(label);

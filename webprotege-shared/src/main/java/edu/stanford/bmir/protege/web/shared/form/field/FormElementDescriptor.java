@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
@@ -20,31 +22,31 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     private FormElementId id;
 
-    private String label = "";
+    private LanguageMap label = LanguageMap.empty();
 
     private FormFieldDescriptor fieldDescriptor;
 
     private Repeatability repeatability = Repeatability.NON_REPEATABLE;
 
-    private Required required = Required.REQUIRED;
+    private Optionality optionality = Optionality.REQUIRED;
 
-    private String help = "";
+    private LanguageMap help = LanguageMap.empty();
 
     @GwtSerializationConstructor
     private FormElementDescriptor() {
     }
 
     public FormElementDescriptor(@Nonnull FormElementId id,
-                                 @Nonnull String formLabel,
+                                 @Nonnull LanguageMap formLabel,
                                  @Nonnull FormFieldDescriptor fieldDescriptor,
                                  @Nonnull Repeatability repeatability,
-                                 @Nonnull Required required,
-                                 @Nonnull String help) {
+                                 @Nonnull Optionality optionality,
+                                 @Nonnull LanguageMap help) {
         this.id = checkNotNull(id);
         this.label = checkNotNull(formLabel);
-        this.repeatability = checkNotNull(repeatability);
         this.fieldDescriptor = checkNotNull(fieldDescriptor);
-        this.required = checkNotNull(required);
+        this.repeatability = checkNotNull(repeatability);
+        this.optionality = checkNotNull(optionality);
         this.help = checkNotNull(help);
     }
 
@@ -54,7 +56,7 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
         return id;
     }
 
-    public String getLabel() {
+    public LanguageMap getLabel() {
         return label;
     }
 
@@ -63,21 +65,21 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
         return repeatability;
     }
 
-    public Required getRequired() {
-        return required;
+    public Optionality getOptionality() {
+        return optionality;
     }
 
     public FormFieldDescriptor getFieldDescriptor() {
         return fieldDescriptor;
     }
 
-    public String getHelp() {
+    public LanguageMap getHelp() {
         return help;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, label, repeatability, required, fieldDescriptor, help);
+        return Objects.hashCode(id, label, repeatability, optionality, fieldDescriptor, help);
     }
 
     @Override
@@ -90,11 +92,11 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
         }
         FormElementDescriptor other = (FormElementDescriptor) obj;
         return this.id.equals(other.id)
-                && this.label.equals(other.label)
+                && Objects.equal(this.label, other.label)
                 && this.repeatability.equals(other.repeatability)
-                && this.required.equals(other.required)
+                && this.optionality.equals(other.optionality)
                 && this.fieldDescriptor.equals(other.fieldDescriptor)
-                && this.help.equals(other.help);
+                && Objects.equal(this.help, other.help);
     }
 
 
@@ -104,7 +106,7 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
                 .addValue(id)
                 .add("label", label)
                 .add("repeatable", repeatability)
-                .add("required", required)
+                .add("optionality", optionality)
                 .add("help", help)
                 .add("descriptor", fieldDescriptor)
                 .toString();

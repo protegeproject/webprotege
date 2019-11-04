@@ -242,7 +242,7 @@
                 <plugin>
                     <groupId>net.ltgt.gwt.maven</groupId>
                     <artifactId>gwt-maven-plugin</artifactId>
-                    <version>1.0-rc-10</version>
+                    <version>1.0.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <sourceLevel>1.8</sourceLevel>
@@ -251,6 +251,10 @@
                         <moduleName>edu.stanford.bmir.protege.web.client.WebProtege</moduleName>
                         <startupUrls>WebProtege.jsp</startupUrls>
                         <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
+                        <style>PRETTY</style>
+                        <devmodeArgs>
+                            <arg>-style</arg><arg>DETAILED</arg>
+                        </devmodeArgs>
                     </configuration>
                 </plugin>
                 <plugin>
