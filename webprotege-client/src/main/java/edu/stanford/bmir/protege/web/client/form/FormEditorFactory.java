@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
@@ -40,6 +39,9 @@ public class FormEditorFactory {
     private final Provider<ClassNameFieldEditor> classNameFieldEditorProvider;
 
     @Nonnull
+    private final Provider<IndividualNameFieldEditor> individualNameFieldEditorProvider;
+
+    @Nonnull
     private final Provider<ImageFieldEditor> imageFieldEditorProvider;
 
     @Nonnull
@@ -55,6 +57,7 @@ public class FormEditorFactory {
                              @Nonnull Provider<ChoiceFieldSegmentedEditor> choiceFieldSegmentedEditorProvider,
                              @Nonnull Provider<ChoiceFieldComboBoxEditor> choiceFieldComboBoxEditorProvider,
                              @Nonnull Provider<ClassNameFieldEditor> classNameFieldEditorProvider,
+                             @Nonnull Provider<IndividualNameFieldEditor> individualNameFieldEditorProvider,
                              @Nonnull Provider<ImageFieldEditor> imageFieldEditorProvider,
                              @Nonnull Provider<NumberFieldEditor> numberFieldEditorProvider,
                              @Nonnull Provider<CompositeFieldEditor> compositeFieldEditorProvider) {
@@ -64,6 +67,7 @@ public class FormEditorFactory {
         this.choiceFieldSegmentedEditorProvider = choiceFieldSegmentedEditorProvider;
         this.choiceFieldComboBoxEditorProvider = choiceFieldComboBoxEditorProvider;
         this.classNameFieldEditorProvider = classNameFieldEditorProvider;
+        this.individualNameFieldEditorProvider = individualNameFieldEditorProvider;
         this.imageFieldEditorProvider = imageFieldEditorProvider;
         this.numberFieldEditorProvider = numberFieldEditorProvider;
         this.compositeFieldEditorProvider = compositeFieldEditorProvider;
@@ -93,6 +97,9 @@ public class FormEditorFactory {
         }
         else if(formFieldDescriptor.getAssociatedType().equals(NumberFieldDescriptor.getTypeId())) {
             return getNumberFieldEditorFactory((NumberFieldDescriptor) formFieldDescriptor);
+        }
+        else if(formFieldDescriptor.getAssociatedType().equalsIgnoreCase(IndividualNameFieldDescriptor.getType())) {
+            return getIndividualNameEditorFactory((IndividualNameFieldDescriptor) formFieldDescriptor);
         }
         else if(formFieldDescriptor.getAssociatedType().equals(CompositeFieldDescriptor.getFieldTypeId())) {
             return getCompositeFieldEditorFactory((CompositeFieldDescriptor) formFieldDescriptor);
@@ -157,6 +164,18 @@ public class FormEditorFactory {
                 () -> {
                     ClassNameFieldEditor editor = classNameFieldEditorProvider.get();
                     editor.setPlaceholder(formFieldDescriptor.getPlaceholder());
+                    return editor;
+                }
+        );
+    }
+
+    @Nonnull
+    private Optional<ValueEditorFactory<FormDataValue>> getIndividualNameEditorFactory(IndividualNameFieldDescriptor fieldDescriptor) {
+        return Optional.of(
+                () -> {
+                    LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
+                    IndividualNameFieldEditor editor = individualNameFieldEditorProvider.get();
+                    editor.setPlaceholder(fieldDescriptor.getPlaceholder().get(localeInfo.getLocaleName()));
                     return editor;
                 }
         );

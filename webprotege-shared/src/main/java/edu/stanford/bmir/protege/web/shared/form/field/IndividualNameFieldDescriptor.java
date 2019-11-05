@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
@@ -22,12 +24,24 @@ public class IndividualNameFieldDescriptor implements FormFieldDescriptor {
 
     private ImmutableSet<OWLClass> filteringTypes;
 
-    public IndividualNameFieldDescriptor(@Nonnull Set<OWLClass> filteringTypes) {
+    private InstanceRetrievalMode retrievalMode;
+
+    private LanguageMap placeholder = LanguageMap.empty();
+
+    public IndividualNameFieldDescriptor(@Nonnull Set<OWLClass> filteringTypes,
+                                         @Nonnull InstanceRetrievalMode retrievalMode,
+                                         @Nonnull LanguageMap placeholder) {
         this.filteringTypes = ImmutableSet.copyOf(checkNotNull(filteringTypes));
+        this.retrievalMode = checkNotNull(retrievalMode);
+        this.placeholder = checkNotNull(placeholder);
     }
 
     @GwtSerializationConstructor
     private IndividualNameFieldDescriptor() {
+    }
+
+    public static String getType() {
+        return TYPE;
     }
 
     @Nonnull
@@ -38,5 +52,13 @@ public class IndividualNameFieldDescriptor implements FormFieldDescriptor {
 
     public Set<OWLClass> getFilteringTypes() {
         return filteringTypes;
+    }
+
+    public LanguageMap getPlaceholder() {
+        return placeholder;
+    }
+
+    public InstanceRetrievalMode getRetrievalMode() {
+        return retrievalMode;
     }
 }
