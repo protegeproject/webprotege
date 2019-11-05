@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
@@ -39,6 +40,9 @@ public class FormPresenter {
     private final FormEditorFactory formEditorFactory;
 
     @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
+
+    @Nonnull
     private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
 
     private boolean dirty;
@@ -47,10 +51,12 @@ public class FormPresenter {
     @Inject
     public FormPresenter(@Nonnull FormView formView,
                          @Nonnull FormEditorFactory formEditorFactory,
-                         @Nonnull Provider<FormElementView> formElementViewProvider) {
+                         @Nonnull Provider<FormElementView> formElementViewProvider,
+                         @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.formView = checkNotNull(formView);
         this.formElementViewProvider = checkNotNull(formElementViewProvider);
         this.formEditorFactory = checkNotNull(formEditorFactory);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     /**
@@ -119,10 +125,12 @@ public class FormPresenter {
     private void createFormAndSetFormData(@Nonnull FormDescriptor formDescriptor,
                                           @Nonnull FormData formData) {
         formView.clear();
+        dispatchServiceManager.beginBatch();
         for (FormElementDescriptor elementDescriptor : formDescriptor.getElements()) {
             Optional<FormDataValue> dataValue = formData.getFormElementData(elementDescriptor.getId());
             createFormEditor(elementDescriptor, dataValue);
         }
+        dispatchServiceManager.executeCurrentBatch();
     }
 
     private void clearDirty() {
@@ -130,6 +138,7 @@ public class FormPresenter {
     }
 
     private void setFormData(@Nonnull FormData formData) {
+        dispatchServiceManager.beginBatch();
         formView.getElementViews().forEach(view -> {
             Optional<FormElementId> theId = view.getId();
             if (theId.isPresent()) {
@@ -147,6 +156,7 @@ public class FormPresenter {
                 view.getEditor().clearValue();
             }
         });
+        dispatchServiceManager.executeCurrentBatch();
     }
 
     private void createFormEditor(@Nonnull FormElementDescriptor elementDescriptor,

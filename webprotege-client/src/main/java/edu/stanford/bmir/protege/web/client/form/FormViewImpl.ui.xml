@@ -8,6 +8,8 @@
             bottom: 0;
             left: 0;
             right: 0;
+            padding-bottom: 4em;
+            box-sizing: border-box;
         }
     </ui:style>
     <g:HTMLPanel ui:field="holder" addStyleNames="{style.container} {wp.style.form}">
