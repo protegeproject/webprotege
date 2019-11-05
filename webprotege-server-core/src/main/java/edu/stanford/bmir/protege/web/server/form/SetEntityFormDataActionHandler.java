@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataResult;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import org.semanticweb.owlapi.model.OWLProperty;
 
@@ -130,6 +131,13 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
                     ));
                 });
                 formDataValue.asIRI().ifPresent(iri -> {
+                    propertyValues.add(PropertyAnnotationValue.get(
+                            renderingManager.getAnnotationPropertyData(property.asOWLAnnotationProperty()),
+                            renderingManager.getRendering(iri),
+                            State.ASSERTED
+                    ));
+                });
+                formDataValue.asOWLEntity().map(OWLEntity::getIRI).ifPresent(iri -> {
                     propertyValues.add(PropertyAnnotationValue.get(
                             renderingManager.getAnnotationPropertyData(property.asOWLAnnotationProperty()),
                             renderingManager.getRendering(iri),
