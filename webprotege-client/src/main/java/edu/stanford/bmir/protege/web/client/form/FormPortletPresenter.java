@@ -95,6 +95,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
             dispatchServiceManager.execute(new SetEntityFormDataAction(projectId,
                                                                        subject,
                                                                        formData),
+                                           this,
                                            result -> {
                                            });
         });
