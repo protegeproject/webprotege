@@ -11,8 +11,10 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -36,13 +38,21 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
 
     @Override
     public void saveFormDescriptor(@Nonnull ProjectId projectId, @Nonnull FormDescriptor formDescriptor) {
-        var document = objectMapper.convertValue(formDescriptor, Document.class);
+        var record = FormDescriptorRecord.get(projectId, formDescriptor);
+        var document = objectMapper.convertValue(record, Document.class);
         database.getCollection(COLLECTION_NAME).insertOne(document);
     }
 
     @Override
     public Stream<FormDescriptor> findFormDescriptors(@Nonnull ProjectId projectId) {
-        return null;
+        return StreamSupport.stream(database.getCollection(COLLECTION_NAME)
+                                            .find(new Document("projectId", projectId.getId())).spliterator(),
+                                        false
+                                    )
+                .map(doc -> objectMapper.convertValue(doc, FormDescriptorRecord.class))
+                            .map(FormDescriptorRecord::getFormDescriptor)
+                .collect(toList())
+                            .stream();
     }
 
     @Override

@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -21,6 +24,7 @@ public abstract class FormDataValue implements IsSerializable {
      * @return The value as a literal, or absent if this value is not a primitive value that wraps
      * a literal.
      */
+    @JsonIgnore
     public Optional<OWLLiteral> asLiteral() {
         return Optional.empty();
     }
@@ -30,13 +34,16 @@ public abstract class FormDataValue implements IsSerializable {
      * @return This value as a list of values.  If this value is a {@link FormDataList}
      * then the values contained in the list will be returned, otherwise this value as a one element list.
      */
+    @JsonIgnore
     public abstract List<FormDataValue> asList();
 
+    @JsonIgnore
     public abstract Optional<IRI> asIRI();
 
     @JsonIgnore
     public abstract boolean isObject();
 
+    @JsonIgnore
     public abstract Optional<OWLEntity> asOWLEntity();
 
     /**
@@ -47,5 +54,6 @@ public abstract class FormDataValue implements IsSerializable {
      * is true if the object does not have any fields, or if the fields are empty, otherwise it is
      * false.
      */
+    @JsonIgnore
     public abstract boolean isEmpty();
 }

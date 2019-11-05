@@ -49,17 +49,17 @@ public class FormDataValueDeserializer extends StdDeserializer<FormDataValue> {
                     IRI iri = IRI.create(node.get("iri").asText());
                     String type = node.get("type").asText();
                     switch (type) {
-                        case "Class" :
+                        case "owl:Class" :
                             return FormDataPrimitive.get(df.getOWLClass(iri));
-                        case "ObjectProperty":
+                        case "owl:ObjectProperty":
                             return FormDataPrimitive.get(df.getOWLObjectProperty(iri));
-                        case "DataProperty" :
+                        case "owl:DataProperty" :
                             return FormDataPrimitive.get(df.getOWLDataProperty(iri));
-                        case "AnnotationProperty":
+                        case "owl:AnnotationProperty":
                             return FormDataPrimitive.get(df.getOWLAnnotationProperty(iri));
-                        case "Datatype" :
+                        case "owl:Datatype" :
                             return FormDataPrimitive.get(df.getOWLDatatype(iri));
-                        case "NamedIndividual" :
+                        case "owl:NamedIndividual" :
                             return FormDataPrimitive.get(df.getOWLDatatype(iri));
                     }
                     throw new JsonParseException(p, "Unrecognised entity type: " + type);

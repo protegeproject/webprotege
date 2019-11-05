@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormResult;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -19,6 +20,8 @@ import javax.inject.Inject;
  */
 public class GetEntityFormActionHandler extends AbstractProjectActionHandler<GetEntityFormAction, GetEntityFormResult> {
 
+    @Nonnull
+    private final ProjectId projectId;
 
     @Nonnull
     private final EntityFormManager formManager;
@@ -28,9 +31,11 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
 
     @Inject
     public GetEntityFormActionHandler(@Nonnull AccessManager accessManager,
+                                      @Nonnull ProjectId projectId,
                                       @Nonnull EntityFormManager formManager,
                                       @Nonnull EntityFrameFormDataBuilder formDataBuilder) {
         super(accessManager);
+        this.projectId = projectId;
         this.formManager = formManager;
         this.formDataBuilder = formDataBuilder;
     }
@@ -41,7 +46,7 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
                                        @Nonnull ExecutionContext executionContext) {
 
         OWLEntity entity = action.getEntity();
-        return formManager.getFormDescriptor(entity)
+        return formManager.getFormDescriptor(entity, projectId)
                           .map(formDescriptor -> {
                               var formData = formDataBuilder.getFormData(entity, formDescriptor);
                               return new GetEntityFormResult(formDescriptor, formData);

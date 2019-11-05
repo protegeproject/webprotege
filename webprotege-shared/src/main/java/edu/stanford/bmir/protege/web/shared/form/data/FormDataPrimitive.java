@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -36,6 +37,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
     @Nonnull
     public abstract Object getValue();
 
+    @JsonIgnore
     public abstract OWLObject toOWLObject();
 
     /**
@@ -114,6 +116,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
     }
 
+    @JsonIgnore
     @Override
     public boolean isEmpty() {
         return false;
@@ -124,6 +127,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
      * created with the factory method that takes a String value as a parameter.
      * @return true if this primitive wraps a String value, otherwise false.
      */
+    @JsonIgnore
     public abstract boolean isString();
 
     /**
@@ -131,6 +135,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
      * @return The String value of this primitive.
      * @throws RuntimeException if this primitive does not wrap a {@link String}.
      */
+    @JsonIgnore
     public abstract String getValueAsString();
 
 
@@ -139,6 +144,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
      * created with the factory method that takes a Number value as a parameter.
      * @return true if this primitive wraps a boolean value, otherwise false.
      */
+    @JsonIgnore
     public abstract boolean isNumber();
 
     /**
@@ -146,6 +152,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
      * @return The double value of this primitive.
      * @throws RuntimeException if this primitive does not wrap a {@link Number}.
      */
+    @JsonIgnore
     public abstract double getValueAsDouble();
 
     /**
@@ -153,6 +160,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
      * created with the factory method that takes a boolean value as a parameter.
      * @return true if this primitive wraps a boolean value, otherwise false.
      */
+    @JsonIgnore
     public abstract boolean isBoolean();
 
     /**
@@ -160,11 +168,10 @@ public abstract class FormDataPrimitive extends FormDataValue {
      * @return The primitive as a boolean value.
      * @throws RuntimeException if this primitive does not wrap a boolean value.
      */
+    @JsonIgnore
     public abstract boolean getValueAsBoolean();
 
-
-
-
+    @JsonIgnore
     @Override
     public List<FormDataValue> asList() {
         return singletonList(this);
@@ -178,6 +185,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
                 .toString();
     }
 
+    @JsonIgnore
     @Override
     public boolean isObject() {
         return false;
@@ -450,7 +458,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
 
         @Nonnull
         @Override
-        public Object getValue() {
+        public String getValue() {
             return string;
         }
 
@@ -599,7 +607,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
 
         @Nonnull
         @Override
-        public Object getValue() {
+        public OWLLiteral getValue() {
             return literal;
         }
 

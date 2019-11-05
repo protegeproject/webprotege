@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -14,6 +15,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,23 +29,32 @@ public class EntityFormManager {
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final EntityFormRepository entityFormRepository;
+
+    @Nonnull
+    private final ObjectMapper objectMapper;
+
     @Inject
-    public EntityFormManager(@Nonnull OWLDataFactory dataFactory) {
+    public EntityFormManager(@Nonnull OWLDataFactory dataFactory,
+                             @Nonnull EntityFormRepository entityFormRepository,
+                             @Nonnull ObjectMapper objectMapper) {
         this.dataFactory = checkNotNull(dataFactory);
+        this.entityFormRepository = entityFormRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public Optional<FormDescriptor> getFormDescriptor(@Nonnull OWLEntity entity) {
+    public Optional<FormDescriptor> getFormDescriptor(@Nonnull OWLEntity entity,
+                                                      @Nonnull ProjectId projectId) {
         try(InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/amino-acid-form.json")) {
+//            FormDescriptor formDescriptor = objectMapper.readerFor(FormDescriptor.class)
+//                                                  .readValue(new BufferedInputStream(is));
+//            is.close();
+//            entityFormRepository.saveFormDescriptor(projectId, formDescriptor);
+            return entityFormRepository.findFormDescriptors(projectId)
+                                .findFirst();
 
-            ObjectMapper mapper = new ObjectMapper();
-            SimpleModule module = new SimpleModule();
-            module.addDeserializer(FormDataValue.class, new FormDataValueDeserializer(dataFactory));
-            mapper.registerModule(module);
-            mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
-            FormDescriptor formDescriptor = mapper.readerFor(FormDescriptor.class)
-                                                  .readValue(new BufferedInputStream(is));
-            is.close();
-            return Optional.of(formDescriptor);
+//            return Optional.of(formDescriptor);
         } catch(IOException e) {
             e.printStackTrace();
             return Optional.empty();

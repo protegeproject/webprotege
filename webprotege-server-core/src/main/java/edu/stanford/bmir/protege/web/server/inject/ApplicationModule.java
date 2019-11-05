@@ -25,6 +25,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryI
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
+import edu.stanford.bmir.protege.web.server.form.EntityFormRepository;
+import edu.stanford.bmir.protege.web.server.form.EntityFormRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.index.IndexUpdatingService;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
@@ -351,6 +353,11 @@ public class ApplicationModule {
 
     @Provides
     OntologyChangeRecordTranslator provideOntologyChangeRecordTranslator(OntologyChangeRecordTranslatorImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityFormRepository provideEntityFormRepository(EntityFormRepositoryImpl impl) {
         return impl;
     }
 }

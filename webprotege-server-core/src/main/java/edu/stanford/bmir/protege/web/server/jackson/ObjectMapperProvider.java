@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import edu.stanford.bmir.protege.web.server.form.FormDataValueDeserializer;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -50,6 +52,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addDeserializer(OWLEntity.class, new OWLEntityDeserializer(dataFactory));
         module.addDeserializer(OWLClass.class, new OWLClassDeserializer(dataFactory));
         module.addDeserializer(IRI.class, new IriDeserializer());
+        module.addDeserializer(FormDataValue.class, new FormDataValueDeserializer(dataFactory));
         module.addSerializer(IRI.class, new IriSerializer());
 
         mapper.registerModule(module);
