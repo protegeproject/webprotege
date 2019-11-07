@@ -40,19 +40,27 @@ public class ChoiceFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
-    @Override
-    public String getAssociatedType() {
-        return TYPE;
-    }
-
-    @Nonnull
     public static String getType() {
         return TYPE;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof ChoiceFieldDescriptor)) {
+            return false;
+        }
+        ChoiceFieldDescriptor other = (ChoiceFieldDescriptor) obj;
+        return this.widgetType.equals(other.widgetType)
+                && this.choices.equals(other.choices);
+    }
+
     @Nonnull
-    public ChoiceFieldType getWidgetType() {
-        return widgetType;
+    @Override
+    public String getAssociatedType() {
+        return TYPE;
     }
 
     @Nonnull
@@ -65,24 +73,15 @@ public class ChoiceFieldDescriptor implements FormFieldDescriptor {
         return new ArrayList<>(defaultChoices);
     }
 
+    @Nonnull
+    public ChoiceFieldType getWidgetType() {
+        return widgetType;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(widgetType, choices);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ChoiceFieldDescriptor)) {
-            return false;
-        }
-        ChoiceFieldDescriptor other = (ChoiceFieldDescriptor) obj;
-        return this.widgetType.equals(other.widgetType)
-                && this.choices.equals(other.choices);
-    }
-
 
     @Override
     public String toString() {

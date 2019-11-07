@@ -13,9 +13,9 @@ import java.util.Optional;
  */
 public interface FieldView extends IsWidget, HasEnabled {
 
-    void setValue(OWLPrimitiveData value);
-
     void clearValue();
 
     Optional<OWLPrimitiveData> getValue();
+
+    void setValue(OWLPrimitiveData value);
 }

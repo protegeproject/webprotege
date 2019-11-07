@@ -32,6 +32,19 @@ public class ChoiceDescriptor implements IsSerializable {
         return new ChoiceDescriptor(label, value);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof ChoiceDescriptor)) {
+            return false;
+        }
+        ChoiceDescriptor other = (ChoiceDescriptor) obj;
+        return this.label.equals(other.label)
+                && this.value.equals(other.value);
+    }
+
     public LanguageMap getLabel() {
         return label;
     }
@@ -43,19 +56,6 @@ public class ChoiceDescriptor implements IsSerializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(label, value);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ChoiceDescriptor)) {
-            return false;
-        }
-        ChoiceDescriptor other = (ChoiceDescriptor) obj;
-        return this.label.equals(other.label)
-                && this.value.equals(other.value);
     }
 
     @Override

@@ -47,6 +47,38 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
+    public static String getType() {
+        return TYPE;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof TextFieldDescriptor)) {
+            return false;
+        }
+        TextFieldDescriptor other = (TextFieldDescriptor) obj;
+        return this.placeholder.equals(other.placeholder)
+                && this.stringType.equals(other.stringType)
+                && this.pattern.equals(other.pattern)
+                && this.patternViolationErrorMessage.equals(other.patternViolationErrorMessage)
+                && this.lineMode.equals(other.lineMode);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper("TextFieldDescriptor")
+                .add("placeholder", placeholder)
+                .add("stringType", stringType)
+                .add("pattern", pattern)
+                .add("patternViolationErrorMessage", patternViolationErrorMessage)
+                .add("lineMode", lineMode)
+                .toString();
+    }
+
+    @Nonnull
     @Override
     @JsonIgnore
     public String getAssociatedType() {
@@ -54,18 +86,8 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
-    public static String getType() {
-        return TYPE;
-    }
-
-    @Nonnull
-    public LanguageMap getPlaceholder() {
-        return placeholder;
-    }
-
-    @Nonnull
-    public StringType getStringType() {
-        return stringType;
+    public LineMode getLineMode() {
+        return lineMode;
     }
 
     @Nonnull
@@ -79,41 +101,17 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
-    public LineMode getLineMode() {
-        return lineMode;
+    public LanguageMap getPlaceholder() {
+        return placeholder;
+    }
+
+    @Nonnull
+    public StringType getStringType() {
+        return stringType;
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(placeholder, stringType, pattern, patternViolationErrorMessage, lineMode);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        GWT.log("TEXT FIELD EQUALS: " + toString());
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof TextFieldDescriptor)) {
-            return false;
-        }
-        TextFieldDescriptor other = (TextFieldDescriptor) obj;
-        return this.placeholder.equals(other.placeholder)
-                && this.stringType.equals(other.stringType)
-                && this.pattern.equals(other.pattern)
-                && this.patternViolationErrorMessage.equals(other.patternViolationErrorMessage)
-                && this.lineMode.equals(other.lineMode);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("TextFieldDescriptor")
-                .add("placeholder", placeholder)
-                .add("stringType", stringType)
-                .add("pattern", pattern)
-                .add("patternViolationErrorMessage", patternViolationErrorMessage)
-                .add("lineMode", lineMode)
-                .toString();
     }
 }

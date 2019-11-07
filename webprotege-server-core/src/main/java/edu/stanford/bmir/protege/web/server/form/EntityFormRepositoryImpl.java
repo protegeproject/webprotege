@@ -57,7 +57,19 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
 
     @Override
     public Optional<FormDescriptor> findFormDescriptor(@Nonnull ProjectId projectId, @Nonnull FormId formId) {
-        return Optional.empty();
+        var filter = new Document();
+        filter.put("projectId", projectId.getId());
+//        filter.put("formDescriptor", new Document("formId", formId.getId()));
+        var foundFormDocument = database.getCollection(COLLECTION_NAME)
+                .find(filter)
+                .first();
+        if(foundFormDocument == null) {
+            return Optional.empty();
+        }
+        else {
+            var formRecord = objectMapper.convertValue(foundFormDocument, FormDescriptorRecord.class);
+            return Optional.of(formRecord.getFormDescriptor());
+        }
     }
 
     @Override

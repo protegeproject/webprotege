@@ -37,7 +37,6 @@ public class NumberFieldRange implements IsSerializable {
     }
 
 
-
     public static NumberFieldRange range(double lowerBound,
                                          BoundType lowerBoundType,
                                          double upperBound,
@@ -50,6 +49,35 @@ public class NumberFieldRange implements IsSerializable {
                                     BoundType.INCLUSIVE,
                                     Double.MAX_VALUE,
                                     BoundType.INCLUSIVE);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof NumberFieldRange)) {
+            return false;
+        }
+        NumberFieldRange other = (NumberFieldRange) obj;
+        return this.lowerBound.equals(other.lowerBound)
+                && this.lowerBoundType.equals(other.lowerBoundType)
+                && this.upperBound.equals(other.upperBound)
+                && this.upperBoundType.equals(other.upperBoundType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(lowerBound, lowerBoundType, upperBound, upperBoundType);
+    }
+
+    public Range<Double> toRange() {
+        return Range.range(
+                this.getLowerBound(),
+                this.getLowerBoundType() == NumberFieldRange.BoundType.INCLUSIVE ? com.google.common.collect.BoundType.CLOSED : com.google.common.collect.BoundType.OPEN,
+                this.getUpperBound(),
+                this.getUpperBoundType() == NumberFieldRange.BoundType.INCLUSIVE ? com.google.common.collect.BoundType.CLOSED : com.google.common.collect.BoundType.OPEN
+        );
     }
 
     public double getLowerBound() {
@@ -66,6 +94,16 @@ public class NumberFieldRange implements IsSerializable {
 
     public BoundType getUpperBoundType() {
         return upperBoundType;
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper("NumberFieldRange")
+                .add("lowerBound", lowerBound)
+                .add("lowerBoundType", lowerBoundType)
+                .add("upperBound", upperBound)
+                .add("upperBoundType", upperBoundType)
+                .toString();
     }
 
     public enum BoundType {
@@ -88,44 +126,5 @@ public class NumberFieldRange implements IsSerializable {
         public String getUpperSymbol() {
             return upperSymbol;
         }
-    }
-
-    @Override
-    public String toString() {
-        return toStringHelper("NumberFieldRange")
-                .add("lowerBound", lowerBound)
-                .add("lowerBoundType", lowerBoundType)
-                .add("upperBound", upperBound)
-                .add("upperBoundType", upperBoundType)
-                .toString();
-    }
-
-    public Range<Double> toRange() {
-        return Range.range(
-                this.getLowerBound(),
-                this.getLowerBoundType() == NumberFieldRange.BoundType.INCLUSIVE ? com.google.common.collect.BoundType.CLOSED : com.google.common.collect.BoundType.OPEN,
-                this.getUpperBound(),
-                this.getUpperBoundType() == NumberFieldRange.BoundType.INCLUSIVE ? com.google.common.collect.BoundType.CLOSED : com.google.common.collect.BoundType.OPEN
-        );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(lowerBound, lowerBoundType, upperBound, upperBoundType);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof NumberFieldRange)) {
-            return false;
-        }
-        NumberFieldRange other = (NumberFieldRange) obj;
-        return this.lowerBound.equals(other.lowerBound)
-                && this.lowerBoundType.equals(other.lowerBoundType)
-                && this.upperBound.equals(other.upperBound)
-                && this.upperBoundType.equals(other.upperBoundType);
     }
 }

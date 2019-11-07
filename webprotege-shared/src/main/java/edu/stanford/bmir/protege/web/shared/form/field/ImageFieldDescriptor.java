@@ -14,30 +14,30 @@ public class ImageFieldDescriptor implements FormFieldDescriptor {
 
     protected static final String TYPE = "IMAGE";
 
+    public static String getFieldTypeId() {
+        return TYPE;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof ImageFieldDescriptor)) {
+            return false;
+        }
+        ImageFieldDescriptor other = (ImageFieldDescriptor) obj;
+        return true;
+    }
+
     @Nonnull
     @Override
     public String getAssociatedType() {
         return TYPE;
     }
 
-    public static String getFieldTypeId() {
-        return TYPE;
-    }
-
     @Override
     public int hashCode() {
         return 33;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ImageFieldDescriptor)) {
-            return false;
-        }
-        ImageFieldDescriptor other = (ImageFieldDescriptor) obj;
-        return true;
     }
 }

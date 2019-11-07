@@ -7,10 +7,12 @@ import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 
@@ -41,8 +43,9 @@ public class EntityFormRepositoryImpl_IT {
                                      .put("de", "Wasser")
                                      .put("en-US", "Water")
                                      .build();
-        var formDescriptor = FormDescriptor.builder(new FormId("TonicWater"))
-                      .addDescriptor(new FormElementDescriptor(
+        var formId = new FormId("TonicWater");
+        var formDescriptor = FormDescriptor.builder(formId)
+                      .addDescriptor(FormElementDescriptor.get(
                               FormElementId.get("Brand"),
                               languageMap,
                               ElementRun.START,
@@ -59,7 +62,11 @@ public class EntityFormRepositoryImpl_IT {
                       ))
                       .build();
 
-        impl.saveFormDescriptor(ProjectId.get("12345678-1234-1234-1234-123456789abc"),
+        var projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
+        impl.saveFormDescriptor(projectId,
                                 formDescriptor);
+        var deserializedFormDescriptor = impl.findFormDescriptor(projectId, formId);
+        assertThat(deserializedFormDescriptor.isPresent(), is(true));
+        assertThat(deserializedFormDescriptor.get(), is(formDescriptor));
     }
 }

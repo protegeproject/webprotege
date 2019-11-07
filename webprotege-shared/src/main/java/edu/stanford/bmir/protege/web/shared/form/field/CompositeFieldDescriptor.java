@@ -15,13 +15,9 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
 
     public static final String TYPE = "COMPOSITE";
 
-    public static String getFieldTypeId() {
-        return TYPE;
-    }
+    private List<CompositeFieldDescriptorEntry> elements = new ArrayList<>();
 
     // Direction?
-
-    private List<CompositeFieldDescriptorEntry> elements = new ArrayList<>();
 
     private CompositeFieldDescriptor() {
     }
@@ -30,8 +26,20 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
         this.elements.addAll(elements);
     }
 
-    public List<CompositeFieldDescriptorEntry> getElements() {
-        return new ArrayList<>(elements);
+    public static String getFieldTypeId() {
+        return TYPE;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof CompositeFieldDescriptor)) {
+            return false;
+        }
+        CompositeFieldDescriptor other = (CompositeFieldDescriptor) obj;
+        return this.elements.equals(other.elements);
     }
 
     @Nonnull
@@ -40,20 +48,12 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
         return TYPE;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(elements);
+    public List<CompositeFieldDescriptorEntry> getElements() {
+        return new ArrayList<>(elements);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof CompositeFieldDescriptor)) {
-            return false;
-        }
-        CompositeFieldDescriptor other = (CompositeFieldDescriptor) obj;
-        return this.elements.equals(other.elements);
+    public int hashCode() {
+        return Objects.hashCode(elements);
     }
 }

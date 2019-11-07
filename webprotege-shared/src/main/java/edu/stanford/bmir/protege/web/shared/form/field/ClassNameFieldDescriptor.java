@@ -43,15 +43,25 @@ public class ClassNameFieldDescriptor implements FormFieldDescriptor {
         return TYPE;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof ClassNameFieldDescriptor)) {
+            return false;
+        }
+        ClassNameFieldDescriptor other = (ClassNameFieldDescriptor) obj;
+        return this.filteringSuperClasses.equals(other.filteringSuperClasses)
+                && this.nodeType == other.nodeType
+                && this.placeholder.equals(other.placeholder);
+    }
+
     @Nonnull
     @Override
     @JsonIgnore
     public String getAssociatedType() {
         return TYPE;
-    }
-
-    public String getPlaceholder() {
-        return placeholder;
     }
 
     @Nonnull
@@ -63,25 +73,14 @@ public class ClassNameFieldDescriptor implements FormFieldDescriptor {
         return nodeType;
     }
 
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(filteringSuperClasses, nodeType, placeholder);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ClassNameFieldDescriptor)) {
-            return false;
-        }
-        ClassNameFieldDescriptor other = (ClassNameFieldDescriptor) obj;
-        return this.filteringSuperClasses.equals(other.filteringSuperClasses)
-                && this.nodeType == other.nodeType
-                && this.placeholder.equals(other.placeholder);
-    }
-
 
     @Override
     public String toString() {

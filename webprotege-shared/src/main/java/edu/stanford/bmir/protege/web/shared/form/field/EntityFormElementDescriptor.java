@@ -16,10 +16,10 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class EntityFormElementDescriptor {
 
-    @Nonnull
-    public abstract OWLProperty getProperty();
-
     @JsonUnwrapped
     @Nonnull
     public abstract FormElementDescriptor getDescriptor();
+
+    @Nonnull
+    public abstract OWLProperty getProperty();
 }

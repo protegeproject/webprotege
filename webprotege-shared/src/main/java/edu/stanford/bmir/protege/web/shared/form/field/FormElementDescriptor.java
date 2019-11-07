@@ -1,133 +1,75 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import com.fasterxml.jackson.annotation.*;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class FormElementDescriptor implements HasFormElementId, HasRepeatability, Serializable {
+@JsonPropertyOrder({"id", "label", "elementRun", "fieldDescriptor", "repeatability", "optionality", "help"})
+@GwtCompatible(serializable = true)
+@AutoValue
+public abstract class FormElementDescriptor implements HasFormElementId, HasRepeatability, Serializable {
 
-    private FormElementId id;
 
-    private LanguageMap label = LanguageMap.empty();
-
-    private ElementRun elementRun = ElementRun.START;
-
-    private FormFieldDescriptor fieldDescriptor;
-
-    private Repeatability repeatability = Repeatability.NON_REPEATABLE;
-
-    private Optionality optionality = Optionality.REQUIRED;
-
-    private LanguageMap help = LanguageMap.empty();
-
-    @GwtSerializationConstructor
-    private FormElementDescriptor() {
-    }
-
-    public FormElementDescriptor(@Nonnull FormElementId id,
-                                 @Nonnull LanguageMap formLabel,
-                                 @Nonnull ElementRun elementRun,
-                                 @Nonnull FormFieldDescriptor fieldDescriptor,
-                                 @Nonnull Repeatability repeatability,
-                                 @Nonnull Optionality optionality,
-                                 @Nonnull LanguageMap help) {
-        this.id = checkNotNull(id);
-        this.label = checkNotNull(formLabel);
-        this.elementRun = checkNotNull(elementRun);
-        this.fieldDescriptor = checkNotNull(fieldDescriptor);
-        this.repeatability = checkNotNull(repeatability);
-        this.optionality = checkNotNull(optionality);
-        this.help = checkNotNull(help);
-    }
-
-    @Override
-    @JsonUnwrapped
-    public FormElementId getId() {
-        return id;
-    }
-
-    public LanguageMap getLabel() {
-        return label;
+    @JsonCreator
+    @Nonnull
+    public static FormElementDescriptor get(@JsonProperty("id") @Nonnull FormElementId id,
+                                            @JsonProperty("label") @Nullable LanguageMap formLabel,
+                                            @JsonProperty("elementRun") @Nullable ElementRun elementRun,
+                                            @JsonProperty("fieldDescriptor") @Nonnull FormFieldDescriptor fieldDescriptor,
+                                            @JsonProperty("repeatability") @Nullable Repeatability repeatability,
+                                            @JsonProperty("optionality") @Nullable Optionality optionality,
+                                            @JsonProperty("help") @Nullable LanguageMap help) {
+        return new AutoValue_FormElementDescriptor(id,
+                                                   formLabel == null ? LanguageMap.empty() : formLabel,
+                                                   elementRun == null ? ElementRun.START : elementRun,
+                                                   fieldDescriptor,
+                                                   optionality == null ? Optionality.REQUIRED : optionality,
+                                                   repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
+                                                   help == null ? LanguageMap.empty() : help);
     }
 
     @Nonnull
-    public ElementRun getElementRun() {
-        return elementRun;
-    }
-
     @Override
-    public Repeatability getRepeatability() {
-        return repeatability;
-    }
+    @JsonProperty("id")
+    public abstract FormElementId getId();
 
-    public Optionality getOptionality() {
-        return optionality;
-    }
+    @Nonnull
+    public abstract LanguageMap getLabel();
 
-    public FormFieldDescriptor getFieldDescriptor() {
-        return fieldDescriptor;
-    }
+    @Nonnull
+    public abstract ElementRun getElementRun();
 
-    public boolean isNonComposite() {
-        return !(fieldDescriptor instanceof CompositeFieldDescriptor);
-    }
+    @Nonnull
+    public abstract FormFieldDescriptor getFieldDescriptor();
 
+    @Nonnull
+    public abstract Optionality getOptionality();
+
+    @Nonnull
+    public abstract Repeatability getRepeatability();
+
+    @Nonnull
+    public abstract LanguageMap getHelp();
+
+    @JsonIgnore
     public boolean isComposite() {
-        return fieldDescriptor instanceof CompositeFieldDescriptor;
+        return getFieldDescriptor() instanceof CompositeFieldDescriptor;
     }
 
-    public LanguageMap getHelp() {
-        return help;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id, label, elementRun, repeatability, optionality, fieldDescriptor, help);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof FormElementDescriptor)) {
-            return false;
-        }
-        FormElementDescriptor other = (FormElementDescriptor) obj;
-        return this.id.equals(other.id)
-                && Objects.equal(this.label, other.label)
-                && this.repeatability.equals(other.repeatability)
-                && this.optionality.equals(other.optionality)
-                && this.elementRun.equals(other.elementRun)
-                && this.fieldDescriptor.equals(other.fieldDescriptor)
-                && Objects.equal(this.help, other.help);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("FormElementDescriptor")
-                .addValue(id)
-                .add("label", label)
-                .add("elementRun", elementRun)
-                .add("repeatable", repeatability)
-                .add("optionality", optionality)
-                .add("help", help)
-                .add("descriptor", fieldDescriptor)
-                .toString();
+    @JsonIgnore
+    public boolean isNonComposite() {
+        return !(getFieldDescriptor() instanceof CompositeFieldDescriptor);
     }
 }

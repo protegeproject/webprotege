@@ -27,9 +27,9 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
 
     @Nonnull
     private NumberFieldRange range = NumberFieldRange.range(Double.MIN_VALUE,
-                                                          NumberFieldRange.BoundType.INCLUSIVE,
-                                                          Double.MAX_VALUE,
-                                                          NumberFieldRange.BoundType.INCLUSIVE);
+                                                            NumberFieldRange.BoundType.INCLUSIVE,
+                                                            Double.MAX_VALUE,
+                                                            NumberFieldRange.BoundType.INCLUSIVE);
 
     @Nonnull
     private NumberFieldType widgetType = NumberFieldType.PLAIN;
@@ -54,14 +54,31 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
         return TYPE;
     }
 
-    @Nonnull
-    public String getFormat() {
-        return format;
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof NumberFieldDescriptor)) {
+            return false;
+        }
+        NumberFieldDescriptor other = (NumberFieldDescriptor) obj;
+        return this.format.equals(other.format)
+                && this.range.equals(other.range)
+                && this.widgetType.equals(other.widgetType)
+                && this.length == other.length
+                && this.placeholder.equals(other.placeholder);
     }
 
     @Nonnull
-    public NumberFieldRange getRange() {
-        return range;
+    @Override
+    public String getAssociatedType() {
+        return TYPE;
+    }
+
+    @Nonnull
+    public String getFormat() {
+        return format;
     }
 
     public int getLength() {
@@ -73,34 +90,17 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
-    public NumberFieldType getWidgetType() {
-        return widgetType;
+    public NumberFieldRange getRange() {
+        return range;
     }
 
     @Nonnull
-    @Override
-    public String getAssociatedType() {
-        return TYPE;
+    public NumberFieldType getWidgetType() {
+        return widgetType;
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(format, range, widgetType, length, placeholder);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof NumberFieldDescriptor)) {
-            return false;
-        }
-        NumberFieldDescriptor other = (NumberFieldDescriptor) obj;
-        return this.format.equals(other.format)
-                && this.range.equals(other.range)
-                && this.widgetType.equals(other.widgetType)
-                && this.length == other.length
-                && this.placeholder.equals(other.placeholder);
     }
 }
