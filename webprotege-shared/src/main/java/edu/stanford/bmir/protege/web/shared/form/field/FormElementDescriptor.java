@@ -73,6 +73,14 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
         return fieldDescriptor;
     }
 
+    public boolean isNonComposite() {
+        return !(fieldDescriptor instanceof CompositeFieldDescriptor);
+    }
+
+    public boolean isComposite() {
+        return fieldDescriptor instanceof CompositeFieldDescriptor;
+    }
+
     public LanguageMap getHelp() {
         return help;
     }

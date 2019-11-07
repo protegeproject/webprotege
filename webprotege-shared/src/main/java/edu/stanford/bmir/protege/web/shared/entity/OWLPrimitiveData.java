@@ -45,4 +45,6 @@ public abstract class OWLPrimitiveData extends ObjectData {
     }
 
     public abstract Optional<OWLAnnotationValue> asAnnotationValue();
+
+    public abstract Optional<OWLEntity> asEntity();
 }

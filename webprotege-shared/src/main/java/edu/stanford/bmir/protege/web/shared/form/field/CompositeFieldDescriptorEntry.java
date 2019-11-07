@@ -14,9 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CompositeFieldDescriptorEntry implements Serializable, IsSerializable {
 
-    private FormElementId elementId;
-
-    private FormFieldDescriptor descriptor;
+    private FormElementDescriptor descriptor;
 
     private double flexGrow;
 
@@ -25,21 +23,15 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
     private CompositeFieldDescriptorEntry() {
     }
 
-    public CompositeFieldDescriptorEntry(FormElementId elementId,
-                                         double flexGrow,
+    public CompositeFieldDescriptorEntry(double flexGrow,
                                          double flexShrink,
-                                         FormFieldDescriptor descriptor) {
-        this.elementId = checkNotNull(elementId);
+                                         FormElementDescriptor descriptor) {
         this.descriptor = checkNotNull(descriptor);
         this.flexGrow = flexGrow;
         this.flexShrink = flexShrink;
     }
 
-    public FormElementId getElementId() {
-        return elementId;
-    }
-
-    public FormFieldDescriptor getDescriptor() {
+    public FormElementDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -53,7 +45,7 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(elementId, descriptor, flexGrow, flexShrink);
+        return Objects.hashCode(descriptor, flexGrow, flexShrink);
     }
 
     @Override
@@ -65,8 +57,7 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
             return false;
         }
         CompositeFieldDescriptorEntry other = (CompositeFieldDescriptorEntry) obj;
-        return this.elementId.equals(other.elementId)
-                && this.descriptor.equals(other.descriptor)
+        return this.descriptor.equals(other.descriptor)
                 && this.flexGrow == other.flexGrow
                 && this.flexShrink == other.flexShrink;
     }

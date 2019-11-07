@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class CompositeFieldDescriptor implements FormFieldDescriptor {
 
-    private static final String COMPOSITE_FIELD = "COMPOSITE";
+    public static final String TYPE = "COMPOSITE";
 
     public static String getFieldTypeId() {
-        return COMPOSITE_FIELD;
+        return TYPE;
     }
 
     // Direction?
@@ -37,7 +37,7 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
     @Nonnull
     @Override
     public String getAssociatedType() {
-        return COMPOSITE_FIELD;
+        return TYPE;
     }
 
     @Override

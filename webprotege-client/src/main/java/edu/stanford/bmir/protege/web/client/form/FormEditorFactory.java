@@ -114,7 +114,7 @@ public class FormEditorFactory {
         List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
         List<CompositeFieldDescriptorEntry> childDescriptorEntries = new ArrayList<>();
         for(CompositeFieldDescriptorEntry childDescriptor : formFieldDescriptor.getChildDescriptors()) {
-            Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor());
+            Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor().getFieldDescriptor());
             if(!childEditorFactory.isPresent()) {
                 return Optional.empty();
             }
@@ -125,7 +125,7 @@ public class FormEditorFactory {
                 () -> {
                     CompositeFieldEditor editor = compositeFieldEditorProvider.get();
                     for(int i = 0; i < childDescriptorEntries.size(); i++) {
-                        FormElementId childId = childDescriptorEntries.get(i).getElementId();
+                        FormElementId childId = childDescriptorEntries.get(i).getDescriptor().getId();
                         ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
                         ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
                         double flexGrow = childDescriptorEntries.get(i).getFlexGrow();

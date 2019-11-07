@@ -2,17 +2,21 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.field.CompositeFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.CompositeFieldDescriptorEntry;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.frame.HasPropertyValues;
@@ -21,12 +25,13 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import javax.management.Descriptor;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -52,37 +57,34 @@ public class EntityFrameFormDataBuilder {
         this.entityProvider = entityProvider;
     }
 
+    private static FormElementId toFormElementId(PropertyValue propertyValue) {
+        var property = propertyValue.getProperty();
+        return EntityFormElementId.toElementId(property.getEntity());
+    }
+
+    private static FormDataValue toFormDataValue(PropertyValue propertyValue) {
+        return propertyValue.getValue()
+                            .accept(new PrimitiveDataConverter());
+    }
+
     @Nonnull
     public FormData getFormData(@Nonnull OWLEntity entity,
                                 @Nonnull FormDescriptor formDescriptor) {
-        var formProperties = formDescriptor.getElements()
-                                           .stream()
-                                           .map(FormElementDescriptor::getId)
-                                           .map(this::toOwlProperty)
-                                           .flatMap(Optional::stream)
-                                           .collect(toImmutableSet());
-        var map = HashMultimap.<FormElementId, FormDataValue>create();
-        getPropertyValues(entity)
-                .getPropertyValues()
-                .stream()
-                .filter(propertyValue -> formProperties.contains(propertyValue.getProperty()
-                                                                              .getEntity()))
-                .forEach(propertyValue -> {
-                    var formElementId = toFormElementId(propertyValue);
-                    var formDataValue = toFormDataValue(propertyValue);
-                    map.put(formElementId, formDataValue);
-                });
-        var formDataValues = toFlatMap(map);
-        return new FormData(formDataValues);
+        List<FormElementDescriptor> elements = formDescriptor.getElements();
+        var propertyValuesByProperty = getPropertyValues(entity);
+        var formDataValue = toFormDataObject(entity, propertyValuesByProperty, elements);
+        var map = formDataValue.getMap()
+                     .entrySet()
+                     .stream()
+                     .collect(toMap(
+                             entry -> FormElementId.get(entry.getKey()),
+                             entry -> entry.getValue()
+                     ));
+        return new FormData(map);
     }
 
-    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
-        return EntityFormElementId.toProperty(formElementId,
-                                              entityProvider);
-    }
-
-    private HasPropertyValues getPropertyValues(OWLEntity entity) {
-        return entity.accept(new OWLEntityVisitorEx<>() {
+    private Multimap<OWLProperty, PropertyValue> getPropertyValues(OWLEntity entity) {
+        HasPropertyValues propertyValues = entity.accept(new OWLEntityVisitorEx<>() {
             @Nonnull
             @Override
             public HasPropertyValues visit(@Nonnull OWLClass cls) {
@@ -121,35 +123,89 @@ public class EntityFrameFormDataBuilder {
                 return ImmutableSet::of;
             }
         });
+        return propertyValues.getPropertyValues()
+                      .stream()
+                      .collect(ImmutableListMultimap.toImmutableListMultimap(
+                              propertyValue -> propertyValue.getProperty().getEntity(),
+                              propertyValue -> propertyValue
+                      ));
+
     }
 
-    private static FormElementId toFormElementId(PropertyValue propertyValue) {
-        var property = propertyValue.getProperty();
-        return EntityFormElementId.toElementId(property.getEntity());
+    private Optional<OWLProperty> getAssociatedOwlProperty(FormElementDescriptor descriptor) {
+        return toOwlProperty(descriptor.getId());
     }
 
-    private static FormDataValue toFormDataValue(PropertyValue propertyValue) {
-        return propertyValue.getValue()
-                            .accept(new PrimitiveDataConverter());
+    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
+        return EntityFormElementId.toProperty(formElementId,
+                                              entityProvider);
     }
 
-    private Map<FormElementId, FormDataValue> toFlatMap(HashMultimap<FormElementId, FormDataValue> map) {
-        var finalMap = new HashMap<FormElementId, FormDataValue>();
-        map.asMap()
-           .forEach((formElementId, formDataValues) -> {
-               FormDataValue reducedFormDataValue;
-               if(formDataValues.size() == 1) {
-                   reducedFormDataValue = formDataValues.iterator()
-                                                        .next();
-               }
-               else {
-                   reducedFormDataValue = FormDataList.of(new ArrayList<>(formDataValues));
-               }
-               finalMap.put(formElementId, reducedFormDataValue);
-           });
-        return finalMap;
+    private FormDataObject toFormDataObject(OWLEntity subject,
+                                            Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
+                                            List<FormElementDescriptor> descriptors) {
+        var map = new HashMap<String, FormDataValue>();
+        for(FormElementDescriptor descriptor : descriptors) {
+            var associatedOwlProperty = getAssociatedOwlProperty(descriptor);
+            if(associatedOwlProperty.isPresent()) {
+                var theProperty = associatedOwlProperty.get();
+                var propertyValues = subjectPropertyValuesByProperty.get(theProperty);
+                var formDataValueForProperty = toFormDataValue(descriptor, propertyValues);
+                map.put(descriptor.getId().getId(), formDataValueForProperty);
+            }
+        }
+        return new FormDataObject(map);
     }
 
+    /**
+     * Translates the property values to a form data value object.
+     * If there are multiple values then a list object will be returned.  Individual values will either be simple
+     * form data values or they will be a form data object depending upon whether the descriptor is a composite
+     * descriptor or not.
+     * @param descriptor The descriptor for the particular field.
+     * @param propertyValues The values for the particular field.
+     * @return A single {@link FormDataValue} that encompases the translation of the property values
+     */
+    private FormDataValue toFormDataValue(FormElementDescriptor descriptor, Collection<PropertyValue> propertyValues) {
+        if(descriptor.isComposite()) {
+            return toCompositeFormDataValues((CompositeFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
+        }
+        else {
+            return toSimpleFormDataValues(propertyValues);
+        }
+    }
+
+    private FormDataValue toSimpleFormDataValues(Collection<PropertyValue> propertyValues) {
+        if(propertyValues.size() == 1) {
+            return toFormDataValue(propertyValues.iterator().next());
+        }
+        var formDataValues = propertyValues.stream()
+                      .map(EntityFrameFormDataBuilder::toFormDataValue)
+                      .collect(toList());
+        return new FormDataList(formDataValues);
+    }
+
+    private FormDataValue toCompositeFormDataValues(CompositeFieldDescriptor descriptor, Collection<PropertyValue> propertyValues) {
+        var childDescriptors = descriptor.getChildDescriptors()
+                  .stream()
+                  .map(CompositeFieldDescriptorEntry::getDescriptor)
+                  .collect(toList());
+        // Property values should be entities
+        var valueList = propertyValues.stream()
+                      .map(PropertyValue::getValue)
+                      .map(OWLPrimitiveData::asEntity)
+                      .flatMap(Optional::stream)
+                      .map(entity -> toFormDataObject(entity, getPropertyValues(entity), childDescriptors))
+                      .collect(Collectors.toList());
+        if(valueList.size() == 1) {
+            return valueList.get(0);
+        }
+        else {
+            return new FormDataList(valueList);
+        }
+
+    }
+    
     private static class PrimitiveDataConverter implements OWLPrimitiveDataVisitor<FormDataValue, RuntimeException> {
 
         @Override

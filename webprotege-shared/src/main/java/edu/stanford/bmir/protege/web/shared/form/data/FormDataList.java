@@ -27,7 +27,7 @@ public class FormDataList extends FormDataValue {
         list.add(value);
     }
 
-    public FormDataList(List<FormDataValue> list) {
+    public FormDataList(List<? extends FormDataValue> list) {
         this.list.addAll(checkNotNull(list));
     }
 

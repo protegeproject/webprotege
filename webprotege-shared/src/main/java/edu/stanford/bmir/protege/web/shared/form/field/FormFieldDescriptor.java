@@ -23,7 +23,8 @@ import javax.annotation.Nonnull;
                       @JsonSubTypes.Type(value = ClassNameFieldDescriptor.class, name = ClassNameFieldDescriptor.TYPE),
                       @JsonSubTypes.Type(value = IndividualNameFieldDescriptor.class, name = IndividualNameFieldDescriptor.TYPE),
                       @JsonSubTypes.Type(value = ImageFieldDescriptor.class, name = ImageFieldDescriptor.TYPE),
-                      @JsonSubTypes.Type(value = NumberFieldDescriptor.class, name = NumberFieldDescriptor.TYPE)
+                      @JsonSubTypes.Type(value = NumberFieldDescriptor.class, name = NumberFieldDescriptor.TYPE),
+                      @JsonSubTypes.Type(value = CompositeFieldDescriptor.class, name = CompositeFieldDescriptor.TYPE)
               })
 public interface FormFieldDescriptor extends IsSerializable {
 

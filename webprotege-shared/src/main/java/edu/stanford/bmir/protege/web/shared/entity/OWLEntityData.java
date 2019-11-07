@@ -64,4 +64,9 @@ public abstract class OWLEntityData extends OWLPrimitiveData implements Comparab
     public Optional<OWLAnnotationValue> asAnnotationValue() {
         return Optional.of(getEntity().getIRI());
     }
+
+    @Override
+    public Optional<OWLEntity> asEntity() {
+        return Optional.of(getEntity());
+    }
 }

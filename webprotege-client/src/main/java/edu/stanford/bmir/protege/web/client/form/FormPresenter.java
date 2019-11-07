@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -75,6 +76,7 @@ public class FormPresenter {
      */
     public void displayForm(@Nonnull FormDescriptor formDescriptor,
                             @Nonnull FormData formData) {
+        GWT.log("[FormPresenter] Form data: " + formData);
         checkNotNull(formDescriptor);
         checkNotNull(formData);
         clearDirty();

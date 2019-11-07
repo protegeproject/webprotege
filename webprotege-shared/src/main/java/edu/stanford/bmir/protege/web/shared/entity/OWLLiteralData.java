@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
@@ -78,5 +79,10 @@ public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexi
     @Override
     public Optional<OWLAnnotationValue> asAnnotationValue() {
         return Optional.of(getLiteral());
+    }
+
+    @Override
+    public Optional<OWLEntity> asEntity() {
+        return Optional.empty();
     }
 }
