@@ -7,6 +7,8 @@
             box-sizing: border-box;
         }
     </ui:style>
-    <g:HTMLPanel ui:field="holder" addStyleNames="{style.container} {wp.style.form}">
+    <g:HTMLPanel>
+        <g:HTMLPanel ui:field="holder" addStyleNames="{style.container} {wp.style.form}">
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
