@@ -113,7 +113,7 @@ public class FormEditorFactory {
     private Optional<ValueEditorFactory<FormDataValue>> getCompositeFieldEditorFactory(CompositeFieldDescriptor formFieldDescriptor) {
         List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
         List<CompositeFieldDescriptorEntry> childDescriptorEntries = new ArrayList<>();
-        for(CompositeFieldDescriptorEntry childDescriptor : formFieldDescriptor.getChildDescriptors()) {
+        for(CompositeFieldDescriptorEntry childDescriptor : formFieldDescriptor.getElements()) {
             Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor().getFieldDescriptor());
             if(!childEditorFactory.isPresent()) {
                 return Optional.empty();

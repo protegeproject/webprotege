@@ -25,9 +25,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.management.Descriptor;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -186,7 +184,7 @@ public class EntityFrameFormDataBuilder {
     }
 
     private FormDataValue toCompositeFormDataValues(CompositeFieldDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        var childDescriptors = descriptor.getChildDescriptors()
+        var childDescriptors = descriptor.getElements()
                   .stream()
                   .map(CompositeFieldDescriptorEntry::getDescriptor)
                   .collect(toList());
@@ -205,7 +203,7 @@ public class EntityFrameFormDataBuilder {
         }
 
     }
-    
+
     private static class PrimitiveDataConverter implements OWLPrimitiveDataVisitor<FormDataValue, RuntimeException> {
 
         @Override

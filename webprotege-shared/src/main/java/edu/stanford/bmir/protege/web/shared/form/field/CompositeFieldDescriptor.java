@@ -21,17 +21,17 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
 
     // Direction?
 
-    private List<CompositeFieldDescriptorEntry> childDescriptors = new ArrayList<>();
+    private List<CompositeFieldDescriptorEntry> elements = new ArrayList<>();
 
     private CompositeFieldDescriptor() {
     }
 
-    public CompositeFieldDescriptor(List<CompositeFieldDescriptorEntry> childDescriptors) {
-        this.childDescriptors.addAll(childDescriptors);
+    public CompositeFieldDescriptor(List<CompositeFieldDescriptorEntry> elements) {
+        this.elements.addAll(elements);
     }
 
-    public List<CompositeFieldDescriptorEntry> getChildDescriptors() {
-        return new ArrayList<>(childDescriptors);
+    public List<CompositeFieldDescriptorEntry> getElements() {
+        return new ArrayList<>(elements);
     }
 
     @Nonnull
@@ -42,7 +42,7 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(childDescriptors);
+        return Objects.hashCode(elements);
     }
 
     @Override
@@ -54,6 +54,6 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
             return false;
         }
         CompositeFieldDescriptor other = (CompositeFieldDescriptor) obj;
-        return this.childDescriptors.equals(other.childDescriptors);
+        return this.elements.equals(other.elements);
     }
 }
