@@ -188,7 +188,7 @@ public class FormPresenter {
             editor.clearValue();
         }
         updateRequiredValuePresent(elementView);
-        formView.addFormElementView(elementView);
+        formView.addFormElementView(elementView, elementDescriptor.getElementRun());
     }
 
 

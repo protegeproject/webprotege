@@ -24,6 +24,8 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     private LanguageMap label = LanguageMap.empty();
 
+    private ElementRun elementRun = ElementRun.START;
+
     private FormFieldDescriptor fieldDescriptor;
 
     private Repeatability repeatability = Repeatability.NON_REPEATABLE;
@@ -38,12 +40,14 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     public FormElementDescriptor(@Nonnull FormElementId id,
                                  @Nonnull LanguageMap formLabel,
+                                 @Nonnull ElementRun elementRun,
                                  @Nonnull FormFieldDescriptor fieldDescriptor,
                                  @Nonnull Repeatability repeatability,
                                  @Nonnull Optionality optionality,
                                  @Nonnull LanguageMap help) {
         this.id = checkNotNull(id);
         this.label = checkNotNull(formLabel);
+        this.elementRun = checkNotNull(elementRun);
         this.fieldDescriptor = checkNotNull(fieldDescriptor);
         this.repeatability = checkNotNull(repeatability);
         this.optionality = checkNotNull(optionality);
@@ -58,6 +62,11 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     public LanguageMap getLabel() {
         return label;
+    }
+
+    @Nonnull
+    public ElementRun getElementRun() {
+        return elementRun;
     }
 
     @Override
@@ -87,7 +96,7 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, label, repeatability, optionality, fieldDescriptor, help);
+        return Objects.hashCode(id, label, elementRun, repeatability, optionality, fieldDescriptor, help);
     }
 
     @Override
@@ -103,6 +112,7 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
                 && Objects.equal(this.label, other.label)
                 && this.repeatability.equals(other.repeatability)
                 && this.optionality.equals(other.optionality)
+                && this.elementRun.equals(other.elementRun)
                 && this.fieldDescriptor.equals(other.fieldDescriptor)
                 && Objects.equal(this.help, other.help);
     }
@@ -113,6 +123,7 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
         return toStringHelper("FormElementDescriptor")
                 .addValue(id)
                 .add("label", label)
+                .add("elementRun", elementRun)
                 .add("repeatable", repeatability)
                 .add("optionality", optionality)
                 .add("help", help)

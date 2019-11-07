@@ -45,6 +45,7 @@ public class EntityFormRepositoryImpl_IT {
                       .addDescriptor(new FormElementDescriptor(
                               FormElementId.get("Brand"),
                               languageMap,
+                              ElementRun.START,
                               new TextFieldDescriptor(
                                       LanguageMap.of("en", "Enter brand name"),
                                       StringType.SIMPLE_STRING,

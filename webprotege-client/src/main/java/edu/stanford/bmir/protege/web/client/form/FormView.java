@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 
 import java.util.List;
 
@@ -11,7 +12,8 @@ import java.util.List;
  */
 public interface FormView extends IsWidget {
 
-    void addFormElementView(FormElementView view);
+    void addFormElementView(FormElementView view,
+                            ElementRun elementRun);
 
     List<FormElementView> getElementViews();
 
