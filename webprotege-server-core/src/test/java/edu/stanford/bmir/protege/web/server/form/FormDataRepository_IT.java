@@ -62,7 +62,7 @@ public class FormDataRepository_IT {
         FormData formData = new FormData(map);
         repository.store(projectId,
                          collectionId,
-                         new FormId("MyForm"),
+                         FormId.get("MyForm"),
                          entity,
                          formData);
     }
@@ -86,7 +86,7 @@ public class FormDataRepository_IT {
                               FormDataPrimitive.get("Bioportal"))));
         map.put(FormElementId.get("Homepage"), FormDataPrimitive.get(IRI.create("http://www.stanford.edu/~johnsmith")));
         FormData formData = new FormData(map);
-        FormId formId = new FormId("MyForm");
+        FormId formId = FormId.get("MyForm");
         repository.store(projectId,
                          collectionId,
                          formId,

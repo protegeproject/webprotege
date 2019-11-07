@@ -20,8 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormDescriptor implements Serializable {
 
-    @JsonUnwrapped
-    private FormId id;
+    private FormId formId;
 
     private List<FormElementDescriptor> elements;
 
@@ -29,16 +28,16 @@ public class FormDescriptor implements Serializable {
     }
 
     public FormDescriptor(FormId id, List<FormElementDescriptor> formElementDescriptors) {
-        this.id = id;
+        this.formId = id;
         this.elements = new ArrayList<>(formElementDescriptors);
     }
 
     public static FormDescriptor empty() {
-        return new FormDescriptor(new FormId("EmptyForm"), Collections.emptyList());
+        return new FormDescriptor(FormId.get("EmptyForm"), Collections.emptyList());
     }
 
-    public FormId getId() {
-        return id;
+    public FormId getFormId() {
+        return formId;
     }
 
     public List<FormElementDescriptor> getElements() {
@@ -51,7 +50,7 @@ public class FormDescriptor implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, elements);
+        return Objects.hashCode(formId, elements);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class FormDescriptor implements Serializable {
             return false;
         }
         FormDescriptor other = (FormDescriptor) obj;
-        return this.id.equals(other.id)
+        return this.formId.equals(other.formId)
                 && this.elements.equals(other.elements);
     }
 
@@ -71,7 +70,7 @@ public class FormDescriptor implements Serializable {
     @Override
     public String toString() {
         return toStringHelper("FormDescriptor")
-                .addValue(id)
+                .addValue(formId)
                 .addValue(elements)
                 .toString();
     }

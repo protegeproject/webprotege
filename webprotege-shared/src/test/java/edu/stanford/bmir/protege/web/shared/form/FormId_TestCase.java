@@ -18,12 +18,12 @@ public class FormId_TestCase {
 
     @Before
     public void setUp() {
-        formId = new FormId(id);
+        formId = FormId.get(id);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_id_IsNull() {
-        new FormId(null);
+        FormId.get(null);
     }
 
     @Test
@@ -43,17 +43,17 @@ public class FormId_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(formId, is(new FormId(id)));
+        assertThat(formId, is(FormId.get(id)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        assertThat(formId, is(not(new FormId("String-1c11bb8a-d00d-4d02-ab5c-84498c0f513c"))));
+        assertThat(formId, is(not(FormId.get("String-1c11bb8a-d00d-4d02-ab5c-84498c0f513c"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(formId.hashCode(), is(new FormId(id).hashCode()));
+        assertThat(formId.hashCode(), is(FormId.get(id).hashCode()));
     }
 
     @Test

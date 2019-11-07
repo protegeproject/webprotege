@@ -21,7 +21,7 @@ public class FormIdConverter extends TypeSafeConverter<String, FormId> implement
 
     @Override
     public FormId decodeObject(String fromDBObject, MappedField optionalExtraInfo) {
-        return new FormId(fromDBObject);
+        return FormId.get(fromDBObject);
     }
 
     @Override

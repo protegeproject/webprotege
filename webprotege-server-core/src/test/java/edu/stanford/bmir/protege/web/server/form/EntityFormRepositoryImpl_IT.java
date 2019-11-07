@@ -43,7 +43,7 @@ public class EntityFormRepositoryImpl_IT {
                                      .put("de", "Wasser")
                                      .put("en-US", "Water")
                                      .build();
-        var formId = new FormId("TonicWater");
+        var formId = FormId.get("TonicWater");
         var formDescriptor = FormDescriptor.builder(formId)
                       .addDescriptor(FormElementDescriptor.get(
                               FormElementId.get("Brand"),

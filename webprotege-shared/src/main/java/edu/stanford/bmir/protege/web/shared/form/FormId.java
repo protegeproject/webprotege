@@ -1,8 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,45 +19,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class FormId implements Serializable, IsSerializable {
+@GwtCompatible(serializable = true)
+@AutoValue
+public abstract class FormId implements Serializable, IsSerializable {
 
-    private String id;
-
-    private FormId() {
-        id = "<NOTINIT>";
+    @JsonCreator
+    public static FormId get(@Nonnull String id) {
+        return new AutoValue_FormId(id);
     }
 
-    public FormId(String id) {
-        this.id = checkNotNull(id);
-    }
-
-    @JsonProperty("formId")
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof FormId)) {
-            return false;
-        }
-        FormId other = (FormId) obj;
-        return this.id.equals(other.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("FormId")
-                .addValue(id)
-                .toString();
-    }
+    @JsonValue
+    public abstract String getId();
 }

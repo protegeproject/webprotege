@@ -29,7 +29,7 @@ public class FormDescriptorDeserializer implements JsonDeserializer<FormDescript
             FormElementDescriptor elementDescriptor = jsonDeserializationContext.deserialize(fieldElement, FormElementDescriptor.class);
             formElementDescriptors.add(elementDescriptor);
         }
-        return new FormDescriptor(new FormId(id), formElementDescriptors);
+        return new FormDescriptor(FormId.get(id), formElementDescriptors);
     }
 
     private static FormDescriptorParseException createParseException(JsonElement element, String typeName) {
