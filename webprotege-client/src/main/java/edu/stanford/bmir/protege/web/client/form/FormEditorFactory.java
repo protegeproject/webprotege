@@ -142,7 +142,7 @@ public class FormEditorFactory {
         return Optional.of(
                 () -> {
                     NumberFieldEditor editor = numberFieldEditorProvider.get();
-                    editor.setFormat(formFieldDescriptor.getNumberFormat());
+                    editor.setFormat(formFieldDescriptor.getFormat());
                     editor.setRange(formFieldDescriptor.getRange());
                     editor.setLength(formFieldDescriptor.getLength());
                     editor.setPlaceholder(formFieldDescriptor.getPlaceholder());

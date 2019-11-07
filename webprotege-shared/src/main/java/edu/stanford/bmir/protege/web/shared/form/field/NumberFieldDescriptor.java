@@ -19,14 +19,14 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     protected static final String TYPE = "NUMBER";
 
     @Nonnull
-    private String numberFormat = "#######";
+    private String format = "#.#";
 
     private int length = 6;
 
     private String placeholder = "";
 
     @Nonnull
-    private NumberFieldRange range = NumberFieldRange.range(Double.MAX_VALUE,
+    private NumberFieldRange range = NumberFieldRange.range(Double.MIN_VALUE,
                                                           NumberFieldRange.BoundType.INCLUSIVE,
                                                           Double.MAX_VALUE,
                                                           NumberFieldRange.BoundType.INCLUSIVE);
@@ -38,12 +38,12 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     private NumberFieldDescriptor() {
     }
 
-    public NumberFieldDescriptor(@Nonnull String numberFormat,
+    public NumberFieldDescriptor(@Nonnull String format,
                                  @Nonnull NumberFieldRange range,
                                  @Nonnull NumberFieldType widgetType,
                                  int length,
                                  @Nonnull String placeholder) {
-        this.numberFormat = checkNotNull(numberFormat);
+        this.format = checkNotNull(format);
         this.range = checkNotNull(range);
         this.widgetType = checkNotNull(widgetType);
         this.length = length;
@@ -55,8 +55,8 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     }
 
     @Nonnull
-    public String getNumberFormat() {
-        return numberFormat;
+    public String getFormat() {
+        return format;
     }
 
     @Nonnull
@@ -85,7 +85,7 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(numberFormat, range, widgetType, length, placeholder);
+        return Objects.hashCode(format, range, widgetType, length, placeholder);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
             return false;
         }
         NumberFieldDescriptor other = (NumberFieldDescriptor) obj;
-        return this.numberFormat.equals(other.numberFormat)
+        return this.format.equals(other.format)
                 && this.range.equals(other.range)
                 && this.widgetType.equals(other.widgetType)
                 && this.length == other.length

@@ -81,7 +81,7 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
             numberField.setText(format.format(v));
         }
         else if(primitive.asLiteral().isPresent()) {
-            double v = primitive.asLiteral().get().parseDouble();
+            double v = Double.parseDouble(primitive.asLiteral().get().getLiteral());
             numberField.setText(format.format(v));
         }
         else {
@@ -101,7 +101,7 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
             double v = format.parse(numberField.getText().trim());
             return Optional.of(FormDataPrimitive.get(v));
         } catch (NumberFormatException e) {
-            GWT.log("Invalid format " + e.getMessage());
+            GWT.log("[NumberFieldEditor] Invalid number format (" + format.getPattern() + ") " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -122,11 +122,16 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
     }
 
     public void setFormat(@Nonnull String numberFormat) {
-        format = NumberFormat.getFormat(checkNotNull(numberFormat));
+        try {
+            GWT.log("[NumberFieldEditor] Set number format to " + numberFormat);
+            format = NumberFormat.getFormat(checkNotNull(numberFormat));
+        } catch(NumberFormatException e) {
+            GWT.log("[NumberFieldEditor] Invalid number format (" + numberFormat + "): " + e.getMessage());
+        }
     }
 
     public void setRange(NumberFieldRange numberRange) {
-        GWT.log("Setting range to " + numberRange);
+        GWT.log("[NumberFieldEditor] Setting range to " + numberRange);
         this.range = checkNotNull(numberRange);
     }
 
@@ -136,7 +141,7 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
             numberField.setText(format.format(v));
             return true;
         } catch (NumberFormatException e) {
-            displayErrorMessage("Invalid number");
+            displayErrorMessage("[NumberFieldEditor] Invalid number");
             return false;
         }
     }
