@@ -45,11 +45,12 @@ public class CompositeFieldEditor extends Composite implements ValueEditor<FormD
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-    public void addChildEditor(FormElementId id, double flexGrow, double flexShrink, ValueEditor<FormDataValue> childEditor) {
+    public void addChildEditor(FormElementId id, double flexBasis, double flexGrow, double flexShrink, ValueEditor<FormDataValue> childEditor) {
         childEditors.put(id, childEditor);
         childEditor.addValueChangeHandler(valueChangeEvent -> ValueChangeEvent.fire(this, getValue()));
         childEditor.addDirtyChangedHandler(event -> fireEvent(new DirtyChangedEvent()));
         CompositeFieldEditorChildHolder holder = new CompositeFieldEditorChildHolder();
+        holder.setFlexBasis(flexBasis);
         holder.setFlexGrow(flexGrow);
         holder.setFlexShrink(flexShrink);
         if(flexGrow == flexShrink && flexGrow == 0) {

@@ -33,6 +33,11 @@ public class CompositeFieldEditorChildHolder extends Composite {
         holder.setWidget(widget);
     }
 
+
+    public void setFlexBasis(double flexBasis) {
+        getElement().getStyle().setProperty("flexBasis", String.valueOf(flexBasis));
+    }
+
     public void setFlexGrow(double grow) {
         getElement().getStyle().setProperty("flexGrow", String.valueOf(grow));
     }

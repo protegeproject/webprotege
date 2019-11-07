@@ -128,9 +128,10 @@ public class FormEditorFactory {
                         FormElementId childId = childDescriptorEntries.get(i).getDescriptor().getId();
                         ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
                         ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
+                        double flexBasis = childDescriptorEntries.get(i).getBasis();
                         double flexGrow = childDescriptorEntries.get(i).getFlexGrow();
                         double flexShrink = childDescriptorEntries.get(i).getFlexShrink();
-                        editor.addChildEditor(childId, flexGrow, flexShrink, childEditor);
+                        editor.addChildEditor(childId, flexBasis, flexGrow, flexShrink, childEditor);
                     }
                     return editor;
                 }

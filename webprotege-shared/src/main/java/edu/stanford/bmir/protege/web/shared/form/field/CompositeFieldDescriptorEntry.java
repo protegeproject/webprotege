@@ -17,26 +17,34 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
 
     private FormElementDescriptor descriptor;
 
+    private double flexBasis;
+
     private double flexGrow;
 
     private double flexShrink;
+
 
     private CompositeFieldDescriptorEntry() {
     }
 
     public CompositeFieldDescriptorEntry(double flexGrow,
                                          double flexShrink,
-                                         FormElementDescriptor descriptor) {
+                                         FormElementDescriptor descriptor, double flexBasis) {
         this.descriptor = checkNotNull(descriptor);
         this.flexGrow = flexGrow;
         this.flexShrink = flexShrink;
+        this.flexBasis = flexBasis;
     }
+
 
     @JsonUnwrapped
     public FormElementDescriptor getDescriptor() {
         return descriptor;
     }
 
+    public double getBasis() {
+        return flexBasis;
+    }
     public double getFlexGrow() {
         return flexGrow;
     }
@@ -47,7 +55,7 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(descriptor, flexGrow, flexShrink);
+        return Objects.hashCode(descriptor, flexBasis, flexGrow, flexShrink);
     }
 
     @Override
@@ -60,6 +68,7 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
         }
         CompositeFieldDescriptorEntry other = (CompositeFieldDescriptorEntry) obj;
         return this.descriptor.equals(other.descriptor)
+                && this.flexBasis == other.flexBasis
                 && this.flexGrow == other.flexGrow
                 && this.flexShrink == other.flexShrink;
     }
