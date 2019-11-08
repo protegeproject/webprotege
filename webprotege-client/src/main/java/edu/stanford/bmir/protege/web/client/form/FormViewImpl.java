@@ -50,7 +50,6 @@ public class FormViewImpl extends Composite implements FormView {
             createAndAddNewRow();
         }
         else if(elementRun.isStart()) {
-            currentRow.finishRow();
             createAndAddNewRow();
         }
         currentRow.add(view);

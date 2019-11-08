@@ -69,6 +69,7 @@
 .wp-form-group--single-col {
     flex-grow: 1;
     flex-shrink: 1;
+    align-items: stretch;
 }
 
 .wp-form-stretch {

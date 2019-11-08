@@ -1,14 +1,16 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Matthew Horridge
@@ -16,10 +18,6 @@ import javax.inject.Inject;
  * 2019-11-08
  */
 public class FormViewRowImpl extends Composite implements FormViewRow {
-
-    interface FormViewRowImplUiBinder extends UiBinder<HTMLPanel, FormViewRowImpl> {
-
-    }
 
     private static FormViewRowImplUiBinder ourUiBinder = GWT.create(FormViewRowImplUiBinder.class);
 
@@ -33,26 +31,34 @@ public class FormViewRowImpl extends Composite implements FormViewRow {
 
     @Override
     public void add(FormElementView elementView) {
+        int viewCount = container.getWidgetCount();
+        if(viewCount == 0) {
+            setSingleColStyle(elementView);
+        }
+        else {
+            if(viewCount == 1) {
+                Widget firstView = container.getWidget(0);
+                setMultiColStyle(firstView);
+            }
+            setMultiColStyle(elementView);
+        }
         container.add(elementView);
     }
 
-    @Override
-    public void finishRow() {
-        if(container.getWidgetCount() > 1) {
-            for(int i = 0; i < container.getWidgetCount(); i++) {
-                Element element = container.getWidget(i)
-                                           .getElement();
-                element.addClassName(WebProtegeClientBundle.BUNDLE.style().formGroupMultiCol());
-                element.removeClassName(WebProtegeClientBundle.BUNDLE.style().formGroupSingleCol());
-            }
-        }
-        else {
-            for(int i = 0; i < container.getWidgetCount(); i++) {
-                Element element = container.getWidget(i)
-                                           .getElement();
-                element.addClassName(WebProtegeClientBundle.BUNDLE.style().formGroupSingleCol());
-                element.removeClassName(WebProtegeClientBundle.BUNDLE.style().formGroupMultiCol());
-            }
-        }
+    private void setSingleColStyle(IsWidget elementView) {
+        elementView.asWidget()
+                   .addStyleName(BUNDLE.style()
+                                       .formGroupSingleCol());
+    }
+
+    private void setMultiColStyle(IsWidget view) {
+        view.asWidget().removeStyleName(BUNDLE.style()
+                                        .formGroupSingleCol());
+        view.asWidget().addStyleName(BUNDLE.style()
+                                     .formGroupMultiCol());
+    }
+
+    interface FormViewRowImplUiBinder extends UiBinder<HTMLPanel, FormViewRowImpl> {
+
     }
 }
