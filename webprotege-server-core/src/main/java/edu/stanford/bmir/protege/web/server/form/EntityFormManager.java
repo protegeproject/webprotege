@@ -1,21 +1,15 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,38 +21,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EntityFormManager {
 
     @Nonnull
-    private final OWLDataFactory dataFactory;
-
-    @Nonnull
     private final EntityFormRepository entityFormRepository;
 
     @Nonnull
-    private final ObjectMapper objectMapper;
+    private final EntityFormSelectorRepository entityFormSelectorRepository;
+
+    @Nonnull
+    private final MatchingEngine matchingEngine;
 
     @Inject
-    public EntityFormManager(@Nonnull OWLDataFactory dataFactory,
-                             @Nonnull EntityFormRepository entityFormRepository,
-                             @Nonnull ObjectMapper objectMapper) {
-        this.dataFactory = checkNotNull(dataFactory);
+    public EntityFormManager(@Nonnull EntityFormRepository entityFormRepository,
+                             @Nonnull EntityFormSelectorRepository entityFormSelectorRepository,
+                             @Nonnull MatchingEngine matchingEngine) {
         this.entityFormRepository = entityFormRepository;
-        this.objectMapper = objectMapper;
+        this.entityFormSelectorRepository = entityFormSelectorRepository;
+        this.matchingEngine = matchingEngine;
     }
 
     public Optional<FormDescriptor> getFormDescriptor(@Nonnull OWLEntity entity,
                                                       @Nonnull ProjectId projectId) {
-        try(InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/amino-acid-form.json")) {
-//            FormDescriptor formDescriptor = objectMapper.readerFor(FormDescriptor.class)
-//                                                  .readValue(new BufferedInputStream(is));
-//            is.close();
-//            entityFormRepository.saveFormDescriptor(projectId, formDescriptor);
-            return entityFormRepository.findFormDescriptors(projectId)
-                                .findFirst();
+        var formId = entityFormSelectorRepository.findFormTriggers(projectId)
+                                    .filter(selector -> matchingEngine.matches(entity,
+                                                                               selector.getCriteria()))
+                                    .map(EntityFormSelector::getFormId)
+                                    .findFirst();
 
-//            return Optional.of(formDescriptor);
-        } catch(IOException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        return formId.flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id));
     }
 
 }

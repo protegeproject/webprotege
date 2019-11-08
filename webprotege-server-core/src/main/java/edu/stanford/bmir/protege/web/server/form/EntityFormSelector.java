@@ -17,13 +17,13 @@ import javax.annotation.Nonnull;
  */
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormSelector {
+public abstract class EntityFormSelector {
 
     @JsonCreator
-    public static FormSelector get(@Nonnull @JsonProperty("projectId") ProjectId projectId,
-                                   @Nonnull @JsonProperty("criteria") EntityMatchCriteria criteria,
-                                   @Nonnull @JsonProperty("formId") FormId formId) {
-        return new AutoValue_FormSelector(projectId, criteria, formId);
+    public static EntityFormSelector get(@Nonnull @JsonProperty("projectId") ProjectId projectId,
+                                         @Nonnull @JsonProperty("criteria") EntityMatchCriteria criteria,
+                                         @Nonnull @JsonProperty("formId") FormId formId) {
+        return new AutoValue_EntityFormSelector(projectId, criteria, formId);
     }
 
     @JsonProperty("projectId")

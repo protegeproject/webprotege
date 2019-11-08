@@ -11,9 +11,9 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-08
  */
-public interface FormTriggerRepository extends Repository {
+public interface EntityFormSelectorRepository extends Repository {
 
-    void save(FormSelector formSelector);
+    void save(EntityFormSelector entityFormSelector);
 
-    Stream<FormSelector> findFormTriggers(@Nonnull ProjectId projectId);
+    Stream<EntityFormSelector> findFormTriggers(@Nonnull ProjectId projectId);
 }
