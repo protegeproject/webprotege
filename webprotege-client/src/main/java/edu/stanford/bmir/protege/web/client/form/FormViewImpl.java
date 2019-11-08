@@ -2,17 +2,15 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +21,8 @@ import java.util.List;
  */
 public class FormViewImpl extends Composite implements FormView {
 
+    private final Provider<FormViewRow> rowProvider;
+
     interface FormViewImplUiBinder extends UiBinder<HTMLPanel, FormViewImpl> {
 
     }
@@ -32,12 +32,13 @@ public class FormViewImpl extends Composite implements FormView {
     @UiField
     HTMLPanel holder;
 
-    FlowPanel currentRun;
+    private FormViewRow currentRow;
 
     private List<FormElementView> elementViews = new ArrayList<>();
 
     @Inject
-    public FormViewImpl() {
+    public FormViewImpl(Provider<FormViewRow> rowProvider) {
+        this.rowProvider = rowProvider;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -45,40 +46,25 @@ public class FormViewImpl extends Composite implements FormView {
     public void addFormElementView(FormElementView view,
                                    ElementRun elementRun) {
 
-        if(currentRun == null || elementRun.isStart()) {
-            currentRun = new FlowPanel();
-            Style style = currentRun.getElement()
-                                    .getStyle();
-            style.setProperty("display", "flex");
-            style.setProperty("boxSizing", "borderBox");
-            style.setProperty("flexDirection", "row");
-            style.setProperty("justifyContent", "flexStart");
-            holder.add(currentRun);
+        if(currentRow == null) {
+            createAndAddNewRow();
         }
-        currentRun.add(view);
+        else if(elementRun.isStart()) {
+            currentRow.finishRow();
+            createAndAddNewRow();
+        }
+        currentRow.add(view);
         elementViews.add(view);
-        if(currentRun.getWidgetCount() > 1) {
-            for(int i = 0; i < currentRun.getWidgetCount(); i++) {
-                Element element = currentRun.getWidget(i)
-                                            .getElement();
-                element.addClassName(WebProtegeClientBundle.BUNDLE.style().formGroupMultiCol());
-                element.removeClassName(WebProtegeClientBundle.BUNDLE.style().formGroupSingleCol());
-            }
-        }
-        else {
-            for(int i = 0; i < currentRun.getWidgetCount(); i++) {
-                Element element = currentRun.getWidget(i)
-                                            .getElement();
-                element.addClassName(WebProtegeClientBundle.BUNDLE.style().formGroupSingleCol());
-                element.removeClassName(WebProtegeClientBundle.BUNDLE.style().formGroupMultiCol());
-            }
-        }
+    }
+
+    private void createAndAddNewRow() {
+        currentRow = rowProvider.get();
+        holder.add(currentRow);
     }
 
     @Override
     public List<FormElementView> getElementViews() {
         return new ArrayList<>(elementViews);
-
     }
 
     @Override
