@@ -58,9 +58,11 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         GWT.log("[FormPortletPresenter] handleAfterSetEntity " + entityData);
         if(entityData.isPresent()) {
             setSubject(entityData.get());
+            setNothingSelectedVisible(false);
         }
         else {
             formPresenter.clear();
+            setNothingSelectedVisible(true);
         }
     }
 

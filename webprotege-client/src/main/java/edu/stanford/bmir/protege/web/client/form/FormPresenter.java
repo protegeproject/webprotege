@@ -35,6 +35,9 @@ public class FormPresenter {
     private final FormView formView;
 
     @Nonnull
+    private final NoFormView noFormView;
+
+    @Nonnull
     private final Provider<FormElementView> formElementViewProvider;
 
     @Nonnull
@@ -48,13 +51,17 @@ public class FormPresenter {
 
     private boolean dirty;
 
+    private Optional<AcceptsOneWidget> container = Optional.empty();
+
 
     @Inject
     public FormPresenter(@Nonnull FormView formView,
+                         @Nonnull NoFormView noFormView,
                          @Nonnull FormEditorFactory formEditorFactory,
                          @Nonnull Provider<FormElementView> formElementViewProvider,
                          @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.formView = checkNotNull(formView);
+        this.noFormView = checkNotNull(noFormView);
         this.formElementViewProvider = checkNotNull(formElementViewProvider);
         this.formEditorFactory = checkNotNull(formEditorFactory);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -69,7 +76,7 @@ public class FormPresenter {
      * @param container The container.
      */
     public void start(@Nonnull AcceptsOneWidget container) {
-        container.setWidget(formView.asWidget());
+        this.container = Optional.of(container);
     }
 
 
@@ -86,9 +93,17 @@ public class FormPresenter {
         clearDirty();
         if (!currentFormDescriptor.equals(Optional.of(formDescriptor))) {
             createFormAndSetFormData(formDescriptor, formData);
+
         }
         else {
             setFormData(formData);
+        }
+        if(formDescriptor.getElements().isEmpty()) {
+            GWT.log("Form is empty");
+            container.ifPresent(c -> c.setWidget(noFormView));
+        }
+        else {
+            container.ifPresent(c -> c.setWidget(formView));
         }
         currentFormDescriptor = Optional.of(formDescriptor);
     }
@@ -234,6 +249,7 @@ public class FormPresenter {
     public void clear() {
         formView.clear();
         currentFormDescriptor = Optional.empty();
+        container.ifPresent(c -> c.setWidget(noFormView));
     }
 
     public IsWidget getView() {

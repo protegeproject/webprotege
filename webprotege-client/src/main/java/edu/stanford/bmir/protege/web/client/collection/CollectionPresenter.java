@@ -168,7 +168,5 @@ public class CollectionPresenter implements Presenter {
                                            result -> formPresenter.displayForm(result.getFormDescriptor(),
                                                                                result.getFormData()));
         });
-        if (!place.getSelection().isPresent()) {
-        }
     }
 }

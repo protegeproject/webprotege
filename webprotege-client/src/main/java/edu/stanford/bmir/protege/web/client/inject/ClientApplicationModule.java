@@ -25,10 +25,7 @@ import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
-import edu.stanford.bmir.protege.web.client.form.FormElementView;
-import edu.stanford.bmir.protege.web.client.form.FormElementViewImpl;
-import edu.stanford.bmir.protege.web.client.form.FormViewRow;
-import edu.stanford.bmir.protege.web.client.form.FormViewRowImpl;
+import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.issues.CommentEditorView;
 import edu.stanford.bmir.protege.web.client.issues.CommentEditorViewImpl;
@@ -532,6 +529,11 @@ public class ClientApplicationModule {
 
     @Provides
     FormViewRow provideFormViewRow(FormViewRowImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NoFormView provideNoFormView(NoFormViewImpl impl) {
         return impl;
     }
 }
