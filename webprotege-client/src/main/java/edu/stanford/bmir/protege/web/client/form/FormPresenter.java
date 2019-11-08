@@ -60,6 +60,10 @@ public class FormPresenter {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
+    public FormDescriptor getFormDescriptor() {
+        return currentFormDescriptor.orElse(FormDescriptor.empty());
+    }
+
     /**
      * Starts the form presenter.  The form will be placed into the specified container.
      * @param container The container.

@@ -47,9 +47,11 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         mapper.registerModule(new GuavaModule());
         SimpleModule module = new SimpleModule();
         module.addSerializer(OWLEntity.class, new OWLEntitySerializer());
+        module.addSerializer(OWLProperty.class, new OWLEntitySerializer());
         module.addSerializer(new EntityTypeSerializer());
         module.addDeserializer(EntityType.class, new EntityTypeDeserializer());
         module.addDeserializer(OWLEntity.class, new OWLEntityDeserializer(dataFactory));
+        module.addDeserializer(OWLProperty.class, new OWLPropertyDeserializer(dataFactory));
         module.addDeserializer(OWLClass.class, new OWLClassDeserializer(dataFactory));
         module.addDeserializer(IRI.class, new IriDeserializer());
         module.addDeserializer(FormDataValue.class, new FormDataValueDeserializer(dataFactory));

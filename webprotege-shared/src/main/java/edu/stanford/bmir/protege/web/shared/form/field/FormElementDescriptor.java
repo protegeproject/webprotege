@@ -5,6 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-@JsonPropertyOrder({"id", "label", "elementRun", "fieldDescriptor", "repeatability", "optionality", "help"})
+@JsonPropertyOrder({"id", "owlProperty", "label", "elementRun", "fieldDescriptor", "repeatability", "optionality", "help"})
 @GwtCompatible(serializable = true)
 @AutoValue
 public abstract class FormElementDescriptor implements HasFormElementId, HasRepeatability, Serializable {
@@ -25,6 +26,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     @JsonCreator
     @Nonnull
     public static FormElementDescriptor get(@JsonProperty("id") @Nonnull FormElementId id,
+                                            @JsonProperty("owlProperty") @Nullable OWLProperty property,
                                             @JsonProperty("label") @Nullable LanguageMap formLabel,
                                             @JsonProperty("elementRun") @Nullable ElementRun elementRun,
                                             @JsonProperty("fieldDescriptor") @Nonnull FormFieldDescriptor fieldDescriptor,
@@ -32,6 +34,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                                             @JsonProperty("optionality") @Nullable Optionality optionality,
                                             @JsonProperty("help") @Nullable LanguageMap help) {
         return new AutoValue_FormElementDescriptor(id,
+                                                   property,
                                                    formLabel == null ? LanguageMap.empty() : formLabel,
                                                    elementRun == null ? ElementRun.START : elementRun,
                                                    fieldDescriptor,
@@ -44,6 +47,15 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     @Override
     @JsonProperty("id")
     public abstract FormElementId getId();
+
+    @JsonIgnore
+    @Nullable
+    protected abstract OWLProperty getOwlPropertyInternal();
+
+    @Nonnull
+    public Optional<OWLProperty> getOwlProperty() {
+        return Optional.ofNullable(getOwlPropertyInternal());
+    }
 
     @Nonnull
     public abstract LanguageMap getLabel();

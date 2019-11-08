@@ -1,15 +1,17 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import org.semanticweb.owlapi.model.OWLProperty;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -40,6 +42,13 @@ public class FormDescriptor implements Serializable {
 
     public List<FormElementDescriptor> getElements() {
         return elements;
+    }
+
+    @JsonIgnore
+    public Map<FormElementId, Optional<OWLProperty>> getOwlPropertyMap() {
+        return elements.stream()
+                .collect(toMap(FormElementDescriptor::getId,
+                               FormElementDescriptor::getOwlProperty));
     }
 
     public static Builder builder(FormId formId) {

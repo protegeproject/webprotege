@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -47,6 +49,7 @@ public class EntityFormRepositoryImpl_IT {
         var formDescriptor = FormDescriptor.builder(formId)
                       .addDescriptor(FormElementDescriptor.get(
                               FormElementId.get("Brand"),
+                              new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_COMMENT.getIRI()),
                               languageMap,
                               ElementRun.START,
                               new TextFieldDescriptor(

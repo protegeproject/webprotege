@@ -18,13 +18,17 @@ public class SetEntityFormDataAction implements ProjectAction<SetEntityFormDataR
 
     private OWLEntity entity;
 
+    private FormDescriptor formDescriptor;
+
     private FormData formData;
 
     public SetEntityFormDataAction(ProjectId projectId,
                                    OWLEntity entity,
+                                   FormDescriptor formDescriptor,
                                    FormData formData) {
         this.projectId = projectId;
         this.entity = entity;
+        this.formDescriptor = formDescriptor;
         this.formData = formData;
     }
 
@@ -40,6 +44,10 @@ public class SetEntityFormDataAction implements ProjectAction<SetEntityFormDataR
 
     public OWLEntity getEntity() {
         return entity;
+    }
+
+    public FormDescriptor getFormDescriptor() {
+        return formDescriptor;
     }
 
     public FormData getFormData() {

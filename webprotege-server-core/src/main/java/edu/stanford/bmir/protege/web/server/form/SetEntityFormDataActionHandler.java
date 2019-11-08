@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataResult;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -27,12 +28,10 @@ import org.semanticweb.owlapi.model.OWLProperty;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -78,13 +77,15 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
     protected ChangeListGenerator<OWLEntityData> getChangeListGenerator(SetEntityFormDataAction action,
                                                                         ExecutionContext executionContext) {
         var formData = action.getFormData();
+        var elementId2PropertyMap = action.getFormDescriptor().getOwlPropertyMap();
+
         var propertyValues = formData.getData()
                                      .entrySet()
                                      .stream()
                                      .map(entry -> {
                                          var formElementId = entry.getKey();
                                          var formDataValue = entry.getValue();
-                                         return toPropertyValues(formElementId, formDataValue);
+                                         return toPropertyValues(formElementId, elementId2PropertyMap, formDataValue);
                                      })
                                      .flatMap(Collection::stream)
                                      .collect(toImmutableSet());
@@ -110,8 +111,10 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
         return SetEntityFormDataAction.class;
     }
 
-    private List<PropertyValue> toPropertyValues(FormElementId elementId, FormDataValue dataValue) {
-        var property = EntityFormElementId.toProperty(elementId, entityProvider);
+    private List<PropertyValue> toPropertyValues(FormElementId elementId,
+                                                 Map<FormElementId, Optional<OWLProperty>> elementId2PropertyMap,
+                                                 FormDataValue dataValue) {
+        var property = elementId2PropertyMap.get(elementId);
         return property.map(prop -> toPropertyValues(prop, dataValue)).orElse(Collections.emptyList());
     }
 

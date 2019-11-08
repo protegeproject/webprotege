@@ -55,11 +55,6 @@ public class EntityFrameFormDataBuilder {
         this.entityProvider = entityProvider;
     }
 
-    private static FormElementId toFormElementId(PropertyValue propertyValue) {
-        var property = propertyValue.getProperty();
-        return EntityFormElementId.toElementId(property.getEntity());
-    }
-
     private static FormDataValue toFormDataValue(PropertyValue propertyValue) {
         return propertyValue.getValue()
                             .accept(new PrimitiveDataConverter());
@@ -131,13 +126,14 @@ public class EntityFrameFormDataBuilder {
     }
 
     private Optional<OWLProperty> getAssociatedOwlProperty(FormElementDescriptor descriptor) {
-        return toOwlProperty(descriptor.getId());
+        return descriptor.getOwlProperty();
+        //        return toOwlProperty(descriptor.getId());
     }
 
-    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
-        return EntityFormElementId.toProperty(formElementId,
-                                              entityProvider);
-    }
+//    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
+//        return EntityFormElementId.toProperty(formElementId,
+//                                              entityProvider);
+//    }
 
     private FormDataObject toFormDataObject(OWLEntity subject,
                                             Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
