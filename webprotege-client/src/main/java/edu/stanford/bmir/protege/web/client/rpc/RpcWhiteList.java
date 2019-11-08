@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
@@ -14,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
@@ -95,6 +97,8 @@ public class RpcWhiteList implements Action, Result {
 
     ActionExecutionResult actionExecutionResult;
 
+    FormElementId formElementId;
+
     public ActionExecutionResult getActionExecutionResult() {
         return actionExecutionResult;
     }
@@ -146,6 +150,40 @@ public class RpcWhiteList implements Action, Result {
     RelationshipEdge relationshipEdge;
 
     ImmutableSetMultimap immutableSetMultimap;
+
+    ElementRun elementRun;
+
+    Optionality optionality;
+
+    Repeatability repeatability;
+
+    TextFieldDescriptor textFieldDescriptor;
+
+    NumberFieldDescriptor numberFieldDescriptor;
+
+    ClassNameFieldDescriptor classNameFieldDescriptor;
+
+    IndividualNameFieldDescriptor individualNameFieldDescriptor;
+
+    CompositeFieldDescriptor compositeFieldDescriptor;
+
+    ChoiceFieldDescriptor choiceFieldDescriptor;
+
+    ChoiceDescriptor choiceDescriptor;
+
+    ImageFieldDescriptor imageFieldDescriptor;
+
+
+
+    public LanguageMap getLanguageMap() {
+        return languageMap;
+    }
+
+    public void setLanguageMap(LanguageMap languageMap) {
+        this.languageMap = languageMap;
+    }
+
+    LanguageMap languageMap;
 
     public RpcWhiteList() {
     }
@@ -356,5 +394,69 @@ public class RpcWhiteList implements Action, Result {
 
     public void setTag(Tag tag) {
         this.tag = tag;
+    }
+
+    public FormElementId getFormElementId() {
+        return formElementId;
+    }
+
+    public void setFormElementId(FormElementId formElementId) {
+        this.formElementId = formElementId;
+    }
+
+    public ElementRun getElementRun() {
+        return elementRun;
+    }
+
+    public void setElementRun(ElementRun elementRun) {
+        this.elementRun = elementRun;
+    }
+
+    public Optionality getOptionality() {
+        return optionality;
+    }
+
+    public void setOptionality(Optionality optionality) {
+        this.optionality = optionality;
+    }
+
+    public Repeatability getRepeatability() {
+        return repeatability;
+    }
+
+    public void setRepeatability(Repeatability repeatability) {
+        this.repeatability = repeatability;
+    }
+
+    public TextFieldDescriptor getTextFieldDescriptor() {
+        return textFieldDescriptor;
+    }
+
+    public NumberFieldDescriptor getNumberFieldDescriptor() {
+        return numberFieldDescriptor;
+    }
+
+    public ClassNameFieldDescriptor getClassNameFieldDescriptor() {
+        return classNameFieldDescriptor;
+    }
+
+    public IndividualNameFieldDescriptor getIndividualNameFieldDescriptor() {
+        return individualNameFieldDescriptor;
+    }
+
+    public CompositeFieldDescriptor getCompositeFieldDescriptor() {
+        return compositeFieldDescriptor;
+    }
+
+    public ChoiceFieldDescriptor getChoiceFieldDescriptor() {
+        return choiceFieldDescriptor;
+    }
+
+    public ChoiceDescriptor getChoiceDescriptor() {
+        return choiceDescriptor;
+    }
+
+    public ImageFieldDescriptor getImageFieldDescriptor() {
+        return imageFieldDescriptor;
     }
 }

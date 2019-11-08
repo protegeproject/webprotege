@@ -1,17 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.Objects;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -20,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormElementId implements Serializable {
+public abstract class FormElementId {
 
     @JsonCreator
     @Nonnull
