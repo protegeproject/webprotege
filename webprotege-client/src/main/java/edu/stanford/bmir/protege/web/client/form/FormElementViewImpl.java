@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
@@ -62,10 +63,12 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     @Override
     public void setRequiredValueNotPresentVisible(boolean visible) {
         if(visible) {
-            label.getElement().getStyle().setColor("#ff0000");
+            label.addStyleName(WebProtegeClientBundle.BUNDLE.style().formLabelError());
+            editorHolder.addStyleName(WebProtegeClientBundle.BUNDLE.style().formEditorError());
         }
         else {
-            label.getElement().getStyle().clearColor();
+            label.removeStyleName(WebProtegeClientBundle.BUNDLE.style().formLabelError());
+            editorHolder.removeStyleName(WebProtegeClientBundle.BUNDLE.style().formEditorError());
         }
     }
 
