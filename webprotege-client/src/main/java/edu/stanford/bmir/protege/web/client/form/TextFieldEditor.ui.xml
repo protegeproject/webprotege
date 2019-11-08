@@ -9,6 +9,7 @@
         }
         .value-field {
             flex-grow: 1;
+            width: 10em;
         }
         .language-field {
             flex-grow: 0;
