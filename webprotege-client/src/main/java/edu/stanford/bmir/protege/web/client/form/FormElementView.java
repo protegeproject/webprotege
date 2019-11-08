@@ -13,6 +13,8 @@ import java.util.Optional;
  */
 public interface FormElementView extends IsWidget {
 
+    void addStylePropertyValue(String cssProperty, String cssValue);
+
     void setId(FormElementId elementId);
 
     Optional<FormElementId> getId();

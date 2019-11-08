@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.base.CaseFormat;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -86,5 +87,12 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     @Override
     public FormElementEditor getEditor() {
         return (FormElementEditor) editorHolder.getWidget();
+    }
+
+    @Override
+    public void addStylePropertyValue(String cssProperty, String cssValue) {
+        String camelCaseProperty = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, cssProperty);
+        String camelCaseValue = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, cssValue);
+        getElement().getStyle().setProperty(camelCaseProperty, camelCaseValue);
     }
 }

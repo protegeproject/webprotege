@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
+import java.util.Map;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
@@ -61,7 +63,8 @@ public class EntityFormRepositoryImpl_IT {
                               ),
                               Repeatability.NON_REPEATABLE,
                               Optionality.OPTIONAL,
-                              LanguageMap.of("en", "Help text")
+                              LanguageMap.of("en", "Help text"),
+                              Map.of()
                       ))
                       .build();
 

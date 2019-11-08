@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -8,6 +9,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 
 import javax.inject.Inject;
@@ -55,6 +57,22 @@ public class FormViewImpl extends Composite implements FormView {
         }
         currentRun.add(view);
         elementViews.add(view);
+        if(currentRun.getWidgetCount() > 1) {
+            for(int i = 0; i < currentRun.getWidgetCount(); i++) {
+                Element element = currentRun.getWidget(i)
+                                            .getElement();
+                element.addClassName(WebProtegeClientBundle.BUNDLE.style().formGroupMultiCol());
+                element.removeClassName(WebProtegeClientBundle.BUNDLE.style().formGroupSingleCol());
+            }
+        }
+        else {
+            for(int i = 0; i < currentRun.getWidgetCount(); i++) {
+                Element element = currentRun.getWidget(i)
+                                            .getElement();
+                element.addClassName(WebProtegeClientBundle.BUNDLE.style().formGroupSingleCol());
+                element.removeClassName(WebProtegeClientBundle.BUNDLE.style().formGroupMultiCol());
+            }
+        }
     }
 
     @Override

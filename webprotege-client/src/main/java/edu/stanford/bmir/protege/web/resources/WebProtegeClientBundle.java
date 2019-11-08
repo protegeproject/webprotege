@@ -282,6 +282,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-group")
         String formGroup();
 
+        @ClassName("wp-form-group--multi-col")
+        String formGroupMultiCol();
+
+        @ClassName("wp-form-group--single-col")
+        String formGroupSingleCol();
+
         @ClassName("wp-form-stretch")
         String formStretch();
 

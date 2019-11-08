@@ -50,6 +50,19 @@
     align-items: stretch;
 }
 
+.wp-form-group--multi-col {
+    margin-right: 1.2rem;
+    align-items: start;
+    min-width: 120px;
+    flex-basis: 120px;
+    width: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+.wp-form-group--single-col {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
 
 .wp-form-stretch {
     display: flex;

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -10,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -32,7 +34,8 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                                             @JsonProperty("fieldDescriptor") @Nonnull FormFieldDescriptor fieldDescriptor,
                                             @JsonProperty("repeatability") @Nullable Repeatability repeatability,
                                             @JsonProperty("optionality") @Nullable Optionality optionality,
-                                            @JsonProperty("help") @Nullable LanguageMap help) {
+                                            @JsonProperty("help") @Nullable LanguageMap help,
+                                            @JsonProperty("style") @Nullable Map<String, String> style) {
         return new AutoValue_FormElementDescriptor(id,
                                                    property,
                                                    formLabel == null ? LanguageMap.empty() : formLabel,
@@ -40,7 +43,8 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                                                    fieldDescriptor,
                                                    optionality == null ? Optionality.REQUIRED : optionality,
                                                    repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
-                                                   help == null ? LanguageMap.empty() : help);
+                                                   help == null ? LanguageMap.empty() : help,
+                                                   style == null ? ImmutableMap.of() : style);
     }
 
     @Nonnull
@@ -75,6 +79,9 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     @Nonnull
     public abstract LanguageMap getHelp();
 
+    @Nonnull
+    public abstract Map<String, String> getStyle();
+    
     @JsonIgnore
     public boolean isComposite() {
         return getFieldDescriptor() instanceof CompositeFieldDescriptor;

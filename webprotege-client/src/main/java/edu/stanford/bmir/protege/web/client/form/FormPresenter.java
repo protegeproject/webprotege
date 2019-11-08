@@ -180,6 +180,8 @@ public class FormPresenter {
         elementView.setFormLabel(elementDescriptor.getLabel().get(langTag));
         elementView.setEditor(editor);
         elementView.setRequired(elementDescriptor.getOptionality());
+        Map<String, String> style = elementDescriptor.getStyle();
+        style.forEach(elementView::addStylePropertyValue);
         // Update the required value missing display when the value changes
         editor.addValueChangeHandler(event -> {
             this.dirty = true;
