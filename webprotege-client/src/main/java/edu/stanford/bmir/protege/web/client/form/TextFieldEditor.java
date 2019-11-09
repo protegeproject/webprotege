@@ -104,7 +104,6 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
                 patternViolationErrorMessage.ifPresent(s -> {
                     patternViolationErrorMessageLabel.setText(s);
                 });
-                patternViolationErrorMessageLabel.setVisible(patternViolationErrorMessage.isPresent());
                 displayErrorBorder();
             }
             else {
@@ -118,11 +117,13 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
     private void clearErrorBorder() {
         editor.removeStyleName(BUNDLE.style().errorBorder());
         editor.addStyleName(BUNDLE.style().noErrorBorder());
+        patternViolationErrorMessageLabel.setVisible(false);
     }
 
     private void displayErrorBorder() {
         editor.removeStyleName(BUNDLE.style().noErrorBorder());
         editor.addStyleName(BUNDLE.style().errorBorder());
+        patternViolationErrorMessageLabel.setVisible(true);
     }
 
     public void setStringType(StringType stringType) {
