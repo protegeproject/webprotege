@@ -20,8 +20,8 @@
             width: auto;
             padding-left: 15px;
             padding-right: 15px;
-            padding-top: 3px;
-            padding-bottom: 3px;
+            padding-top: 10px;
+            padding-bottom: 10px;
             text-align: center;
             box-sizing: border-box;
             cursor: pointer;
