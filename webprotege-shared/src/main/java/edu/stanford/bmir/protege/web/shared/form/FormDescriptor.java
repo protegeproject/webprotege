@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import java.io.Serializable;
@@ -22,22 +23,31 @@ public class FormDescriptor implements Serializable {
 
     private FormId formId;
 
+    private LanguageMap label = LanguageMap.empty();
+
     private List<FormElementDescriptor> elements;
 
     private FormDescriptor() {
     }
 
-    public FormDescriptor(FormId id, List<FormElementDescriptor> formElementDescriptors) {
+    public FormDescriptor(FormId id,
+                          LanguageMap label,
+                          List<FormElementDescriptor> formElementDescriptors) {
         this.formId = id;
+        this.label = label;
         this.elements = new ArrayList<>(formElementDescriptors);
     }
 
     public static FormDescriptor empty() {
-        return new FormDescriptor(FormId.get("EmptyForm"), Collections.emptyList());
+        return new FormDescriptor(FormId.get("EmptyForm"), LanguageMap.empty(), Collections.emptyList());
     }
 
     public FormId getFormId() {
         return formId;
+    }
+
+    public LanguageMap getLabel() {
+        return label;
     }
 
     public List<FormElementDescriptor> getElements() {
@@ -57,7 +67,7 @@ public class FormDescriptor implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(formId, elements);
+        return Objects.hashCode(formId, label, elements);
     }
 
     @Override
@@ -70,6 +80,7 @@ public class FormDescriptor implements Serializable {
         }
         FormDescriptor other = (FormDescriptor) obj;
         return this.formId.equals(other.formId)
+                && this.label.equals(other.label)
                 && this.elements.equals(other.elements);
     }
 
@@ -78,6 +89,7 @@ public class FormDescriptor implements Serializable {
     public String toString() {
         return toStringHelper("FormDescriptor")
                 .addValue(formId)
+                .addValue(label)
                 .addValue(elements)
                 .toString();
     }
@@ -86,11 +98,18 @@ public class FormDescriptor implements Serializable {
 
         private final FormId formId;
 
+        private LanguageMap label = LanguageMap.empty();
+
         private final List<FormElementDescriptor> builder_elementDescriptors = new ArrayList<>();
 
 
         public Builder(FormId formId) {
             this.formId = checkNotNull(formId);
+        }
+
+        public Builder setLabel(LanguageMap label) {
+            this.label = checkNotNull(label);
+            return this;
         }
 
         public Builder addDescriptor(FormElementDescriptor descriptor) {
@@ -100,7 +119,7 @@ public class FormDescriptor implements Serializable {
 
 
         public FormDescriptor build() {
-            return new FormDescriptor(formId, builder_elementDescriptors);
+            return new FormDescriptor(formId, label, builder_elementDescriptors);
         }
     }
 }

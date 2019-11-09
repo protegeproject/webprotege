@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.LocaleInfo;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -41,6 +42,9 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Nonnull
     private Optional<OWLEntity> currentSubject = Optional.empty();
 
+    @Nonnull
+    private Optional<PortletUi> portletUi = Optional.empty();
+
     @Inject
     public FormPortletPresenter(SelectionModel selectionModel,
                                 @Nonnull ProjectId projectId,
@@ -68,7 +72,10 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        this.portletUi = Optional.of(portletUi);
         formPresenter.start(portletUi);
+        setDisplaySelectedEntityNameAsSubtitle(true);
+
         eventBus.addProjectEventHandler(projectId, CLASS_FRAME_CHANGED, this::handleClassFrameChanged);
     }
 
@@ -112,6 +119,21 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
         else {
             formPresenter.clear();
+        }
+        String formLabel = getFormLabel(formDescriptor);
+        portletUi.ifPresent(ui -> ui.setTitle(formLabel));
+
+    }
+
+    private String getFormLabel(Optional<FormDescriptor> formDescriptor) {
+        LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
+        String formLabel = formDescriptor.map(desc -> desc.getLabel().get(localeInfo.getLocaleName()))
+                                         .orElse("Form");
+        if(formLabel.isEmpty()) {
+            return "Form";
+        }
+        else {
+            return formLabel;
         }
 
     }
