@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -49,6 +50,9 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
 
     @UiField(provided = true)
     DefaultLanguageEditor languageEditor;
+
+    @UiField
+    Label patternViolationErrorMessageLabel;
 
     private Optional<String> pattern = Optional.empty();
 
@@ -97,7 +101,10 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
             GWT.log("[TextFieldEditor] Match: " + mr);
             if(mr == null) {
                 GWT.log("[TextFieldEditor] Input is not valid");
-                patternViolationErrorMessage.ifPresent(s -> editor.setTitle(s));
+                patternViolationErrorMessage.ifPresent(s -> {
+                    patternViolationErrorMessageLabel.setText(s);
+                });
+                patternViolationErrorMessageLabel.setVisible(patternViolationErrorMessage.isPresent());
                 displayErrorBorder();
             }
             else {

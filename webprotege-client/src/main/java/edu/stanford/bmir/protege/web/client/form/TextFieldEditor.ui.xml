@@ -5,6 +5,10 @@
     <ui:style>
         .main {
             display: flex;
+            flex-direction: column;
+        }
+        .editor {
+            display: flex;
             flex-direction: row;
         }
         .value-field {
@@ -27,9 +31,17 @@
             border-top: 1px solid transparent;
             border-bottom: 1px solid transparent;
         }
+        .patternViolationMessage {
+            padding-top: 0.3em;
+            max-width: 120px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <primitive:PrimitiveDataEditorImpl ui:field="editor" addStyleNames="{style.value-field}"/>
-        <primitive:DefaultLanguageEditor placeholder="lang" ui:field="languageEditor" addStyleNames="{style.language-field}"/>
+        <g:HTMLPanel addStyleNames="{style.editor}">
+            <primitive:PrimitiveDataEditorImpl ui:field="editor" addStyleNames="{style.value-field}"/>
+            <primitive:DefaultLanguageEditor placeholder="lang" ui:field="languageEditor"
+                                             addStyleNames="{style.language-field}"/>
+        </g:HTMLPanel>
+        <g:Label ui:field="patternViolationErrorMessageLabel" addStyleNames="{wp.style.errorLabel} {style.patternViolationMessage}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
