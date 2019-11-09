@@ -170,7 +170,13 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
             return Optional.empty();
         }
         if(stringType == StringType.SIMPLE_STRING) {
-            return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral()));
+            // Preserve lang if one was originally set
+            if(literalData.getLang().isEmpty()) {
+                return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral()));
+            }
+            else {
+                return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral(), literalData.getLang()));
+            }
         }
         else {
             return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral(), literalData.getLang()));
