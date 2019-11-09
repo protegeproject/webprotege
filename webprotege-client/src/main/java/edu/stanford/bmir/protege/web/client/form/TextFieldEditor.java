@@ -97,9 +97,7 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
             GWT.log("[TextFieldEditor] Match: " + mr);
             if(mr == null) {
                 GWT.log("[TextFieldEditor] Input is not valid");
-                if (patternViolationErrorMessage.isPresent()) {
-                    editor.setTitle(patternViolationErrorMessage.get());
-                }
+                patternViolationErrorMessage.ifPresent(s -> editor.setTitle(s));
                 displayErrorBorder();
             }
             else {
