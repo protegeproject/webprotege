@@ -67,9 +67,8 @@ public class EntityFrameFormDataBuilder {
     @Nonnull
     public FormData getFormData(@Nonnull OWLEntity entity,
                                 @Nonnull FormDescriptor formDescriptor) {
-        List<FormElementDescriptor> elements = formDescriptor.getElements();
         var propertyValuesByProperty = getPropertyValues(entity);
-        return toFormData(entity, propertyValuesByProperty, elements);
+        return toFormData(entity, propertyValuesByProperty, formDescriptor);
     }
 
     private Multimap<OWLProperty, PropertyValue> getPropertyValues(OWLEntity entity) {
@@ -129,9 +128,9 @@ public class EntityFrameFormDataBuilder {
 
     private FormData toFormData(OWLEntity subject,
                                 Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
-                                List<FormElementDescriptor> descriptors) {
+                                FormDescriptor formDescriptor) {
         var map = new HashMap<FormElementId, FormDataValue>();
-        for(FormElementDescriptor descriptor : descriptors) {
+        for(FormElementDescriptor descriptor : formDescriptor.getElements()) {
             var associatedOwlProperty = getAssociatedOwlProperty(descriptor);
             if(associatedOwlProperty.isPresent()) {
                 var theProperty = associatedOwlProperty.get();
@@ -140,7 +139,7 @@ public class EntityFrameFormDataBuilder {
                 map.put(descriptor.getId(), formDataValueForProperty);
             }
         }
-        return new FormData(map);
+        return new FormData(subject, map, formDescriptor);
     }
 
     /**
@@ -175,14 +174,16 @@ public class EntityFrameFormDataBuilder {
 
     private FormDataValue toSubFormDataValue(SubFormFieldDescriptor descriptor,
                                              Collection<PropertyValue> propertyValues) {
-        var childDescriptors = descriptor.getFormDescriptor()
-                                         .getElements();
         // Property values should be entities
         var valueList = propertyValues.stream()
                                       .map(PropertyValue::getValue)
                                       .map(OWLPrimitiveData::asEntity)
                                       .flatMap(Optional::stream)
-                                      .map(entity -> toFormData(entity, getPropertyValues(entity), childDescriptors))
+                                      // Property values that are entities
+                                      .map(entityValue -> {
+                                          FormDescriptor subFormDescriptor = descriptor.getFormDescriptor();
+                                          return toFormData(entityValue, getPropertyValues(entityValue), subFormDescriptor);
+                                      })
                                       .collect(Collectors.toList());
         if(valueList.size() == 1) {
             return valueList.get(0);
@@ -222,7 +223,7 @@ public class EntityFrameFormDataBuilder {
 
         @Override
         public FormDataValue visit(OWLDatatypeData data) {
-            return null;
+            return FormDataPrimitive.get(data.getEntity());
         }
 
         @Override

@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
 
@@ -25,6 +26,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormData extends FormDataValue implements Serializable, IsSerializable {
 
+    @Nullable
+    private OWLEntity subject;
+
+    @Nonnull
+    private FormDescriptor formDescriptor;
+
     @JsonUnwrapped
     private Map<String, FormDataValue> data = new HashMap<>();
 
@@ -32,16 +39,30 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
     }
 
     public static FormData empty() {
-        return new FormData(Collections.emptyMap());
+        return new FormData(null, Collections.emptyMap(), FormDescriptor.empty());
     }
 
-    public FormData(@Nonnull Map<FormElementId, FormDataValue> data) {
+    public FormData(@Nullable OWLEntity subject,
+                    @Nonnull Map<FormElementId, FormDataValue> data,
+                    @Nonnull FormDescriptor formDescriptor) {
+        this.formDescriptor = checkNotNull(formDescriptor);
         checkNotNull(data);
+        this.subject = subject;
         data.forEach((id, val) -> {
             checkNotNull(id);
             checkNotNull(val);
             this.data.put(id.getId(), val);
         });
+    }
+
+    @Override
+    public Optional<FormData> asFormData() {
+        return Optional.of(this);
+    }
+
+    @Nonnull
+    public Optional<OWLEntity> getSubject() {
+        return Optional.ofNullable(subject);
     }
 
     @Override
@@ -82,13 +103,18 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
         return true;
     }
 
+    @Nonnull
+    public FormDescriptor getFormDescriptor() {
+        return formDescriptor;
+    }
+
     @JsonIgnore
     public Optional<FormDataValue> getFormElementData(FormElementId formElementId) {
         return Optional.ofNullable(data.get(formElementId.getId()));
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(FormDescriptor formDescriptor) {
+        return new Builder(formDescriptor);
     }
 
     @Override
@@ -112,7 +138,10 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
 
         private final ListMultimap<FormElementId, FormDataValue> builder_data = ArrayListMultimap.create();
 
-        public Builder() {
+        private final FormDescriptor formDescriptor;
+
+        public Builder(FormDescriptor formDescriptor) {
+            this.formDescriptor = formDescriptor;
         }
 
         public Builder addData(FormElementId elementId, FormDataValue dataValue) {
@@ -125,7 +154,7 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
             for(FormElementId elementId : builder_data.keys()) {
                 map.put(elementId, new FormDataList(builder_data.get(elementId)));
             }
-            return new FormData(map);
+            return new FormData(null, map, formDescriptor);
         }
     }
 

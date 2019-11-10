@@ -50,6 +50,11 @@ public class FormDataList extends FormDataValue {
     }
 
     @Override
+    public Optional<FormData> asFormData() {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<OWLEntity> asOWLEntity() {
         return Optional.empty();
     }

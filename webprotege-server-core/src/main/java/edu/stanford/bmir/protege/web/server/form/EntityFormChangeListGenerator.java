@@ -1,23 +1,26 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameUpdate;
+import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.HasPropertyValues;
+import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
-
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -26,13 +29,10 @@ import static java.util.stream.Collectors.toSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEntityData> {
+public class EntityFormChangeListGenerator implements ChangeListGenerator<Boolean> {
 
     @Nonnull
-    private final OWLEntity entity;
-
-    @Nonnull
-    private final ImmutableSet<PropertyValue> propertyValues;
+    private final ImmutableMultimap<OWLEntity, PropertyValue> propertyValuesBySubject;
 
     @Nonnull
     private final RenderingManager renderingManager;
@@ -40,67 +40,121 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     @Nonnull
     private final ClassFrameTranslator classFrameTranslator;
 
+    private final NamedIndividualFrameTranslator individualFrameTranslator;
+
     @Nonnull
     private final FrameChangeGeneratorFactory frameChangeGenerator;
 
-    public EntityFormChangeListGenerator(@Nonnull OWLEntity entity,
-                                         @Nonnull ImmutableSet<PropertyValue> propertyValues,
+    public EntityFormChangeListGenerator(@Nonnull ImmutableMultimap<OWLEntity, PropertyValue> propertyValuesBySubject,
                                          @Nonnull RenderingManager renderingManager,
                                          @Nonnull ClassFrameTranslator classFrameTranslator,
+                                         @Nonnull NamedIndividualFrameTranslator individualFrameTranslator,
                                          @Nonnull FrameChangeGeneratorFactory frameChangeGenerator) {
-        this.entity = entity;
-        this.propertyValues = propertyValues;
+        this.propertyValuesBySubject = propertyValuesBySubject;
         this.renderingManager = renderingManager;
         this.classFrameTranslator = classFrameTranslator;
+        this.individualFrameTranslator = individualFrameTranslator;
         this.frameChangeGenerator = frameChangeGenerator;
     }
 
     @Override
-    public OntologyChangeList<OWLEntityData> generateChanges(ChangeGenerationContext context) {
-        if(entity.isOWLClass()) {
-            return generateChangesForClass(context);
+    public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
 
-        }
-        return null;
+        var ontologyChanges = propertyValuesBySubject.asMap()
+                                                     .entrySet()
+                                                     .stream()
+                                                     .map(entry -> {
+                                                         var entity = entry.getKey();
+                                                         var propertyValues = entry.getValue();
+                                                         if(entity.isOWLClass()) {
+                                                             return generateChangesForClass(entity.asOWLClass(),
+                                                                                            propertyValues,
+                                                                                            context);
+                                                         }
+                                                         else if(entity.isOWLNamedIndividual()) {
+                                                             return generateChangesForIndividual(entity.asOWLNamedIndividual(),
+                                                                                                 propertyValues,
+                                                                                                 context);
+                                                         }
+                                                         else {
+                                                             return Collections.<OntologyChange>emptyList();
+                                                         }
+                                                     })
+                                                     .flatMap(Collection::stream)
+                                                     .collect(Collectors.toList());
+
+        return OntologyChangeList.<Boolean>builder().addAll(ontologyChanges)
+                                                    .build(Boolean.TRUE);
     }
 
-    private OntologyChangeList<OWLEntityData> generateChangesForClass(ChangeGenerationContext context) {
+    private List<OntologyChange> generateChangesForClass(OWLEntity entity,
+                                                         Collection<PropertyValue> propertyValues,
+                                                         ChangeGenerationContext context) {
         var frameSubject = renderingManager.getClassData(entity.asOWLClass());
 
         // Current frame – may be a superset of the form frame
         // as forms may only edit a subset of properties
         var currentFrame = classFrameTranslator.getFrame(frameSubject);
 
-        // Frame as edited by the form – may be a subset of the current frame
-        var editedFrame = classFrameTranslator.getFrame(frameSubject);
-        var touchedProperties = propertyValues.stream()
-                .map(propertyValue -> propertyValue.getProperty().getEntity())
-                .collect(toSet());
+        var mergedPropertyValues = getMergedPropertyValues(propertyValues, currentFrame);
+        var finalFrame = ClassFrame.get(frameSubject, currentFrame.getClassEntries(), mergedPropertyValues);
+        var frameUpdate = FrameUpdate.get(currentFrame, finalFrame);
+        return frameChangeGenerator.create(frameUpdate)
+                                   .generateChanges(context)
+                                   .getChanges();
+    }
 
-        var currentPropertyValues = editedFrame.getPropertyValues();
+    private List<OntologyChange> generateChangesForIndividual(OWLNamedIndividual entity,
+                                                              Collection<PropertyValue> propertyValues,
+                                                              ChangeGenerationContext context) {
+        var frameSubject = renderingManager.getIndividualData(entity);
+
+        // Current frame – may be a superset of the form frame
+        // as forms may only edit a subset of properties
+        var currentFrame = individualFrameTranslator.getFrame(frameSubject);
+        ImmutableSet<PropertyValue> mergedPropertyValues = getMergedPropertyValues(propertyValues, currentFrame);
+
+        var finalFrame = NamedIndividualFrame.get(frameSubject,
+                                                  currentFrame.getClasses(),
+                                                  mergedPropertyValues,
+                                                  currentFrame.getSameIndividuals());
+        var frameUpdate = FrameUpdate.get(currentFrame, finalFrame);
+        return frameChangeGenerator.create(frameUpdate)
+                                   .generateChanges(context)
+                                   .getChanges();
+    }
+
+    private ImmutableSet<PropertyValue> getMergedPropertyValues(Collection<PropertyValue> editedPropertyValues,
+                                                                HasPropertyValues existingFrame) {
+        // Frame as edited by the form – may be a subset of the current frame
+        var touchedProperties = editedPropertyValues.stream()
+                                                    .map(propertyValue -> propertyValue.getProperty()
+                                                                                       .getEntity())
+                                                    .collect(toSet());
+
+        var currentPropertyValues = existingFrame.getPropertyValues();
         // Untouched property values get to stay in the final set
         // as the form may not display these
         var untouchedPropertyValues = currentPropertyValues.stream()
-                .filter(propertyValue -> !touchedProperties.contains(propertyValue.getProperty().getEntity()))
-                .collect(toSet());
+                                                           .filter(propertyValue -> !touchedProperties.contains(
+                                                                   propertyValue.getProperty()
+                                                                                .getEntity()))
+                                                           .collect(toSet());
 
-        var mergedPropertyValues = ImmutableSet.<PropertyValue>builder()
+        return ImmutableSet.<PropertyValue>builder()
                 .addAll(untouchedPropertyValues)
-                .addAll(propertyValues)
+                .addAll(editedPropertyValues)
                 .build();
-        var finalFrame = ClassFrame.get(frameSubject, currentFrame.getClassEntries(), mergedPropertyValues);
-        var frameUpdate = FrameUpdate.get(currentFrame, finalFrame);
-        return frameChangeGenerator.create(frameUpdate).generateChanges(context);
-    }
-
-    @Override
-    public OWLEntityData getRenamedResult(OWLEntityData result, RenameMap renameMap) {
-        return result;
     }
 
     @Nonnull
     @Override
-    public String getMessage(ChangeApplicationResult<OWLEntityData> result) {
+    public String getMessage(ChangeApplicationResult<Boolean> result) {
         return "Edited frame";
+    }
+
+    @Override
+    public Boolean getRenamedResult(Boolean result, RenameMap renameMap) {
+        return result;
     }
 }

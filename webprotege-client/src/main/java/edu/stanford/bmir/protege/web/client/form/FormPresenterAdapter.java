@@ -1,12 +1,15 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
@@ -22,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-09
  */
-public class FormPresenterAdapter implements FormElementEditor {
+public class FormPresenterAdapter implements FormElementEditor, HasValueChangeHandlers<Optional<FormDataValue>> {
 
     @Nonnull
     private final SimplePanel container = new SimplePanel();
@@ -33,6 +36,8 @@ public class FormPresenterAdapter implements FormElementEditor {
     @Nonnull
     private final FormPresenter formPresenter;
 
+    private final HandlerManager handlerManager = new HandlerManager(this);
+
     public FormPresenterAdapter(@Nonnull FormDescriptor formDescriptor,
                                 @Nonnull FormPresenter formPresenter) {
         this.formDescriptor = checkNotNull(formDescriptor);
@@ -41,7 +46,13 @@ public class FormPresenterAdapter implements FormElementEditor {
 
     public void start() {
         formPresenter.start(container);
+        formPresenter.setFormDataChangedHandler(this::handleFormDataChanged);
         formPresenter.displayForm(formDescriptor, FormData.empty());
+    }
+
+    private void handleFormDataChanged() {
+        GWT.log("[FormPresenterAdapter] handleFormDataChanged");
+        ValueChangeEvent.fire(this, getValue());
     }
 
     @Override
@@ -66,7 +77,7 @@ public class FormPresenterAdapter implements FormElementEditor {
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
-        return () -> {};
+        return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
 
     @Override
@@ -81,16 +92,16 @@ public class FormPresenterAdapter implements FormElementEditor {
 
     @Override
     public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return () -> {};
+        return handlerManager.addHandler(DirtyChangedEvent.TYPE, handler);
     }
 
     @Override
     public void fireEvent(GwtEvent<?> event) {
-
+        handlerManager.fireEvent(event);
     }
 
     @Override
     public boolean isWellFormed() {
-        return false;
+        return true;
     }
 }

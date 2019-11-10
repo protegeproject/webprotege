@@ -8,16 +8,21 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
+import uk.ac.manchester.cs.owl.owlapi.OWLNamedIndividualImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +38,10 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Presents a form and its associated form data.
  */
 public class FormPresenter {
+
+    interface FormDataChangedHandler {
+        void handleFormDataChanged();
+    }
 
     @Nonnull
     private final FormView formView;
@@ -58,6 +67,10 @@ public class FormPresenter {
 
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
+    @Nonnull
+    private Optional<OWLEntity> currentSubject = Optional.empty();
+
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     @AutoFactory
     @Inject
@@ -88,6 +101,9 @@ public class FormPresenter {
         this.container = Optional.of(container);
     }
 
+    public void setFormDataChangedHandler(FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+    }
 
     /**
      * Displays the specified form and the specified form data.
@@ -132,17 +148,27 @@ public class FormPresenter {
      */
     @Nonnull
     public FormData getFormData() {
-        Map<FormElementId, FormDataValue> dataMap = new HashMap<>();
-        for (FormElementView view : formView.getElementViews()) {
-            view.getId().ifPresent(id -> view.getEditor().getValue().ifPresent(
-                    v -> dataMap.put(id, v)
-            ));
-        }
-        return new FormData(dataMap);
+        return currentFormDescriptor.map(formDescriptor -> {
+            Map<FormElementId, FormDataValue> dataMap = new HashMap<>();
+            for (FormElementView view : formView.getElementViews()) {
+                view.getId().ifPresent(id -> view.getEditor().getValue().ifPresent(
+                        v -> dataMap.put(id, v)
+                ));
+            }
+            // TODO:  What if current subject is null?
+            return new FormData(getOrGenerateCurrentSubject(), dataMap, formDescriptor);
+        }).orElse(FormData.empty());
+    }
+
+    private OWLEntity getOrGenerateCurrentSubject() {
+        return currentSubject.orElseGet(() -> {
+            return new OWLNamedIndividualImpl(DataFactory.getFreshOWLEntityIRI("Fresh value @ " + new Date().getTime()));
+        });
     }
 
     public void clearData() {
         clearDirty();
+        currentSubject = Optional.empty();
         for(FormElementView view : formView.getElementViews()) {
             view.getEditor().clearValue();
             updateRequiredValuePresent(view);
@@ -172,6 +198,7 @@ public class FormPresenter {
 
     private void setFormData(@Nonnull FormData formData) {
         GWT.log("[FormPresenter] setFormData: " + formData);
+        this.currentSubject = formData.getSubject();
         dispatchServiceManager.beginBatch();
         formView.getElementViews().forEach(view -> {
             Optional<FormElementId> theId = view.getId();
@@ -206,7 +233,7 @@ public class FormPresenter {
             FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
             FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
             subFormPresenter.displayForm(subFormDescriptor,
-                                         new FormData(new HashMap<>()));;
+                                         new FormData(null, new HashMap<>(), subFormDescriptor));;
             FormPresenterAdapter subFormPresenterAdapter = new FormPresenterAdapter(subFormDescriptor, subFormPresenter);
             subFormPresenterAdapter.start();
             formElementEditor = subFormPresenterAdapter;
@@ -233,6 +260,7 @@ public class FormPresenter {
         formElementEditor.addValueChangeHandler(event -> {
             this.dirty = true;
             updateRequiredValuePresent(elementView);
+            formDataChangedHandler.handleFormDataChanged();
         });
         if (formDataValue.isPresent()) {
             formElementEditor.setValue(formDataValue.get());

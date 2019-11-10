@@ -1,24 +1,24 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableMultimap;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
+import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataResult;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.toMap;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler<OWLEntityData, SetEntityFormDataAction, SetEntityFormDataResult> {
+public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler<Boolean, SetEntityFormDataAction, SetEntityFormDataResult> {
 
     @Nonnull
     private final RenderingManager renderingManager;
@@ -50,6 +50,9 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
     private final ClassFrameTranslator classFrameTranslator;
 
     @Nonnull
+    private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
+
+    @Nonnull
     private final FrameChangeGeneratorFactory frameChangeGeneratorFactory;
 
     @Inject
@@ -59,12 +62,14 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
                                           @Nonnull ClassFrameTranslator classFrameTranslator,
                                           @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
                                           EventManager<ProjectEvent<?>> eventManager,
-                                          HasApplyChanges applyChanges) {
+                                          HasApplyChanges applyChanges,
+                                          @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator) {
         super(accessManager, eventManager, applyChanges);
         this.renderingManager = renderingManager;
         this.entityProvider = entityProvider;
         this.classFrameTranslator = classFrameTranslator;
         this.frameChangeGeneratorFactory = frameChangeGeneratorFactory;
+        this.namedIndividualFrameTranslator = namedIndividualFrameTranslator;
     }
 
     @Nullable
@@ -74,31 +79,39 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
     }
 
     @Override
-    protected ChangeListGenerator<OWLEntityData> getChangeListGenerator(SetEntityFormDataAction action,
+    protected ChangeListGenerator<Boolean> getChangeListGenerator(SetEntityFormDataAction action,
                                                                         ExecutionContext executionContext) {
-        var formData = action.getFormData();
-        var elementId2PropertyMap = action.getFormDescriptor().getOwlPropertyMap();
 
-        var propertyValues = formData.getData()
-                                     .entrySet()
-                                     .stream()
-                                     .map(entry -> {
-                                         var formElementId = entry.getKey();
-                                         var formDataValue = entry.getValue();
-                                         return toPropertyValues(formElementId, elementId2PropertyMap, formDataValue);
-                                     })
-                                     .flatMap(Collection::stream)
-                                     .collect(toImmutableSet());
-        var entity = action.getEntity();
-        return new EntityFormChangeListGenerator(entity,
-                                                 propertyValues,
+        var formData = action.getFormData();
+        if(formData.getSubject().isEmpty()) {
+            return new FixedChangeListGenerator<>(Collections.emptyList(), false, "");
+        }
+
+        var elementId2PropertyMap = action.getFormData().getFormDescriptor().getOwlPropertyMap();
+
+        var resultBuilder = ImmutableMultimap.<OWLEntity, PropertyValue>builder();
+
+        buildIt(formData, resultBuilder, elementId2PropertyMap);
+        return new EntityFormChangeListGenerator(resultBuilder.build(),
                                                  renderingManager,
                                                  classFrameTranslator,
+                                                 namedIndividualFrameTranslator,
                                                  frameChangeGeneratorFactory);
     }
 
+    private void buildIt(FormData formData, ImmutableMultimap.Builder<OWLEntity, PropertyValue> resultBuilder,
+                         Map<FormElementId, Optional<OWLProperty>> elementId2PropertyMap) {
+        formData.getData()
+                .forEach((formElementId, formDataValue) -> toPropertyValues(formData.getSubject()
+                                                                                    .get(),
+                                                                            resultBuilder,
+                                                                            formElementId,
+                                                                            elementId2PropertyMap,
+                                                                            formDataValue));
+    }
+
     @Override
-    protected SetEntityFormDataResult createActionResult(ChangeApplicationResult<OWLEntityData> changeApplicationResult,
+    protected SetEntityFormDataResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult,
                                                          SetEntityFormDataAction action,
                                                          ExecutionContext executionContext,
                                                          EventList<ProjectEvent<?>> eventList) {
@@ -111,18 +124,23 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
         return SetEntityFormDataAction.class;
     }
 
-    private List<PropertyValue> toPropertyValues(FormElementId elementId,
+    private void toPropertyValues(OWLEntity subject, ImmutableMultimap.Builder<OWLEntity, PropertyValue> resultBuilder,
+                                                 FormElementId elementId,
                                                  Map<FormElementId, Optional<OWLProperty>> elementId2PropertyMap,
                                                  FormDataValue dataValue) {
         var property = elementId2PropertyMap.get(elementId);
-        return property.map(prop -> toPropertyValues(prop, dataValue)).orElse(Collections.emptyList());
+        property.ifPresent(prop -> toPropertyValues(subject, resultBuilder, prop, dataValue));
     }
 
-    private List<PropertyValue> toPropertyValues(OWLProperty property, FormDataValue dataValue) {
-        return toPropertyValues(property, dataValue.asList());
+    private void toPropertyValues(OWLEntity subject,
+                                  ImmutableMultimap.Builder<OWLEntity, PropertyValue> resultBuilder,
+                                  OWLProperty property, FormDataValue dataValue) {
+        toPropertyValues(subject, resultBuilder, property, dataValue.asList());
     }
 
-    private List<PropertyValue> toPropertyValues(OWLProperty property, List<FormDataValue> formDataValues) {
+    private void toPropertyValues(OWLEntity subject,
+                                  ImmutableMultimap.Builder<OWLEntity, PropertyValue> resultBuilder,
+                                  OWLProperty property, List<FormDataValue> formDataValues) {
         List<PropertyValue> propertyValues = new ArrayList<>();
         if(property.isOWLAnnotationProperty()) {
             formDataValues.forEach(formDataValue -> {
@@ -167,6 +185,25 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
                         ));
                     }
                 });
+                formDataValue.asFormData().ifPresent(formData -> {
+                    formData.getSubject().ifPresent(nestedSubject -> {
+                        if(nestedSubject.isOWLClass()) {
+                            propertyValues.add(PropertyClassValue.get(
+                                    renderingManager.getObjectPropertyData(property.asOWLObjectProperty()),
+                                    renderingManager.getClassData(nestedSubject.asOWLClass()),
+                                    State.ASSERTED  // Sort this!
+                            ));
+                        }
+                        else if(nestedSubject.isOWLNamedIndividual()) {
+                            propertyValues.add(PropertyIndividualValue.get(
+                                    renderingManager.getObjectPropertyData(property.asOWLObjectProperty()),
+                                    renderingManager.getIndividualData(nestedSubject.asOWLNamedIndividual()),
+                                    State.ASSERTED  // Sort this!
+                            ));
+                        }
+                        buildIt(formData, resultBuilder, formData.getFormDescriptor().getOwlPropertyMap());
+                    });
+                });
             });
         }
         else if(property.isOWLDataProperty()) {
@@ -189,6 +226,6 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
                 });
             });
         }
-        return propertyValues;
+        resultBuilder.putAll(subject, propertyValues);
     }
 }

@@ -101,10 +101,9 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     private void saveCurrentFormData() {
         currentSubject.ifPresent(subject -> {
             FormData formData = formPresenter.getFormData();
-            FormDescriptor formDescriptor = formPresenter.getFormDescriptor();
             dispatchServiceManager.execute(new SetEntityFormDataAction(projectId,
                                                                        subject,
-                                                                       formDescriptor, formData),
+                                                                       formData.getFormDescriptor(), formData),
                                            this,
                                            result -> {
                                            });
