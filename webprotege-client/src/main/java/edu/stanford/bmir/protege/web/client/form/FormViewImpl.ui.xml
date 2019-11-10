@@ -2,12 +2,16 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
+        .outer {
+            border: 1px solid cyan;
+        }
         .container {
             padding-bottom: 4em;
             box-sizing: border-box;
+            border: 1px solid magenta;
         }
     </ui:style>
-    <g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.outer}">
         <g:HTMLPanel ui:field="holder" addStyleNames="{style.container} {wp.style.form}">
         </g:HTMLPanel>
     </g:HTMLPanel>

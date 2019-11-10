@@ -84,6 +84,7 @@ public class FormPresenter {
      * @param container The container.
      */
     public void start(@Nonnull AcceptsOneWidget container) {
+        GWT.log("[FormPresenter] start");
         this.container = Optional.of(container);
     }
 
@@ -100,17 +101,20 @@ public class FormPresenter {
         checkNotNull(formData);
         clearDirty();
         if (!currentFormDescriptor.equals(Optional.of(formDescriptor))) {
+            GWT.log("[FormPresenter] New form descriptor.  Creating new form and setting data.");
             createFormAndSetFormData(formDescriptor, formData);
-
         }
         else {
+            GWT.log("[FormPresenter] Existing form descriptor.  Setting data.");
             setFormData(formData);
         }
         if(formDescriptor.getElements().isEmpty()) {
-            GWT.log("Form is empty");
+            GWT.log("[FormPresenter] Form is empty");
             container.ifPresent(c -> c.setWidget(noFormView));
         }
         else {
+            GWT.log("[FormPresenter] Container " + container.map(c -> c.getClass().getName()).orElse(""));
+            GWT.log("[FormPresenter] FormView.elementViews " + formView.getElementViews().size());
             container.ifPresent(c -> c.setWidget(formView));
         }
         currentFormDescriptor = Optional.of(formDescriptor);
@@ -167,13 +171,17 @@ public class FormPresenter {
     }
 
     private void setFormData(@Nonnull FormData formData) {
+        GWT.log("[FormPresenter] setFormData: " + formData);
         dispatchServiceManager.beginBatch();
         formView.getElementViews().forEach(view -> {
             Optional<FormElementId> theId = view.getId();
+            GWT.log("    [FormPresenter] FormElement: " + theId);
             if (theId.isPresent()) {
                 FormElementId id = theId.get();
                 Optional<FormDataValue> formElementData = formData.getFormElementData(id);
+                GWT.log("    [FormPresenter] FormElementData: " + formElementData);
                 if (formElementData.isPresent()) {
+                    GWT.log("    [FormPresenter] Editor: " + view.getEditor().getClass().getName());
                     view.getEditor().setValue(formElementData.get());
                 }
                 else {
@@ -271,6 +279,7 @@ public class FormPresenter {
     }
 
     public void clear() {
+        GWT.log("[FormPresenter] Clearing form view");
         formView.clear();
         currentFormDescriptor = Optional.empty();
         container.ifPresent(c -> c.setWidget(noFormView));

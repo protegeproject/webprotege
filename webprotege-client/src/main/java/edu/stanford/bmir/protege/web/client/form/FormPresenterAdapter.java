@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -36,8 +37,6 @@ public class FormPresenterAdapter implements FormElementEditor {
                                 @Nonnull FormPresenter formPresenter) {
         this.formDescriptor = checkNotNull(formDescriptor);
         this.formPresenter = checkNotNull(formPresenter);
-        container.getElement().getStyle().setBorderStyle(Style.BorderStyle.SOLID);
-        container.getElement().getStyle().setBorderColor("#ff00ff");
     }
 
     public void start() {
@@ -47,8 +46,12 @@ public class FormPresenterAdapter implements FormElementEditor {
 
     @Override
     public void setValue(FormDataValue object) {
-        // TODO
-//        formPresenter.displayForm(formDescriptor, object);
+        clearValue();
+        if(!(object instanceof FormData)) {
+            return;
+        }
+        FormData formData = (FormData) object;
+        formPresenter.displayForm(formDescriptor, formData);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class FormPresenterAdapter implements FormElementEditor {
 
     @Override
     public Optional<FormDataValue> getValue() {
-        return Optional.empty();
+        return Optional.of(formPresenter.getFormData());
     }
 
     @Override
@@ -68,7 +71,7 @@ public class FormPresenterAdapter implements FormElementEditor {
 
     @Override
     public Widget asWidget() {
-        return formPresenter.getView().asWidget();
+        return container;
     }
 
     @Override
@@ -88,6 +91,6 @@ public class FormPresenterAdapter implements FormElementEditor {
 
     @Override
     public boolean isWellFormed() {
-        return true;
+        return false;
     }
 }

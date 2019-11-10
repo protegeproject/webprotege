@@ -8,13 +8,12 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12/04/16
  */
-public class FormData implements Serializable, IsSerializable {
+public class FormData extends FormDataValue implements Serializable, IsSerializable {
 
     @JsonUnwrapped
     private Map<String, FormDataValue> data = new HashMap<>();
@@ -43,6 +42,26 @@ public class FormData implements Serializable, IsSerializable {
             checkNotNull(val);
             this.data.put(id.getId(), val);
         });
+    }
+
+    @Override
+    public List<FormDataValue> asList() {
+        return Collections.singletonList(this);
+    }
+
+    @Override
+    public Optional<IRI> asIRI() {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean isObject() {
+        return true;
+    }
+
+    @Override
+    public Optional<OWLEntity> asOWLEntity() {
+        return Optional.empty();
     }
 
     public Map<FormElementId, FormDataValue> getData() {

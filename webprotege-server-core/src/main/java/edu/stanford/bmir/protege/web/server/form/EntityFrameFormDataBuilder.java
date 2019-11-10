@@ -12,23 +12,24 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.HasPropertyValues;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -59,20 +60,16 @@ public class EntityFrameFormDataBuilder {
                             .accept(new PrimitiveDataConverter());
     }
 
+    private Optional<OWLProperty> getAssociatedOwlProperty(FormElementDescriptor descriptor) {
+        return descriptor.getOwlProperty();
+    }
+
     @Nonnull
     public FormData getFormData(@Nonnull OWLEntity entity,
                                 @Nonnull FormDescriptor formDescriptor) {
         List<FormElementDescriptor> elements = formDescriptor.getElements();
         var propertyValuesByProperty = getPropertyValues(entity);
-        var formDataValue = toFormDataObject(entity, propertyValuesByProperty, elements);
-        var map = formDataValue.getMap()
-                     .entrySet()
-                     .stream()
-                     .collect(toMap(
-                             entry -> FormElementId.get(entry.getKey()),
-                             entry -> entry.getValue()
-                     ));
-        return new FormData(map);
+        return toFormData(entity, propertyValuesByProperty, elements);
     }
 
     private Multimap<OWLProperty, PropertyValue> getPropertyValues(OWLEntity entity) {
@@ -116,38 +113,34 @@ public class EntityFrameFormDataBuilder {
             }
         });
         return propertyValues.getPropertyValues()
-                      .stream()
-                      .collect(ImmutableListMultimap.toImmutableListMultimap(
-                              propertyValue -> propertyValue.getProperty().getEntity(),
-                              propertyValue -> propertyValue
-                      ));
+                             .stream()
+                             .collect(ImmutableListMultimap.toImmutableListMultimap(
+                                     propertyValue -> propertyValue.getProperty()
+                                                                   .getEntity(),
+                                     propertyValue -> propertyValue
+                             ));
 
     }
 
-    private Optional<OWLProperty> getAssociatedOwlProperty(FormElementDescriptor descriptor) {
-        return descriptor.getOwlProperty();
-        //        return toOwlProperty(descriptor.getId());
-    }
+    //    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
+    //        return EntityFormElementId.toProperty(formElementId,
+    //                                              entityProvider);
+    //    }
 
-//    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
-//        return EntityFormElementId.toProperty(formElementId,
-//                                              entityProvider);
-//    }
-
-    private FormDataObject toFormDataObject(OWLEntity subject,
-                                            Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
-                                            List<FormElementDescriptor> descriptors) {
-        var map = new HashMap<String, FormDataValue>();
+    private FormData toFormData(OWLEntity subject,
+                                Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
+                                List<FormElementDescriptor> descriptors) {
+        var map = new HashMap<FormElementId, FormDataValue>();
         for(FormElementDescriptor descriptor : descriptors) {
             var associatedOwlProperty = getAssociatedOwlProperty(descriptor);
             if(associatedOwlProperty.isPresent()) {
                 var theProperty = associatedOwlProperty.get();
                 var propertyValues = subjectPropertyValuesByProperty.get(theProperty);
                 var formDataValueForProperty = toFormDataValue(descriptor, propertyValues);
-                map.put(descriptor.getId().getId(), formDataValueForProperty);
+                map.put(descriptor.getId(), formDataValueForProperty);
             }
         }
-        return new FormDataObject(map);
+        return new FormData(map);
     }
 
     /**
@@ -155,7 +148,8 @@ public class EntityFrameFormDataBuilder {
      * If there are multiple values then a list object will be returned.  Individual values will either be simple
      * form data values or they will be a form data object depending upon whether the descriptor is a composite
      * descriptor or not.
-     * @param descriptor The descriptor for the particular field.
+     *
+     * @param descriptor     The descriptor for the particular field.
      * @param propertyValues The values for the particular field.
      * @return A single {@link FormDataValue} that encompases the translation of the property values
      */
@@ -170,23 +164,26 @@ public class EntityFrameFormDataBuilder {
 
     private FormDataValue toSimpleFormDataValues(Collection<PropertyValue> propertyValues) {
         if(propertyValues.size() == 1) {
-            return toFormDataValue(propertyValues.iterator().next());
+            return toFormDataValue(propertyValues.iterator()
+                                                 .next());
         }
         var formDataValues = propertyValues.stream()
-                      .map(EntityFrameFormDataBuilder::toFormDataValue)
-                      .collect(toList());
+                                           .map(EntityFrameFormDataBuilder::toFormDataValue)
+                                           .collect(toList());
         return new FormDataList(formDataValues);
     }
 
-    private FormDataValue toSubFormDataValue(SubFormFieldDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        var childDescriptors = descriptor.getFormDescriptor().getElements();
+    private FormDataValue toSubFormDataValue(SubFormFieldDescriptor descriptor,
+                                             Collection<PropertyValue> propertyValues) {
+        var childDescriptors = descriptor.getFormDescriptor()
+                                         .getElements();
         // Property values should be entities
         var valueList = propertyValues.stream()
-                      .map(PropertyValue::getValue)
-                      .map(OWLPrimitiveData::asEntity)
-                      .flatMap(Optional::stream)
-                      .map(entity -> toFormDataObject(entity, getPropertyValues(entity), childDescriptors))
-                      .collect(Collectors.toList());
+                                      .map(PropertyValue::getValue)
+                                      .map(OWLPrimitiveData::asEntity)
+                                      .flatMap(Optional::stream)
+                                      .map(entity -> toFormData(entity, getPropertyValues(entity), childDescriptors))
+                                      .collect(Collectors.toList());
         if(valueList.size() == 1) {
             return valueList.get(0);
         }
