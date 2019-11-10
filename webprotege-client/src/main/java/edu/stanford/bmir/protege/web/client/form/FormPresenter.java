@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -11,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -46,6 +49,8 @@ public class FormPresenter {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final FormPresenterFactory formPresenterFactory;
+
     @Nonnull
     private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
 
@@ -54,17 +59,20 @@ public class FormPresenter {
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
 
+    @AutoFactory
     @Inject
-    public FormPresenter(@Nonnull FormView formView,
-                         @Nonnull NoFormView noFormView,
-                         @Nonnull FormEditorFactory formEditorFactory,
-                         @Nonnull Provider<FormElementView> formElementViewProvider,
-                         @Nonnull DispatchServiceManager dispatchServiceManager) {
+    public FormPresenter(@Nonnull @Provided FormView formView,
+                         @Nonnull @Provided NoFormView noFormView,
+                         @Nonnull @Provided FormEditorFactory formEditorFactory,
+                         @Nonnull @Provided Provider<FormElementView> formElementViewProvider,
+                         @Nonnull @Provided DispatchServiceManager dispatchServiceManager,
+                         @Nonnull FormPresenterFactory formPresenterFactory) {
         this.formView = checkNotNull(formView);
         this.noFormView = checkNotNull(noFormView);
         this.formElementViewProvider = checkNotNull(formElementViewProvider);
         this.formEditorFactory = checkNotNull(formEditorFactory);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.formPresenterFactory = formPresenterFactory;
     }
 
     public FormDescriptor getFormDescriptor() {
@@ -149,7 +157,7 @@ public class FormPresenter {
         dispatchServiceManager.beginBatch();
         for (FormElementDescriptor elementDescriptor : formDescriptor.getElements()) {
             Optional<FormDataValue> dataValue = formData.getFormElementData(elementDescriptor.getId());
-            createFormEditor(elementDescriptor, dataValue);
+            addFormElement(elementDescriptor, dataValue);
         }
         dispatchServiceManager.executeCurrentBatch();
     }
@@ -180,33 +188,49 @@ public class FormPresenter {
         dispatchServiceManager.executeCurrentBatch();
     }
 
-    private void createFormEditor(@Nonnull FormElementDescriptor elementDescriptor,
-                                  @Nonnull Optional<FormDataValue> formData) {
-        Optional<FormElementEditor> elementEditor = createFormElementEditor(elementDescriptor);
-        if (!elementEditor.isPresent()) {
-            return;
+    private void addFormElement(@Nonnull FormElementDescriptor elementDescriptor,
+                                @Nonnull Optional<FormDataValue> formDataValue) {
+        FormElementEditor formElementEditor;
+        if(elementDescriptor.isComposite()) {
+            GWT.log("[FormPresenter] SubForm: " + elementDescriptor);
+            SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
+            GWT.log("[FormPresenter] Creating presenter for subform");
+            FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
+            FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
+            subFormPresenter.displayForm(subFormDescriptor,
+                                         new FormData(new HashMap<>()));;
+            FormPresenterAdapter subFormPresenterAdapter = new FormPresenterAdapter(subFormDescriptor, subFormPresenter);
+            subFormPresenterAdapter.start();
+            formElementEditor = subFormPresenterAdapter;
         }
-        FormElementEditor editor = elementEditor.get();
+        else {
+            Optional<FormElementEditor> elementEditor = createFormElementEditor(elementDescriptor);
+            if (!elementEditor.isPresent()) {
+                return;
+            }
+            formElementEditor = elementEditor.get();
+        }
+
 
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
         String langTag = localeInfo.getLocaleName();
         FormElementView elementView = formElementViewProvider.get();
         elementView.setId(elementDescriptor.getId());
         elementView.setFormLabel(elementDescriptor.getLabel().get(langTag));
-        elementView.setEditor(editor);
+        elementView.setEditor(formElementEditor);
         elementView.setRequired(elementDescriptor.getOptionality());
         Map<String, String> style = elementDescriptor.getStyle();
         style.forEach(elementView::addStylePropertyValue);
         // Update the required value missing display when the value changes
-        editor.addValueChangeHandler(event -> {
+        formElementEditor.addValueChangeHandler(event -> {
             this.dirty = true;
             updateRequiredValuePresent(elementView);
         });
-        if (formData.isPresent()) {
-            editor.setValue(formData.get());
+        if (formDataValue.isPresent()) {
+            formElementEditor.setValue(formDataValue.get());
         }
         else {
-            editor.clearValue();
+            formElementEditor.clearValue();
         }
         updateRequiredValuePresent(elementView);
         formView.addFormElementView(elementView, elementDescriptor.getElementRun());

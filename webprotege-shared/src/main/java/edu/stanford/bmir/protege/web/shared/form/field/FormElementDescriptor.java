@@ -84,11 +84,11 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     
     @JsonIgnore
     public boolean isComposite() {
-        return getFieldDescriptor() instanceof CompositeFieldDescriptor;
+        return getFieldDescriptor() instanceof SubFormFieldDescriptor;
     }
 
     @JsonIgnore
     public boolean isNonComposite() {
-        return !(getFieldDescriptor() instanceof CompositeFieldDescriptor);
+        return !(getFieldDescriptor() instanceof SubFormFieldDescriptor);
     }
 }

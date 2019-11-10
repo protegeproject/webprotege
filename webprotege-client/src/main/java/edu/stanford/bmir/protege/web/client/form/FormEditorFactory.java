@@ -101,42 +101,36 @@ public class FormEditorFactory {
         else if(formFieldDescriptor.getAssociatedType().equalsIgnoreCase(IndividualNameFieldDescriptor.getType())) {
             return getIndividualNameEditorFactory((IndividualNameFieldDescriptor) formFieldDescriptor);
         }
-        else if(formFieldDescriptor.getAssociatedType().equals(CompositeFieldDescriptor.getFieldTypeId())) {
-            return getCompositeFieldEditorFactory((CompositeFieldDescriptor) formFieldDescriptor);
-        }
         else {
             return Optional.empty();
         }
     }
 
-    @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getCompositeFieldEditorFactory(CompositeFieldDescriptor formFieldDescriptor) {
-        List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
-        List<CompositeFieldDescriptorEntry> childDescriptorEntries = new ArrayList<>();
-        for(CompositeFieldDescriptorEntry childDescriptor : formFieldDescriptor.getElements()) {
-            Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor().getFieldDescriptor());
-            if(!childEditorFactory.isPresent()) {
-                return Optional.empty();
-            }
-            childDescriptorEntries.add(childDescriptor);
-            childEditorFactories.add(childEditorFactory.get());
-        }
-        return Optional.of(
-                () -> {
-                    CompositeFieldEditor editor = compositeFieldEditorProvider.get();
-                    for(int i = 0; i < childDescriptorEntries.size(); i++) {
-                        FormElementId childId = childDescriptorEntries.get(i).getDescriptor().getId();
-                        ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
-                        ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
-                        double flexBasis = childDescriptorEntries.get(i).getBasis();
-                        double flexGrow = childDescriptorEntries.get(i).getFlexGrow();
-                        double flexShrink = childDescriptorEntries.get(i).getFlexShrink();
-                        editor.addChildEditor(childId, flexBasis, flexGrow, flexShrink, childEditor);
-                    }
-                    return editor;
-                }
-        );
-    }
+//    @Nonnull
+//    private Optional<ValueEditorFactory<FormDataValue>> getSubFormEditorFactory(SubFormFieldDescriptor formFieldDescriptor) {
+//        List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
+//        List<FormElementDescriptor> childDescriptorEntries = new ArrayList<>();
+//        for(FormElementDescriptor childDescriptor : formFieldDescriptor.getFormDescriptor().getElements()) {
+//            Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getFieldDescriptor());
+//            if(!childEditorFactory.isPresent()) {
+//                return Optional.empty();
+//            }
+//            childDescriptorEntries.add(childDescriptor);
+//            childEditorFactories.add(childEditorFactory.get());
+//        }
+//        return Optional.of(
+//                () -> {
+//                    CompositeFieldEditor editor = compositeFieldEditorProvider.get();
+//                    for(int i = 0; i < childDescriptorEntries.size(); i++) {
+//                        FormElementId childId = childDescriptorEntries.get(i).getId();
+//                        ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
+//                        ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
+//                        editor.addChildEditor(childId, flexBasis, flexGrow, flexShrink, childEditor);
+//                    }
+//                    return editor;
+//                }
+//        );
+//    }
 
     @Nonnull
     private Optional<ValueEditorFactory<FormDataValue>> getNumberFieldEditorFactory(NumberFieldDescriptor formFieldDescriptor) {

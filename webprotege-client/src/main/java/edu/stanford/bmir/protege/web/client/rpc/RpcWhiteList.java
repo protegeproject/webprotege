@@ -165,7 +165,7 @@ public class RpcWhiteList implements Action, Result {
 
     IndividualNameFieldDescriptor individualNameFieldDescriptor;
 
-    CompositeFieldDescriptor compositeFieldDescriptor;
+    SubFormFieldDescriptor subFormFieldDescriptor;
 
     ChoiceFieldDescriptor choiceFieldDescriptor;
 
@@ -444,8 +444,8 @@ public class RpcWhiteList implements Action, Result {
         return individualNameFieldDescriptor;
     }
 
-    public CompositeFieldDescriptor getCompositeFieldDescriptor() {
-        return compositeFieldDescriptor;
+    public SubFormFieldDescriptor getSubFormFieldDescriptor() {
+        return subFormFieldDescriptor;
     }
 
     public ChoiceFieldDescriptor getChoiceFieldDescriptor() {

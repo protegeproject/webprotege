@@ -251,7 +251,7 @@
                         <moduleName>edu.stanford.bmir.protege.web.client.WebProtege</moduleName>
                         <startupUrls>WebProtege.jsp</startupUrls>
                         <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
-                        <style>PRETTY</style>
+                        <style>DETAILED</style>
                         <devmodeArgs>
                             <arg>-style</arg><arg>DETAILED</arg>
                         </devmodeArgs>

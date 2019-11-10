@@ -48,6 +48,7 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         OWLEntity entity = action.getEntity();
         return formManager.getFormDescriptor(entity, projectId)
                           .map(formDescriptor -> {
+                              System.out.println("[GetEntityFormActionHandler] " + formDescriptor);
                               var formData = formDataBuilder.getFormData(entity, formDescriptor);
                               return new GetEntityFormResult(formDescriptor, formData);
 

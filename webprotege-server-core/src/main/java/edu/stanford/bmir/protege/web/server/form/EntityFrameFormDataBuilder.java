@@ -15,8 +15,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.CompositeFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.CompositeFieldDescriptorEntry;
+import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.frame.HasPropertyValues;
@@ -162,7 +161,7 @@ public class EntityFrameFormDataBuilder {
      */
     private FormDataValue toFormDataValue(FormElementDescriptor descriptor, Collection<PropertyValue> propertyValues) {
         if(descriptor.isComposite()) {
-            return toCompositeFormDataValues((CompositeFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
+            return toSubFormDataValue((SubFormFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
         }
         else {
             return toSimpleFormDataValues(propertyValues);
@@ -179,11 +178,8 @@ public class EntityFrameFormDataBuilder {
         return new FormDataList(formDataValues);
     }
 
-    private FormDataValue toCompositeFormDataValues(CompositeFieldDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        var childDescriptors = descriptor.getElements()
-                  .stream()
-                  .map(CompositeFieldDescriptorEntry::getDescriptor)
-                  .collect(toList());
+    private FormDataValue toSubFormDataValue(SubFormFieldDescriptor descriptor, Collection<PropertyValue> propertyValues) {
+        var childDescriptors = descriptor.getFormDescriptor().getElements();
         // Property values should be entities
         var valueList = propertyValues.stream()
                       .map(PropertyValue::getValue)

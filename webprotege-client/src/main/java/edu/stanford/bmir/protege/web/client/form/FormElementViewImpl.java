@@ -40,6 +40,9 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     @UiField
     SimplePanel editorHolder;
 
+
+    FormElementEditor editor;
+
     @Inject
     public FormElementViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -84,12 +87,13 @@ public class FormElementViewImpl extends Composite implements FormElementView {
 
     @Override
     public void setEditor(FormElementEditor editor) {
+        this.editor = checkNotNull(editor);
         editorHolder.setWidget(editor);
     }
 
     @Override
     public FormElementEditor getEditor() {
-        return (FormElementEditor) editorHolder.getWidget();
+        return checkNotNull(editor);
     }
 
     @Override
