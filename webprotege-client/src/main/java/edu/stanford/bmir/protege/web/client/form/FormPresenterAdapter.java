@@ -24,6 +24,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-09
+ *
+ * Adapts a form presenter to a {@link FormElementEditor}.
  */
 public class FormPresenterAdapter implements FormElementEditor, HasValueChangeHandlers<Optional<FormDataValue>> {
 
@@ -51,7 +53,6 @@ public class FormPresenterAdapter implements FormElementEditor, HasValueChangeHa
     }
 
     private void handleFormDataChanged() {
-        GWT.log("[FormPresenterAdapter] handleFormDataChanged");
         ValueChangeEvent.fire(this, getValue());
     }
 
