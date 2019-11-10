@@ -40,6 +40,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -271,6 +272,10 @@ public class ChangeManager implements HasApplyChanges {
                               }
                           }
                       });
+                if(isChangeForAnnotationAssertionWithFreshIris(change)) {
+                    changesToBeRenamed.add(change);
+                }
+
             }
 
 
@@ -326,6 +331,28 @@ public class ChangeManager implements HasApplyChanges {
         }
 
         return changeApplicationResult;
+    }
+
+    private boolean isChangeForAnnotationAssertionWithFreshIris(OntologyChange change) {
+        if(!change.isAxiomChange()) {
+            return false;
+        }
+        var axiom = change.getAxiomOrThrow();
+        if(!(axiom instanceof OWLAnnotationAssertionAxiom)) {
+            return false;
+        }
+        var assertion = (OWLAnnotationAssertionAxiom) axiom;
+        var subject = assertion.getSubject();
+        if(subject instanceof IRI) {
+            if(DataFactory.isFreshIri((IRI) subject)) {
+                return true;
+            }
+        }
+        var object = assertion.getValue();
+        if(object instanceof IRI) {
+            return DataFactory.isFreshIri((IRI) object);
+        }
+        return false;
     }
 
     private void throwEditPermissionDeniedIfNecessary(UserId userId) {

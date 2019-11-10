@@ -121,6 +121,10 @@ public class DataFactory {
 
     public static boolean isFreshEntity(OWLEntity entity) {
         IRI iri = entity.getIRI();
+        return isFreshIri(iri);
+    }
+
+    public static boolean isFreshIri(IRI iri) {
         String scheme = iri.getScheme();
         return scheme != null && FRESH_ENTITY_SCHEME.equalsIgnoreCase(scheme);
     }
