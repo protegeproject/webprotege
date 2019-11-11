@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -15,11 +14,11 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import uk.ac.manchester.cs.owl.owlapi.OWLNamedIndividualImpl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Date;
@@ -71,6 +70,8 @@ public class FormPresenter {
     private Optional<OWLEntity> currentSubject = Optional.empty();
 
     private FormDataChangedHandler formDataChangedHandler = () -> {};
+
+    private FormDataFreshSubjectStrategy formDataFreshSubjectStrategy = Optional::empty;
 
     @AutoFactory
     @Inject
@@ -148,15 +149,13 @@ public class FormPresenter {
                         v -> dataMap.put(id, v)
                 ));
             }
-            // TODO:  What if current subject is null?
             return new FormData(getOrGenerateCurrentSubject(), dataMap, formDescriptor);
         }).orElse(FormData.empty());
     }
 
+    @Nullable
     private OWLEntity getOrGenerateCurrentSubject() {
-        return currentSubject.orElseGet(() -> {
-            return new OWLNamedIndividualImpl(DataFactory.getFreshOWLEntityIRI("Fresh value @ " + new Date().getTime()));
-        });
+        return currentSubject.orElseGet(() -> formDataFreshSubjectStrategy.getFreshSubject().orElse(null));
     }
 
     public void clearData() {
@@ -166,6 +165,10 @@ public class FormPresenter {
             view.getEditor().clearValue();
             updateRequiredValuePresent(view);
         }
+    }
+
+    public void setFormDataFreshSubjectStrategy(FormDataFreshSubjectStrategy formDataFreshSubjectStrategy) {
+        this.formDataFreshSubjectStrategy = checkNotNull(formDataFreshSubjectStrategy);
     }
 
     /**
@@ -216,14 +219,7 @@ public class FormPresenter {
                                 @Nonnull Optional<FormDataValue> formDataValue) {
         FormElementEditor formElementEditor;
         if(elementDescriptor.isComposite()) {
-            SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
-            FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
-            FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
-            subFormPresenter.displayForm(subFormDescriptor,
-                                         new FormData(null, new HashMap<>(), subFormDescriptor));;
-            FormPresenterAdapter subFormPresenterAdapter = new FormPresenterAdapter(subFormDescriptor, subFormPresenter);
-            subFormPresenterAdapter.start();
-            formElementEditor = subFormPresenterAdapter;
+            formElementEditor = createSubFormElement(elementDescriptor);
         }
         else {
             Optional<FormElementEditor> elementEditor = createFormElementEditor(elementDescriptor);
@@ -259,6 +255,19 @@ public class FormPresenter {
         formView.addFormElementView(elementView, elementDescriptor.getElementRun());
     }
 
+    private FormElementEditor createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
+        SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
+        FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
+        subFormPresenter.setFormDataFreshSubjectStrategy(() -> {
+            return Optional.of(new OWLNamedIndividualImpl(DataFactory.getFreshOWLEntityIRI("Fresh value @ " + new Date().getTime())));
+        });
+        FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
+        subFormPresenter.displayForm(subFormDescriptor,
+                                     new FormData(null, new HashMap<>(), subFormDescriptor));
+        FormPresenterAdapter subFormPresenterAdapter = new FormPresenterAdapter(subFormDescriptor, subFormPresenter);
+        subFormPresenterAdapter.start();
+        return subFormPresenterAdapter;
+    }
 
 
     /**
