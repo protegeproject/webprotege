@@ -71,7 +71,7 @@ public class FormPresenter {
 
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
-    private FormDataFreshSubjectStrategy formDataFreshSubjectStrategy = Optional::empty;
+    private FormDataFreshSubjectStrategy freshSubjectStrategy = Optional::empty;
 
     @AutoFactory
     @Inject
@@ -155,7 +155,7 @@ public class FormPresenter {
 
     @Nullable
     private OWLEntity getOrGenerateCurrentSubject() {
-        return currentSubject.orElseGet(() -> formDataFreshSubjectStrategy.getFreshSubject().orElse(null));
+        return currentSubject.orElseGet(() -> freshSubjectStrategy.getFreshSubject().orElse(null));
     }
 
     public void clearData() {
@@ -167,8 +167,8 @@ public class FormPresenter {
         }
     }
 
-    public void setFormDataFreshSubjectStrategy(FormDataFreshSubjectStrategy formDataFreshSubjectStrategy) {
-        this.formDataFreshSubjectStrategy = checkNotNull(formDataFreshSubjectStrategy);
+    public void setFreshSubjectStrategy(FormDataFreshSubjectStrategy formDataFreshSubjectStrategy) {
+        this.freshSubjectStrategy = checkNotNull(formDataFreshSubjectStrategy);
     }
 
     /**
@@ -258,7 +258,7 @@ public class FormPresenter {
     private FormElementEditor createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
         SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
         FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
-        subFormPresenter.setFormDataFreshSubjectStrategy(() -> {
+        subFormPresenter.setFreshSubjectStrategy(() -> {
             return Optional.of(new OWLNamedIndividualImpl(DataFactory.getFreshOWLEntityIRI("Fresh value @ " + new Date().getTime())));
         });
         FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
