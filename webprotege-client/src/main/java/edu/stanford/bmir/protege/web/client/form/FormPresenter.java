@@ -71,7 +71,7 @@ public class FormPresenter {
 
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
-    private FormDataFreshSubjectStrategy freshSubjectStrategy = Optional::empty;
+    private EntityFormSubjectFactory freshSubjectStrategy = Optional::empty;
 
     @AutoFactory
     @Inject
@@ -155,7 +155,7 @@ public class FormPresenter {
 
     @Nullable
     private OWLEntity getOrGenerateCurrentSubject() {
-        return currentSubject.orElseGet(() -> freshSubjectStrategy.getFreshSubject().orElse(null));
+        return currentSubject.orElseGet(() -> freshSubjectStrategy.createSubject().orElse(null));
     }
 
     public void clearData() {
@@ -167,8 +167,8 @@ public class FormPresenter {
         }
     }
 
-    public void setFreshSubjectStrategy(FormDataFreshSubjectStrategy formDataFreshSubjectStrategy) {
-        this.freshSubjectStrategy = checkNotNull(formDataFreshSubjectStrategy);
+    public void setFreshSubjectStrategy(EntityFormSubjectFactory entityFormSubjectFactory) {
+        this.freshSubjectStrategy = checkNotNull(entityFormSubjectFactory);
     }
 
     /**

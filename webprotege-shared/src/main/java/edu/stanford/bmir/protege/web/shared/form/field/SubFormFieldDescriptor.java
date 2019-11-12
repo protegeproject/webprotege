@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 
 import javax.annotation.Nonnull;
@@ -20,11 +21,15 @@ public class SubFormFieldDescriptor implements FormFieldDescriptor {
 
     private FormDescriptor formDescriptor;
 
+    private EntityFormSubjectFactoryDescriptor freshSubjectStrategy;
+
     private SubFormFieldDescriptor() {
     }
 
-    public SubFormFieldDescriptor(@Nonnull FormDescriptor formDescriptor) {
+    public SubFormFieldDescriptor(@Nonnull FormDescriptor formDescriptor,
+                                  EntityFormSubjectFactoryDescriptor freshSubjectStrategy) {
         this.formDescriptor = checkNotNull(formDescriptor);
+        this.freshSubjectStrategy = freshSubjectStrategy;
     }
 
     public static String getFieldTypeId() {
@@ -52,6 +57,11 @@ public class SubFormFieldDescriptor implements FormFieldDescriptor {
     @JsonUnwrapped
     public FormDescriptor getFormDescriptor() {
         return formDescriptor;
+    }
+
+    @Nonnull
+    public EntityFormSubjectFactoryDescriptor getFreshSubjectStrategy() {
+        return freshSubjectStrategy;
     }
 
     @Override

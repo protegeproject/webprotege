@@ -1,13 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.junit.Before;
 import org.junit.Test;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
@@ -19,7 +21,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Matthew Horridge
@@ -58,8 +59,14 @@ public class SubFormFieldDescriptor_IT {
                                                                 Map.of()
                                                         )
                                                 ));
-        SubFormFieldDescriptor descriptor = new SubFormFieldDescriptor(formDescriptor);
+        var freshSubject = EntityFormSubjectFactoryDescriptor.get(
+                EntityType.CLASS,
+                "${type}-${uuid}",
+                ImmutableList.of("SubClassOf(${subject.iri} <http://example.org/A>)")
+        );
+        SubFormFieldDescriptor descriptor = new SubFormFieldDescriptor(formDescriptor, freshSubject);
         var serialized = objectMapper.writeValueAsString(descriptor);
+        System.out.println(serialized);
         var deserialized = objectMapper.readerFor(SubFormFieldDescriptor.class)
                 .readValue(serialized);
         assertThat(deserialized, is(descriptor));
