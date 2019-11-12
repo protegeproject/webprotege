@@ -39,9 +39,6 @@ public abstract class EntityFormSubjectFactoryDescriptor {
      *     "Class" for an owl:Class, "NamedIndividual" for an individual etc.
      *     ${uuid} – generates a fresh UUID.  For example, "MyClass-${uuid}" will
      *     generate a name of the form "MyClass-12345678-1234-1234-1234-123456789abc".
-     *     ${counter} – generates an integer counter so that the resulting label
-     *     is unique in the ontology.  For example, "MyClass-${counter}" would
-     *     generate "MyClass-0", "MyClass-1" etc.
      *
      * If the supplied name is quoted IRI then this IRI will be used for the entity
      * and it will override any entity creation settings in WebProtege.
