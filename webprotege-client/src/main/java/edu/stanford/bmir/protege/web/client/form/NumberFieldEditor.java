@@ -60,6 +60,11 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
     }
 
     @Override
+    public void requestFocus() {
+        numberField.setFocus(true);
+    }
+
+    @Override
     public boolean isWellFormed() {
         return getValue().isPresent();
     }

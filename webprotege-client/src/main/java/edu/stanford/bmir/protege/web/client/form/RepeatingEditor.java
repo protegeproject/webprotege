@@ -33,6 +33,7 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
         this.delegate.addValueChangeHandler(event -> {
            ValueChangeEvent.fire(this, getValue());
         });
+        delegate.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
     }
 
     @Override

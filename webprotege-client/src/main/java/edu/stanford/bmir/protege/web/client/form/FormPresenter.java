@@ -106,6 +106,10 @@ public class FormPresenter {
         this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
+    public void requestFocus() {
+        formView.requestFocus();
+    }
+
     /**
      * Displays the specified form and the specified form data.
      * @param formDescriptor The form to be displayed.

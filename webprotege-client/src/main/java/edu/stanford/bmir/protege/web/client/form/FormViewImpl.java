@@ -70,4 +70,12 @@ public class FormViewImpl extends Composite implements FormView {
     public void clear() {
         holder.clear();
     }
+
+    @Override
+    public void requestFocus() {
+        if(elementViews.isEmpty()) {
+            return;
+        }
+        elementViews.get(0).getEditor().requestFocus();
+    }
 }

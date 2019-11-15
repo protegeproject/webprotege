@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.user.client.ui.HasEnabled;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import java.util.List;

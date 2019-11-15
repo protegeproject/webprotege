@@ -76,6 +76,11 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
         editor.setShowLinksForEntities(false);
     }
 
+    @Override
+    public void requestFocus() {
+        editor.requestFocus();
+    }
+
     public void setPlaceholder(String placeholder) {
         editor.setPlaceholder(placeholder);
     }

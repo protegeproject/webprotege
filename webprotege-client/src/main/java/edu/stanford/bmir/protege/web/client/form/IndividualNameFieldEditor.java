@@ -64,6 +64,11 @@ public class IndividualNameFieldEditor extends Composite implements FormElementE
         });
     }
 
+    @Override
+    public void requestFocus() {
+
+    }
+
     public void setPlaceholder(String placeholder) {
         editor.setPlaceholder(placeholder);
     }

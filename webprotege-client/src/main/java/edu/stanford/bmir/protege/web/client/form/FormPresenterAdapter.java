@@ -52,6 +52,11 @@ public class FormPresenterAdapter implements FormElementEditor, HasValueChangeHa
         formPresenter.displayForm(formDescriptor, FormData.empty());
     }
 
+    @Override
+    public void requestFocus() {
+        formPresenter.requestFocus();
+    }
+
     private void handleFormDataChanged() {
         ValueChangeEvent.fire(this, getValue());
     }

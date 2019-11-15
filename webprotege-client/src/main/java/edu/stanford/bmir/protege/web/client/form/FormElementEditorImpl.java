@@ -56,6 +56,10 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
         editorHolder.setWidget(delegateEditor);
     }
 
+    @Override
+    public void requestFocus() {
+        
+    }
 
     @Override
     public void setValue(FormDataValue value) {
