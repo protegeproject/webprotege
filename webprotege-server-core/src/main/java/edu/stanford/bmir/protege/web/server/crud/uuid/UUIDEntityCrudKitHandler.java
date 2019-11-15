@@ -105,10 +105,12 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         var entity = dataFactory.getOWLEntity(entityType, entityIRI);
         builder.add(AddAxiomChange.of(targetOntology, dataFactory.getOWLDeclarationAxiom(entity)));
 
-        var annotationPropertyIri = dictionaryLanguage.getAnnotationPropertyIri();
-        if (annotationPropertyIri != null) {
-            var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.add(AddAxiomChange.of(targetOntology, ax));
+        if(!suppliedName.isBlank()) {
+            var annotationPropertyIri = dictionaryLanguage.getAnnotationPropertyIri();
+            if (annotationPropertyIri != null) {
+                var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+                builder.add(AddAxiomChange.of(targetOntology, ax));
+            }
         }
         return entity;
     }

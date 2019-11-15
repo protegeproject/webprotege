@@ -113,11 +113,13 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
         builder.add(AddAxiomChange.of(targetOntology, declarationAxiom));
         DictionaryLanguage language = context.getDictionaryLanguage();
-        IRI annotationPropertyIri = language.getAnnotationPropertyIri();
-        if (annotationPropertyIri != null) {
-            final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
-            var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.add(AddAxiomChange.of(targetOntology, ax));
+        if(!shortForm.getShortForm().isBlank()) {
+            IRI annotationPropertyIri = language.getAnnotationPropertyIri();
+            if (annotationPropertyIri != null) {
+                final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
+                var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+                builder.add(AddAxiomChange.of(targetOntology, ax));
+            }
         }
         OWLAnnotationAssertionAxiom createdByAx = dataFactory.getOWLAnnotationAssertionAxiom(
                 dataFactory.getOWLAnnotationProperty(CREATED_BY),
