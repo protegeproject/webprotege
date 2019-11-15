@@ -49,10 +49,7 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
     @Override
     public Optional<FormDataValue> getValue() {
         Optional<List<FormDataValue>> value = delegate.getValue();
-        if(!value.isPresent()) {
-            return Optional.empty();
-        }
-        return Optional.of(new FormDataList(value.get()));
+        return value.map(FormDataList::new);
     }
 
     @Override
