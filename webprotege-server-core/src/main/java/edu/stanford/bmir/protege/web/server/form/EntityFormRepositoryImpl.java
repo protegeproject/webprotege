@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
 public class EntityFormRepositoryImpl implements EntityFormRepository {
 
 
-    private static final String COLLECTION_NAME = "forms";
+    private static final String COLLECTION_NAME = "Forms";
 
     private final ObjectMapper objectMapper;
 

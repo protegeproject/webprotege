@@ -10,12 +10,14 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -58,13 +60,8 @@ public class SubFormFieldDescriptor_IT {
                                                                 LanguageMap.empty(),
                                                                 Map.of()
                                                         )
-                                                ));
-        var freshSubject = EntityFormSubjectFactoryDescriptor.get(
-                EntityType.CLASS,
-                "${type}-${uuid}",
-                ImmutableList.of("SubClassOf(${subject.iri} <http://example.org/A>)")
-        );
-        SubFormFieldDescriptor descriptor = new SubFormFieldDescriptor(formDescriptor, freshSubject);
+                                                ), Optional.empty());
+        SubFormFieldDescriptor descriptor = new SubFormFieldDescriptor(formDescriptor);
         var serialized = objectMapper.writeValueAsString(descriptor);
         System.out.println(serialized);
         var deserialized = objectMapper.readerFor(SubFormFieldDescriptor.class)

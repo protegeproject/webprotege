@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -61,18 +59,17 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     @Nonnull
     private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
 
-    @AutoFactory
     @Inject
     public FrameChangeGenerator(@Nonnull FrameUpdate frameUpdate,
-                                @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                @Provided @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
-                                @Provided @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                                @Provided @Nonnull OntologyAxiomsIndex axiomsIndex,
-                                @Provided @Nonnull ClassFrameTranslator classFrameTranslator,
-                                @Provided @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
-                                @Provided @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
-                                @Provided @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
-                                @Provided @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator) {
+                                @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
+                                @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                @Nonnull OntologyAxiomsIndex axiomsIndex,
+                                @Nonnull ClassFrameTranslator classFrameTranslator,
+                                @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
+                                @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
+                                @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
+                                @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator) {
         this.frameUpdate = checkNotNull(frameUpdate);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.factory = checkNotNull(factory);

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
@@ -10,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +31,6 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
     @Nullable
     private OWLEntity subject;
 
-    @Nonnull
     private FormDescriptor formDescriptor;
 
     @JsonUnwrapped
@@ -58,6 +59,10 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
     @Override
     public Optional<FormData> asFormData() {
         return Optional.of(this);
+    }
+
+    public Optional<OWLProperty> getOwlProperty(FormElementId formElementId) {
+        return formDescriptor.getOwlProperty(formElementId);
     }
 
     @Nonnull

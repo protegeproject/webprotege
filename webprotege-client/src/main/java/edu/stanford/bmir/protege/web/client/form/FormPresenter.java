@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
@@ -149,13 +150,8 @@ public class FormPresenter {
                         v -> dataMap.put(id, v)
                 ));
             }
-            return new FormData(getOrGenerateCurrentSubject(), dataMap, formDescriptor);
+            return new FormData(currentSubject.orElse(null), dataMap, formDescriptor);
         }).orElse(FormData.empty());
-    }
-
-    @Nullable
-    private OWLEntity getOrGenerateCurrentSubject() {
-        return currentSubject.orElseGet(() -> freshSubjectStrategy.createSubject().orElse(null));
     }
 
     public void clearData() {
@@ -165,10 +161,6 @@ public class FormPresenter {
             view.getEditor().clearValue();
             updateRequiredValuePresent(view);
         }
-    }
-
-    public void setFreshSubjectStrategy(EntityFormSubjectFactory entityFormSubjectFactory) {
-        this.freshSubjectStrategy = checkNotNull(entityFormSubjectFactory);
     }
 
     /**
@@ -258,9 +250,6 @@ public class FormPresenter {
     private FormElementEditor createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
         SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
         FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
-        subFormPresenter.setFreshSubjectStrategy(() -> {
-            return Optional.of(new OWLNamedIndividualImpl(DataFactory.getFreshOWLEntityIRI("Fresh value @ " + new Date().getTime())));
-        });
         FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
         subFormPresenter.displayForm(subFormDescriptor,
                                      new FormData(null, new HashMap<>(), subFormDescriptor));

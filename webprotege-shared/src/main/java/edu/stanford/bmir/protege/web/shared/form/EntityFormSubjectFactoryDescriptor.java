@@ -6,8 +6,11 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -21,8 +24,12 @@ public abstract class EntityFormSubjectFactoryDescriptor {
     @JsonCreator
     public static EntityFormSubjectFactoryDescriptor get(@Nonnull @JsonProperty("entityType") EntityType entityType,
                                                          @Nonnull @JsonProperty("suppliedNameTemplate") String suppliedNameTemplate,
-                                                         @Nonnull @JsonProperty("axiomTemplates") ImmutableList<String> axiomTemplates) {
-        return new AutoValue_Entity_FormSubjectFactoryDescriptor(entityType, suppliedNameTemplate, axiomTemplates);
+                                                         @Nonnull @JsonProperty("axiomTemplates") ImmutableList<String> axiomTemplates,
+                                                         @Nonnull @JsonProperty("targetOntologyIri") Optional<IRI> targetOntologyIri) {
+        return new AutoValue_EntityFormSubjectFactoryDescriptor(entityType,
+                                                                suppliedNameTemplate == null ? "" : suppliedNameTemplate,
+                                                                axiomTemplates == null ? ImmutableList.of() : axiomTemplates,
+                                                                targetOntologyIri.orElse(null));
     }
 
     @Nonnull
@@ -57,4 +64,12 @@ public abstract class EntityFormSubjectFactoryDescriptor {
      */
     @Nonnull
     public abstract ImmutableList<String> getAxiomTemplates();
+
+    @Nullable
+    protected abstract IRI getTargetOntologyIriInternal();
+
+    @Nonnull
+    public Optional<IRI> getTargetOntologyIri() {
+        return Optional.ofNullable(getTargetOntologyIriInternal());
+    }
 }

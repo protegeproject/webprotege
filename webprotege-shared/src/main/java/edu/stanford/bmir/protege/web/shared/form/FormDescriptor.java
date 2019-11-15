@@ -2,16 +2,21 @@ package edu.stanford.bmir.protege.web.shared.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -27,19 +32,26 @@ public class FormDescriptor implements Serializable {
 
     private List<FormElementDescriptor> elements;
 
+    @Nullable
+    private EntityFormSubjectFactoryDescriptor subjectFactoryDescriptor;
+
     private FormDescriptor() {
+        this.elements = new ArrayList<>();
     }
 
     public FormDescriptor(FormId id,
                           LanguageMap label,
-                          List<FormElementDescriptor> formElementDescriptors) {
+                          List<FormElementDescriptor> formElementDescriptors,
+                          Optional<EntityFormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
         this.formId = id;
         this.label = label;
         this.elements = new ArrayList<>(formElementDescriptors);
+        this.subjectFactoryDescriptor = subjectFactoryDescriptor.orElse(null);
     }
 
     public static FormDescriptor empty() {
-        return new FormDescriptor(FormId.get("EmptyForm"), LanguageMap.empty(), Collections.emptyList());
+        return new FormDescriptor(FormId.get("EmptyForm"), LanguageMap.empty(), Collections.emptyList(),
+                                  Optional.empty());
     }
 
     public FormId getFormId() {
@@ -48,6 +60,18 @@ public class FormDescriptor implements Serializable {
 
     public LanguageMap getLabel() {
         return label;
+    }
+
+    public Optional<OWLProperty> getOwlProperty(@Nonnull FormElementId formElementId) {
+        return elements.stream()
+                .filter(element -> element.getId().equals(formElementId))
+                .findFirst()
+                .flatMap(FormElementDescriptor::getOwlProperty);
+    }
+
+    @Nonnull
+    public Optional<EntityFormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
+        return Optional.ofNullable(subjectFactoryDescriptor);
     }
 
     public List<FormElementDescriptor> getElements() {
@@ -81,7 +105,8 @@ public class FormDescriptor implements Serializable {
         FormDescriptor other = (FormDescriptor) obj;
         return this.formId.equals(other.formId)
                 && this.label.equals(other.label)
-                && this.elements.equals(other.elements);
+                && this.elements.equals(other.elements)
+                && Objects.equal(this.subjectFactoryDescriptor, other.subjectFactoryDescriptor);
     }
 
 
@@ -119,7 +144,7 @@ public class FormDescriptor implements Serializable {
 
 
         public FormDescriptor build() {
-            return new FormDescriptor(formId, label, builder_elementDescriptors);
+            return new FormDescriptor(formId, label, builder_elementDescriptors, Optional.empty());
         }
     }
 }

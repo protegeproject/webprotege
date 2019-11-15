@@ -21,15 +21,11 @@ public class SubFormFieldDescriptor implements FormFieldDescriptor {
 
     private FormDescriptor formDescriptor;
 
-    private EntityFormSubjectFactoryDescriptor freshSubjectStrategy;
-
     private SubFormFieldDescriptor() {
     }
 
-    public SubFormFieldDescriptor(@Nonnull FormDescriptor formDescriptor,
-                                  EntityFormSubjectFactoryDescriptor freshSubjectStrategy) {
+    public SubFormFieldDescriptor(@Nonnull FormDescriptor formDescriptor) {
         this.formDescriptor = checkNotNull(formDescriptor);
-        this.freshSubjectStrategy = freshSubjectStrategy;
     }
 
     public static String getFieldTypeId() {
@@ -57,11 +53,6 @@ public class SubFormFieldDescriptor implements FormFieldDescriptor {
     @JsonUnwrapped
     public FormDescriptor getFormDescriptor() {
         return formDescriptor;
-    }
-
-    @Nonnull
-    public EntityFormSubjectFactoryDescriptor getFreshSubjectStrategy() {
-        return freshSubjectStrategy;
     }
 
     @Override
