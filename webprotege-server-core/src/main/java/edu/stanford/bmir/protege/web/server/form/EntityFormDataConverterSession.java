@@ -2,18 +2,17 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.collect.*;
-import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,19 +27,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EntityFormDataConverterSession {
 
     @Nonnull
-    private final Map<FormData, OWLEntity> formData2Subject = new HashMap<>();
+    private final Map<FormData, OWLEntity> formSubjects = new HashMap<>();
 
     @Nonnull
     private final Set<String> axiomTemplates = new HashSet<>();
 
     @Nonnull
-    private final Multimap<OWLEntity, PropertyValue> entityPropertyValues = HashMultimap.create();
-
-    @Nonnull
-    private final ProjectId projectId;
-
-    @Nonnull
-    private final ProjectDetailsManager projectDetailsManager;
+    private final Multimap<FormData, PropertyValue> formPropertyValues = HashMultimap.create();
 
     @Nonnull
     private final EntityFormSubjectFactory formSubjectFactory;
@@ -48,63 +41,59 @@ public class EntityFormDataConverterSession {
     @Nonnull
     private Optional<IRI> targetOntologyIri = Optional.empty();
 
+    private Optional<String> langTag = Optional.empty();
+
     @AutoFactory
     @Inject
-    public EntityFormDataConverterSession(@Nonnull ProjectId projectId,
-                                          @Nonnull @Provided ProjectDetailsManager projectDetailsManager,
-                                          @Nonnull @Provided EntityFormSubjectFactory formSubjectFactory) {
-        this.projectId = checkNotNull(projectId);
-        this.projectDetailsManager = projectDetailsManager;
+    public EntityFormDataConverterSession(@Nonnull @Provided EntityFormSubjectFactory formSubjectFactory) {
         this.formSubjectFactory = formSubjectFactory;
     }
 
-    public void putPropertyValue(@Nonnull OWLEntity entity,
-                                 @Nonnull PropertyValue propertyValue) {
-        checkNotNull(entity);
-        checkNotNull(propertyValue);
-        entityPropertyValues.put(entity, propertyValue);
+    public void setLangTag(Optional<String> langTag) {
+        this.langTag = checkNotNull(langTag);
     }
 
-    @Nonnull
-    public ImmutableMultimap<OWLEntity, PropertyValue> getEntityPropertyValues() {
-        return ImmutableMultimap.copyOf(entityPropertyValues);
-    }
-
-    @Nonnull
-    public Optional<OWLEntity> getSubject(@Nonnull FormData formData) {
+    public void addFormData(@Nonnull FormData formData) {
         checkNotNull(formData);
         Optional<OWLEntity> subject = formData.getSubject();
         if(subject.isPresent()) {
-            return subject;
+            formSubjects.put(formData, subject.get());
         }
-        var cachedFormSubject = formData2Subject.get(formData);
-        if(cachedFormSubject != null) {
-            return Optional.of(cachedFormSubject);
+        else {
+            var formDescriptor = formData.getFormDescriptor();
+            formDescriptor.getSubjectFactoryDescriptor()
+                          .ifPresent(subjectFactoryDescriptor -> {
+                              // Create and map the form subject
+                              var formSubject = createFormSubject(subjectFactoryDescriptor);
+                              formSubjects.put(formData, formSubject);
+                              // Create and store axiom templates for this subject
+                              var axiomTemplates = createAxiomTemplatesForFormSubject(subjectFactoryDescriptor,
+                                                                                      formSubject);
+                              this.axiomTemplates.addAll(axiomTemplates);
+                              targetOntologyIri = subjectFactoryDescriptor.getTargetOntologyIri();
+                          });
         }
-        FormDescriptor descriptor = formData.getFormDescriptor();
-        return descriptor.getSubjectFactoryDescriptor()
-                         .map(subjectFactoryDescriptor -> {
-                             var suppliedNameTemplate = subjectFactoryDescriptor.getSuppliedNameTemplate();
-                             var entityType = subjectFactoryDescriptor.getEntityType();
-                             var langTag = getDefaultLanguageTag();
-                             var formSubject = formSubjectFactory.createSubject(suppliedNameTemplate,
-                                                                                entityType,
-                                                                                langTag);
-                             formData2Subject.put(formData, formSubject);
-                             var entityIri = formSubject.getIRI();
-                             var axiomTemplates = subjectFactoryDescriptor.getAxiomTemplates()
-                                                     .stream()
-                                                     .map(axiomTemplate -> axiomTemplate.replace("${subject.iri}", entityIri.toQuotedString()))
-                                                     .collect(Collectors.toList());
-                             this.axiomTemplates.addAll(axiomTemplates);
-                             targetOntologyIri = subjectFactoryDescriptor.getTargetOntologyIri();
-                             return formSubject;
-                         });
+
+    }
+
+    private OWLEntity createFormSubject(@Nonnull EntityFormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+        var suppliedNameTemplate = subjectFactoryDescriptor.getSuppliedNameTemplate();
+        var entityType = subjectFactoryDescriptor.getEntityType();
+        return formSubjectFactory.createSubject(suppliedNameTemplate,
+                                                entityType,
+                                                langTag);
     }
 
     @Nonnull
-    public Optional<IRI> getTargetOntologyIri() {
-        return targetOntologyIri;
+    private List<String> createAxiomTemplatesForFormSubject(EntityFormSubjectFactoryDescriptor subjectFactoryDescriptor,
+                                                            OWLEntity formSubject) {
+        var entityIri = formSubject.getIRI();
+        return subjectFactoryDescriptor.getAxiomTemplates()
+                                       .stream()
+                                       .map(axiomTemplate -> axiomTemplate.replace(
+                                               "${subject.iri}",
+                                               entityIri.toQuotedString()))
+                                       .collect(Collectors.toList());
     }
 
     @Nonnull
@@ -112,16 +101,29 @@ public class EntityFormDataConverterSession {
         return ImmutableSet.copyOf(axiomTemplates);
     }
 
-    private Optional<String> getDefaultLanguageTag() {
-        var lang = projectDetailsManager.getProjectDetails(projectId)
-                                        .getDefaultDictionaryLanguage()
-                                        .getLang();
-        if(lang.isEmpty()) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(lang);
-        }
+    public Collection<FormData> getFormData() {
+        return ImmutableSet.copyOf(formSubjects.keySet());
+    }
+
+    public Collection<PropertyValue> getFormDataPropertyValues(FormData formData) {
+        return ImmutableList.copyOf(formPropertyValues.get(formData));
+    }
+
+    @Nonnull
+    public Optional<OWLEntity> getSubject(@Nonnull FormData formData) {
+        return Optional.ofNullable(formSubjects.get(formData));
+    }
+
+    @Nonnull
+    public Optional<IRI> getTargetOntologyIri() {
+        return targetOntologyIri;
+    }
+
+    public void putPropertyValue(@Nonnull FormData formData,
+                                 @Nonnull PropertyValue propertyValue) {
+        checkNotNull(formData);
+        checkNotNull(propertyValue);
+        formPropertyValues.put(formData, propertyValue);
     }
 
 }

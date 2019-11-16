@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
+import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
@@ -40,6 +42,12 @@ public class EntityFormChangeListGeneratorFactory {
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
+    @Nonnull
+    private final ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory;
+
+    @Nonnull
+    private final MessageFormatter messageFormatter;
+
     @Inject
     public EntityFormChangeListGeneratorFactory(@Nonnull AxiomTemplatesParser axiomTemplatesParser,
                                                 @Nonnull EntityFormDataConverter entityFormDataConverter,
@@ -47,7 +55,9 @@ public class EntityFormChangeListGeneratorFactory {
                                                 @Nonnull ClassFrameTranslator classFrameTranslator,
                                                 @Nonnull NamedIndividualFrameTranslator individualFrameTranslator,
                                                 @Nonnull FrameChangeGeneratorFactory frameChangeGenerator,
-                                                @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
+                                                @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+                                                @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory,
+                                                @Nonnull MessageFormatter messageFormatter) {
         this.axiomTemplatesParser = axiomTemplatesParser;
         this.entityFormDataConverter = entityFormDataConverter;
         this.renderingManager = renderingManager;
@@ -55,6 +65,8 @@ public class EntityFormChangeListGeneratorFactory {
         this.individualFrameTranslator = individualFrameTranslator;
         this.frameChangeGenerator = frameChangeGenerator;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
+        this.reverseEngineeredChangeDescriptionGeneratorFactory = reverseEngineeredChangeDescriptionGeneratorFactory;
+        this.messageFormatter = messageFormatter;
     }
 
     public EntityFormChangeListGenerator create(@Nonnull FormData formData) {
@@ -66,6 +78,8 @@ public class EntityFormChangeListGeneratorFactory {
                                                  this.classFrameTranslator,
                                                  this.individualFrameTranslator,
                                                  this.frameChangeGenerator,
-                                                 this.defaultOntologyIdManager);
+                                                 this.defaultOntologyIdManager,
+                                                 this.reverseEngineeredChangeDescriptionGeneratorFactory,
+                                                 this.messageFormatter);
     }
 }

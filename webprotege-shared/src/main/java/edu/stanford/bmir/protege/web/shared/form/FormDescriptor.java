@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -60,6 +62,15 @@ public class FormDescriptor implements Serializable {
 
     public LanguageMap getLabel() {
         return label;
+    }
+
+    @Nonnull
+    public ImmutableSet<OWLProperty> getOwlProperties() {
+        return elements.stream()
+                       .map(FormElementDescriptor::getOwlProperty)
+                       .filter(Optional::isPresent)
+                       .map(Optional::get)
+                       .collect(toImmutableSet());
     }
 
     public Optional<OWLProperty> getOwlProperty(@Nonnull FormElementId formElementId) {
