@@ -301,15 +301,15 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     public void setDirection(ValueListFlexEditorDirection direction) {
         this.direction = direction;
-        Style style = getElement().getStyle();
+        Style style = container.getElement().getStyle();
         if (direction == ValueListFlexEditorDirection.COLUMN) {
             style.setProperty("flexDirection", "column");
-            style.clearProperty("flexFlow");
+            style.setProperty("flexWrap", "noWrap");
             style.clearMargin();
         }
         else {
             style.setProperty("flexDirection", "row");
-            style.setProperty("flexFlow", "wrap");
+            style.setProperty("flexWrap", "wrap");
             style.setMargin(-5, Style.Unit.PX);
         }
         for (int i = 0; i < container.getWidgetCount(); i++) {
