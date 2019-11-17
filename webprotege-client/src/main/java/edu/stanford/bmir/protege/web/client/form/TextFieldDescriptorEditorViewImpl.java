@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -37,8 +39,17 @@ public class TextFieldDescriptorEditorViewImpl extends Composite implements Text
     @UiField
     TextBox patternField;
 
+    @UiField(provided = true)
+    LanguageMapEditor patternViolationMessageEditor;
+
+    @UiField(provided = true)
+    LanguageMapEditor placeholderEditor;
+
     @Inject
-    public TextFieldDescriptorEditorViewImpl() {
+    public TextFieldDescriptorEditorViewImpl(@Nonnull LanguageMapEditor placeholderEditor,
+                                             @Nonnull LanguageMapEditor patternViolationMessageEditor) {
+        this.placeholderEditor = checkNotNull(placeholderEditor);
+        this.patternViolationMessageEditor = checkNotNull(patternViolationMessageEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

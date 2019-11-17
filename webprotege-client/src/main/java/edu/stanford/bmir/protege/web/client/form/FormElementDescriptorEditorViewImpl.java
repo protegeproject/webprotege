@@ -40,11 +40,17 @@ public class FormElementDescriptorEditorViewImpl extends Composite implements Fo
     @UiField
     CheckBox requiredCheckBox;
 
-    @UiField
+    @UiField(provided = true)
     LanguageMapEditor labelEditor;
 
+    @UiField(provided = true)
+    LanguageMapEditor helpEditor;
+
     @Inject
-    public FormElementDescriptorEditorViewImpl() {
+    public FormElementDescriptorEditorViewImpl(LanguageMapEditor labelEditor,
+                                               LanguageMapEditor helpEditor) {
+        this.labelEditor = labelEditor;
+        this.helpEditor = helpEditor;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

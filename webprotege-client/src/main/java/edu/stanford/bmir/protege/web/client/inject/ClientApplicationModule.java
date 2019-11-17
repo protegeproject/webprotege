@@ -536,4 +536,19 @@ public class ClientApplicationModule {
     NoFormView provideNoFormView(NoFormViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    FormsManagerView provideFormsManagerView(FormsManagerViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormElementDescriptorEditorView provideFormElementDescriptorEditorView(FormElementDescriptorEditorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TextFieldDescriptorEditorView provideTextFieldDescriptorEditorView(TextFieldDescriptorEditorView view) {
+        return view;
+    }
 }

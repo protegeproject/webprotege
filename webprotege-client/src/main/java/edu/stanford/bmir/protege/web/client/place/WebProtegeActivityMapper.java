@@ -10,6 +10,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ApplicationSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.client.form.FormsActivity;
+import edu.stanford.bmir.protege.web.client.form.FormsPlace;
+import edu.stanford.bmir.protege.web.client.form.FormsManagerPresenter;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
@@ -58,6 +61,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     private Optional<ProjectPresenter> lastProjectPresenter = Optional.empty();
 
     private Optional<CollectionPresenter> lastCollectionPresenter = Optional.empty();
+
+    private Optional<FormsManagerPresenter> lastFormsPresenter = Optional.empty();
 
     private Optional<UserId> lastUser = Optional.empty();
 
@@ -189,6 +194,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new CollectionViewActivity(collectionPresenter, collectionViewPlace);
         }
 
+        if(place instanceof FormsPlace) {
+            FormsPlace formsPlace = (FormsPlace) place;
+            FormsManagerPresenter formsManagerPresenter = getFormsPresenter(formsPlace);
+            return new FormsActivity(formsManagerPresenter, formsPlace);
+        }
+
         return null;
     }
 
@@ -231,5 +242,16 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
     }
 
+    private FormsManagerPresenter getFormsPresenter(FormsPlace place) {
+        if(lastFormsPresenter.isPresent()) {
+            return lastFormsPresenter.get();
+        }
+        else {
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(new ClientProjectModule(place.getProjectId()));
+            FormsManagerPresenter formsManagerPresenter = projectComponent.getFormsPresenter();
+            lastFormsPresenter = Optional.of(formsManagerPresenter);
+            return formsManagerPresenter;
+        }
+    }
 
 }
