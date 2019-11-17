@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.editor;
+package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;

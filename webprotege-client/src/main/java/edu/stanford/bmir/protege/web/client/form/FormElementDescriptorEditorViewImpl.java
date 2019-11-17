@@ -1,10 +1,9 @@
-package edu.stanford.bmir.protege.web.client.editor;
+package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.form.LanguageMapEditor;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;

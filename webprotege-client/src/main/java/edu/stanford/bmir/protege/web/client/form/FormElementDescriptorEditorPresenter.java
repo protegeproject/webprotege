@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.editor;
+package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

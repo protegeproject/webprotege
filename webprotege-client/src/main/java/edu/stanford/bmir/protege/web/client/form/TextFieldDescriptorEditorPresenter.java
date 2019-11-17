@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.editor;
+package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;

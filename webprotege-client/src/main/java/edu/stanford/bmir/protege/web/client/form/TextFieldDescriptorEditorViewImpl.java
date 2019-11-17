@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.editor;
+package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
