@@ -14,6 +14,11 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class NumberFieldRange implements IsSerializable {
 
+    private static final NumberFieldRange ANY_NUMBER = new NumberFieldRange(Double.MIN_VALUE,
+                                                                            BoundType.INCLUSIVE,
+                                                                            Double.MAX_VALUE,
+                                                                            BoundType.INCLUSIVE);
+
     private Double lowerBound = Double.MIN_VALUE;
 
     private BoundType lowerBoundType = BoundType.INCLUSIVE;
@@ -36,6 +41,9 @@ public class NumberFieldRange implements IsSerializable {
     private NumberFieldRange() {
     }
 
+    public boolean isAnyNumber() {
+        return this.equals(ANY_NUMBER);
+    }
 
     public static NumberFieldRange range(double lowerBound,
                                          BoundType lowerBoundType,
@@ -45,10 +53,7 @@ public class NumberFieldRange implements IsSerializable {
     }
 
     public static NumberFieldRange all() {
-        return new NumberFieldRange(Double.MIN_VALUE,
-                                    BoundType.INCLUSIVE,
-                                    Double.MAX_VALUE,
-                                    BoundType.INCLUSIVE);
+        return ANY_NUMBER;
     }
 
     @Override

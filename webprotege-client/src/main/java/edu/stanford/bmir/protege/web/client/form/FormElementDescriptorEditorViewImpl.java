@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -15,12 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
 public class FormElementDescriptorEditorViewImpl extends Composite implements FormElementDescriptorEditorView {
+
+    @Nonnull
+    private FieldTypeChangedHandler fieldTypeChangedHander = () -> {};
 
     interface FormElementDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorEditorViewImpl> {
 
@@ -70,6 +77,7 @@ public class FormElementDescriptorEditorViewImpl extends Composite implements Fo
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
         initWidget(ourUiBinder.createAndBindUi(this));
+        typesComboBox.addChangeHandler(event -> fieldTypeChangedHander.handleFieldTypeChanged());
     }
 
     @Nonnull
@@ -198,5 +206,10 @@ public class FormElementDescriptorEditorViewImpl extends Composite implements Fo
         types.addAll(fieldTypes);
         fieldTypes.forEach(type -> typesComboBox.addItem(type));
         typesComboBox.setSelectedIndex(0);
+    }
+
+    @Override
+    public void setFieldTypeChangedHandler(FieldTypeChangedHandler handler) {
+        this.fieldTypeChangedHander = checkNotNull(handler);
     }
 }

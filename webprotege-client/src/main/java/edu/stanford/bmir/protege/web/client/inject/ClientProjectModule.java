@@ -434,6 +434,17 @@ public class ClientProjectModule {
     NoFormView provideNoFormView(NoFormViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    NumberFieldRangeView provideNumberFieldRangeView(@Nonnull NumberFieldRangeViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NumberFieldDescriptorView provideNumberFieldDescriptorView(@Nonnull NumberFieldDescriptorViewImpl impl) {
+        return impl;
+    }
+
 }
 
 

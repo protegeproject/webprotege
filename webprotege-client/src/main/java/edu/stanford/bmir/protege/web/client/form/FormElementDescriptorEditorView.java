@@ -18,6 +18,10 @@ import java.util.Optional;
  */
 public interface FormElementDescriptorEditorView extends IsWidget {
 
+    interface FieldTypeChangedHandler {
+        void handleFieldTypeChanged();
+    }
+
     void clearOwlProperty();
 
     @Nonnull
@@ -57,6 +61,8 @@ public interface FormElementDescriptorEditorView extends IsWidget {
 
     @Nonnull
     String getFieldType();
+
+    void setFieldTypeChangedHandler(FieldTypeChangedHandler handler);
 
     void setFieldType(@Nonnull String fieldType);
 

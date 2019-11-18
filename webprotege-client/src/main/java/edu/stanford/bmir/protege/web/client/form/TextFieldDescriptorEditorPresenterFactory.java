@@ -20,11 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class TextFieldDescriptorEditorPresenterFactory implements FormFieldDescriptorEditorPresenterFactory {
 
     @Nonnull
-    private final Provider<TextFieldDescriptorEditorPresenter> presenterProvider;
+    private final Provider<TextFieldDescriptorPresenter> presenterProvider;
 
 
     @Inject
-    public TextFieldDescriptorEditorPresenterFactory(@Nonnull Provider<TextFieldDescriptorEditorPresenter> presenterProvider) {
+    public TextFieldDescriptorEditorPresenterFactory(@Nonnull Provider<TextFieldDescriptorPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 
@@ -52,7 +52,7 @@ public class TextFieldDescriptorEditorPresenterFactory implements FormFieldDescr
 
     @Nonnull
     @Override
-    public FormFieldDescriptorEditorPresenter create() {
+    public FormFieldDescriptorPresenter create() {
         return presenterProvider.get();
     }
 }

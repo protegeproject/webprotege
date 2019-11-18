@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +24,7 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
 
     private int length = 6;
 
-    private String placeholder = "";
+    private LanguageMap placeholder = LanguageMap.empty();
 
     @Nonnull
     private NumberFieldRange range = NumberFieldRange.range(Double.MIN_VALUE,
@@ -42,7 +43,7 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
                                  @Nonnull NumberFieldRange range,
                                  @Nonnull NumberFieldType widgetType,
                                  int length,
-                                 @Nonnull String placeholder) {
+                                 @Nonnull LanguageMap placeholder) {
         this.format = checkNotNull(format);
         this.range = checkNotNull(range);
         this.widgetType = checkNotNull(widgetType);
@@ -85,7 +86,7 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
         return length;
     }
 
-    public String getPlaceholder() {
+    public LanguageMap getPlaceholder() {
         return placeholder;
     }
 

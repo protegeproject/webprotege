@@ -17,13 +17,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class TextFieldDescriptorEditorPresenter implements FormFieldDescriptorEditorPresenter {
+public class TextFieldDescriptorPresenter implements FormFieldDescriptorPresenter {
 
     @Nonnull
     private final TextFieldDescriptorEditorView view;
 
     @Inject
-    public TextFieldDescriptorEditorPresenter(@Nonnull TextFieldDescriptorEditorView view) {
+    public TextFieldDescriptorPresenter(@Nonnull TextFieldDescriptorEditorView view) {
         this.view = checkNotNull(view);
     }
 

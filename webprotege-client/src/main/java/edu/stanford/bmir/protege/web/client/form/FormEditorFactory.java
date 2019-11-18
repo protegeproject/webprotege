@@ -140,7 +140,10 @@ public class FormEditorFactory {
                     editor.setFormat(formFieldDescriptor.getFormat());
                     editor.setRange(formFieldDescriptor.getRange());
                     editor.setLength(formFieldDescriptor.getLength());
-                    editor.setPlaceholder(formFieldDescriptor.getPlaceholder());
+                    LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
+                    String localeName = localeInfo.getLocaleName();
+                    String placeholder = formFieldDescriptor.getPlaceholder().get(localeName);
+                    editor.setPlaceholder(placeholder);
                     return editor;
                 }
         );

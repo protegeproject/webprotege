@@ -18,5 +18,5 @@ public interface FormFieldDescriptorEditorPresenterFactory {
     FormFieldDescriptor createDefaultDescriptor();
 
     @Nonnull
-    FormFieldDescriptorEditorPresenter create();
+    FormFieldDescriptorPresenter create();
 }

@@ -13,8 +13,10 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -60,7 +62,7 @@ public class FormsManagerPresenter implements Presenter {
     private void createBlank() {
         FormDescriptor descriptor = new FormDescriptor(FormId.get("MyForm"),
                                                        LanguageMap.of("en", "My form"),
-                                                       Collections.singletonList(
+                                                       Arrays.asList(
                                                                FormElementDescriptor.get(
                                                                        FormElementId.get("FirstName"),
                                                                        null,
@@ -75,6 +77,23 @@ public class FormsManagerPresenter implements Presenter {
                                                                        ),
                                                                        Repeatability.REPEATABLE_VERTICALLY,
                                                                        Optionality.REQUIRED,
+                                                                       LanguageMap.empty(),
+                                                                       Collections.emptyMap()
+                                                               ),
+                                                               FormElementDescriptor.get(
+                                                                       FormElementId.get("TheThingy"),
+                                                                       null,
+                                                                       LanguageMap.of("en", "The number"),
+                                                                       ElementRun.START,
+                                                                       new NumberFieldDescriptor(
+                                                                               "###.##",
+                                                                               NumberFieldRange.all(),
+                                                                               NumberFieldType.PLAIN,
+                                                                               5,
+                                                                               LanguageMap.empty()
+                                                                       ),
+                                                                       Repeatability.NON_REPEATABLE,
+                                                                       Optionality.OPTIONAL,
                                                                        LanguageMap.empty(),
                                                                        Collections.emptyMap()
                                                                )

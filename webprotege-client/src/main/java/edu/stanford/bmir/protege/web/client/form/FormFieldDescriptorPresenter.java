@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public interface FormFieldDescriptorEditorPresenter {
+public interface FormFieldDescriptorPresenter {
 
     @Nonnull
     FormFieldDescriptor getFormFieldDescriptor();
