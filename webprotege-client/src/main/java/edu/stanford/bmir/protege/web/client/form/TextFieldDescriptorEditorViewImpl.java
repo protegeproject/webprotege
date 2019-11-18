@@ -45,6 +45,12 @@ public class TextFieldDescriptorEditorViewImpl extends Composite implements Text
     @UiField(provided = true)
     LanguageMapEditor placeholderEditor;
 
+    @UiField
+    RadioButton multiLineMode;
+
+    @UiField
+    RadioButton langString;
+
     @Inject
     public TextFieldDescriptorEditorViewImpl(@Nonnull LanguageMapEditor placeholderEditor,
                                              @Nonnull LanguageMapEditor patternViolationMessageEditor) {
@@ -59,7 +65,7 @@ public class TextFieldDescriptorEditorViewImpl extends Composite implements Text
             simpleString.setValue(true);
         }
         else {
-            simpleString.setValue(true);
+            langString.setValue(true);
         }
     }
 
@@ -76,7 +82,12 @@ public class TextFieldDescriptorEditorViewImpl extends Composite implements Text
 
     @Override
     public void setLineMode(@Nonnull LineMode lineMode) {
-
+        if(lineMode == LineMode.SINGLE_LINE) {
+            singleLineMode.setValue(true);
+        }
+        else {
+            multiLineMode.setValue(true);
+        }
     }
 
     @Nonnull
@@ -103,23 +114,23 @@ public class TextFieldDescriptorEditorViewImpl extends Composite implements Text
 
     @Override
     public void setPatternViolationMessage(@Nonnull LanguageMap patternViolationMessage) {
-
+        patternViolationMessageEditor.setValue(patternViolationMessage);
     }
 
     @Nonnull
     @Override
     public LanguageMap getPatternViolationMessage() {
-        return LanguageMap.empty();
+        return patternViolationMessageEditor.getValue().orElse(LanguageMap.empty());
     }
 
     @Override
     public void setPlaceholder(@Nonnull LanguageMap languageMap) {
-
+        placeholderEditor.setValue(languageMap);
     }
 
     @Nonnull
     @Override
     public LanguageMap getPlaceholder() {
-        return null;
+        return placeholderEditor.getValue().orElse(LanguageMap.empty());
     }
 }

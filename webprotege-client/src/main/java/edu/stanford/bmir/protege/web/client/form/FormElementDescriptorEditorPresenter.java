@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,13 +38,18 @@ public class FormElementDescriptorEditorPresenter {
 
     @Inject
     public FormElementDescriptorEditorPresenter(@Nonnull FormElementDescriptorEditorView view,
-                                                @Nonnull ImmutableList<FormFieldDescriptorEditorPresenterFactory> fieldPresenterFactories) {
+                                                @Nonnull TextFieldDescriptorEditorPresenterFactory textFieldDescriptorEditorPresenterFactory) {
         this.view = checkNotNull(view);
-        this.fieldPresenterFactories = checkNotNull(fieldPresenterFactories);
+        this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory);
+    }
+
+    public void setNumber(int number) {
+        view.setNumber(number);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        view.setAvailableFieldTypes(Collections.singletonList("Text"));
     }
 
     public void setFormElementDescriptor(@Nonnull FormElementDescriptor descriptor) {
@@ -64,6 +70,7 @@ public class FormElementDescriptorEditorPresenter {
 
         FormFieldDescriptor formFieldDescriptor = descriptor.getFieldDescriptor();
         String type = formFieldDescriptor.getAssociatedType();
+        view.setFieldType(type);
         FormFieldDescriptorEditorPresenter fieldPresenter = getOrCreateFieldPresenter(type);
         fieldPresenter.start(view.getFieldEditorContainer());
         fieldPresenter.setFormFieldDescriptor(formFieldDescriptor);

@@ -51,8 +51,10 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
             editor.setAllowedType(PrimitiveType.LITERAL, true);
             editor.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
             editor.setPlaceholder("");
+            editor.setEnabled(true);
             return editor;
         });
+        delegate.setEnabled(true);
         delegate.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
         initWidget(ourUiBinder.createAndBindUi(this));
     }

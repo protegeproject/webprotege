@@ -8,12 +8,8 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-17
+ * 2019-11-18
  */
-public interface FormsManagerView extends IsWidget {
+public interface FormElementDescriptorViewHolder extends IsWidget, AcceptsOneWidget {
 
-
-
-    @Nonnull
-    AcceptsOneWidget getFormDescriptorContainer();
 }

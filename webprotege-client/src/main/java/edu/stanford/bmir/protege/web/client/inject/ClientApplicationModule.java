@@ -372,11 +372,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    FormElementView provideFormElementView(FormElementViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
     CollectionView provideCollectionView(CollectionViewImpl impl) {
         return impl;
     }
@@ -525,30 +520,5 @@ public class ClientApplicationModule {
     @Provides
     InputBoxView providesInputBoxView(InputBoxViewImpl impl) {
         return impl;
-    }
-
-    @Provides
-    FormViewRow provideFormViewRow(FormViewRowImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    NoFormView provideNoFormView(NoFormViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    FormsManagerView provideFormsManagerView(FormsManagerViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    FormElementDescriptorEditorView provideFormElementDescriptorEditorView(FormElementDescriptorEditorViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    TextFieldDescriptorEditorView provideTextFieldDescriptorEditorView(TextFieldDescriptorEditorView view) {
-        return view;
     }
 }

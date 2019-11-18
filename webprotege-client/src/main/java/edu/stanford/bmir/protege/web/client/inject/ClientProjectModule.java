@@ -16,8 +16,7 @@ import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesViewImpl;
-import edu.stanford.bmir.protege.web.client.form.FormView;
-import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
+import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
@@ -387,6 +386,52 @@ public class ClientProjectModule {
 
     @Provides
     LargeGraphMessageView provideLargeGraphMessageView(LargeGraphMessageViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormsManagerView provideFormsManagerView(FormsManagerViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormElementDescriptorEditorView provideFormElementDescriptorEditorView(FormElementDescriptorEditorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TextFieldDescriptorEditorView provideTextFieldDescriptorEditorView(TextFieldDescriptorEditorViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    FormDescriptorView provideFormDescriptorView(FormDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormElementDescriptorListView provideFormElementDescriptorListView(@Nonnull FormElementDescriptorListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormElementDescriptorViewHolder provideFormElementDescriptorViewHolder(@Nonnull FormElementDescriptorViewHolderImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    FormElementView provideFormElementView(FormElementViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormViewRow provideFormViewRow(FormViewRowImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NoFormView provideNoFormView(NoFormViewImpl impl) {
         return impl;
     }
 }

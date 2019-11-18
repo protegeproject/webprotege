@@ -2,9 +2,10 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -20,8 +21,20 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
 
     private static FormsManagerViewImplUiBinder ourUiBinder = GWT.create(FormsManagerViewImplUiBinder.class);
 
+    @UiField
+    SimplePanel formDescriptorContainer;
+
+    @UiField
+    ListBox formSelector;
+
     @Inject
     public FormsManagerViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getFormDescriptorContainer() {
+        return formDescriptorContainer;
     }
 }

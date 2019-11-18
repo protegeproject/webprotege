@@ -38,6 +38,8 @@ public interface FormElementDescriptorEditorView extends IsWidget {
     @Nonnull
     LanguageMap getLabel();
 
+    void setNumber(int number);
+
     void setOptionality(@Nonnull Optionality optionality);
 
     @Nonnull
