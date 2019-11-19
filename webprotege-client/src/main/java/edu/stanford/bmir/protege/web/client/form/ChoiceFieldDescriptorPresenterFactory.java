@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class ChoiceFieldDescriptorPresenterFactory implements FormFieldDescriptorEditorPresenterFactory {
+public class ChoiceFieldDescriptorPresenterFactory implements FormFieldDescriptorPresenterFactory {
 
 
     @Nonnull
@@ -31,7 +30,7 @@ public class ChoiceFieldDescriptorPresenterFactory implements FormFieldDescripto
 
     @Nonnull
     @Override
-    public String getDescriptorEditorType() {
+    public String getDescriptorType() {
         return ChoiceFieldDescriptor.getType();
     }
 

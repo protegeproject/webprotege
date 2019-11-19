@@ -25,7 +25,7 @@ public class FormElementDescriptorEditorPresenter {
     private final FormElementDescriptorEditorView view;
 
     @Nonnull
-    private final ImmutableList<FormFieldDescriptorEditorPresenterFactory> fieldPresenterFactories;
+    private final ImmutableList<FormFieldDescriptorPresenterFactory> fieldPresenterFactories;
 
     @Nonnull
     private final Map<String, FormFieldDescriptorPresenter> fieldType2FieldPresenter = new HashMap<>();
@@ -38,7 +38,7 @@ public class FormElementDescriptorEditorPresenter {
 
     @Inject
     public FormElementDescriptorEditorPresenter(@Nonnull FormElementDescriptorEditorView view,
-                                                @Nonnull TextFieldDescriptorEditorPresenterFactory textFieldDescriptorEditorPresenterFactory,
+                                                @Nonnull TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
                                                 @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
                                                 @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory) {
         this.view = checkNotNull(view);
@@ -53,7 +53,7 @@ public class FormElementDescriptorEditorPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         List<String> availableTypes = fieldPresenterFactories.stream()
-                                                             .map(factory -> factory.getDescriptorEditorType())
+                                                             .map(factory -> factory.getDescriptorType())
                                                              .collect(Collectors.toList());
         view.setAvailableFieldTypes(availableTypes);
         view.setFieldType(availableTypes.get(0));
@@ -72,7 +72,7 @@ public class FormElementDescriptorEditorPresenter {
         }
         else {
             fieldPresenterFactories.stream()
-                                   .filter(factory -> factory.getDescriptorEditorType().equals(fieldType))
+                                   .filter(factory -> factory.getDescriptorType().equals(fieldType))
                                    .findFirst()
                                    .map(factory -> factory.createDefaultDescriptor())
                                    .ifPresent(desc -> setFormFieldDescriptor(desc));
@@ -119,10 +119,10 @@ public class FormElementDescriptorEditorPresenter {
         FormFieldDescriptorPresenter presenter = fieldType2FieldPresenter.get(type);
         if(presenter == null) {
             presenter = fieldPresenterFactories.stream()
-                                                .filter(factory -> factory.getDescriptorEditorType().equalsIgnoreCase(type))
-                                               .map(formFieldDescriptorEditorPresenterFactory -> {
-                                                   FormFieldDescriptorPresenter p = formFieldDescriptorEditorPresenterFactory.create();
-                                                   p.setFormFieldDescriptor(formFieldDescriptorEditorPresenterFactory.createDefaultDescriptor());
+                                                .filter(factory -> factory.getDescriptorType().equalsIgnoreCase(type))
+                                               .map(formFieldDescriptorPresenterFactory -> {
+                                                   FormFieldDescriptorPresenter p = formFieldDescriptorPresenterFactory.create();
+                                                   p.setFormFieldDescriptor(formFieldDescriptorPresenterFactory.createDefaultDescriptor());
                                                    return p;
                                                })
                                                 .findFirst()

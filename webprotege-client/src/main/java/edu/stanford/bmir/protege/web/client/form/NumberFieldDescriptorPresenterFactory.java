@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class NumberFieldDescriptorPresenterFactory implements FormFieldDescriptorEditorPresenterFactory {
+public class NumberFieldDescriptorPresenterFactory implements FormFieldDescriptorPresenterFactory {
 
     @Nonnull
     private final Provider<NumberFieldDescriptorPresenter> presenterProvider;
@@ -29,7 +29,7 @@ public class NumberFieldDescriptorPresenterFactory implements FormFieldDescripto
 
     @Nonnull
     @Override
-    public String getDescriptorEditorType() {
+    public String getDescriptorType() {
         return NumberFieldDescriptor.getTypeId();
     }
 

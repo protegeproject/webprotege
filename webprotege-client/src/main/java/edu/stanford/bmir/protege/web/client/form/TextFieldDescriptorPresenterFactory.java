@@ -17,20 +17,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class TextFieldDescriptorEditorPresenterFactory implements FormFieldDescriptorEditorPresenterFactory {
+public class TextFieldDescriptorPresenterFactory implements FormFieldDescriptorPresenterFactory {
 
     @Nonnull
     private final Provider<TextFieldDescriptorPresenter> presenterProvider;
 
 
     @Inject
-    public TextFieldDescriptorEditorPresenterFactory(@Nonnull Provider<TextFieldDescriptorPresenter> presenterProvider) {
+    public TextFieldDescriptorPresenterFactory(@Nonnull Provider<TextFieldDescriptorPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 
     @Nonnull
     @Override
-    public String getDescriptorEditorType() {
+    public String getDescriptorType() {
         return TextFieldDescriptor.getType();
     }
 
