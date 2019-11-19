@@ -69,7 +69,7 @@
                 </g:HTMLPanel>
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label text="Help" addStyleNames="{wp.style.formLabel}"/>
+                <g:Label text="Help text" addStyleNames="{wp.style.formLabel}"/>
                 <form:LanguageMapEditor ui:field="helpEditor"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
