@@ -58,8 +58,8 @@
             <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                 <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                     <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
-                    <g:RadioButton name="optionality" text="Optional" ui:field="optionalRadio"/>
                     <g:RadioButton name="optionality" text="Required" ui:field="requiredRadio"/>
+                    <g:RadioButton name="optionality" text="Optional" ui:field="optionalRadio"/>
                 </g:HTMLPanel>
                 <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                     <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
