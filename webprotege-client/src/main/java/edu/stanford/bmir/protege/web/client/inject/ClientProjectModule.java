@@ -465,6 +465,11 @@ public class ClientProjectModule {
     NoFieldDescriptorView provideNoFieldDescriptorView(NoFieldDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    ImageDescriptorView provideImageDescriptorView(ImageDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 
