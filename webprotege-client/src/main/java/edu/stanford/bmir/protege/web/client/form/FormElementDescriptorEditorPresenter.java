@@ -39,9 +39,11 @@ public class FormElementDescriptorEditorPresenter {
     @Inject
     public FormElementDescriptorEditorPresenter(@Nonnull FormElementDescriptorEditorView view,
                                                 @Nonnull TextFieldDescriptorEditorPresenterFactory textFieldDescriptorEditorPresenterFactory,
-                                                @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory) {
+                                                @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
+                                                @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory) {
         this.view = checkNotNull(view);
-        this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory, numberFieldDescriptorPresenterFactory);
+        this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory, numberFieldDescriptorPresenterFactory,
+                                                        choiceFieldDescriptorPresenterFactory);
     }
 
     public void setNumber(int number) {

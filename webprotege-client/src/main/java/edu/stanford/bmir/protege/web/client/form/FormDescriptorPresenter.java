@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
@@ -45,6 +46,7 @@ public class FormDescriptorPresenter implements Presenter {
     }
 
     public void setFormDescriptor(@Nonnull FormDescriptor formDescriptor) {
+
         FormId formId = formDescriptor.getFormId();
         view.setFormId(formId.getId());
 

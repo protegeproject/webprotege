@@ -11,8 +11,8 @@ import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.PrimitiveDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -194,46 +193,4 @@ public class EntityFrameFormDataBuilder {
 
     }
 
-    private static class PrimitiveDataConverter implements OWLPrimitiveDataVisitor<FormDataValue, RuntimeException> {
-
-        @Override
-        public FormDataValue visit(OWLClassData data) {
-            return FormDataPrimitive.get(data.getEntity());
-        }
-
-        @Override
-        public FormDataValue visit(OWLObjectPropertyData data) {
-            return FormDataPrimitive.get(data.getEntity());
-        }
-
-        @Override
-        public FormDataValue visit(OWLDataPropertyData data) {
-            return FormDataPrimitive.get(data.getEntity());
-        }
-
-        @Override
-        public FormDataValue visit(OWLAnnotationPropertyData data) {
-            return FormDataPrimitive.get(data.getEntity());
-        }
-
-        @Override
-        public FormDataValue visit(OWLNamedIndividualData data) {
-            return FormDataPrimitive.get(data.getEntity());
-        }
-
-        @Override
-        public FormDataValue visit(OWLDatatypeData data) {
-            return FormDataPrimitive.get(data.getEntity());
-        }
-
-        @Override
-        public FormDataValue visit(OWLLiteralData data) {
-            return FormDataPrimitive.get(data.getLiteral());
-        }
-
-        @Override
-        public FormDataValue visit(IRIData data) {
-            return FormDataPrimitive.get(data.getObject());
-        }
-    }
 }

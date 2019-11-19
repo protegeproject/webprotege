@@ -50,6 +50,11 @@
                 <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>
                 <form:LanguageMapEditor ui:field="labelEditor"/>
             </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
+                <g:ListBox visibleItemCount="1" ui:field="typesComboBox"/>
+                <g:SimplePanel ui:field="fieldEditorContainer" addStyleNames="{style.typeView}"/>
+            </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                 <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                     <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
@@ -66,11 +71,6 @@
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                 <g:Label text="Help" addStyleNames="{wp.style.formLabel}"/>
                 <form:LanguageMapEditor ui:field="helpEditor"/>
-            </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
-                <g:ListBox visibleItemCount="1" ui:field="typesComboBox"/>
-                <g:SimplePanel ui:field="fieldEditorContainer" addStyleNames="{style.typeView}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>

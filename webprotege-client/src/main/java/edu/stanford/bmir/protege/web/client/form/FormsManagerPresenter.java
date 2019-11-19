@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
@@ -16,7 +17,6 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -37,13 +37,18 @@ public class FormsManagerPresenter implements Presenter {
     @Nonnull
     private final FormDescriptorPresenter formDescriptorPresenter;
 
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
+
     @Inject
     public FormsManagerPresenter(@Nonnull FormsManagerView view,
                                  @Nonnull SettingsPresenter settingsPresenter,
-                                 @Nonnull FormDescriptorPresenter formDescriptorPresenter) {
+                                 @Nonnull FormDescriptorPresenter formDescriptorPresenter,
+                                 @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.view = checkNotNull(view);
         this.settingsPresenter = settingsPresenter;
         this.formDescriptorPresenter = formDescriptorPresenter;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -96,9 +101,28 @@ public class FormsManagerPresenter implements Presenter {
                                                                        Optionality.OPTIONAL,
                                                                        LanguageMap.empty(),
                                                                        Collections.emptyMap()
+                                                               ),
+                                                               FormElementDescriptor.get(
+                                                                       FormElementId.get("TheChoices"),
+                                                                       null,
+                                                                       LanguageMap.empty(),
+                                                                       ElementRun.START,
+                                                                       new ChoiceFieldDescriptor(ChoiceFieldType.RADIO_BUTTON,
+                                                                                                 Collections.emptyList(),
+                                                                                                 Collections.emptyList()),
+                                                                       Repeatability.REPEATABLE_HORIZONTALLY,
+                                                                       Optionality.REQUIRED,
+                                                                       LanguageMap.empty(),
+                                                                       Collections.emptyMap()
                                                                )
                                                        ),
                                                        Optional.empty());
-        formDescriptorPresenter.setFormDescriptor(descriptor);
+        try {
+            dispatchServiceManager.beginBatch();
+            formDescriptorPresenter.setFormDescriptor(descriptor);
+        } finally {
+            dispatchServiceManager.executeCurrentBatch();
+        }
+
     }
 }

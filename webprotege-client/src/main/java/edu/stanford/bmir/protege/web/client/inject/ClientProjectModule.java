@@ -4,6 +4,7 @@ import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
+import edu.stanford.bmir.protege.web.client.change.ChangeDetailsViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
@@ -442,6 +443,16 @@ public class ClientProjectModule {
 
     @Provides
     NumberFieldDescriptorView provideNumberFieldDescriptorView(@Nonnull NumberFieldDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ChoiceDescriptorView provideChoiceDescriptorView(@Nonnull ChoiceDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ChoiceFieldDescriptorView provideChoiceFieldDescriptorView(ChoiceFieldDescriptorViewImpl impl) {
         return impl;
     }
 
