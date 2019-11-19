@@ -2,6 +2,13 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .choiceList {
+            margin-top: 1em;
+            margin-left: 2em;
+            max-width: 600px;
+        }
+    </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="Widget Type"/>
@@ -10,7 +17,10 @@
             <g:RadioButton name="widgetType" text="Check box" ui:field="checkBoxRadio"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <editor:ValueListEditor ui:field="choiceListEditor"/>
+            <g:Label text="Choices" addStyleNames="{wp.style.formLabel}"/>
+            <g:HTMLPanel addStyleNames="{style.choiceList}">
+                <editor:ValueListEditor ui:field="choiceListEditor"/>
+            </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
