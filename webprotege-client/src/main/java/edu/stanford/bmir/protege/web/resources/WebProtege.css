@@ -50,6 +50,10 @@
     align-items: stretch;
 }
 
+.wp-form-group--narrow {
+    max-width: 300px;
+}
+
 .wp-form-group__row {
     display: flex;
     flex-direction: row;

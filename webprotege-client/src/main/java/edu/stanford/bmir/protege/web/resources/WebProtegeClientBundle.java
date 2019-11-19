@@ -282,6 +282,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-group")
         String formGroup();
 
+        @ClassName("wp-form-group--narrow")
+        String formGroupNarrow();
+
         @ClassName("wp-form-group__row")
         String formGroupRow();
 

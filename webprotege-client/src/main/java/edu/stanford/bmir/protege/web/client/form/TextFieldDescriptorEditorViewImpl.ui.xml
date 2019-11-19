@@ -18,21 +18,23 @@
             </g:HTMLPanel>
         </g:HTMLPanel>
 
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="Placeholder"/>
             <form:LanguageMapEditor ui:field="placeholderEditor"/>
         </g:HTMLPanel>
 
 
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="Pattern"/>
             <g:TextBox ui:field="patternField"/>
+            <g:Label addStyleNames="{wp.style.formHelpText}" text="Specify a regular expression that entered values will be matched against."/>
         </g:HTMLPanel>
 
 
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="Pattern violation message"/>
             <form:LanguageMapEditor ui:field="patternViolationMessageEditor"/>
+            <g:Label addStyleNames="{wp.style.formHelpText}" text="Enter a message that will be displayed on the form if the entered value fails to match the above pattern."/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

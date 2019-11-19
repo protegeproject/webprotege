@@ -11,15 +11,15 @@
     <g:HTMLPanel>
         <g:Label ui:field="numberField"/>
         <g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                 <g:Label text="Form Id" addStyleNames="{wp.style.formLabel}"/>
                 <g:TextBox ui:field="formIdField"/>
             </g:HTMLPanel>
 
-            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                 <g:Label text="Form Label" addStyleNames="{wp.style.formLabel}"/>
                 <form:LanguageMapEditor ui:field="labelField"/>
-                <g:HTMLPanel addStyleNames="{wp.style.formHelpText}">
+                <g:HTMLPanel addStyleNames="{wp.style.formHelpText} {wp.style.formGroupNarrow}">
                     This label will appear on the form view for an entity that is selected and matched with this form.
                 </g:HTMLPanel>
             </g:HTMLPanel>
