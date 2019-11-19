@@ -456,6 +456,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    LanguageMapEntryView provideLanguageMapEntryView(LanguageMapEntryViewImpl impl) {
+        return impl;
+    }
 }
 
 

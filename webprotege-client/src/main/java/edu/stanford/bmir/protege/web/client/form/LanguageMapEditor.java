@@ -42,18 +42,11 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
     private static LanguageMapEditorUiBinder ourUiBinder = GWT.create(LanguageMapEditorUiBinder.class);
 
     @UiField(provided = true)
-    ValueListFlexEditorImpl<OWLPrimitiveData> delegate;
+    ValueListFlexEditorImpl<LanguageMapEntry> delegate;
 
     @Inject
-    public LanguageMapEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
-        delegate = new ValueListFlexEditorImpl<>(() -> {
-            PrimitiveDataEditor editor = primitiveDataEditorProvider.get();
-            editor.setAllowedType(PrimitiveType.LITERAL, true);
-            editor.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
-            editor.setPlaceholder("");
-            editor.setEnabled(true);
-            return editor;
-        });
+    public LanguageMapEditor(Provider<LanguageMapEntryPresenter> presenterProvider) {
+        delegate = new ValueListFlexEditorImpl<>(presenterProvider::get);
         delegate.setEnabled(true);
         delegate.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -79,27 +72,23 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
         Map<String, String> map = delegate.getValue()
                 .orElse(Collections.emptyList())
                 .stream()
-                .map(OWLPrimitiveData::getObject)
-                .filter(literal -> literal instanceof OWLLiteral)
-                .map(literal -> (OWLLiteral) literal)
                 .collect(Collectors.toMap(
-                        OWLLiteral::getLang,
-                        OWLLiteral::getLiteral
+                        LanguageMapEntry::getLangTag,
+                        LanguageMapEntry::getValue
                 ));
         return Optional.of(LanguageMap.get(map));
     }
 
     @Override
     public void setValue(LanguageMap object) {
-        List<OWLPrimitiveData> entries = object.asMap()
+        List<LanguageMapEntry> entries = object.asMap()
                                                .entrySet()
                                                .stream()
                                                .map(entry -> {
                                                    String langTag = entry.getKey();
                                                    String value = entry.getValue();
-                                                   return DataFactory.getOWLLiteral(value, langTag);
+                                                   return LanguageMapEntry.get(langTag, value);
                                                })
-                                               .map(OWLLiteralData::get)
                                                .collect(toList());
         delegate.setValue(entries);
     }

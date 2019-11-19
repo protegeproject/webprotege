@@ -1,0 +1,25 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .valueField {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .langTagField {
+            width: literal("var(--lang-field--width)");
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-left: 0.3em;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:TextBox ui:field="valueField" addStyleNames="{style.valueField}"/>
+        <primitive:DefaultLanguageEditor ui:field="langTagEditor" addStyleNames="{style.langTagField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
