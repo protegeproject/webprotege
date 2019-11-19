@@ -10,7 +10,6 @@
             <g:RadioButton name="widgetType" text="Check box" ui:field="checkBoxRadio"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label addStyleNames="{wp.style.formLabel}" text="Choices"/>
             <editor:ValueListEditor ui:field="choiceListEditor"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
