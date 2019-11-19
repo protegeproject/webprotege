@@ -8,9 +8,9 @@ import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,6 +25,9 @@ public class FormElementDescriptorEditorPresenter {
     private final FormElementDescriptorEditorView view;
 
     @Nonnull
+    private final NoFieldDescriptorView noFieldDescriptorView;
+
+    @Nonnull
     private final ImmutableList<FormFieldDescriptorPresenterFactory> fieldPresenterFactories;
 
     @Nonnull
@@ -33,55 +36,30 @@ public class FormElementDescriptorEditorPresenter {
     @Nonnull
     private final Map<String, FormFieldDescriptor> fieldType2FieldDescriptor = new HashMap<>();
 
-    private FormFieldDescriptorPresenter currentFieldPresenter;
+    @Nonnull
+    private Optional<FormFieldDescriptorPresenter> currentFieldPresenter = Optional.empty();
 
 
     @Inject
     public FormElementDescriptorEditorPresenter(@Nonnull FormElementDescriptorEditorView view,
+                                                @Nonnull NoFieldDescriptorView noFieldDescriptorView,
                                                 @Nonnull TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
                                                 @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
                                                 @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory) {
         this.view = checkNotNull(view);
-        this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory, numberFieldDescriptorPresenterFactory,
+        this.noFieldDescriptorView = checkNotNull(noFieldDescriptorView);
+        this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
+                                                        numberFieldDescriptorPresenterFactory,
                                                         choiceFieldDescriptorPresenterFactory);
     }
 
-    public void setNumber(int number) {
-        view.setNumber(number);
-    }
-
-    public void start(@Nonnull AcceptsOneWidget container) {
-        container.setWidget(view);
-        List<String> availableTypes = fieldPresenterFactories.stream()
-                                                             .map(factory -> factory.getDescriptorType())
-                                                             .collect(Collectors.toList());
-        view.setAvailableFieldTypes(availableTypes);
-        view.setFieldType(availableTypes.get(0));
-        view.setFieldTypeChangedHandler(this::handleFieldTypeChanged);
-    }
-
-    private void handleFieldTypeChanged() {
-        if(currentFieldPresenter != null) {
-            FormFieldDescriptor descriptor = currentFieldPresenter.getFormFieldDescriptor();
-            fieldType2FieldDescriptor.put(descriptor.getAssociatedType(), descriptor);
-        }
-        String fieldType = view.getFieldType();
-        FormFieldDescriptor nextDescriptor = fieldType2FieldDescriptor.get(fieldType);
-        if(nextDescriptor != null) {
-            setFormFieldDescriptor(nextDescriptor);
-        }
-        else {
-            fieldPresenterFactories.stream()
-                                   .filter(factory -> factory.getDescriptorType().equals(fieldType))
-                                   .findFirst()
-                                   .map(factory -> factory.createDefaultDescriptor())
-                                   .ifPresent(desc -> setFormFieldDescriptor(desc));
-        }
-
+    public FormElementDescriptor getFormElementDescriptor() {
+        return null;
     }
 
     public void setFormElementDescriptor(@Nonnull FormElementDescriptor descriptor) {
-        String elementId = descriptor.getId().getId();
+        String elementId = descriptor.getId()
+                                     .getId();
         view.setFormElementId(elementId);
 
         view.setLabel(descriptor.getLabel());
@@ -101,35 +79,78 @@ public class FormElementDescriptorEditorPresenter {
         setFormFieldDescriptor(formFieldDescriptor);
     }
 
+    public void setNumber(int number) {
+        view.setNumber(number);
+    }
+
+    public void start(@Nonnull AcceptsOneWidget container) {
+        container.setWidget(view);
+        fieldPresenterFactories.forEach(factory -> {
+            view.addAvailableFieldType(factory.getDescriptorType(), factory.getDescriptorLabel());
+        });
+        view.setFieldTypeChangedHandler(this::handleFieldTypeChanged);
+    }
+
+    private void handleFieldTypeChanged() {
+        currentFieldPresenter.map(FormFieldDescriptorPresenter::getFormFieldDescriptor)
+                             .ifPresent(this::cacheFieldDescriptor);
+
+        String fieldType = view.getFieldType();
+        FormFieldDescriptor nextDescriptor = fieldType2FieldDescriptor.get(fieldType);
+        if(nextDescriptor != null) {
+            setFormFieldDescriptor(nextDescriptor);
+        }
+        else {
+            fieldPresenterFactories.stream()
+                                   .filter(factory -> factory.getDescriptorType()
+                                                             .equals(fieldType))
+                                   .findFirst()
+                                   .map(FormFieldDescriptorPresenterFactory::createDefaultDescriptor)
+                                   .ifPresent(this::setFormFieldDescriptor);
+        }
+
+    }
+
+    private void cacheFieldDescriptor(FormFieldDescriptor descriptor) {
+        fieldType2FieldDescriptor.put(descriptor.getAssociatedType(), descriptor);
+    }
+
     public void setFormFieldDescriptor(FormFieldDescriptor formFieldDescriptor) {
         String type = formFieldDescriptor.getAssociatedType();
         view.setFieldType(type);
-        FormFieldDescriptorPresenter fieldPresenter = getOrCreateFieldPresenter(type);
-        fieldPresenter.start(view.getFieldEditorContainer());
-        fieldPresenter.setFormFieldDescriptor(formFieldDescriptor);
-        this.currentFieldPresenter = fieldPresenter;
+        Optional<FormFieldDescriptorPresenter> fieldPresenter = getOrCreateFieldPresenter(type);
+        fieldPresenter.ifPresent(p -> {
+            p.start(view.getFieldEditorContainer());
+            p.setFormFieldDescriptor(formFieldDescriptor);
+            this.currentFieldPresenter = Optional.of(p);
+        });
+        if(!fieldPresenter.isPresent()) {
+            currentFieldPresenter = Optional.empty();
+            view.getFieldEditorContainer().setWidget(noFieldDescriptorView);
+        }
     }
 
-    public FormElementDescriptor getFormElementDescriptor() {
-        return null;
-    }
 
     @Nonnull
-    public FormFieldDescriptorPresenter getOrCreateFieldPresenter(String type) {
+    public Optional<FormFieldDescriptorPresenter> getOrCreateFieldPresenter(String type) {
         FormFieldDescriptorPresenter presenter = fieldType2FieldPresenter.get(type);
-        if(presenter == null) {
-            presenter = fieldPresenterFactories.stream()
-                                                .filter(factory -> factory.getDescriptorType().equalsIgnoreCase(type))
-                                               .map(formFieldDescriptorPresenterFactory -> {
-                                                   FormFieldDescriptorPresenter p = formFieldDescriptorPresenterFactory.create();
-                                                   p.setFormFieldDescriptor(formFieldDescriptorPresenterFactory.createDefaultDescriptor());
-                                                   return p;
-                                               })
-                                                .findFirst()
-                    .get();
-            fieldType2FieldPresenter.put(type, presenter);
-            fieldType2FieldDescriptor.put(type, presenter.getFormFieldDescriptor());
+        if(presenter != null) {
+            return Optional.of(presenter);
         }
-        return presenter;
+        Optional<FormFieldDescriptorPresenter> presenterForType = getPresenterForType(type);
+        presenterForType
+                .ifPresent(p -> {
+                    fieldType2FieldPresenter.put(type, p);
+                    fieldType2FieldDescriptor.put(type, p.getFormFieldDescriptor());
+                });
+        return presenterForType;
+    }
+
+    public Optional<FormFieldDescriptorPresenter> getPresenterForType(String type) {
+        return fieldPresenterFactories.stream()
+                                      .filter(factory -> factory.getDescriptorType()
+                                                                .equals(type))
+                                      .map(FormFieldDescriptorPresenterFactory::create)
+                                      .findFirst();
     }
 }

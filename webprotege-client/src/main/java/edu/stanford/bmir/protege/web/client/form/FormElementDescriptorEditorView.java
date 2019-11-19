@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -66,5 +67,5 @@ public interface FormElementDescriptorEditorView extends IsWidget {
 
     void setFieldType(@Nonnull String fieldType);
 
-    void setAvailableFieldTypes(@Nonnull List<String> fieldTypes);
+    void addAvailableFieldType(@Nonnull String value, @Nonnull String label);
 }

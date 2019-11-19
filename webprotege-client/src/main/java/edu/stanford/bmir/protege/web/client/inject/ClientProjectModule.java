@@ -460,6 +460,11 @@ public class ClientProjectModule {
     LanguageMapEntryView provideLanguageMapEntryView(LanguageMapEntryViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    NoFieldDescriptorView provideNoFieldDescriptorView(NoFieldDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 

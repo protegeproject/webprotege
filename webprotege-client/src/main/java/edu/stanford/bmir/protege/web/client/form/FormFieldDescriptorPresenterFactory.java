@@ -12,6 +12,9 @@ import javax.annotation.Nonnull;
 public interface FormFieldDescriptorPresenterFactory {
 
     @Nonnull
+    String getDescriptorLabel();
+
+    @Nonnull
     String getDescriptorType();
 
     @Nonnull

@@ -50,6 +50,20 @@ public class ChoiceFieldDescriptorViewImpl extends Composite implements ChoiceFi
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
+    @Nonnull
+    @Override
+    public ChoiceFieldType getWidgetType() {
+        if(checkBoxRadio.getValue()) {
+            return ChoiceFieldType.RADIO_BUTTON;
+        }
+        else if(radioRadio.getValue()) {
+            return ChoiceFieldType.RADIO_BUTTON;
+        }
+        else {
+            return ChoiceFieldType.SEGMENTED_BUTTON;
+        }
+    }
+
     @Override
     public void setWidgetType(@Nonnull ChoiceFieldType widgetType) {
         if(widgetType == ChoiceFieldType.CHECK_BOX) {

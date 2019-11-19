@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldType;
@@ -14,6 +13,9 @@ import java.util.List;
  * 2019-11-18
  */
 public interface ChoiceFieldDescriptorView extends IsWidget {
+
+    @Nonnull
+    ChoiceFieldType getWidgetType();
 
     void setWidgetType(@Nonnull ChoiceFieldType widgetType);
 

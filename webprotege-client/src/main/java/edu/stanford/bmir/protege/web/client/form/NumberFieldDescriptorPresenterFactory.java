@@ -29,6 +29,12 @@ public class NumberFieldDescriptorPresenterFactory implements FormFieldDescripto
 
     @Nonnull
     @Override
+    public String getDescriptorLabel() {
+        return "Number";
+    }
+
+    @Nonnull
+    @Override
     public String getDescriptorType() {
         return NumberFieldDescriptor.getTypeId();
     }

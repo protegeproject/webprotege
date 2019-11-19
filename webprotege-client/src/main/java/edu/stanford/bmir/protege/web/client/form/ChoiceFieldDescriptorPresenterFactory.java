@@ -30,6 +30,12 @@ public class ChoiceFieldDescriptorPresenterFactory implements FormFieldDescripto
 
     @Nonnull
     @Override
+    public String getDescriptorLabel() {
+        return "Choice";
+    }
+
+    @Nonnull
+    @Override
     public String getDescriptorType() {
         return ChoiceFieldDescriptor.getType();
     }

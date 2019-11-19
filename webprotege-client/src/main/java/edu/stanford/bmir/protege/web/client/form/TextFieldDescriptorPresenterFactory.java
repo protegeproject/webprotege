@@ -30,6 +30,12 @@ public class TextFieldDescriptorPresenterFactory implements FormFieldDescriptorP
 
     @Nonnull
     @Override
+    public String getDescriptorLabel() {
+        return "Text";
+    }
+
+    @Nonnull
+    @Override
     public String getDescriptorType() {
         return TextFieldDescriptor.getType();
     }

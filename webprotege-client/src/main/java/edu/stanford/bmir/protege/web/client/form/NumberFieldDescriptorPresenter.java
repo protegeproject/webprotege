@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldType;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 

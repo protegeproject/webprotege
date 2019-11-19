@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -13,9 +11,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -68,8 +64,6 @@ public class FormElementDescriptorEditorViewImpl extends Composite implements Fo
 
     @UiField
     Label numberField;
-
-    private final List<String> types = new ArrayList<>();
 
     @Inject
     public FormElementDescriptorEditorViewImpl(LanguageMapEditor labelEditor,
@@ -192,20 +186,18 @@ public class FormElementDescriptorEditorViewImpl extends Composite implements Fo
 
     @Override
     public void setFieldType(@Nonnull String fieldType) {
-        int index = types.indexOf(fieldType);
-        if(index == -1) {
-            return;
+        for(int i = 0; i < typesComboBox.getItemCount(); i++) {
+            if(typesComboBox.getValue(i).equals(fieldType)) {
+                typesComboBox.setSelectedIndex(i);
+                return;
+            }
         }
-        typesComboBox.setSelectedIndex(index);
     }
 
     @Override
-    public void setAvailableFieldTypes(@Nonnull List<String> fieldTypes) {
-        typesComboBox.clear();
-        types.clear();
-        types.addAll(fieldTypes);
-        fieldTypes.forEach(type -> typesComboBox.addItem(type));
-        typesComboBox.setSelectedIndex(0);
+    public void addAvailableFieldType(@Nonnull String value,
+                                      @Nonnull String label) {
+        typesComboBox.addItem(label, value);
     }
 
     @Override
