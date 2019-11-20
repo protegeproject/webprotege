@@ -87,16 +87,13 @@ public class FormEditorFactory {
             return getChoiceFieldEditorFactory((ChoiceFieldDescriptor) formFieldDescriptor);
         }
         else if (formFieldDescriptor.getAssociatedType().equals(EntityNameFieldDescriptor.getFieldTypeId())) {
-            return getClassNamedEditorFactory((EntityNameFieldDescriptor) formFieldDescriptor);
+            return getEntityNameEditorFactory((EntityNameFieldDescriptor) formFieldDescriptor);
         }
         else if(formFieldDescriptor.getAssociatedType().equals(ImageFieldDescriptor.getFieldTypeId())) {
             return getImageFieldEditorFactory();
         }
         else if(formFieldDescriptor.getAssociatedType().equals(NumberFieldDescriptor.getTypeId())) {
             return getNumberFieldEditorFactory((NumberFieldDescriptor) formFieldDescriptor);
-        }
-        else if(formFieldDescriptor.getAssociatedType().equalsIgnoreCase(IndividualNameFieldDescriptor.getType())) {
-            return getIndividualNameEditorFactory((IndividualNameFieldDescriptor) formFieldDescriptor);
         }
         else {
             return Optional.empty();
@@ -154,24 +151,12 @@ public class FormEditorFactory {
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getClassNamedEditorFactory(EntityNameFieldDescriptor formFieldDescriptor) {
+    private Optional<ValueEditorFactory<FormDataValue>> getEntityNameEditorFactory(EntityNameFieldDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
                     ClassNameFieldEditor editor = classNameFieldEditorProvider.get();
                     LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
                     editor.setPlaceholder(formFieldDescriptor.getPlaceholder().get(localeInfo.getLocaleName()));
-                    return editor;
-                }
-        );
-    }
-
-    @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getIndividualNameEditorFactory(IndividualNameFieldDescriptor fieldDescriptor) {
-        return Optional.of(
-                () -> {
-                    LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
-                    IndividualNameFieldEditor editor = individualNameFieldEditorProvider.get();
-                    editor.setPlaceholder(fieldDescriptor.getPlaceholder().get(localeInfo.getLocaleName()));
                     return editor;
                 }
         );

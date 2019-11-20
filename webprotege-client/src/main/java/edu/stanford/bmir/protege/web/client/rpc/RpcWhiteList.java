@@ -163,8 +163,6 @@ public class RpcWhiteList implements Action, Result {
 
     EntityNameFieldDescriptor entityNameFieldDescriptor;
 
-    IndividualNameFieldDescriptor individualNameFieldDescriptor;
-
     SubFormFieldDescriptor subFormFieldDescriptor;
 
     ChoiceFieldDescriptor choiceFieldDescriptor;
@@ -438,10 +436,6 @@ public class RpcWhiteList implements Action, Result {
 
     public EntityNameFieldDescriptor getEntityNameFieldDescriptor() {
         return entityNameFieldDescriptor;
-    }
-
-    public IndividualNameFieldDescriptor getIndividualNameFieldDescriptor() {
-        return individualNameFieldDescriptor;
     }
 
     public SubFormFieldDescriptor getSubFormFieldDescriptor() {
