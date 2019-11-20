@@ -3,11 +3,13 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -57,14 +59,24 @@ public class FormElementDescriptorPresenter {
                                                         entityNameFieldDescriptorPresenterFactory);
     }
 
-    public FormElementDescriptor getFormElementDescriptor() {
-        return null;
+    public Optional<FormElementDescriptor> getFormElementDescriptor() {
+        return currentFieldPresenter.map(fieldDescriptorPresenter -> FormElementDescriptor.get(FormElementId.get(view.getFormElementId()),
+                                                                                           view.getOwlProperty().orElse(null),
+                                                                                           view.getLabel(),
+                                                                                           view.getElementRun(),
+                                                                                           fieldDescriptorPresenter.getFormFieldDescriptor(),
+                                                                                           view.getRepeatability(),
+                                                                                           view.getOptionality(),
+                                                                                           view.getHelp(),
+                                                                                           Collections.emptyMap()));
     }
 
     public void setFormElementDescriptor(@Nonnull FormElementDescriptor descriptor) {
         String elementId = descriptor.getId()
                                      .getId();
         view.setFormElementId(elementId);
+
+        view.setElementRun(descriptor.getElementRun());
 
         view.setLabel(descriptor.getLabel());
 

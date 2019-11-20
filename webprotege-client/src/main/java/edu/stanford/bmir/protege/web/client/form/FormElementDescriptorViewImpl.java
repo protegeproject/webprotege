@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -65,6 +66,12 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @UiField
     Label numberField;
 
+    @UiField
+    RadioButton elementRunStartRadio;
+
+    @UiField
+    RadioButton elementRunContinueRadio;
+
     @Inject
     public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
                                          LanguageMapEditor helpEditor) {
@@ -122,6 +129,26 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @Override
     public LanguageMap getLabel() {
         return labelEditor.getValue().orElse(LanguageMap.empty());
+    }
+
+    @Override
+    public void setElementRun(ElementRun elementRun) {
+        if(elementRun == ElementRun.CONTINUE) {
+            elementRunContinueRadio.setValue(true);
+        }
+        else {
+            elementRunStartRadio.setValue(true);
+        }
+    }
+
+    @Override
+    public ElementRun getElementRun() {
+        if(elementRunContinueRadio.getValue()) {
+            return ElementRun.CONTINUE;
+        }
+        else {
+            return ElementRun.START;
+        }
     }
 
     @Override
