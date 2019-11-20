@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.i18n.client.LocaleInfo;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -9,8 +8,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -89,8 +86,8 @@ public class FormEditorFactory {
         else if (formFieldDescriptor.getAssociatedType().equals(ChoiceFieldDescriptor.getType())) {
             return getChoiceFieldEditorFactory((ChoiceFieldDescriptor) formFieldDescriptor);
         }
-        else if (formFieldDescriptor.getAssociatedType().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
-            return getClassNamedEditorFactory((ClassNameFieldDescriptor) formFieldDescriptor);
+        else if (formFieldDescriptor.getAssociatedType().equals(EntityNameFieldDescriptor.getFieldTypeId())) {
+            return getClassNamedEditorFactory((EntityNameFieldDescriptor) formFieldDescriptor);
         }
         else if(formFieldDescriptor.getAssociatedType().equals(ImageFieldDescriptor.getFieldTypeId())) {
             return getImageFieldEditorFactory();
@@ -157,11 +154,12 @@ public class FormEditorFactory {
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getClassNamedEditorFactory(ClassNameFieldDescriptor formFieldDescriptor) {
+    private Optional<ValueEditorFactory<FormDataValue>> getClassNamedEditorFactory(EntityNameFieldDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
                     ClassNameFieldEditor editor = classNameFieldEditorProvider.get();
-                    editor.setPlaceholder(formFieldDescriptor.getPlaceholder());
+                    LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
+                    editor.setPlaceholder(formFieldDescriptor.getPlaceholder().get(localeInfo.getLocaleName()));
                     return editor;
                 }
         );

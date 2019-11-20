@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 @JsonSubTypes({
                       @JsonSubTypes.Type(value = TextFieldDescriptor.class, name = TextFieldDescriptor.TYPE),
                       @JsonSubTypes.Type(value = ChoiceFieldDescriptor.class, name = ChoiceFieldDescriptor.TYPE),
-                      @JsonSubTypes.Type(value = ClassNameFieldDescriptor.class, name = ClassNameFieldDescriptor.TYPE),
+                      @JsonSubTypes.Type(value = EntityNameFieldDescriptor.class, name = EntityNameFieldDescriptor.TYPE),
                       @JsonSubTypes.Type(value = IndividualNameFieldDescriptor.class,
                                          name = IndividualNameFieldDescriptor.TYPE),
                       @JsonSubTypes.Type(value = ImageFieldDescriptor.class, name = ImageFieldDescriptor.TYPE),

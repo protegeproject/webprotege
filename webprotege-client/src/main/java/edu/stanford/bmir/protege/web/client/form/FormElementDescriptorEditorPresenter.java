@@ -46,13 +46,15 @@ public class FormElementDescriptorEditorPresenter {
                                                 @Nonnull TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
                                                 @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
                                                 @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
-                                                @Nonnull ImageDescriptorPresenterFactory imageDescriptorPresenterFactory) {
+                                                @Nonnull ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
+                                                @Nonnull EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory) {
         this.view = checkNotNull(view);
         this.noFieldDescriptorView = checkNotNull(noFieldDescriptorView);
         this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
                                                         numberFieldDescriptorPresenterFactory,
                                                         choiceFieldDescriptorPresenterFactory,
-                                                        imageDescriptorPresenterFactory);
+                                                        imageDescriptorPresenterFactory,
+                                                        entityNameFieldDescriptorPresenterFactory);
     }
 
     public FormElementDescriptor getFormElementDescriptor() {

@@ -470,6 +470,11 @@ public class ClientProjectModule {
     ImageDescriptorView provideImageDescriptorView(ImageDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntityNameFieldDescriptorView provideEntityNameFieldDescriptorView(@Nonnull EntityNameFieldDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 

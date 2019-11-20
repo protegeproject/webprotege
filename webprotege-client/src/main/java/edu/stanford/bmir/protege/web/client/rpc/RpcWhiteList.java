@@ -161,7 +161,7 @@ public class RpcWhiteList implements Action, Result {
 
     NumberFieldDescriptor numberFieldDescriptor;
 
-    ClassNameFieldDescriptor classNameFieldDescriptor;
+    EntityNameFieldDescriptor entityNameFieldDescriptor;
 
     IndividualNameFieldDescriptor individualNameFieldDescriptor;
 
@@ -436,8 +436,8 @@ public class RpcWhiteList implements Action, Result {
         return numberFieldDescriptor;
     }
 
-    public ClassNameFieldDescriptor getClassNameFieldDescriptor() {
-        return classNameFieldDescriptor;
+    public EntityNameFieldDescriptor getEntityNameFieldDescriptor() {
+        return entityNameFieldDescriptor;
     }
 
     public IndividualNameFieldDescriptor getIndividualNameFieldDescriptor() {
