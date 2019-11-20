@@ -17,7 +17,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public interface FormElementDescriptorEditorView extends IsWidget {
+public interface FormElementDescriptorView extends IsWidget {
 
     interface FieldTypeChangedHandler {
         void handleFieldTypeChanged();

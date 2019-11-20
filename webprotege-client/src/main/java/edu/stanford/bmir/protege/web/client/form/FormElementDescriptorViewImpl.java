@@ -20,12 +20,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormElementDescriptorEditorViewImpl extends Composite implements FormElementDescriptorEditorView {
+public class FormElementDescriptorViewImpl extends Composite implements FormElementDescriptorView {
 
     @Nonnull
     private FieldTypeChangedHandler fieldTypeChangedHander = () -> {};
 
-    interface FormElementDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorEditorViewImpl> {
+    interface FormElementDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorViewImpl> {
 
     }
 
@@ -66,8 +66,8 @@ public class FormElementDescriptorEditorViewImpl extends Composite implements Fo
     Label numberField;
 
     @Inject
-    public FormElementDescriptorEditorViewImpl(LanguageMapEditor labelEditor,
-                                               LanguageMapEditor helpEditor) {
+    public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
+                                         LanguageMapEditor helpEditor) {
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
         initWidget(ourUiBinder.createAndBindUi(this));

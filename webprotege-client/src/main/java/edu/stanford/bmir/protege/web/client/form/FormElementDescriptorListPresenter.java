@@ -27,17 +27,17 @@ public class FormElementDescriptorListPresenter implements Presenter {
     private FormElementDescriptorListView view;
 
     @Nonnull
-    private final Provider<FormElementDescriptorEditorPresenter> elementDescriptorEditorPresenterProvider;
+    private final Provider<FormElementDescriptorPresenter> elementDescriptorEditorPresenterProvider;
 
     @Nonnull
     private final Provider<FormElementDescriptorViewHolder> elementDescriptorViewHolderProvider;
 
     @Nonnull
-    private final List<FormElementDescriptorEditorPresenter> descriptorEditorPresenters = new ArrayList<>();
+    private final List<FormElementDescriptorPresenter> descriptorEditorPresenters = new ArrayList<>();
 
     @Inject
     public FormElementDescriptorListPresenter(@Nonnull FormElementDescriptorListView view,
-                                              @Nonnull Provider<FormElementDescriptorEditorPresenter> elementDescriptorEditorPresenterProvider,
+                                              @Nonnull Provider<FormElementDescriptorPresenter> elementDescriptorEditorPresenterProvider,
                                               @Nonnull Provider<FormElementDescriptorViewHolder> elementDescriptorViewHolderProvider) {
         this.view = checkNotNull(view);
         this.elementDescriptorEditorPresenterProvider = checkNotNull(elementDescriptorEditorPresenterProvider);
@@ -57,7 +57,7 @@ public class FormElementDescriptorListPresenter implements Presenter {
     public void setDescriptors(@Nonnull List<FormElementDescriptor> descriptors) {
         checkNotNull(descriptors);
         descriptors.forEach(descriptor -> {
-            FormElementDescriptorEditorPresenter descriptorPresenter = elementDescriptorEditorPresenterProvider.get();
+            FormElementDescriptorPresenter descriptorPresenter = elementDescriptorEditorPresenterProvider.get();
             descriptorEditorPresenters.add(descriptorPresenter);
             descriptorPresenter.setNumber(descriptorEditorPresenters.size());
             FormElementDescriptorViewHolder viewHolder = elementDescriptorViewHolderProvider.get();
@@ -72,7 +72,7 @@ public class FormElementDescriptorListPresenter implements Presenter {
     @Nonnull
     public List<FormElementDescriptor> getDescriptors() {
         return descriptorEditorPresenters.stream()
-                                         .map(FormElementDescriptorEditorPresenter::getFormElementDescriptor)
+                                         .map(FormElementDescriptorPresenter::getFormElementDescriptor)
                                          .collect(toList());
     }
 }

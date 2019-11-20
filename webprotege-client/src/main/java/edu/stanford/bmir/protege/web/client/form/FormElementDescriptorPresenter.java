@@ -19,10 +19,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormElementDescriptorEditorPresenter {
+public class FormElementDescriptorPresenter {
 
     @Nonnull
-    private final FormElementDescriptorEditorView view;
+    private final FormElementDescriptorView view;
 
     @Nonnull
     private final NoFieldDescriptorView noFieldDescriptorView;
@@ -41,13 +41,13 @@ public class FormElementDescriptorEditorPresenter {
 
 
     @Inject
-    public FormElementDescriptorEditorPresenter(@Nonnull FormElementDescriptorEditorView view,
-                                                @Nonnull NoFieldDescriptorView noFieldDescriptorView,
-                                                @Nonnull TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
-                                                @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
-                                                @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
-                                                @Nonnull ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
-                                                @Nonnull EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory) {
+    public FormElementDescriptorPresenter(@Nonnull FormElementDescriptorView view,
+                                          @Nonnull NoFieldDescriptorView noFieldDescriptorView,
+                                          @Nonnull TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
+                                          @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
+                                          @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
+                                          @Nonnull ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
+                                          @Nonnull EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory) {
         this.view = checkNotNull(view);
         this.noFieldDescriptorView = checkNotNull(noFieldDescriptorView);
         this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory,

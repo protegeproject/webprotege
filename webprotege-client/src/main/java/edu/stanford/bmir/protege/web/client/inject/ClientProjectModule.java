@@ -4,7 +4,6 @@ import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
-import edu.stanford.bmir.protege.web.client.change.ChangeDetailsViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
@@ -396,7 +395,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    FormElementDescriptorEditorView provideFormElementDescriptorEditorView(FormElementDescriptorEditorViewImpl impl) {
+    FormElementDescriptorView provideFormElementDescriptorEditorView(FormElementDescriptorViewImpl impl) {
         return impl;
     }
 

@@ -99,7 +99,7 @@ public class FormEditorFactory {
             return Optional.empty();
         }
     }
-    
+
     @Nonnull
     private Optional<ValueEditorFactory<FormDataValue>> getNumberFieldEditorFactory(NumberFieldDescriptor formFieldDescriptor) {
         return Optional.of(
