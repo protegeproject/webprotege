@@ -99,33 +99,7 @@ public class FormEditorFactory {
             return Optional.empty();
         }
     }
-
-//    @Nonnull
-//    private Optional<ValueEditorFactory<FormDataValue>> getSubFormEditorFactory(SubFormFieldDescriptor formFieldDescriptor) {
-//        List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
-//        List<FormElementDescriptor> childDescriptorEntries = new ArrayList<>();
-//        for(FormElementDescriptor childDescriptor : formFieldDescriptor.getFormDescriptor().getElements()) {
-//            Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getFieldDescriptor());
-//            if(!childEditorFactory.isPresent()) {
-//                return Optional.empty();
-//            }
-//            childDescriptorEntries.add(childDescriptor);
-//            childEditorFactories.add(childEditorFactory.get());
-//        }
-//        return Optional.of(
-//                () -> {
-//                    CompositeFieldEditor editor = compositeFieldEditorProvider.get();
-//                    for(int i = 0; i < childDescriptorEntries.size(); i++) {
-//                        FormElementId childId = childDescriptorEntries.get(i).getId();
-//                        ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
-//                        ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
-//                        editor.addChildEditor(childId, flexBasis, flexGrow, flexShrink, childEditor);
-//                    }
-//                    return editor;
-//                }
-//        );
-//    }
-
+    
     @Nonnull
     private Optional<ValueEditorFactory<FormDataValue>> getNumberFieldEditorFactory(NumberFieldDescriptor formFieldDescriptor) {
         return Optional.of(
