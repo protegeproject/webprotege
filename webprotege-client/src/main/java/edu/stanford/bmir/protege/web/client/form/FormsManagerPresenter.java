@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import org.semanticweb.owlapi.vocab.SKOSVocabulary;
+import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -70,7 +72,7 @@ public class FormsManagerPresenter implements Presenter {
                                                        Arrays.asList(
                                                                FormElementDescriptor.get(
                                                                        FormElementId.get("FirstName"),
-                                                                       null,
+                                                                       new OWLAnnotationPropertyImpl(SKOSVocabulary.ALTLABEL.getIRI()),
                                                                        LanguageMap.of("en", "First name"),
                                                                        ElementRun.START,
                                                                        new TextFieldDescriptor(

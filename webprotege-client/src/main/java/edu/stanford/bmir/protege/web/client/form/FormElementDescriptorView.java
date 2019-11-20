@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
@@ -56,10 +57,10 @@ public interface FormElementDescriptorView extends IsWidget {
     @Nonnull
     Optionality getOptionality();
 
-    void setOwlProperty(@Nonnull OWLProperty property);
+    void setOwlProperty(@Nonnull OWLPropertyData property);
 
     @Nonnull
-    Optional<OWLProperty> getOwlProperty();
+    Optional<OWLPropertyData> getOwlProperty();
 
     void setRepeatability(@Nonnull Repeatability repeatability);
 

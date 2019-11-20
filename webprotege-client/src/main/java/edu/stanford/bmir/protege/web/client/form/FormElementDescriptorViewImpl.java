@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
@@ -72,11 +74,16 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @UiField
     RadioButton elementRunContinueRadio;
 
+    @UiField(provided = true)
+    PrimitiveDataEditor propertyBindingField;
+
     @Inject
     public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
-                                         LanguageMapEditor helpEditor) {
+                                         LanguageMapEditor helpEditor,
+                                         PrimitiveDataEditor propertyBindingField) {
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
+        this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
         typesComboBox.addChangeHandler(event -> fieldTypeChangedHander.handleFieldTypeChanged());
     }
@@ -106,7 +113,7 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
 
     @Override
     public void clearOwlProperty() {
-
+        propertyBindingField.clearValue();
     }
 
     @Override
@@ -168,14 +175,16 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     }
 
     @Override
-    public void setOwlProperty(@Nonnull OWLProperty property) {
-
+    public void setOwlProperty(@Nonnull OWLPropertyData property) {
+        propertyBindingField.setValue(property);
     }
 
     @Nonnull
     @Override
-    public Optional<OWLProperty> getOwlProperty() {
-        return Optional.empty();
+    public Optional<OWLPropertyData> getOwlProperty() {
+        return propertyBindingField.getValue()
+                .filter(property -> property instanceof OWLPropertyData)
+                .map(property -> (OWLPropertyData) property);
     }
 
     @Override

@@ -2,9 +2,14 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
@@ -24,6 +29,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormElementDescriptorPresenter {
 
     @Nonnull
+    private ProjectId projectId;
+
+    @Nonnull
     private final FormElementDescriptorView view;
 
     @Nonnull
@@ -41,17 +49,23 @@ public class FormElementDescriptorPresenter {
     @Nonnull
     private Optional<FormFieldDescriptorPresenter> currentFieldPresenter = Optional.empty();
 
+    @Nonnull
+    private DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public FormElementDescriptorPresenter(@Nonnull FormElementDescriptorView view,
+    public FormElementDescriptorPresenter(@Nonnull ProjectId projectId,
+                                          @Nonnull FormElementDescriptorView view,
                                           @Nonnull NoFieldDescriptorView noFieldDescriptorView,
                                           @Nonnull TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
                                           @Nonnull NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
                                           @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
                                           @Nonnull ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
-                                          @Nonnull EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory) {
+                                          @Nonnull EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
+                                          @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.projectId = projectId;
         this.view = checkNotNull(view);
         this.noFieldDescriptorView = checkNotNull(noFieldDescriptorView);
+        this.dispatchServiceManager = dispatchServiceManager;
         this.fieldPresenterFactories = ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
                                                         numberFieldDescriptorPresenterFactory,
                                                         choiceFieldDescriptorPresenterFactory,
@@ -61,7 +75,9 @@ public class FormElementDescriptorPresenter {
 
     public Optional<FormElementDescriptor> getFormElementDescriptor() {
         return currentFieldPresenter.map(fieldDescriptorPresenter -> FormElementDescriptor.get(FormElementId.get(view.getFormElementId()),
-                                                                                           view.getOwlProperty().orElse(null),
+                                                                                           view.getOwlProperty().map(
+                                                                                                   OWLPropertyData::getEntity)
+                                                                                               .orElse(null),
                                                                                            view.getLabel(),
                                                                                            view.getElementRun(),
                                                                                            fieldDescriptorPresenter.getFormFieldDescriptor(),
@@ -72,6 +88,21 @@ public class FormElementDescriptorPresenter {
     }
 
     public void setFormElementDescriptor(@Nonnull FormElementDescriptor descriptor) {
+
+        view.clearOwlProperty();
+        Optional<OWLProperty> owlProperty = descriptor.getOwlProperty();
+        owlProperty.ifPresent(property -> {
+            dispatchServiceManager.execute(new GetEntityRenderingAction(projectId,
+                                                                        property),
+                                           result -> {
+                                               OWLEntityData entityData = result.getEntityData();
+                                               if(entityData instanceof OWLPropertyData) {
+                                                   view.setOwlProperty((OWLPropertyData) entityData);
+                                               }
+            });
+        });
+
+
         String elementId = descriptor.getId()
                                      .getId();
         view.setFormElementId(elementId);
@@ -86,9 +117,7 @@ public class FormElementDescriptorPresenter {
 
         view.setOptionality(descriptor.getOptionality());
 
-        Optional<OWLProperty> owlProperty = descriptor.getOwlProperty();
-        view.clearOwlProperty();
-        owlProperty.ifPresent(view::setOwlProperty);
+
 
         FormFieldDescriptor formFieldDescriptor = descriptor.getFieldDescriptor();
 
