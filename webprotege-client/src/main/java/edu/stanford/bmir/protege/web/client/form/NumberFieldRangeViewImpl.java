@@ -47,6 +47,7 @@ public class NumberFieldRangeViewImpl extends Composite implements NumberFieldRa
 
     @Inject
     public NumberFieldRangeViewImpl() {
+        counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
