@@ -31,9 +31,15 @@ public class NumberFieldRangePresenter {
         view.clear();
         view.setAnyNumber(numberRange.isAnyNumber());
         if(!numberRange.isAnyNumber()) {
-            view.setLowerBound(numberRange.getLowerBound());
+            double lowerBound = numberRange.getLowerBound();
+            if(lowerBound != Double.MIN_VALUE) {
+                view.setLowerBound(lowerBound);
+            }
             view.setLowerBoundType(numberRange.getLowerBoundType());
-            view.setUpperBound(numberRange.getUpperBound());
+            double upperBound = numberRange.getUpperBound();
+            if(upperBound != Double.MAX_VALUE) {
+                view.setUpperBound(upperBound);
+            }
             view.setUpperBoundType(numberRange.getUpperBoundType());
         }
     }
