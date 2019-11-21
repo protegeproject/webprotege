@@ -73,7 +73,7 @@ public class FormElementDescriptorListPresenter implements Presenter {
     @Nonnull
     public List<FormElementDescriptor> getDescriptors() {
         return descriptorEditorPresenters.stream()
-                                         .map(FormElementDescriptorPresenter::getFormElementDescriptor)
+                                         .map(p -> p.getFormElementDescriptor())
                                          .filter(Optional::isPresent)
                                          .map(Optional::get)
                                          .collect(toList());

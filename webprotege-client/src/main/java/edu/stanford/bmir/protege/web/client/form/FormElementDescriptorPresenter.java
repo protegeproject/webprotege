@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -61,6 +62,7 @@ public class FormElementDescriptorPresenter {
                                           @Nonnull ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
                                           @Nonnull ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
                                           @Nonnull EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
+                                          @Nonnull SubFormFieldDescriptorPresenterFactory subFormFieldDescriptorPresenterFactory,
                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.view = checkNotNull(view);
@@ -70,21 +72,32 @@ public class FormElementDescriptorPresenter {
                                                         numberFieldDescriptorPresenterFactory,
                                                         choiceFieldDescriptorPresenterFactory,
                                                         imageDescriptorPresenterFactory,
-                                                        entityNameFieldDescriptorPresenterFactory);
+                                                        entityNameFieldDescriptorPresenterFactory,
+                                                        subFormFieldDescriptorPresenterFactory);
     }
 
     public Optional<FormElementDescriptor> getFormElementDescriptor() {
-        return currentFieldPresenter.map(fieldDescriptorPresenter -> FormElementDescriptor.get(FormElementId.get(view.getFormElementId()),
-                                                                                           view.getOwlProperty().map(
-                                                                                                   OWLPropertyData::getEntity)
-                                                                                               .orElse(null),
-                                                                                           view.getLabel(),
-                                                                                           view.getElementRun(),
-                                                                                           fieldDescriptorPresenter.getFormFieldDescriptor(),
-                                                                                           view.getRepeatability(),
-                                                                                           view.getOptionality(),
-                                                                                           view.getHelp(),
-                                                                                           Collections.emptyMap()));
+        if(currentFieldPresenter.isPresent()) {
+            FormFieldDescriptorPresenter p = currentFieldPresenter.get();
+            return Optional.of(getFormElementDescriptor(p));
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    public FormElementDescriptor getFormElementDescriptor(FormFieldDescriptorPresenter fieldDescriptorPresenter) {
+        FormFieldDescriptor formFieldDescriptor = fieldDescriptorPresenter.getFormFieldDescriptor();
+        return FormElementDescriptor.get(FormElementId.get(view.getFormElementId()),
+                                         view.getOwlProperty().map(
+                                                 OWLPropertyData::getEntity).orElse(null),
+                                         view.getLabel(),
+                                         view.getElementRun(),
+                                         formFieldDescriptor,
+                                         view.getRepeatability(),
+                                         view.getOptionality(),
+                                         view.getHelp(),
+                                         Collections.emptyMap());
     }
 
     public void setFormElementDescriptor(@Nonnull FormElementDescriptor descriptor) {

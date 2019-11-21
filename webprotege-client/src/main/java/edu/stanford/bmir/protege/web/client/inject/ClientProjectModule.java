@@ -474,6 +474,11 @@ public class ClientProjectModule {
     EntityNameFieldDescriptorView provideEntityNameFieldDescriptorView(@Nonnull EntityNameFieldDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    SubFormFieldDescriptorView provideSubFormFieldDescriptorView(@Nonnull SubFormFieldDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 
