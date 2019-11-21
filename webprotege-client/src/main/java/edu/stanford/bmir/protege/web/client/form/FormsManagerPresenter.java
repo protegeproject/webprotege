@@ -1,24 +1,21 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
-import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,7 +25,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 2019-11-17
  */
 @ProjectSingleton
-public class FormsManagerPresenter implements Presenter {
+public class FormsManagerPresenter implements Presenter, HasBusy {
+
+    @Nonnull
+    private final ProjectId projectId;
 
     @Nonnull
     private final FormsManagerView view;
@@ -42,11 +42,16 @@ public class FormsManagerPresenter implements Presenter {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final Map<FormId, FormDescriptor> formDescriptors = new LinkedHashMap<>();
+
     @Inject
-    public FormsManagerPresenter(@Nonnull FormsManagerView view,
+    public FormsManagerPresenter(@Nonnull ProjectId projectId,
+                                 @Nonnull FormsManagerView view,
                                  @Nonnull SettingsPresenter settingsPresenter,
                                  @Nonnull FormDescriptorPresenter formDescriptorPresenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.settingsPresenter = settingsPresenter;
         this.formDescriptorPresenter = formDescriptorPresenter;
@@ -62,69 +67,43 @@ public class FormsManagerPresenter implements Presenter {
         formsManagerContainer.setWidget(view);
         AcceptsOneWidget descriptorContainer = view.getFormDescriptorContainer();
         formDescriptorPresenter.start(descriptorContainer, eventBus);
-        createBlank();
+        retrieveAndDisplayFormDescriptors();
     }
 
+    @Override
+    public void setBusy(boolean busy) {
 
-    private void createBlank() {
-        FormDescriptor descriptor = new FormDescriptor(FormId.get("MyForm"),
-                                                       LanguageMap.of("en", "My form"),
-                                                       Arrays.asList(
-                                                               FormElementDescriptor.get(
-                                                                       FormElementId.get("FirstName"),
-                                                                       new OWLAnnotationPropertyImpl(SKOSVocabulary.ALTLABEL.getIRI()),
-                                                                       LanguageMap.of("en", "First name"),
-                                                                       ElementRun.START,
-                                                                       new TextFieldDescriptor(
-                                                                               LanguageMap.empty(),
-                                                                               StringType.SIMPLE_STRING,
-                                                                               LineMode.SINGLE_LINE,
-                                                                               "",
-                                                                               LanguageMap.empty()
-                                                                       ),
-                                                                       Repeatability.REPEATABLE_VERTICALLY,
-                                                                       Optionality.REQUIRED,
-                                                                       LanguageMap.empty(),
-                                                                       Collections.emptyMap()
-                                                               ),
-                                                               FormElementDescriptor.get(
-                                                                       FormElementId.get("TheThingy"),
-                                                                       null,
-                                                                       LanguageMap.of("en", "The number"),
-                                                                       ElementRun.START,
-                                                                       new NumberFieldDescriptor(
-                                                                               "###.##",
-                                                                               NumberFieldRange.all(),
-                                                                               NumberFieldType.PLAIN,
-                                                                               5,
-                                                                               LanguageMap.empty()
-                                                                       ),
-                                                                       Repeatability.NON_REPEATABLE,
-                                                                       Optionality.OPTIONAL,
-                                                                       LanguageMap.empty(),
-                                                                       Collections.emptyMap()
-                                                               ),
-                                                               FormElementDescriptor.get(
-                                                                       FormElementId.get("TheChoices"),
-                                                                       null,
-                                                                       LanguageMap.empty(),
-                                                                       ElementRun.START,
-                                                                       new ChoiceFieldDescriptor(ChoiceFieldType.RADIO_BUTTON,
-                                                                                                 Collections.emptyList(),
-                                                                                                 Collections.emptyList()),
-                                                                       Repeatability.REPEATABLE_HORIZONTALLY,
-                                                                       Optionality.REQUIRED,
-                                                                       LanguageMap.empty(),
-                                                                       Collections.emptyMap()
-                                                               )
-                                                       ),
-                                                       Optional.empty());
+    }
+
+    private void retrieveAndDisplayFormDescriptors() {
+            dispatchServiceManager.execute(new GetProjectFormDescriptorsAction(projectId),
+                                           this,
+                                           this::loadFormDescriptors);
+
+    }
+
+    private void loadFormDescriptors(GetProjectFormDescriptorsResult result) {
+            ImmutableList<FormDescriptor> formDescriptors = result.getFormDescriptors();
+            this.formDescriptors.clear();
+            formDescriptors.forEach(formDescriptor -> this.formDescriptors.put(formDescriptor.getFormId(),
+                                                                               formDescriptor));
+        List<FormId> formIds = formDescriptors.stream()
+                                              .map(FormDescriptor::getFormId)
+                                              .collect(Collectors.toList());
+        view.setFormIds(formIds);
+            this.formDescriptors.values()
+                    .stream()
+                    .findFirst()
+                    .ifPresent(this::displayFormDescriptor);
+    }
+
+    private void displayFormDescriptor(FormDescriptor formDescriptor) {
         try {
             dispatchServiceManager.beginBatch();
-            formDescriptorPresenter.setFormDescriptor(descriptor);
+            view.setCurrentFormId(formDescriptor.getFormId());
+            formDescriptorPresenter.setFormDescriptor(formDescriptor);
         } finally {
             dispatchServiceManager.executeCurrentBatch();
         }
-
     }
 }

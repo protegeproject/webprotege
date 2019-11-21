@@ -97,7 +97,8 @@ public enum BuiltInRole {
                     EDIT_NEW_ENTITY_SETTINGS,
                     EDIT_PROJECT_PREFIXES,
                     UPLOAD_AND_MERGE,
-                    EDIT_PROJECT_TAGS),
+                    EDIT_PROJECT_TAGS,
+                    EDIT_FORMS),
 
 
     // Roles that relate to the UI

@@ -20,10 +20,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
 import edu.stanford.bmir.protege.web.server.entity.GetDeprecatedEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.MergeEntitiesActionHandler;
-import edu.stanford.bmir.protege.web.server.form.GetEntityFormActionHandler;
-import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
-import edu.stanford.bmir.protege.web.server.form.SetEntityFormDataActionHandler;
-import edu.stanford.bmir.protege.web.server.form.SetFormDataActionHandler;
+import edu.stanford.bmir.protege.web.server.form.*;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
@@ -603,6 +600,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler providesGetEntityFormActionHandler(GetEntityFormActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesGetProjectFormDescriptorsActionHandler(GetProjectFormDescriptorsActionHandler handler) {
         return handler;
     }
 }
