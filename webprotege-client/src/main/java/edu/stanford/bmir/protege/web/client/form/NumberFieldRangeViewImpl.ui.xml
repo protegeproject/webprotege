@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:import field="edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange.BoundType.*"/>
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
     <ui:style>
         .boundGroup {
             display: flex;
@@ -14,8 +15,8 @@
     </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:RadioButton name="range" text="Any number" ui:field="anyNumberRadio"/>
-            <g:RadioButton name="range" text="Specific range" ui:field="specificRangeRadio"/>
+            <g:RadioButton name="range-{counter.getValue}" text="Any number" ui:field="anyNumberRadio"/>
+            <g:RadioButton name="range-{counter.getValue}" text="Specific range" ui:field="specificRangeRadio"/>
         </g:HTMLPanel>
         <g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">

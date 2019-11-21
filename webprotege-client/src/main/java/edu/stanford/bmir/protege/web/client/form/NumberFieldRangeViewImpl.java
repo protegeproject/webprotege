@@ -5,6 +5,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange;
 
 import javax.inject.Inject;
@@ -40,6 +41,9 @@ public class NumberFieldRangeViewImpl extends Composite implements NumberFieldRa
 
     @UiField
     ListBox upperBoundType;
+
+    @UiField(provided = true)
+    static Counter counter = new Counter();
 
     @Inject
     public NumberFieldRangeViewImpl() {
