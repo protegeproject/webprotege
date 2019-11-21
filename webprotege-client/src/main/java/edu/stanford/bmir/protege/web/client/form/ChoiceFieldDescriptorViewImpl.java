@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldType;
 
@@ -42,11 +43,15 @@ public class ChoiceFieldDescriptorViewImpl extends Composite implements ChoiceFi
     @UiField
     RadioButton checkBoxRadio;
 
+    @UiField(provided = true)
+    static Counter counter = new Counter();
+
     @Inject
     public ChoiceFieldDescriptorViewImpl(Provider<ChoiceDescriptorPresenter> choiceDescriptorPresenterProvider) {
         choiceListEditor = new ValueListFlexEditorImpl<>(choiceDescriptorPresenterProvider::get);
         choiceListEditor.setEnabled(true);
         choiceListEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
+        counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
