@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -51,11 +52,15 @@ public class TextFieldDescriptorEditorViewImpl extends Composite implements Text
     @UiField
     RadioButton langString;
 
+    @UiField(provided = true)
+    protected static Counter counter = new Counter();
+
     @Inject
     public TextFieldDescriptorEditorViewImpl(@Nonnull LanguageMapEditor placeholderEditor,
                                              @Nonnull LanguageMapEditor patternViolationMessageEditor) {
         this.placeholderEditor = checkNotNull(placeholderEditor);
         this.patternViolationMessageEditor = checkNotNull(patternViolationMessageEditor);
+        counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

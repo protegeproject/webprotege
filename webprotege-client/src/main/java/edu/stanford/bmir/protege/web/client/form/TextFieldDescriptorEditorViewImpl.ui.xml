@@ -2,19 +2,20 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
     <g:HTMLPanel>
 
         <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                 <g:Label addStyleNames="{wp.style.formLabel}" text="String type"/>
-                <g:RadioButton name="type" text="Simple string" ui:field="simpleString"/>
-                <g:RadioButton name="type" text="String with language tag" ui:field="langString"/>
+                <g:RadioButton name="type-{counter.getValue}" text="Simple string" ui:field="simpleString"/>
+                <g:RadioButton name="type-{counter.getValue}" text="String with language tag" ui:field="langString"/>
             </g:HTMLPanel>
 
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                 <g:Label addStyleNames="{wp.style.formLabel}" text="Line Mode"/>
-                <g:RadioButton name="lineMode" text="Single line" ui:field="singleLineMode"/>
-                <g:RadioButton name="lineMode" text="Multiline" ui:field="multiLineMode"/>
+                <g:RadioButton name="lineMode-{counter.getValue}" text="Single line" ui:field="singleLineMode"/>
+                <g:RadioButton name="lineMode-{counter.getValue}" text="Multiline" ui:field="multiLineMode"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
 
