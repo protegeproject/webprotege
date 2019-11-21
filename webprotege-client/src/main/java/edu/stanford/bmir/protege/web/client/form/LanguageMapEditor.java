@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -37,7 +38,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class LanguageMapEditor extends Composite implements ValueEditor<LanguageMap> {
+public class LanguageMapEditor extends Composite implements ValueEditor<LanguageMap>, HasPlaceholder {
 
     private static LanguageMapEditorUiBinder ourUiBinder = GWT.create(LanguageMapEditorUiBinder.class);
 
@@ -105,5 +106,15 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
 
     interface LanguageMapEditorUiBinder extends UiBinder<HTMLPanel, LanguageMapEditor> {
 
+    }
+
+    @Override
+    public String getPlaceholder() {
+        return delegate.getPlaceholder();
+    }
+
+    @Override
+    public void setPlaceholder(String placeholder) {
+        delegate.setPlaceholder(placeholder);
     }
 }

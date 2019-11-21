@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -22,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class LanguageMapEntryPresenter implements ValueEditor<LanguageMapEntry>, HasRequestFocus {
+public class LanguageMapEntryPresenter implements ValueEditor<LanguageMapEntry>, HasRequestFocus, HasPlaceholder {
 
     @Nonnull
     private final LanguageMapEntryView view;
@@ -89,5 +90,15 @@ public class LanguageMapEntryPresenter implements ValueEditor<LanguageMapEntry>,
     @Override
     public void requestFocus() {
         view.requestFocus();
+    }
+
+    @Override
+    public String getPlaceholder() {
+        return view.getPlaceholder();
+    }
+
+    @Override
+    public void setPlaceholder(String placeholder) {
+        view.setPlaceholder(placeholder);
     }
 }

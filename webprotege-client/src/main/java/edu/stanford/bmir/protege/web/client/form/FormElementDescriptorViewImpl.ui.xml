@@ -3,6 +3,7 @@
              xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form"
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
             display: flex;
@@ -67,7 +68,7 @@
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                 <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>
-                <form:LanguageMapEditor ui:field="labelEditor"/>
+                <form:LanguageMapEditor ui:field="labelEditor" placeholder="{msg.forms_descriptor_labelField_placeholder}"/>
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                 <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
@@ -94,7 +95,7 @@
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                 <g:Label text="Help text" addStyleNames="{wp.style.formLabel}"/>
-                <form:LanguageMapEditor ui:field="helpEditor"/>
+                <form:LanguageMapEditor ui:field="helpEditor" placeholder="{msg.forms_descriptor_helpField_placeholder}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>
