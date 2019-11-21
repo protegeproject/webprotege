@@ -3,8 +3,10 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
@@ -77,15 +79,20 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @UiField(provided = true)
     PrimitiveDataEditor propertyBindingField;
 
+    @UiField(provided = true)
+    protected static Counter counter = new Counter();
+
     @Inject
     public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
                                          LanguageMapEditor helpEditor,
                                          PrimitiveDataEditor propertyBindingField) {
+        counter.increment();
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
         this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
         typesComboBox.addChangeHandler(event -> fieldTypeChangedHander.handleFieldTypeChanged());
+
     }
 
     @Nonnull
@@ -160,6 +167,7 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
 
     @Override
     public void setOptionality(@Nonnull Optionality optionality) {
+        GWT.log("[FormElementDescriptorViewImpl] setOptionality");
         if(optionality == Optionality.OPTIONAL) {
             optionalRadio.setValue(true);
         }

@@ -4,6 +4,7 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
     <ui:style>
         .main {
             display: flex;
@@ -78,19 +79,19 @@
             <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                 <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                     <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
-                    <g:RadioButton name="optionality" text="Required" ui:field="requiredRadio"/>
-                    <g:RadioButton name="optionality" text="Optional" ui:field="optionalRadio"/>
+                    <g:RadioButton name="optionality-{counter.getValue}" text="Required" ui:field="requiredRadio"/>
+                    <g:RadioButton name="optionality-{counter.getValue}" text="Optional" ui:field="optionalRadio"/>
                 </g:HTMLPanel>
                 <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                     <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
-                    <g:RadioButton name="repeatability" text="Non-repeatable" ui:field="nonRepeatableRadio"/>
-                    <g:RadioButton name="repeatability" text="Repeatable (Vertically)" ui:field="repeatableVerticallyRadio"/>
-                    <g:RadioButton name="repeatability" text="Repeatable (Horizontally)" ui:field="repeatableHorizontallyRadio"/>
+                    <g:RadioButton name="repeatability-{counter.getValue}" text="Non-repeatable" ui:field="nonRepeatableRadio"/>
+                    <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Vertically)" ui:field="repeatableVerticallyRadio"/>
+                    <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Horizontally)" ui:field="repeatableHorizontallyRadio"/>
                 </g:HTMLPanel>
                 <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                     <g:Label text="Position" addStyleNames="{wp.style.formLabel}"/>
-                    <g:RadioButton name="elementRun" text="Start new line" ui:field="elementRunStartRadio"/>
-                    <g:RadioButton name="elementRun" text="Continue previous line" ui:field="elementRunContinueRadio"/>
+                    <g:RadioButton name="elementRun-{counter.getValue}" text="Start new line" ui:field="elementRunStartRadio"/>
+                    <g:RadioButton name="elementRun-{counter.getValue}" text="Continue previous line" ui:field="elementRunContinueRadio"/>
                 </g:HTMLPanel>
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
