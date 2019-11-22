@@ -1,14 +1,21 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,11 +53,18 @@ public class SubFormFieldDescriptorPresenter implements FormFieldDescriptorPrese
 
     @Override
     public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
+        view.clear();
         if(!(formFieldDescriptor instanceof SubFormFieldDescriptor)) {
             return;
         }
         SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) formFieldDescriptor;
-        subFormPresenter.setFormDescriptor(subFormFieldDescriptor.getFormDescriptor());
+        FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
+        subFormPresenter.setFormDescriptor(subFormDescriptor);
+        subFormDescriptor.getSubjectFactoryDescriptor()
+                         .ifPresent(fac -> {
+                             view.setEntityType(fac.getEntityType());
+//                             view.setParents();
+                         });
     }
 
     @Override
