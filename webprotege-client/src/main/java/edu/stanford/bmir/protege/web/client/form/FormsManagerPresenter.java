@@ -68,6 +68,35 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         AcceptsOneWidget descriptorContainer = view.getFormDescriptorContainer();
         formDescriptorPresenter.start(descriptorContainer, eventBus);
         retrieveAndDisplayFormDescriptors();
+        view.setAddFormHandler(this::handleAddForm);
+        view.setFormSelectionChangedHandler(this::handleFormSelectionChanged);
+    }
+
+    private void handleFormSelectionChanged() {
+        saveCurrentFormDescriptor();
+        view.getCurrentFormId().ifPresent(this::displayFormDescriptor);
+    }
+
+    private void displayFormDescriptor(FormId formId) {
+        FormDescriptor formDescriptor = formDescriptors.get(formId);
+        if(formDescriptor == null) {
+            formDescriptor = FormDescriptor.builder(formId).build();
+            formDescriptors.put(formId, formDescriptor);
+        }
+        displayFormDescriptor(formDescriptor);
+    }
+
+    private void saveCurrentFormDescriptor() {
+        FormDescriptor formDescriptor = formDescriptorPresenter.getFormDescriptor();
+        formDescriptors.put(formDescriptor.getFormId(), formDescriptor);
+    }
+
+    private void handleAddForm() {
+        view.displayCreateFormIdPrompt(newFormId -> {
+            FormId formId = FormId.get(newFormId);
+            view.addFormId(formId);
+            displayFormDescriptor(formId);
+        });
     }
 
     @Override
@@ -100,7 +129,8 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     private void displayFormDescriptor(FormDescriptor formDescriptor) {
         try {
             dispatchServiceManager.beginBatch();
-            view.setCurrentFormId(formDescriptor.getFormId());
+            FormId formId = formDescriptor.getFormId();
+            view.setCurrentFormId(formId);
             formDescriptorPresenter.setFormDescriptor(formDescriptor);
         } finally {
             dispatchServiceManager.executeCurrentBatch();

@@ -13,6 +13,10 @@ import javax.annotation.Nonnull;
  */
 public interface FormDescriptorView extends IsWidget {
 
+    interface AddFormElementHandler {
+        void handleAddForm();
+    }
+
     @Nonnull
     String getFormId();
 
@@ -25,4 +29,6 @@ public interface FormDescriptorView extends IsWidget {
 
     @Nonnull
     AcceptsOneWidget getElementDescriptorListContainer();
+
+    void setAddFormElementHandler(@Nonnull AddFormElementHandler handler);
 }
