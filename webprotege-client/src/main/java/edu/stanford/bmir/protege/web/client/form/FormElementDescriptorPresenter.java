@@ -29,16 +29,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormElementDescriptorPresenter {
 
-    interface RemoveFormElementDescriptorHandler {
-        void handleRemoveFormElementDescriptor();
-    }
-    interface MoveFormElementDescriptorUpHandler {
-        void handleMoveUp();
-    }
-    interface MoveFormElementDescriptorDownHandler {
-        void handleMoveDown();
-    }
-
     @Nonnull
     private ProjectId projectId;
 
