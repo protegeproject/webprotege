@@ -47,6 +47,8 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @UiField
     Button addFormButton;
 
+
+
     @Inject
     public FormsManagerViewImpl(@Nonnull InputBox inputBox) {
         this.inputBox = checkNotNull(inputBox);

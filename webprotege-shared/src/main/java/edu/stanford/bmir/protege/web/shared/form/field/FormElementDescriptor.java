@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,6 +46,24 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                                                    repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
                                                    help == null ? LanguageMap.empty() : help,
                                                    style == null ? ImmutableMap.of() : style);
+    }
+
+    public static FormElementDescriptor getDefault() {
+        return FormElementDescriptor.get(
+                FormElementId.get(""),
+                null,
+                LanguageMap.empty(),
+                ElementRun.START,
+                new TextFieldDescriptor(LanguageMap.empty(),
+                                        StringType.SIMPLE_STRING,
+                                        LineMode.SINGLE_LINE,
+                                        "",
+                                        LanguageMap.empty()),
+                Repeatability.NON_REPEATABLE,
+                Optionality.REQUIRED,
+                LanguageMap.empty(),
+                Collections.emptyMap()
+        );
     }
 
     @Nonnull

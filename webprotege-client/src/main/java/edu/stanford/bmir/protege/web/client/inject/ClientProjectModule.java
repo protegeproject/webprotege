@@ -479,6 +479,11 @@ public class ClientProjectModule {
     SubFormFieldDescriptorView provideSubFormFieldDescriptorView(@Nonnull SubFormFieldDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    NoFormDescriptorSelectedView provideNoFormDescriptorSelectedView(NoFormDescriptorSelectedViewImpl impl) {
+        return impl;
+    }
 }
 
 

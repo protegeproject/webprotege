@@ -7,7 +7,9 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
@@ -520,5 +522,10 @@ public class ClientApplicationModule {
     @Provides
     InputBoxView providesInputBoxView(InputBoxViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    AcceptsOneWidget provideAcceptsOneWidget() {
+        return new SimplePanel();
     }
 }

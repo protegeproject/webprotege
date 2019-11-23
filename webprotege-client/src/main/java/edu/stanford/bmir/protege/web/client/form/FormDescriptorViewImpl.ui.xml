@@ -28,7 +28,7 @@
                 <g:Label text="Form Elements" addStyleNames="{wp.style.formLabel}"/>
                 <g:SimplePanel ui:field="elementDescriptorListContainer" addStyleNames="{style.formElementsContainer}"/>
             </g:HTMLPanel>
-            <g:Button text="{msg.add}" addStyleNames="{wp.buttons.button} {wp.buttons.secondaryButton} {wp.buttons.smallPageButton}"/>
+            <g:Button ui:field="addElementButton" text="{msg.add}" addStyleNames="{wp.buttons.button} {wp.buttons.secondaryButton} {wp.buttons.smallPageButton}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

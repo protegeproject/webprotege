@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -35,10 +36,25 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
     @UiField(provided = true)
     LanguageMapEditor labelField;
 
+    @UiField
+    Button addElementButton;
+
     @Inject
     public FormDescriptorViewImpl(@Nonnull LanguageMapEditor labelEditor) {
         this.labelField = checkNotNull(labelEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
+        addElementButton.addClickHandler(this::handleAddElement);
+    }
+
+    private void handleAddElement(ClickEvent clickEvent) {
+        handler.handleAddForm();
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        formIdField.setEnabled(enabled);
+        labelField.setEnabled(enabled);
+        addElementButton.setEnabled(enabled);
     }
 
     @Nonnull

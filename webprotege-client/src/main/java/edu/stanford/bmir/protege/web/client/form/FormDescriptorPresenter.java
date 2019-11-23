@@ -43,15 +43,20 @@ public class FormDescriptorPresenter implements Presenter {
         elementDescriptorListPresenter.start(
                 view.getElementDescriptorListContainer(),
                 eventBus);
+        view.setAddFormElementHandler(this::handleAddFormElement);
+        view.setEnabled(false);
+    }
+
+    private void handleAddFormElement() {
+        elementDescriptorListPresenter.addElement();
     }
 
     public void setFormDescriptor(@Nonnull FormDescriptor formDescriptor) {
 
         FormId formId = formDescriptor.getFormId();
         view.setFormId(formId.getId());
-
         view.setLabel(formDescriptor.getLabel());
-
+        view.setEnabled(true);
         elementDescriptorListPresenter.setDescriptors(formDescriptor.getElements());
 
     }

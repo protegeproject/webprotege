@@ -3,13 +3,15 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,10 +47,14 @@ public class FormElementDescriptorListPresenter implements Presenter {
         this.elementDescriptorViewHolderProvider = checkNotNull(elementDescriptorViewHolderProvider);
     }
 
+    public void addElement() {
+        FormElementDescriptor descriptor = FormElementDescriptor.getDefault();
+        addFormElementDescriptor(descriptor);
+    }
+
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         container.setWidget(view);
-
     }
 
     public void clear() {
@@ -57,17 +63,19 @@ public class FormElementDescriptorListPresenter implements Presenter {
 
     public void setDescriptors(@Nonnull List<FormElementDescriptor> descriptors) {
         checkNotNull(descriptors);
-        descriptors.forEach(descriptor -> {
-            FormElementDescriptorPresenter descriptorPresenter = elementDescriptorEditorPresenterProvider.get();
-            descriptorEditorPresenters.add(descriptorPresenter);
-            descriptorPresenter.setNumber(descriptorEditorPresenters.size());
-            FormElementDescriptorViewHolder viewHolder = elementDescriptorViewHolderProvider.get();
-            // TODO: Set removed handler etc.
-            view.addFormElementDescriptorEditorView(viewHolder);
-            descriptorPresenter.start(viewHolder);
-            descriptorPresenter.setFormElementDescriptor(descriptor);
-        });
-        // TODO: Set add handler
+        clear();
+        descriptors.forEach(this::addFormElementDescriptor);
+    }
+
+    public void addFormElementDescriptor(FormElementDescriptor descriptor) {
+        FormElementDescriptorPresenter descriptorPresenter = elementDescriptorEditorPresenterProvider.get();
+        descriptorEditorPresenters.add(descriptorPresenter);
+        descriptorPresenter.setNumber(descriptorEditorPresenters.size());
+        FormElementDescriptorViewHolder viewHolder = elementDescriptorViewHolderProvider.get();
+        // TODO: Set removed handler etc.
+        view.addFormElementDescriptorEditorView(viewHolder);
+        descriptorPresenter.start(viewHolder);
+        descriptorPresenter.setFormElementDescriptor(descriptor);
     }
 
     @Nonnull

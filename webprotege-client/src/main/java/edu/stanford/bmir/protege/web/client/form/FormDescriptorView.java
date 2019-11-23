@@ -13,6 +13,8 @@ import javax.annotation.Nonnull;
  */
 public interface FormDescriptorView extends IsWidget {
 
+    void setEnabled(boolean b);
+
     interface AddFormElementHandler {
         void handleAddForm();
     }
@@ -32,3 +34,4 @@ public interface FormDescriptorView extends IsWidget {
 
     void setAddFormElementHandler(@Nonnull AddFormElementHandler handler);
 }
+

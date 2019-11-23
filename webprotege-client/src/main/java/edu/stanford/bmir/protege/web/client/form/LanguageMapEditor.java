@@ -80,6 +80,10 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
         return Optional.of(LanguageMap.get(map));
     }
 
+    public void setEnabled(boolean enabled) {
+        delegate.setEnabled(enabled);
+    }
+
     @Override
     public void setValue(LanguageMap object) {
         List<LanguageMapEntry> entries = object.asMap()
