@@ -69,6 +69,18 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         this.noFormDescriptorSelectedView = noFormDescriptorSelectedView;
     }
 
+    @Override
+    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        settingsPresenter.start(container);
+        settingsPresenter.setSettingsTitle("Forms");
+        AcceptsOneWidget section = settingsPresenter.addSection("Project Forms");
+        section.setWidget(formManagerView);
+        formManagerView.setAddFormHandler(this::handleAddForm);
+        formManagerView.setFormSelectionChangedHandler(this::handleFormSelectionChanged);
+        formManagerView.getFormDescriptorContainer().setWidget(noFormDescriptorSelectedView);
+        retrieveAndDisplayFormDescriptors();
+    }
+
     private void displayFormDescriptor(FormId formId) {
         FormDescriptor formDescriptor = formDescriptors.get(formId);
         if(formDescriptor == null) {
@@ -84,9 +96,9 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
             dispatchServiceManager.beginBatch();
             FormId formId = formDescriptor.getFormId();
             formManagerView.setCurrentFormId(formId);
-            formDescriptorPresenter.setFormDescriptor(formDescriptor);
             AcceptsOneWidget descriptorContainer = formManagerView.getFormDescriptorContainer();
             formDescriptorPresenter.start(descriptorContainer, new SimpleEventBus());
+            formDescriptorPresenter.setFormDescriptor(formDescriptor);
         } finally {
             dispatchServiceManager.executeCurrentBatch();
         }
@@ -94,6 +106,7 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
 
     private void handleAddForm() {
         formManagerView.displayCreateFormIdPrompt(newFormId -> {
+            saveCurrentFormDescriptor();
             FormId formId = FormId.get(newFormId);
             formManagerView.addFormId(formId);
             displayFormDescriptor(formId);
@@ -136,17 +149,5 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     @Override
     public void setBusy(boolean busy) {
 
-    }
-
-    @Override
-    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        settingsPresenter.start(container);
-        settingsPresenter.setSettingsTitle("Forms");
-        AcceptsOneWidget section = settingsPresenter.addSection("Project Forms");
-        section.setWidget(formManagerView);
-        formManagerView.setAddFormHandler(this::handleAddForm);
-        formManagerView.setFormSelectionChangedHandler(this::handleFormSelectionChanged);
-        formManagerView.getFormDescriptorContainer().setWidget(noFormDescriptorSelectedView);
-        retrieveAndDisplayFormDescriptors();
     }
 }

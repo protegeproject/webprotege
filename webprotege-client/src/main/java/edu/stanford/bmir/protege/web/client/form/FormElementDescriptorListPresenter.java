@@ -58,6 +58,7 @@ public class FormElementDescriptorListPresenter implements Presenter {
     }
 
     public void clear() {
+        view.clear();
         descriptorEditorPresenters.clear();
     }
 

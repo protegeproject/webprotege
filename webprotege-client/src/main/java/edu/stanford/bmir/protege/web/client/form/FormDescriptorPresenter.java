@@ -51,7 +51,6 @@ public class FormDescriptorPresenter implements Presenter {
     }
 
     public void setFormDescriptor(@Nonnull FormDescriptor formDescriptor) {
-
         FormId formId = formDescriptor.getFormId();
         view.setFormId(formId.getId());
         view.setLabel(formDescriptor.getLabel());
