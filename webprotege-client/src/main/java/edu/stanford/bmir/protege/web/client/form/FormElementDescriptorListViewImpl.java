@@ -43,8 +43,14 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     }
 
     @Override
-    public void addFormElementDescriptorEditorView(@Nonnull FormElementDescriptorViewHolder view) {
+    public void addView(@Nonnull FormElementDescriptorViewHolder view) {
         views.add(view);
         descriptorEditorViewContainer.add(view);
+    }
+
+    @Override
+    public void removeView(@Nonnull FormElementDescriptorViewHolder viewHolder) {
+        views.remove(viewHolder);
+        descriptorEditorViewContainer.remove(viewHolder);
     }
 }

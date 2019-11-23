@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.form.FormElementDescriptorPresenter.RemoveFormElementDescriptorHandler;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
@@ -82,6 +83,11 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @UiField(provided = true)
     protected static Counter counter = new Counter();
 
+    @UiField
+    Button removeButton;
+
+    RemoveFormElementDescriptorHandler removeHandler = () -> {};
+
     @Inject
     public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
                                          LanguageMapEditor helpEditor,
@@ -92,6 +98,7 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
         this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
         typesComboBox.addChangeHandler(event -> fieldTypeChangedHander.handleFieldTypeChanged());
+        removeButton.addClickHandler(event -> removeHandler.handleRemoveFormElementDescriptor());
 
     }
 
@@ -242,6 +249,11 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     public void addAvailableFieldType(@Nonnull String value,
                                       @Nonnull String label) {
         typesComboBox.addItem(label, value);
+    }
+
+    @Override
+    public void setRemoveFormElementDescriptorHandler(RemoveFormElementDescriptorHandler handler) {
+        this.removeHandler = checkNotNull(handler);
     }
 
     @Override

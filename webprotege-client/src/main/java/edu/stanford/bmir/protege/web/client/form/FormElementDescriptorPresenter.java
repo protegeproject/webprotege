@@ -29,6 +29,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormElementDescriptorPresenter {
 
+    interface RemoveFormElementDescriptorHandler {
+        void handleRemoveFormElementDescriptor();
+    }
+
     @Nonnull
     private ProjectId projectId;
 
@@ -139,6 +143,10 @@ public class FormElementDescriptorPresenter {
 
     public void setNumber(int number) {
         view.setNumber(number);
+    }
+
+    public void setRemoveFormElementDescriptorHandler(RemoveFormElementDescriptorHandler handler) {
+        view.setRemoveFormElementDescriptorHandler(handler);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

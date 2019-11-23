@@ -1,17 +1,16 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,10 +72,20 @@ public class FormElementDescriptorListPresenter implements Presenter {
         descriptorEditorPresenters.add(descriptorPresenter);
         descriptorPresenter.setNumber(descriptorEditorPresenters.size());
         FormElementDescriptorViewHolder viewHolder = elementDescriptorViewHolderProvider.get();
-        // TODO: Set removed handler etc.
-        view.addFormElementDescriptorEditorView(viewHolder);
+        view.addView(viewHolder);
         descriptorPresenter.start(viewHolder);
         descriptorPresenter.setFormElementDescriptor(descriptor);
+        descriptorPresenter.setRemoveFormElementDescriptorHandler(() -> {
+            descriptorEditorPresenters.remove(descriptorPresenter);
+            view.removeView(viewHolder);
+            renumberHolders();
+        });
+    }
+
+    private void renumberHolders() {
+        for(int i = 0; i < descriptorEditorPresenters.size(); i++) {
+            descriptorEditorPresenters.get(i).setNumber(i + 1);
+        }
     }
 
     @Nonnull
