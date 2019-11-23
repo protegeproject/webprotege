@@ -2,6 +2,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <g:HTMLPanel>
-        <g:HTMLPanel ui:field="descriptorEditorViewContainer"/>
+        <g:HTMLPanel ui:field="elementDescriptorViewContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>

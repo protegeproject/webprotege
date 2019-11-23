@@ -76,6 +76,22 @@ public class FormElementDescriptorViewHolderImpl extends Composite implements Fo
         scrollIntoView(element);
     }
 
+    @Override
+    public void setFirst() {
+        moveUpButton.setEnabled(false);
+    }
+
+    @Override
+    public void setMiddle() {
+        moveUpButton.setEnabled(true);
+        moveDownButton.setEnabled(true);
+    }
+
+    @Override
+    public void setLast() {
+        moveDownButton.setEnabled(false);
+    }
+
     public native void scrollIntoView(JavaScriptObject element)/*-{
         element.scrollIntoView(true)
     }-*/;

@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -29,7 +27,7 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
             FormElementDescriptorListViewImplUiBinder.class);
 
     @UiField
-    HTMLPanel descriptorEditorViewContainer;
+    HTMLPanel elementDescriptorViewContainer;
 
     private final List<FormElementDescriptorViewHolder> views = new ArrayList<>();
 
@@ -41,19 +39,21 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     @Override
     public void clear() {
         views.clear();
-        descriptorEditorViewContainer.clear();
+        elementDescriptorViewContainer.clear();
     }
 
     @Override
     public void addView(@Nonnull FormElementDescriptorViewHolder view) {
         views.add(view);
-        descriptorEditorViewContainer.add(view);
+        elementDescriptorViewContainer.add(view);
+        updateButtons();
     }
 
     @Override
     public void removeView(@Nonnull FormElementDescriptorViewHolder viewHolder) {
         views.remove(viewHolder);
-        descriptorEditorViewContainer.remove(viewHolder);
+        elementDescriptorViewContainer.remove(viewHolder);
+        updateButtons();
     }
 
     @Override
@@ -76,9 +76,23 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
         }
     }
 
+    private void updateButtons() {
+        for(int i = 0; i < views.size(); i++) {
+            FormElementDescriptorViewHolder holder = views.get(i);
+            holder.setMiddle();
+            if(i == 0) {
+                holder.setFirst();
+            }
+            if(i == views.size() - 1) {
+                holder.setLast();
+            }
+        }
+    }
+
     private void refill(FormElementDescriptorViewHolder viewHolder) {
-        descriptorEditorViewContainer.clear();
-        views.forEach(view -> descriptorEditorViewContainer.add(view));
+        elementDescriptorViewContainer.clear();
+        views.forEach(view -> elementDescriptorViewContainer.add(view));
         viewHolder.scrollIntoView();
+        updateButtons();
     }
 }
