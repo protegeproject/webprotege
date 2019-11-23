@@ -69,9 +69,6 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     RadioButton repeatableHorizontallyRadio;
 
     @UiField
-    Label numberField;
-
-    @UiField
     RadioButton elementRunStartRadio;
 
     @UiField
@@ -83,11 +80,6 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @UiField(provided = true)
     protected static Counter counter = new Counter();
 
-    @UiField
-    Button removeButton;
-
-    RemoveFormElementDescriptorHandler removeHandler = () -> {};
-
     @Inject
     public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
                                          LanguageMapEditor helpEditor,
@@ -98,19 +90,12 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
         this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
         typesComboBox.addChangeHandler(event -> fieldTypeChangedHander.handleFieldTypeChanged());
-        removeButton.addClickHandler(event -> removeHandler.handleRemoveFormElementDescriptor());
-
     }
 
     @Nonnull
     @Override
     public AcceptsOneWidget getFieldEditorContainer() {
         return fieldEditorContainer;
-    }
-
-    @Override
-    public void setNumber(int number) {
-        numberField.setText(Integer.toString(number));
     }
 
     @Override
@@ -249,11 +234,6 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     public void addAvailableFieldType(@Nonnull String value,
                                       @Nonnull String label) {
         typesComboBox.addItem(label, value);
-    }
-
-    @Override
-    public void setRemoveFormElementDescriptorHandler(RemoveFormElementDescriptorHandler handler) {
-        this.removeHandler = checkNotNull(handler);
     }
 
     @Override

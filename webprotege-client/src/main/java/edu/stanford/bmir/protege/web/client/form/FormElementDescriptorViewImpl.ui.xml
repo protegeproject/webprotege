@@ -11,34 +11,14 @@
             flex-direction: row;
             align-items: start;
         }
-        .numberColumn {
-            flex-grow: 0;
-            flex-shrink: 0;
-            margin-right: 1.5rem;
-        }
-        .number {
-            background-color: literal("var(--tertiary--color)");
-            color: literal("var(--primary--background-color)");
-            border-radius: 50%;
-            padding: 0.2rem;
-            font-weight: bold;
-            font-size: 1.4em;
-            width: 1.6rem;
-            height: 1.6rem;
-            line-height: 1.6rem;
-            text-align: center;
-        }
-        .elementSplitter {
-            box-sizing: content-box;
-            height: 0.9rem;
-            border-bottom: 0.14rem solid literal("var(--tertiary--color)");
-            margin-bottom: 0.8rem;
-            align-self: stretch;
-            margin-left: literal("-1.6rem");
-        }
         .elementColumn {
             flex-grow: 1;
             flex-shrink: 1;
+        }
+        .elementContent {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
         .settingsRow div {
             margin-right: 2em;
@@ -47,58 +27,70 @@
             margin-top: 1.5em;
             margin-left: 3em;
         }
+        .button {
+            margin-bottom: 0.1em;
+        }
+        .deleteButton {
+            margin-top: 0.3em;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel addStyleNames="{style.numberColumn}">
-            <g:Label ui:field="numberField" addStyleNames="{style.number}"/>
-        </g:HTMLPanel>
+
         <g:HTMLPanel addStyleNames="{style.elementColumn}">
-            <g:HTMLPanel addStyleNames="{style.elementSplitter}"/>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
-                <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-                    <g:Label text="Element Id" addStyleNames="{wp.style.formLabel}"/>
-                    <g:TextBox ui:field="elementIdField"/>
-                </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                    <g:Label text="Property binding" addStyleNames="{wp.style.formLabel}"/>
-                    <primitive:PrimitiveDataEditor objectPropertiesAllowed="true"
-                                                   dataPropertiesAllowed="true"
-                                                   annotationPropertiesAllowed="true"
-                                                   ui:field="propertyBindingField"/>
+            <g:HTMLPanel addStyleNames="{style.elementContent}">
+                <g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+                            <g:Label text="Element Id" addStyleNames="{wp.style.formLabel}"/>
+                            <g:TextBox ui:field="elementIdField"/>
+                        </g:HTMLPanel>
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Property binding" addStyleNames="{wp.style.formLabel}"/>
+                            <primitive:PrimitiveDataEditor objectPropertiesAllowed="true"
+                                                           dataPropertiesAllowed="true"
+                                                           annotationPropertiesAllowed="true"
+                                                           ui:field="propertyBindingField"/>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+                        <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>
+                        <form:LanguageMapEditor ui:field="labelEditor" placeholder="{msg.enterLabel}"/>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                        <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
+                        <g:ListBox visibleItemCount="1" ui:field="typesComboBox"
+                                   addStyleNames="{wp.style.formGroupNarrow}"/>
+                        <g:SimplePanel ui:field="fieldEditorContainer" addStyleNames="{style.typeView}"/>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
+                            <g:RadioButton name="optionality-{counter.getValue}" text="Required" ui:field="requiredRadio"/>
+                            <g:RadioButton name="optionality-{counter.getValue}" text="Optional" ui:field="optionalRadio"/>
+                        </g:HTMLPanel>
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
+                            <g:RadioButton name="repeatability-{counter.getValue}" text="Non-repeatable"
+                                           ui:field="nonRepeatableRadio"/>
+                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Vertically)"
+                                           ui:field="repeatableVerticallyRadio"/>
+                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Horizontally)"
+                                           ui:field="repeatableHorizontallyRadio"/>
+                        </g:HTMLPanel>
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Position" addStyleNames="{wp.style.formLabel}"/>
+                            <g:RadioButton name="elementRun-{counter.getValue}" text="Start new line"
+                                           ui:field="elementRunStartRadio"/>
+                            <g:RadioButton name="elementRun-{counter.getValue}" text="Continue previous line"
+                                           ui:field="elementRunContinueRadio"/>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+                        <g:Label text="Help text" addStyleNames="{wp.style.formLabel}"/>
+                        <form:LanguageMapEditor ui:field="helpEditor" placeholder="{msg.enterHelpText}"/>
+                    </g:HTMLPanel>
                 </g:HTMLPanel>
             </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-                <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>
-                <form:LanguageMapEditor ui:field="labelEditor" placeholder="{msg.enterLabel}"/>
-            </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
-                <g:ListBox visibleItemCount="1" ui:field="typesComboBox" addStyleNames="{wp.style.formGroupNarrow}"/>
-                <g:SimplePanel ui:field="fieldEditorContainer" addStyleNames="{style.typeView}"/>
-            </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
-                <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                    <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
-                    <g:RadioButton name="optionality-{counter.getValue}" text="Required" ui:field="requiredRadio"/>
-                    <g:RadioButton name="optionality-{counter.getValue}" text="Optional" ui:field="optionalRadio"/>
-                </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                    <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
-                    <g:RadioButton name="repeatability-{counter.getValue}" text="Non-repeatable" ui:field="nonRepeatableRadio"/>
-                    <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Vertically)" ui:field="repeatableVerticallyRadio"/>
-                    <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Horizontally)" ui:field="repeatableHorizontallyRadio"/>
-                </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                    <g:Label text="Position" addStyleNames="{wp.style.formLabel}"/>
-                    <g:RadioButton name="elementRun-{counter.getValue}" text="Start new line" ui:field="elementRunStartRadio"/>
-                    <g:RadioButton name="elementRun-{counter.getValue}" text="Continue previous line" ui:field="elementRunContinueRadio"/>
-                </g:HTMLPanel>
-            </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-                <g:Label text="Help text" addStyleNames="{wp.style.formLabel}"/>
-                <form:LanguageMapEditor ui:field="helpEditor" placeholder="{msg.enterHelpText}"/>
-            </g:HTMLPanel>
-            <g:Button text="{msg.removeFormElement}" ui:field="removeButton" addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.alternateButton}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

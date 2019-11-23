@@ -17,4 +17,8 @@ public interface FormElementDescriptorListView extends IsWidget {
     void addView(@Nonnull FormElementDescriptorViewHolder view);
 
     void removeView(@Nonnull FormElementDescriptorViewHolder viewHolder);
+
+    void moveUp(@Nonnull FormElementDescriptorViewHolder viewHolder);
+
+    void moveDown(@Nonnull FormElementDescriptorViewHolder viewHolder);
 }

@@ -32,6 +32,12 @@ public class FormElementDescriptorPresenter {
     interface RemoveFormElementDescriptorHandler {
         void handleRemoveFormElementDescriptor();
     }
+    interface MoveFormElementDescriptorUpHandler {
+        void handleMoveUp();
+    }
+    interface MoveFormElementDescriptorDownHandler {
+        void handleMoveDown();
+    }
 
     @Nonnull
     private ProjectId projectId;
@@ -141,14 +147,6 @@ public class FormElementDescriptorPresenter {
         setFormFieldDescriptor(formFieldDescriptor);
     }
 
-    public void setNumber(int number) {
-        view.setNumber(number);
-    }
-
-    public void setRemoveFormElementDescriptorHandler(RemoveFormElementDescriptorHandler handler) {
-        view.setRemoveFormElementDescriptorHandler(handler);
-    }
-
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         fieldPresenterFactories.forEach(factory -> {
@@ -219,4 +217,6 @@ public class FormElementDescriptorPresenter {
                                       .map(FormFieldDescriptorPresenterFactory::create)
                                       .findFirst();
     }
+
+
 }

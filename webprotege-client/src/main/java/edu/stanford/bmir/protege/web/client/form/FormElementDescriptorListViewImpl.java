@@ -6,10 +6,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,5 +54,31 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     public void removeView(@Nonnull FormElementDescriptorViewHolder viewHolder) {
         views.remove(viewHolder);
         descriptorEditorViewContainer.remove(viewHolder);
+    }
+
+    @Override
+    public void moveUp(@Nonnull FormElementDescriptorViewHolder viewHolder) {
+        int fromIndex = views.indexOf(viewHolder);
+        int toIndex = fromIndex - 1;
+        if(toIndex > -1) {
+            Collections.swap(views, fromIndex, toIndex);
+            refill(viewHolder);
+        }
+    }
+
+    @Override
+    public void moveDown(@Nonnull FormElementDescriptorViewHolder viewHolder) {
+        int fromIndex = views.indexOf(viewHolder);
+        int toIndex = fromIndex + 1;
+        if(toIndex < views.size()) {
+            Collections.swap(views, fromIndex, toIndex);
+            refill(viewHolder);
+        }
+    }
+
+    private void refill(FormElementDescriptorViewHolder viewHolder) {
+        descriptorEditorViewContainer.clear();
+        views.forEach(view -> descriptorEditorViewContainer.add(view));
+        viewHolder.scrollIntoView();
     }
 }

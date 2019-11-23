@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
@@ -11,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,10 @@ public class FormElementDescriptorListPresenter implements Presenter {
     private final Provider<FormElementDescriptorViewHolder> elementDescriptorViewHolderProvider;
 
     @Nonnull
-    private final List<FormElementDescriptorPresenter> descriptorEditorPresenters = new ArrayList<>();
+    private final List<FormElementDescriptorPresenter> descriptorPresenters = new ArrayList<>();
+
+    @Nonnull
+    private final List<FormElementDescriptorViewHolder> viewHolders = new ArrayList<>();
 
     @Inject
     public FormElementDescriptorListPresenter(@Nonnull FormElementDescriptorListView view,
@@ -58,7 +61,7 @@ public class FormElementDescriptorListPresenter implements Presenter {
 
     public void clear() {
         view.clear();
-        descriptorEditorPresenters.clear();
+        descriptorPresenters.clear();
     }
 
     public void setDescriptors(@Nonnull List<FormElementDescriptor> descriptors) {
@@ -69,31 +72,63 @@ public class FormElementDescriptorListPresenter implements Presenter {
 
     public void addFormElementDescriptor(FormElementDescriptor descriptor) {
         FormElementDescriptorPresenter descriptorPresenter = elementDescriptorEditorPresenterProvider.get();
-        descriptorEditorPresenters.add(descriptorPresenter);
-        descriptorPresenter.setNumber(descriptorEditorPresenters.size());
+        descriptorPresenters.add(descriptorPresenter);
         FormElementDescriptorViewHolder viewHolder = elementDescriptorViewHolderProvider.get();
+        viewHolders.add(viewHolder);
+        viewHolder.setNumber(descriptorPresenters.size());
         view.addView(viewHolder);
         descriptorPresenter.start(viewHolder);
         descriptorPresenter.setFormElementDescriptor(descriptor);
-        descriptorPresenter.setRemoveFormElementDescriptorHandler(() -> {
-            descriptorEditorPresenters.remove(descriptorPresenter);
+        viewHolder.setRemoveHandler(() -> {
+            descriptorPresenters.remove(descriptorPresenter);
+            viewHolders.remove(viewHolder);
             view.removeView(viewHolder);
             renumberHolders();
         });
+        viewHolder.setMoveUpHandler(() -> {
+            moveUp(descriptorPresenter);
+            view.moveUp(viewHolder);
+            renumberHolders();
+        });
+        viewHolder.setMoveDownHandler(() -> {
+            moveDown(descriptorPresenter);
+            view.moveDown(viewHolder);
+            renumberHolders();
+        });
+
+    }
+
+    public void moveUp(FormElementDescriptorPresenter descriptorPresenter) {
+        int fromIndex = descriptorPresenters.indexOf(descriptorPresenter);
+        int toIndex = fromIndex - 1;
+        if(toIndex > -1) {
+            Collections.swap(descriptorPresenters, fromIndex, toIndex);
+            Collections.swap(viewHolders, fromIndex, toIndex);
+        }
+
+    }
+
+    public void moveDown(FormElementDescriptorPresenter descriptorPresenter) {
+        int fromIndex = descriptorPresenters.indexOf(descriptorPresenter);
+        int toIndex = fromIndex + 1;
+        if(toIndex < descriptorPresenters.size() - 1) {
+            Collections.swap(descriptorPresenters, fromIndex, toIndex);
+            Collections.swap(viewHolders, fromIndex, toIndex);
+        }
     }
 
     private void renumberHolders() {
-        for(int i = 0; i < descriptorEditorPresenters.size(); i++) {
-            descriptorEditorPresenters.get(i).setNumber(i + 1);
+        for(int i = 0; i < viewHolders.size(); i++) {
+            viewHolders.get(i).setNumber(i + 1);
         }
     }
 
     @Nonnull
     public List<FormElementDescriptor> getDescriptors() {
-        return descriptorEditorPresenters.stream()
-                                         .map(p -> p.getFormElementDescriptor())
-                                         .filter(Optional::isPresent)
-                                         .map(Optional::get)
-                                         .collect(toList());
+        return descriptorPresenters.stream()
+                                   .map(p -> p.getFormElementDescriptor())
+                                   .filter(Optional::isPresent)
+                                   .map(Optional::get)
+                                   .collect(toList());
     }
 }

@@ -1,6 +1,67 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
-        <g:HTMLPanel ui:field="container"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display:        flex;
+            flex-direction: row;
+        }
+
+        .numberColumn {
+            flex-grow:    0;
+            flex-shrink:  0;
+            margin-right: 1.5rem;
+        }
+
+        .number {
+            background-color: literal("var(--tertiary--color)");
+            color:            literal("var(--primary--background-color)");
+            border-radius:    50%;
+            padding:          0.2rem;
+            font-weight:      bold;
+            font-size:        1.4em;
+            width:            1.6rem;
+            height:           1.6rem;
+            line-height:      1.6rem;
+            text-align:       center;
+        }
+
+        .elementSplitter {
+            box-sizing:    content-box;
+            height:        0.9rem;
+            border-bottom: 0.14rem solid literal("var(--tertiary--color)");
+            margin-bottom: 0.8rem;
+            align-self:    stretch;
+            margin-left:   literal("-1.6rem");
+        }
+
+        .elementColumn {
+            flex-grow:   1;
+            flex-shrink: 1;
+        }
+
+        .buttonBar {
+            margin-bottom: 0.5em;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{style.numberColumn}">
+            <g:Label ui:field="numberField" addStyleNames="{style.number}"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.elementColumn}">
+            <g:HTMLPanel addStyleNames="{style.elementSplitter}"/>
+            <g:HTMLPanel ui:field="buttonBar" addStyleNames="{style.buttonBar}">
+                <g:Button ui:field="moveUpButton"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.upButton}"/>
+                <g:Button ui:field="moveDownButton"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.downButton}"/>
+            </g:HTMLPanel>
+            <g:HTMLPanel ui:field="container"/>
+            <g:HTMLPanel>
+                <g:Button text="{msg.removeFormElement}" ui:field="removeButton"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.alternateButton}"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

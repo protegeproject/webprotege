@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.form.FormElementDescriptorPresenter.MoveFormElementDescriptorDownHandler;
+import edu.stanford.bmir.protege.web.client.form.FormElementDescriptorPresenter.MoveFormElementDescriptorUpHandler;
 import edu.stanford.bmir.protege.web.client.form.FormElementDescriptorPresenter.RemoveFormElementDescriptorHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
@@ -50,9 +52,6 @@ public interface FormElementDescriptorView extends IsWidget {
 
     ElementRun getElementRun();
 
-
-    void setNumber(int number);
-
     void setOptionality(@Nonnull Optionality optionality);
 
     @Nonnull
@@ -76,6 +75,4 @@ public interface FormElementDescriptorView extends IsWidget {
     void setFieldType(@Nonnull String fieldType);
 
     void addAvailableFieldType(@Nonnull String value, @Nonnull String label);
-
-    void setRemoveFormElementDescriptorHandler(RemoveFormElementDescriptorHandler handler);
 }

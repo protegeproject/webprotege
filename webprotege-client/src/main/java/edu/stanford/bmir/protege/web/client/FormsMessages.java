@@ -26,9 +26,6 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("addFormElement")
     String addFormElement();
 
-    @DefaultMessage("Delete form element")
-    @Key("deleteFormElement")
-    String deleteFormElement();
 
     @DefaultMessage("Enter help text")
     @Key("enterHelpText")
@@ -45,4 +42,13 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Delete")
     @Key("removeFormElement")
     String removeFormElement();
+
+    @DefaultMessage("Move down")
+    @Key("moveFormElementDown")
+    String moveFormElementDown();
+
+
+    @DefaultMessage("Move up")
+    @Key("moveFormElementUp")
+    String moveFormElementUp();
 }
