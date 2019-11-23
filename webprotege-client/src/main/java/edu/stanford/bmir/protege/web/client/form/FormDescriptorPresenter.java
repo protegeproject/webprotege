@@ -44,7 +44,6 @@ public class FormDescriptorPresenter implements Presenter {
                 view.getElementDescriptorListContainer(),
                 eventBus);
         view.setAddFormElementHandler(this::handleAddFormElement);
-        view.setEnabled(false);
     }
 
     private void handleAddFormElement() {
@@ -56,7 +55,6 @@ public class FormDescriptorPresenter implements Presenter {
         FormId formId = formDescriptor.getFormId();
         view.setFormId(formId.getId());
         view.setLabel(formDescriptor.getLabel());
-        view.setEnabled(true);
         elementDescriptorListPresenter.setDescriptors(formDescriptor.getElements());
 
     }

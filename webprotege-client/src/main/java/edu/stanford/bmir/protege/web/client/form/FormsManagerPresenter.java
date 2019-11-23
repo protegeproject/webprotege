@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -48,6 +49,9 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Nonnull
+    private final NoFormDescriptorSelectedView noFormDescriptorSelectedView;
+
+    @Nonnull
     private final Map<FormId, FormDescriptor> formDescriptors = new LinkedHashMap<>();
 
     @Inject
@@ -55,12 +59,14 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
                                  @Nonnull FormsManagerView formManagerView,
                                  @Nonnull SettingsPresenter settingsPresenter,
                                  @Nonnull FormDescriptorPresenter formDescriptorPresenter,
-                                 @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                 @Nonnull DispatchServiceManager dispatchServiceManager,
+                                 @Nonnull NoFormDescriptorSelectedView noFormDescriptorSelectedView) {
         this.projectId = checkNotNull(projectId);
         this.formManagerView = checkNotNull(formManagerView);
         this.settingsPresenter = settingsPresenter;
         this.formDescriptorPresenter = formDescriptorPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.noFormDescriptorSelectedView = noFormDescriptorSelectedView;
     }
 
     private void displayFormDescriptor(FormId formId) {
@@ -79,6 +85,8 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
             FormId formId = formDescriptor.getFormId();
             formManagerView.setCurrentFormId(formId);
             formDescriptorPresenter.setFormDescriptor(formDescriptor);
+            AcceptsOneWidget descriptorContainer = formManagerView.getFormDescriptorContainer();
+            formDescriptorPresenter.start(descriptorContainer, new SimpleEventBus());
         } finally {
             dispatchServiceManager.executeCurrentBatch();
         }
@@ -134,13 +142,11 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         settingsPresenter.start(container);
         settingsPresenter.setSettingsTitle("Forms");
-        AcceptsOneWidget descriptorContainer = formManagerView.getFormDescriptorContainer();
-        formDescriptorPresenter.start(descriptorContainer, eventBus);
         AcceptsOneWidget section = settingsPresenter.addSection("Project Forms");
         section.setWidget(formManagerView);
         formManagerView.setAddFormHandler(this::handleAddForm);
         formManagerView.setFormSelectionChangedHandler(this::handleFormSelectionChanged);
-
+        formManagerView.getFormDescriptorContainer().setWidget(noFormDescriptorSelectedView);
         retrieveAndDisplayFormDescriptors();
     }
 }
