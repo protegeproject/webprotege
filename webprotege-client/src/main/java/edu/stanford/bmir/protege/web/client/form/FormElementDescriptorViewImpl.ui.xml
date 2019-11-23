@@ -98,6 +98,7 @@
                 <g:Label text="Help text" addStyleNames="{wp.style.formLabel}"/>
                 <form:LanguageMapEditor ui:field="helpEditor" placeholder="{msg.enterHelpText}"/>
             </g:HTMLPanel>
+            <g:Button text="{msg.removeFormElement}" ui:field="removeButton" addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.alternateButton}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -41,4 +41,8 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Enter placeholder")
     @Key("enterPlaceholder")
     String enterPlaceholder();
+
+    @DefaultMessage("Delete")
+    @Key("removeFormElement")
+    String removeFormElement();
 }
