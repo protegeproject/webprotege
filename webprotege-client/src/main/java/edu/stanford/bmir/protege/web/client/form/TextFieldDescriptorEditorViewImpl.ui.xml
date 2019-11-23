@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
     <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
     <g:HTMLPanel>
 
@@ -22,7 +22,7 @@
 
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="Placeholder"/>
-            <form:LanguageMapEditor ui:field="placeholderEditor" placeholder="{msg.forms_descriptor_helpField_placeholder}"/>
+            <form:LanguageMapEditor ui:field="placeholderEditor" placeholder="{msg.enterPlaceholder}"/>
         </g:HTMLPanel>
 
 

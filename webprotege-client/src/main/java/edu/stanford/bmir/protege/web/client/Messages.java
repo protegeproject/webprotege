@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 import org.checkerframework.checker.units.qual.K;
+import org.graalvm.compiler.lir.LIRInstruction;
 
 import static com.google.gwt.i18n.client.LocalizableResource.*;
 
@@ -1273,13 +1274,4 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("The password that you specified as your current password is incorrect. Please re-enter your current password and try again.")
     @Key("password.change.currentPasswordIncorrect.body")
     String password_change_currentPasswordIncorrect_Body();
-
-
-    @DefaultMessage("Enter label")
-    @Key("forms.descriptor.label.placeholder")
-    String forms_descriptor_labelField_placeholder();
-
-    @DefaultMessage("Enter help text")
-    @Key("forms.descriptor.placeholderfield.placeholder")
-    String forms_descriptor_helpField_placeholder();
 }
