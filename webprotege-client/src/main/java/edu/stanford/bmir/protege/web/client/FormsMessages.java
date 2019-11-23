@@ -39,16 +39,18 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("enterPlaceholder")
     String enterPlaceholder();
 
-    @DefaultMessage("Delete")
+    @DefaultMessage("Delete form element")
     @Key("removeFormElement")
     String removeFormElement();
 
-    @DefaultMessage("Move down")
+    @DefaultMessage("Move form element down")
     @Key("moveFormElementDown")
     String moveFormElementDown();
 
 
-    @DefaultMessage("Move up")
+    @DefaultMessage("Move form element up")
     @Key("moveFormElementUp")
     String moveFormElementUp();
+
+
 }
