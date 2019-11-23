@@ -91,6 +91,7 @@
 }
 
 .wp-btn--primary:hover {
+    color: #fff;
     background-color: #501c70;
 }
 
@@ -105,6 +106,7 @@
 }
 
 .wp-btn--secondary:hover {
+    color: #fff;
     background-color: #0073a5;
 }
 
@@ -119,6 +121,7 @@
 }
 
 .wp-btn--alternate:hover {
+    color: #fff;
     background-color: #bc4d26;
 }
 
