@@ -83,6 +83,7 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     @Override
     public void setFormLabel(String formLabel) {
         label.setText(formLabel);
+        label.setVisible(!formLabel.isEmpty());
     }
 
     @Override

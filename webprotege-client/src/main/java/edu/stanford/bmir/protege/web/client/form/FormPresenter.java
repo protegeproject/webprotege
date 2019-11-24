@@ -100,6 +100,7 @@ public class FormPresenter {
      */
     public void start(@Nonnull AcceptsOneWidget container) {
         this.container = Optional.of(container);
+        container.setWidget(noFormView);
     }
 
     public void setFormDataChangedHandler(FormDataChangedHandler formDataChangedHandler) {
