@@ -73,6 +73,15 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("deleteFormElementConfirmation.message")
     String deleteFormElementConfirmation_Message(String formElementId);
 
+    @DefaultMessage("Subject annotations")
+    @Key("subForm.subject.annotations")
+    String subFormSubjectAnnotations();
 
+    @DefaultMessage("Subject parents/types")
+    @Key("subForm.subject.parents")
+    String subFormSubjectParents();
 
+    @DefaultMessage("Subject type")
+    @Key("subForm.subject.type")
+    String subFormSubjectType();
 }

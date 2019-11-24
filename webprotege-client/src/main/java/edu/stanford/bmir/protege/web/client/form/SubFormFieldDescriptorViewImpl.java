@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.frame.PropertyValueGridGrammar;
 import edu.stanford.bmir.protege.web.client.frame.PropertyValueListEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
@@ -22,6 +24,8 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -40,8 +44,8 @@ public class SubFormFieldDescriptorViewImpl extends Composite implements SubForm
     @UiField
     SimplePanel subFormContainer;
 
-    @UiField
-    static Counter counter = new Counter();
+    @UiField(provided = true)
+    protected static Counter counter = new Counter();
 
     @UiField(provided = true)
     ValueListEditor<OWLPrimitiveData> parentsList;
@@ -67,6 +71,7 @@ public class SubFormFieldDescriptorViewImpl extends Composite implements SubForm
             editor.setClassesAllowed(true);
             return editor;
         });
+        parentsList.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
         parentsList.setEnabled(true);
         initWidget(ourUiBinder.createAndBindUi(this));
         this.annotationsList.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
@@ -121,5 +126,11 @@ public class SubFormFieldDescriptorViewImpl extends Composite implements SubForm
     public void clear() {
         parentsList.clearValue();
         annotationsList.clearValue();
+    }
+
+    @Nonnull
+    @Override
+    public List<OWLPrimitiveData> getParents() {
+        return parentsList.getEditorValue().orElse(Collections.emptyList());
     }
 }

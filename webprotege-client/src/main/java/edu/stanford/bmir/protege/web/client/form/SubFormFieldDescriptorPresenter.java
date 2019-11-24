@@ -1,23 +1,31 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -27,28 +35,68 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SubFormFieldDescriptorPresenter implements FormFieldDescriptorPresenter {
 
     @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final FormDescriptorPresenter subFormPresenter;
 
     @Nonnull
     private final SubFormFieldDescriptorView view;
 
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
+
     @Inject
-    public SubFormFieldDescriptorPresenter(@Nonnull FormDescriptorPresenter subFormPresenter,
-                                           @Nonnull SubFormFieldDescriptorView view) {
+    public SubFormFieldDescriptorPresenter(@Nonnull ProjectId projectId,
+                                           @Nonnull FormDescriptorPresenter subFormPresenter,
+                                           @Nonnull SubFormFieldDescriptorView view,
+                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.projectId = projectId;
         this.subFormPresenter = checkNotNull(subFormPresenter);
         this.view = checkNotNull(view);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+    }
+
+    @Override
+    public void clear() {
+        view.clear();
     }
 
     @Nonnull
     @Override
     public FormFieldDescriptor getFormFieldDescriptor() {
-        try {
-            FormDescriptor subFormDescriptor = subFormPresenter.getFormDescriptor();
-            return new SubFormFieldDescriptor(subFormDescriptor);
-        } catch(Exception e) {
-            Window.alert(e.getClass().getName());
-            return new SubFormFieldDescriptor(FormDescriptor.empty());
-        }
+        FormDescriptor subFormDescriptor = subFormPresenter.getFormDescriptor();
+        EntityType entityType = view.getEntityType();
+        List<String> parentTemplates = view.getParents()
+                                           .stream()
+                                           .filter(primitiveData -> primitiveData instanceof OWLClassData)
+                                           .map(primitiveData -> (OWLClassData) primitiveData)
+                                           .map(OWLClassData::getEntity)
+                                           .map(OWLEntity::getIRI)
+                                           .map(IRI::toQuotedString)
+                                           .map(clsIri -> {
+                                               if(entityType.equals(EntityType.CLASS)) {
+                                                   return "SubClassOf(${subject.iri} " + clsIri + ")";
+                                               }
+                                               else {
+                                                   return "ClassAssertion(" + clsIri + " ${subject.iri})";
+                                               }
+                                           })
+                                           .collect(toList());
+
+        EntityFormSubjectFactoryDescriptor subjectFactoryDescriptor = EntityFormSubjectFactoryDescriptor.get(
+                entityType,
+                "",
+                ImmutableList.copyOf(parentTemplates),
+                Optional.empty()
+        );
+        FormDescriptor aug = new FormDescriptor(
+                subFormDescriptor.getFormId(),
+                subFormDescriptor.getLabel(),
+                subFormDescriptor.getElements(),
+                Optional.of(subjectFactoryDescriptor)
+        );
+        return new SubFormFieldDescriptor(aug);
     }
 
     @Override
@@ -63,13 +111,37 @@ public class SubFormFieldDescriptorPresenter implements FormFieldDescriptorPrese
         subFormDescriptor.getSubjectFactoryDescriptor()
                          .ifPresent(fac -> {
                              view.setEntityType(fac.getEntityType());
-//                             view.setParents();
+                             renderAndSetParents(subFormDescriptor);
                          });
     }
 
-    @Override
-    public void clear() {
-        view.clear();
+    public void renderAndSetParents(FormDescriptor subFormDescriptor) {
+        List<OWLClass> parents = getParents(subFormDescriptor);
+        List<OWLPrimitiveData> parentsData = new ArrayList<>();
+        parents.forEach(parent -> dispatchServiceManager.execute(new GetEntityRenderingAction(
+                                                                         projectId,
+                                                                         parent),
+                                                                 result -> {
+                                                                     parentsData.add(result.getEntityData());
+                                                                     if(parentsData.size() == parents.size()) {
+                                                                         view.setParents(
+                                                                                 parentsData);
+                                                                     }
+                                                                 }));
+    }
+
+    private List<OWLClass> getParents(FormDescriptor formDescriptor) {
+        return formDescriptor.getSubjectFactoryDescriptor()
+                             .map(descriptor -> {
+                                 return descriptor.getAxiomTemplates()
+                                                  .stream()
+                                                  .map(axiomTemplate -> new ParentClassAxiomParser().parseParentAxiom(
+                                                          axiomTemplate))
+                                                  .filter(Optional::isPresent)
+                                                  .map(Optional::get)
+                                                  .collect(toList());
+                             })
+                             .orElse(Collections.emptyList());
     }
 
     @Override

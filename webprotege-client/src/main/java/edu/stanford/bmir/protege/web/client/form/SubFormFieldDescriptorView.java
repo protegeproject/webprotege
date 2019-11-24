@@ -19,6 +19,9 @@ public interface SubFormFieldDescriptorView extends IsWidget {
     void clear();
 
     @Nonnull
+    List<OWLPrimitiveData> getParents();
+
+    @Nonnull
     AcceptsOneWidget getSubFormContainer();
 
     @Nonnull

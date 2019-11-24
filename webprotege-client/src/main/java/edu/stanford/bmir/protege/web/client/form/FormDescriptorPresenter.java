@@ -55,7 +55,6 @@ public class FormDescriptorPresenter implements Presenter {
         view.setFormId(formId.getId());
         view.setLabel(formDescriptor.getLabel());
         elementDescriptorListPresenter.setDescriptors(formDescriptor.getElements());
-
     }
 
     @Nonnull
@@ -63,6 +62,7 @@ public class FormDescriptorPresenter implements Presenter {
         FormId formId = FormId.get(view.getFormId().trim());
         LanguageMap label = view.getLabel();
         List<FormElementDescriptor> elementDescriptors = elementDescriptorListPresenter.getDescriptors();
+
         return new FormDescriptor(formId, label, elementDescriptors, Optional.empty());
     }
 }
