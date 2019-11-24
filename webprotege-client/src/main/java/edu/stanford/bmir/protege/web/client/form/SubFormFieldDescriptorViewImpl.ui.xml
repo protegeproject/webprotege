@@ -16,10 +16,6 @@
             <editor:ValueListEditor ui:field="parentsList"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.subFormSubjectAnnotations}"/>
-            <frame:PropertyValueListEditor ui:field="annotationsList"/>
-        </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:SimplePanel ui:field="subFormContainer"/>
         </g:HTMLPanel>
     </g:HTMLPanel>

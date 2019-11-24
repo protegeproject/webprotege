@@ -50,9 +50,6 @@ public class SubFormFieldDescriptorViewImpl extends Composite implements SubForm
     @UiField(provided = true)
     ValueListEditor<OWLPrimitiveData> parentsList;
 
-    @UiField(provided = true)
-    PropertyValueListEditor annotationsList;
-
     @UiField
     RadioButton classRadio;
 
@@ -60,11 +57,8 @@ public class SubFormFieldDescriptorViewImpl extends Composite implements SubForm
     RadioButton individualRadio;
 
     @Inject
-    public SubFormFieldDescriptorViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                          PropertyValueListEditor annotationsList) {
+    public SubFormFieldDescriptorViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         counter.increment();
-        this.annotationsList = annotationsList;
-        this.annotationsList.setEnabled(true);
         parentsList = new ValueListFlexEditorImpl<>(() -> {
             PrimitiveDataEditor editor = primitiveDataEditorProvider.get();
             editor.setEnabled(true);
@@ -74,8 +68,6 @@ public class SubFormFieldDescriptorViewImpl extends Composite implements SubForm
         parentsList.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
         parentsList.setEnabled(true);
         initWidget(ourUiBinder.createAndBindUi(this));
-        this.annotationsList.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        this.annotationsList.setValue(new PropertyValueList(Collections.emptyList()));
     }
 
     @Nonnull
@@ -111,21 +103,8 @@ public class SubFormFieldDescriptorViewImpl extends Composite implements SubForm
     }
 
     @Override
-    public void setAnnotationPropertyValues(@Nonnull List<PropertyAnnotationValue> propertyAnnotationValues) {
-        annotationsList.setValue(new PropertyValueList(propertyAnnotationValues));
-    }
-
-    @Override
-    public List<PropertyAnnotationValue> getAnnotationPropertyValues() {
-        return annotationsList.getValue().map(PropertyValueList::getAnnotationPropertyValues)
-                              .map(ImmutableList::copyOf)
-                              .orElse(ImmutableList.of());
-    }
-
-    @Override
     public void clear() {
         parentsList.clearValue();
-        annotationsList.clearValue();
     }
 
     @Nonnull

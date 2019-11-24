@@ -5,7 +5,6 @@
         .outer {
         }
         .container {
-            padding-bottom: 4em;
             box-sizing: border-box;
         }
     </ui:style>

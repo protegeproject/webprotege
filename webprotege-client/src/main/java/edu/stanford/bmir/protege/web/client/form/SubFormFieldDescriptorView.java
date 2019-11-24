@@ -30,8 +30,4 @@ public interface SubFormFieldDescriptorView extends IsWidget {
     void setEntityType(@Nonnull EntityType<?> entityType);
 
     void setParents(@Nonnull List<OWLPrimitiveData> parents);
-
-    void setAnnotationPropertyValues(@Nonnull List<PropertyAnnotationValue> propertyAnnotationValues);
-
-    List<PropertyAnnotationValue> getAnnotationPropertyValues();
 }

@@ -6,6 +6,7 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
@@ -253,14 +254,17 @@ public class FormPresenter {
     }
 
     private FormElementEditor createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
-        SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
-        FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
-        FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
-        subFormPresenter.displayForm(subFormDescriptor,
-                                     new FormData(null, new HashMap<>(), subFormDescriptor));
-        FormPresenterAdapter subFormPresenterAdapter = new FormPresenterAdapter(subFormDescriptor, subFormPresenter);
-        subFormPresenterAdapter.start();
-        return subFormPresenterAdapter;
+        return new FormElementEditorImpl(() -> {
+            SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
+
+            FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
+            FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
+            subFormPresenter.displayForm(subFormDescriptor,
+                                         new FormData(null, new HashMap<>(), subFormDescriptor));
+            FormPresenterAdapter subFormPresenterAdapter = new FormPresenterAdapter(subFormDescriptor, subFormPresenter);
+            subFormPresenterAdapter.start();
+            return subFormPresenterAdapter;
+        }, elementDescriptor.getRepeatability());
     }
 
 
