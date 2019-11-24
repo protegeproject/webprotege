@@ -45,6 +45,9 @@ public class FormElementDescriptorViewHolderImpl extends Composite implements Fo
     @UiField
     HTMLPanel buttonBar;
 
+    @UiField
+    Label elementHeaderLabel;
+
     private Runnable removeHandler = () -> {};
 
     private Runnable moveUpHandler = () -> {};
@@ -57,6 +60,7 @@ public class FormElementDescriptorViewHolderImpl extends Composite implements Fo
         moveUpButton.addClickHandler(event -> moveUpHandler.run());
         moveDownButton.addClickHandler(event -> moveDownHandler.run());
         removeButton.addClickHandler(event -> removeHandler.run());
+        numberField.addClickHandler(event -> toggleExpansion());
     }
 
     @Override
@@ -65,9 +69,18 @@ public class FormElementDescriptorViewHolderImpl extends Composite implements Fo
         container.add(w);
     }
 
+    private void toggleExpansion() {
+        container.setVisible(!container.isVisible());
+    }
+
     @Override
     public void setNumber(int number) {
         numberField.setText(Integer.toString(number));
+    }
+
+    @Override
+    public void setHeaderLabel(@Nonnull String headerLabel) {
+        elementHeaderLabel.setText(headerLabel);
     }
 
     @Override

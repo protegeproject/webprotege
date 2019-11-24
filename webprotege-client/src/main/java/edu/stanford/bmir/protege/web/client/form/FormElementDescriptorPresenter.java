@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -205,6 +206,10 @@ public class FormElementDescriptorPresenter {
                                                                 .equals(type))
                                       .map(FormFieldDescriptorPresenterFactory::create)
                                       .findFirst();
+    }
+
+    public void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> handler) {
+        view.setElementIdChangedHandler(handler);
     }
 
 

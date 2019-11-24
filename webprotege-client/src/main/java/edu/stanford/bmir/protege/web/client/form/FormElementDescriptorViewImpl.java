@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -15,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,6 +29,9 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
 
     @Nonnull
     private FieldTypeChangedHandler fieldTypeChangedHander = () -> {};
+
+    @Nonnull
+    private Consumer<FormElementId> elementIdChangedHandler = (elementId) -> {};
 
     interface FormElementDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorViewImpl> {
 
@@ -87,6 +92,10 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
         this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
         typesComboBox.addChangeHandler(event -> fieldTypeChangedHander.handleFieldTypeChanged());
+        elementIdField.addValueChangeHandler(event -> {
+            FormElementId formElementId = FormElementId.get(elementIdField.getValue());
+            elementIdChangedHandler.accept(formElementId);
+        });
     }
 
     @Nonnull
@@ -231,6 +240,11 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     public void addAvailableFieldType(@Nonnull String value,
                                       @Nonnull String label) {
         typesComboBox.addItem(label, value);
+    }
+
+    @Override
+    public void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> runnable) {
+        this.elementIdChangedHandler = checkNotNull(runnable);
     }
 
     @Override

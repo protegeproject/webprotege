@@ -76,8 +76,12 @@ public class FormElementDescriptorListPresenter implements Presenter {
         FormElementDescriptorViewHolder viewHolder = elementDescriptorViewHolderProvider.get();
         viewHolders.add(viewHolder);
         viewHolder.setNumber(descriptorPresenters.size());
+        viewHolder.setHeaderLabel(descriptor.getId().getId());
         view.addView(viewHolder);
         descriptorPresenter.start(viewHolder);
+        descriptorPresenter.setElementIdChangedHandler((elementId -> {
+            viewHolder.setHeaderLabel(elementId.getId());
+        }));
         descriptorPresenter.setFormElementDescriptor(descriptor);
         viewHolder.setRemoveHandler(() -> {
             view.performDeleteElementConfirmation(descriptor.getId(), () -> {

@@ -20,6 +20,8 @@ public interface FormElementDescriptorViewHolder extends IsWidget, AcceptsOneWid
 
     void setNumber(int number);
 
+    void setHeaderLabel(@Nonnull String headerLabel);
+
     void scrollIntoView();
 
     void setFirst();

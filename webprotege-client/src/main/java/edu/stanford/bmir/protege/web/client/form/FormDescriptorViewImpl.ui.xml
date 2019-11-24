@@ -6,7 +6,6 @@
     <ui:style>
         .formElementsContainer {
             margin-top: 1.5em;
-            margin-left: 3em;
         }
     </ui:style>
     <g:HTMLPanel>

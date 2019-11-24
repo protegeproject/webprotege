@@ -11,6 +11,10 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 @DefaultLocale
 public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
 
+    @DefaultMessage("Expand/collapse element")
+    @Key("expandCollapse")
+    String expandCollapse();
+
     @DefaultMessage("Forms")
     @Key("forms.title")
     String forms_Title();

@@ -4,12 +4,14 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
@@ -69,4 +71,6 @@ public interface FormElementDescriptorView extends IsWidget {
     void setFieldType(@Nonnull String fieldType);
 
     void addAvailableFieldType(@Nonnull String value, @Nonnull String label);
+
+    void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> runnable);
 }
