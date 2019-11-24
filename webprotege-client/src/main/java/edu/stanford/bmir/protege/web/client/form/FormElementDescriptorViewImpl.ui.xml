@@ -56,12 +56,6 @@
                         <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>
                         <form:LanguageMapEditor ui:field="labelEditor" placeholder="{msg.enterLabel}"/>
                     </g:HTMLPanel>
-                    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                        <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
-                        <g:ListBox visibleItemCount="1" ui:field="typesComboBox"
-                                   addStyleNames="{wp.style.formGroupNarrow}"/>
-                        <g:SimplePanel ui:field="fieldEditorContainer" addStyleNames="{style.typeView}"/>
-                    </g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
@@ -72,13 +66,13 @@
                             <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
                             <g:RadioButton name="repeatability-{counter.getValue}" text="Non-repeatable"
                                            ui:field="nonRepeatableRadio"/>
-                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Vertically)"
+                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable vertically"
                                            ui:field="repeatableVerticallyRadio"/>
-                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable (Horizontally)"
+                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable horizontally"
                                            ui:field="repeatableHorizontallyRadio"/>
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                            <g:Label text="Position" addStyleNames="{wp.style.formLabel}"/>
+                            <g:Label text="Flow" addStyleNames="{wp.style.formLabel}"/>
                             <g:RadioButton name="elementRun-{counter.getValue}" text="Start new line"
                                            ui:field="elementRunStartRadio"/>
                             <g:RadioButton name="elementRun-{counter.getValue}" text="Continue previous line"
@@ -88,6 +82,12 @@
                     <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                         <g:Label text="Help text" addStyleNames="{wp.style.formLabel}"/>
                         <form:LanguageMapEditor ui:field="helpEditor" placeholder="{msg.enterHelpText}"/>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                        <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
+                        <g:ListBox visibleItemCount="1" ui:field="typesComboBox"
+                                   addStyleNames="{wp.style.formGroupNarrow}"/>
+                        <g:SimplePanel ui:field="fieldEditorContainer" addStyleNames="{style.typeView}"/>
                     </g:HTMLPanel>
                 </g:HTMLPanel>
             </g:HTMLPanel>
