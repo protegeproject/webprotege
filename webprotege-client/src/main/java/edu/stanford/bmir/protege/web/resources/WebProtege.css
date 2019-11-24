@@ -284,6 +284,10 @@
     border: 2px dashed #ff0000 !important;
 }
 
+.errorBorderColor {
+    border-color: #ff0000 !important;
+}
+
 .noErrorBorder {
     border: 2px dashed transparent;
 }

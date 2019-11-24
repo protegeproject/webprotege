@@ -369,6 +369,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String errorBorder();
 
+        String errorBorderColor();
+
         String noErrorBorder();
 
         String errorLabel();

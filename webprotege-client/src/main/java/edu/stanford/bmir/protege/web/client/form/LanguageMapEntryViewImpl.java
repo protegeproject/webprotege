@@ -1,15 +1,18 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.swing.event.ChangeEvent;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,6 +39,23 @@ public class LanguageMapEntryViewImpl extends Composite implements LanguageMapEn
     public LanguageMapEntryViewImpl(DefaultLanguageEditor langTagEditor) {
         this.langTagEditor = checkNotNull(langTagEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
+        valueField.addValueChangeHandler(event -> updateLangTagErrorBorder());
+        langTagEditor.addValueChangeHandler(event -> updateLangTagErrorBorder());
+    }
+
+    public void updateLangTagErrorBorder() {
+        if(valueField.getValue().trim().isEmpty()) {
+            langTagEditor.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorderColor());
+        }
+        else {
+            if(langTagEditor.getValue().orElse("").isEmpty()) {
+                langTagEditor.addStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorderColor());
+            }
+            else {
+
+                langTagEditor.removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorderColor());
+            }
+        }
     }
 
     @Override
