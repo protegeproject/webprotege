@@ -80,10 +80,12 @@ public class FormElementDescriptorListPresenter implements Presenter {
         descriptorPresenter.start(viewHolder);
         descriptorPresenter.setFormElementDescriptor(descriptor);
         viewHolder.setRemoveHandler(() -> {
-            descriptorPresenters.remove(descriptorPresenter);
-            viewHolders.remove(viewHolder);
-            view.removeView(viewHolder);
-            renumberHolders();
+            view.performDeleteElementConfirmation(descriptor.getId(), () -> {
+                descriptorPresenters.remove(descriptorPresenter);
+                viewHolders.remove(viewHolder);
+                view.removeView(viewHolder);
+                renumberHolders();
+            });
         });
         viewHolder.setMoveUpHandler(() -> {
             moveUp(descriptorPresenter);

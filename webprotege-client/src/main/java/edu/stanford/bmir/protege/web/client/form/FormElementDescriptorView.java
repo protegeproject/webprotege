@@ -2,19 +2,13 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.form.FormElementDescriptorPresenter.MoveFormElementDescriptorDownHandler;
-import edu.stanford.bmir.protege.web.client.form.FormElementDescriptorPresenter.MoveFormElementDescriptorUpHandler;
-import edu.stanford.bmir.protege.web.client.form.FormElementDescriptorPresenter.RemoveFormElementDescriptorHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**

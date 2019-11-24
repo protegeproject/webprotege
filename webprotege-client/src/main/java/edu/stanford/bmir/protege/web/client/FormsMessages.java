@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 /**
  * Matthew Horridge
@@ -51,6 +52,15 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Move form element up")
     @Key("moveFormElementUp")
     String moveFormElementUp();
+
+    @DefaultMessage("Delete <b>{0}</b>?")
+    @Key("deleteFormElementConfirmation.title")
+    String deleteFormElementConfirmation_Title(String formElementId);
+
+    @DefaultMessage("Are you sure that you want to delete the <b>{0}</b> form element?  This cannot be undone.")
+    @Key("deleteFormElementConfirmation.message")
+    String deleteFormElementConfirmation_Message(String formElementId);
+
 
 
 }

@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordView;
@@ -138,6 +139,12 @@ public class ClientApplicationModule {
     @ApplicationSingleton
     Messages provideMessages() {
         return GWT.create(Messages.class);
+    }
+
+    @Provides
+    @ApplicationSingleton
+    FormsMessages provideFormsMessages() {
+        return GWT.create(FormsMessages.class);
     }
 
     @Provides

@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.client;
 
 
 import com.google.gwt.safehtml.shared.SafeHtml;
-import org.checkerframework.checker.units.qual.K;
-import org.graalvm.compiler.lir.LIRInstruction;
 
 import static com.google.gwt.i18n.client.LocalizableResource.*;
 

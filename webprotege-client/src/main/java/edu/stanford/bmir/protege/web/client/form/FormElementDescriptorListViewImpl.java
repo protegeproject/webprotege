@@ -5,6 +5,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,6 +23,10 @@ import java.util.List;
  */
 public class FormElementDescriptorListViewImpl extends Composite implements FormElementDescriptorListView {
 
+    private final MessageBox messageBox;
+
+    private final FormsMessages formsMessages;
+
     interface FormElementDescriptorListViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorListViewImpl> {
 
     }
@@ -32,7 +40,10 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     private final List<FormElementDescriptorViewHolder> views = new ArrayList<>();
 
     @Inject
-    public FormElementDescriptorListViewImpl() {
+    public FormElementDescriptorListViewImpl(MessageBox messageBox,
+                                             FormsMessages formsMessages) {
+        this.messageBox = messageBox;
+        this.formsMessages = formsMessages;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -94,5 +105,16 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
         views.forEach(view -> elementDescriptorViewContainer.add(view));
         viewHolder.scrollIntoView();
         updateButtons();
+    }
+
+    @Override
+    public void performDeleteElementConfirmation(FormElementId formElementId,
+                                                 @Nonnull Runnable deleteRunnable) {
+        messageBox.showConfirmBox(formsMessages.deleteFormElementConfirmation_Title(formElementId.getId()),
+                                  formsMessages.deleteFormElementConfirmation_Message(formElementId.getId()),
+                                  DialogButton.NO,
+                                  DialogButton.DELETE,
+                                  deleteRunnable,
+                                  DialogButton.NO);
     }
 }
