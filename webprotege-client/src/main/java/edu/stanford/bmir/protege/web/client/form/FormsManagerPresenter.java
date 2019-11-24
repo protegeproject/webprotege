@@ -1,18 +1,16 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.GetProjectFormDescriptorsAction;
-import edu.stanford.bmir.protege.web.shared.form.GetProjectFormDescriptorsResult;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -52,6 +50,9 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     private final NoFormDescriptorSelectedView noFormDescriptorSelectedView;
 
     @Nonnull
+    private final FormsMessages formsMessages;
+
+    @Nonnull
     private final Map<FormId, FormDescriptor> formDescriptors = new LinkedHashMap<>();
 
     @Inject
@@ -60,25 +61,38 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
                                  @Nonnull SettingsPresenter settingsPresenter,
                                  @Nonnull FormDescriptorPresenter formDescriptorPresenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
-                                 @Nonnull NoFormDescriptorSelectedView noFormDescriptorSelectedView) {
+                                 @Nonnull NoFormDescriptorSelectedView noFormDescriptorSelectedView,
+                                 @Nonnull FormsMessages formsMessages) {
         this.projectId = checkNotNull(projectId);
         this.formManagerView = checkNotNull(formManagerView);
         this.settingsPresenter = settingsPresenter;
         this.formDescriptorPresenter = formDescriptorPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
         this.noFormDescriptorSelectedView = noFormDescriptorSelectedView;
+        this.formsMessages = formsMessages;
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         settingsPresenter.start(container);
-        settingsPresenter.setSettingsTitle("Forms");
-        AcceptsOneWidget section = settingsPresenter.addSection("Project Forms");
+        settingsPresenter.setSettingsTitle(formsMessages.forms_Title());
+        settingsPresenter.setApplySettingsHandler(this::saveForms);
+        AcceptsOneWidget section = settingsPresenter.addSection(formsMessages.projectForms_Title());
         section.setWidget(formManagerView);
         formManagerView.setAddFormHandler(this::handleAddForm);
         formManagerView.setFormSelectionChangedHandler(this::handleFormSelectionChanged);
         formManagerView.getFormDescriptorContainer().setWidget(noFormDescriptorSelectedView);
         retrieveAndDisplayFormDescriptors();
+    }
+
+    private void saveForms() {
+        FormDescriptor currentFormDescriptor = formDescriptorPresenter.getFormDescriptor();
+        this.formDescriptors.put(currentFormDescriptor.getFormId(), currentFormDescriptor);
+        ImmutableList<FormDescriptor> formDescriptors = ImmutableList.copyOf(this.formDescriptors.values());
+        GWT.log(formDescriptors.toString());
+        dispatchServiceManager.execute(new SetProjectFormDescriptorsAction(projectId,
+                                                                           formDescriptors),
+                                       result -> {});
     }
 
     private void displayFormDescriptor(FormId formId) {

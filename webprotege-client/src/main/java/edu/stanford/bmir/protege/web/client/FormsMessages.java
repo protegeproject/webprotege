@@ -11,6 +11,10 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 @DefaultLocale
 public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
 
+    @DefaultMessage("Forms")
+    @Key("forms.title")
+    String forms_Title();
+
     @DefaultMessage("No form selected")
     @Key("noFormSelected")
     String noFormSelected();
@@ -39,6 +43,10 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Enter placeholder")
     @Key("enterPlaceholder")
     String enterPlaceholder();
+
+    @DefaultMessage("Project Forms")
+    @Key("projectForms.title")
+    String projectForms_Title();
 
     @DefaultMessage("Delete form element")
     @Key("removeFormElement")

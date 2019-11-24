@@ -9,6 +9,7 @@ import org.bson.Document;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -53,6 +54,17 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
                             .map(FormDescriptorRecord::getFormDescriptor)
                 .collect(toList())
                             .stream();
+    }
+
+    @Override
+    public void setProjectFormDescriptors(@Nonnull ProjectId projectId, @Nonnull List<FormDescriptor> formDescriptors) {
+        var collection = database.getCollection(COLLECTION_NAME);
+        collection.deleteMany(new Document("projectId", projectId.getId()));
+        var docs = formDescriptors.stream()
+                                  .map(formDescriptor -> FormDescriptorRecord.get(projectId, formDescriptor))
+                       .map(record -> objectMapper.convertValue(record, Document.class))
+                       .collect(toList());
+        collection.insertMany(docs);
     }
 
     @Override

@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -18,6 +19,9 @@ public interface EntityFormRepository extends Repository {
 
     void saveFormDescriptor(@Nonnull ProjectId projectId,
                             @Nonnull FormDescriptor formDescriptor);
+
+    void setProjectFormDescriptors(@Nonnull ProjectId projectId,
+                                   @Nonnull List<FormDescriptor> formDescriptors);
 
     Stream<FormDescriptor> findFormDescriptors(@Nonnull ProjectId projectId);
 

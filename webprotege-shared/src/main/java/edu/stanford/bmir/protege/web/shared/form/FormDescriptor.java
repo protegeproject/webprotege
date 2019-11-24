@@ -64,6 +64,7 @@ public class FormDescriptor implements Serializable {
         return label;
     }
 
+    @JsonIgnore
     @Nonnull
     public ImmutableSet<OWLProperty> getOwlProperties() {
         return elements.stream()

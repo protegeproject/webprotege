@@ -607,4 +607,9 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler providesGetProjectFormDescriptorsActionHandler(GetProjectFormDescriptorsActionHandler handler) {
         return handler;
     }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesSetProjectFormDescriptorsActionHandler(SetProjectFormDescriptorsActionHandler handler) {
+        return handler;
+    }
 }
