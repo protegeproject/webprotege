@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -89,8 +90,10 @@ public class FormElementDescriptorPresenter {
     public FormElementDescriptor getFormElementDescriptor(FormFieldDescriptorPresenter fieldDescriptorPresenter) {
         FormFieldDescriptor formFieldDescriptor = fieldDescriptorPresenter.getFormFieldDescriptor();
         return FormElementDescriptor.get(FormElementId.get(view.getFormElementId()),
-                                         view.getOwlProperty().map(
-                                                 OWLPropertyData::getEntity).orElse(null),
+                                         view.getOwlProperty()
+                                             .map(OWLPropertyData::getEntity)
+                                             .map(OwlPropertyBinding::get)
+                                             .orElse(null),
                                          view.getLabel(),
                                          view.getElementRun(),
                                          formFieldDescriptor,

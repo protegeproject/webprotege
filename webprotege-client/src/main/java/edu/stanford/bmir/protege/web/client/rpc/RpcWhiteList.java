@@ -99,6 +99,12 @@ public class RpcWhiteList implements Action, Result {
 
     FormElementId formElementId;
 
+    OwlPropertyBinding owlPropertyBinding;
+
+    OwlClassBinding owlClassBinding;
+
+    OwlBinding owlBinding;
+
     public ActionExecutionResult getActionExecutionResult() {
         return actionExecutionResult;
     }
@@ -452,5 +458,57 @@ public class RpcWhiteList implements Action, Result {
 
     public ImageFieldDescriptor getImageFieldDescriptor() {
         return imageFieldDescriptor;
+    }
+
+    public OwlPropertyBinding getOwlPropertyBinding() {
+        return owlPropertyBinding;
+    }
+
+    public void setOwlPropertyBinding(OwlPropertyBinding owlPropertyBinding) {
+        this.owlPropertyBinding = owlPropertyBinding;
+    }
+
+    public OwlClassBinding getOwlClassBinding() {
+        return owlClassBinding;
+    }
+
+    public void setOwlClassBinding(OwlClassBinding owlClassBinding) {
+        this.owlClassBinding = owlClassBinding;
+    }
+
+    public OwlBinding getOwlBinding() {
+        return owlBinding;
+    }
+
+    public void setOwlBinding(OwlBinding owlBinding) {
+        this.owlBinding = owlBinding;
+    }
+
+    public void setTextFieldDescriptor(TextFieldDescriptor textFieldDescriptor) {
+        this.textFieldDescriptor = textFieldDescriptor;
+    }
+
+    public void setNumberFieldDescriptor(NumberFieldDescriptor numberFieldDescriptor) {
+        this.numberFieldDescriptor = numberFieldDescriptor;
+    }
+
+    public void setEntityNameFieldDescriptor(EntityNameFieldDescriptor entityNameFieldDescriptor) {
+        this.entityNameFieldDescriptor = entityNameFieldDescriptor;
+    }
+
+    public void setSubFormFieldDescriptor(SubFormFieldDescriptor subFormFieldDescriptor) {
+        this.subFormFieldDescriptor = subFormFieldDescriptor;
+    }
+
+    public void setChoiceFieldDescriptor(ChoiceFieldDescriptor choiceFieldDescriptor) {
+        this.choiceFieldDescriptor = choiceFieldDescriptor;
+    }
+
+    public void setChoiceDescriptor(ChoiceDescriptor choiceDescriptor) {
+        this.choiceDescriptor = choiceDescriptor;
+    }
+
+    public void setImageFieldDescriptor(ImageFieldDescriptor imageFieldDescriptor) {
+        this.imageFieldDescriptor = imageFieldDescriptor;
     }
 }

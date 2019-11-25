@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.HasPropertyValues;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -60,7 +61,7 @@ public class EntityFrameFormDataBuilder {
     }
 
     private Optional<OWLProperty> getAssociatedOwlProperty(FormElementDescriptor descriptor) {
-        return descriptor.getOwlProperty();
+        return descriptor.getOwlBinding().flatMap(OwlBinding::getOwlProperty);
     }
 
     @Nonnull

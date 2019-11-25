@@ -29,7 +29,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     @JsonCreator
     @Nonnull
     public static FormElementDescriptor get(@JsonProperty("id") @Nonnull FormElementId id,
-                                            @JsonProperty("owlProperty") @Nullable OWLProperty property,
+                                            @JsonProperty("owlBinding") @Nullable OwlBinding owlBinding,
                                             @JsonProperty("label") @Nullable LanguageMap formLabel,
                                             @JsonProperty("elementRun") @Nullable ElementRun elementRun,
                                             @JsonProperty("fieldDescriptor") @Nonnull FormFieldDescriptor fieldDescriptor,
@@ -38,7 +38,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                                             @JsonProperty("help") @Nullable LanguageMap help,
                                             @JsonProperty("style") @Nullable Map<String, String> style) {
         return new AutoValue_FormElementDescriptor(id,
-                                                   property,
+                                                   owlBinding,
                                                    formLabel == null ? LanguageMap.empty() : formLabel,
                                                    elementRun == null ? ElementRun.START : elementRun,
                                                    fieldDescriptor,
@@ -73,11 +73,16 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
 
     @JsonIgnore
     @Nullable
-    protected abstract OWLProperty getOwlPropertyInternal();
+    protected abstract OwlBinding getOwlBindingInternal();
 
     @Nonnull
+    public Optional<OwlBinding> getOwlBinding() {
+        return Optional.ofNullable(getOwlBindingInternal());
+    }
+
+    @JsonIgnore
     public Optional<OWLProperty> getOwlProperty() {
-        return Optional.ofNullable(getOwlPropertyInternal());
+        return getOwlBinding().flatMap(OwlBinding::getOwlProperty);
     }
 
     @Nonnull

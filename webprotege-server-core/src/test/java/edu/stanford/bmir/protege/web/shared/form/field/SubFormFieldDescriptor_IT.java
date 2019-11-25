@@ -45,7 +45,7 @@ public class SubFormFieldDescriptor_IT {
                                                 Arrays.asList(
                                                         FormElementDescriptor.get(
                                                                 FormElementId.get("Label"),
-                                                                new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_LABEL.getIRI()),
+                                                                OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_LABEL.getIRI())),
                                                                 LanguageMap.of("en", "The Label"),
                                                                 ElementRun.START,
                                                                 new TextFieldDescriptor(

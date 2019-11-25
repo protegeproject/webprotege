@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
 
@@ -68,17 +69,22 @@ public class FormDescriptor implements Serializable {
     @Nonnull
     public ImmutableSet<OWLProperty> getOwlProperties() {
         return elements.stream()
-                       .map(FormElementDescriptor::getOwlProperty)
+                       .map(FormElementDescriptor::getOwlBinding)
                        .filter(Optional::isPresent)
                        .map(Optional::get)
+                       .filter(binding -> binding instanceof OwlPropertyBinding)
+                       .map(binding -> (OwlPropertyBinding) binding)
+                       .map(OwlPropertyBinding::getProperty)
                        .collect(toImmutableSet());
     }
 
     public Optional<OWLProperty> getOwlProperty(@Nonnull FormElementId formElementId) {
         return elements.stream()
                 .filter(element -> element.getId().equals(formElementId))
-                .findFirst()
-                .flatMap(FormElementDescriptor::getOwlProperty);
+                       .map(FormElementDescriptor::getOwlProperty)
+                       .filter(Optional::isPresent)
+                       .map(Optional::get)
+                       .findFirst();
     }
 
     @Nonnull
@@ -88,13 +94,6 @@ public class FormDescriptor implements Serializable {
 
     public List<FormElementDescriptor> getElements() {
         return elements;
-    }
-
-    @JsonIgnore
-    public Map<FormElementId, Optional<OWLProperty>> getOwlPropertyMap() {
-        return elements.stream()
-                .collect(toMap(FormElementDescriptor::getId,
-                               FormElementDescriptor::getOwlProperty));
     }
 
     public static Builder builder(FormId formId) {
