@@ -2,10 +2,11 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.*;
 import dagger.multibindings.IntoSet;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -21,8 +22,19 @@ public class GridViewImpl extends Composite implements GridView {
 
     private static GridViewImplUiBinder ourUiBinder = GWT.create(GridViewImplUiBinder.class);
 
+    @UiField
+    FlowPanel rowContainer;
+
     @Inject
     public GridViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget addRow() {
+        SimplePanel row = new SimplePanel();
+        rowContainer.add(row);
+        return row;
     }
 }

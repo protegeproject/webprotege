@@ -484,6 +484,26 @@ public class ClientProjectModule {
     NoFormDescriptorSelectedView provideNoFormDescriptorSelectedView(NoFormDescriptorSelectedViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    GridView provideGridView(GridViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridRowView provideGridRowView(GridRowViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridCellView provideGridCellView(GridCellViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridFieldDescriptorView provideGridFieldDescriptorView(GridFieldDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 

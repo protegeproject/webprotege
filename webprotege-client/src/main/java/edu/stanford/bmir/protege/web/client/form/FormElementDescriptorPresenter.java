@@ -64,6 +64,7 @@ public class FormElementDescriptorPresenter {
                                           @Nonnull ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
                                           @Nonnull EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
                                           @Nonnull SubFormFieldDescriptorPresenterFactory subFormFieldDescriptorPresenterFactory,
+                                          @Nonnull GridFieldDescriptorPresenterFactory gridFieldDescriptorPresenterFactory,
                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.view = checkNotNull(view);
@@ -74,7 +75,8 @@ public class FormElementDescriptorPresenter {
                                                         choiceFieldDescriptorPresenterFactory,
                                                         imageDescriptorPresenterFactory,
                                                         entityNameFieldDescriptorPresenterFactory,
-                                                        subFormFieldDescriptorPresenterFactory);
+                                                        subFormFieldDescriptorPresenterFactory,
+                                                        gridFieldDescriptorPresenterFactory);
     }
 
     public Optional<FormElementDescriptor> getFormElementDescriptor() {
