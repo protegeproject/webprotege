@@ -28,11 +28,12 @@ public abstract class GridFieldDescriptor implements FormFieldDescriptor {
         return getType();
     }
 
-    public static GridFieldDescriptor get(@Nonnull @JsonProperty("columnDescriptors") ImmutableList<GridColumnDescriptor> columnDescriptors) {
+    @Nonnull
+    public static GridFieldDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors) {
         return new AutoValue_GridFieldDescriptor(columnDescriptors);
     }
 
     @Nonnull
-    public abstract ImmutableList<GridColumnDescriptor> getColumnDescriptors();
+    public abstract ImmutableList<GridColumnDescriptor> getColumns();
 
 }
