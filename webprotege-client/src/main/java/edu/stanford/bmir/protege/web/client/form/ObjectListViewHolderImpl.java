@@ -5,7 +5,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
@@ -18,9 +17,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class FormElementDescriptorViewHolderImpl extends Composite implements FormElementDescriptorViewHolder {
+public class ObjectListViewHolderImpl extends Composite implements ObjectListViewHolder {
 
-    interface FormElementDescriptorListViewHolderUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorViewHolderImpl> {
+    interface FormElementDescriptorListViewHolderUiBinder extends UiBinder<HTMLPanel, ObjectListViewHolderImpl> {
 
     }
 
@@ -55,7 +54,7 @@ public class FormElementDescriptorViewHolderImpl extends Composite implements Fo
     private Runnable moveDownHandler = () -> {};
 
     @Inject
-    public FormElementDescriptorViewHolderImpl() {
+    public ObjectListViewHolderImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         moveUpButton.addClickHandler(event -> moveUpHandler.run());
         moveDownButton.addClickHandler(event -> moveDownHandler.run());

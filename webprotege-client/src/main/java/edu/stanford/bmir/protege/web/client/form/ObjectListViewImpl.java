@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,13 +20,13 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-17
  */
-public class FormElementDescriptorListViewImpl extends Composite implements FormElementDescriptorListView {
+public class ObjectListViewImpl extends Composite implements ObjectListView {
 
     private final MessageBox messageBox;
 
     private final FormsMessages formsMessages;
 
-    interface FormElementDescriptorListViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorListViewImpl> {
+    interface FormElementDescriptorListViewImplUiBinder extends UiBinder<HTMLPanel, ObjectListViewImpl> {
 
     }
 
@@ -37,11 +36,11 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     @UiField
     HTMLPanel elementDescriptorViewContainer;
 
-    private final List<FormElementDescriptorViewHolder> views = new ArrayList<>();
+    private final List<ObjectListViewHolder> views = new ArrayList<>();
 
     @Inject
-    public FormElementDescriptorListViewImpl(MessageBox messageBox,
-                                             FormsMessages formsMessages) {
+    public ObjectListViewImpl(MessageBox messageBox,
+                              FormsMessages formsMessages) {
         this.messageBox = messageBox;
         this.formsMessages = formsMessages;
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -54,21 +53,21 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     }
 
     @Override
-    public void addView(@Nonnull FormElementDescriptorViewHolder view) {
+    public void addView(@Nonnull ObjectListViewHolder view) {
         views.add(view);
         elementDescriptorViewContainer.add(view);
         updateButtons();
     }
 
     @Override
-    public void removeView(@Nonnull FormElementDescriptorViewHolder viewHolder) {
+    public void removeView(@Nonnull ObjectListViewHolder viewHolder) {
         views.remove(viewHolder);
         elementDescriptorViewContainer.remove(viewHolder);
         updateButtons();
     }
 
     @Override
-    public void moveUp(@Nonnull FormElementDescriptorViewHolder viewHolder) {
+    public void moveUp(@Nonnull ObjectListViewHolder viewHolder) {
         int fromIndex = views.indexOf(viewHolder);
         int toIndex = fromIndex - 1;
         if(toIndex > -1) {
@@ -78,7 +77,7 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     }
 
     @Override
-    public void moveDown(@Nonnull FormElementDescriptorViewHolder viewHolder) {
+    public void moveDown(@Nonnull ObjectListViewHolder viewHolder) {
         int fromIndex = views.indexOf(viewHolder);
         int toIndex = fromIndex + 1;
         if(toIndex < views.size()) {
@@ -89,7 +88,7 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
 
     private void updateButtons() {
         for(int i = 0; i < views.size(); i++) {
-            FormElementDescriptorViewHolder holder = views.get(i);
+            ObjectListViewHolder holder = views.get(i);
             holder.setMiddle();
             if(i == 0) {
                 holder.setFirst();
@@ -100,7 +99,7 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
         }
     }
 
-    private void refill(FormElementDescriptorViewHolder viewHolder) {
+    private void refill(ObjectListViewHolder viewHolder) {
         elementDescriptorViewContainer.clear();
         views.forEach(view -> elementDescriptorViewContainer.add(view));
         viewHolder.scrollIntoView();
@@ -108,10 +107,10 @@ public class FormElementDescriptorListViewImpl extends Composite implements Form
     }
 
     @Override
-    public void performDeleteElementConfirmation(FormElementId formElementId,
+    public void performDeleteElementConfirmation(String objectId,
                                                  @Nonnull Runnable deleteRunnable) {
-        messageBox.showConfirmBox(formsMessages.deleteFormElementConfirmation_Title(formElementId.getId()),
-                                  formsMessages.deleteFormElementConfirmation_Message(formElementId.getId()),
+        messageBox.showConfirmBox(formsMessages.deleteFormElementConfirmation_Title(objectId),
+                                  formsMessages.deleteFormElementConfirmation_Message(objectId),
                                   DialogButton.NO,
                                   DialogButton.DELETE,
                                   deleteRunnable,

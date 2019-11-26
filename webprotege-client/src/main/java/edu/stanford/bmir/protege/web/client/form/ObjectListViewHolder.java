@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public interface FormElementDescriptorViewHolder extends IsWidget, AcceptsOneWidget {
+public interface ObjectListViewHolder extends IsWidget, AcceptsOneWidget {
 
     void setMoveDownHandler(@Nonnull Runnable handler);
 

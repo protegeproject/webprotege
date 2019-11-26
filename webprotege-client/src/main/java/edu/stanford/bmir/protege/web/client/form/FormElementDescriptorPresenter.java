@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormElementDescriptorPresenter {
+public class FormElementDescriptorPresenter implements ObjectPresenter<FormElementDescriptor> {
 
     @Nonnull
     private ProjectId projectId;
@@ -79,17 +79,30 @@ public class FormElementDescriptorPresenter {
                                                         gridFieldDescriptorPresenterFactory);
     }
 
-    public Optional<FormElementDescriptor> getFormElementDescriptor() {
+    @Nonnull
+    @Override
+    public String getHeaderLabel() {
+        return view.getFormElementId();
+    }
+
+    @Override
+    public void setHeaderLabelChangedHandler(Consumer<String> headerLabelHandler) {
+        view.setElementIdChangedHandler(elementId -> headerLabelHandler.accept(elementId.getId()));
+    }
+
+    @Nonnull
+    public Optional<FormElementDescriptor> getValue() {
         if(currentFieldPresenter.isPresent()) {
             FormFieldDescriptorPresenter p = currentFieldPresenter.get();
-            return Optional.of(getFormElementDescriptor(p));
+            return Optional.of(getValue(p));
         }
         else {
             return Optional.empty();
         }
     }
 
-    public FormElementDescriptor getFormElementDescriptor(FormFieldDescriptorPresenter fieldDescriptorPresenter) {
+    @Nonnull
+    public FormElementDescriptor getValue(FormFieldDescriptorPresenter fieldDescriptorPresenter) {
         FormFieldDescriptor formFieldDescriptor = fieldDescriptorPresenter.getFormFieldDescriptor();
         return FormElementDescriptor.get(FormElementId.get(view.getFormElementId()),
                                          view.getOwlProperty()
@@ -105,7 +118,7 @@ public class FormElementDescriptorPresenter {
                                          Collections.emptyMap());
     }
 
-    public void setFormElementDescriptor(@Nonnull FormElementDescriptor descriptor) {
+    public void setValue(@Nonnull FormElementDescriptor descriptor) {
 
         view.clearOwlProperty();
         Optional<OWLProperty> owlProperty = descriptor.getOwlProperty();

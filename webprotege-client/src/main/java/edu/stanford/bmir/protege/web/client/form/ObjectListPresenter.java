@@ -1,0 +1,145 @@
+package edu.stanford.bmir.protege.web.client.form;
+
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
+
+/**
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 2019-11-17
+ */
+public class ObjectListPresenter<T> implements Presenter {
+
+
+    @Nonnull
+    private ObjectListView view;
+
+    @Nonnull
+    private final Provider<ObjectPresenter<T>> objectListPresenter;
+
+    @Nonnull
+    private final Provider<ObjectListViewHolder> objectViewHolderProvider;
+
+    @Nonnull
+    private final Provider<T> defaultObjectProvider;
+
+    @Nonnull
+    private final List<ObjectPresenter<T>> objectPresenters = new ArrayList<>();
+
+    @Nonnull
+    private final List<ObjectListViewHolder> viewHolders = new ArrayList<>();
+
+    @Inject
+    public ObjectListPresenter(@Nonnull ObjectListView view,
+                               @Nonnull Provider<ObjectPresenter<T>> objectListPresenter,
+                               @Nonnull Provider<ObjectListViewHolder> objectViewHolderProvider,
+                               @Nonnull Provider<T> defaultObjectProvider) {
+        this.view = checkNotNull(view);
+        this.objectListPresenter = checkNotNull(objectListPresenter);
+        this.objectViewHolderProvider = checkNotNull(objectViewHolderProvider);
+        this.defaultObjectProvider = defaultObjectProvider;
+    }
+
+    public void addElement() {
+//        FormElementDescriptor descriptor = FormElementDescriptor.getDefault();
+//        addValue(descriptor);
+        T value = defaultObjectProvider.get();
+        addValue(value);
+    }
+
+    @Override
+    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        container.setWidget(view);
+    }
+
+    public void clear() {
+        view.clear();
+        objectPresenters.clear();
+    }
+
+    public void setValues(@Nonnull List<T> values) {
+        checkNotNull(values);
+        clear();
+        values.forEach(this::addValue);
+    }
+
+    public void addValue(T value) {
+        ObjectPresenter<T> descriptorPresenter = objectListPresenter.get();
+        objectPresenters.add(descriptorPresenter);
+        ObjectListViewHolder viewHolder = objectViewHolderProvider.get();
+        viewHolders.add(viewHolder);
+        viewHolder.setNumber(objectPresenters.size());
+        view.addView(viewHolder);
+        descriptorPresenter.start(viewHolder);
+        descriptorPresenter.setHeaderLabelChangedHandler((viewHolder::setHeaderLabel));
+        descriptorPresenter.setValue(value);
+        String headerLabel = descriptorPresenter.getHeaderLabel();
+        viewHolder.setHeaderLabel(headerLabel);
+        viewHolder.setRemoveHandler(() -> {
+            view.performDeleteElementConfirmation(descriptorPresenter.getHeaderLabel(), () -> {
+                objectPresenters.remove(descriptorPresenter);
+                viewHolders.remove(viewHolder);
+                view.removeView(viewHolder);
+                renumberHolders();
+            });
+        });
+        viewHolder.setMoveUpHandler(() -> {
+            moveUp(descriptorPresenter);
+            view.moveUp(viewHolder);
+            renumberHolders();
+        });
+        viewHolder.setMoveDownHandler(() -> {
+            moveDown(descriptorPresenter);
+            view.moveDown(viewHolder);
+            renumberHolders();
+        });
+
+    }
+
+    public void moveUp(ObjectPresenter<T> objectPresenter) {
+        int fromIndex = objectPresenters.indexOf(objectPresenter);
+        int toIndex = fromIndex - 1;
+        if(toIndex > -1) {
+            Collections.swap(objectPresenters, fromIndex, toIndex);
+            Collections.swap(viewHolders, fromIndex, toIndex);
+        }
+
+    }
+
+    public void moveDown(ObjectPresenter<T> objectPresenter) {
+        int fromIndex = objectPresenters.indexOf(objectPresenter);
+        int toIndex = fromIndex + 1;
+        if(toIndex < objectPresenters.size() - 1) {
+            Collections.swap(objectPresenters, fromIndex, toIndex);
+            Collections.swap(viewHolders, fromIndex, toIndex);
+        }
+    }
+
+    private void renumberHolders() {
+        for(int i = 0; i < viewHolders.size(); i++) {
+            viewHolders.get(i).setNumber(i + 1);
+        }
+    }
+
+    @Nonnull
+    public List<T> getValues() {
+        return objectPresenters.stream()
+                               .map(ObjectPresenter::getValue)
+                               .filter(Optional::isPresent)
+                               .map(Optional::get)
+                               .collect(toList());
+    }
+}

@@ -51,6 +51,7 @@ import edu.stanford.bmir.protege.web.client.viz.VizViewImpl;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
@@ -58,6 +59,7 @@ import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -410,12 +412,12 @@ public class ClientProjectModule {
     }
 
     @Provides
-    FormElementDescriptorListView provideFormElementDescriptorListView(@Nonnull FormElementDescriptorListViewImpl impl) {
+    ObjectListView provideFormElementDescriptorListView(@Nonnull ObjectListViewImpl impl) {
         return impl;
     }
 
     @Provides
-    FormElementDescriptorViewHolder provideFormElementDescriptorViewHolder(@Nonnull FormElementDescriptorViewHolderImpl impl) {
+    ObjectListViewHolder provideFormElementDescriptorViewHolder(@Nonnull ObjectListViewHolderImpl impl) {
         return impl;
     }
 
@@ -503,6 +505,18 @@ public class ClientProjectModule {
     @Provides
     GridFieldDescriptorView provideGridFieldDescriptorView(GridFieldDescriptorViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    ObjectListPresenter<FormElementDescriptor> provideFormElementDescriptorListPresenter(@Nonnull ObjectListView view,
+                                                                                         @Nonnull Provider<ObjectPresenter<FormElementDescriptor>> objectPresenterProvider,
+                                                                                         @Nonnull Provider<ObjectListViewHolder> objectViewHolderProvider) {
+        return new ObjectListPresenter<>(view, objectPresenterProvider, objectViewHolderProvider, FormElementDescriptor::getDefault);
+    }
+
+    @Provides
+    ObjectPresenter<FormElementDescriptor> providesFormElementDescriptorPresenter(FormElementDescriptorPresenter presenter) {
+        return presenter;
     }
 }
 

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
@@ -28,11 +27,11 @@ public class FormDescriptorPresenter implements Presenter {
     private final FormDescriptorView view;
 
     @Nonnull
-    private final FormElementDescriptorListPresenter elementDescriptorListPresenter;
+    private final ObjectListPresenter<FormElementDescriptor> elementDescriptorListPresenter;
 
     @Inject
     public FormDescriptorPresenter(@Nonnull FormDescriptorView view,
-                                   @Nonnull FormElementDescriptorListPresenter elementDescriptorListPresenter) {
+                                   @Nonnull ObjectListPresenter<FormElementDescriptor> elementDescriptorListPresenter) {
         this.view = checkNotNull(view);
         this.elementDescriptorListPresenter = checkNotNull(elementDescriptorListPresenter);
     }
@@ -54,14 +53,14 @@ public class FormDescriptorPresenter implements Presenter {
         FormId formId = formDescriptor.getFormId();
         view.setFormId(formId.getId());
         view.setLabel(formDescriptor.getLabel());
-        elementDescriptorListPresenter.setDescriptors(formDescriptor.getElements());
+        elementDescriptorListPresenter.setValues(formDescriptor.getElements());
     }
 
     @Nonnull
     public FormDescriptor getFormDescriptor() {
         FormId formId = FormId.get(view.getFormId().trim());
         LanguageMap label = view.getLabel();
-        List<FormElementDescriptor> elementDescriptors = elementDescriptorListPresenter.getDescriptors();
+        List<FormElementDescriptor> elementDescriptors = elementDescriptorListPresenter.getValues();
 
         return new FormDescriptor(formId, label, elementDescriptors, Optional.empty());
     }
