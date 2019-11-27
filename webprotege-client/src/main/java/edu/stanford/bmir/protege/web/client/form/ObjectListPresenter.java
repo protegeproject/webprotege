@@ -54,8 +54,6 @@ public class ObjectListPresenter<T> implements Presenter {
     }
 
     public void addElement() {
-//        FormElementDescriptor descriptor = FormElementDescriptor.getDefault();
-//        addValue(descriptor);
         T value = defaultObjectProvider.get();
         addValue(value);
     }
