@@ -46,7 +46,6 @@ public class GridCellPresenter {
     }
 
     public void setDescriptor(GridColumnDescriptor column) {
-
         FormFieldDescriptor formFieldDescriptor = column.getFieldDescriptor();
         Optional<ValueEditorFactory<FormDataValue>> valueEditorFactory = formEditorFactory.getValueEditorFactory(
                 formFieldDescriptor);
@@ -54,6 +53,7 @@ public class GridCellPresenter {
         editor.ifPresent(e -> {
             view.getEditorContainer().setWidget(e);
         });
+        this.descriptor = Optional.of(column);
     }
 
     public void start(AcceptsOneWidget cellContainer) {
