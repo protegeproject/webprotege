@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -13,11 +10,9 @@ import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.PrimitiveDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.HasPropertyValues;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
@@ -26,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -149,12 +145,15 @@ public class EntityFrameFormDataBuilder {
      * descriptor or not.
      *
      * @param descriptor     The descriptor for the particular field.
-     * @param propertyValues The values for the particular field.
+     * @param propertyValues The values for the particular field.  The values will all have the same property.
      * @return A single {@link FormDataValue} that encompases the translation of the property values
      */
     private FormDataValue toFormDataValue(FormElementDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        if(descriptor.isComposite()) {
+        if(descriptor.getFieldDescriptor() instanceof SubFormFieldDescriptor) {
             return toSubFormDataValue((SubFormFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
+        }
+        else if(descriptor.getFieldDescriptor() instanceof GridFieldDescriptor) {
+            return toGridFormDataValue((GridFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
         }
         else {
             return toSimpleFormDataValues(propertyValues);
@@ -171,6 +170,54 @@ public class EntityFrameFormDataBuilder {
                                            .collect(toList());
         return new FormDataList(formDataValues);
     }
+
+    @Nonnull
+    private FormDataValue toGridFormDataValue(GridFieldDescriptor descriptor,
+                                              Collection<PropertyValue> propertyValues) {
+        // Property values should be entities
+        var valueList = propertyValues.stream()
+                                      .map(PropertyValue::getValue)
+                                      .map(OWLPrimitiveData::asEntity)
+                                      .flatMap(Optional::stream)
+                                      // Property values that are entities
+                                      .map(entityValue -> toFormDataObject(entityValue, getPropertyValues(entityValue), descriptor.getColumns()))
+                                      .collect(Collectors.toList());
+        if(valueList.size() == 1) {
+            return valueList.get(0);
+        }
+        else {
+            return new FormDataList(valueList);
+        }
+    }
+
+    private FormDataObject toFormDataObject(OWLEntity subject,
+                                            Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
+                                            ImmutableList<GridColumnDescriptor> columnDescriptors) {
+        var map = new HashMap<String, FormDataValue>();
+        for(GridColumnDescriptor descriptor : columnDescriptors) {
+            var associatedOwlProperty = descriptor.getOwlBinding().flatMap(OwlBinding::getOwlProperty);
+            if(associatedOwlProperty.isPresent()) {
+                var theProperty = associatedOwlProperty.get();
+                var propertyValues = subjectPropertyValuesByProperty.get(theProperty);
+                var formDataValueForProperty = toFormDataValue(descriptor, propertyValues);
+                map.put(descriptor.getId().getId(), formDataValueForProperty);
+            }
+        }
+        return new FormDataObject(map);
+    }
+
+    private FormDataValue toFormDataValue(GridColumnDescriptor descriptor, Collection<PropertyValue> propertyValues) {
+        if(descriptor.getFieldDescriptor() instanceof SubFormFieldDescriptor) {
+            return toSubFormDataValue((SubFormFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
+        }
+        else if(descriptor.getFieldDescriptor() instanceof GridFieldDescriptor) {
+            return toGridFormDataValue((GridFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
+        }
+        else {
+            return toSimpleFormDataValues(propertyValues);
+        }
+    }
+
 
     private FormDataValue toSubFormDataValue(SubFormFieldDescriptor descriptor,
                                              Collection<PropertyValue> propertyValues) {
