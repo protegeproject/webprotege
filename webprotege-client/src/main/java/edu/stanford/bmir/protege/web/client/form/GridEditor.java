@@ -5,6 +5,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -26,12 +28,15 @@ public class GridEditor implements ValueEditor<FormDataValue> {
 
     private final HandlerManager handlerManager = new HandlerManager(this);
 
+    private final SimplePanel view = new SimplePanel();
+
     @Nonnull
     private final GridPresenter gridPresenter;
 
     @Inject
     public GridEditor(@Nonnull GridPresenter gridPresenter) {
         this.gridPresenter = checkNotNull(gridPresenter);
+        this.gridPresenter.start(view);
     }
 
     @Override
@@ -56,7 +61,7 @@ public class GridEditor implements ValueEditor<FormDataValue> {
 
     @Override
     public Widget asWidget() {
-        return gridPresenter.getView().asWidget();
+        return view;
     }
 
     @Override
