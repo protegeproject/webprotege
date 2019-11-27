@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
@@ -9,4 +12,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface GridFieldDescriptorView extends IsWidget {
 
+    @Nonnull
+    AcceptsOneWidget getViewContainer();
 }

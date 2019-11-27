@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
@@ -30,6 +28,9 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
 
     @UiField(provided = true)
     LanguageMapEditor labelField;
+
+    @UiField
+    SimplePanel fieldDescriptorChooserContainer;
 
     @Inject
     public GridColumnDescriptorViewImpl(LanguageMapEditor labelField) {
@@ -57,5 +58,11 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
     @Override
     public LanguageMap getLabel() {
         return labelField.getValue().orElse(LanguageMap.empty());
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getFieldDescriptorChooserContainer() {
+        return fieldDescriptorChooserContainer;
     }
 }

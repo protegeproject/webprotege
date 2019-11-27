@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -23,5 +24,7 @@ public interface GridColumnDescriptorView extends IsWidget {
     @Nonnull
     LanguageMap getLabel();
 
+    @Nonnull
+    AcceptsOneWidget getFieldDescriptorChooserContainer();
 
 }

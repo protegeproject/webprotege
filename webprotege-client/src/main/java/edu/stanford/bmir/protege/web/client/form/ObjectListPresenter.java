@@ -63,6 +63,7 @@ public class ObjectListPresenter<T> implements Presenter {
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         container.setWidget(view);
+        view.setAddObjectHandler(this::addElement);
     }
 
     public void clear() {

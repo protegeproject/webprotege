@@ -28,9 +28,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormElementDescriptorViewImpl extends Composite implements FormElementDescriptorView {
 
     @Nonnull
-    private FieldTypeChangedHandler fieldTypeChangedHander = () -> {};
-
-    @Nonnull
     private Consumer<FormElementId> elementIdChangedHandler = (elementId) -> {};
 
     interface FormElementDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorViewImpl> {
@@ -39,9 +36,6 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
 
     private static FormElementDescriptorEditorViewImplUiBinder ourUiBinder = GWT.create(
             FormElementDescriptorEditorViewImplUiBinder.class);
-
-    @UiField
-    SimplePanel fieldEditorContainer;
 
     @UiField
     TextBox elementIdField;
@@ -58,8 +52,6 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @UiField(provided = true)
     LanguageMapEditor helpEditor;
 
-    @UiField
-    ListBox typesComboBox;
 
     @UiField
     RadioButton nonRepeatableRadio;
@@ -82,6 +74,9 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     @UiField(provided = true)
     protected static Counter counter = new Counter();
 
+    @UiField
+    SimplePanel fieldViewContainer;
+
     @Inject
     public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
                                          LanguageMapEditor helpEditor,
@@ -91,17 +86,10 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
         this.helpEditor = helpEditor;
         this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
-        typesComboBox.addChangeHandler(event -> fieldTypeChangedHander.handleFieldTypeChanged());
         elementIdField.addValueChangeHandler(event -> {
             FormElementId formElementId = FormElementId.get(elementIdField.getValue());
             elementIdChangedHandler.accept(formElementId);
         });
-    }
-
-    @Nonnull
-    @Override
-    public AcceptsOneWidget getFieldEditorContainer() {
-        return fieldEditorContainer;
     }
 
     @Override
@@ -220,35 +208,14 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
         }
     }
 
+    @Override
+    public void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> handler) {
+        this.elementIdChangedHandler = checkNotNull(handler);
+    }
+
     @Nonnull
     @Override
-    public String getFieldType() {
-        return typesComboBox.getSelectedValue();
-    }
-
-    @Override
-    public void setFieldType(@Nonnull String fieldType) {
-        for(int i = 0; i < typesComboBox.getItemCount(); i++) {
-            if(typesComboBox.getValue(i).equals(fieldType)) {
-                typesComboBox.setSelectedIndex(i);
-                return;
-            }
-        }
-    }
-
-    @Override
-    public void addAvailableFieldType(@Nonnull String value,
-                                      @Nonnull String label) {
-        typesComboBox.addItem(label, value);
-    }
-
-    @Override
-    public void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> runnable) {
-        this.elementIdChangedHandler = checkNotNull(runnable);
-    }
-
-    @Override
-    public void setFieldTypeChangedHandler(FieldTypeChangedHandler handler) {
-        this.fieldTypeChangedHander = checkNotNull(handler);
+    public AcceptsOneWidget getFieldDescriptorViewContainer() {
+        return fieldViewContainer;
     }
 }

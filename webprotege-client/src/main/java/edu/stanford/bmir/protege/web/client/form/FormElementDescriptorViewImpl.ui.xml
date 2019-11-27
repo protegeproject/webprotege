@@ -23,16 +23,6 @@
         .settingsRow div {
             margin-right: 2em;
         }
-        .typeView {
-            margin-top: 1.5em;
-            margin-left: 3em;
-        }
-        .button {
-            margin-bottom: 0.1em;
-        }
-        .deleteButton {
-            margin-top: 0.3em;
-        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
 
@@ -83,12 +73,7 @@
                         <g:Label text="Help text" addStyleNames="{wp.style.formLabel}"/>
                         <form:LanguageMapEditor ui:field="helpEditor" placeholder="{msg.enterHelpText}"/>
                     </g:HTMLPanel>
-                    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                        <g:Label text="Field Type" addStyleNames="{wp.style.formLabel}"/>
-                        <g:ListBox visibleItemCount="1" ui:field="typesComboBox"
-                                   addStyleNames="{wp.style.formGroupNarrow}"/>
-                        <g:SimplePanel ui:field="fieldEditorContainer" addStyleNames="{style.typeView}"/>
-                    </g:HTMLPanel>
+                    <g:SimplePanel ui:field="fieldViewContainer"/>
                 </g:HTMLPanel>
             </g:HTMLPanel>
         </g:HTMLPanel>

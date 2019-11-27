@@ -1,7 +1,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
         <g:HTMLPanel ui:field="elementDescriptorViewContainer"/>
+        <g:Button ui:field="addObjectButton" text="Add object" addStyleNames="{wp.buttons.button} {wp.buttons.secondaryButton} {wp.buttons.smallPageButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

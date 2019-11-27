@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Grid;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridFieldDescriptor;
 
 import javax.annotation.Nonnull;
@@ -18,15 +20,20 @@ public class GridFieldDescriptorPresenter implements FormFieldDescriptorPresente
     @Nonnull
     private final GridFieldDescriptorView view;
 
+    @Nonnull
+    private final ObjectListPresenter<GridColumnDescriptor> columnListPresenter;
+
     @Inject
-    public GridFieldDescriptorPresenter(@Nonnull GridFieldDescriptorView view) {
+    public GridFieldDescriptorPresenter(@Nonnull GridFieldDescriptorView view,
+                                        @Nonnull ObjectListPresenter<GridColumnDescriptor> columnListPresenter) {
         this.view = view;
+        this.columnListPresenter = columnListPresenter;
     }
 
     @Nonnull
     @Override
     public FormFieldDescriptor getFormFieldDescriptor() {
-        return null;
+        return GridFieldDescriptor.get(ImmutableList.copyOf(columnListPresenter.getValues()));
     }
 
     @Override
@@ -35,7 +42,7 @@ public class GridFieldDescriptorPresenter implements FormFieldDescriptorPresente
             return;
         }
         GridFieldDescriptor gridFieldDescriptor = (GridFieldDescriptor) formFieldDescriptor;
-
+        columnListPresenter.setValues(gridFieldDescriptor.getColumns());
     }
 
     @Override
@@ -46,5 +53,6 @@ public class GridFieldDescriptorPresenter implements FormFieldDescriptorPresente
     @Override
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        columnListPresenter.start(view.getViewContainer(), new SimpleEventBus());
     }
 }

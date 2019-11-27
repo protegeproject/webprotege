@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -26,6 +29,8 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
 
     private final FormsMessages formsMessages;
 
+    private Runnable addObjectHandler = () -> {};
+
     interface FormElementDescriptorListViewImplUiBinder extends UiBinder<HTMLPanel, ObjectListViewImpl> {
 
     }
@@ -36,6 +41,9 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     @UiField
     HTMLPanel elementDescriptorViewContainer;
 
+    @UiField
+    Button addObjectButton;
+
     private final List<ObjectListViewHolder> views = new ArrayList<>();
 
     @Inject
@@ -44,6 +52,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
         this.messageBox = messageBox;
         this.formsMessages = formsMessages;
         initWidget(ourUiBinder.createAndBindUi(this));
+        addObjectButton.addClickHandler(event -> addObjectHandler.run());
     }
 
     @Override
@@ -84,6 +93,11 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
             Collections.swap(views, fromIndex, toIndex);
             refill(viewHolder);
         }
+    }
+
+    @Override
+    public void setAddObjectHandler(Runnable handler) {
+        this.addObjectHandler = checkNotNull(handler);
     }
 
     private void updateButtons() {

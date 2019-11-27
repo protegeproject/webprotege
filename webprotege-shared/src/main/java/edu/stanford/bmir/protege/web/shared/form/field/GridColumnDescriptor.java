@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * 2019-11-24
  */
 @AutoValue
+@GwtCompatible(serializable = true)
 public abstract class GridColumnDescriptor {
 
     @JsonCreator
@@ -26,8 +28,17 @@ public abstract class GridColumnDescriptor {
     public static GridColumnDescriptor get(@Nonnull @JsonProperty("id") GridColumnId id,
                                            @Nullable @JsonProperty("owlBinding") OwlBinding owlBinding,
                                            @Nonnull @JsonProperty("label") LanguageMap columnLabel,
-                                           @Nonnull @JsonProperty("formFieldDescriptor") FormFieldDescriptor formFieldDescriptor) {
+                                           @Nonnull @JsonProperty("fieldDescriptor") FormFieldDescriptor formFieldDescriptor) {
         return new AutoValue_GridColumnDescriptor(id, owlBinding, columnLabel, formFieldDescriptor);
+    }
+
+    public static GridColumnDescriptor getDefaultColumnDescriptor() {
+        return GridColumnDescriptor.get(
+                GridColumnId.get(""),
+                null,
+                LanguageMap.empty(),
+                TextFieldDescriptor.getDefault()
+        );
     }
 
     @JsonUnwrapped

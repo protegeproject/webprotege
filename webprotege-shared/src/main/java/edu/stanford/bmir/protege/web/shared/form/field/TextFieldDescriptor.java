@@ -51,6 +51,16 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
         return TYPE;
     }
 
+    public static FormFieldDescriptor getDefault() {
+        return new TextFieldDescriptor(
+                LanguageMap.empty(),
+                StringType.SIMPLE_STRING,
+                LineMode.SINGLE_LINE,
+                "",
+                LanguageMap.empty()
+        );
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == this) {

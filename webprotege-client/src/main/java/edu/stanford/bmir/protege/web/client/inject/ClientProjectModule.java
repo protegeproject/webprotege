@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
@@ -52,6 +53,7 @@ import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
@@ -517,6 +519,49 @@ public class ClientProjectModule {
     @Provides
     ObjectPresenter<FormElementDescriptor> providesFormElementDescriptorPresenter(FormElementDescriptorPresenter presenter) {
         return presenter;
+    }
+
+    @Provides
+    ImmutableList<FormFieldDescriptorPresenterFactory> provideFormFieldDescriptorPresenterFactories(
+            TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
+            NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
+            ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
+            ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
+            EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
+            SubFormFieldDescriptorPresenterFactory subFormFieldDescriptorPresenterFactory,
+            GridFieldDescriptorPresenterFactory gridFieldDescriptorPresenterFactory) {
+        return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
+                                numberFieldDescriptorPresenterFactory,
+                                choiceFieldDescriptorPresenterFactory,
+                                imageDescriptorPresenterFactory,
+                                entityNameFieldDescriptorPresenterFactory,
+                                subFormFieldDescriptorPresenterFactory,
+                                gridFieldDescriptorPresenterFactory);
+    }
+
+    @Provides
+    FormFieldDescriptorChooserView providesFormFieldDescriptorChooserView(FormFieldDescriptorChooserViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectListPresenter<GridColumnDescriptor> provideGridColumnDescriptorListPresenter(ObjectListView view,
+                                                                                       Provider<ObjectPresenter<GridColumnDescriptor>> gridColumnDescriptorPresenterProvider,
+                                                                                       Provider<ObjectListViewHolder> objectViewHolderProvider) {
+        return new ObjectListPresenter<>(view,
+                                         gridColumnDescriptorPresenterProvider,
+                                         objectViewHolderProvider,
+                                         GridColumnDescriptor::getDefaultColumnDescriptor);
+    }
+
+    @Provides
+    ObjectPresenter<GridColumnDescriptor> provideGridColumnDescriptor(GridColumnDescriptorPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides
+    GridColumnDescriptorView provideGridColumnDescriptorView(GridColumnDescriptorViewImpl impl) {
+        return impl;
     }
 }
 

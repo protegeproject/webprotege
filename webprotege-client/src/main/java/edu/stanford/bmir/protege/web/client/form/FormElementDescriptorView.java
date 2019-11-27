@@ -20,14 +20,7 @@ import java.util.function.Consumer;
  */
 public interface FormElementDescriptorView extends IsWidget {
 
-    interface FieldTypeChangedHandler {
-        void handleFieldTypeChanged();
-    }
-
     void clearOwlProperty();
-
-    @Nonnull
-    AcceptsOneWidget getFieldEditorContainer();
 
     void setFormElementId(@Nonnull String id);
 
@@ -63,14 +56,8 @@ public interface FormElementDescriptorView extends IsWidget {
     @Nonnull
     Repeatability getRepeatability();
 
-    @Nonnull
-    String getFieldType();
-
-    void setFieldTypeChangedHandler(FieldTypeChangedHandler handler);
-
-    void setFieldType(@Nonnull String fieldType);
-
-    void addAvailableFieldType(@Nonnull String value, @Nonnull String label);
-
     void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> runnable);
+
+    @Nonnull
+    AcceptsOneWidget getFieldDescriptorViewContainer();
 }

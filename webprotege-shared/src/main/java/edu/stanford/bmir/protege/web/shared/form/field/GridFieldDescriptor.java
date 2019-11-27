@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nonnull;
@@ -14,6 +16,7 @@ import javax.annotation.Nonnull;
  */
 @JsonTypeName(GridFieldDescriptor.TYPE)
 @AutoValue
+@GwtCompatible(serializable = true)
 public abstract class GridFieldDescriptor implements FormFieldDescriptor {
 
     protected static final String TYPE = "GRID";
@@ -28,11 +31,13 @@ public abstract class GridFieldDescriptor implements FormFieldDescriptor {
         return getType();
     }
 
+    @JsonCreator
     @Nonnull
     public static GridFieldDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors) {
-        return new AutoValue_GridFieldDescriptor(columnDescriptors);
+        return new AutoValue_GridFieldDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors);
     }
 
+    @JsonProperty("columns")
     @Nonnull
     public abstract ImmutableList<GridColumnDescriptor> getColumns();
 

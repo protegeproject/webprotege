@@ -11,6 +11,6 @@
             <g:Label text="Column header" addStyleNames="{wp.style.formLabel}"/>
             <form:LanguageMapEditor ui:field="labelField"/>
         </g:HTMLPanel>
-
+        <g:SimplePanel ui:field="fieldDescriptorChooserContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>

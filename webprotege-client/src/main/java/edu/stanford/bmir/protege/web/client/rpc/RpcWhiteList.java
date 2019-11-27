@@ -105,6 +105,36 @@ public class RpcWhiteList implements Action, Result {
 
     OwlBinding owlBinding;
 
+    public GridColumnId getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(GridColumnId columnId) {
+        this.columnId = columnId;
+    }
+
+    GridColumnId columnId;
+
+    GridFieldDescriptor gridFieldDescriptor;
+
+    GridColumnDescriptor gridColumnDescriptor;
+
+    public GridFieldDescriptor getGridFieldDescriptor() {
+        return gridFieldDescriptor;
+    }
+
+    public void setGridFieldDescriptor(GridFieldDescriptor gridFieldDescriptor) {
+        this.gridFieldDescriptor = gridFieldDescriptor;
+    }
+
+    public GridColumnDescriptor getGridColumnDescriptor() {
+        return gridColumnDescriptor;
+    }
+
+    public void setGridColumnDescriptor(GridColumnDescriptor gridColumnDescriptor) {
+        this.gridColumnDescriptor = gridColumnDescriptor;
+    }
+
     public ActionExecutionResult getActionExecutionResult() {
         return actionExecutionResult;
     }
@@ -511,4 +541,6 @@ public class RpcWhiteList implements Action, Result {
     public void setImageFieldDescriptor(ImageFieldDescriptor imageFieldDescriptor) {
         this.imageFieldDescriptor = imageFieldDescriptor;
     }
+
+
 }
