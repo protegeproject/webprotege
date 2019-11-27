@@ -563,6 +563,12 @@ public class ClientProjectModule {
     GridColumnDescriptorView provideGridColumnDescriptorView(GridColumnDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    OwlBindingView provideOwlBindingView(OwlBindingViewImpl impl) {
+        return impl;
+    }
+
 }
 
 

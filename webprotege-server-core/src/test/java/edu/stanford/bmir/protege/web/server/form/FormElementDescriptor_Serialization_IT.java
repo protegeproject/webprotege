@@ -72,7 +72,7 @@ public class FormElementDescriptor_Serialization_IT {
     public void shouldSerializeElementWithOwlClassBinding() throws IOException {
         var formElementDescriptor = FormElementDescriptor.get(
                 FormElementId.get("TheFormElementId"),
-                OwlClassBinding.get(ImmutableList.of(new OWLClassImpl(IRI.create("http://example.org/A")))),
+                OwlClassBinding.get(),
                 LanguageMap.empty(),
                 ElementRun.START,
                 new TextFieldDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),

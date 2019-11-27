@@ -25,22 +25,29 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
 
     private final FormFieldDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
+    private final OwlBindingPresenter bindingPresenter;
+
     @Inject
     public GridColumnDescriptorPresenter(@Nonnull GridColumnDescriptorView view,
-                                         @Nonnull FormFieldDescriptorChooserPresenter fieldDescriptorChooserPresenter) {
+                                         @Nonnull FormFieldDescriptorChooserPresenter fieldDescriptorChooserPresenter,
+                                         @Nonnull OwlBindingPresenter bindingPresenter) {
         this.view = checkNotNull(view);
         this.fieldDescriptorChooserPresenter = checkNotNull(fieldDescriptorChooserPresenter);
+        this.bindingPresenter = bindingPresenter;
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         fieldDescriptorChooserPresenter.start(view.getFieldDescriptorChooserContainer());
+        bindingPresenter.start(view.getBindingViewContainer());
     }
 
     public void setValue(@Nonnull GridColumnDescriptor descriptor) {
         this.descriptor = Optional.of(descriptor);
         view.setId(descriptor.getId());
         view.setLabel(descriptor.getLabel());
+        bindingPresenter.clear();
+        descriptor.getOwlBinding().ifPresent(bindingPresenter::setBinding);
     }
 
     @Nonnull
@@ -48,7 +55,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     public Optional<GridColumnDescriptor> getValue() {
         return fieldDescriptorChooserPresenter.getFormFieldDescriptor()
                 .map(fieldDescriptor -> GridColumnDescriptor.get(view.getId(),
-                                                             null,
+                                                             bindingPresenter.getBinding().orElse(null),
                                                              view.getLabel(),
                                                              fieldDescriptor));
     }

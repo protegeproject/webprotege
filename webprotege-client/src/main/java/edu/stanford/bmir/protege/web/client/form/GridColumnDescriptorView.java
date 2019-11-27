@@ -25,6 +25,9 @@ public interface GridColumnDescriptorView extends IsWidget {
     LanguageMap getLabel();
 
     @Nonnull
+    AcceptsOneWidget getBindingViewContainer();
+
+    @Nonnull
     AcceptsOneWidget getFieldDescriptorChooserContainer();
 
 }

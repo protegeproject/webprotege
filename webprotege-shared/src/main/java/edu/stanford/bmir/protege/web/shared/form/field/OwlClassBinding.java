@@ -27,11 +27,9 @@ public abstract class OwlClassBinding implements OwlBinding {
 
     @JsonCreator
     @Nonnull
-    public static OwlClassBinding get(@Nonnull @JsonProperty("classes") ImmutableList<OWLClass> classes) {
-        return new AutoValue_OwlClassBinding(classes);
+    public static OwlClassBinding get() {
+        return new AutoValue_OwlClassBinding();
     }
-
-    public abstract ImmutableList<OWLClass> getClasses();
 
     @Nonnull
     @Override

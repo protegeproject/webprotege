@@ -1,0 +1,20 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
+    <ui:style>
+        .propertyBindingEditor {
+            margin-left: 3em;
+            margin-top: 0.4em;
+            margin-bottom: 0.6em;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:RadioButton ui:field="propertyRadioButton" name="binding-{counter.getValue}" text="Property"/>
+        <g:HTMLPanel addStyleNames="{style.propertyBindingEditor}">
+            <primitive:PrimitiveDataEditor ui:field="primitiveDataField" objectPropertiesAllowed="true"
+                                           dataPropertiesAllowed="true" annotationPropertiesAllowed="true"/>
+        </g:HTMLPanel>
+        <g:RadioButton ui:field="classRadioButton" name="binding-{counter.getValue}" text="Class"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -32,6 +32,9 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
     @UiField
     SimplePanel fieldDescriptorChooserContainer;
 
+    @UiField
+    SimplePanel bindingViewContainer;
+
     @Inject
     public GridColumnDescriptorViewImpl(LanguageMapEditor labelField) {
         this.labelField = labelField;
@@ -58,6 +61,12 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
     @Override
     public LanguageMap getLabel() {
         return labelField.getValue().orElse(LanguageMap.empty());
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getBindingViewContainer() {
+        return bindingViewContainer;
     }
 
     @Nonnull

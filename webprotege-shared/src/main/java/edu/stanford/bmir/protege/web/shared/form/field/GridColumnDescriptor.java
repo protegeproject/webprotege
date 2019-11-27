@@ -41,7 +41,6 @@ public abstract class GridColumnDescriptor {
         );
     }
 
-    @JsonUnwrapped
     @Nonnull
     public abstract GridColumnId getId();
 

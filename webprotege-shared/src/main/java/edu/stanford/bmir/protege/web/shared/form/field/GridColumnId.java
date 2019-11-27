@@ -21,7 +21,7 @@ public abstract class GridColumnId {
     public static GridColumnId get(@Nonnull String id) {
         return new AutoValue_GridColumnId(id);
     }
-
+    
     @JsonValue
     public abstract String getId();
 }

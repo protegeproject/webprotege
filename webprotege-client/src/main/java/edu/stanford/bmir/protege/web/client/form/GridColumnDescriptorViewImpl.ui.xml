@@ -8,6 +8,10 @@
             <g:TextBox ui:field="idField"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <g:Label text="Binding" addStyleNames="{wp.style.formLabel}"/>
+            <g:SimplePanel ui:field="bindingViewContainer"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Column header" addStyleNames="{wp.style.formLabel}"/>
             <form:LanguageMapEditor ui:field="labelField"/>
         </g:HTMLPanel>
