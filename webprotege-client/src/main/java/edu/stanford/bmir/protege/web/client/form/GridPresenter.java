@@ -61,11 +61,16 @@ public class GridPresenter {
             return;
         }
         this.descriptor = checkNotNull(descriptor);
+        clear();
+    }
+
+    public void clear() {
         rowPresenters.clear();
+        view.clear();
     }
 
     public void setValue(FormDataValue value) {
-        rowPresenters.clear();
+        clear();
         // List of objects
         value.asList()
              .forEach(rowDataValue -> {
