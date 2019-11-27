@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CreateCollectionItemsAction;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataAction;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;

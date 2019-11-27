@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

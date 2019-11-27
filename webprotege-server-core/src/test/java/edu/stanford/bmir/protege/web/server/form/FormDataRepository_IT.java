@@ -1,29 +1,5 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.mongodb.MongoClient;
-import edu.stanford.bmir.protege.web.MockingUtils;
-import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.hamcrest.Matchers;
-import org.junit.After;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**

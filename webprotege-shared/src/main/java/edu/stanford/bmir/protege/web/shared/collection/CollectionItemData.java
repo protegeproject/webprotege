@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.collection;
 
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;

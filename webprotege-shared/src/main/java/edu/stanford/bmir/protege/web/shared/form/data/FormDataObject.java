@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import edu.stanford.bmir.protege.web.shared.form.FormData;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 

@@ -1,24 +1,5 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ListMultimap;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-import edu.stanford.bmir.protege.web.shared.frame.*;
-import org.semanticweb.owlapi.model.*;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.util.*;
-
-import static java.util.stream.Collectors.toSet;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.shared.form;
 
 import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.Null;
 import java.util.Optional;
 
 /**
