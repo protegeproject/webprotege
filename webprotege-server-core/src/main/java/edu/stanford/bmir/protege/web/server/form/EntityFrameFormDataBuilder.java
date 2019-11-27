@@ -149,15 +149,7 @@ public class EntityFrameFormDataBuilder {
      * @return A single {@link FormDataValue} that encompases the translation of the property values
      */
     private FormDataValue toFormDataValue(FormElementDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        if(descriptor.getFieldDescriptor() instanceof SubFormFieldDescriptor) {
-            return toSubFormDataValue((SubFormFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
-        }
-        else if(descriptor.getFieldDescriptor() instanceof GridFieldDescriptor) {
-            return toGridFormDataValue((GridFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
-        }
-        else {
-            return toSimpleFormDataValues(propertyValues);
-        }
+        return toFormDataValue(propertyValues, descriptor.getFieldDescriptor());
     }
 
     private FormDataValue toSimpleFormDataValues(Collection<PropertyValue> propertyValues) {
@@ -207,11 +199,16 @@ public class EntityFrameFormDataBuilder {
     }
 
     private FormDataValue toFormDataValue(GridColumnDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        if(descriptor.getFieldDescriptor() instanceof SubFormFieldDescriptor) {
-            return toSubFormDataValue((SubFormFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
+        return toFormDataValue(propertyValues, descriptor.getFieldDescriptor());
+    }
+
+    private FormDataValue toFormDataValue(Collection<PropertyValue> propertyValues,
+                                          FormFieldDescriptor fieldDescriptor) {
+        if(fieldDescriptor instanceof SubFormFieldDescriptor) {
+            return toSubFormDataValue((SubFormFieldDescriptor) fieldDescriptor, propertyValues);
         }
-        else if(descriptor.getFieldDescriptor() instanceof GridFieldDescriptor) {
-            return toGridFormDataValue((GridFieldDescriptor) descriptor.getFieldDescriptor(), propertyValues);
+        else if(fieldDescriptor instanceof GridFieldDescriptor) {
+            return toGridFormDataValue((GridFieldDescriptor) fieldDescriptor, propertyValues);
         }
         else {
             return toSimpleFormDataValues(propertyValues);
