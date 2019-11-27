@@ -56,7 +56,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     @Nonnull
     @Override
     public String getHeaderLabel() {
-        return view.getId().getId();
+        return view.getId().getId() + " Column";
     }
 
     @Override
