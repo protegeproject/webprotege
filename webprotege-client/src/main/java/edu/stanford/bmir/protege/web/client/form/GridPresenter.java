@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
@@ -40,6 +42,14 @@ public class GridPresenter {
                          @Nonnull Provider<GridRowPresenter> rowPresenterProvider) {
         this.view = checkNotNull(view);
         this.rowPresenterProvider = rowPresenterProvider;
+    }
+
+    public void clearValue() {
+        rowPresenters.clear();
+    }
+
+    public IsWidget getView() {
+        return view;
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

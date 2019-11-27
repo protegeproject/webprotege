@@ -14,4 +14,6 @@ public interface GridView extends IsWidget {
 
     @Nonnull
     AcceptsOneWidget addRow();
+
+    void clear();
 }

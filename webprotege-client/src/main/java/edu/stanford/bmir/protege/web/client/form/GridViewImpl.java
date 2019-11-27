@@ -37,4 +37,9 @@ public class GridViewImpl extends Composite implements GridView {
         rowContainer.add(row);
         return row;
     }
+
+    @Override
+    public void clear() {
+        rowContainer.clear();
+    }
 }

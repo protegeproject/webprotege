@@ -36,16 +36,13 @@ public class FormEditorFactory {
     private final Provider<ClassNameFieldEditor> classNameFieldEditorProvider;
 
     @Nonnull
-    private final Provider<IndividualNameFieldEditor> individualNameFieldEditorProvider;
-
-    @Nonnull
     private final Provider<ImageFieldEditor> imageFieldEditorProvider;
 
     @Nonnull
     private final Provider<NumberFieldEditor> numberFieldEditorProvider;
 
     @Nonnull
-    private final Provider<CompositeFieldEditor> compositeFieldEditorProvider;
+    private final Provider<GridPresenter> gridPresenterProvider;
 
     @Inject
     public FormEditorFactory(@Nonnull Provider<TextFieldEditor> textFieldEditorProvider,
@@ -57,17 +54,17 @@ public class FormEditorFactory {
                              @Nonnull Provider<IndividualNameFieldEditor> individualNameFieldEditorProvider,
                              @Nonnull Provider<ImageFieldEditor> imageFieldEditorProvider,
                              @Nonnull Provider<NumberFieldEditor> numberFieldEditorProvider,
-                             @Nonnull Provider<CompositeFieldEditor> compositeFieldEditorProvider) {
+                             @Nonnull Provider<CompositeFieldEditor> compositeFieldEditorProvider,
+                             @Nonnull Provider<GridPresenter> gridPresenterProvider) {
         this.textFieldEditorProvider = textFieldEditorProvider;
         this.choiceFieldRadioButtonEditorProvider = choiceFieldRadioButtonEditorProvider;
         this.choiceFieldCheckBoxEditorProvider = choiceFieldCheckBoxEditorProvider;
         this.choiceFieldSegmentedEditorProvider = choiceFieldSegmentedEditorProvider;
         this.choiceFieldComboBoxEditorProvider = choiceFieldComboBoxEditorProvider;
         this.classNameFieldEditorProvider = classNameFieldEditorProvider;
-        this.individualNameFieldEditorProvider = individualNameFieldEditorProvider;
         this.imageFieldEditorProvider = imageFieldEditorProvider;
         this.numberFieldEditorProvider = numberFieldEditorProvider;
-        this.compositeFieldEditorProvider = compositeFieldEditorProvider;
+        this.gridPresenterProvider = gridPresenterProvider;
     }
 
     /**
@@ -94,6 +91,9 @@ public class FormEditorFactory {
         }
         else if(formFieldDescriptor.getAssociatedType().equals(NumberFieldDescriptor.getTypeId())) {
             return getNumberFieldEditorFactory((NumberFieldDescriptor) formFieldDescriptor);
+        }
+        else if(formFieldDescriptor.getAssociatedType().equals(GridFieldDescriptor.getType())) {
+            return getGridFieldEditorFactory((GridFieldDescriptor) formFieldDescriptor);
         }
         else {
             return Optional.empty();
@@ -174,6 +174,17 @@ public class FormEditorFactory {
                         textFieldEditor.setPatternViolationErrorMessage(formFieldDescriptor.getPatternViolationErrorMessage().get(localeName));
                     }
                     return textFieldEditor;
+                }
+        );
+    }
+
+    @Nonnull
+    private Optional<ValueEditorFactory<FormDataValue>> getGridFieldEditorFactory(GridFieldDescriptor descriptor) {
+        return Optional.of(
+                () -> {
+                    GridPresenter gridPresenter = gridPresenterProvider.get();
+                    gridPresenter.setDescriptor(descriptor);
+                    return new GridEditor(gridPresenter);
                 }
         );
     }
