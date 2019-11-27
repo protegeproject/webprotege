@@ -569,6 +569,16 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    GridHeaderView provideGridHeaderView(GridHeaderViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridHeaderColumnView provideGridColumnHeaderView(GridHeaderColumnViewImpl view) {
+        return view;
+    }
+
 }
 
 

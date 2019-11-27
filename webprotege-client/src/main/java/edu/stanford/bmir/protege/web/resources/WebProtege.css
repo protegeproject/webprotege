@@ -430,3 +430,19 @@
     -moz-user-select: text;
     -webkit-user-select: text;
 }
+
+.wp-form__grid {
+
+}
+
+.wp-form__grid__column {
+    width: 100px;
+}
+
+.wp-form__grid__row {
+    border-bottom: 1px solid literal("var(--separator--color)");
+}
+
+.wp-form__grid__header-row {
+    border-bottom: 2px solid literal("var(--separator--color)");
+}

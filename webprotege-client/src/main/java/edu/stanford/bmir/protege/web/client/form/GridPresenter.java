@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
@@ -30,6 +29,9 @@ public class GridPresenter {
     private final GridView view;
 
     @Nonnull
+    private final GridHeaderPresenter headerPresenter;
+
+    @Nonnull
     private final Provider<GridRowPresenter> rowPresenterProvider;
 
     @Nonnull
@@ -39,8 +41,10 @@ public class GridPresenter {
 
     @Inject
     public GridPresenter(@Nonnull GridView view,
+                         @Nonnull GridHeaderPresenter headerPresenter,
                          @Nonnull Provider<GridRowPresenter> rowPresenterProvider) {
         this.view = checkNotNull(view);
+        this.headerPresenter = headerPresenter;
         this.rowPresenterProvider = rowPresenterProvider;
     }
 
@@ -54,14 +58,16 @@ public class GridPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        headerPresenter.start(view.getHeaderContainer());
     }
 
     public void setDescriptor(GridFieldDescriptor descriptor) {
         if(this.descriptor.equals(descriptor)) {
             return;
         }
-        this.descriptor = checkNotNull(descriptor);
         clear();
+        this.descriptor = checkNotNull(descriptor);
+        headerPresenter.setColumns(descriptor.getColumns());
     }
 
     public void clear() {

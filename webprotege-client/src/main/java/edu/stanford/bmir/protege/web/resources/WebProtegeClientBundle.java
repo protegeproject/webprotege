@@ -402,6 +402,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-form__iri-field")
         String formIriField();
+
+        @ClassName("wp-form__grid")
+        String formGrid();
+
+        @ClassName("wp-form__grid__header-row")
+        String formGridHeaderRow();
+
+        @ClassName("wp-form__grid__row")
+        String formGridRow();
+
+        @ClassName("wp-form__grid__column")
+        String formGridColumn();
     }
 
     interface DateTimePicker extends CssResource {

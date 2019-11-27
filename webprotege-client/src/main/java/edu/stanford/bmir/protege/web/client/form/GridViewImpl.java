@@ -25,9 +25,18 @@ public class GridViewImpl extends Composite implements GridView {
     @UiField
     FlowPanel rowContainer;
 
+    @UiField
+    SimplePanel headerContainer;
+
     @Inject
     public GridViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getHeaderContainer() {
+        return headerContainer;
     }
 
     @Nonnull
