@@ -148,7 +148,7 @@ public class EntityFrameFormDataBuilder {
      * @return A single {@link FormDataValue} that encompases the translation of the property values
      */
     private FormDataValue toFormDataValue(FormElementDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        return toFormDataValue(propertyValues, descriptor.getFieldDescriptor());
+        return toFormDataValue(propertyValues, descriptor.getFormControlDescriptor());
     }
 
     private FormDataValue toSimpleFormDataValues(Collection<PropertyValue> propertyValues) {

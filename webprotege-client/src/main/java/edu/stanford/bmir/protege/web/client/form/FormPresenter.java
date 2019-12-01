@@ -249,7 +249,7 @@ public class FormPresenter {
 
     private FormElementEditor createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
         return new FormElementEditorImpl(() -> {
-            SubFormControlDescriptor subFormFieldDescriptor = (SubFormControlDescriptor) elementDescriptor.getFieldDescriptor();
+            SubFormControlDescriptor subFormFieldDescriptor = (SubFormControlDescriptor) elementDescriptor.getFormControlDescriptor();
 
             FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
             FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
@@ -287,7 +287,7 @@ public class FormPresenter {
      */
     @Nonnull
     private Optional<FormElementEditor> createFormElementEditor(@Nonnull FormElementDescriptor descriptor) {
-        Optional<ValueEditorFactory<FormDataValue>> editorFactory = formEditorFactory.getValueEditorFactory(descriptor.getFieldDescriptor());
+        Optional<ValueEditorFactory<FormDataValue>> editorFactory = formEditorFactory.getValueEditorFactory(descriptor.getFormControlDescriptor());
         return editorFactory.map(valueEditorFactory -> new FormElementEditorImpl(
                 valueEditorFactory,
                 descriptor.getRepeatability()

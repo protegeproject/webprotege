@@ -92,7 +92,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     public abstract ElementRun getElementRun();
 
     @Nonnull
-    public abstract FormControlDescriptor getFieldDescriptor();
+    public abstract FormControlDescriptor getFormControlDescriptor();
 
     @Nonnull
     public abstract Optionality getOptionality();
@@ -108,11 +108,11 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     
     @JsonIgnore
     public boolean isComposite() {
-        return getFieldDescriptor() instanceof SubFormControlDescriptor;
+        return getFormControlDescriptor() instanceof SubFormControlDescriptor;
     }
 
     @JsonIgnore
     public boolean isNonComposite() {
-        return !(getFieldDescriptor() instanceof SubFormControlDescriptor);
+        return !(getFormControlDescriptor() instanceof SubFormControlDescriptor);
     }
 }

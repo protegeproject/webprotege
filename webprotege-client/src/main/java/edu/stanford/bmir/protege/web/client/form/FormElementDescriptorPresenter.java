@@ -114,7 +114,7 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormEleme
 
 
 
-        FormControlDescriptor formControlDescriptor = descriptor.getFieldDescriptor();
+        FormControlDescriptor formControlDescriptor = descriptor.getFormControlDescriptor();
         fieldDescriptorChooserPresenter.setFormFieldDescriptor(formControlDescriptor);
     }
 
