@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,13 +34,13 @@ public class SubFormFieldDescriptorPresenterFactory implements FormFieldDescript
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return SubFormFieldDescriptor.getFieldTypeId();
+        return SubFormControlDescriptor.getFieldTypeId();
     }
 
     @Nonnull
     @Override
-    public FormFieldDescriptor createDefaultDescriptor() {
-        return new SubFormFieldDescriptor(FormDescriptor.empty());
+    public FormControlDescriptor createDefaultDescriptor() {
+        return new SubFormControlDescriptor(FormDescriptor.empty());
     }
 
     @Nonnull

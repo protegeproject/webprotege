@@ -8,8 +8,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.*;
@@ -61,7 +61,7 @@ public class SubFormFieldDescriptorPresenter implements FormFieldDescriptorPrese
 
     @Nonnull
     @Override
-    public FormFieldDescriptor getFormFieldDescriptor() {
+    public FormControlDescriptor getFormFieldDescriptor() {
         FormDescriptor subFormDescriptor = subFormPresenter.getFormDescriptor();
         EntityType entityType = view.getEntityType();
         List<String> parentTemplates = view.getParents()
@@ -93,16 +93,16 @@ public class SubFormFieldDescriptorPresenter implements FormFieldDescriptorPrese
                 subFormDescriptor.getElements(),
                 Optional.of(subjectFactoryDescriptor)
         );
-        return new SubFormFieldDescriptor(aug);
+        return new SubFormControlDescriptor(aug);
     }
 
     @Override
-    public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
+    public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
         view.clear();
-        if(!(formFieldDescriptor instanceof SubFormFieldDescriptor)) {
+        if(!(formControlDescriptor instanceof SubFormControlDescriptor)) {
             return;
         }
-        SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) formFieldDescriptor;
+        SubFormControlDescriptor subFormFieldDescriptor = (SubFormControlDescriptor) formControlDescriptor;
         FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
         subFormPresenter.setFormDescriptor(subFormDescriptor);
         subFormDescriptor.getSubjectFactoryDescriptor()

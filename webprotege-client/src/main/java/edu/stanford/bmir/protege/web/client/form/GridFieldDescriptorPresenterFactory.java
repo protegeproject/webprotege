@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,13 +34,13 @@ public class GridFieldDescriptorPresenterFactory implements FormFieldDescriptorP
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return GridFieldDescriptor.getType();
+        return GridControlDescriptor.getType();
     }
 
     @Nonnull
     @Override
-    public FormFieldDescriptor createDefaultDescriptor() {
-        return GridFieldDescriptor.get(ImmutableList.of());
+    public FormControlDescriptor createDefaultDescriptor() {
+        return GridControlDescriptor.get(ImmutableList.of());
     }
 
     @Nonnull

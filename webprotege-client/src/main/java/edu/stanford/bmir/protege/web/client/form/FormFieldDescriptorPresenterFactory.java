@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +18,7 @@ public interface FormFieldDescriptorPresenterFactory {
     String getDescriptorType();
 
     @Nonnull
-    FormFieldDescriptor createDefaultDescriptor();
+    FormControlDescriptor createDefaultDescriptor();
 
     @Nonnull
     FormFieldDescriptorPresenter create();

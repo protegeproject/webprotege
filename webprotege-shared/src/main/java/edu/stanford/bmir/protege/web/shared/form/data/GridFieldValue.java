@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.form.field.GridFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public abstract class GridFieldValue implements ComplexFormFieldValue {
 
     @Nonnull
-    public abstract GridFieldDescriptor getDescriptor();
+    public abstract GridControlDescriptor getDescriptor();
 
     @Nonnull
     public abstract ImmutableList<GridRowValue> getRows();

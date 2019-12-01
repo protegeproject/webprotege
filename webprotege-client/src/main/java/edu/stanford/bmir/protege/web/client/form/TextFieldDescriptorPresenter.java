@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
-import edu.stanford.bmir.protege.web.shared.form.field.StringType;
-import edu.stanford.bmir.protege.web.shared.form.field.TextFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -29,21 +28,21 @@ public class TextFieldDescriptorPresenter implements FormFieldDescriptorPresente
 
     @Nonnull
     @Override
-    public FormFieldDescriptor getFormFieldDescriptor() {
-        return new TextFieldDescriptor(view.getPlaceholder(),
-                                       view.getStringType(),
-                                       view.getLineMode(),
-                                       view.getPattern(),
-                                       view.getPatternViolationMessage());
+    public FormControlDescriptor getFormFieldDescriptor() {
+        return new TextControlDescriptor(view.getPlaceholder(),
+                                         view.getStringType(),
+                                         view.getLineMode(),
+                                         view.getPattern(),
+                                         view.getPatternViolationMessage());
     }
 
     @Override
-    public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
-        if(!(formFieldDescriptor instanceof TextFieldDescriptor)) {
+    public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
+        if(!(formControlDescriptor instanceof TextControlDescriptor)) {
             clear();
             return;
         }
-        TextFieldDescriptor descriptor = (TextFieldDescriptor) formFieldDescriptor;
+        TextControlDescriptor descriptor = (TextControlDescriptor) formControlDescriptor;
         view.setStringType(descriptor.getStringType());
         view.setLineMode(descriptor.getLineMode());
         view.setPatternViolationMessage(descriptor.getPlaceholder());

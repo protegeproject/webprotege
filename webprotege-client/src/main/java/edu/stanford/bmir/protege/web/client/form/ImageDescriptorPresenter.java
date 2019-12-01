@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ImageFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,12 +23,12 @@ public class ImageDescriptorPresenter implements FormFieldDescriptorPresenter {
 
     @Nonnull
     @Override
-    public FormFieldDescriptor getFormFieldDescriptor() {
-        return new ImageFieldDescriptor();
+    public FormControlDescriptor getFormFieldDescriptor() {
+        return new ImageControlDescriptor();
     }
 
     @Override
-    public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
+    public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
 
     }
 

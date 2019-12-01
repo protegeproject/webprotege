@@ -9,8 +9,8 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 09/04/16
  */
-@JsonTypeName(ImageFieldDescriptor.TYPE)
-public class ImageFieldDescriptor implements FormFieldDescriptor {
+@JsonTypeName(ImageControlDescriptor.TYPE)
+public class ImageControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "IMAGE";
 
@@ -23,10 +23,10 @@ public class ImageFieldDescriptor implements FormFieldDescriptor {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof ImageFieldDescriptor)) {
+        if(!(obj instanceof ImageControlDescriptor)) {
             return false;
         }
-        ImageFieldDescriptor other = (ImageFieldDescriptor) obj;
+        ImageControlDescriptor other = (ImageControlDescriptor) obj;
         return true;
     }
 

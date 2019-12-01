@@ -14,8 +14,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 25 Jun 2017
  */
-@JsonTypeName(NumberFieldDescriptor.TYPE)
-public class NumberFieldDescriptor implements FormFieldDescriptor {
+@JsonTypeName(NumberControlDescriptor.TYPE)
+public class NumberControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "NUMBER";
 
@@ -36,14 +36,14 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     private NumberFieldType widgetType = NumberFieldType.PLAIN;
 
     @GwtSerializationConstructor
-    private NumberFieldDescriptor() {
+    private NumberControlDescriptor() {
     }
 
-    public NumberFieldDescriptor(@Nonnull String format,
-                                 @Nonnull NumberFieldRange range,
-                                 @Nonnull NumberFieldType widgetType,
-                                 int length,
-                                 @Nonnull LanguageMap placeholder) {
+    public NumberControlDescriptor(@Nonnull String format,
+                                   @Nonnull NumberFieldRange range,
+                                   @Nonnull NumberFieldType widgetType,
+                                   int length,
+                                   @Nonnull LanguageMap placeholder) {
         this.format = checkNotNull(format);
         this.range = checkNotNull(range);
         this.widgetType = checkNotNull(widgetType);
@@ -60,10 +60,10 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof NumberFieldDescriptor)) {
+        if(!(obj instanceof NumberControlDescriptor)) {
             return false;
         }
-        NumberFieldDescriptor other = (NumberFieldDescriptor) obj;
+        NumberControlDescriptor other = (NumberControlDescriptor) obj;
         return this.format.equals(other.format)
                 && this.range.equals(other.range)
                 && this.widgetType.equals(other.widgetType)

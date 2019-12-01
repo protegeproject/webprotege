@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
@@ -46,9 +46,9 @@ public class GridCellPresenter {
     }
 
     public void setDescriptor(GridColumnDescriptor column) {
-        FormFieldDescriptor formFieldDescriptor = column.getFieldDescriptor();
+        FormControlDescriptor formControlDescriptor = column.getFieldDescriptor();
         Optional<ValueEditorFactory<FormDataValue>> valueEditorFactory = formEditorFactory.getValueEditorFactory(
-                formFieldDescriptor);
+                formControlDescriptor);
         editor = valueEditorFactory.map(ValueEditorFactory::createEditor);
         editor.ifPresent(e -> {
             view.getEditorContainer().setWidget(e);

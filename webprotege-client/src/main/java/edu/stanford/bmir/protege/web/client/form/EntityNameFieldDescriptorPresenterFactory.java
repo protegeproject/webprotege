@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.EntityNameFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,13 +33,13 @@ public class EntityNameFieldDescriptorPresenterFactory implements FormFieldDescr
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return EntityNameFieldDescriptor.getFieldTypeId();
+        return EntityNameControlDescriptor.getFieldTypeId();
     }
 
     @Nonnull
     @Override
-    public FormFieldDescriptor createDefaultDescriptor() {
-        return EntityNameFieldDescriptor.getDefault();
+    public FormControlDescriptor createDefaultDescriptor() {
+        return EntityNameControlDescriptor.getDefault();
     }
 
     @Nonnull

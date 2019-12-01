@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.GridFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,7 +37,7 @@ public class GridPresenter {
     @Nonnull
     private final List<GridRowPresenter> rowPresenters = new ArrayList<>();
 
-    private GridFieldDescriptor descriptor = GridFieldDescriptor.get(ImmutableList.of());
+    private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of());
 
     @Inject
     public GridPresenter(@Nonnull GridView view,
@@ -61,7 +61,7 @@ public class GridPresenter {
         headerPresenter.start(view.getHeaderContainer());
     }
 
-    public void setDescriptor(GridFieldDescriptor descriptor) {
+    public void setDescriptor(GridControlDescriptor descriptor) {
         if(this.descriptor.equals(descriptor)) {
             return;
         }

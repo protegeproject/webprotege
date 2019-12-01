@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange;
-import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldType;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -36,13 +35,13 @@ public class NumberFieldDescriptorPresenterFactory implements FormFieldDescripto
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return NumberFieldDescriptor.getTypeId();
+        return NumberControlDescriptor.getTypeId();
     }
 
     @Nonnull
     @Override
-    public FormFieldDescriptor createDefaultDescriptor() {
-        return new NumberFieldDescriptor(
+    public FormControlDescriptor createDefaultDescriptor() {
+        return new NumberControlDescriptor(
                 "#.##",
                 NumberFieldRange.all(),
                 NumberFieldType.PLAIN,

@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.IRI;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import java.io.IOException;
@@ -38,7 +36,7 @@ public class FormElementDescriptor_Serialization_IT {
                 null,
                 LanguageMap.empty(),
                 ElementRun.START,
-                new TextFieldDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
+                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
                 LanguageMap.empty(),
@@ -56,7 +54,7 @@ public class FormElementDescriptor_Serialization_IT {
                 OwlPropertyBinding.get(new OWLObjectPropertyImpl(IRI.create("http://example.org/prop"))),
                 LanguageMap.empty(),
                 ElementRun.START,
-                new TextFieldDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
+                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
                 LanguageMap.empty(),
@@ -75,7 +73,7 @@ public class FormElementDescriptor_Serialization_IT {
                 OwlClassBinding.get(),
                 LanguageMap.empty(),
                 ElementRun.START,
-                new TextFieldDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
+                new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
                 LanguageMap.empty(),

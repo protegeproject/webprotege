@@ -4,9 +4,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -63,7 +63,7 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormEleme
 
     @Nonnull
     public Optional<FormElementDescriptor> getValue() {
-        Optional<FormFieldDescriptor> formFieldDescriptor = fieldDescriptorChooserPresenter.getFormFieldDescriptor();
+        Optional<FormControlDescriptor> formFieldDescriptor = fieldDescriptorChooserPresenter.getFormFieldDescriptor();
         if(!formFieldDescriptor.isPresent()) {
             return Optional.empty();
         }
@@ -114,8 +114,8 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormEleme
 
 
 
-        FormFieldDescriptor formFieldDescriptor = descriptor.getFieldDescriptor();
-        fieldDescriptorChooserPresenter.setFormFieldDescriptor(formFieldDescriptor);
+        FormControlDescriptor formControlDescriptor = descriptor.getFieldDescriptor();
+        fieldDescriptorChooserPresenter.setFormFieldDescriptor(formControlDescriptor);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldType;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
@@ -33,8 +33,8 @@ public class NumberFieldDescriptorPresenter implements FormFieldDescriptorPresen
 
     @Nonnull
     @Override
-    public FormFieldDescriptor getFormFieldDescriptor() {
-        return new NumberFieldDescriptor(
+    public FormControlDescriptor getFormFieldDescriptor() {
+        return new NumberControlDescriptor(
                 view.getFormat(),
                 rangePresenter.getNumberFieldRange(),
                 NumberFieldType.PLAIN,
@@ -44,11 +44,11 @@ public class NumberFieldDescriptorPresenter implements FormFieldDescriptorPresen
     }
 
     @Override
-    public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
-        if(!(formFieldDescriptor instanceof NumberFieldDescriptor)) {
+    public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
+        if(!(formControlDescriptor instanceof NumberControlDescriptor)) {
             return;
         }
-        NumberFieldDescriptor numberFieldDescriptor = (NumberFieldDescriptor) formFieldDescriptor;
+        NumberControlDescriptor numberFieldDescriptor = (NumberControlDescriptor) formControlDescriptor;
         view.setFormat(numberFieldDescriptor.getFormat());
         view.setPlaceholder(numberFieldDescriptor.getPlaceholder());
         rangePresenter.setNumberFieldRange(numberFieldDescriptor.getRange());

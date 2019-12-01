@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
-import edu.stanford.bmir.protege.web.shared.form.field.StringType;
-import edu.stanford.bmir.protege.web.shared.form.field.TextFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -37,11 +36,11 @@ public class TextFieldDescriptorPresenterFactory implements FormFieldDescriptorP
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return TextFieldDescriptor.getType();
+        return TextControlDescriptor.getType();
     }
 
-    public static TextFieldDescriptor createDefault() {
-        return new TextFieldDescriptor(
+    public static TextControlDescriptor createDefault() {
+        return new TextControlDescriptor(
                 LanguageMap.empty(),
                 StringType.SIMPLE_STRING,
                 LineMode.SINGLE_LINE,
@@ -52,7 +51,7 @@ public class TextFieldDescriptorPresenterFactory implements FormFieldDescriptorP
 
     @Nonnull
     @Override
-    public FormFieldDescriptor createDefaultDescriptor() {
+    public FormControlDescriptor createDefaultDescriptor() {
         return createDefault();
     }
 

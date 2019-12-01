@@ -3,8 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,7 +34,7 @@ public class FormFieldDescriptorChooserPresenter {
     private final Map<String, FormFieldDescriptorPresenter> fieldType2FieldPresenter = new HashMap<>();
 
     @Nonnull
-    private final Map<String, FormFieldDescriptor> fieldType2FieldDescriptor = new HashMap<>();
+    private final Map<String, FormControlDescriptor> fieldType2FieldDescriptor = new HashMap<>();
 
     @Nonnull
     private Optional<FormFieldDescriptorPresenter> currentFieldPresenter = Optional.empty();
@@ -65,7 +64,7 @@ public class FormFieldDescriptorChooserPresenter {
                              .ifPresent(this::cacheFieldDescriptor);
 
         String fieldType = view.getFieldType();
-        FormFieldDescriptor nextDescriptor = fieldType2FieldDescriptor.get(fieldType);
+        FormControlDescriptor nextDescriptor = fieldType2FieldDescriptor.get(fieldType);
         if(nextDescriptor != null) {
             setFormFieldDescriptor(nextDescriptor);
         }
@@ -80,21 +79,21 @@ public class FormFieldDescriptorChooserPresenter {
 
     }
 
-    public Optional<FormFieldDescriptor> getFormFieldDescriptor() {
+    public Optional<FormControlDescriptor> getFormFieldDescriptor() {
         return currentFieldPresenter.map(FormFieldDescriptorPresenter::getFormFieldDescriptor);
     }
 
-    private void cacheFieldDescriptor(FormFieldDescriptor descriptor) {
+    private void cacheFieldDescriptor(FormControlDescriptor descriptor) {
         fieldType2FieldDescriptor.put(descriptor.getAssociatedType(), descriptor);
     }
 
-    public void setFormFieldDescriptor(FormFieldDescriptor formFieldDescriptor) {
-        String type = formFieldDescriptor.getAssociatedType();
+    public void setFormFieldDescriptor(FormControlDescriptor formControlDescriptor) {
+        String type = formControlDescriptor.getAssociatedType();
         view.setFieldType(type);
         Optional<FormFieldDescriptorPresenter> fieldPresenter = getOrCreateFieldPresenter(type);
         fieldPresenter.ifPresent(p -> {
             p.start(view.getFieldEditorContainer());
-            p.setFormFieldDescriptor(formFieldDescriptor);
+            p.setFormFieldDescriptor(formControlDescriptor);
             this.currentFieldPresenter = Optional.of(p);
         });
         if(!fieldPresenter.isPresent()) {

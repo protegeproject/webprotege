@@ -16,8 +16,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-@JsonTypeName(ChoiceFieldDescriptor.TYPE)
-public class ChoiceFieldDescriptor implements FormFieldDescriptor {
+@JsonTypeName(ChoiceControlDescriptor.TYPE)
+public class ChoiceControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "CHOICE";
 
@@ -28,12 +28,12 @@ public class ChoiceFieldDescriptor implements FormFieldDescriptor {
     @Nonnull
     private List<FormDataValue> defaultChoices = new ArrayList<>();
 
-    private ChoiceFieldDescriptor() {
+    private ChoiceControlDescriptor() {
     }
 
-    public ChoiceFieldDescriptor(@Nonnull ChoiceFieldType widgetType,
-                                 @Nonnull List<ChoiceDescriptor> choices,
-                                 @Nonnull List<FormDataValue> defaultChoices) {
+    public ChoiceControlDescriptor(@Nonnull ChoiceFieldType widgetType,
+                                   @Nonnull List<ChoiceDescriptor> choices,
+                                   @Nonnull List<FormDataValue> defaultChoices) {
         this.widgetType = checkNotNull(widgetType);
         this.choices.addAll(checkNotNull(choices));
         this.defaultChoices = checkNotNull(defaultChoices);
@@ -49,10 +49,10 @@ public class ChoiceFieldDescriptor implements FormFieldDescriptor {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof ChoiceFieldDescriptor)) {
+        if(!(obj instanceof ChoiceControlDescriptor)) {
             return false;
         }
-        ChoiceFieldDescriptor other = (ChoiceFieldDescriptor) obj;
+        ChoiceControlDescriptor other = (ChoiceControlDescriptor) obj;
         return this.widgetType.equals(other.widgetType)
                 && this.choices.equals(other.choices);
     }
@@ -85,7 +85,7 @@ public class ChoiceFieldDescriptor implements FormFieldDescriptor {
 
     @Override
     public String toString() {
-        return toStringHelper("ChoiceFieldDescriptor")
+        return toStringHelper("ChoiceControlDescriptor")
                 .add("widgetType", widgetType)
                 .add("choices", choices)
                 .toString();

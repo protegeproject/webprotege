@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
-import edu.stanford.bmir.protege.web.shared.form.field.EntityNameFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityNameFieldDescriptorPresenter implements FormFieldDescriptorPresenter {
 
-    private static final EntityNameFieldDescriptor DEFAULT_DESCRIPTOR = EntityNameFieldDescriptor.getDefault();
+    private static final EntityNameControlDescriptor DEFAULT_DESCRIPTOR = EntityNameControlDescriptor.getDefault();
 
     @Nonnull
     private final EntityNameFieldDescriptorView view;
@@ -35,19 +35,19 @@ public class EntityNameFieldDescriptorPresenter implements FormFieldDescriptorPr
 
     @Nonnull
     @Override
-    public FormFieldDescriptor getFormFieldDescriptor() {
-        return EntityNameFieldDescriptor.get(
+    public FormControlDescriptor getFormFieldDescriptor() {
+        return EntityNameControlDescriptor.get(
                 view.getPlaceholder(),
                 entityCriteriaPresenter.getCriteria().orElse(null)
         );
     }
 
     @Override
-    public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
-        if(!(formFieldDescriptor instanceof EntityNameFieldDescriptor)) {
+    public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
+        if(!(formControlDescriptor instanceof EntityNameControlDescriptor)) {
             return;
         }
-        EntityNameFieldDescriptor entityNameFieldDescriptor = (EntityNameFieldDescriptor) formFieldDescriptor;
+        EntityNameControlDescriptor entityNameFieldDescriptor = (EntityNameControlDescriptor) formControlDescriptor;
         view.clear();
         view.setPlaceholder(entityNameFieldDescriptor.getPlaceholder());
         entityNameFieldDescriptor.getMatchCriteria()

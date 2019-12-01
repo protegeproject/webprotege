@@ -1,15 +1,14 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldType;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,9 +19,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChoiceFieldDescriptorPresenter implements FormFieldDescriptorPresenter {
 
-    private static final ChoiceFieldDescriptor DEFAULT_DESCRIPTOR = new ChoiceFieldDescriptor(ChoiceFieldType.SEGMENTED_BUTTON,
-                                                                                              Collections.emptyList(),
-                                                                                              Collections.emptyList());
+    private static final ChoiceControlDescriptor DEFAULT_DESCRIPTOR = new ChoiceControlDescriptor(ChoiceFieldType.SEGMENTED_BUTTON,
+                                                                                                  Collections.emptyList(),
+                                                                                                  Collections.emptyList());
 
     @Nonnull
     private final ChoiceFieldDescriptorView view;
@@ -34,8 +33,8 @@ public class ChoiceFieldDescriptorPresenter implements FormFieldDescriptorPresen
 
     @Nonnull
     @Override
-    public FormFieldDescriptor getFormFieldDescriptor() {
-        return new ChoiceFieldDescriptor(
+    public FormControlDescriptor getFormFieldDescriptor() {
+        return new ChoiceControlDescriptor(
                 view.getWidgetType(),
                 view.getChoiceDescriptors(),
                 Collections.emptyList()
@@ -43,16 +42,16 @@ public class ChoiceFieldDescriptorPresenter implements FormFieldDescriptorPresen
     }
 
     @Override
-    public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
-        checkNotNull(formFieldDescriptor);
-        if(!(formFieldDescriptor instanceof ChoiceFieldDescriptor)) {
+    public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
+        checkNotNull(formControlDescriptor);
+        if(!(formControlDescriptor instanceof ChoiceControlDescriptor)) {
             return;
         }
-        updateView((ChoiceFieldDescriptor) formFieldDescriptor);
+        updateView((ChoiceControlDescriptor) formControlDescriptor);
 
     }
 
-    public void updateView(@Nonnull ChoiceFieldDescriptor formFieldDescriptor) {
+    public void updateView(@Nonnull ChoiceControlDescriptor formFieldDescriptor) {
         view.setWidgetType(formFieldDescriptor.getWidgetType());
         view.setChoiceDescriptors(formFieldDescriptor.getChoices());
     }

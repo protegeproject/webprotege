@@ -68,32 +68,32 @@ public class FormEditorFactory {
     }
 
     /**
-     * Get the value editor for the specified {@link FormFieldDescriptor}.  If an editor for
+     * Get the value editor for the specified {@link FormControlDescriptor}.  If an editor for
      * specified descriptor cannot be found then an {@link Optional#empty()} value will be
      * returned.
-     * @param formFieldDescriptor The form field descriptor that describes the editor to be
+     * @param formControlDescriptor The form field descriptor that describes the editor to be
      *                            created.
      * @return The {@link ValueEditorFactory} for the specified descriptor.
      */
     @Nonnull
-    public Optional<ValueEditorFactory<FormDataValue>> getValueEditorFactory(@Nonnull FormFieldDescriptor formFieldDescriptor) {
-        if (formFieldDescriptor.getAssociatedType().equals(TextFieldDescriptor.getType())) {
-            return getTextFieldEditorFactory((TextFieldDescriptor) formFieldDescriptor);
+    public Optional<ValueEditorFactory<FormDataValue>> getValueEditorFactory(@Nonnull FormControlDescriptor formControlDescriptor) {
+        if (formControlDescriptor.getAssociatedType().equals(TextControlDescriptor.getType())) {
+            return getTextFieldEditorFactory((TextControlDescriptor) formControlDescriptor);
         }
-        else if (formFieldDescriptor.getAssociatedType().equals(ChoiceFieldDescriptor.getType())) {
-            return getChoiceFieldEditorFactory((ChoiceFieldDescriptor) formFieldDescriptor);
+        else if (formControlDescriptor.getAssociatedType().equals(ChoiceControlDescriptor.getType())) {
+            return getChoiceFieldEditorFactory((ChoiceControlDescriptor) formControlDescriptor);
         }
-        else if (formFieldDescriptor.getAssociatedType().equals(EntityNameFieldDescriptor.getFieldTypeId())) {
-            return getEntityNameEditorFactory((EntityNameFieldDescriptor) formFieldDescriptor);
+        else if (formControlDescriptor.getAssociatedType().equals(EntityNameControlDescriptor.getFieldTypeId())) {
+            return getEntityNameEditorFactory((EntityNameControlDescriptor) formControlDescriptor);
         }
-        else if(formFieldDescriptor.getAssociatedType().equals(ImageFieldDescriptor.getFieldTypeId())) {
+        else if(formControlDescriptor.getAssociatedType().equals(ImageControlDescriptor.getFieldTypeId())) {
             return getImageFieldEditorFactory();
         }
-        else if(formFieldDescriptor.getAssociatedType().equals(NumberFieldDescriptor.getTypeId())) {
-            return getNumberFieldEditorFactory((NumberFieldDescriptor) formFieldDescriptor);
+        else if(formControlDescriptor.getAssociatedType().equals(NumberControlDescriptor.getTypeId())) {
+            return getNumberFieldEditorFactory((NumberControlDescriptor) formControlDescriptor);
         }
-        else if(formFieldDescriptor.getAssociatedType().equals(GridFieldDescriptor.getType())) {
-            return getGridFieldEditorFactory((GridFieldDescriptor) formFieldDescriptor);
+        else if(formControlDescriptor.getAssociatedType().equals(GridControlDescriptor.getType())) {
+            return getGridFieldEditorFactory((GridControlDescriptor) formControlDescriptor);
         }
         else {
             return Optional.empty();
@@ -101,7 +101,7 @@ public class FormEditorFactory {
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getNumberFieldEditorFactory(NumberFieldDescriptor formFieldDescriptor) {
+    private Optional<ValueEditorFactory<FormDataValue>> getNumberFieldEditorFactory(NumberControlDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
                     NumberFieldEditor editor = numberFieldEditorProvider.get();
@@ -125,7 +125,7 @@ public class FormEditorFactory {
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getEntityNameEditorFactory(EntityNameFieldDescriptor formFieldDescriptor) {
+    private Optional<ValueEditorFactory<FormDataValue>> getEntityNameEditorFactory(EntityNameControlDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
                     ClassNameFieldEditor editor = classNameFieldEditorProvider.get();
@@ -137,7 +137,7 @@ public class FormEditorFactory {
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getChoiceFieldEditorFactory(ChoiceFieldDescriptor formFieldDescriptor) {
+    private Optional<ValueEditorFactory<FormDataValue>> getChoiceFieldEditorFactory(ChoiceControlDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
                     ChoiceFieldEditor editor;
@@ -161,7 +161,7 @@ public class FormEditorFactory {
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getTextFieldEditorFactory(TextFieldDescriptor formFieldDescriptor) {
+    private Optional<ValueEditorFactory<FormDataValue>> getTextFieldEditorFactory(TextControlDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
                     String localeName = LocaleInfo.getCurrentLocale().getLocaleName();
@@ -179,7 +179,7 @@ public class FormEditorFactory {
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getGridFieldEditorFactory(GridFieldDescriptor descriptor) {
+    private Optional<ValueEditorFactory<FormDataValue>> getGridFieldEditorFactory(GridControlDescriptor descriptor) {
         return Optional.of(
                 () -> {
                     GridPresenter gridPresenter = gridPresenterProvider.get();

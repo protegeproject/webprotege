@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Objects;
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -16,8 +15,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-@JsonTypeName(TextFieldDescriptor.TYPE)
-public class TextFieldDescriptor implements FormFieldDescriptor {
+@JsonTypeName(TextControlDescriptor.TYPE)
+public class TextControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "TEXT";
 
@@ -31,14 +30,14 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
 
     private LanguageMap patternViolationErrorMessage = LanguageMap.empty();
 
-    private TextFieldDescriptor() {
+    private TextControlDescriptor() {
     }
 
-    public TextFieldDescriptor(@Nonnull LanguageMap placeholder,
-                               @Nonnull StringType stringType,
-                               @Nonnull LineMode lineMode,
-                               @Nonnull String pattern,
-                               @Nonnull LanguageMap patternViolationErrorMessage) {
+    public TextControlDescriptor(@Nonnull LanguageMap placeholder,
+                                 @Nonnull StringType stringType,
+                                 @Nonnull LineMode lineMode,
+                                 @Nonnull String pattern,
+                                 @Nonnull LanguageMap patternViolationErrorMessage) {
         this.placeholder = checkNotNull(placeholder);
         this.stringType = checkNotNull(stringType);
         this.lineMode = checkNotNull(lineMode);
@@ -51,8 +50,8 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
         return TYPE;
     }
 
-    public static FormFieldDescriptor getDefault() {
-        return new TextFieldDescriptor(
+    public static FormControlDescriptor getDefault() {
+        return new TextControlDescriptor(
                 LanguageMap.empty(),
                 StringType.SIMPLE_STRING,
                 LineMode.SINGLE_LINE,
@@ -66,10 +65,10 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof TextFieldDescriptor)) {
+        if(!(obj instanceof TextControlDescriptor)) {
             return false;
         }
-        TextFieldDescriptor other = (TextFieldDescriptor) obj;
+        TextControlDescriptor other = (TextControlDescriptor) obj;
         return this.placeholder.equals(other.placeholder)
                 && this.stringType.equals(other.stringType)
                 && this.pattern.equals(other.pattern)
@@ -79,7 +78,7 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
 
     @Override
     public String toString() {
-        return toStringHelper("TextFieldDescriptor")
+        return toStringHelper("TextControlDescriptor")
                 .add("placeholder", placeholder)
                 .add("stringType", stringType)
                 .add("pattern", pattern)

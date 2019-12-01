@@ -3,12 +3,9 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,8 +25,8 @@ public abstract class GridColumnDescriptor {
     public static GridColumnDescriptor get(@Nonnull @JsonProperty("id") GridColumnId id,
                                            @Nullable @JsonProperty("owlBinding") OwlBinding owlBinding,
                                            @Nonnull @JsonProperty("label") LanguageMap columnLabel,
-                                           @Nonnull @JsonProperty("fieldDescriptor") FormFieldDescriptor formFieldDescriptor) {
-        return new AutoValue_GridColumnDescriptor(id, owlBinding, columnLabel, formFieldDescriptor);
+                                           @Nonnull @JsonProperty("fieldDescriptor") FormControlDescriptor formControlDescriptor) {
+        return new AutoValue_GridColumnDescriptor(id, owlBinding, columnLabel, formControlDescriptor);
     }
 
     public static GridColumnDescriptor getDefaultColumnDescriptor() {
@@ -37,7 +34,7 @@ public abstract class GridColumnDescriptor {
                 GridColumnId.get(""),
                 null,
                 LanguageMap.empty(),
-                TextFieldDescriptor.getDefault()
+                TextControlDescriptor.getDefault()
         );
     }
 
@@ -57,7 +54,7 @@ public abstract class GridColumnDescriptor {
     public abstract LanguageMap getLabel();
 
     @Nonnull
-    public abstract FormFieldDescriptor getFieldDescriptor();
+    public abstract FormControlDescriptor getFieldDescriptor();
 
     // TODO: Column width, grow, shrink
 

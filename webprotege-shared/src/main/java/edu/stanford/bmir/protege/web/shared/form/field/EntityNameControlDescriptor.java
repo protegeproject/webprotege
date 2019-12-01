@@ -24,25 +24,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-@JsonTypeName(EntityNameFieldDescriptor.TYPE)
+@JsonTypeName(EntityNameControlDescriptor.TYPE)
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class EntityNameFieldDescriptor implements FormFieldDescriptor {
+public abstract class EntityNameControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "ENTITY_NAME";
 
     @JsonCreator
     @Nonnull
-    public static EntityNameFieldDescriptor get(@Nullable @JsonProperty("placeholder") LanguageMap languageMap,
-                                                @Nullable @JsonProperty("matchCriteria") CompositeRootCriteria criteria) {
-        return new AutoValue_EntityNameFieldDescriptor(languageMap == null ? LanguageMap.empty() : languageMap,
-                                                       criteria);
+    public static EntityNameControlDescriptor get(@Nullable @JsonProperty("placeholder") LanguageMap languageMap,
+                                                  @Nullable @JsonProperty("matchCriteria") CompositeRootCriteria criteria) {
+        return new AutoValue_EntityNameControlDescriptor(languageMap == null ? LanguageMap.empty() : languageMap,
+                                                         criteria);
     }
 
     @Nonnull
-    public static EntityNameFieldDescriptor getDefault() {
-        return new AutoValue_EntityNameFieldDescriptor(LanguageMap.empty(),
-                                                       getDefaultEntityMatchCriteria());
+    public static EntityNameControlDescriptor getDefault() {
+        return new AutoValue_EntityNameControlDescriptor(LanguageMap.empty(),
+                                                         getDefaultEntityMatchCriteria());
     }
 
     public static CompositeRootCriteria getDefaultEntityMatchCriteria() {

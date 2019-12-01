@@ -32,7 +32,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                                             @JsonProperty("owlBinding") @Nullable OwlBinding owlBinding,
                                             @JsonProperty("label") @Nullable LanguageMap formLabel,
                                             @JsonProperty("elementRun") @Nullable ElementRun elementRun,
-                                            @JsonProperty("fieldDescriptor") @Nonnull FormFieldDescriptor fieldDescriptor,
+                                            @JsonProperty("fieldDescriptor") @Nonnull FormControlDescriptor fieldDescriptor,
                                             @JsonProperty("repeatability") @Nullable Repeatability repeatability,
                                             @JsonProperty("optionality") @Nullable Optionality optionality,
                                             @JsonProperty("help") @Nullable LanguageMap help,
@@ -54,11 +54,11 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                 null,
                 LanguageMap.empty(),
                 ElementRun.START,
-                new TextFieldDescriptor(LanguageMap.empty(),
-                                        StringType.SIMPLE_STRING,
-                                        LineMode.SINGLE_LINE,
-                                        "",
-                                        LanguageMap.empty()),
+                new TextControlDescriptor(LanguageMap.empty(),
+                                          StringType.SIMPLE_STRING,
+                                          LineMode.SINGLE_LINE,
+                                          "",
+                                          LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
                 LanguageMap.empty(),
@@ -92,7 +92,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     public abstract ElementRun getElementRun();
 
     @Nonnull
-    public abstract FormFieldDescriptor getFieldDescriptor();
+    public abstract FormControlDescriptor getFieldDescriptor();
 
     @Nonnull
     public abstract Optionality getOptionality();
@@ -108,11 +108,11 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     
     @JsonIgnore
     public boolean isComposite() {
-        return getFieldDescriptor() instanceof SubFormFieldDescriptor;
+        return getFieldDescriptor() instanceof SubFormControlDescriptor;
     }
 
     @JsonIgnore
     public boolean isNonComposite() {
-        return !(getFieldDescriptor() instanceof SubFormFieldDescriptor);
+        return !(getFieldDescriptor() instanceof SubFormControlDescriptor);
     }
 }

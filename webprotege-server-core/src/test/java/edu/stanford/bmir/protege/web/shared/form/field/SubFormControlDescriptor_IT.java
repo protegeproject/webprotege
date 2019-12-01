@@ -1,16 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
-import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.junit.Before;
 import org.junit.Test;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
@@ -29,7 +25,7 @@ import static org.mockito.Mockito.mock;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-09
  */
-public class SubFormFieldDescriptor_IT {
+public class SubFormControlDescriptor_IT {
 
     private ObjectMapper objectMapper;
 
@@ -48,7 +44,7 @@ public class SubFormFieldDescriptor_IT {
                                                                 OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_LABEL.getIRI())),
                                                                 LanguageMap.of("en", "The Label"),
                                                                 ElementRun.START,
-                                                                new TextFieldDescriptor(
+                                                                new TextControlDescriptor(
                                                                         LanguageMap.empty(),
                                                                         StringType.SIMPLE_STRING,
                                                                         LineMode.SINGLE_LINE,
@@ -61,10 +57,10 @@ public class SubFormFieldDescriptor_IT {
                                                                 Map.of()
                                                         )
                                                 ), Optional.empty());
-        SubFormFieldDescriptor descriptor = new SubFormFieldDescriptor(formDescriptor);
+        SubFormControlDescriptor descriptor = new SubFormControlDescriptor(formDescriptor);
         var serialized = objectMapper.writeValueAsString(descriptor);
         System.out.println(serialized);
-        var deserialized = objectMapper.readerFor(SubFormFieldDescriptor.class)
+        var deserialized = objectMapper.readerFor(SubFormControlDescriptor.class)
                 .readValue(serialized);
         assertThat(deserialized, is(descriptor));
     }

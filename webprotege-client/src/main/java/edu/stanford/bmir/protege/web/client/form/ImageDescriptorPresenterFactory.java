@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ImageFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,13 +33,13 @@ public class ImageDescriptorPresenterFactory implements FormFieldDescriptorPrese
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return ImageFieldDescriptor.getFieldTypeId();
+        return ImageControlDescriptor.getFieldTypeId();
     }
 
     @Nonnull
     @Override
-    public FormFieldDescriptor createDefaultDescriptor() {
-        return new ImageFieldDescriptor();
+    public FormControlDescriptor createDefaultDescriptor() {
+        return new ImageControlDescriptor();
     }
 
     @Nonnull

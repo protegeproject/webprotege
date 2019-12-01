@@ -3,9 +3,9 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,16 +32,16 @@ public class GridFieldDescriptorPresenter implements FormFieldDescriptorPresente
 
     @Nonnull
     @Override
-    public FormFieldDescriptor getFormFieldDescriptor() {
-        return GridFieldDescriptor.get(ImmutableList.copyOf(columnListPresenter.getValues()));
+    public FormControlDescriptor getFormFieldDescriptor() {
+        return GridControlDescriptor.get(ImmutableList.copyOf(columnListPresenter.getValues()));
     }
 
     @Override
-    public void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor) {
-        if(!(formFieldDescriptor instanceof GridFieldDescriptor)) {
+    public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
+        if(!(formControlDescriptor instanceof GridControlDescriptor)) {
             return;
         }
-        GridFieldDescriptor gridFieldDescriptor = (GridFieldDescriptor) formFieldDescriptor;
+        GridControlDescriptor gridFieldDescriptor = (GridControlDescriptor) formControlDescriptor;
         columnListPresenter.setValues(gridFieldDescriptor.getColumns());
     }
 

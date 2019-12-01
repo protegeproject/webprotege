@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-import edu.stanford.bmir.protege.web.shared.form.field.SubFormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -249,7 +249,7 @@ public class FormPresenter {
 
     private FormElementEditor createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
         return new FormElementEditorImpl(() -> {
-            SubFormFieldDescriptor subFormFieldDescriptor = (SubFormFieldDescriptor) elementDescriptor.getFieldDescriptor();
+            SubFormControlDescriptor subFormFieldDescriptor = (SubFormControlDescriptor) elementDescriptor.getFieldDescriptor();
 
             FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
             FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();

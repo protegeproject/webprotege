@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldType;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,13 +37,13 @@ public class ChoiceFieldDescriptorPresenterFactory implements FormFieldDescripto
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return ChoiceFieldDescriptor.getType();
+        return ChoiceControlDescriptor.getType();
     }
 
     @Nonnull
     @Override
-    public FormFieldDescriptor createDefaultDescriptor() {
-        return new ChoiceFieldDescriptor(
+    public FormControlDescriptor createDefaultDescriptor() {
+        return new ChoiceControlDescriptor(
                 ChoiceFieldType.SEGMENTED_BUTTON,
                 Collections.emptyList(),
                 Collections.emptyList()

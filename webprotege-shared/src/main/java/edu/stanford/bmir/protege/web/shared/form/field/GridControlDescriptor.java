@@ -14,10 +14,10 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-24
  */
-@JsonTypeName(GridFieldDescriptor.TYPE)
+@JsonTypeName(GridControlDescriptor.TYPE)
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridFieldDescriptor implements FormFieldDescriptor {
+public abstract class GridControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "GRID";
 
@@ -33,8 +33,8 @@ public abstract class GridFieldDescriptor implements FormFieldDescriptor {
 
     @JsonCreator
     @Nonnull
-    public static GridFieldDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors) {
-        return new AutoValue_GridFieldDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors);
+    public static GridControlDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors) {
+        return new AutoValue_GridControlDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors);
     }
 
     @JsonProperty("columns")

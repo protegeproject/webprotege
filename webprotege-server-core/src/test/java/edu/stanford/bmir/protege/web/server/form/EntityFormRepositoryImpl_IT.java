@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -54,7 +53,7 @@ public class EntityFormRepositoryImpl_IT {
                               OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_COMMENT.getIRI())),
                               languageMap,
                               ElementRun.START,
-                              new TextFieldDescriptor(
+                              new TextControlDescriptor(
                                       LanguageMap.of("en", "Enter brand name"),
                                       StringType.SIMPLE_STRING,
                                       LineMode.SINGLE_LINE,

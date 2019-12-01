@@ -115,15 +115,15 @@ public class RpcWhiteList implements Action, Result {
 
     GridColumnId columnId;
 
-    GridFieldDescriptor gridFieldDescriptor;
+    GridControlDescriptor gridFieldDescriptor;
 
     GridColumnDescriptor gridColumnDescriptor;
 
-    public GridFieldDescriptor getGridFieldDescriptor() {
+    public GridControlDescriptor getGridFieldDescriptor() {
         return gridFieldDescriptor;
     }
 
-    public void setGridFieldDescriptor(GridFieldDescriptor gridFieldDescriptor) {
+    public void setGridFieldDescriptor(GridControlDescriptor gridFieldDescriptor) {
         this.gridFieldDescriptor = gridFieldDescriptor;
     }
 
@@ -193,19 +193,19 @@ public class RpcWhiteList implements Action, Result {
 
     Repeatability repeatability;
 
-    TextFieldDescriptor textFieldDescriptor;
+    TextControlDescriptor textFieldDescriptor;
 
-    NumberFieldDescriptor numberFieldDescriptor;
+    NumberControlDescriptor numberFieldDescriptor;
 
-    EntityNameFieldDescriptor entityNameFieldDescriptor;
+    EntityNameControlDescriptor entityNameFieldDescriptor;
 
-    SubFormFieldDescriptor subFormFieldDescriptor;
+    SubFormControlDescriptor subFormFieldDescriptor;
 
-    ChoiceFieldDescriptor choiceFieldDescriptor;
+    ChoiceControlDescriptor choiceFieldDescriptor;
 
     ChoiceDescriptor choiceDescriptor;
 
-    ImageFieldDescriptor imageFieldDescriptor;
+    ImageControlDescriptor imageFieldDescriptor;
 
 
 
@@ -462,23 +462,23 @@ public class RpcWhiteList implements Action, Result {
         this.repeatability = repeatability;
     }
 
-    public TextFieldDescriptor getTextFieldDescriptor() {
+    public TextControlDescriptor getTextFieldDescriptor() {
         return textFieldDescriptor;
     }
 
-    public NumberFieldDescriptor getNumberFieldDescriptor() {
+    public NumberControlDescriptor getNumberFieldDescriptor() {
         return numberFieldDescriptor;
     }
 
-    public EntityNameFieldDescriptor getEntityNameFieldDescriptor() {
+    public EntityNameControlDescriptor getEntityNameFieldDescriptor() {
         return entityNameFieldDescriptor;
     }
 
-    public SubFormFieldDescriptor getSubFormFieldDescriptor() {
+    public SubFormControlDescriptor getSubFormFieldDescriptor() {
         return subFormFieldDescriptor;
     }
 
-    public ChoiceFieldDescriptor getChoiceFieldDescriptor() {
+    public ChoiceControlDescriptor getChoiceFieldDescriptor() {
         return choiceFieldDescriptor;
     }
 
@@ -486,7 +486,7 @@ public class RpcWhiteList implements Action, Result {
         return choiceDescriptor;
     }
 
-    public ImageFieldDescriptor getImageFieldDescriptor() {
+    public ImageControlDescriptor getImageFieldDescriptor() {
         return imageFieldDescriptor;
     }
 
@@ -514,23 +514,23 @@ public class RpcWhiteList implements Action, Result {
         this.owlBinding = owlBinding;
     }
 
-    public void setTextFieldDescriptor(TextFieldDescriptor textFieldDescriptor) {
+    public void setTextFieldDescriptor(TextControlDescriptor textFieldDescriptor) {
         this.textFieldDescriptor = textFieldDescriptor;
     }
 
-    public void setNumberFieldDescriptor(NumberFieldDescriptor numberFieldDescriptor) {
+    public void setNumberFieldDescriptor(NumberControlDescriptor numberFieldDescriptor) {
         this.numberFieldDescriptor = numberFieldDescriptor;
     }
 
-    public void setEntityNameFieldDescriptor(EntityNameFieldDescriptor entityNameFieldDescriptor) {
+    public void setEntityNameFieldDescriptor(EntityNameControlDescriptor entityNameFieldDescriptor) {
         this.entityNameFieldDescriptor = entityNameFieldDescriptor;
     }
 
-    public void setSubFormFieldDescriptor(SubFormFieldDescriptor subFormFieldDescriptor) {
+    public void setSubFormFieldDescriptor(SubFormControlDescriptor subFormFieldDescriptor) {
         this.subFormFieldDescriptor = subFormFieldDescriptor;
     }
 
-    public void setChoiceFieldDescriptor(ChoiceFieldDescriptor choiceFieldDescriptor) {
+    public void setChoiceFieldDescriptor(ChoiceControlDescriptor choiceFieldDescriptor) {
         this.choiceFieldDescriptor = choiceFieldDescriptor;
     }
 
@@ -538,7 +538,7 @@ public class RpcWhiteList implements Action, Result {
         this.choiceDescriptor = choiceDescriptor;
     }
 
-    public void setImageFieldDescriptor(ImageFieldDescriptor imageFieldDescriptor) {
+    public void setImageFieldDescriptor(ImageControlDescriptor imageFieldDescriptor) {
         this.imageFieldDescriptor = imageFieldDescriptor;
     }
 

@@ -163,7 +163,7 @@ public class EntityFrameFormDataBuilder {
     }
 
     @Nonnull
-    private FormDataValue toGridFormDataValue(GridFieldDescriptor descriptor,
+    private FormDataValue toGridFormDataValue(GridControlDescriptor descriptor,
                                               Collection<PropertyValue> propertyValues) {
         // Property values should be entities
         var valueList = propertyValues.stream()
@@ -202,12 +202,12 @@ public class EntityFrameFormDataBuilder {
     }
 
     private FormDataValue toFormDataValue(Collection<PropertyValue> propertyValues,
-                                          FormFieldDescriptor fieldDescriptor) {
-        if(fieldDescriptor instanceof SubFormFieldDescriptor) {
-            return toSubFormDataValue((SubFormFieldDescriptor) fieldDescriptor, propertyValues);
+                                          FormControlDescriptor fieldDescriptor) {
+        if(fieldDescriptor instanceof SubFormControlDescriptor) {
+            return toSubFormDataValue((SubFormControlDescriptor) fieldDescriptor, propertyValues);
         }
-        else if(fieldDescriptor instanceof GridFieldDescriptor) {
-            return toGridFormDataValue((GridFieldDescriptor) fieldDescriptor, propertyValues);
+        else if(fieldDescriptor instanceof GridControlDescriptor) {
+            return toGridFormDataValue((GridControlDescriptor) fieldDescriptor, propertyValues);
         }
         else {
             return toSimpleFormDataValues(propertyValues);
@@ -215,7 +215,7 @@ public class EntityFrameFormDataBuilder {
     }
 
 
-    private FormDataValue toSubFormDataValue(SubFormFieldDescriptor descriptor,
+    private FormDataValue toSubFormDataValue(SubFormControlDescriptor descriptor,
                                              Collection<PropertyValue> propertyValues) {
         // Property values should be entities
         var valueList = propertyValues.stream()

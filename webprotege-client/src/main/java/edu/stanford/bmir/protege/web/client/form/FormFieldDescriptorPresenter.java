@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
+import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
 
@@ -14,9 +13,9 @@ import javax.annotation.Nonnull;
 public interface FormFieldDescriptorPresenter {
 
     @Nonnull
-    FormFieldDescriptor getFormFieldDescriptor();
+    FormControlDescriptor getFormFieldDescriptor();
 
-    void setFormFieldDescriptor(@Nonnull FormFieldDescriptor formFieldDescriptor);
+    void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor);
 
     void clear();
 
