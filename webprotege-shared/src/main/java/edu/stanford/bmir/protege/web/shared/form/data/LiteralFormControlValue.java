@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class LiteralFormFieldValue implements SimpleFormFieldValue {
+public abstract class LiteralFormControlValue implements SimpleFormControlValue {
 
     @Nonnull
     public abstract OWLLiteral getLiteral();

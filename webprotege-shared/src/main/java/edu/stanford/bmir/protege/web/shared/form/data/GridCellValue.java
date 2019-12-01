@@ -20,5 +20,5 @@ public abstract class GridCellValue {
     public abstract GridColumnId getColumnId();
 
     @Nonnull
-    public abstract Optional<FormFieldValue> getValue();
+    public abstract Optional<FormControlValue> getValue();
 }

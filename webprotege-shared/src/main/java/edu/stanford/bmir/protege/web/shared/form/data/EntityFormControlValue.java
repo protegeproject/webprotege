@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
@@ -14,11 +13,8 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridFieldValue implements ComplexFormFieldValue {
+public abstract class EntityFormControlValue implements SimpleFormControlValue {
 
     @Nonnull
-    public abstract GridControlDescriptor getDescriptor();
-
-    @Nonnull
-    public abstract ImmutableList<GridRowValue> getRows();
+    public abstract OWLEntity getEntity();
 }

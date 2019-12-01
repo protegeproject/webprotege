@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class FormDataNew implements ComplexFormFieldValue {
+public abstract class FormDataNew implements ComplexFormControlValue {
 
     @Nonnull
     public abstract FormControlDescriptor getFormFieldDescriptor();
