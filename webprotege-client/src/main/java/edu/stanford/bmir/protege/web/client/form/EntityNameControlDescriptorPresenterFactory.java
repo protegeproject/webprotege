@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -12,34 +12,34 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-19
+ * 2019-11-20
  */
-public class ImageDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
+public class EntityNameControlDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
 
     @Nonnull
-    private final Provider<ImageDescriptorPresenter> presenterProvider;
+    private Provider<EntityNameControlDescriptorPresenter> presenterProvider;
 
     @Inject
-    public ImageDescriptorPresenterFactory(@Nonnull Provider<ImageDescriptorPresenter> presenterProvider) {
+    public EntityNameControlDescriptorPresenterFactory(@Nonnull Provider<EntityNameControlDescriptorPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 
     @Nonnull
     @Override
     public String getDescriptorLabel() {
-        return "Image";
+        return "Entity name";
     }
 
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return ImageControlDescriptor.getFieldTypeId();
+        return EntityNameControlDescriptor.getFieldTypeId();
     }
 
     @Nonnull
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
-        return new ImageControlDescriptor();
+        return EntityNameControlDescriptor.getDefault();
     }
 
     @Nonnull

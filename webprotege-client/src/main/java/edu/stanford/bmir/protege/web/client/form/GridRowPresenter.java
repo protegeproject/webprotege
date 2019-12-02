@@ -54,6 +54,12 @@ public class GridRowPresenter {
         return new FormDataObject(map);
     }
 
+    public void requestFocus() {
+        cellPresenters.stream()
+                      .findFirst()
+                      .ifPresent(cellPresenter -> cellPresenter.requestFocus());
+    }
+
     public void setColumnDescriptors(ImmutableList<GridColumnDescriptor> columnDescriptors) {
         if(this.columnDescriptors.equals(columnDescriptors)) {
             return;

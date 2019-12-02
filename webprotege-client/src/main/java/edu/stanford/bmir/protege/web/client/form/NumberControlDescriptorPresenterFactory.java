@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -12,34 +14,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-19
+ * 2019-11-18
  */
-public class ImageDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
+public class NumberControlDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
 
     @Nonnull
-    private final Provider<ImageDescriptorPresenter> presenterProvider;
+    private final Provider<NumberControlDescriptorPresenter> presenterProvider;
 
     @Inject
-    public ImageDescriptorPresenterFactory(@Nonnull Provider<ImageDescriptorPresenter> presenterProvider) {
+    public NumberControlDescriptorPresenterFactory(@Nonnull Provider<NumberControlDescriptorPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 
     @Nonnull
     @Override
     public String getDescriptorLabel() {
-        return "Image";
+        return "Number";
     }
 
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return ImageControlDescriptor.getFieldTypeId();
+        return NumberControlDescriptor.getTypeId();
     }
 
     @Nonnull
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
-        return new ImageControlDescriptor();
+        return new NumberControlDescriptor(
+                "#.##",
+                NumberControlRange.all(),
+                NumberControlType.PLAIN,
+                10,
+                LanguageMap.empty()
+        );
     }
 
     @Nonnull

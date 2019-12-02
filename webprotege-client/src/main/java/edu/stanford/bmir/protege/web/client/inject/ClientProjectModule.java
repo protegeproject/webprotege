@@ -404,7 +404,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    TextFieldDescriptorEditorView provideTextFieldDescriptorEditorView(TextFieldDescriptorEditorViewImpl view) {
+    TextControlDescriptorView provideTextFieldDescriptorEditorView(TextControlDescriptorViewImpl view) {
         return view;
     }
 
@@ -440,12 +440,12 @@ public class ClientProjectModule {
     }
 
     @Provides
-    NumberFieldRangeView provideNumberFieldRangeView(@Nonnull NumberFieldRangeViewImpl impl) {
+    NumberControlRangeView provideNumberFieldRangeView(@Nonnull NumberControlRangeViewImpl impl) {
         return impl;
     }
 
     @Provides
-    NumberFieldDescriptorView provideNumberFieldDescriptorView(@Nonnull NumberFieldDescriptorViewImpl impl) {
+    NumberControlDescriptorView provideNumberFieldDescriptorView(@Nonnull NumberControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -455,7 +455,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ChoiceFieldDescriptorView provideChoiceFieldDescriptorView(ChoiceFieldDescriptorViewImpl impl) {
+    ChoiceControlDescriptorView provideChoiceFieldDescriptorView(ChoiceControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -480,7 +480,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    SubFormFieldDescriptorView provideSubFormFieldDescriptorView(@Nonnull SubFormFieldDescriptorViewImpl impl) {
+    SubFormControlDescriptorView provideSubFormFieldDescriptorView(@Nonnull SubFormControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -505,7 +505,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    GridFieldDescriptorView provideGridFieldDescriptorView(GridFieldDescriptorViewImpl impl) {
+    GridControlDescriptorView provideGridFieldDescriptorView(GridControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -522,25 +522,25 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ImmutableList<FormFieldDescriptorPresenterFactory> provideFormFieldDescriptorPresenterFactories(
-            TextFieldDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
-            NumberFieldDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
-            ChoiceFieldDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
+    ImmutableList<FormControlDescriptorPresenterFactory> provideFormFieldDescriptorPresenterFactories(
+            TextControlDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
+            NumberControlDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
+            ChoiceControlDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
             ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
-            EntityNameFieldDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
-            SubFormFieldDescriptorPresenterFactory subFormFieldDescriptorPresenterFactory,
-            GridFieldDescriptorPresenterFactory gridFieldDescriptorPresenterFactory) {
+            EntityNameControlDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
+            SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,
+            GridControlDescriptorPresenterFactory gridControlDescriptorPresenterFactory) {
         return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
                                 numberFieldDescriptorPresenterFactory,
                                 choiceFieldDescriptorPresenterFactory,
                                 imageDescriptorPresenterFactory,
                                 entityNameFieldDescriptorPresenterFactory,
-                                subFormFieldDescriptorPresenterFactory,
-                                gridFieldDescriptorPresenterFactory);
+                                subFormControlDescriptorPresenterFactory,
+                                gridControlDescriptorPresenterFactory);
     }
 
     @Provides
-    FormFieldDescriptorChooserView providesFormFieldDescriptorChooserView(FormFieldDescriptorChooserViewImpl impl) {
+    FormControlDescriptorChooserView providesFormFieldDescriptorChooserView(FormControlDescriptorChooserViewImpl impl) {
         return impl;
     }
 

@@ -21,7 +21,7 @@ public class ChoiceControlDescriptor implements FormControlDescriptor {
 
     protected static final String TYPE = "CHOICE";
 
-    private ChoiceFieldType widgetType = ChoiceFieldType.COMBO_BOX;
+    private ChoiceControlType widgetType = ChoiceControlType.COMBO_BOX;
 
     private List<ChoiceDescriptor> choices = new ArrayList<>();
 
@@ -31,7 +31,7 @@ public class ChoiceControlDescriptor implements FormControlDescriptor {
     private ChoiceControlDescriptor() {
     }
 
-    public ChoiceControlDescriptor(@Nonnull ChoiceFieldType widgetType,
+    public ChoiceControlDescriptor(@Nonnull ChoiceControlType widgetType,
                                    @Nonnull List<ChoiceDescriptor> choices,
                                    @Nonnull List<FormDataValue> defaultChoices) {
         this.widgetType = checkNotNull(widgetType);
@@ -74,7 +74,7 @@ public class ChoiceControlDescriptor implements FormControlDescriptor {
     }
 
     @Nonnull
-    public ChoiceFieldType getWidgetType() {
+    public ChoiceControlType getWidgetType() {
         return widgetType;
     }
 

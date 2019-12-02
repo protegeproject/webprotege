@@ -21,9 +21,9 @@ public interface FormElementView extends IsWidget {
 
     void setFormLabel(String formLabel);
 
-    void setEditor(FormElementEditor editor);
+    void setEditor(FormControl editor);
 
-    FormElementEditor getEditor();
+    FormControl getEditor();
 
     void setRequiredValueNotPresentVisible(boolean visible);
 

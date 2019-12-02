@@ -12,7 +12,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-19
  */
-public class ImageDescriptorPresenter implements FormFieldDescriptorPresenter {
+public class ImageDescriptorPresenter implements FormControlDescriptorPresenter {
 
     private final ImageDescriptorView view;
 

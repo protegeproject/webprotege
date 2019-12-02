@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
@@ -21,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public class GridCellPresenter {
+public class GridCellPresenter implements HasRequestFocus {
 
     @Nonnull
     private final GridCellView view;
@@ -30,24 +31,28 @@ public class GridCellPresenter {
     private Optional<GridColumnDescriptor> descriptor = Optional.empty();
 
     @Nonnull
-    private final FormEditorFactory formEditorFactory;
+    private final FormControlFactory formControlFactory;
 
     private Optional<ValueEditor<FormDataValue>> editor = Optional.empty();
 
     @Inject
     public GridCellPresenter(@Nonnull GridCellView view,
-                             @Nonnull FormEditorFactory formEditorFactory) {
+                             @Nonnull FormControlFactory formControlFactory) {
         this.view = checkNotNull(view);
-        this.formEditorFactory = formEditorFactory;
+        this.formControlFactory = formControlFactory;
     }
 
     public Optional<GridColumnId> getId() {
         return descriptor.map(GridColumnDescriptor::getId);
     }
 
+    public void requestFocus() {
+        view.requestFocus();
+    }
+
     public void setDescriptor(GridColumnDescriptor column) {
         FormControlDescriptor formControlDescriptor = column.getFieldDescriptor();
-        Optional<ValueEditorFactory<FormDataValue>> valueEditorFactory = formEditorFactory.getValueEditorFactory(
+        Optional<ValueEditorFactory<FormDataValue>> valueEditorFactory = formControlFactory.getValueEditorFactory(
                 formControlDescriptor);
         editor = valueEditorFactory.map(ValueEditorFactory::createEditor);
         editor.ifPresent(e -> {

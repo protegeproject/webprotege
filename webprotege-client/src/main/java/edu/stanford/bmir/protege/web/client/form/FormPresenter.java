@@ -48,7 +48,7 @@ public class FormPresenter {
     private final Provider<FormElementView> formElementViewProvider;
 
     @Nonnull
-    private final FormEditorFactory formEditorFactory;
+    private final FormControlFactory formControlFactory;
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -73,14 +73,14 @@ public class FormPresenter {
     @Inject
     public FormPresenter(@Nonnull @Provided FormView formView,
                          @Nonnull @Provided NoFormView noFormView,
-                         @Nonnull @Provided FormEditorFactory formEditorFactory,
+                         @Nonnull @Provided FormControlFactory formControlFactory,
                          @Nonnull @Provided Provider<FormElementView> formElementViewProvider,
                          @Nonnull @Provided DispatchServiceManager dispatchServiceManager,
                          @Nonnull FormPresenterFactory formPresenterFactory) {
         this.formView = checkNotNull(formView);
         this.noFormView = checkNotNull(noFormView);
         this.formElementViewProvider = checkNotNull(formElementViewProvider);
-        this.formEditorFactory = checkNotNull(formEditorFactory);
+        this.formControlFactory = checkNotNull(formControlFactory);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.formPresenterFactory = formPresenterFactory;
     }
@@ -209,16 +209,16 @@ public class FormPresenter {
 
     private void addFormElement(@Nonnull FormElementDescriptor elementDescriptor,
                                 @Nonnull Optional<FormDataValue> formDataValue) {
-        FormElementEditor formElementEditor;
+        FormControl formControl;
         if(elementDescriptor.isComposite()) {
-            formElementEditor = createSubFormElement(elementDescriptor);
+            formControl = createSubFormElement(elementDescriptor);
         }
         else {
-            Optional<FormElementEditor> elementEditor = createFormElementEditor(elementDescriptor);
+            Optional<FormControl> elementEditor = createFormElementEditor(elementDescriptor);
             if (!elementEditor.isPresent()) {
                 return;
             }
-            formElementEditor = elementEditor.get();
+            formControl = elementEditor.get();
         }
 
 
@@ -227,37 +227,37 @@ public class FormPresenter {
         FormElementView elementView = formElementViewProvider.get();
         elementView.setId(elementDescriptor.getId());
         elementView.setFormLabel(elementDescriptor.getLabel().get(langTag));
-        elementView.setEditor(formElementEditor);
+        elementView.setEditor(formControl);
         elementView.setRequired(elementDescriptor.getOptionality());
         Map<String, String> style = elementDescriptor.getStyle();
         style.forEach(elementView::addStylePropertyValue);
         // Update the required value missing display when the value changes
-        formElementEditor.addValueChangeHandler(event -> {
+        formControl.addValueChangeHandler(event -> {
             this.dirty = true;
             updateRequiredValuePresent(elementView);
             formDataChangedHandler.handleFormDataChanged();
         });
         if (formDataValue.isPresent()) {
-            formElementEditor.setValue(formDataValue.get());
+            formControl.setValue(formDataValue.get());
         }
         else {
-            formElementEditor.clearValue();
+            formControl.clearValue();
         }
         updateRequiredValuePresent(elementView);
         formView.addFormElementView(elementView, elementDescriptor.getElementRun());
     }
 
-    private FormElementEditor createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
-        return new FormElementEditorImpl(() -> {
+    private FormControl createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
+        return new FormControlImpl(() -> {
             SubFormControlDescriptor subFormFieldDescriptor = (SubFormControlDescriptor) elementDescriptor.getFormControlDescriptor();
 
             FormPresenter subFormPresenter = formPresenterFactory.create(formPresenterFactory);
             FormDescriptor subFormDescriptor = subFormFieldDescriptor.getFormDescriptor();
             subFormPresenter.displayForm(subFormDescriptor,
                                          new FormData(null, new HashMap<>(), subFormDescriptor));
-            FormPresenterAdapter subFormPresenterAdapter = new FormPresenterAdapter(subFormDescriptor, subFormPresenter);
-            subFormPresenterAdapter.start();
-            return subFormPresenterAdapter;
+            SubFormControl subSubFormControl = new SubFormControl(subFormDescriptor, subFormPresenter);
+            subSubFormControl.start();
+            return subSubFormControl;
         }, elementDescriptor.getRepeatability());
     }
 
@@ -286,9 +286,9 @@ public class FormPresenter {
      * @return An editor for the form element described by the descriptor.
      */
     @Nonnull
-    private Optional<FormElementEditor> createFormElementEditor(@Nonnull FormElementDescriptor descriptor) {
-        Optional<ValueEditorFactory<FormDataValue>> editorFactory = formEditorFactory.getValueEditorFactory(descriptor.getFormControlDescriptor());
-        return editorFactory.map(valueEditorFactory -> new FormElementEditorImpl(
+    private Optional<FormControl> createFormElementEditor(@Nonnull FormElementDescriptor descriptor) {
+        Optional<ValueEditorFactory<FormDataValue>> editorFactory = formControlFactory.getValueEditorFactory(descriptor.getFormControlDescriptor());
+        return editorFactory.map(valueEditorFactory -> new FormControlImpl(
                 valueEditorFactory,
                 descriptor.getRepeatability()
         ));

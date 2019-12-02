@@ -34,7 +34,7 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormEleme
     private final FormElementDescriptorView view;
 
     @Nonnull
-    private final FormFieldDescriptorChooserPresenter fieldDescriptorChooserPresenter;
+    private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
     @Nonnull
     private DispatchServiceManager dispatchServiceManager;
@@ -42,7 +42,7 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormEleme
     @Inject
     public FormElementDescriptorPresenter(@Nonnull ProjectId projectId,
                                           @Nonnull FormElementDescriptorView view,
-                                          @Nonnull FormFieldDescriptorChooserPresenter fieldChooserPresenter,
+                                          @Nonnull FormControlDescriptorChooserPresenter fieldChooserPresenter,
                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.view = checkNotNull(view);

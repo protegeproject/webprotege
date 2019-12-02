@@ -23,13 +23,13 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
 
     private Optional<GridColumnDescriptor> descriptor = Optional.empty();
 
-    private final FormFieldDescriptorChooserPresenter fieldDescriptorChooserPresenter;
+    private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
     private final OwlBindingPresenter bindingPresenter;
 
     @Inject
     public GridColumnDescriptorPresenter(@Nonnull GridColumnDescriptorView view,
-                                         @Nonnull FormFieldDescriptorChooserPresenter fieldDescriptorChooserPresenter,
+                                         @Nonnull FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter,
                                          @Nonnull OwlBindingPresenter bindingPresenter) {
         this.view = checkNotNull(view);
         this.fieldDescriptorChooserPresenter = checkNotNull(fieldDescriptorChooserPresenter);

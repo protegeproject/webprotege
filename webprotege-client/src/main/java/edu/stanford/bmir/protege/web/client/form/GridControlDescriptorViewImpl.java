@@ -14,32 +14,27 @@ import javax.inject.Inject;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-25
+ * 2019-11-26
  */
-public class GridCellViewImpl extends Composite implements GridCellView {
+public class GridControlDescriptorViewImpl extends Composite implements GridControlDescriptorView {
 
-    interface GridCellViewImplUiBinder extends UiBinder<HTMLPanel, GridCellViewImpl> {
+    interface GridFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, GridControlDescriptorViewImpl> {
 
     }
 
-    private static GridCellViewImplUiBinder ourUiBinder = GWT.create(GridCellViewImplUiBinder.class);
+    private static GridFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(GridFieldDescriptorViewImplUiBinder.class);
 
     @UiField
-    SimplePanel editorContainer;
+    SimplePanel viewContainer;
 
     @Inject
-    public GridCellViewImpl() {
+    public GridControlDescriptorViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @Nonnull
     @Override
-    public AcceptsOneWidget getEditorContainer() {
-        return editorContainer;
-    }
-
-    @Override
-    public void requestFocus() {
-
+    public AcceptsOneWidget getViewContainer() {
+        return viewContainer;
     }
 }

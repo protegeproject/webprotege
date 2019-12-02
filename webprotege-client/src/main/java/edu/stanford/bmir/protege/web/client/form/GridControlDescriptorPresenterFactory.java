@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -12,34 +13,34 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-19
+ * 2019-11-26
  */
-public class ImageDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
+public class GridControlDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
 
     @Nonnull
-    private final Provider<ImageDescriptorPresenter> presenterProvider;
+    private final Provider<GridControlDescriptorPresenter> presenterProvider;
 
     @Inject
-    public ImageDescriptorPresenterFactory(@Nonnull Provider<ImageDescriptorPresenter> presenterProvider) {
+    public GridControlDescriptorPresenterFactory(@Nonnull Provider<GridControlDescriptorPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 
     @Nonnull
     @Override
     public String getDescriptorLabel() {
-        return "Image";
+        return "Grid";
     }
 
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return ImageControlDescriptor.getFieldTypeId();
+        return GridControlDescriptor.getType();
     }
 
     @Nonnull
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
-        return new ImageControlDescriptor();
+        return GridControlDescriptor.get(ImmutableList.of());
     }
 
     @Nonnull

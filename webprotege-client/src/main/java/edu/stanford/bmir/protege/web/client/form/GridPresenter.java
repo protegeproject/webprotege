@@ -56,6 +56,12 @@ public class GridPresenter {
         return view;
     }
 
+    public void requestFocus() {
+        rowPresenters.stream()
+                     .findFirst()
+                     .ifPresent(gridRowPresenter -> gridRowPresenter.requestFocus());
+    }
+
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         headerPresenter.start(view.getHeaderContainer());

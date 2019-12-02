@@ -41,7 +41,7 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     SimplePanel editorHolder;
 
 
-    FormElementEditor editor;
+    FormControl editor;
 
     @Inject
     public FormElementViewImpl() {
@@ -87,13 +87,13 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     }
 
     @Override
-    public void setEditor(FormElementEditor editor) {
+    public void setEditor(FormControl editor) {
         this.editor = checkNotNull(editor);
         editorHolder.setWidget(editor);
     }
 
     @Override
-    public FormElementEditor getEditor() {
+    public FormControl getEditor() {
         return checkNotNull(editor);
     }
 

@@ -27,21 +27,21 @@ public class NumberControlDescriptor implements FormControlDescriptor {
     private LanguageMap placeholder = LanguageMap.empty();
 
     @Nonnull
-    private NumberFieldRange range = NumberFieldRange.range(Double.MIN_VALUE,
-                                                            NumberFieldRange.BoundType.INCLUSIVE,
-                                                            Double.MAX_VALUE,
-                                                            NumberFieldRange.BoundType.INCLUSIVE);
+    private NumberControlRange range = NumberControlRange.range(Double.MIN_VALUE,
+                                                                NumberControlRange.BoundType.INCLUSIVE,
+                                                                Double.MAX_VALUE,
+                                                                NumberControlRange.BoundType.INCLUSIVE);
 
     @Nonnull
-    private NumberFieldType widgetType = NumberFieldType.PLAIN;
+    private NumberControlType widgetType = NumberControlType.PLAIN;
 
     @GwtSerializationConstructor
     private NumberControlDescriptor() {
     }
 
     public NumberControlDescriptor(@Nonnull String format,
-                                   @Nonnull NumberFieldRange range,
-                                   @Nonnull NumberFieldType widgetType,
+                                   @Nonnull NumberControlRange range,
+                                   @Nonnull NumberControlType widgetType,
                                    int length,
                                    @Nonnull LanguageMap placeholder) {
         this.format = checkNotNull(format);
@@ -91,12 +91,12 @@ public class NumberControlDescriptor implements FormControlDescriptor {
     }
 
     @Nonnull
-    public NumberFieldRange getRange() {
+    public NumberControlRange getRange() {
         return range;
     }
 
     @Nonnull
-    public NumberFieldType getWidgetType() {
+    public NumberControlType getWidgetType() {
         return widgetType;
     }
 
