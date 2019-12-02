@@ -25,12 +25,12 @@ public class FormControlDescriptorChooserViewImpl extends Composite implements F
     @UiField
     SimplePanel fieldEditorContainer;
 
-    interface ElementFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, FormControlDescriptorChooserViewImpl> {
+    interface FormControlDescriptorChooserViewImplUiBinder extends UiBinder<HTMLPanel, FormControlDescriptorChooserViewImpl> {
 
     }
 
-    private static ElementFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(
-            ElementFieldDescriptorViewImplUiBinder.class);
+    private static FormControlDescriptorChooserViewImplUiBinder ourUiBinder = GWT.create(
+            FormControlDescriptorChooserViewImplUiBinder.class);
 
     @Inject
     public FormControlDescriptorChooserViewImpl() {

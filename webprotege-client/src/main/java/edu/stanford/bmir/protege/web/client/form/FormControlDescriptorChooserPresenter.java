@@ -22,7 +22,7 @@ public class FormControlDescriptorChooserPresenter {
     private final FormControlDescriptorChooserView view;
 
     @Nonnull
-    private final NoFieldDescriptorView noFieldDescriptorView;
+    private final NoControlDescriptorView noControlDescriptorView;
 
     @Nonnull
     private final ImmutableList<FormControlDescriptorPresenterFactory> fieldPresenterFactories;
@@ -41,11 +41,11 @@ public class FormControlDescriptorChooserPresenter {
 
     @Inject
     public FormControlDescriptorChooserPresenter(@Nonnull FormControlDescriptorChooserView view,
-                                                 @Nonnull NoFieldDescriptorView noFieldDescriptorView,
+                                                 @Nonnull NoControlDescriptorView noControlDescriptorView,
                                                  @Nonnull ImmutableList<FormControlDescriptorPresenterFactory> fieldPresenterFactories,
                                                  @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.view = view;
-        this.noFieldDescriptorView = noFieldDescriptorView;
+        this.noControlDescriptorView = noControlDescriptorView;
         this.fieldPresenterFactories = fieldPresenterFactories;
         this.dispatchServiceManager = dispatchServiceManager;
     }
@@ -98,7 +98,7 @@ public class FormControlDescriptorChooserPresenter {
         });
         if(!fieldPresenter.isPresent()) {
             currentFieldPresenter = Optional.empty();
-            view.getFieldEditorContainer().setWidget(noFieldDescriptorView);
+            view.getFieldEditorContainer().setWidget(noControlDescriptorView);
         }
     }
 

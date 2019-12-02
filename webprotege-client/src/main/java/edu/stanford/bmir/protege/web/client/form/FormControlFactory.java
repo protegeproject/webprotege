@@ -33,7 +33,7 @@ public class FormControlFactory {
     private final Provider<ComboBoxChoiceControl> choiceFieldComboBoxEditorProvider;
 
     @Nonnull
-    private final Provider<ClassNameFieldEditor> classNameFieldEditorProvider;
+    private final Provider<EntityNameControl> classNameFieldEditorProvider;
 
     @Nonnull
     private final Provider<ImageControl> imageFieldEditorProvider;
@@ -50,7 +50,7 @@ public class FormControlFactory {
                               @Nonnull Provider<CheckBoxChoiceControl> choiceFieldCheckBoxEditorProvider,
                               @Nonnull Provider<SegmentedButtonChoiceControl> choiceFieldSegmentedEditorProvider,
                               @Nonnull Provider<ComboBoxChoiceControl> choiceFieldComboBoxEditorProvider,
-                              @Nonnull Provider<ClassNameFieldEditor> classNameFieldEditorProvider,
+                              @Nonnull Provider<EntityNameControl> classNameFieldEditorProvider,
                               @Nonnull Provider<ImageControl> imageFieldEditorProvider,
                               @Nonnull Provider<NumberEditorControl> numberFieldEditorProvider,
                               @Nonnull Provider<GridControl> gridControlProvider) {
@@ -126,7 +126,7 @@ public class FormControlFactory {
     private Optional<ValueEditorFactory<FormDataValue>> getEntityNameEditorFactory(EntityNameControlDescriptor formFieldDescriptor) {
         return Optional.of(
                 () -> {
-                    ClassNameFieldEditor editor = classNameFieldEditorProvider.get();
+                    EntityNameControl editor = classNameFieldEditorProvider.get();
                     LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
                     editor.setPlaceholder(formFieldDescriptor.getPlaceholder().get(localeInfo.getLocaleName()));
                     return editor;

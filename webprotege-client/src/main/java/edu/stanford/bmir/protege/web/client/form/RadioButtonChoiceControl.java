@@ -31,11 +31,11 @@ public class RadioButtonChoiceControl extends Composite implements MutuallyExclu
 
     private ValueChangeHandler<Boolean> radioButtonValueChangedHandler;
 
-    interface ChoiceFieldRadioButtonEditorUiBinder extends UiBinder<HTMLPanel, RadioButtonChoiceControl> {
+    interface RadioButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, RadioButtonChoiceControl> {
 
     }
 
-    private static ChoiceFieldRadioButtonEditorUiBinder ourUiBinder = GWT.create(ChoiceFieldRadioButtonEditorUiBinder.class);
+    private static RadioButtonChoiceControlUiBinder ourUiBinder = GWT.create(RadioButtonChoiceControlUiBinder.class);
 
     @UiField
     HTMLPanel container;

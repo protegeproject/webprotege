@@ -31,11 +31,11 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
 
     private ValueChangeHandler<Boolean> checkBoxValueChangedHandler;
 
-    interface ChoiceFieldCheckBoxEditorUiBinder extends UiBinder<HTMLPanel, CheckBoxChoiceControl> {
+    interface CheckBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, CheckBoxChoiceControl> {
 
     }
 
-    private static ChoiceFieldCheckBoxEditorUiBinder ourUiBinder = GWT.create(ChoiceFieldCheckBoxEditorUiBinder.class);
+    private static CheckBoxChoiceControlUiBinder ourUiBinder = GWT.create(CheckBoxChoiceControlUiBinder.class);
 
     @UiField
     HTMLPanel container;

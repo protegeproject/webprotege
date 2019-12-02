@@ -25,11 +25,12 @@ import java.util.List;
  */
 public class ChoiceControlDescriptorViewImpl extends Composite implements ChoiceControlDescriptorView {
 
-    interface ChoiceFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, ChoiceControlDescriptorViewImpl> {
+    interface ChoiceControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, ChoiceControlDescriptorViewImpl> {
 
     }
 
-    private static ChoiceFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(ChoiceFieldDescriptorViewImplUiBinder.class);
+    private static ChoiceControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(
+            ChoiceControlDescriptorViewImplUiBinder.class);
 
     @UiField(provided = true)
     ValueListEditor<ChoiceDescriptor> choiceListEditor;

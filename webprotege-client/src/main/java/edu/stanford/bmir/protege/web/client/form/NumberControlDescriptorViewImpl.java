@@ -20,11 +20,12 @@ public class NumberControlDescriptorViewImpl extends Composite implements Number
 
     private static final int DEFAULT_LENGTH = 10;
 
-    interface NumberFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, NumberControlDescriptorViewImpl> {
+    interface NumberControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, NumberControlDescriptorViewImpl> {
 
     }
 
-    private static NumberFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(NumberFieldDescriptorViewImplUiBinder.class);
+    private static NumberControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(
+            NumberControlDescriptorViewImplUiBinder.class);
 
 
     @UiField

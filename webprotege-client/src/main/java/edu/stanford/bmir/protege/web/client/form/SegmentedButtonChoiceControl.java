@@ -32,11 +32,11 @@ public class SegmentedButtonChoiceControl extends Composite implements MutuallyE
 
     private static final int SEGMENT_SIZE = 120;
 
-    interface ChoiceFieldSegmentedEditorUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
+    interface SegmentedButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
 
     }
 
-    private static ChoiceFieldSegmentedEditorUiBinder ourUiBinder = GWT.create(ChoiceFieldSegmentedEditorUiBinder.class);
+    private static SegmentedButtonChoiceControlUiBinder ourUiBinder = GWT.create(SegmentedButtonChoiceControlUiBinder.class);
 
     @UiField
     FocusPanel focusPanel;

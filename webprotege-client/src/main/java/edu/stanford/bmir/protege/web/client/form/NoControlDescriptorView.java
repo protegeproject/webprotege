@@ -7,6 +7,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-19
  */
-public interface NoFieldDescriptorView extends IsWidget {
+public interface NoControlDescriptorView extends IsWidget {
 
 }

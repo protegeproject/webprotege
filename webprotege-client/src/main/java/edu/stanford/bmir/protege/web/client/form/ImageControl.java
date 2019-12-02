@@ -35,11 +35,11 @@ public class ImageControl extends Composite implements FormControl {
     @Nonnull
     private final InputBox inputBox;
 
-    interface ImageFieldEditorUiBinder extends UiBinder<HTMLPanel, ImageControl> {
+    interface ImageControlUiBinder extends UiBinder<HTMLPanel, ImageControl> {
 
     }
 
-    private static ImageFieldEditorUiBinder ourUiBinder = GWT.create(ImageFieldEditorUiBinder.class);
+    private static ImageControlUiBinder ourUiBinder = GWT.create(ImageControlUiBinder.class);
 
     @UiField
     Image imageField;

@@ -20,14 +20,14 @@ public class EntityNameControlDescriptorPresenter implements FormControlDescript
     private static final EntityNameControlDescriptor DEFAULT_DESCRIPTOR = EntityNameControlDescriptor.getDefault();
 
     @Nonnull
-    private final EntityNameFieldDescriptorView view;
+    private final EntityNameControlDescriptorView view;
 
     @Nonnull
     private final EntityCriteriaPresenter entityCriteriaPresenter;
 
 
     @Inject
-    public EntityNameControlDescriptorPresenter(@Nonnull EntityNameFieldDescriptorView view,
+    public EntityNameControlDescriptorPresenter(@Nonnull EntityNameControlDescriptorView view,
                                                 @Nonnull EntityCriteriaPresenter entityCriteriaPresenter) {
         this.view = checkNotNull(view);
         this.entityCriteriaPresenter = checkNotNull(entityCriteriaPresenter);

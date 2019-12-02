@@ -465,7 +465,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    NoFieldDescriptorView provideNoFieldDescriptorView(NoFieldDescriptorViewImpl impl) {
+    NoControlDescriptorView provideNoFieldDescriptorView(NoControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -475,7 +475,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    EntityNameFieldDescriptorView provideEntityNameFieldDescriptorView(@Nonnull EntityNameFieldDescriptorViewImpl impl) {
+    EntityNameControlDescriptorView provideEntityNameFieldDescriptorView(@Nonnull EntityNameControlDescriptorViewImpl impl) {
         return impl;
     }
 

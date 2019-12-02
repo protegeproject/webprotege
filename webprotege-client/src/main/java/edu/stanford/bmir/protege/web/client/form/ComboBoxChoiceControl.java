@@ -29,11 +29,11 @@ import java.util.Optional;
  */
 public class ComboBoxChoiceControl extends Composite implements MutuallyExclusiveChoiceControl {
 
-    interface ChoiceFieldComboBoxEditorUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
+    interface ComboBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
 
     }
 
-    private static ChoiceFieldComboBoxEditorUiBinder ourUiBinder = GWT.create(ChoiceFieldComboBoxEditorUiBinder.class);
+    private static ComboBoxChoiceControlUiBinder ourUiBinder = GWT.create(ComboBoxChoiceControlUiBinder.class);
 
     @UiField
     ListBox comboBox;

@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TextFieldDescriptor_TestCase {
+public class TextControlDescriptor_TestCase {
 
     private TextControlDescriptor textFieldDescriptor;
 

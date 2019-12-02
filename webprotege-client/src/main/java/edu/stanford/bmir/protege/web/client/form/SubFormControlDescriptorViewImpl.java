@@ -24,12 +24,12 @@ import java.util.List;
  */
 public class SubFormControlDescriptorViewImpl extends Composite implements SubFormControlDescriptorView {
 
-    interface SubFormFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, SubFormControlDescriptorViewImpl> {
+    interface SubFormControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, SubFormControlDescriptorViewImpl> {
 
     }
 
-    private static SubFormFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(
-            SubFormFieldDescriptorViewImplUiBinder.class);
+    private static SubFormControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(
+            SubFormControlDescriptorViewImplUiBinder.class);
 
     @UiField
     SimplePanel subFormContainer;

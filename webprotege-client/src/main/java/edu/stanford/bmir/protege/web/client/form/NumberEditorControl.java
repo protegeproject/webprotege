@@ -40,11 +40,11 @@ public class NumberEditorControl extends Composite implements ValueEditor<FormDa
 
     private NumberControlRange range = NumberControlRange.all();
 
-    interface NumberFieldEditorUiBinder extends UiBinder<HTMLPanel, NumberEditorControl> {
+    interface NumberEditorControlUiBinder extends UiBinder<HTMLPanel, NumberEditorControl> {
 
     }
 
-    private static NumberFieldEditorUiBinder ourUiBinder = GWT.create(NumberFieldEditorUiBinder.class);
+    private static NumberEditorControlUiBinder ourUiBinder = GWT.create(NumberEditorControlUiBinder.class);
 
     @UiField
     TextBox numberField;

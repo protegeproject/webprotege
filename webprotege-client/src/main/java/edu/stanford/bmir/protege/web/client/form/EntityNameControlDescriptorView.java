@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-20
  */
-public interface EntityNameFieldDescriptorView extends IsWidget {
+public interface EntityNameControlDescriptorView extends IsWidget {
 
     void clear();
 

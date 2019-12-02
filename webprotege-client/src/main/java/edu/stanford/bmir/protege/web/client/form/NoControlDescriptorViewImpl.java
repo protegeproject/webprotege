@@ -12,16 +12,16 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-19
  */
-public class NoFieldDescriptorViewImpl extends Composite implements NoFieldDescriptorView {
+public class NoControlDescriptorViewImpl extends Composite implements NoControlDescriptorView {
 
-    interface NoFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, NoFieldDescriptorViewImpl> {
+    interface NoControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, NoControlDescriptorViewImpl> {
 
     }
 
-    private static NoFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(NoFieldDescriptorViewImplUiBinder.class);
+    private static NoControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(NoControlDescriptorViewImplUiBinder.class);
 
     @Inject
-    public NoFieldDescriptorViewImpl() {
+    public NoControlDescriptorViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 }

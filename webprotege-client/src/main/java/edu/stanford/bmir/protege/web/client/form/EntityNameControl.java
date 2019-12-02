@@ -15,7 +15,6 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
@@ -34,13 +33,13 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 06/04/16
  */
-public class ClassNameFieldEditor extends Composite implements ValueEditor<FormDataValue>, HasPlaceholder {
+public class EntityNameControl extends Composite implements ValueEditor<FormDataValue>, HasPlaceholder {
 
-    interface ClassNameFieldEditorUiBinder extends UiBinder<HTMLPanel, ClassNameFieldEditor> {
+    interface EntityNameControlUiBinder extends UiBinder<HTMLPanel, EntityNameControl> {
 
     }
 
-    private static ClassNameFieldEditorUiBinder ourUiBinder = GWT.create(ClassNameFieldEditorUiBinder.class);
+    private static EntityNameControlUiBinder ourUiBinder = GWT.create(EntityNameControlUiBinder.class);
 
     @UiField(provided = true)
     PrimitiveDataEditorImpl editor;
@@ -55,9 +54,9 @@ public class ClassNameFieldEditor extends Composite implements ValueEditor<FormD
     private Optional<OWLClass> currentValue = Optional.empty();
 
     @Inject
-    public ClassNameFieldEditor(@Nonnull ProjectId projectId,
-                                @Nonnull DispatchServiceManager dispatchServiceManager,
-                                Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+    public EntityNameControl(@Nonnull ProjectId projectId,
+                             @Nonnull DispatchServiceManager dispatchServiceManager,
+                             Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         editor = (PrimitiveDataEditorImpl) primitiveDataEditorProvider.get();
         initWidget(ourUiBinder.createAndBindUi(this));
         editor.addValueChangeHandler(this::handleEditorValueChanged);
@@ -72,7 +71,7 @@ public class ClassNameFieldEditor extends Composite implements ValueEditor<FormD
                             .filter(val -> val instanceof OWLClassData)
                             .map(val -> (OWLClassData) val)
                             .map(OWLClassData::getEntity);
-        ValueChangeEvent.fire(ClassNameFieldEditor.this, getValue());
+        ValueChangeEvent.fire(EntityNameControl.this, getValue());
     }
 
     @Override

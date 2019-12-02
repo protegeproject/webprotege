@@ -39,11 +39,11 @@ public class TextControl extends Composite implements FormControl {
 
     private StringType stringType = StringType.SIMPLE_STRING;
 
-    interface TextFieldEditorUiBinder extends UiBinder<HTMLPanel, TextControl> {
+    interface TextControlUiBinder extends UiBinder<HTMLPanel, TextControl> {
 
     }
 
-    private static TextFieldEditorUiBinder ourUiBinder = GWT.create(TextFieldEditorUiBinder.class);
+    private static TextControlUiBinder ourUiBinder = GWT.create(TextControlUiBinder.class);
 
     @UiField(provided = true)
     PrimitiveDataEditorImpl editor;

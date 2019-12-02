@@ -18,11 +18,11 @@ import javax.inject.Inject;
  */
 public class GridControlDescriptorViewImpl extends Composite implements GridControlDescriptorView {
 
-    interface GridFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, GridControlDescriptorViewImpl> {
+    interface GridControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, GridControlDescriptorViewImpl> {
 
     }
 
-    private static GridFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(GridFieldDescriptorViewImplUiBinder.class);
+    private static GridControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(GridControlDescriptorViewImplUiBinder.class);
 
     @UiField
     SimplePanel viewContainer;

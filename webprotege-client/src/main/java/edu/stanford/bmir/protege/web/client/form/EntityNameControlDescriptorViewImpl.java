@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,14 +19,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-20
  */
-public class EntityNameFieldDescriptorViewImpl extends Composite implements EntityNameFieldDescriptorView {
+public class EntityNameControlDescriptorViewImpl extends Composite implements EntityNameControlDescriptorView {
 
-    interface ClassNameFieldDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, EntityNameFieldDescriptorViewImpl> {
+    interface EntityNameControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, EntityNameControlDescriptorViewImpl> {
 
     }
 
-    private static ClassNameFieldDescriptorViewImplUiBinder ourUiBinder = GWT.create(
-            ClassNameFieldDescriptorViewImplUiBinder.class);
+    private static EntityNameControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(
+            EntityNameControlDescriptorViewImplUiBinder.class);
 
     @UiField
     SimplePanel criteriaContainer;
@@ -36,7 +35,7 @@ public class EntityNameFieldDescriptorViewImpl extends Composite implements Enti
     LanguageMapEditor placeholderEditor;
 
     @Inject
-    public EntityNameFieldDescriptorViewImpl(@Nonnull LanguageMapEditor placeholderEditor) {
+    public EntityNameControlDescriptorViewImpl(@Nonnull LanguageMapEditor placeholderEditor) {
         this.placeholderEditor = checkNotNull(placeholderEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
     }

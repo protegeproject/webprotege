@@ -24,12 +24,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class TextControlDescriptorViewImpl extends Composite implements TextControlDescriptorView {
 
-    interface TextFieldDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, TextControlDescriptorViewImpl> {
+    interface TextControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, TextControlDescriptorViewImpl> {
 
     }
 
-    private static TextFieldDescriptorEditorViewImplUiBinder ourUiBinder = GWT.create(
-            TextFieldDescriptorEditorViewImplUiBinder.class);
+    private static TextControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(
+            TextControlDescriptorViewImplUiBinder.class);
 
     @UiField
     RadioButton simpleString;
