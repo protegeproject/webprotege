@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.server.match;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.apache.commons.lang.StringUtils;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -47,14 +44,18 @@ public class MatcherFactory {
     @Nonnull
     private final IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory;
 
+    private EntityRelationshipMatcherFactory entityRelationshipMatcherFactory;
+
     @Inject
     public MatcherFactory(@Nonnull SubClassOfMatcherFactory subClassOfMatcherFactory,
-                          @Nonnull InstanceOfMatcherFactory instanceOfMatcherFactory, @Nonnull ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory,
+                          @Nonnull InstanceOfMatcherFactory instanceOfMatcherFactory,
+                          @Nonnull ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory,
                           @Nonnull EntityIsDeprecatedMatcherFactory entityIsDeprecatedMatcherFactory,
                           @Nonnull AnnotationValuesAreNotDisjointMatcherFactory annotationValuesAreNotDisjointMatcherFactory,
                           @Nonnull NonUniqueLangTagsMatcherFactory nonUniqueLangTagsMatcherFactory,
                           @Nonnull EntityAnnotationMatcherFactory entityAnnotationMatcherFactory,
-                          @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory) {
+                          @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory,
+                          @Nonnull EntityRelationshipMatcherFactory entityRelationshipMatcherFactory) {
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
         this.instanceOfMatcherFactory = checkNotNull(instanceOfMatcherFactory);
         this.conflictingBooleanValuesMatcherFactory = checkNotNull(conflictingBooleanValuesMatcherFactory);
@@ -63,6 +64,7 @@ public class MatcherFactory {
         this.nonUniqueLangTagsMatcherFactory = checkNotNull(nonUniqueLangTagsMatcherFactory);
         this.entityAnnotationMatcherFactory = checkNotNull(entityAnnotationMatcherFactory);
         this.iriAnnotationsMatcherFactory = checkNotNull(iriAnnotationsMatcherFactory);
+        this.entityRelationshipMatcherFactory = entityRelationshipMatcherFactory;
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
@@ -151,6 +153,53 @@ public class MatcherFactory {
             public Matcher<OWLEntity> visit(@Nonnull InstanceOfCriteria criteria) {
                 return instanceOfMatcherFactory.create(criteria.getTarget(),
                                                        criteria.getFilterType());
+            }
+
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> visit(@Nonnull EntityRelationshipCriteria criteria) {
+                var propertyCriteria = criteria.getRelationshipPropertyCriteria();
+                var propertyMatcher = getRelationshipPropertyMatcher(propertyCriteria);
+                var valueCriteria = criteria.getRelationshipValueCriteria();
+                var valueMatcher = getRelationshipValueMatcher(valueCriteria);
+                var propertyValueMatcher = new PropertyValueMatcher(propertyMatcher, valueMatcher);
+                return entityRelationshipMatcherFactory.create(criteria.getRelationshipPresence(),
+                                                               propertyValueMatcher);
+            }
+        });
+    }
+
+
+    private Matcher<OWLProperty> getRelationshipPropertyMatcher(RelationshipPropertyCriteria criteria) {
+        return criteria.accept(new RelationshipPropertyCriteriaVisitor<>() {
+            @Override
+            public Matcher<OWLProperty> visit(RelationshipPropertyEqualsCriteria criteria) {
+                return prop -> criteria.getProperty()
+                                       .equals(prop);
+            }
+
+            @Override
+            public Matcher<OWLProperty> visit(AnyRelationshipPropertyCriteria criteria) {
+                return AnythingMatcher.get();
+            }
+        });
+    }
+
+    private Matcher<OWLPrimitive> getRelationshipValueMatcher(RelationshipValueCriteria criteria) {
+        return criteria.accept(new RelationshipValueCriteriaVisitor<>() {
+            @Override
+            public Matcher<OWLPrimitive> visit(AnyRelationshipValueCriteria criteria) {
+                return AnythingMatcher.get();
+            }
+
+            @Override
+            public Matcher<OWLPrimitive> visit(EntityValueRelationshipCriteria criteria) {
+                return new MatcherAdapter<>(OWLEntity.class, getMatcher(criteria.getEntityMatchCriteria()));
+            }
+
+            @Override
+            public Matcher<OWLPrimitive> visit(RelationshipValueThatIsEqualToCriteria criteria) {
+                return primitive -> primitive.equals(criteria.getValue());
             }
         });
     }

@@ -1,0 +1,18 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:import field="edu.stanford.bmir.protege.web.client.match.RelationshipValueMatchType.*"/>
+    <g:HTMLPanel>
+        <primitive:PrimitiveDataEditor ui:field="propertyField"
+                                       objectPropertiesAllowed="true"
+                                       dataPropertiesAllowed="true"
+                                       placeholder="Enter property name"/>
+        <g:Label text="that"/>
+        <g:ListBox visibleItemCount="1" ui:field="valueMatchTypeSelector">
+            <g:item value="ANY_VALUE">has any value</g:item>
+            <g:item value="SPECIFIC_VALUE">has specific value</g:item>
+            <g:item value="VALUE_THAT_MATCHES">has value that matches</g:item>
+        </g:ListBox>
+        <g:SimplePanel ui:field="valueMatchCriteriaContainer"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
