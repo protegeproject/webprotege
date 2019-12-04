@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.cmdline;
 
 import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
 import edu.stanford.bmir.protege.web.server.access.*;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
@@ -19,6 +20,8 @@ import java.io.Console;
 import java.util.Collections;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -36,7 +39,7 @@ public class SetPermissions {
 
     public void run() {
         console.printf("Set User Role\n");
-        try(MongoClient mongoClient = new MongoClient()) {
+        try(MongoClient mongoClient = WebProtegeCli.getMongoClient()) {
             var accessManager = getAccessManager(mongoClient);
 
             var projectId = getProjectId();
