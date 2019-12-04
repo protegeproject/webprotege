@@ -19,7 +19,7 @@ public abstract class AnyRelationshipValueCriteria implements RelationshipValueC
 
     @Nonnull
     @JsonCreator
-    public static RelationshipValueCriteria get() {
+    public static AnyRelationshipValueCriteria get() {
         return new AutoValue_AnyRelationshipValueCriteria();
     }
 

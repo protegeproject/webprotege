@@ -2,15 +2,11 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -107,7 +103,7 @@ public class EntityRelationshipCriteriaPresenter implements CriteriaPresenter<En
         }
         else if(view.getValueMatchType() == RelationshipValueMatchType.VALUE_THAT_MATCHES) {
             valueCriteria = rootCriteriaPresenter.getCriteria()
-                    .<RelationshipValueCriteria>map(EntityValueRelationshipCriteria::get)
+                    .<RelationshipValueCriteria>map(RelationshipValueMatchesCriteria::get)
                     .orElse(AnyRelationshipValueCriteria.get());
         }
         else {
@@ -146,10 +142,10 @@ public class EntityRelationshipCriteriaPresenter implements CriteriaPresenter<En
             }
 
             @Override
-            public Void visit(EntityValueRelationshipCriteria criteria) {
+            public Void visit(RelationshipValueMatchesCriteria criteria) {
                 view.setValueMatchType(RelationshipValueMatchType.VALUE_THAT_MATCHES);
                 rootCriteriaPresenter.start(view.getValueEntityCriteriaContainer());
-                rootCriteriaPresenter.setCriteria(criteria.getEntityMatchCriteria());
+                rootCriteriaPresenter.setCriteria(criteria.getMatchCriteria());
                 return null;
             }
 

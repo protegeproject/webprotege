@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.annotation.Nonnull;
 
@@ -9,10 +10,11 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-02
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "match")
 @JsonSubTypes(
         {
                 @JsonSubTypes.Type(AnyRelationshipValueCriteria.class),
-                @JsonSubTypes.Type(EntityValueRelationshipCriteria.class)
+                @JsonSubTypes.Type(RelationshipValueMatchesCriteria.class)
         }
 )
 public interface RelationshipValueCriteria extends Criteria {

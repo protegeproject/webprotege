@@ -193,8 +193,8 @@ public class MatcherFactory {
             }
 
             @Override
-            public Matcher<OWLPrimitive> visit(EntityValueRelationshipCriteria criteria) {
-                return new MatcherAdapter<>(OWLEntity.class, getMatcher(criteria.getEntityMatchCriteria()));
+            public Matcher<OWLPrimitive> visit(RelationshipValueMatchesCriteria criteria) {
+                return new MatcherAdapter<>(OWLEntity.class, getMatcher(criteria.getMatchCriteria()));
             }
 
             @Override

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -14,17 +15,17 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("EntityValue")
-public abstract class EntityValueRelationshipCriteria implements RelationshipValueCriteria {
+@JsonTypeName("ValueMatches")
+public abstract class RelationshipValueMatchesCriteria implements RelationshipValueCriteria {
 
     @Nonnull
     @JsonCreator
-    public static EntityValueRelationshipCriteria get(@Nonnull EntityMatchCriteria criteria) {
-        return new AutoValue_EntityValueRelationshipCriteria(criteria);
+    public static RelationshipValueMatchesCriteria get(@Nonnull @JsonProperty("matchCriteria") EntityMatchCriteria criteria) {
+        return new AutoValue_RelationshipValueMatchesCriteria(criteria);
     }
 
     @Nonnull
-    public abstract EntityMatchCriteria getEntityMatchCriteria();
+    public abstract EntityMatchCriteria getMatchCriteria();
 
     @Override
     public <R> R accept(@Nonnull RelationshipValueCriteriaVisitor<R> visitor) {

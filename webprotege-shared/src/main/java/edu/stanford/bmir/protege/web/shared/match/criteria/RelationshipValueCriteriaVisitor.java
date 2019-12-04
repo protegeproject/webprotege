@@ -9,7 +9,7 @@ public interface RelationshipValueCriteriaVisitor<R> {
 
     R visit(AnyRelationshipValueCriteria criteria);
 
-    R visit(EntityValueRelationshipCriteria criteria);
+    R visit(RelationshipValueMatchesCriteria criteria);
 
     R visit(RelationshipValueThatIsEqualToCriteria criteria);
 }
