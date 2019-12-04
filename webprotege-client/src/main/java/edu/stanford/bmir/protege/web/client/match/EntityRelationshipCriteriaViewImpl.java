@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 
@@ -45,12 +46,7 @@ public class EntityRelationshipCriteriaViewImpl extends Composite implements Ent
     public EntityRelationshipCriteriaViewImpl(@Nonnull PrimitiveDataEditor propertyField) {
         this.propertyField = propertyField;
         initWidget(ourUiBinder.createAndBindUi(this));
-        valueMatchTypeSelector.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                valueMatchTypeChangedHandler.run();
-            }
-        });
+        valueMatchTypeSelector.addChangeHandler(event -> valueMatchTypeChangedHandler.run());
     }
 
     @Override

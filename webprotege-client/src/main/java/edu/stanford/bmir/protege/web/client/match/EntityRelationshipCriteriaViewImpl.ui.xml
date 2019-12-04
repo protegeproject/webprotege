@@ -2,17 +2,56 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:import field="edu.stanford.bmir.protege.web.client.match.RelationshipValueMatchType.*"/>
-    <g:HTMLPanel>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+
+        }
+
+        .propertyField {
+            min-width: 250px;
+            max-width: 250px;
+        }
+
+        .valueCriteria {
+            display:        flex;
+            flex-direction: row;
+            align-items:    baseline;
+            justify-items:  flex-start;
+            padding-top:    2px;
+            padding-bottom: 2px;
+        }
+
+        .prefixLabel {
+            padding-right: 5px;
+        }
+
+        .valueCriteriaEditor {
+            display:        flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .valueMatchCriteria {
+            padding-top:    2px;
+            padding-bottom: 2px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
         <primitive:PrimitiveDataEditor ui:field="propertyField"
                                        objectPropertiesAllowed="true"
                                        dataPropertiesAllowed="true"
-                                       placeholder="Enter property name"/>
-        <g:Label text="that"/>
-        <g:ListBox visibleItemCount="1" ui:field="valueMatchTypeSelector">
-            <g:item value="ANY_VALUE">has any value</g:item>
-            <g:item value="SPECIFIC_VALUE">has specific value</g:item>
-            <g:item value="VALUE_THAT_MATCHES">has value that matches</g:item>
-        </g:ListBox>
-        <g:SimplePanel ui:field="valueMatchCriteriaContainer"/>
+                                       placeholder="Enter property name"  addStyleNames="{style.propertyField}"/>
+        <g:HTMLPanel addStyleNames="{style.valueCriteria}">
+            <g:InlineLabel text="that " addStyleNames="{style.prefixLabel} {wp.style.formLabel}"/>
+            <g:HTMLPanel addStyleNames="{style.valueCriteriaEditor}">
+                <g:ListBox visibleItemCount="1" ui:field="valueMatchTypeSelector">
+                    <g:item value="ANY_VALUE">has any value</g:item>
+                    <g:item value="SPECIFIC_VALUE">has a value equal to</g:item>
+                    <g:item value="VALUE_THAT_MATCHES">has a value that</g:item>
+                </g:ListBox>
+                <g:SimplePanel ui:field="valueMatchCriteriaContainer" addStyleNames="{style.valueMatchCriteria}"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
