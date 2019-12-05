@@ -11,5 +11,8 @@ public interface RelationshipValueCriteriaVisitor<R> {
 
     R visit(RelationshipValueMatchesCriteria criteria);
 
-    R visit(RelationshipValueThatIsEqualToCriteria criteria);
+    R visit(RelationshipValueEqualsEntityCriteria criteria);
+
+    R visit(RelationshipValueEqualsLiteralCriteria criteria);
+
 }

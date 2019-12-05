@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
@@ -15,18 +17,19 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("ValueEqualTo")
-public abstract class RelationshipValueThatIsEqualToCriteria implements RelationshipValueCriteria {
+@JsonTypeName("ValueEqualToEntity")
+public abstract class RelationshipValueEqualsEntityCriteria implements RelationshipValueEqualsCriteria {
 
     private static final String VALUE = "value";
 
-    public static RelationshipValueThatIsEqualToCriteria get(@Nonnull OWLPrimitive value) {
-        return new AutoValue_RelationshipValueThatIsEqualToCriteria(value);
+    @JsonCreator
+    public static RelationshipValueEqualsEntityCriteria get(@Nonnull @JsonProperty(VALUE) OWLEntity value) {
+        return new AutoValue_RelationshipValueEqualsEntityCriteria(value);
     }
 
     @Nonnull
     @JsonProperty(VALUE)
-    public abstract OWLPrimitive getValue();
+    public abstract OWLEntity getValue();
 
 
     @Override

@@ -198,7 +198,12 @@ public class MatcherFactory {
             }
 
             @Override
-            public Matcher<OWLPrimitive> visit(RelationshipValueThatIsEqualToCriteria criteria) {
+            public Matcher<OWLPrimitive> visit(RelationshipValueEqualsEntityCriteria criteria) {
+                return primitive -> primitive.equals(criteria.getValue());
+            }
+
+            @Override
+            public Matcher<OWLPrimitive> visit(RelationshipValueEqualsLiteralCriteria criteria) {
                 return primitive -> primitive.equals(criteria.getValue());
             }
         });

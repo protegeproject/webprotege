@@ -4,7 +4,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipValueThatIsEqualToCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipValueEqualsCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipValueEqualsEntityCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipValueEqualsLiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -13,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-02
  */
-public class RelationshipValueThatIsEqualToCriteriaPresenter implements CriteriaPresenter<RelationshipValueThatIsEqualToCriteria> {
+public class RelationshipValueThatIsEqualToCriteriaPresenter implements CriteriaPresenter<RelationshipValueEqualsCriteria> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -53,14 +56,24 @@ public class RelationshipValueThatIsEqualToCriteriaPresenter implements Criteria
     }
 
     @Override
-    public Optional<? extends RelationshipValueThatIsEqualToCriteria> getCriteria() {
+    public Optional<? extends RelationshipValueEqualsCriteria> getCriteria() {
         return view.getValue()
             .map(OWLPrimitiveData::getObject)
-            .map(RelationshipValueThatIsEqualToCriteria::get);
+            .flatMap(value -> {
+                if(value instanceof OWLEntity) {
+                    return Optional.of(RelationshipValueEqualsEntityCriteria.get((OWLEntity) value));
+                }
+                else if(value instanceof OWLLiteral) {
+                    return Optional.of(RelationshipValueEqualsLiteralCriteria.get((OWLLiteral) value));
+                }
+                else {
+                    return Optional.empty();
+                }
+            });
     }
 
     @Override
-    public void setCriteria(@Nonnull RelationshipValueThatIsEqualToCriteria criteria) {
+    public void setCriteria(@Nonnull RelationshipValueEqualsCriteria criteria) {
         OWLPrimitive value = criteria.getValue();
         if(value instanceof OWLEntity) {
             dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, (OWLEntity) value),

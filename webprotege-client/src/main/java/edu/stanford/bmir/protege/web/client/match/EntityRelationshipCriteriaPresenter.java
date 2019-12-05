@@ -150,7 +150,15 @@ public class EntityRelationshipCriteriaPresenter implements CriteriaPresenter<En
             }
 
             @Override
-            public Void visit(RelationshipValueThatIsEqualToCriteria criteria) {
+            public Void visit(RelationshipValueEqualsLiteralCriteria criteria) {
+                view.setValueMatchType(RelationshipValueMatchType.SPECIFIC_VALUE);
+                valueThatIsEqualToCriteriaPresenter.start(view.getValueEntityCriteriaContainer());
+                valueThatIsEqualToCriteriaPresenter.setCriteria(criteria);
+                return null;
+            }
+
+            @Override
+            public Void visit(RelationshipValueEqualsEntityCriteria criteria) {
                 view.setValueMatchType(RelationshipValueMatchType.SPECIFIC_VALUE);
                 valueThatIsEqualToCriteriaPresenter.start(view.getValueEntityCriteriaContainer());
                 valueThatIsEqualToCriteriaPresenter.setCriteria(criteria);
