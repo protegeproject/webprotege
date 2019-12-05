@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.viz;
 
+import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -17,12 +19,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.*;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyAssertionAxiomImpl;
 
 import javax.annotation.Nonnull;
+import java.lang.ref.Reference;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -384,6 +387,43 @@ public class EntityGraphBuilder_TestCase {
                 edge(indAData, indBData),
                 edge(indBData, indAData)
         ));
+    }
+
+    private OWLNamedIndividual head;
+
+    private OWLNamedIndividual indA;
+
+    @Test
+    public void shouldHandleDeepGraph() {
+        head = null;
+        indA = null;
+        OWLObjectProperty property = MockingUtils.mockOWLObjectProperty();
+        when(renderingManager.getObjectPropertyData(property))
+                .thenReturn(OWLObjectPropertyData.get(property, "", ImmutableMap.of()));
+        // Enough to cause a stack over flow with a recursive implementation of the graph builder
+        int count = 1000;
+        for(int i = 0; i < count; i++) {
+            OWLNamedIndividual indB = MockingUtils.mockOWLNamedIndividual();
+            when(renderingManager.getIndividualData(indB))
+                    .thenReturn(OWLNamedIndividualData.get(indB, "", ImmutableMap.of()));
+            when(renderingManager.getRendering(indB))
+                    .thenReturn(OWLNamedIndividualData.get(indB, "", ImmutableMap.of()));
+            if(head == null) {
+                head = indB;
+            }
+            if(indA != null) {
+                when(objectPropertyAssertionsIndex.getObjectPropertyAssertions(indA, ontId))
+                        .thenAnswer(answer -> Stream.of(new OWLObjectPropertyAssertionAxiomImpl(
+                                indA,
+                                property,
+                                indB,
+                                Collections.emptySet()
+                        )));
+            }
+            indA = indB;
+        }
+        var graph = graphBuilder.createGraph(head);
+        assertThat(graph.getEdgeCount(), is(count - 1));
     }
 
     private static Matcher<Edge> edge(@Nonnull OWLEntityData tail,
