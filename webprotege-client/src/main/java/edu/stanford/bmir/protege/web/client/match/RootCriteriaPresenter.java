@@ -48,7 +48,11 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Nonnull
     private final InstanceOfCriteriaPresenterFactory instanceOfFactory;
 
+    @Nonnull
     private final EntityRelationshipPresenterFactory entityRelationshipFactory;
+
+    @Nonnull
+    private final EntityRelationshipAbsentPresenterFactory entityRelationshipAbsentFactory;
 
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
@@ -63,7 +67,8 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
                                  @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory,
                                  @Nonnull SubClassOfCriteriaPresenterFactory subClassOfFactory,
                                  @Nonnull InstanceOfCriteriaPresenterFactory instanceOfFactory,
-                                 EntityRelationshipPresenterFactory entityRelationshipFactory) {
+                                 @Nonnull EntityRelationshipPresenterFactory entityRelationshipFactory,
+                                 @Nonnull EntityRelationshipAbsentPresenterFactory entityRelationshipAbsentPresenterFactory) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
         this.absentAnnotationCriteriaFactory = checkNotNull(absentAnnotationCriteriaFactory);
@@ -77,6 +82,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         this.subClassOfFactory = checkNotNull(subClassOfFactory);
         this.instanceOfFactory = checkNotNull(instanceOfFactory);
         this.entityRelationshipFactory = checkNotNull(entityRelationshipFactory);
+        this.entityRelationshipAbsentFactory = checkNotNull(entityRelationshipAbsentPresenterFactory);
     }
 
     @Override
@@ -84,6 +90,8 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(annotationCriteriaFactory);
         factoryRegistry.addPresenter(absentAnnotationCriteriaFactory);
         factoryRegistry.addPresenter(atMostOneAnnotationFactory);
+        factoryRegistry.addPresenter(entityRelationshipFactory);
+        factoryRegistry.addPresenter(entityRelationshipAbsentFactory);
         factoryRegistry.addPresenter(entityTypeFactory);
         factoryRegistry.addPresenter(isDeprecatedFactory);
         factoryRegistry.addPresenter(notDeprecatedFactory);
@@ -92,7 +100,6 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(notDisjointFactory);
         factoryRegistry.addPresenter(subClassOfFactory);
         factoryRegistry.addPresenter(instanceOfFactory);
-        factoryRegistry.addPresenter(entityRelationshipFactory);
     }
 
     @Nonnull
