@@ -241,5 +241,7 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
 
     @Nonnull
     Optional<OWLAnnotationPropertyData> getValueAsAnnotationPropertyData();
+
+    void addStyleName(@Nonnull String styleName);
     
 }

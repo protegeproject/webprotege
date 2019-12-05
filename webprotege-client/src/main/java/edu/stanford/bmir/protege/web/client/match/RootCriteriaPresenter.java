@@ -48,13 +48,31 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Nonnull
     private final InstanceOfCriteriaPresenterFactory instanceOfFactory;
 
+    @Nonnull
+    private final EntityRelationshipPresenterFactory entityRelationshipFactory;
+
+    @Nonnull
+    private final EntityRelationshipAbsentPresenterFactory entityRelationshipAbsentFactory;
+
+    @Nonnull
+    private final EntityHasMoreThanOneRelationshipCriteriaPresenterFactory hasAtMostOneRelationshipFactory;
+
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
-                                 @Nonnull EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory, @Nonnull EntityAnnotationMatchesAtMostOneCriteriaPresenterFactory atMostOneAnnotationFactory, @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
-                                 @Nonnull IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory, @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
+                                 @Nonnull EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory,
+                                 @Nonnull EntityAnnotationMatchesAtMostOneCriteriaPresenterFactory atMostOneAnnotationFactory,
+                                 @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
+                                 @Nonnull IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory,
+                                 @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
                                  @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
-                                 @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags, @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory, @Nonnull SubClassOfCriteriaPresenterFactory subClassOfFactory, @Nonnull InstanceOfCriteriaPresenterFactory instanceOfFactory) {
+                                 @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags,
+                                 @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory,
+                                 @Nonnull SubClassOfCriteriaPresenterFactory subClassOfFactory,
+                                 @Nonnull InstanceOfCriteriaPresenterFactory instanceOfFactory,
+                                 @Nonnull EntityRelationshipPresenterFactory entityRelationshipFactory,
+                                 @Nonnull EntityRelationshipAbsentPresenterFactory entityRelationshipAbsentPresenterFactory,
+                                 @Nonnull EntityHasMoreThanOneRelationshipCriteriaPresenterFactory hasAtMostOneRelationshipFactory) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
         this.absentAnnotationCriteriaFactory = checkNotNull(absentAnnotationCriteriaFactory);
@@ -67,6 +85,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         this.notDisjointFactory = checkNotNull(notDisjointFactory);
         this.subClassOfFactory = checkNotNull(subClassOfFactory);
         this.instanceOfFactory = checkNotNull(instanceOfFactory);
+        this.entityRelationshipFactory = checkNotNull(entityRelationshipFactory);
+        this.entityRelationshipAbsentFactory = checkNotNull(entityRelationshipAbsentPresenterFactory);
+        this.hasAtMostOneRelationshipFactory = checkNotNull(hasAtMostOneRelationshipFactory);
     }
 
     @Override
@@ -74,6 +95,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(annotationCriteriaFactory);
         factoryRegistry.addPresenter(absentAnnotationCriteriaFactory);
         factoryRegistry.addPresenter(atMostOneAnnotationFactory);
+        factoryRegistry.addPresenter(entityRelationshipFactory);
+        factoryRegistry.addPresenter(entityRelationshipAbsentFactory);
+        factoryRegistry.addPresenter(hasAtMostOneRelationshipFactory);
         factoryRegistry.addPresenter(entityTypeFactory);
         factoryRegistry.addPresenter(isDeprecatedFactory);
         factoryRegistry.addPresenter(notDeprecatedFactory);
@@ -162,6 +186,21 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
             @Override
             public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull InstanceOfCriteria instanceOfCriteria) {
                 return instanceOfFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityRelationshipCriteria criteria) {
+                switch (criteria.getRelationshipPresence()) {
+                    case AT_LEAST_ONE:
+                        return entityRelationshipFactory;
+                    case AT_MOST_ONE:
+                        return hasAtMostOneRelationshipFactory;
+                    case NONE:
+                        return entityRelationshipAbsentFactory;
+                    default:
+                        throw new RuntimeException("Unknown MultiType");
+                }
             }
         });
     }

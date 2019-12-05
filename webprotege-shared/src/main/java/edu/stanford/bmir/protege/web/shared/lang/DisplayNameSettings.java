@@ -28,8 +28,8 @@ public abstract class DisplayNameSettings {
     @Nonnull
     public static DisplayNameSettings get(@Nonnull @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> primaryLanguages,
                                           @Nonnull @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> secondaryLanguages) {
-        return new AutoValue_DisplayNameSettings(primaryLanguages,
-                                                 secondaryLanguages);
+        return new AutoValue_DisplayNameSettings(primaryLanguages == null ? ImmutableList.of() : primaryLanguages,
+                                                 secondaryLanguages == null ? ImmutableList.of() : secondaryLanguages);
     }
 
     @Nonnull

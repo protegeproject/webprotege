@@ -231,6 +231,16 @@ public class ClientProjectModule {
     }
 
     @Provides
+    EntityRelationshipCriteriaView provideEntityRelationshipCriteriaView(EntityRelationshipCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    RelationValueThatIsEqualToView provideRelationValueThatIsEqualToView(RelationValueThatIsEqualToViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     EntityTypeCriteriaView provideEntityTypeCriteriaView(EntityTypeCriteriaViewImpl impl) {
         return impl;
     }

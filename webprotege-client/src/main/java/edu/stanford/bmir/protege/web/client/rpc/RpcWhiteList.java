@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
@@ -146,6 +147,16 @@ public class RpcWhiteList implements Action, Result {
     RelationshipEdge relationshipEdge;
 
     ImmutableSetMultimap immutableSetMultimap;
+
+    public RelationshipPresence getRelationshipPresence() {
+        return relationshipPresence;
+    }
+
+    public void setRelationshipPresence(RelationshipPresence relationshipPresence) {
+        this.relationshipPresence = relationshipPresence;
+    }
+
+    RelationshipPresence relationshipPresence;
 
     public RpcWhiteList() {
     }
