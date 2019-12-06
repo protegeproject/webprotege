@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.viz;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 
@@ -16,8 +17,9 @@ import javax.annotation.Nonnull;
 public abstract class CompositeEdgeCriteria implements EdgeCriteria {
 
     @Nonnull
-    public static CompositeEdgeCriteria get(@Nonnull ImmutableList<EdgeCriteria> criteria) {
-        return new AutoValue_CompositeEdgeCriteria(criteria);
+    public static CompositeEdgeCriteria get(@Nonnull ImmutableList<EdgeCriteria> criteria,
+                                            @Nonnull MultiMatchType multiMatchType) {
+        return new AutoValue_CompositeEdgeCriteria(criteria, multiMatchType);
     }
 
     @Override
@@ -28,4 +30,6 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
     @Nonnull
     public abstract ImmutableList<EdgeCriteria> getCriteria();
 
+    @Nonnull
+    public abstract MultiMatchType getMatchType();
 }

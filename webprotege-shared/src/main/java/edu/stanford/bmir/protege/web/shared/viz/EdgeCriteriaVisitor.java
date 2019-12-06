@@ -9,15 +9,23 @@ import javax.annotation.Nonnull;
  */
 public interface EdgeCriteriaVisitor<R> {
 
-    R visit(@Nonnull CompositeEdgeCriteria compositeEdgeCriteria);
+    R visit(@Nonnull CompositeEdgeCriteria criteria);
 
-    R visit(@Nonnull IncludeAnyRelationshipCriteria includeAnyRelationshipCriteria);
+    R visit(@Nonnull AnyRelationshipEdgeCriteria criteria);
 
-    R visit(@Nonnull IncludeInstanceOfCriteria includeInstanceOfCriteria);
+    R visit(@Nonnull AnyInstanceOfEdgeCriteria criteria);
 
-    R visit(@Nonnull IncludePropertyCriteria includePropertyCriteria);
+    R visit(@Nonnull RelationshipEdgeWithPropertyCriteria criteria);
 
-    R visit(@Nonnull IncludeSubClassOfCriteria includeSubClassOfCriteria);
+    R visit(@Nonnull AnySubClassOfEdgeCriteria criteria);
 
-    R visit(IncludeAnyEdgeCriteria includeAnyEdgeCriteria);
+    R visit(@Nonnull AnyEdgeCriteria criteria);
+
+    R visit(@Nonnull TailNodeMatchesCriteria criteria);
+
+    R visit(@Nonnull HeadNodeMatchesCriteria criteria);
+
+    R visit(@Nonnull AnyNodeCriteria criteria);
+
+    R visit(@Nonnull NegatedEdgeCriteria criteria);
 }

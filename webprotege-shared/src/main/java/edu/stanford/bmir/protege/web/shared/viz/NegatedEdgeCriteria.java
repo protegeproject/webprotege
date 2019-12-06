@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 
@@ -8,16 +9,19 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-12-05
+ * 2019-12-06
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public class IncludeAnyEdgeCriteria implements EdgeCriteria {
+@JsonTypeName("NegationOf")
+public abstract class NegatedEdgeCriteria implements EdgeCriteria {
+
+    public static NegatedEdgeCriteria get(@Nonnull EdgeCriteria negatedCriteria) {
+        return new AutoValue_NegatedEdgeCriteria(negatedCriteria);
+    }
 
     @Nonnull
-    public static IncludeAnyEdgeCriteria get() {
-        return new AutoValue_IncludeAnyEdgeCriteria();
-    }
+    public abstract EdgeCriteria getNegatedCriteria();
 
     @Override
     public <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor) {

@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 
@@ -13,17 +12,15 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class IncludePropertyCriteria implements EdgeCriteria {
+public class AnyRelationshipEdgeCriteria implements EdgeTypeCriteria {
 
-    public static IncludePropertyCriteria get(@Nonnull OWLProperty property) {
-        return new AutoValue_IncludePropertyCriteria(property);
+    @Nonnull
+    public static AnyRelationshipEdgeCriteria get() {
+        return new AutoValue_AnyRelationshipEdgeCriteria();
     }
 
     @Override
     public <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
-
-    @Nonnull
-    public abstract OWLProperty getProperty();
 }

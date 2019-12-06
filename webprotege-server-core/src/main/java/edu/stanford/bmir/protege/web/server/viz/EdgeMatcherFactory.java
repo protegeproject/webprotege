@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.viz;
 
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 
 import javax.annotation.Nonnull;
@@ -17,8 +19,12 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableList;
  */
 public class EdgeMatcherFactory {
 
+    @Nonnull
+    private final MatcherFactory matcherFactory;
+
     @Inject
-    public EdgeMatcherFactory() {
+    public EdgeMatcherFactory(@Nonnull MatcherFactory matcherFactory) {
+        this.matcherFactory = matcherFactory;
     }
 
     @Nonnull
@@ -26,32 +32,57 @@ public class EdgeMatcherFactory {
         EdgeCriteriaVisitor<EdgeMatcher> mapper = new EdgeCriteriaVisitor<>() {
             @Override
             public EdgeMatcher visit(@Nonnull CompositeEdgeCriteria compositeEdgeCriteria) {
-                return new CompositeEdgeMatcher(compositeEdgeCriteria.getCriteria().stream().map(EdgeMatcherFactory.this::createMatcher).collect(toImmutableList()));
+                ImmutableList<EdgeMatcher> matchers = compositeEdgeCriteria.getCriteria()
+                                                                          .stream()
+                                                                          .map(EdgeMatcherFactory.this::createMatcher)
+                                                                          .collect(toImmutableList());
+                return new CompositeEdgeMatcher(matchers,
+                                                compositeEdgeCriteria.getMatchType());
             }
 
             @Override
-            public EdgeMatcher visit(@Nonnull IncludeAnyRelationshipCriteria includeAnyPropertyCriteria) {
+            public EdgeMatcher visit(@Nonnull AnyRelationshipEdgeCriteria includeAnyPropertyCriteria) {
                 return Edge::isRelationship;
             }
 
             @Override
-            public EdgeMatcher visit(@Nonnull IncludeInstanceOfCriteria includeInstanceOfCriteria) {
+            public EdgeMatcher visit(@Nonnull AnyInstanceOfEdgeCriteria includeInstanceOfCriteria) {
                 return edge -> edge.isIsA() && edge.getTail().getEntity().isIndividual();
             }
 
             @Override
-            public EdgeMatcher visit(@Nonnull IncludePropertyCriteria includePropertyCriteria) {
+            public EdgeMatcher visit(@Nonnull RelationshipEdgeWithPropertyCriteria includePropertyCriteria) {
                 return edge -> edge.isRelationship() && edge.getLabellingEntity().filter(rel -> includePropertyCriteria.getProperty().equals(rel.getEntity())).isPresent();
             }
 
             @Override
-            public EdgeMatcher visit(@Nonnull IncludeSubClassOfCriteria includeSubClassOfCriteria) {
+            public EdgeMatcher visit(@Nonnull AnySubClassOfEdgeCriteria includeSubClassOfCriteria) {
                 return edge -> edge.isIsA() && edge.getTail().getEntity().isOWLClass();
             }
 
             @Override
-            public EdgeMatcher visit(IncludeAnyEdgeCriteria includeAnyEdgeCriteria) {
+            public EdgeMatcher visit(@Nonnull AnyEdgeCriteria includeAnyEdgeCriteria) {
                 return edge -> true;
+            }
+
+            @Override
+            public EdgeMatcher visit(@Nonnull TailNodeMatchesCriteria criteria) {
+                return edge -> matcherFactory.getMatcher(criteria.getNodeCriteria()).matches(edge.getTail().getEntity());
+            }
+
+            @Override
+            public EdgeMatcher visit(@Nonnull HeadNodeMatchesCriteria criteria) {
+                return edge -> matcherFactory.getMatcher(criteria.getNodeCriteria()).matches(edge.getHead().getEntity());
+            }
+
+            @Override
+            public EdgeMatcher visit(@Nonnull AnyNodeCriteria criteria) {
+                return edge -> true;
+            }
+
+            @Override
+            public EdgeMatcher visit(@Nonnull NegatedEdgeCriteria criteria) {
+                return new EdgeNegatedMatcher(createMatcher(criteria.getNegatedCriteria()));
             }
         };
         return criteria.accept(mapper);
@@ -63,13 +94,39 @@ public class EdgeMatcherFactory {
         @Nonnull
         private final ImmutableList<EdgeMatcher> matchers;
 
-        public CompositeEdgeMatcher(@Nonnull ImmutableList<EdgeMatcher> matchers) {
+        @Nonnull
+        private final MultiMatchType multiMatchType;
+
+        public CompositeEdgeMatcher(@Nonnull ImmutableList<EdgeMatcher> matchers,
+                                    @Nonnull MultiMatchType multiMatchType) {
             this.matchers = checkNotNull(matchers);
+            this.multiMatchType = checkNotNull(multiMatchType);
         }
 
         @Override
         public boolean matches(@Nonnull Edge edge) {
-            return matchers.stream().anyMatch(m -> m.matches(edge));
+            if(multiMatchType == MultiMatchType.ALL) {
+                return matchers.stream().allMatch(m -> m.matches(edge));
+            }
+            else {
+                return matchers.stream().anyMatch(m -> m.matches(edge));
+            }
+        }
+    }
+
+
+    private static class EdgeNegatedMatcher implements EdgeMatcher {
+
+        @Nonnull
+        private final EdgeMatcher negatedMatcher;
+
+        public EdgeNegatedMatcher(@Nonnull EdgeMatcher negatedMatcher) {
+            this.negatedMatcher = negatedMatcher;
+        }
+
+        @Override
+        public boolean matches(@Nonnull Edge edge) {
+            return !negatedMatcher.matches(edge);
         }
     }
 }

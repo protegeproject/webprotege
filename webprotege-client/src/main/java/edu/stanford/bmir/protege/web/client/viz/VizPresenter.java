@@ -16,9 +16,11 @@ import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.Item;
@@ -29,6 +31,7 @@ import edu.stanford.bmir.protege.web.shared.viz.*;
 import elemental.dom.Element;
 import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -171,15 +174,16 @@ public class VizPresenter {
     private EdgeCriteria getEdgeCriteria() {
         ImmutableList.Builder<EdgeCriteria> edgeCriteriaBuilder = ImmutableList.builder();
         if(view.isIncludeSubClassOf()) {
-            edgeCriteriaBuilder.add(IncludeSubClassOfCriteria.get());
+            edgeCriteriaBuilder.add(AnySubClassOfEdgeCriteria.get());
         }
         if(view.isIncludeInstanceOf()) {
-            edgeCriteriaBuilder.add(IncludeInstanceOfCriteria.get());
+            edgeCriteriaBuilder.add(AnyInstanceOfEdgeCriteria.get());
         }
         if(view.isIncludeRelationships()) {
-            edgeCriteriaBuilder.add(IncludeAnyRelationshipCriteria.get());
+            edgeCriteriaBuilder.add(AnyRelationshipEdgeCriteria.get());
         }
-        return CompositeEdgeCriteria.get(edgeCriteriaBuilder.build());
+        return CompositeEdgeCriteria.get(edgeCriteriaBuilder.build(),
+                                         MultiMatchType.ANY);
     }
 
     private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {
