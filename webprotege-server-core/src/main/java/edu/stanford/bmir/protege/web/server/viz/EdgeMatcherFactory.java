@@ -30,7 +30,7 @@ public class EdgeMatcherFactory {
             }
 
             @Override
-            public EdgeMatcher visit(@Nonnull IncludeAnyPropertyCriteria includeAnyPropertyCriteria) {
+            public EdgeMatcher visit(@Nonnull IncludeAnyRelationshipCriteria includeAnyPropertyCriteria) {
                 return Edge::isRelationship;
             }
 

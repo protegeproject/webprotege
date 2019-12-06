@@ -11,7 +11,7 @@ public interface EdgeCriteriaVisitor<R> {
 
     R visit(@Nonnull CompositeEdgeCriteria compositeEdgeCriteria);
 
-    R visit(@Nonnull IncludeAnyPropertyCriteria includeAnyPropertyCriteria);
+    R visit(@Nonnull IncludeAnyRelationshipCriteria includeAnyRelationshipCriteria);
 
     R visit(@Nonnull IncludeInstanceOfCriteria includeInstanceOfCriteria);
 

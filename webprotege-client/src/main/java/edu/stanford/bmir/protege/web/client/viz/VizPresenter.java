@@ -19,7 +19,6 @@ import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.Item;
@@ -178,7 +177,7 @@ public class VizPresenter {
             edgeCriteriaBuilder.add(IncludeInstanceOfCriteria.get());
         }
         if(view.isIncludeRelationships()) {
-            edgeCriteriaBuilder.add(IncludeAnyPropertyCriteria.get());
+            edgeCriteriaBuilder.add(IncludeAnyRelationshipCriteria.get());
         }
         return CompositeEdgeCriteria.get(edgeCriteriaBuilder.build());
     }

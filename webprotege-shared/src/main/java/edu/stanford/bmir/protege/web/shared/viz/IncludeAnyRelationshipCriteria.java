@@ -12,11 +12,11 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public class IncludeAnyPropertyCriteria implements EdgeCriteria {
+public class IncludeAnyRelationshipCriteria implements EdgeCriteria {
 
     @Nonnull
-    public static IncludeAnyPropertyCriteria get() {
-        return new AutoValue_IncludeAnyPropertyCriteria();
+    public static IncludeAnyRelationshipCriteria get() {
+        return new AutoValue_IncludeAnyRelationshipCriteria();
     }
 
     @Override
