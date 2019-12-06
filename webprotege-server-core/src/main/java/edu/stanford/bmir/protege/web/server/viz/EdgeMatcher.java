@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.viz;
 
 import edu.stanford.bmir.protege.web.shared.viz.Edge;
-import edu.stanford.protege.gwt.graphtree.shared.graph.GraphEdge;
 
 import javax.annotation.Nonnull;
 
