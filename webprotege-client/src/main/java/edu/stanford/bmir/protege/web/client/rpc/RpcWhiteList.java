@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
+import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.IsAEdge;
 import edu.stanford.bmir.protege.web.shared.viz.RelationshipEdge;
@@ -147,6 +148,16 @@ public class RpcWhiteList implements Action, Result {
     RelationshipEdge relationshipEdge;
 
     ImmutableSetMultimap immutableSetMultimap;
+
+    public EdgeCriteria getEdgeCriteria() {
+        return edgeCriteria;
+    }
+
+    public void setEdgeCriteria(EdgeCriteria edgeCriteria) {
+        this.edgeCriteria = edgeCriteria;
+    }
+
+    EdgeCriteria edgeCriteria;
 
     public RelationshipPresence getRelationshipPresence() {
         return relationshipPresence;

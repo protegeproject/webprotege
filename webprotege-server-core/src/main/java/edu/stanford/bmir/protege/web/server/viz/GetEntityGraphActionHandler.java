@@ -4,7 +4,6 @@ import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
 import org.slf4j.Logger;
@@ -26,13 +25,18 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
     private static Logger logger = LoggerFactory.getLogger(GetEntityGraphActionHandler.class);
 
     @Nonnull
-    private final EntityGraphBuilder graphBuilder;
+    private final EntityGraphBuilderFactory graphBuilderFactory;
+
+    @Nonnull
+    private final EdgeMatcherFactory edgeMatcherFactory;
 
     @Inject
     public GetEntityGraphActionHandler(@Nonnull AccessManager accessManager,
-                                       @Nonnull EntityGraphBuilder graphBuilder) {
+                                       @Nonnull EntityGraphBuilderFactory graphBuilderFactory,
+                                       @Nonnull EdgeMatcherFactory edgeMatcherFactory) {
         super(accessManager);
-        this.graphBuilder = checkNotNull(graphBuilder);
+        this.graphBuilderFactory = checkNotNull(graphBuilderFactory);
+        this.edgeMatcherFactory = checkNotNull(edgeMatcherFactory);
     }
 
     @Nonnull
@@ -45,7 +49,9 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
     @Override
     public GetEntityGraphResult execute(@Nonnull GetEntityGraphAction action, @Nonnull ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        EntityGraph graph = graphBuilder.createGraph(action.getEntity());
+        var edgeMatcher = edgeMatcherFactory.createMatcher(action.getEdgeCriteria());
+        var graph = graphBuilderFactory.create(edgeMatcher)
+                                       .createGraph(action.getEntity());
         stopwatch.stop();
         logger.debug("Created entity graph [{} nodes; edges {}] in {} ms",
                     graph.getNodes().size(),

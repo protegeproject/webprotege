@@ -35,6 +35,8 @@ public interface VizView extends IsWidget {
 
     void setGraph(@Nonnull OWLEntity rootEntity, @Nonnull Graph graph);
 
+    void setGraphCriteriaChangedHandler(GraphCriteriaChangedHandler handler);
+
     void updateGraph(Graph graph);
 
     void setLoadHandler(Runnable handler);
@@ -44,6 +46,12 @@ public interface VizView extends IsWidget {
     boolean isVisible();
 
     double getRankSpacing();
+
+    boolean isIncludeSubClassOf();
+
+    boolean isIncludeInstanceOf();
+
+    boolean isIncludeRelationships();
 
     void setSettingsChangedHandler(@Nonnull SettingsChangedHandler handler);
 
@@ -74,5 +82,9 @@ public interface VizView extends IsWidget {
     interface SettingsChangedHandler {
 
         void handleSettingsChanged();
+    }
+
+    interface GraphCriteriaChangedHandler {
+        void handleGraphCriteriaChanged();
     }
 }

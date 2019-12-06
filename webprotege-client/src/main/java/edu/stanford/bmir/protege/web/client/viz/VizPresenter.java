@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -18,15 +19,14 @@ import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.Item;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
-import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
+import edu.stanford.bmir.protege.web.shared.viz.*;
 import elemental.dom.Element;
 import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -114,6 +114,7 @@ public class VizPresenter {
     }
 
     private void addHandlersToView() {
+        view.setGraphCriteriaChangedHandler(this::handleGraphCriteriaChanged);
         view.setSettingsChangedHandler(this::handleSettingsChanged);
         view.setLoadHandler(this::handleLoad);
         view.setDownloadHandler(this::handleDownload);
@@ -156,9 +157,30 @@ public class VizPresenter {
     public void displayEntity(@Nonnull OWLEntity entity) {
         checkNotNull(entity);
         this.currentEntity = Optional.of(entity);
-        dispatch.execute(new GetEntityGraphAction(projectId, entity),
-                         hasBusy,
-                         this::handleRendering);
+        redisplayCurrentEntity();
+    }
+
+    private void redisplayCurrentEntity() {
+        currentEntity.ifPresent(entity -> {
+            EdgeCriteria edgeCriteria = getEdgeCriteria();
+            dispatch.execute(new GetEntityGraphAction(projectId, entity, edgeCriteria),
+                             hasBusy,
+                             this::handleRendering);
+        });
+    }
+
+    private EdgeCriteria getEdgeCriteria() {
+        ImmutableList.Builder<EdgeCriteria> edgeCriteriaBuilder = ImmutableList.builder();
+        if(view.isIncludeSubClassOf()) {
+            edgeCriteriaBuilder.add(IncludeSubClassOfCriteria.get());
+        }
+        if(view.isIncludeInstanceOf()) {
+            edgeCriteriaBuilder.add(IncludeInstanceOfCriteria.get());
+        }
+        if(view.isIncludeRelationships()) {
+            edgeCriteriaBuilder.add(IncludeAnyPropertyCriteria.get());
+        }
+        return CompositeEdgeCriteria.get(edgeCriteriaBuilder.build());
     }
 
     private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {
@@ -350,6 +372,9 @@ public class VizPresenter {
         layoutAndDisplayGraph();
     }
 
+    private void handleGraphCriteriaChanged() {
+        redisplayCurrentEntity();
+    }
 
     private void handleRendering(@Nonnull GetEntityGraphResult result) {
         if(result.getEntityGraph().equals(currentEntityGraph)) {

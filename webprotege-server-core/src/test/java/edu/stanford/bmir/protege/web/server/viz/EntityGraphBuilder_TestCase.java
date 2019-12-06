@@ -11,20 +11,16 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.viz.Edge;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyAssertionAxiomImpl;
 
 import javax.annotation.Nonnull;
-import java.lang.ref.Reference;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Stream;
 
@@ -66,6 +62,8 @@ public class EntityGraphBuilder_TestCase {
     @Mock
     private OWLOntologyID ontId;
 
+    private EdgeMatcher edgeMatcher = edge -> true;
+
     @Before
     public void setUp() {
         graphBuilder = new EntityGraphBuilder(renderingManager,
@@ -73,7 +71,7 @@ public class EntityGraphBuilder_TestCase {
                                               objectPropertyAssertionsIndex,
                                               subClassOfAxiomIndex,
                                               classAssertionAxiomsIndex,
-                                              equivalentClassesAxiomsIndex);
+                                              equivalentClassesAxiomsIndex, edgeMatcher);
         when(projectOntologiesIndex.getOntologyIds())
                 .thenAnswer(inv -> Stream.of(ontId));
     }

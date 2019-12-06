@@ -20,9 +20,14 @@ public class GetEntityGraphAction implements ProjectAction<GetEntityGraphResult>
 
     private OWLEntity entity;
 
-    public GetEntityGraphAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+    private EdgeCriteria edgeCriteria;
+
+    public GetEntityGraphAction(@Nonnull ProjectId projectId,
+                                @Nonnull OWLEntity entity,
+                                EdgeCriteria edgeCriteria) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
+        this.edgeCriteria = checkNotNull(edgeCriteria);
     }
 
     @GwtSerializationConstructor
@@ -38,5 +43,10 @@ public class GetEntityGraphAction implements ProjectAction<GetEntityGraphResult>
     @Nonnull
     public OWLEntity getEntity() {
         return entity;
+    }
+
+    @Nonnull
+    public EdgeCriteria getEdgeCriteria() {
+        return edgeCriteria;
     }
 }

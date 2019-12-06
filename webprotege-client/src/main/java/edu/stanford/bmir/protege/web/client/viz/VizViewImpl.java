@@ -69,6 +69,15 @@ public class VizViewImpl extends Composite implements VizView {
     @UiField
     LargeGraphMessageViewImpl largeGraphMessageView;
 
+    @UiField
+    CheckBox includeSubClassOfCheckBox;
+
+    @UiField
+    CheckBox instanceOfCheckBox;
+
+    @UiField
+    CheckBox relationshipsCheckBox;
+
     @Nonnull
     private Runnable loadHandler = () -> {
     };
@@ -114,6 +123,8 @@ public class VizViewImpl extends Composite implements VizView {
 
     private List<Tooltip> tooltips = new ArrayList<>();
 
+    private GraphCriteriaChangedHandler graphCriteriaChangedHandler = () -> {};
+
 
     @Inject
     public VizViewImpl() {
@@ -121,6 +132,9 @@ public class VizViewImpl extends Composite implements VizView {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
+        includeSubClassOfCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
+        instanceOfCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
+        relationshipsCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
     }
 
     private void handleKeyDown(KeyDownEvent event) {
@@ -317,6 +331,11 @@ public class VizViewImpl extends Composite implements VizView {
         setupZoom();
     }
 
+    @Override
+    public void setGraphCriteriaChangedHandler(GraphCriteriaChangedHandler handler) {
+        this.graphCriteriaChangedHandler = checkNotNull(handler);
+    }
+
     private void setupZoom() {
         Selection svgElement = d3.selectElement(getSvgElement());
         Zoom zoom = d3.zoom();
@@ -410,6 +429,21 @@ public class VizViewImpl extends Composite implements VizView {
         } catch (NumberFormatException e) {
             return 2.0;
         }
+    }
+
+    @Override
+    public boolean isIncludeSubClassOf() {
+        return includeSubClassOfCheckBox.getValue();
+    }
+
+    @Override
+    public boolean isIncludeInstanceOf() {
+        return instanceOfCheckBox.getValue();
+    }
+
+    @Override
+    public boolean isIncludeRelationships() {
+        return relationshipsCheckBox.getValue();
     }
 
     @Override

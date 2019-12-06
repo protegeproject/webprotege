@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.viz;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.index.*;
@@ -57,20 +59,25 @@ public class EntityGraphBuilder {
     @Nonnull
     private final Queue<OWLEntity> queue = new ArrayDeque<>();
 
+    private final EdgeMatcher edgeMatcher;
 
+
+    @AutoFactory
     @Inject
-    public EntityGraphBuilder(@Nonnull RenderingManager renderer,
-                              @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                              @Nonnull ObjectPropertyAssertionAxiomsBySubjectIndex objectPropertyAssertions,
-                              @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxioms,
-                              @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxioms,
-                              @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxioms) {
+    public EntityGraphBuilder(@Nonnull @Provided RenderingManager renderer,
+                              @Nonnull @Provided ProjectOntologiesIndex projectOntologiesIndex,
+                              @Nonnull @Provided ObjectPropertyAssertionAxiomsBySubjectIndex objectPropertyAssertions,
+                              @Nonnull @Provided SubClassOfAxiomsBySubClassIndex subClassOfAxioms,
+                              @Nonnull @Provided ClassAssertionAxiomsByIndividualIndex classAssertionAxioms,
+                              @Nonnull @Provided EquivalentClassesAxiomsIndex equivalentClassesAxioms,
+                              @Nonnull EdgeMatcher edgeMatcher) {
         this.renderer = checkNotNull(renderer);
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.objectPropertyAssertions = objectPropertyAssertions;
         this.subClassOfAxioms = subClassOfAxioms;
         this.classAssertionAxioms = classAssertionAxioms;
         this.equivalentClassesAxioms = equivalentClassesAxioms;
+        this.edgeMatcher = edgeMatcher;
     }
 
     private void addEdgeForComplexSuperClass(Set<Edge> edges,
@@ -100,8 +107,11 @@ public class EntityGraphBuilder {
         var individual = filler.asOWLNamedIndividual();
         var individualData = renderer.getIndividualData(individual);
         var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
-        edges.add(RelationshipEdge.get(subClsData, individualData, propertyData));
-        push(individual);
+        RelationshipEdge edge = RelationshipEdge.get(subClsData, individualData, propertyData);
+        if(edgeMatcher.matches(edge)) {
+            edges.add(edge);
+            push(individual);
+        }
     }
 
     private void addEdgeForNamedSuperClass(Set<Edge> edges,
@@ -109,8 +119,11 @@ public class EntityGraphBuilder {
                                            OWLClassExpression superClass) {
         var superCls = superClass.asOWLClass();
         var superClsData = renderer.getClassData(superCls);
-        edges.add(IsAEdge.get(subClsData, superClsData));
-        push(superCls);
+        IsAEdge edge = IsAEdge.get(subClsData, superClsData);
+        if(edgeMatcher.matches(edge)) {
+            edges.add(edge);
+            push(superCls);
+        }
     }
 
     private void addEdgeForSomeValuesFrom(Set<Edge> edges,
@@ -127,8 +140,11 @@ public class EntityGraphBuilder {
         var fillerCls = filler.asOWLClass();
         var fillerClsData = renderer.getClassData(fillerCls);
         var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
-        edges.add(RelationshipEdge.get(subClsData, fillerClsData, propertyData));
-        push(fillerCls);
+        RelationshipEdge edge = RelationshipEdge.get(subClsData, fillerClsData, propertyData);
+        if(edgeMatcher.matches(edge)) {
+            edges.add(edge);
+            push(fillerCls);
+        }
     }
 
     private void addEdgeForSuperClass(Set<Edge> edges,
@@ -191,8 +207,11 @@ public class EntityGraphBuilder {
                                           OWLNamedIndividualData individualData,
                                           OWLClass cls) {
         var clsData = renderer.getClassData(cls);
-        edges.add(IsAEdge.get(individualData, clsData));
-        push(cls);
+        IsAEdge edge = IsAEdge.get(individualData, clsData);
+        if(edgeMatcher.matches(edge)) {
+            edges.add(edge);
+            push(cls);
+        }
     }
 
     private void addInstanceOfToComplexClassExpression(Set<Edge> edges,
@@ -218,8 +237,11 @@ public class EntityGraphBuilder {
         }
         var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
         var fillerData = renderer.getIndividualData(individual.asOWLNamedIndividual());
-        edges.add(RelationshipEdge.get(individualData, fillerData, propertyData));
-        push(individual.asOWLNamedIndividual());
+        RelationshipEdge edge = RelationshipEdge.get(individualData, fillerData, propertyData);
+        if(edgeMatcher.matches(edge)) {
+            edges.add(edge);
+            push(individual.asOWLNamedIndividual());
+        }
     }
 
     private void addInstanceOfObjectSomeValuesFrom(Set<Edge> edges,
@@ -235,8 +257,11 @@ public class EntityGraphBuilder {
         }
         var propertyData = renderer.getObjectPropertyData(property.asOWLObjectProperty());
         var fillerData = renderer.getClassData(fillerCls.asOWLClass());
-        edges.add(RelationshipEdge.get(individualData, fillerData, propertyData));
-        push(fillerCls.asOWLClass());
+        RelationshipEdge edge = RelationshipEdge.get(individualData, fillerData, propertyData);
+        if(edgeMatcher.matches(edge)) {
+            edges.add(edge);
+            push(fillerCls.asOWLClass());
+        }
     }
 
     private void createEdgesForIndividual(Set<Edge> edges,
@@ -259,8 +284,11 @@ public class EntityGraphBuilder {
                                   var objectData = renderer.getIndividualData(object);
                                   var propertyData = renderer.getObjectPropertyData(ax.getProperty()
                                                                                       .asOWLObjectProperty());
-                                  edges.add(RelationshipEdge.get(individualData, objectData, propertyData));
-                                  push(object);
+                                  RelationshipEdge edge = RelationshipEdge.get(individualData, objectData, propertyData);
+                                  if(edgeMatcher.matches(edge)) {
+                                      edges.add(edge);
+                                      push(object);
+                                  }
                               });
     }
 
