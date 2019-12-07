@@ -24,7 +24,8 @@ import javax.annotation.Nonnull;
         @Type(RelationshipEdgePropertyEqualsCriteria.class),
         @Type(HeadNodeMatchesCriteria.class),
         @Type(TailNodeMatchesCriteria.class),
-        @Type(NegatedEdgeCriteria.class)
+        @Type(NegatedEdgeCriteria.class),
+        @Type(CompositeEdgeCriteria.class)
               })
 public interface EdgeCriteria extends IsSerializable {
 

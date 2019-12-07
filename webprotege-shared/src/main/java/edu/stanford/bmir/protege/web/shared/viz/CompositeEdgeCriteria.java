@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
+import jsinterop.annotations.JsProperty;
 
 import javax.annotation.Nonnull;
 
@@ -14,11 +18,13 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("CompositeOf")
 public abstract class CompositeEdgeCriteria implements EdgeCriteria {
 
+    @JsonCreator
     @Nonnull
-    public static CompositeEdgeCriteria get(@Nonnull ImmutableList<EdgeCriteria> criteria,
-                                            @Nonnull MultiMatchType multiMatchType) {
+    public static CompositeEdgeCriteria get(@Nonnull @JsonProperty("criteria") ImmutableList<EdgeCriteria> criteria,
+                                            @Nonnull @JsonProperty("matchType") MultiMatchType multiMatchType) {
         return new AutoValue_CompositeEdgeCriteria(criteria, multiMatchType);
     }
 
