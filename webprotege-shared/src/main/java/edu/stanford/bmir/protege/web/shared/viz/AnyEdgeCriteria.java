@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 
@@ -12,8 +14,10 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public class AnyEdgeCriteria implements EdgeCriteria {
+@JsonTypeName("AnyEdge")
+public abstract class AnyEdgeCriteria implements EdgeCriteria {
 
+    @JsonCreator
     @Nonnull
     public static AnyEdgeCriteria get() {
         return new AutoValue_AnyEdgeCriteria();
