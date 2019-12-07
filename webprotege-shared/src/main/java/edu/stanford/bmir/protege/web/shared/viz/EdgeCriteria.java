@@ -20,7 +20,11 @@ import javax.annotation.Nonnull;
         @Type(AnyEdgeCriteria.class),
         @Type(AnyInstanceOfEdgeCriteria.class),
         @Type(AnySubClassOfEdgeCriteria.class),
-        @Type(AnyRelationshipEdgeCriteria.class)
+        @Type(AnyRelationshipEdgeCriteria.class),
+        @Type(RelationshipEdgePropertyEqualsCriteria.class),
+        @Type(HeadNodeMatchesCriteria.class),
+        @Type(TailNodeMatchesCriteria.class),
+        @Type(NegatedEdgeCriteria.class)
               })
 public interface EdgeCriteria extends IsSerializable {
 

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -17,7 +19,8 @@ import javax.annotation.Nonnull;
 @JsonTypeName("TailNodeMatches")
 public abstract class TailNodeMatchesCriteria implements NodeMatchesCriteria {
 
-    public static TailNodeMatchesCriteria get(@Nonnull EntityMatchCriteria criteria) {
+    @JsonCreator
+    public static TailNodeMatchesCriteria get(@Nonnull @JsonProperty("nodeCriteria") EntityMatchCriteria criteria) {
         return new AutoValue_TailNodeMatchesCriteria(criteria);
     }
 

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -17,7 +19,8 @@ import javax.annotation.Nonnull;
 @JsonTypeName("HeadNodeMatches")
 public abstract class HeadNodeMatchesCriteria implements NodeMatchesCriteria {
 
-    public static HeadNodeMatchesCriteria get(@Nonnull EntityMatchCriteria matchCriteria) {
+    @JsonCreator
+    public static HeadNodeMatchesCriteria get(@Nonnull @JsonProperty("nodeCriteria") EntityMatchCriteria matchCriteria) {
         return new AutoValue_HeadNodeMatchesCriteria(matchCriteria);
     }
 

@@ -51,7 +51,7 @@ public class EdgeMatcherFactory {
             }
 
             @Override
-            public EdgeMatcher visit(@Nonnull RelationshipEdgeWithPropertyCriteria includePropertyCriteria) {
+            public EdgeMatcher visit(@Nonnull RelationshipEdgePropertyEqualsCriteria includePropertyCriteria) {
                 return edge -> edge.isRelationship() && edge.getLabellingEntity().filter(rel -> includePropertyCriteria.getProperty().equals(rel.getEntity())).isPresent();
             }
 

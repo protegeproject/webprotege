@@ -15,7 +15,7 @@ public interface EdgeCriteriaVisitor<R> {
 
     R visit(@Nonnull AnyInstanceOfEdgeCriteria criteria);
 
-    R visit(@Nonnull RelationshipEdgeWithPropertyCriteria criteria);
+    R visit(@Nonnull RelationshipEdgePropertyEqualsCriteria criteria);
 
     R visit(@Nonnull AnySubClassOfEdgeCriteria criteria);
 

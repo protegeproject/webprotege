@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -13,10 +16,12 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class RelationshipEdgeWithPropertyCriteria implements EdgeCriteria {
+@JsonTypeName("RelationshipEdgePropertyEquals")
+public abstract class RelationshipEdgePropertyEqualsCriteria implements EdgeCriteria {
 
-    public static RelationshipEdgeWithPropertyCriteria get(@Nonnull OWLProperty property) {
-        return new AutoValue_RelationshipEdgeWithPropertyCriteria(property);
+    @JsonCreator
+    public static RelationshipEdgePropertyEqualsCriteria get(@Nonnull @JsonProperty("property") OWLProperty property) {
+        return new AutoValue_RelationshipEdgePropertyEqualsCriteria(property);
     }
 
     @Override
