@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +28,7 @@ import javax.annotation.Nonnull;
         @Type(NegatedEdgeCriteria.class),
         @Type(CompositeEdgeCriteria.class)
               })
-public interface EdgeCriteria extends IsSerializable {
+public interface EdgeCriteria extends Criteria {
 
     <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor);
 }
