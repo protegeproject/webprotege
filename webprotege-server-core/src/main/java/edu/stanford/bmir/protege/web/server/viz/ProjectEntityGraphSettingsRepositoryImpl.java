@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.UpdateOptions;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.bson.Document;
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-06
  */
-@ProjectSingleton
+@ApplicationSingleton
 public class ProjectEntityGraphSettingsRepositoryImpl implements ProjectEntityGraphSettingsRepository {
 
     private static final String COLLECTION_NAME = "EntityGraphSettings";

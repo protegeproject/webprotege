@@ -35,10 +35,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -172,18 +169,31 @@ public class VizPresenter {
     }
 
     private EdgeCriteria getEdgeCriteria() {
-        ImmutableList.Builder<EdgeCriteria> edgeCriteriaBuilder = ImmutableList.builder();
+        List<EdgeCriteria> negativeCriteria = new ArrayList<>();
+        List<EdgeCriteria> positiveCriteria = new ArrayList<>();
         if(view.isIncludeSubClassOf()) {
-            edgeCriteriaBuilder.add(AnySubClassOfEdgeCriteria.get());
+            positiveCriteria.add(AnySubClassOfEdgeCriteria.get());
+        }
+        else {
+            negativeCriteria.add(NegatedEdgeCriteria.get(AnySubClassOfEdgeCriteria.get()));
         }
         if(view.isIncludeInstanceOf()) {
-            edgeCriteriaBuilder.add(AnyInstanceOfEdgeCriteria.get());
+            positiveCriteria.add(AnyInstanceOfEdgeCriteria.get());
+        }
+        else {
+            negativeCriteria.add(NegatedEdgeCriteria.get(AnyInstanceOfEdgeCriteria.get()));
         }
         if(view.isIncludeRelationships()) {
-            edgeCriteriaBuilder.add(AnyRelationshipEdgeCriteria.get());
+            positiveCriteria.add(AnyRelationshipEdgeCriteria.get());
         }
-        return CompositeEdgeCriteria.get(edgeCriteriaBuilder.build(),
-                                         MultiMatchType.ANY);
+        else {
+            negativeCriteria.add(NegatedEdgeCriteria.get(AnyRelationshipEdgeCriteria.get()));
+        }
+        EdgeCriteria combinedPositiveCriteria = CompositeEdgeCriteria.get(positiveCriteria, MultiMatchType.ANY);
+        EdgeCriteria combinedNegativeCriteria = CompositeEdgeCriteria.get(negativeCriteria, MultiMatchType.ALL);
+        return CompositeEdgeCriteria.get(ImmutableList.of(combinedPositiveCriteria,
+                                                          combinedNegativeCriteria),
+                                         MultiMatchType.ALL);
     }
 
     private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {

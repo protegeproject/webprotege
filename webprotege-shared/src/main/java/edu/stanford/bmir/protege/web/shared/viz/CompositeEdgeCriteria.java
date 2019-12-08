@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import jsinterop.annotations.JsProperty;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -23,9 +24,9 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
 
     @JsonCreator
     @Nonnull
-    public static CompositeEdgeCriteria get(@Nonnull @JsonProperty("criteria") ImmutableList<EdgeCriteria> criteria,
+    public static CompositeEdgeCriteria get(@Nonnull @JsonProperty("criteria") List<EdgeCriteria> criteria,
                                             @Nonnull @JsonProperty("matchType") MultiMatchType multiMatchType) {
-        return new AutoValue_CompositeEdgeCriteria(criteria, multiMatchType);
+        return new AutoValue_CompositeEdgeCriteria(ImmutableList.copyOf(criteria), multiMatchType);
     }
 
     @Override

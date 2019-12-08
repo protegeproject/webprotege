@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.server.viz;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
+import edu.stanford.bmir.protege.web.shared.viz.CompositeEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
 import org.slf4j.Logger;
@@ -30,13 +34,18 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
     @Nonnull
     private final EdgeMatcherFactory edgeMatcherFactory;
 
+    @Nonnull
+    private final ProjectEntityGraphSettingsRepository entityGraphSettingsRepository;
+
     @Inject
     public GetEntityGraphActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull EntityGraphBuilderFactory graphBuilderFactory,
-                                       @Nonnull EdgeMatcherFactory edgeMatcherFactory) {
+                                       @Nonnull EdgeMatcherFactory edgeMatcherFactory,
+                                       @Nonnull ProjectEntityGraphSettingsRepository entityGraphSettingsRepository) {
         super(accessManager);
         this.graphBuilderFactory = checkNotNull(graphBuilderFactory);
         this.edgeMatcherFactory = checkNotNull(edgeMatcherFactory);
+        this.entityGraphSettingsRepository = checkNotNull(entityGraphSettingsRepository);
     }
 
     @Nonnull
@@ -49,7 +58,15 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
     @Override
     public GetEntityGraphResult execute(@Nonnull GetEntityGraphAction action, @Nonnull ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        var edgeMatcher = edgeMatcherFactory.createMatcher(action.getEdgeCriteria());
+        var entityGraphSettings = entityGraphSettingsRepository.getSettings(action.getProjectId());
+        var projectDefaultCriteria = entityGraphSettings.getEdgeCriteria();
+        var userCriteria = action.getEdgeCriteria();
+        var combinedCriteria = ImmutableList.<EdgeCriteria>builder()
+                .addAll(projectDefaultCriteria)
+                .add(userCriteria)
+                .build();
+        var criteria = CompositeEdgeCriteria.get(combinedCriteria, MultiMatchType.ALL);
+        var edgeMatcher = edgeMatcherFactory.createMatcher(criteria);
         var graph = graphBuilderFactory.create(edgeMatcher)
                                        .createGraph(action.getEntity());
         stopwatch.stop();
