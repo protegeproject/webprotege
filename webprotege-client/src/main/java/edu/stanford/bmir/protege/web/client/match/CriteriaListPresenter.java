@@ -25,6 +25,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class CriteriaListPresenter<C extends Criteria, F extends C> implements CriteriaPresenter<F> {
 
     @Nonnull
+    private MultiMatchType defaultMatchType = MultiMatchType.ALL;
+
+    @Nonnull
     private final CriteriaListView view;
 
     @Nonnull
@@ -52,6 +55,7 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
         container.setWidget(view);
         if (criteriaPresenters.isEmpty()) {
             addCriteriaPresenter();
+            view.setMultiMatchType(defaultMatchType);
         }
         view.setAddCriteriaHandler(this::handleAddCriteria);
     }
@@ -60,6 +64,9 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
         view.setMatchTextPrefix(checkNotNull(prefix));
     }
 
+    public void setDefaultMatchType(@Nonnull MultiMatchType defaultMatchType) {
+        this.defaultMatchType = checkNotNull(defaultMatchType);
+    }
 
     private void handleAddCriteria() {
         addCriteriaPresenter();

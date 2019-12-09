@@ -16,28 +16,53 @@ import java.util.Optional;
 public class VizSettingsPresenter {
 
     @Nonnull
-    private final EdgeCriteriaListPresenter presenter;
+    private final EdgeCriteriaListPresenter inclusionCriteriaPresenter;
+
+    @Nonnull
+    private final EdgeCriteriaListPresenter exclusionCriteriaPresenter;
 
     @Nonnull
     private final VizSettingsView view;
 
     @Inject
-    public VizSettingsPresenter(@Nonnull EdgeCriteriaListPresenter presenter,
+    public VizSettingsPresenter(@Nonnull EdgeCriteriaListPresenter inclusionCriteriaPresenter,
+                                @Nonnull EdgeCriteriaListPresenter exclusionCriteriaPresenter,
                                 @Nonnull VizSettingsView view) {
-        this.presenter = presenter;
+        this.inclusionCriteriaPresenter = inclusionCriteriaPresenter;
+        this.exclusionCriteriaPresenter = exclusionCriteriaPresenter;
         this.view = view;
     }
 
-    public void setEdgeCriteria(CompositeEdgeCriteria criteria) {
-        presenter.setCriteria(criteria);
+    public void setInclusionCriteria(CompositeEdgeCriteria criteria) {
+        inclusionCriteriaPresenter.setCriteria(criteria);
     }
 
-    public Optional<? extends EdgeCriteria> getEdgeCriteria() {
-        return presenter.getCriteria();
+    public void setExclusionCriteria(CompositeEdgeCriteria criteria) {
+        exclusionCriteriaPresenter.setCriteria(criteria);
     }
+
+    @Nonnull
+    public Optional<? extends EdgeCriteria> getInclusionCriteria() {
+        return inclusionCriteriaPresenter.getCriteria();
+    }
+
+    @Nonnull
+    public Optional<? extends EdgeCriteria> getExclusionCriteria() {
+        return exclusionCriteriaPresenter.getCriteria();
+    }
+
+    public void setApplySettingsHandler(Runnable runnable) {
+        view.setApplySettingsHandler(runnable);
+    }
+
+    public void setCancelHandler(Runnable runnable) {
+        view.setCancelSettingsHandler(runnable);
+    }
+
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        presenter.start(view.getEdgeCriteriaContainer());
+        inclusionCriteriaPresenter.start(view.getIncludeCriteriaContainer());
+        exclusionCriteriaPresenter.start(view.getExclusionCriteriaContainer());
     }
 }

@@ -3,8 +3,8 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:style>
         .propertyNameField {
-            min-width: 250px;
-            max-width: 250px;
+            min-width: 170px;
+            max-width: 170px;
         }
     </ui:style>
     <g:HTMLPanel>

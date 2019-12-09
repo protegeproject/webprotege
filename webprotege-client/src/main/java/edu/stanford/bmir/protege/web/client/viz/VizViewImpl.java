@@ -287,6 +287,13 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     @Override
+    public void hideSettings() {
+        canvas.setVisible(true);
+        largeGraphMessageView.setVisible(false);
+        settingsContainer.setVisible(false);
+    }
+
+    @Override
     public Element getSvgElement() {
         return (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
     }
@@ -339,6 +346,7 @@ public class VizViewImpl extends Composite implements VizView {
     private void hideLargeGraphMessage() {
         GWT.log("[VizViewImpl] hideLargeGraphMessage");
         canvas.setVisible(true);
+        settingsContainer.setVisible(false);
         largeGraphMessageView.setVisible(false);
     }
 

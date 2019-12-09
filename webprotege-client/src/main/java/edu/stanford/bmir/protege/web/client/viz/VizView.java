@@ -25,6 +25,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public interface VizView extends IsWidget {
 
+    void hideSettings();
+
     Element getSvgElement();
 
     void clearGraph();

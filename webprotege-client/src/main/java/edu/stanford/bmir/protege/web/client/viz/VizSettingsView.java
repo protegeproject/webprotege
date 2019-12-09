@@ -13,5 +13,12 @@ import javax.annotation.Nonnull;
 public interface VizSettingsView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget getEdgeCriteriaContainer();
+    AcceptsOneWidget getExclusionCriteriaContainer();
+
+    @Nonnull
+    AcceptsOneWidget getIncludeCriteriaContainer();
+
+    void setApplySettingsHandler(Runnable runnable);
+
+    void setCancelSettingsHandler(Runnable runnable);
 }

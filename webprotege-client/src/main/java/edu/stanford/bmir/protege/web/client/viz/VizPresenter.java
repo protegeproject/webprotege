@@ -125,6 +125,18 @@ public class VizPresenter {
         view.setNodeMouseEnterHandler(this::handleMouseEnter);
         view.setNodeMouseLeaveHandler(this::handleMouseLeave);
         view.setDisplaySettingsHandler(this::displaySettings);
+        vizSettingsPresenter.setApplySettingsHandler(this::applySettings);
+        vizSettingsPresenter.setCancelHandler(this::cancelApplySettings);
+    }
+
+    private void cancelApplySettings() {
+        view.hideSettings();
+        redisplayCurrentEntity();
+    }
+
+    private void applySettings() {
+        view.hideSettings();
+        redisplayCurrentEntity();
     }
 
     private void displaySettings() {
@@ -166,6 +178,7 @@ public class VizPresenter {
     }
 
     private void redisplayCurrentEntity() {
+        GWT.log("[VizPresenter] redisplay current entity");
         currentEntity.ifPresent(entity -> {
             EdgeCriteria edgeCriteria = getEdgeCriteria();
             dispatch.execute(new GetEntityGraphAction(projectId, entity, edgeCriteria),
@@ -195,13 +208,23 @@ public class VizPresenter {
         else {
             negativeCriteria.add(NegatedEdgeCriteria.get(AnyRelationshipEdgeCriteria.get()));
         }
-        CompositeEdgeCriteria combinedPositiveCriteria = CompositeEdgeCriteria.get(positiveCriteria, MultiMatchType.ANY);
-        CompositeEdgeCriteria combinedNegativeCriteria = CompositeEdgeCriteria.get(negativeCriteria, MultiMatchType.ALL);
-        CompositeEdgeCriteria criteria = CompositeEdgeCriteria.get(ImmutableList.of(combinedPositiveCriteria,
-                                                          combinedNegativeCriteria),
-                                         MultiMatchType.ALL);
-        vizSettingsPresenter.setEdgeCriteria(criteria);
-        return criteria;
+
+        Optional<? extends EdgeCriteria> inclusionCriteria = vizSettingsPresenter.getInclusionCriteria();
+        Optional<? extends EdgeCriteria> exclusionCriteria = vizSettingsPresenter.getExclusionCriteria();
+        GWT.log("[VizPresenter] InclusionCriteria: " + inclusionCriteria.toString());
+        EdgeCriteria inc;
+        if(inclusionCriteria.isPresent()) {
+            inc = inclusionCriteria.get();
+        }
+        else {
+            inc = AnyEdgeCriteria.get();
+        }
+        if(exclusionCriteria.isPresent()) {
+            EdgeCriteria exc = NegatedEdgeCriteria.get(exclusionCriteria.get());
+            inc = CompositeEdgeCriteria.get(ImmutableList.of(inc, exc), MultiMatchType.ALL);
+        }
+        GWT.log("[VizPresenter] Criteria: " + inc.toString());
+        return inc;
     }
 
     private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {

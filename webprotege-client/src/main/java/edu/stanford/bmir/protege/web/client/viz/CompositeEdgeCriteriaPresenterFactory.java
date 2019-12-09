@@ -26,7 +26,7 @@ public class CompositeEdgeCriteriaPresenterFactory implements CriteriaPresenterF
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Edges that match";
+        return "Edge matches";
     }
 
     @Nonnull

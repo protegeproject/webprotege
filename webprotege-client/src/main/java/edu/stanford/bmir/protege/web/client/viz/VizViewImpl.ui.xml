@@ -10,6 +10,12 @@
             align-items: stretch;
         }
 
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
         .messageView {
             flex-grow: 1;
             flex-shrink: 1;
@@ -82,10 +88,14 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
-        <viz:LargeGraphMessageViewImpl visible="false" ui:field="largeGraphMessageView" addStyleNames="{style.messageView}"/>
-        <g:SimplePanel ui:field="settingsContainer" visible="false" addStyleNames="{style.settingsView}"/>
-        <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
-        <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
+        <g:HTMLPanel addStyleNames="{style.container}">
+            <viz:LargeGraphMessageViewImpl visible="false" ui:field="largeGraphMessageView"
+                                           addStyleNames="{style.messageView}"/>
+            <g:SimplePanel ui:field="settingsContainer"
+                           visible="false"
+                           addStyleNames="{style.settingsView} {wp.style.panelFilled}"/>
+            <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
+        </g:HTMLPanel><g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
             <g:HTMLPanel addStyleNames="{style.settingsBarFormGroup}">
                 <g:Label text="Spacing" addStyleNames="{wp.style.formLabel} {style.settingsBarLabel}"/>
                 <g:ListBox ui:field="ranksepListBox">

@@ -27,6 +27,12 @@ public class EdgeCriteriaListPresenter extends CriteriaListPresenter<EdgeCriteri
     }
 
     @Override
+    public void start(@Nonnull AcceptsOneWidget container) {
+        setDefaultMatchType(MultiMatchType.ANY);
+        super.start(container);
+    }
+
+    @Override
     protected CompositeEdgeCriteria createCompositeCriteria(@Nonnull ImmutableList<? extends EdgeCriteria> criteriaList) {
         return CompositeEdgeCriteria.get(criteriaList, getMultiMatchType());
     }

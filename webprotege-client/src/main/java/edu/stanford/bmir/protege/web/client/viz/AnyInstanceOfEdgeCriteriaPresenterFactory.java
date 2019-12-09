@@ -28,12 +28,14 @@ public class AnyInstanceOfEdgeCriteriaPresenterFactory implements CriteriaPresen
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Edge is any InstanceOf edge";
+        return "Edge is InstanceOf";
     }
 
     @Nonnull
     @Override
     public CriteriaPresenter<? extends AnyInstanceOfEdgeCriteria> createPresenter() {
-        return presenterProvider.get();
+        BlankEdgeCriteriaPresenter<AnyInstanceOfEdgeCriteria> presenter = presenterProvider.get();
+        presenter.setCriteria(AnyInstanceOfEdgeCriteria.get());
+        return presenter;
     }
 }

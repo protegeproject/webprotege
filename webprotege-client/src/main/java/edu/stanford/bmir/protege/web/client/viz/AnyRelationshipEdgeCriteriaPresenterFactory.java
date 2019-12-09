@@ -29,12 +29,14 @@ public class AnyRelationshipEdgeCriteriaPresenterFactory implements CriteriaPres
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Edge is any relationship edge";
+        return "Edge is a Relationship";
     }
 
     @Nonnull
     @Override
     public CriteriaPresenter<? extends AnyRelationshipEdgeCriteria> createPresenter() {
-        return presenterProvider.get();
+        BlankEdgeCriteriaPresenter<AnyRelationshipEdgeCriteria> presenter = presenterProvider.get();
+        presenter.setCriteria(AnyRelationshipEdgeCriteria.get());
+        return presenter;
     }
 }

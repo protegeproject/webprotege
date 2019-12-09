@@ -28,13 +28,15 @@ public class AnySubClassofEdgeCriteriaPresenterFactory implements CriteriaPresen
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Edge is any SubClassOf edge";
+        return "Edge is SubClassOf";
     }
 
     @Nonnull
     @Override
     public CriteriaPresenter<? extends AnySubClassOfEdgeCriteria> createPresenter() {
-        return presenterProvider.get();
+        BlankEdgeCriteriaPresenter<AnySubClassOfEdgeCriteria> presenter = presenterProvider.get();
+        presenter.setCriteria(AnySubClassOfEdgeCriteria.get());
+        return presenter;
     }
     
 }
