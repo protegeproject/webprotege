@@ -28,7 +28,7 @@ public class RelationshipEdgePropertyEqualsCriteriaPresenterFactory implements C
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Relationship is";
+        return "Specific relationship";
     }
 
     @Nonnull

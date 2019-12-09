@@ -29,7 +29,7 @@ public class AnyRelationshipEdgeCriteriaPresenterFactory implements CriteriaPres
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Edge is a Relationship";
+        return "All relationships";
     }
 
     @Nonnull

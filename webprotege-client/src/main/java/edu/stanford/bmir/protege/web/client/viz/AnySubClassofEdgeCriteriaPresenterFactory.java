@@ -28,7 +28,7 @@ public class AnySubClassofEdgeCriteriaPresenterFactory implements CriteriaPresen
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Edge is SubClassOf";
+        return "SubClassOf";
     }
 
     @Nonnull
