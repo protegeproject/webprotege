@@ -16,7 +16,6 @@ import edu.stanford.bmir.protege.web.client.graphlib.Graph;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -26,12 +25,10 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.Item;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import elemental.dom.Element;
 import elemental.events.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -63,9 +60,6 @@ public class VizPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final SelectionModel selectionModel;
-
-    @Nonnull
     private final VizView view;
 
     @Nonnull
@@ -73,6 +67,9 @@ public class VizPresenter {
 
     @Nonnull
     private final PlaceController placeController;
+
+    @Nonnull
+    private final VizSettingsPresenter vizSettingsPresenter;
 
 
     @Nonnull
@@ -89,17 +86,20 @@ public class VizPresenter {
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
     private EntityDisplay entityDisplay;
+
     @Inject
     public VizPresenter(@Nonnull ProjectId projectId,
                         @Nonnull DispatchServiceManager dispatch,
-                        @Nonnull SelectionModel selectionModel, @Nonnull VizView view, @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper,
-                        @Nonnull PlaceController placeController) {
+                        @Nonnull VizView view,
+                        @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper,
+                        @Nonnull PlaceController placeController,
+                        @Nonnull VizSettingsPresenter vizSettingsPresenter) {
         this.projectId = checkNotNull(projectId);
         this.dispatch = checkNotNull(dispatch);
-        this.selectionModel = checkNotNull(selectionModel);
         this.view = checkNotNull(view);
         this.typePerspectiveMapper = checkNotNull(typePerspectiveMapper);
         this.placeController = checkNotNull(placeController);
+        this.vizSettingsPresenter = vizSettingsPresenter;
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -124,6 +124,12 @@ public class VizPresenter {
         view.setNodeMouseOutHandler(this::handleNodeMouseOut);
         view.setNodeMouseEnterHandler(this::handleMouseEnter);
         view.setNodeMouseLeaveHandler(this::handleMouseLeave);
+        view.setDisplaySettingsHandler(this::displaySettings);
+    }
+
+    private void displaySettings() {
+        vizSettingsPresenter.start(view.getSettingsContainer());
+        view.displaySettings();
     }
 
     private void addContextMenuItemsToView() {
@@ -189,11 +195,13 @@ public class VizPresenter {
         else {
             negativeCriteria.add(NegatedEdgeCriteria.get(AnyRelationshipEdgeCriteria.get()));
         }
-        EdgeCriteria combinedPositiveCriteria = CompositeEdgeCriteria.get(positiveCriteria, MultiMatchType.ANY);
-        EdgeCriteria combinedNegativeCriteria = CompositeEdgeCriteria.get(negativeCriteria, MultiMatchType.ALL);
-        return CompositeEdgeCriteria.get(ImmutableList.of(combinedPositiveCriteria,
+        CompositeEdgeCriteria combinedPositiveCriteria = CompositeEdgeCriteria.get(positiveCriteria, MultiMatchType.ANY);
+        CompositeEdgeCriteria combinedNegativeCriteria = CompositeEdgeCriteria.get(negativeCriteria, MultiMatchType.ALL);
+        CompositeEdgeCriteria criteria = CompositeEdgeCriteria.get(ImmutableList.of(combinedPositiveCriteria,
                                                           combinedNegativeCriteria),
                                          MultiMatchType.ALL);
+        vizSettingsPresenter.setEdgeCriteria(criteria);
+        return criteria;
     }
 
     private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {

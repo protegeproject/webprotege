@@ -144,7 +144,7 @@ public abstract class SelectableCriteriaTypePresenter<C extends Criteria> implem
     @Nonnull
     protected abstract CriteriaPresenterFactory<? extends C> getPresenterFactoryForCriteria(@Nonnull C criteria);
 
-    interface PresenterFactoryRegistry<C> {
+    public interface PresenterFactoryRegistry<C> {
 
         /**
          * Register a {@link CriteriaPresenterFactory} with this registry

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.graphlib.Graph;
@@ -32,6 +33,13 @@ public interface VizView extends IsWidget {
 
     void displayLargeGraphMessage(OWLEntityData rootEntity, int nodes, int edges,
                                   @Nonnull Runnable displayGraphCallback);
+
+    void displaySettings();
+
+    @Nonnull
+    AcceptsOneWidget getSettingsContainer();
+
+    void setDisplaySettingsHandler(Runnable displaySettingsHandler);
 
     void setGraph(@Nonnull OWLEntity rootEntity, @Nonnull Graph graph);
 

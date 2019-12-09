@@ -16,6 +16,12 @@
             position: relative;
         }
 
+        .settingsView {
+            flex-grow: 1;
+            flex-shrink: 1;
+            position: relative;
+        }
+
         .canvas {
             flex-grow: 1;
             flex-shrink: 1;
@@ -77,6 +83,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
         <viz:LargeGraphMessageViewImpl visible="false" ui:field="largeGraphMessageView" addStyleNames="{style.messageView}"/>
+        <g:SimplePanel ui:field="settingsContainer" visible="false" addStyleNames="{style.settingsView}"/>
         <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
             <g:HTMLPanel addStyleNames="{style.settingsBarFormGroup}">
@@ -99,6 +106,7 @@
                     <g:CheckBox value="true" ui:field="relationshipsCheckBox" text="Relationships"
                                 addStyleNames="{style.filterCheckBox}"/>
                 </g:HTMLPanel>
+                <g:Button ui:field="viewSettingsButton" text="View settings"/>
             </g:HTMLPanel>
             <div class="{style.spacer}"/>
             <g:Button ui:field="downloadButton" title="download" addStyleNames="{style.download} {wp.buttons.btnGlyph} {wp.buttons.download}"/>

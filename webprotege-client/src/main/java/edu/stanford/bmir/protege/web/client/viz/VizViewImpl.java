@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.JSON;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.app.ApplicationInitManager;
 import edu.stanford.bmir.protege.web.client.d3.Selection;
 import edu.stanford.bmir.protege.web.client.d3.Transform;
 import edu.stanford.bmir.protege.web.client.d3.Zoom;
@@ -54,6 +55,8 @@ public class VizViewImpl extends Composite implements VizView {
 
     private final LinkedHashMap<OWLEntity, TransformCoordinates> previousTransforms = new LinkedHashMap<>();
 
+    private Runnable displaySettingsHandler = () -> {};
+
     @UiField
     HTMLPanel canvas;
 
@@ -77,6 +80,12 @@ public class VizViewImpl extends Composite implements VizView {
 
     @UiField
     CheckBox relationshipsCheckBox;
+
+    @UiField
+    SimplePanel settingsContainer;
+
+    @UiField
+    Button viewSettingsButton;
 
     @Nonnull
     private Runnable loadHandler = () -> {
@@ -135,6 +144,7 @@ public class VizViewImpl extends Composite implements VizView {
         includeSubClassOfCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
         instanceOfCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
         relationshipsCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
+        viewSettingsButton.addClickHandler(event -> this.displaySettingsHandler.run());
     }
 
     private void handleKeyDown(KeyDownEvent event) {
@@ -301,9 +311,28 @@ public class VizViewImpl extends Composite implements VizView {
         showLargeGraphMessage();
     }
 
+    @Override
+    public void displaySettings() {
+        canvas.setVisible(false);
+        largeGraphMessageView.setVisible(false);
+        settingsContainer.setVisible(true);
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getSettingsContainer() {
+        return settingsContainer;
+    }
+
+    @Override
+    public void setDisplaySettingsHandler(Runnable displaySettingsHandler) {
+        this.displaySettingsHandler = checkNotNull(displaySettingsHandler);
+    }
+
     private void showLargeGraphMessage() {
         GWT.log("[VizViewImpl] showLargeGraphMessage");
         canvas.setVisible(false);
+        settingsContainer.setVisible(false);
         largeGraphMessageView.setVisible(true);
     }
 

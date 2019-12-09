@@ -24,7 +24,7 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
 
     @JsonCreator
     @Nonnull
-    public static CompositeEdgeCriteria get(@Nonnull @JsonProperty("criteria") List<EdgeCriteria> criteria,
+    public static CompositeEdgeCriteria get(@Nonnull @JsonProperty("criteria") List<? extends EdgeCriteria> criteria,
                                             @Nonnull @JsonProperty("matchType") MultiMatchType multiMatchType) {
         return new AutoValue_CompositeEdgeCriteria(ImmutableList.copyOf(criteria), multiMatchType);
     }

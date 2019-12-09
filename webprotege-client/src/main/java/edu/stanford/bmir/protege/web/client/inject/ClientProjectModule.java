@@ -45,15 +45,16 @@ import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
-import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageView;
-import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageViewImpl;
-import edu.stanford.bmir.protege.web.client.viz.VizView;
-import edu.stanford.bmir.protege.web.client.viz.VizViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.viz.AnyInstanceOfEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.AnyRelationshipEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.AnySubClassOfEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -399,6 +400,32 @@ public class ClientProjectModule {
     LargeGraphMessageView provideLargeGraphMessageView(LargeGraphMessageViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    RelationshipEdgePropertyEqualsCriteriaView provideRelationshipEdgePropertyEqualsCriteriaView(RelationshipEdgePropertyEqualsCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    BlankEdgeCriteriaPresenter<AnyRelationshipEdgeCriteria> providAnyRelationshipEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    BlankEdgeCriteriaPresenter<AnySubClassOfEdgeCriteria> providAnySubClassOfEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    BlankEdgeCriteriaPresenter<AnyInstanceOfEdgeCriteria> providAnyInstanceOfEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    VizSettingsView provideVizSettingsView(VizSettingsViewImpl impl) {
+        return impl;
+    }
+
 }
 
 
