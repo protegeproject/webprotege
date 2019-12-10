@@ -51,10 +51,7 @@ import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.viz.AnyInstanceOfEdgeCriteria;
-import edu.stanford.bmir.protege.web.shared.viz.AnyRelationshipEdgeCriteria;
-import edu.stanford.bmir.protege.web.shared.viz.AnySubClassOfEdgeCriteria;
-import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -418,6 +415,11 @@ public class ClientProjectModule {
 
     @Provides
     BlankEdgeCriteriaPresenter<AnyInstanceOfEdgeCriteria> providAnyInstanceOfEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    BlankEdgeCriteriaPresenter<AnyEdgeCriteria> provideAnyEdgeCriteriaPresenter(BlankCriteriaView view) {
         return new BlankEdgeCriteriaPresenter<>(view);
     }
 

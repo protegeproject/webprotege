@@ -36,6 +36,9 @@ public class EdgeCriteriaPresenter extends SelectableCriteriaTypePresenter<EdgeC
     @Nonnull
     private final CompositeEdgeCriteriaPresenterFactory compositeEdgeCriteriaPresenterFactory;
 
+    @Nonnull
+    private final AnyEdgeCriteriaPresenterFactory anyEdgeCriteriaPresenterFactory;
+
     @Inject
     public EdgeCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull RelationshipEdgePropertyEqualsCriteriaPresenterFactory propertyEqualsCriteriaPresenterFactory,
@@ -44,7 +47,8 @@ public class EdgeCriteriaPresenter extends SelectableCriteriaTypePresenter<EdgeC
                                  @Nonnull AnyRelationshipEdgeCriteriaPresenterFactory anyRelationshipEdgeCriteriaPresenterFactory,
                                  @Nonnull AnyInstanceOfEdgeCriteriaPresenterFactory anyInstanceOfEdgeCriteriaPresenterFactory,
                                  @Nonnull AnySubClassofEdgeCriteriaPresenterFactory anySubClassofEdgeCriteriaPresenterFactory,
-                                 @Nonnull CompositeEdgeCriteriaPresenterFactory compositeEdgeCriteriaPresenterFactory) {
+                                 @Nonnull CompositeEdgeCriteriaPresenterFactory compositeEdgeCriteriaPresenterFactory,
+                                 @Nonnull AnyEdgeCriteriaPresenterFactory anyEdgeCriteriaPresenterFactory) {
         super(view);
         this.propertyEqualsCriteriaPresenterFactory = propertyEqualsCriteriaPresenterFactory;
         this.headNodeMatchesCriteriaPresenterFactory = headNodeMatchesCriteriaPresenterFactory;
@@ -53,16 +57,18 @@ public class EdgeCriteriaPresenter extends SelectableCriteriaTypePresenter<EdgeC
         this.anyInstanceOfEdgeCriteriaPresenterFactory = anyInstanceOfEdgeCriteriaPresenterFactory;
         this.anySubClassofEdgeCriteriaPresenterFactory = anySubClassofEdgeCriteriaPresenterFactory;
         this.compositeEdgeCriteriaPresenterFactory = compositeEdgeCriteriaPresenterFactory;
+        this.anyEdgeCriteriaPresenterFactory = anyEdgeCriteriaPresenterFactory;
     }
 
     @Override
     protected void start(@Nonnull PresenterFactoryRegistry<EdgeCriteria> factoryRegistry) {
-        factoryRegistry.addPresenter(propertyEqualsCriteriaPresenterFactory);
-        factoryRegistry.addPresenter(headNodeMatchesCriteriaPresenterFactory);
-        factoryRegistry.addPresenter(tailNodeMatchesCriteriaPresenterFactory);
+        factoryRegistry.addPresenter(anyEdgeCriteriaPresenterFactory);
         factoryRegistry.addPresenter(anySubClassofEdgeCriteriaPresenterFactory);
         factoryRegistry.addPresenter(anyInstanceOfEdgeCriteriaPresenterFactory);
         factoryRegistry.addPresenter(anyRelationshipEdgeCriteriaPresenterFactory);
+        factoryRegistry.addPresenter(propertyEqualsCriteriaPresenterFactory);
+        factoryRegistry.addPresenter(headNodeMatchesCriteriaPresenterFactory);
+        factoryRegistry.addPresenter(tailNodeMatchesCriteriaPresenterFactory);
         factoryRegistry.addPresenter(compositeEdgeCriteriaPresenterFactory);
     }
 
@@ -97,7 +103,7 @@ public class EdgeCriteriaPresenter extends SelectableCriteriaTypePresenter<EdgeC
 
             @Override
             public CriteriaPresenterFactory<? extends EdgeCriteria> visit(@Nonnull AnyEdgeCriteria criteria) {
-                return null;
+                return anySubClassofEdgeCriteriaPresenterFactory;
             }
 
             @Override
