@@ -28,7 +28,7 @@ public class HeadNodeMatchesCriteriaPresenterFactory implements CriteriaPresente
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Head node matches";
+        return "Head node entity";
     }
 
     @Nonnull

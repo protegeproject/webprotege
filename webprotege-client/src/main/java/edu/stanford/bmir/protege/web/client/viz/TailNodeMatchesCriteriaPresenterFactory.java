@@ -28,7 +28,7 @@ public class TailNodeMatchesCriteriaPresenterFactory implements CriteriaPresente
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Tail node matches";
+        return "Tail node entity";
     }
 
     @Nonnull

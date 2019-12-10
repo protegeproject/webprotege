@@ -28,7 +28,7 @@ public class AnyInstanceOfEdgeCriteriaPresenterFactory implements CriteriaPresen
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "InstanceOf";
+        return "Edge is InstanceOf";
     }
 
     @Nonnull
