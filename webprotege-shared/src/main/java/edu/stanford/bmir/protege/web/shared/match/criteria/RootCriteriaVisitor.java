@@ -44,5 +44,8 @@ public interface RootCriteriaVisitor<R> {
 
     @Nonnull
     R visit(@Nonnull EntityRelationshipCriteria entityRelationshipCriteria);
+
+    @Nonnull
+    R visit(EntityIsCriteria entityIsCriteria);
 }
 

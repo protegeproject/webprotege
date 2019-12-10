@@ -166,6 +166,12 @@ public class MatcherFactory {
                 return entityRelationshipMatcherFactory.create(criteria.getRelationshipPresence(),
                                                                propertyValueMatcher);
             }
+
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> visit(EntityIsCriteria entityIsCriteria) {
+                return entity -> entity.equals(entityIsCriteria.getEntity());
+            }
         });
     }
 

@@ -428,6 +428,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    EntityIsCriteriaView provideEntityIsCriteriaView(EntityIsCriteriaViewImpl impl) {
+        return impl;
+    }
 }
 
 
