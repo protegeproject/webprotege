@@ -107,16 +107,7 @@
                     <g:item value="3.00">x 5</g:item>
                 </g:ListBox>
                 <g:HTMLPanel addStyleNames="{style.strut}"/>
-                <g:Label text="Include" addStyleNames="{wp.style.formLabel}"/>
-                <g:HTMLPanel addStyleNames="{style.checkBoxRow}">
-                    <g:CheckBox value="true" ui:field="includeSubClassOfCheckBox" text="SubClassOf"
-                                addStyleNames="{style.filterCheckBox}"/>
-                    <g:CheckBox value="true" ui:field="instanceOfCheckBox" text="InstanceOf"
-                                addStyleNames="{style.filterCheckBox}"/>
-                    <g:CheckBox value="true" ui:field="relationshipsCheckBox" text="Relationships"
-                                addStyleNames="{style.filterCheckBox}"/>
-                </g:HTMLPanel>
-                <g:Button ui:field="viewSettingsButton" text="View settings"/>
+                <g:Button ui:field="viewSettingsButton" text="Settings"/>
             </g:HTMLPanel>
             <div class="{style.spacer}"/>
             <g:Button ui:field="downloadButton" title="download" addStyleNames="{style.download} {wp.buttons.btnGlyph} {wp.buttons.download}"/>

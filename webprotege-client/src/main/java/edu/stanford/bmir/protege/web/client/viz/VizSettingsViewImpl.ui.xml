@@ -29,17 +29,18 @@
             flex-shrink: 1;
             overflow: scroll;
             padding: 1em;
+            width: 100%;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
         <g:HTMLPanel addStyleNames="{style.criteria}">
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label addStyleNames="{wp.style.formLabel}" text="Include"/>
+                <g:Label addStyleNames="{wp.style.formLabel}" text="Included Edges"/>
                 <g:Label addStyleNames="{wp.style.formHelpText}" text="Specify a list of criteria below that will be used to determine whether a given edge should be included in the entity graph"/>
                 <g:SimplePanel ui:field="includeCriteriaContainer" addStyleNames="{style.container}"/>
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label addStyleNames="{wp.style.formLabel}" text="Exclude"/>
+                <g:Label addStyleNames="{wp.style.formLabel}" text="Excluded edges"/>
                 <g:Label addStyleNames="{wp.style.formHelpText}" text="Specify a list of criteria below that will be used to determine whether a given edge should be excluded from the entity graph"/>
                 <g:SimplePanel ui:field="excludeCriteriaContainer" addStyleNames="{style.container}"/>
             </g:HTMLPanel>

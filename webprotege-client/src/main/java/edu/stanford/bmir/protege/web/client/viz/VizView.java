@@ -57,12 +57,6 @@ public interface VizView extends IsWidget {
 
     double getRankSpacing();
 
-    boolean isIncludeSubClassOf();
-
-    boolean isIncludeInstanceOf();
-
-    boolean isIncludeRelationships();
-
     void setSettingsChangedHandler(@Nonnull SettingsChangedHandler handler);
 
     @Nonnull

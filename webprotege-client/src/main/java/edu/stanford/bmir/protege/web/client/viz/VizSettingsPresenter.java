@@ -63,6 +63,8 @@ public class VizSettingsPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         inclusionCriteriaPresenter.start(view.getIncludeCriteriaContainer());
+        inclusionCriteriaPresenter.setMatchTextPrefix("");
         exclusionCriteriaPresenter.start(view.getExclusionCriteriaContainer());
+        exclusionCriteriaPresenter.setMatchTextPrefix("");
     }
 }

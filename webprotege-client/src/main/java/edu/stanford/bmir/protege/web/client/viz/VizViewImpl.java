@@ -73,15 +73,6 @@ public class VizViewImpl extends Composite implements VizView {
     LargeGraphMessageViewImpl largeGraphMessageView;
 
     @UiField
-    CheckBox includeSubClassOfCheckBox;
-
-    @UiField
-    CheckBox instanceOfCheckBox;
-
-    @UiField
-    CheckBox relationshipsCheckBox;
-
-    @UiField
     SimplePanel settingsContainer;
 
     @UiField
@@ -141,9 +132,6 @@ public class VizViewImpl extends Composite implements VizView {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
-        includeSubClassOfCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
-        instanceOfCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
-        relationshipsCheckBox.addValueChangeHandler(event -> graphCriteriaChangedHandler.handleGraphCriteriaChanged());
         viewSettingsButton.addClickHandler(event -> this.displaySettingsHandler.run());
     }
 
@@ -466,21 +454,6 @@ public class VizViewImpl extends Composite implements VizView {
         } catch (NumberFormatException e) {
             return 2.0;
         }
-    }
-
-    @Override
-    public boolean isIncludeSubClassOf() {
-        return includeSubClassOfCheckBox.getValue();
-    }
-
-    @Override
-    public boolean isIncludeInstanceOf() {
-        return instanceOfCheckBox.getValue();
-    }
-
-    @Override
-    public boolean isIncludeRelationships() {
-        return relationshipsCheckBox.getValue();
     }
 
     @Override

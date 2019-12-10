@@ -188,30 +188,8 @@ public class VizPresenter {
     }
 
     private EdgeCriteria getEdgeCriteria() {
-        List<EdgeCriteria> negativeCriteria = new ArrayList<>();
-        List<EdgeCriteria> positiveCriteria = new ArrayList<>();
-        if(view.isIncludeSubClassOf()) {
-            positiveCriteria.add(AnySubClassOfEdgeCriteria.get());
-        }
-        else {
-            negativeCriteria.add(NegatedEdgeCriteria.get(AnySubClassOfEdgeCriteria.get()));
-        }
-        if(view.isIncludeInstanceOf()) {
-            positiveCriteria.add(AnyInstanceOfEdgeCriteria.get());
-        }
-        else {
-            negativeCriteria.add(NegatedEdgeCriteria.get(AnyInstanceOfEdgeCriteria.get()));
-        }
-        if(view.isIncludeRelationships()) {
-            positiveCriteria.add(AnyRelationshipEdgeCriteria.get());
-        }
-        else {
-            negativeCriteria.add(NegatedEdgeCriteria.get(AnyRelationshipEdgeCriteria.get()));
-        }
-
         Optional<? extends EdgeCriteria> inclusionCriteria = vizSettingsPresenter.getInclusionCriteria();
         Optional<? extends EdgeCriteria> exclusionCriteria = vizSettingsPresenter.getExclusionCriteria();
-        GWT.log("[VizPresenter] InclusionCriteria: " + inclusionCriteria.toString());
         EdgeCriteria inc;
         if(inclusionCriteria.isPresent()) {
             inc = inclusionCriteria.get();
@@ -223,7 +201,6 @@ public class VizPresenter {
             EdgeCriteria exc = NegatedEdgeCriteria.get(exclusionCriteria.get());
             inc = CompositeEdgeCriteria.get(ImmutableList.of(inc, exc), MultiMatchType.ALL);
         }
-        GWT.log("[VizPresenter] Criteria: " + inc.toString());
         return inc;
     }
 
