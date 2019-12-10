@@ -29,6 +29,7 @@ public class EdgeCriteriaListPresenter extends CriteriaListPresenter<EdgeCriteri
     @Override
     public void start(@Nonnull AcceptsOneWidget container) {
         setDefaultMatchType(MultiMatchType.ANY);
+        setDisplayAtLeastOneCriteria(false);
         super.start(container);
     }
 
