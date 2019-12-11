@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.viz.AnyEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.AnySubClassOfEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

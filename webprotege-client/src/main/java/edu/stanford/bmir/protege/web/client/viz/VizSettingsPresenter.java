@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.server.viz.EdgeCriteriaSplitter;
-import edu.stanford.bmir.protege.web.server.viz.SplitEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteriaSplitter;
+import edu.stanford.bmir.protege.web.shared.viz.SplitEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.viz.AnyEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.CompositeEdgeCriteria;

@@ -1,6 +1,4 @@
-package edu.stanford.bmir.protege.web.server.viz;
-
-import edu.stanford.bmir.protege.web.shared.viz.*;
+package edu.stanford.bmir.protege.web.shared.viz;
 
 import javax.annotation.Nonnull;
 import java.util.List;

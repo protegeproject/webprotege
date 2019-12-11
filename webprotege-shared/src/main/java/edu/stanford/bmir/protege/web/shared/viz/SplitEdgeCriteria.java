@@ -1,9 +1,6 @@
-package edu.stanford.bmir.protege.web.server.viz;
+package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.viz.CompositeEdgeCriteria;
-import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
 
 import javax.annotation.Nonnull;
 

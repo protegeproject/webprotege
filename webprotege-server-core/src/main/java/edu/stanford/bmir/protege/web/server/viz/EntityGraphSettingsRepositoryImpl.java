@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.viz.AnyEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.CompositeEdgeCriteria;
+import edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings;
 import edu.stanford.bmir.protege.web.shared.viz.NegatedEdgeCriteria;
 import org.bson.Document;
 
@@ -19,8 +20,8 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.viz.EntityGraphSettings.PROJECT_ID;
-import static edu.stanford.bmir.protege.web.server.viz.EntityGraphSettings.USER_ID;
+import static edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings.PROJECT_ID;
+import static edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings.USER_ID;
 
 /**
  * Matthew Horridge

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.viz;
+package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
