@@ -68,7 +68,7 @@ public class EntityGraphSettingsRepositoryImpl implements EntityGraphSettingsRep
                             CompositeEdgeCriteria.get(ImmutableList.of(AnyEdgeCriteria.get()), MultiMatchType.ANY),
                             NegatedEdgeCriteria.get(CompositeEdgeCriteria.get(ImmutableList.of(), MultiMatchType.ANY))),
                     MultiMatchType.ALL
-            ));
+            ), 1.0);
         }
         return objectMapper.convertValue(firstDocument, EntityGraphSettings.class);
     }

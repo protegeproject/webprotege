@@ -25,6 +25,8 @@ import static org.mockito.Mockito.mock;
  */
 public class EntityGraphSettingsRepositoryImpl_IT {
 
+    private static final double RANK_SEPARATION = 2.0;
+
     private EntityGraphSettingsRepositoryImpl repository;
 
     private MongoClient client;
@@ -50,7 +52,8 @@ public class EntityGraphSettingsRepositoryImpl_IT {
     public void shouldSaveSettings() {
         var settings = EntityGraphSettings.get(projectId,
                                                userId,
-                                               AnyEdgeCriteria.get());
+                                               AnyEdgeCriteria.get(),
+                                               RANK_SEPARATION);
         repository.saveSettings(settings);
         var collection = database.getCollection(EntityGraphSettingsRepositoryImpl.getCollectionName());
         assertThat(collection.countDocuments(), is(1L));
@@ -62,7 +65,8 @@ public class EntityGraphSettingsRepositoryImpl_IT {
     public void shouldNotDuplicateSaveSettings() {
         var settings = EntityGraphSettings.get(projectId,
                                                userId,
-                                               AnyEdgeCriteria.get());
+                                               AnyEdgeCriteria.get(),
+                                               RANK_SEPARATION);
         repository.saveSettings(settings);
         repository.saveSettings(settings);
         var collection = database.getCollection(EntityGraphSettingsRepositoryImpl.getCollectionName());
@@ -75,12 +79,14 @@ public class EntityGraphSettingsRepositoryImpl_IT {
     public void shouldSaveProjectDefaultAndUserSettings() {
         var userSettings = EntityGraphSettings.get(projectId,
                                                    userId,
-                                                   AnyEdgeCriteria.get());
+                                                   AnyEdgeCriteria.get(),
+                                                   RANK_SEPARATION);
         repository.saveSettings(userSettings);
 
         var projectSettings = EntityGraphSettings.get(projectId,
                                                       null,
-                                                      AnySubClassOfEdgeCriteria.get());
+                                                      AnySubClassOfEdgeCriteria.get(),
+                                                      RANK_SEPARATION);
         repository.saveSettings(projectSettings);
 
 
@@ -99,7 +105,8 @@ public class EntityGraphSettingsRepositoryImpl_IT {
     public void shouldSaveSettingsWithoutUserId() {
         var settings = EntityGraphSettings.get(projectId,
                                                null,
-                                               AnyEdgeCriteria.get());
+                                               AnyEdgeCriteria.get(),
+                                               RANK_SEPARATION);
         repository.saveSettings(settings);
         var collection = database.getCollection(EntityGraphSettingsRepositoryImpl.getCollectionName());
         assertThat(collection.countDocuments(), is(1L));

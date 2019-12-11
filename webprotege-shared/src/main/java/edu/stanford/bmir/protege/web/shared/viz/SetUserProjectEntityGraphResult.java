@@ -7,6 +7,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-10
  */
-public class SetUserProjectEntityGraphCriteriaResult implements Result {
+public class SetUserProjectEntityGraphResult implements Result {
 
 }

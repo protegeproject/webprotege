@@ -4,8 +4,8 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.viz.SetUserProjectEntityGraphCriteriaAction;
-import edu.stanford.bmir.protege.web.shared.viz.SetUserProjectEntityGraphCriteriaResult;
+import edu.stanford.bmir.protege.web.shared.viz.SetUserProjectEntityGraphSettingsAction;
+import edu.stanford.bmir.protege.web.shared.viz.SetUserProjectEntityGraphResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-10
  */
-public class SetUserProjectEntityGraphCriteriaActionHandler extends AbstractProjectActionHandler<SetUserProjectEntityGraphCriteriaAction, SetUserProjectEntityGraphCriteriaResult> {
+public class SetUserProjectEntityGraphCriteriaActionHandler extends AbstractProjectActionHandler<SetUserProjectEntityGraphSettingsAction, SetUserProjectEntityGraphResult> {
 
     @Nonnull
     private final EntityGraphSettingsRepository repository;
@@ -33,8 +33,8 @@ public class SetUserProjectEntityGraphCriteriaActionHandler extends AbstractProj
 
     @Nonnull
     @Override
-    public Class<SetUserProjectEntityGraphCriteriaAction> getActionClass() {
-        return SetUserProjectEntityGraphCriteriaAction.class;
+    public Class<SetUserProjectEntityGraphSettingsAction> getActionClass() {
+        return SetUserProjectEntityGraphSettingsAction.class;
     }
 
     @Nullable
@@ -45,12 +45,13 @@ public class SetUserProjectEntityGraphCriteriaActionHandler extends AbstractProj
 
     @Nonnull
     @Override
-    public SetUserProjectEntityGraphCriteriaResult execute(@Nonnull SetUserProjectEntityGraphCriteriaAction action,
-                                                           @Nonnull ExecutionContext executionContext) {
+    public SetUserProjectEntityGraphResult execute(@Nonnull SetUserProjectEntityGraphSettingsAction action,
+                                                   @Nonnull ExecutionContext executionContext) {
         var projectId = action.getProjectId();
         var userId = executionContext.getUserId();
         var criteria = action.getEdgeCriteria();
-        repository.saveSettings(EntityGraphSettings.get(projectId, userId, criteria));
-        return new SetUserProjectEntityGraphCriteriaResult();
+        var rankSep = action.getRankSeparation();
+        repository.saveSettings(EntityGraphSettings.get(projectId, userId, criteria, rankSep));
+        return new SetUserProjectEntityGraphResult();
     }
 }

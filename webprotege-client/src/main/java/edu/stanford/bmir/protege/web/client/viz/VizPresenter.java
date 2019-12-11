@@ -135,7 +135,7 @@ public class VizPresenter {
     private void applySettings() {
         view.hideSettings();
         EdgeCriteria edgeCriteria = vizSettingsPresenter.getEdgeCriteria();
-        dispatch.execute(new SetUserProjectEntityGraphCriteriaAction(projectId, edgeCriteria),
+        dispatch.execute(new SetUserProjectEntityGraphSettingsAction(projectId, edgeCriteria, vizSettingsPresenter.getRankSpacing()),
                          hasBusy,
                          result -> redisplayCurrentEntity());
     }

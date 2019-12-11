@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,20 +13,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-10
  */
-public class SetUserProjectEntityGraphCriteriaAction implements ProjectAction<SetUserProjectEntityGraphCriteriaResult> {
+public class SetUserProjectEntityGraphSettingsAction implements ProjectAction<SetUserProjectEntityGraphResult> {
 
     private ProjectId projectId;
 
     private EdgeCriteria edgeCriteria;
 
-    public SetUserProjectEntityGraphCriteriaAction(@Nonnull ProjectId projectId,
-                                                   @Nonnull EdgeCriteria criteria) {
+    private double rankSeparation;
+
+    public SetUserProjectEntityGraphSettingsAction(@Nonnull ProjectId projectId,
+                                                   @Nonnull EdgeCriteria criteria, double rankSeparation) {
         this.projectId = checkNotNull(projectId);
         this.edgeCriteria = checkNotNull(criteria);
+        this.rankSeparation = rankSeparation;
     }
 
     @GwtSerializationConstructor
-    private SetUserProjectEntityGraphCriteriaAction() {
+    private SetUserProjectEntityGraphSettingsAction() {
     }
 
     @Nonnull
@@ -39,5 +41,9 @@ public class SetUserProjectEntityGraphCriteriaAction implements ProjectAction<Se
     @Nonnull
     public EdgeCriteria getEdgeCriteria() {
         return edgeCriteria;
+    }
+
+    public double getRankSeparation() {
+        return rankSeparation;
     }
 }

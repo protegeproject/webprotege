@@ -27,11 +27,14 @@ public abstract class EntityGraphSettings {
 
     public static final String CRITERIA = "criteria";
 
+    public static final String RANK_SPACING = "rankSpacing";
+
     @JsonCreator
     public static EntityGraphSettings get(@Nonnull @JsonProperty(PROJECT_ID) ProjectId projectId,
                                           @Nullable @JsonProperty(USER_ID) UserId userId,
-                                          @Nonnull @JsonProperty(CRITERIA) EdgeCriteria criteria) {
-        return new AutoValue_EntityGraphSettings(projectId, userId, criteria);
+                                          @Nonnull @JsonProperty(CRITERIA) EdgeCriteria criteria,
+                                          @JsonProperty(value = RANK_SPACING, defaultValue = "1.0") double rankSpacing) {
+        return new AutoValue_EntityGraphSettings(projectId, userId, criteria, rankSpacing);
     }
 
     @JsonProperty(PROJECT_ID)
@@ -55,4 +58,7 @@ public abstract class EntityGraphSettings {
     @Nonnull
     @JsonProperty(CRITERIA)
     public abstract EdgeCriteria getCriteria();
+
+    @JsonProperty(RANK_SPACING)
+    public abstract double getRankSpacing();
 }
