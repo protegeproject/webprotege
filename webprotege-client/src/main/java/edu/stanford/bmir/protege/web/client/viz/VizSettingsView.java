@@ -23,4 +23,6 @@ public interface VizSettingsView extends IsWidget {
     void setCancelSettingsHandler(Runnable runnable);
 
     double getRankSpacing();
+
+    void setRankSpacing(double value);
 }

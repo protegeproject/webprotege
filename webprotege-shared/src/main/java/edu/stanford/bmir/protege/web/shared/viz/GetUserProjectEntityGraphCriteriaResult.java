@@ -18,12 +18,15 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class GetUserProjectEntityGraphCriteriaResult implements Result {
 
+
     public static GetUserProjectEntityGraphCriteriaResult get(@Nonnull ProjectId projectId,
-                                               @Nonnull UserId userId,
-                                               @Nonnull EdgeCriteria edgeCriteria) {
+                                                              @Nonnull UserId userId,
+                                                              @Nonnull EdgeCriteria edgeCriteria,
+                                                              double rankSpacing) {
         return new AutoValue_GetUserProjectEntityGraphCriteriaResult(projectId,
                                                                      userId,
-                                                                     edgeCriteria);
+                                                                     edgeCriteria,
+                                                                     rankSpacing);
     }
 
     @Nonnull
@@ -35,5 +38,6 @@ public abstract class GetUserProjectEntityGraphCriteriaResult implements Result 
     @Nonnull
     public abstract EdgeCriteria getCriteria();
 
+    public abstract double getRankSpacing();
 
 }

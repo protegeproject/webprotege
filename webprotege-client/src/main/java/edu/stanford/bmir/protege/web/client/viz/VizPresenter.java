@@ -155,6 +155,7 @@ public class VizPresenter {
     private void displayCriteriaSettingsResult(GetUserProjectEntityGraphCriteriaResult result) {
         vizSettingsPresenter.start(view.getSettingsContainer());
         vizSettingsPresenter.setEdgeCriteria(result.getCriteria());
+        vizSettingsPresenter.setRankSpacing(result.getRankSpacing());
         view.displaySettings();
     }
 
@@ -399,6 +400,7 @@ public class VizPresenter {
             return;
         }
         currentEntityGraph = result.getEntityGraph();
+        vizSettingsPresenter.setRankSpacing(result.getRankSpacing());
         if (entityDisplay != null) {
             entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
         }

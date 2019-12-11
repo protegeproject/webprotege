@@ -81,4 +81,17 @@ public class VizSettingsViewImpl extends Composite implements VizSettingsView {
             return 2.0;
         }
     }
+
+    @Override
+    public void setRankSpacing(double value) {
+        double val = value / 2.0;
+        for(int index = 0; index < ranksepListBox.getItemCount(); index++) {
+            String valAtIndex = ranksepListBox.getValue(index);
+            double doubleValue = Double.parseDouble(valAtIndex);
+            if(doubleValue == val) {
+                ranksepListBox.setSelectedIndex(index);
+                return;
+            }
+        }
+    }
 }

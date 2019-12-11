@@ -71,6 +71,6 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
                     graph.getNodes().size(),
                     graph.getEdges().size(),
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        return GetEntityGraphResult.get(graph);
+        return GetEntityGraphResult.get(graph, entityGraphSettings.getRankSpacing());
     }
 }

@@ -54,6 +54,10 @@ public class VizSettingsPresenter {
         exclusionCriteriaPresenter.setCriteria(CompositeEdgeCriteria.empty());
     }
 
+    public void setRankSpacing(double spacing) {
+        view.setRankSpacing(spacing);
+    }
+
     public double getRankSpacing() {
         return view.getRankSpacing();
     }
