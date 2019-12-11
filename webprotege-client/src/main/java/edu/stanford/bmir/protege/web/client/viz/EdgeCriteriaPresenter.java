@@ -103,7 +103,7 @@ public class EdgeCriteriaPresenter extends SelectableCriteriaTypePresenter<EdgeC
 
             @Override
             public CriteriaPresenterFactory<? extends EdgeCriteria> visit(@Nonnull AnyEdgeCriteria criteria) {
-                return anySubClassofEdgeCriteriaPresenterFactory;
+                return anyEdgeCriteriaPresenterFactory;
             }
 
             @Override

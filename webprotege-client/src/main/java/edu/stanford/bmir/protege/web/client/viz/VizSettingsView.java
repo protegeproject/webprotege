@@ -21,4 +21,6 @@ public interface VizSettingsView extends IsWidget {
     void setApplySettingsHandler(Runnable runnable);
 
     void setCancelSettingsHandler(Runnable runnable);
+
+    double getRankSpacing();
 }

@@ -35,13 +35,13 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
     private final EdgeMatcherFactory edgeMatcherFactory;
 
     @Nonnull
-    private final ProjectEntityGraphSettingsRepository entityGraphSettingsRepository;
+    private final EntityGraphSettingsRepository entityGraphSettingsRepository;
 
     @Inject
     public GetEntityGraphActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull EntityGraphBuilderFactory graphBuilderFactory,
                                        @Nonnull EdgeMatcherFactory edgeMatcherFactory,
-                                       @Nonnull ProjectEntityGraphSettingsRepository entityGraphSettingsRepository) {
+                                       @Nonnull EntityGraphSettingsRepository entityGraphSettingsRepository) {
         super(accessManager);
         this.graphBuilderFactory = checkNotNull(graphBuilderFactory);
         this.edgeMatcherFactory = checkNotNull(edgeMatcherFactory);
@@ -58,14 +58,11 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
     @Override
     public GetEntityGraphResult execute(@Nonnull GetEntityGraphAction action, @Nonnull ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        var entityGraphSettings = entityGraphSettingsRepository.getSettings(action.getProjectId());
-        var projectDefaultCriteria = entityGraphSettings.getEdgeCriteria();
-        var userCriteria = action.getEdgeCriteria();
-        var combinedCriteria = ImmutableList.<EdgeCriteria>builder()
-                .addAll(projectDefaultCriteria)
-                .add(userCriteria)
-                .build();
-        var criteria = CompositeEdgeCriteria.get(combinedCriteria, MultiMatchType.ALL);
+        var projectId = action.getProjectId();
+        var userId = executionContext.getUserId();
+        var entityGraphSettings = entityGraphSettingsRepository.getSettingsForUserOrProjectDefault(projectId,
+                                                                                                   userId);
+        var criteria = entityGraphSettings.getCriteria();
         var edgeMatcher = edgeMatcherFactory.createMatcher(criteria);
         var graph = graphBuilderFactory.create(edgeMatcher)
                                        .createGraph(action.getEntity());

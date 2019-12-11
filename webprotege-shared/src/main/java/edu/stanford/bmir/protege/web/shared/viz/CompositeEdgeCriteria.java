@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
@@ -27,6 +28,17 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
     public static CompositeEdgeCriteria get(@Nonnull @JsonProperty("criteria") List<? extends EdgeCriteria> criteria,
                                             @Nonnull @JsonProperty("matchType") MultiMatchType multiMatchType) {
         return new AutoValue_CompositeEdgeCriteria(ImmutableList.copyOf(criteria), multiMatchType);
+    }
+
+    @Nonnull
+    public static CompositeEdgeCriteria get(@Nonnull MultiMatchType multiMatchType,
+                                            @Nonnull EdgeCriteria ... criteria) {
+        return get(ImmutableList.copyOf(criteria), multiMatchType);
+    }
+
+    @Nonnull
+    public static CompositeEdgeCriteria empty() {
+        return get(ImmutableList.of(), MultiMatchType.ANY);
     }
 
     @Override

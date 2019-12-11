@@ -45,8 +45,8 @@ import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
 import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
-import edu.stanford.bmir.protege.web.server.viz.ProjectEntityGraphSettingsRepository;
-import edu.stanford.bmir.protege.web.server.viz.ProjectEntityGraphSettingsRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepository;
+import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
@@ -358,8 +358,8 @@ public class ApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    ProjectEntityGraphSettingsRepository provideProjectEntityGraphSettingsRepository(
-            ProjectEntityGraphSettingsRepositoryImpl impl) {
+    EntityGraphSettingsRepository provideProjectEntityGraphSettingsRepository(
+            EntityGraphSettingsRepositoryImpl impl) {
         return impl;
     }
 }

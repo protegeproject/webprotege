@@ -51,23 +51,7 @@
             align-items: center;
             border-top: 1px solid literal("var(--alternate--separator--color)");
         }
-        .settingsBarLabel {
-            margin-right: 5px;
-        }
-        .settingsBarFormGroup {
-            display: flex;;
-            flex-direction: row;
-            align-items: baseline;
-        }
-        .checkBoxRow {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            align-self: baseline;
-        }
-        .filterCheckBox {
-            margin-left: 0.7rem;
-        }
+
         .download {
             justify-self: flex-end;
         }
@@ -95,21 +79,11 @@
                            visible="false"
                            addStyleNames="{style.settingsView} {wp.style.panelFilled}"/>
             <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
+
         </g:HTMLPanel><g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
-            <g:HTMLPanel addStyleNames="{style.settingsBarFormGroup}">
-                <g:Label text="Spacing" addStyleNames="{wp.style.formLabel} {style.settingsBarLabel}"/>
-                <g:ListBox ui:field="ranksepListBox">
-                    <g:item value="0.50">x 0.5</g:item>
-                    <g:item value="1.00">x 1</g:item>
-                    <g:item value="2.00">x 2</g:item>
-                    <g:item value="3.00">x 3</g:item>
-                    <g:item value="3.00">x 4</g:item>
-                    <g:item value="3.00">x 5</g:item>
-                </g:ListBox>
-                <g:HTMLPanel addStyleNames="{style.strut}"/>
-                <g:Button ui:field="viewSettingsButton" text="Settings"/>
-            </g:HTMLPanel>
-            <div class="{style.spacer}"/>
+        <g:Button ui:field="viewSettingsButton" text="" title="Settings" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.filter}"/>
+
+        <div class="{style.spacer}"/>
             <g:Button ui:field="downloadButton" title="download" addStyleNames="{style.download} {wp.buttons.btnGlyph} {wp.buttons.download}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>

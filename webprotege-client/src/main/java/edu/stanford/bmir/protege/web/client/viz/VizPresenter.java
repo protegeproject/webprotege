@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -19,7 +18,6 @@ import edu.stanford.bmir.protege.web.client.ui.ElementalUtil;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.Item;
@@ -124,7 +122,7 @@ public class VizPresenter {
         view.setNodeMouseOutHandler(this::handleNodeMouseOut);
         view.setNodeMouseEnterHandler(this::handleMouseEnter);
         view.setNodeMouseLeaveHandler(this::handleMouseLeave);
-        view.setDisplaySettingsHandler(this::displaySettings);
+        view.setDisplaySettingsHandler(this::toggleSettings);
         vizSettingsPresenter.setApplySettingsHandler(this::applySettings);
         vizSettingsPresenter.setCancelHandler(this::cancelApplySettings);
     }
@@ -136,11 +134,27 @@ public class VizPresenter {
 
     private void applySettings() {
         view.hideSettings();
-        redisplayCurrentEntity();
+        EdgeCriteria edgeCriteria = vizSettingsPresenter.getEdgeCriteria();
+        dispatch.execute(new SetUserProjectEntityGraphCriteriaAction(projectId, edgeCriteria),
+                         hasBusy,
+                         result -> redisplayCurrentEntity());
     }
 
-    private void displaySettings() {
+    private void toggleSettings() {
+        if(view.isSettingsVisible()) {
+            applySettings();
+        }
+        else {
+            dispatch.execute(new GetUserProjectEntityGraphCriteriaAction(projectId),
+                             hasBusy,
+                             this::displayCriteriaSettingsResult);
+        }
+
+    }
+
+    private void displayCriteriaSettingsResult(GetUserProjectEntityGraphCriteriaResult result) {
         vizSettingsPresenter.start(view.getSettingsContainer());
+        vizSettingsPresenter.setEdgeCriteria(result.getCriteria());
         view.displaySettings();
     }
 
@@ -179,29 +193,12 @@ public class VizPresenter {
 
     private void redisplayCurrentEntity() {
         GWT.log("[VizPresenter] redisplay current entity");
+        currentEntityGraph = null;
         currentEntity.ifPresent(entity -> {
-            EdgeCriteria edgeCriteria = getEdgeCriteria();
-            dispatch.execute(new GetEntityGraphAction(projectId, entity, edgeCriteria),
+            dispatch.execute(new GetEntityGraphAction(projectId, entity),
                              hasBusy,
                              this::handleRendering);
         });
-    }
-
-    private EdgeCriteria getEdgeCriteria() {
-        Optional<? extends EdgeCriteria> inclusionCriteria = vizSettingsPresenter.getInclusionCriteria();
-        Optional<? extends EdgeCriteria> exclusionCriteria = vizSettingsPresenter.getExclusionCriteria();
-        EdgeCriteria inc;
-        if(inclusionCriteria.isPresent()) {
-            inc = inclusionCriteria.get();
-        }
-        else {
-            inc = AnyEdgeCriteria.get();
-        }
-        if(exclusionCriteria.isPresent()) {
-            EdgeCriteria exc = NegatedEdgeCriteria.get(exclusionCriteria.get());
-            inc = CompositeEdgeCriteria.get(ImmutableList.of(inc, exc), MultiMatchType.ALL);
-        }
-        return inc;
     }
 
     private void handleNodeMouseOut(NodeDetails nodeDetails, Event event) {
@@ -368,7 +365,7 @@ public class VizPresenter {
             currentGraph.setMarginX(10);
             currentGraph.setMarginY(10);
             currentGraph.setRankDirBottomToTop();
-            currentGraph.setRankSep((int) (20 * view.getRankSpacing()));
+            currentGraph.setRankSep((int) (20 * vizSettingsPresenter.getRankSpacing()));
             currentGraph.setNodeSep(10);
             currentGraph.setRankerToLongestPath();
             GWT.log("[VizPresenter] Laying out graph");

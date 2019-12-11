@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -18,7 +20,8 @@ import javax.annotation.Nonnull;
 @JsonTypeName("EntityIs")
 public abstract class EntityIsCriteria implements EntityMatchCriteria {
 
-    public static EntityIsCriteria get(@Nonnull OWLEntity entity) {
+    @JsonCreator
+    public static EntityIsCriteria get(@Nonnull @JsonProperty("entity") OWLEntity entity) {
         return new AutoValue_EntityIsCriteria(entity);
     }
 

@@ -41,6 +41,8 @@ public interface VizView extends IsWidget {
     @Nonnull
     AcceptsOneWidget getSettingsContainer();
 
+    boolean isSettingsVisible();
+
     void setDisplaySettingsHandler(Runnable displaySettingsHandler);
 
     void setGraph(@Nonnull OWLEntity rootEntity, @Nonnull Graph graph);
@@ -54,8 +56,6 @@ public interface VizView extends IsWidget {
     void setDownloadHandler(@Nonnull DownloadHandler handler);
 
     boolean isVisible();
-
-    double getRankSpacing();
 
     void setSettingsChangedHandler(@Nonnull SettingsChangedHandler handler);
 

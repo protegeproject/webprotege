@@ -39,9 +39,13 @@ public class VizSettingsViewImpl extends Composite implements VizSettingsView {
     @UiField
     Button cancelButton;
 
+    @UiField
+    ListBox ranksepListBox;
+
     @Inject
     public VizSettingsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        ranksepListBox.setSelectedIndex(1);
         applyButton.addClickHandler(event -> applyHandler.run());
         cancelButton.addClickHandler(event -> cancelHandler.run());
     }
@@ -66,5 +70,15 @@ public class VizSettingsViewImpl extends Composite implements VizSettingsView {
     @Override
     public void setCancelSettingsHandler(Runnable runnable) {
         this.cancelHandler = checkNotNull(runnable);
+    }
+
+    @Override
+    public double getRankSpacing() {
+        String value = ranksepListBox.getSelectedValue();
+        try {
+            return 2 * Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return 2.0;
+        }
     }
 }

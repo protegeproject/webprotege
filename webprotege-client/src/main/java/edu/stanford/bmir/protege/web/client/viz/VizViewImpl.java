@@ -61,9 +61,6 @@ public class VizViewImpl extends Composite implements VizView {
     HTMLPanel canvas;
 
     @UiField
-    ListBox ranksepListBox;
-
-    @UiField
     Button downloadButton;
 
     @UiField
@@ -130,8 +127,6 @@ public class VizViewImpl extends Composite implements VizView {
     public VizViewImpl() {
         popupMenu = new PopupMenu();
         initWidget(ourUiBinder.createAndBindUi(this));
-        ranksepListBox.setSelectedIndex(1);
-        ranksepListBox.addChangeHandler(event -> settingsChangedHandler.handleSettingsChanged());
         viewSettingsButton.addClickHandler(event -> this.displaySettingsHandler.run());
     }
 
@@ -320,6 +315,11 @@ public class VizViewImpl extends Composite implements VizView {
     }
 
     @Override
+    public boolean isSettingsVisible() {
+        return settingsContainer.isVisible();
+    }
+
+    @Override
     public void setDisplaySettingsHandler(Runnable displaySettingsHandler) {
         this.displaySettingsHandler = checkNotNull(displaySettingsHandler);
     }
@@ -444,16 +444,6 @@ public class VizViewImpl extends Composite implements VizView {
 
     private Element getCanvasElement() {
         return (Element) canvas.getElement();
-    }
-
-    @Override
-    public double getRankSpacing() {
-        String value = ranksepListBox.getSelectedValue();
-        try {
-            return 2 * Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            return 2.0;
-        }
     }
 
     @Override
