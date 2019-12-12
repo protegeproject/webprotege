@@ -17,15 +17,12 @@ public class SetUserProjectEntityGraphSettingsAction implements ProjectAction<Se
 
     private ProjectId projectId;
 
-    private EdgeCriteria edgeCriteria;
-
-    private double rankSeparation;
+    private EntityGraphSettings settings;
 
     public SetUserProjectEntityGraphSettingsAction(@Nonnull ProjectId projectId,
-                                                   @Nonnull EdgeCriteria criteria, double rankSeparation) {
+                                                   @Nonnull EntityGraphSettings settings) {
         this.projectId = checkNotNull(projectId);
-        this.edgeCriteria = checkNotNull(criteria);
-        this.rankSeparation = rankSeparation;
+        this.settings = checkNotNull(settings);
     }
 
     @GwtSerializationConstructor
@@ -39,11 +36,7 @@ public class SetUserProjectEntityGraphSettingsAction implements ProjectAction<Se
     }
 
     @Nonnull
-    public EdgeCriteria getEdgeCriteria() {
-        return edgeCriteria;
-    }
-
-    public double getRankSeparation() {
-        return rankSeparation;
+    public EntityGraphSettings getSettings() {
+        return settings;
     }
 }

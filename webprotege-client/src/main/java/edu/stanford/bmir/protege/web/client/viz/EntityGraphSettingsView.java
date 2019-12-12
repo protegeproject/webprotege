@@ -10,13 +10,10 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-08
  */
-public interface VizSettingsView extends IsWidget {
+public interface EntityGraphSettingsView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget getExclusionCriteriaContainer();
-
-    @Nonnull
-    AcceptsOneWidget getIncludeCriteriaContainer();
+    AcceptsOneWidget getFilterListContainer();
 
     void setApplySettingsHandler(Runnable runnable);
 

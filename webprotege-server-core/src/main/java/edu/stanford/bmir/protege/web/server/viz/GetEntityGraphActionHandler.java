@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.server.viz;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
-import edu.stanford.bmir.protege.web.shared.viz.CompositeEdgeCriteria;
-import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphAction;
 import edu.stanford.bmir.protege.web.shared.viz.GetEntityGraphResult;
 import org.slf4j.Logger;
@@ -60,9 +56,10 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
         Stopwatch stopwatch = Stopwatch.createStarted();
         var projectId = action.getProjectId();
         var userId = executionContext.getUserId();
-        var entityGraphSettings = entityGraphSettingsRepository.getSettingsForUserOrProjectDefault(projectId,
-                                                                                                   userId);
-        var criteria = entityGraphSettings.getCriteria();
+        var projectUserSettings = entityGraphSettingsRepository.getSettingsForUserOrProjectDefault(projectId, userId);
+        var entityGraphSettings = projectUserSettings.getSettings();
+        var criteria = projectUserSettings.getSettings()
+                                          .getCombinedActiveFilterCriteria();;
         var edgeMatcher = edgeMatcherFactory.createMatcher(criteria);
         var graph = graphBuilderFactory.create(edgeMatcher)
                                        .createGraph(action.getEntity());

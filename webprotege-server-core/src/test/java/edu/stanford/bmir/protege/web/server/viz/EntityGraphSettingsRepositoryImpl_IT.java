@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.viz.AnyEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.AnySubClassOfEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings;
+import edu.stanford.bmir.protege.web.shared.viz.ProjectUserEntityGraphSettings;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,43 +52,31 @@ public class EntityGraphSettingsRepositoryImpl_IT {
 
     @Test
     public void shouldSaveSettings() {
-        var settings = EntityGraphSettings.get(projectId,
-                                               userId,
-                                               AnyEdgeCriteria.get(),
-                                               RANK_SEPARATION);
+        var settings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
         repository.saveSettings(settings);
         var collection = database.getCollection(EntityGraphSettingsRepositoryImpl.getCollectionName());
         assertThat(collection.countDocuments(), is(1L));
-        EntityGraphSettings savedSettings = repository.getSettingsForUserOrProjectDefault(projectId, userId);
+        ProjectUserEntityGraphSettings savedSettings = repository.getSettingsForUserOrProjectDefault(projectId, userId);
         assertThat(savedSettings, is(settings));
     }
 
     @Test
     public void shouldNotDuplicateSaveSettings() {
-        var settings = EntityGraphSettings.get(projectId,
-                                               userId,
-                                               AnyEdgeCriteria.get(),
-                                               RANK_SEPARATION);
+        var settings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
         repository.saveSettings(settings);
         repository.saveSettings(settings);
         var collection = database.getCollection(EntityGraphSettingsRepositoryImpl.getCollectionName());
         assertThat(collection.countDocuments(), is(1L));
-        EntityGraphSettings savedSettings = repository.getSettingsForUserOrProjectDefault(projectId, userId);
+        ProjectUserEntityGraphSettings savedSettings = repository.getSettingsForUserOrProjectDefault(projectId, userId);
         assertThat(savedSettings, is(settings));
     }
 
     @Test
     public void shouldSaveProjectDefaultAndUserSettings() {
-        var userSettings = EntityGraphSettings.get(projectId,
-                                                   userId,
-                                                   AnyEdgeCriteria.get(),
-                                                   RANK_SEPARATION);
+        var userSettings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
         repository.saveSettings(userSettings);
 
-        var projectSettings = EntityGraphSettings.get(projectId,
-                                                      null,
-                                                      AnySubClassOfEdgeCriteria.get(),
-                                                      RANK_SEPARATION);
+        var projectSettings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
         repository.saveSettings(projectSettings);
 
 
@@ -104,14 +93,11 @@ public class EntityGraphSettingsRepositoryImpl_IT {
 
     @Test
     public void shouldSaveSettingsWithoutUserId() {
-        var settings = EntityGraphSettings.get(projectId,
-                                               null,
-                                               AnyEdgeCriteria.get(),
-                                               RANK_SEPARATION);
+        var settings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
         repository.saveSettings(settings);
         var collection = database.getCollection(EntityGraphSettingsRepositoryImpl.getCollectionName());
         assertThat(collection.countDocuments(), is(1L));
-        EntityGraphSettings savedSettings = repository.getSettingsForUserOrProjectDefault(projectId, null);
+        ProjectUserEntityGraphSettings savedSettings = repository.getSettingsForUserOrProjectDefault(projectId, null);
         assertThat(savedSettings, is(settings));
     }
 

@@ -30,10 +30,7 @@ import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
-import edu.stanford.bmir.protege.web.shared.viz.EdgeCriteria;
-import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
-import edu.stanford.bmir.protege.web.shared.viz.IsAEdge;
-import edu.stanford.bmir.protege.web.shared.viz.RelationshipEdge;
+import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 
 /**
@@ -96,6 +93,48 @@ public class RpcWhiteList implements Action, Result {
     InstanceRetrievalMode instanceRetrievalMode;
 
     ActionExecutionResult actionExecutionResult;
+
+    EntityGraphFilter entityGraphFilter;
+
+    public FilterName getFilterName() {
+        return filterName;
+    }
+
+    public void setFilterName(FilterName filterName) {
+        this.filterName = filterName;
+    }
+
+    FilterName filterName;
+
+    public EntityGraphFilter getEntityGraphFilter() {
+        return entityGraphFilter;
+    }
+
+    public void setEntityGraphFilter(EntityGraphFilter entityGraphFilter) {
+        this.entityGraphFilter = entityGraphFilter;
+    }
+
+    public ProjectUserEntityGraphSettings getProjectUserEntityGraphSettings() {
+        return projectUserEntityGraphSettings;
+    }
+
+    public void setProjectUserEntityGraphSettings(ProjectUserEntityGraphSettings projectUserEntityGraphSettings) {
+        this.projectUserEntityGraphSettings = projectUserEntityGraphSettings;
+    }
+
+
+
+    ProjectUserEntityGraphSettings projectUserEntityGraphSettings;
+
+    public EntityGraphSettings getEntityGraphSettings() {
+        return entityGraphSettings;
+    }
+
+    public void setEntityGraphSettings(EntityGraphSettings entityGraphSettings) {
+        this.entityGraphSettings = entityGraphSettings;
+    }
+
+    EntityGraphSettings entityGraphSettings;
 
     public ActionExecutionResult getActionExecutionResult() {
         return actionExecutionResult;

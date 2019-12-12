@@ -424,12 +424,27 @@ public class ClientProjectModule {
     }
 
     @Provides
-    VizSettingsView provideVizSettingsView(VizSettingsViewImpl impl) {
+    EntityGraphSettingsView provideVizSettingsView(EntityGraphSettingsViewImpl impl) {
         return impl;
     }
 
     @Provides
     EntityIsCriteriaView provideEntityIsCriteriaView(EntityIsCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityGraphFilterView provideEntityGraphFilterView(EntityGraphFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityGraphFilterListItemView provideEntityGraphFilterListItemView(EntityGraphFilterListItemViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityGraphFilterListView provideEntityGraphFilterListView(EntityGraphFilterListViewImpl impl) {
         return impl;
     }
 }

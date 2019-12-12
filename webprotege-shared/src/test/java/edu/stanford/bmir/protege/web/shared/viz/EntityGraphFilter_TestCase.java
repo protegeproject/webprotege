@@ -22,11 +22,14 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityGraphFilter_TestCase {
 
-    private static final String THE_NAME = "TheName";
 
     private static final String THE_DESCRIPTION = "TheDescription";
 
+
     private EntityGraphFilter filter;
+
+    @Mock
+    private FilterName filterName;
 
     @Mock
     private CompositeEdgeCriteria inclusionCriteria;
@@ -36,7 +39,7 @@ public class EntityGraphFilter_TestCase {
 
     @Before
     public void setUp() {
-        filter = EntityGraphFilter.get(THE_NAME,
+        filter = EntityGraphFilter.get(filterName,
                                        THE_DESCRIPTION,
                                        inclusionCriteria,
                                        exclusionCriteria);
@@ -44,7 +47,7 @@ public class EntityGraphFilter_TestCase {
 
     @Test
     public void shouldGetSuppliedName() {
-        assertThat(filter.getName(), is(THE_NAME));
+        assertThat(filter.getName(), is(filterName));
     }
 
     @Test

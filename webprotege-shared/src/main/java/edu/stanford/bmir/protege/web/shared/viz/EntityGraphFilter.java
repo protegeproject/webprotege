@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.Null;
 
 /**
  * Matthew Horridge
@@ -25,11 +27,26 @@ public abstract class EntityGraphFilter {
     private static final String EXCLUSION_CRITERIA = "exclusionCriteria";
 
     @JsonCreator
-    public static EntityGraphFilter get(@Nonnull @JsonProperty(NAME) String name,
+    public static EntityGraphFilter get(@Nonnull @JsonProperty(NAME) FilterName name,
                                         @Nonnull @JsonProperty(DESCRIPTION) String description,
                                         @Nonnull @JsonProperty(INCLUSION_CRITERIA) CompositeEdgeCriteria inclusionCriteria,
                                         @Nonnull @JsonProperty(EXCLUSION_CRITERIA) CompositeEdgeCriteria exclusionCriteria) {
         return new AutoValue_EntityGraphFilter(name, description, inclusionCriteria, exclusionCriteria);
+    }
+
+    @Null
+    public static EntityGraphFilter getDefault() {
+        return get(FilterName.get(""),
+                   "",
+                   CompositeEdgeCriteria.empty(),
+                   CompositeEdgeCriteria.empty());
+    }
+
+    @Nonnull
+    public CompositeEdgeCriteria getCombinedCriteria() {
+        return CompositeEdgeCriteria.get(MultiMatchType.ALL,
+                                         getInclusionCriteria(),
+                                         NegatedEdgeCriteria.get(getExclusionCriteria()));
     }
 
     /**
@@ -37,7 +54,7 @@ public abstract class EntityGraphFilter {
      */
     @Nonnull
     @JsonProperty(NAME)
-    public abstract String getName();
+    public abstract FilterName getName();
 
     @Nonnull
     @JsonProperty(DESCRIPTION)

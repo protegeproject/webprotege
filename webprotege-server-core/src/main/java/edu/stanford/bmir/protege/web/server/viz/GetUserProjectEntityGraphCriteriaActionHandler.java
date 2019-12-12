@@ -43,7 +43,6 @@ public class GetUserProjectEntityGraphCriteriaActionHandler extends AbstractProj
         var settings = repository.getSettingsForUserOrProjectDefault(projectId, userId);
         return GetUserProjectEntityGraphCriteriaResult.get(projectId,
                                                            userId,
-                                                           settings.getCriteria(),
-                                                           settings.getRankSpacing());
+                                                           settings.getSettings());
     }
 }

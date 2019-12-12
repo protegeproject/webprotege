@@ -15,23 +15,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-08
  */
-public class VizSettingsViewImpl extends Composite implements VizSettingsView {
+public class EntityGraphSettingsViewImpl extends Composite implements EntityGraphSettingsView {
 
     private Runnable applyHandler = () -> {};
 
     private Runnable cancelHandler = () -> {};
 
-    interface VizSettingsViewImplUiBinder extends UiBinder<HTMLPanel, VizSettingsViewImpl> {
+    interface VizSettingsViewImplUiBinder extends UiBinder<HTMLPanel, EntityGraphSettingsViewImpl> {
 
     }
 
     private static VizSettingsViewImplUiBinder ourUiBinder = GWT.create(VizSettingsViewImplUiBinder.class);
-
-    @UiField
-    SimplePanel includeCriteriaContainer;
-
-    @UiField
-    SimplePanel excludeCriteriaContainer;
 
     @UiField
     Button applyButton;
@@ -42,24 +36,22 @@ public class VizSettingsViewImpl extends Composite implements VizSettingsView {
     @UiField
     ListBox ranksepListBox;
 
+    @UiField
+    SimplePanel filterListContainer;
+
     @Inject
-    public VizSettingsViewImpl() {
+    public EntityGraphSettingsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         applyButton.addClickHandler(event -> applyHandler.run());
         cancelButton.addClickHandler(event -> cancelHandler.run());
     }
 
-    @Nonnull
-    @Override
-    public AcceptsOneWidget getExclusionCriteriaContainer() {
-        return excludeCriteriaContainer;
-    }
 
     @Nonnull
     @Override
-    public AcceptsOneWidget getIncludeCriteriaContainer() {
-        return includeCriteriaContainer;
+    public AcceptsOneWidget getFilterListContainer() {
+        return filterListContainer;
     }
 
     @Override

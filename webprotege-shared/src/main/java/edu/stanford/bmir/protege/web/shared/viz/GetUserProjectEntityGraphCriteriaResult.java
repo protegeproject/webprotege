@@ -21,12 +21,10 @@ public abstract class GetUserProjectEntityGraphCriteriaResult implements Result 
 
     public static GetUserProjectEntityGraphCriteriaResult get(@Nonnull ProjectId projectId,
                                                               @Nonnull UserId userId,
-                                                              @Nonnull EdgeCriteria edgeCriteria,
-                                                              double rankSpacing) {
+                                                              @Nonnull EntityGraphSettings settings) {
         return new AutoValue_GetUserProjectEntityGraphCriteriaResult(projectId,
                                                                      userId,
-                                                                     edgeCriteria,
-                                                                     rankSpacing);
+                                                                     settings);
     }
 
     @Nonnull
@@ -36,8 +34,6 @@ public abstract class GetUserProjectEntityGraphCriteriaResult implements Result 
     public abstract UserId getUserId();
 
     @Nonnull
-    public abstract EdgeCriteria getCriteria();
-
-    public abstract double getRankSpacing();
+    public abstract EntityGraphSettings getSettings();
 
 }

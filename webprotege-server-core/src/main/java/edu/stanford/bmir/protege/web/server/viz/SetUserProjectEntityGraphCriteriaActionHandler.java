@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings;
+import edu.stanford.bmir.protege.web.shared.viz.ProjectUserEntityGraphSettings;
 import edu.stanford.bmir.protege.web.shared.viz.SetUserProjectEntityGraphSettingsAction;
 import edu.stanford.bmir.protege.web.shared.viz.SetUserProjectEntityGraphResult;
 
@@ -48,11 +49,11 @@ public class SetUserProjectEntityGraphCriteriaActionHandler extends AbstractProj
     @Override
     public SetUserProjectEntityGraphResult execute(@Nonnull SetUserProjectEntityGraphSettingsAction action,
                                                    @Nonnull ExecutionContext executionContext) {
+
+        var settings = action.getSettings();
         var projectId = action.getProjectId();
         var userId = executionContext.getUserId();
-        var criteria = action.getEdgeCriteria();
-        var rankSep = action.getRankSeparation();
-        repository.saveSettings(EntityGraphSettings.get(projectId, userId, criteria, rankSep));
+        repository.saveSettings(ProjectUserEntityGraphSettings.get(projectId, userId, settings));
         return new SetUserProjectEntityGraphResult();
     }
 }

@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings;
+import edu.stanford.bmir.protege.web.shared.viz.ProjectUserEntityGraphSettings;
 
 import javax.annotation.Nonnull;
 
@@ -14,10 +15,10 @@ import javax.annotation.Nonnull;
  */
 public interface EntityGraphSettingsRepository extends Repository {
 
-    void saveSettings(@Nonnull EntityGraphSettings settings);
+    void saveSettings(@Nonnull ProjectUserEntityGraphSettings settings);
 
     @Nonnull
-    EntityGraphSettings getProjectDefaultSettings(@Nonnull ProjectId projectId);
+    ProjectUserEntityGraphSettings getProjectDefaultSettings(@Nonnull ProjectId projectId);
 
     /**
      * Gets the entity graph settings, or the project default if a user does
@@ -27,7 +28,7 @@ public interface EntityGraphSettingsRepository extends Repository {
      * @return The settings
      */
     @Nonnull
-    EntityGraphSettings getSettingsForUserOrProjectDefault(@Nonnull ProjectId projectId,
+    ProjectUserEntityGraphSettings getSettingsForUserOrProjectDefault(@Nonnull ProjectId projectId,
                                                            @Nonnull UserId userId);
 
 

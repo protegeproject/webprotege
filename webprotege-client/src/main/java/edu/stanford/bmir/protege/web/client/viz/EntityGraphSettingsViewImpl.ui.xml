@@ -24,6 +24,9 @@
             flex-shrink: 0;
             border-top: 1px solid literal("var(--alternate--separator--color)");
         }
+        .buttonBar button+button {
+            margin-left: 1em;
+        }
         .criteria {
             flex-grow: 1;
             flex-shrink: 1;
@@ -31,33 +34,28 @@
             padding: 1em;
             width: 100%;
         }
-        .rankSepSettings {
-
-        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
         <g:HTMLPanel addStyleNames="{style.criteria}">
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label addStyleNames="{wp.style.formLabel}" text="Included Edges"/>
-                <g:Label addStyleNames="{wp.style.formHelpText}" text="Specify a list of criteria below that will be used to determine whether a given edge should be included in the entity graph.  Leave empty to include all types of edges by default."/>
-                <g:SimplePanel ui:field="includeCriteriaContainer" addStyleNames="{style.container}"/>
-            </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label addStyleNames="{wp.style.formLabel}" text="Excluded edges"/>
-                <g:Label addStyleNames="{wp.style.formHelpText}" text="Specify a list of criteria below that will be used to determine whether a given edge should be excluded from the entity graph.   Leave empty to include all types of edges by default."/>
-                <g:SimplePanel ui:field="excludeCriteriaContainer" addStyleNames="{style.container}"/>
-            </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{style.rankSepSettings}">
                 <g:Label addStyleNames="{wp.style.formLabel}" text="Spacing"/>
-                <g:ListBox ui:field="ranksepListBox">
-                    <g:item value="0.50">x 0.5</g:item>
-                    <g:item value="1.00">x 1</g:item>
-                    <g:item value="2.00">x 2</g:item>
-                    <g:item value="3.00">x 3</g:item>
-                    <g:item value="3.00">x 4</g:item>
-                    <g:item value="3.00">x 5</g:item>
-                </g:ListBox>
+                <g:HTMLPanel>
+                    <g:ListBox ui:field="ranksepListBox">
+                        <g:item value="0.50">x 0.5</g:item>
+                        <g:item value="1.00">x 1</g:item>
+                        <g:item value="2.00">x 2</g:item>
+                        <g:item value="3.00">x 3</g:item>
+                        <g:item value="3.00">x 4</g:item>
+                        <g:item value="3.00">x 5</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
             </g:HTMLPanel>
+
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label addStyleNames="{wp.style.formLabel}" text="Filters"/>
+                <g:SimplePanel ui:field="filterListContainer"/>
+            </g:HTMLPanel>
+
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.buttonBar}">
             <g:HTMLPanel>

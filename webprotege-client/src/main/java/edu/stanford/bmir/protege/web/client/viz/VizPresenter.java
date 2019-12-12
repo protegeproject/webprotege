@@ -67,7 +67,7 @@ public class VizPresenter {
     private final PlaceController placeController;
 
     @Nonnull
-    private final VizSettingsPresenter vizSettingsPresenter;
+    private final EntityGraphSettingsPresenter entityGraphSettingsPresenter;
 
 
     @Nonnull
@@ -91,13 +91,13 @@ public class VizPresenter {
                         @Nonnull VizView view,
                         @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper,
                         @Nonnull PlaceController placeController,
-                        @Nonnull VizSettingsPresenter vizSettingsPresenter) {
+                        @Nonnull EntityGraphSettingsPresenter entityGraphSettingsPresenter) {
         this.projectId = checkNotNull(projectId);
         this.dispatch = checkNotNull(dispatch);
         this.view = checkNotNull(view);
         this.typePerspectiveMapper = checkNotNull(typePerspectiveMapper);
         this.placeController = checkNotNull(placeController);
-        this.vizSettingsPresenter = vizSettingsPresenter;
+        this.entityGraphSettingsPresenter = entityGraphSettingsPresenter;
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -123,8 +123,8 @@ public class VizPresenter {
         view.setNodeMouseEnterHandler(this::handleMouseEnter);
         view.setNodeMouseLeaveHandler(this::handleMouseLeave);
         view.setDisplaySettingsHandler(this::toggleSettings);
-        vizSettingsPresenter.setApplySettingsHandler(this::applySettings);
-        vizSettingsPresenter.setCancelHandler(this::cancelApplySettings);
+        entityGraphSettingsPresenter.setApplySettingsHandler(this::applySettings);
+        entityGraphSettingsPresenter.setCancelHandler(this::cancelApplySettings);
     }
 
     private void cancelApplySettings() {
@@ -134,8 +134,8 @@ public class VizPresenter {
 
     private void applySettings() {
         view.hideSettings();
-        EdgeCriteria edgeCriteria = vizSettingsPresenter.getEdgeCriteria();
-        dispatch.execute(new SetUserProjectEntityGraphSettingsAction(projectId, edgeCriteria, vizSettingsPresenter.getRankSpacing()),
+        EntityGraphSettings entityGraphSettings = entityGraphSettingsPresenter.getSettings();
+        dispatch.execute(new SetUserProjectEntityGraphSettingsAction(projectId, entityGraphSettings),
                          hasBusy,
                          result -> redisplayCurrentEntity());
     }
@@ -153,9 +153,9 @@ public class VizPresenter {
     }
 
     private void displayCriteriaSettingsResult(GetUserProjectEntityGraphCriteriaResult result) {
-        vizSettingsPresenter.start(view.getSettingsContainer());
-        vizSettingsPresenter.setEdgeCriteria(result.getCriteria());
-        vizSettingsPresenter.setRankSpacing(result.getRankSpacing());
+        entityGraphSettingsPresenter.start(view.getSettingsContainer());
+        EntityGraphSettings settings = result.getSettings();
+        entityGraphSettingsPresenter.setSettings(settings);
         view.displaySettings();
     }
 
@@ -366,7 +366,7 @@ public class VizPresenter {
             currentGraph.setMarginX(10);
             currentGraph.setMarginY(10);
             currentGraph.setRankDirBottomToTop();
-            currentGraph.setRankSep((int) (20 * vizSettingsPresenter.getRankSpacing()));
+            currentGraph.setRankSep((int) (20 * entityGraphSettingsPresenter.getRankSpacing()));
             currentGraph.setNodeSep(10);
             currentGraph.setRankerToLongestPath();
             GWT.log("[VizPresenter] Laying out graph");
@@ -400,7 +400,7 @@ public class VizPresenter {
             return;
         }
         currentEntityGraph = result.getEntityGraph();
-        vizSettingsPresenter.setRankSpacing(result.getRankSpacing());
+        entityGraphSettingsPresenter.setRankSpacing(result.getRankSpacing());
         if (entityDisplay != null) {
             entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
         }
