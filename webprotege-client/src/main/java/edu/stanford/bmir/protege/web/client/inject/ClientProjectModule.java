@@ -447,6 +447,11 @@ public class ClientProjectModule {
     EntityGraphFilterListView provideEntityGraphFilterListView(EntityGraphFilterListViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntityGraphView provideEntityGraphView(EntityGraphViewImpl impl) {
+        return impl;
+    }
 }
 
 

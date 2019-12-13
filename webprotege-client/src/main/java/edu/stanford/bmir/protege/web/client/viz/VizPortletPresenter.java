@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.viz;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
@@ -21,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 11 Oct 2018
  */
 @Portlet(id = "portlets.viz", title = "Entity Graph", tooltip = "Provides a visualisation")
-public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
+public class VizPortletPresenter extends AbstractWebProtegePortletPresenter implements EntityDisplay {
 
     @Nonnull
     private final VizPresenter vizPresenter;
@@ -39,7 +40,7 @@ public class VizPortletPresenter extends AbstractWebProtegePortletPresenter {
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         setDisplaySelectedEntityNameAsSubtitle(true);
         vizPresenter.setEntityDisplay(this);
-        vizPresenter.start(portletUi, eventBus);
+        vizPresenter.start(portletUi);
         vizPresenter.setHasBusy(portletUi);
     }
 

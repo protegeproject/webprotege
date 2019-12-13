@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 22 Mar 2018
  */
-public interface EditorPortletView extends IsWidget, HasDispose {
+public interface EditorPortletView extends AcceptsOneWidget, IsWidget, HasDispose {
 
     interface EditorPaneChangedHandler {
         void handleEditorPaneChanged();

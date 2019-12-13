@@ -35,7 +35,7 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
     SimplePanel tagListViewContainer;
 
     @UiField
-    SimplePanel paneContainer;
+    HTMLPanel paneContainer;
 
     @UiField
     TabBar tabBar;
@@ -50,6 +50,12 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
     public EditorPortletViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         tabBar.addSelectionHandler(event -> setVisibleIndex(event.getSelectedItem()));
+    }
+
+    @Override
+    public void setWidget(IsWidget w) {
+        paneContainer.clear();
+        paneContainer.add(w);
     }
 
     @Override
@@ -80,6 +86,12 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
         tooltips.add(Tooltip.create(widget, displayName));
         tabBar.addTab(widget);
         SimplePanel simplePanel = new SimplePanel();
+        Style style = simplePanel.getElement().getStyle();
+        style.setTop(0, Style.Unit.PX);
+        style.setLeft(0, Style.Unit.PX);
+        style.setRight(0, Style.Unit.PX);
+        style.setBottom(0, Style.Unit.PX);
+        style.setPosition(Style.Position.ABSOLUTE);
         containerMap.put(displayName, simplePanel);
         tabs.add(displayName);
         return simplePanel;
@@ -100,7 +112,7 @@ public class EditorPortletViewImpl extends Composite implements EditorPortletVie
             SimplePanel container = containerMap.get(dn);
             container.setVisible(i == index);
             if(i == index) {
-                paneContainer.setWidget(container);
+                paneContainer.add(container);
             }
             else {
                 container.removeFromParent();

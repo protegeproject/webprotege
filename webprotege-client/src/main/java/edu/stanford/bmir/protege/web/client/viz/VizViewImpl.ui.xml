@@ -5,86 +5,14 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-        }
-
-        .messageView {
-            flex-grow: 1;
-            flex-shrink: 1;
-            position: relative;
-        }
-
-        .settingsView {
-            flex-grow: 1;
-            flex-shrink: 1;
-            position: relative;
-        }
-
-        .canvas {
-            flex-grow: 1;
-            flex-shrink: 1;
-            position: relative;
-        }
-
-        .canvas svg {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .settingsBar {
-            flex-grow: 0;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: row;
-            padding: 2px;
-            align-items: center;
-            border-top: 1px solid literal("var(--alternate--separator--color)");
-        }
-
-        .download {
-            justify-self: flex-end;
-        }
-        .strut {
-            width: 3em;
-        }
-        .spacer {
-            flex-grow: 1;
-            flex-shrink: 1;
-        }
-        .textMeasurer {
-            position: absolute;
-            visibility: hidden;
-            width: auto;
-            height: auto;
-            white-space: nowrap;
+            right: 0;
+            bottom: 0;
+            box-sizing: border-box;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
-        <g:HTMLPanel addStyleNames="{style.container}">
-            <viz:LargeGraphMessageViewImpl visible="false" ui:field="largeGraphMessageView"
-                                           addStyleNames="{style.messageView}"/>
-            <g:SimplePanel ui:field="settingsContainer"
-                           visible="false"
-                           addStyleNames="{style.settingsView} {wp.style.panelFilled}"/>
-            <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
-
-        </g:HTMLPanel><g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
-        <g:Button ui:field="viewSettingsButton" text="" title="Settings" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.filter}"/>
-
-        <div class="{style.spacer}"/>
-            <g:Button ui:field="downloadButton" title="download" addStyleNames="{style.download} {wp.buttons.btnGlyph} {wp.buttons.download}"/>
-        </g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.main}" ui:field="viewViewContainer">
     </g:HTMLPanel>
 </ui:UiBinder>
