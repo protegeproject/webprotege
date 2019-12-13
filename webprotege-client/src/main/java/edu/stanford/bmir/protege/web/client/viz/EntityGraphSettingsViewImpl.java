@@ -21,6 +21,8 @@ public class EntityGraphSettingsViewImpl extends Composite implements EntityGrap
 
     private Runnable cancelHandler = () -> {};
 
+    private Runnable applyProjectDefaultHandler = () -> {};
+
     interface VizSettingsViewImplUiBinder extends UiBinder<HTMLPanel, EntityGraphSettingsViewImpl> {
 
     }
@@ -39,12 +41,16 @@ public class EntityGraphSettingsViewImpl extends Composite implements EntityGrap
     @UiField
     SimplePanel filterListContainer;
 
+    @UiField
+    Button applyProjectDefaultButton;
+
     @Inject
     public EntityGraphSettingsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         ranksepListBox.setSelectedIndex(1);
         applyButton.addClickHandler(event -> applyHandler.run());
         cancelButton.addClickHandler(event -> cancelHandler.run());
+        applyProjectDefaultButton.addClickHandler(event -> applyProjectDefaultHandler.run());
     }
 
 
@@ -85,5 +91,15 @@ public class EntityGraphSettingsViewImpl extends Composite implements EntityGrap
                 return;
             }
         }
+    }
+
+    @Override
+    public void setApplySettingsAsProjectDefaultHandler(Runnable runnable) {
+        this.applyProjectDefaultHandler = checkNotNull(runnable);
+    }
+
+    @Override
+    public void setApplySettingsAsProjectDefaultVisible(boolean b) {
+        applyProjectDefaultButton.setVisible(b);
     }
 }

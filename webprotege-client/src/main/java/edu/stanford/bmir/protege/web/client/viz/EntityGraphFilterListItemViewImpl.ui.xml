@@ -16,6 +16,6 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:SimplePanel ui:field="container"/>
-        <g:Button ui:field="deleteButton" text="Delete" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+        <g:Button ui:field="deleteButton" text="Delete filter" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

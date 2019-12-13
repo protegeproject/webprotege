@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 
@@ -45,15 +45,20 @@ public class EntityGraphSettingsPresenter {
     @Nonnull
     private Runnable cancelHandler = () -> {};
 
+    @Nonnull
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     @Inject
     public EntityGraphSettingsPresenter(@Nonnull ProjectId projectId,
                                         @Nonnull EntityGraphSettingsView view,
                                         @Nonnull EntityGraphFilterListPresenter filterListPresenter,
-                                        @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                        @Nonnull DispatchServiceManager dispatchServiceManager,
+                                        @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         this.projectId = projectId;
         this.view = view;
         this.filterListPresenter = filterListPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.permissionChecker = permissionChecker;
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -68,6 +73,8 @@ public class EntityGraphSettingsPresenter {
         dispatchServiceManager.execute(new GetUserProjectEntityGraphCriteriaAction(projectId),
                                        hasBusy,
                                        this::displaySettings);
+        permissionChecker.hasPermission(BuiltInAction.EDIT_DEFAULT_VISUALIZATION_SETTINGS,
+                                        view::setApplySettingsAsProjectDefaultVisible);
     }
 
     private void displaySettings(GetUserProjectEntityGraphCriteriaResult result) {

@@ -14,6 +14,6 @@
         <g:HTMLPanel ui:field="container">
 
         </g:HTMLPanel>
-        <g:Button ui:field="addButton" text="Add filter" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.primaryButton}"/>
+        <g:Button ui:field="addButton" text="New filter" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

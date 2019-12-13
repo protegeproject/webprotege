@@ -19,6 +19,10 @@ public interface EntityGraphSettingsView extends IsWidget {
 
     void setCancelSettingsHandler(Runnable runnable);
 
+    void setApplySettingsAsProjectDefaultHandler(Runnable runnable);
+
+    void setApplySettingsAsProjectDefaultVisible(boolean b);
+
     double getRankSpacing();
 
     void setRankSpacing(double value);

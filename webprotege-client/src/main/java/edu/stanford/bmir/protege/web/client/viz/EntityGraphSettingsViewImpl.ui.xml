@@ -56,16 +56,17 @@
                 <g:SimplePanel ui:field="filterListContainer"/>
             </g:HTMLPanel>
 
+            <g:HTMLPanel>
+                <g:Button ui:field="applyProjectDefaultButton" text="Set as project defaults"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.alternateButton}"/>
+            </g:HTMLPanel>
+
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.buttonBar}">
-            <g:HTMLPanel>
                 <g:Button ui:field="applyButton" text="{msg.dialog_apply}"
-                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.primaryButton}"/>
-            </g:HTMLPanel>
-            <g:HTMLPanel>
+                          addStyleNames="{wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.primaryButton}"/>
                 <g:Button ui:field="cancelButton" text="{msg.dialog_cancel}"
-                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
-            </g:HTMLPanel>
+                          addStyleNames="{wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.escapeButton}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
