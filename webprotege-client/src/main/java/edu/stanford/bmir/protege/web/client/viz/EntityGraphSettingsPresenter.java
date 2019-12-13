@@ -83,7 +83,6 @@ public class EntityGraphSettingsPresenter {
     private void handleApplySettings() {
         EntityGraphSettings settings = EntityGraphSettings.get(
                 filterListPresenter.getFilters(),
-                ImmutableSet.of(),
                 view.getRankSpacing()
         );
         dispatchServiceManager.execute(new SetUserProjectEntityGraphSettingsAction(projectId,
@@ -112,7 +111,7 @@ public class EntityGraphSettingsPresenter {
     @Nonnull
     public EntityGraphSettings getSettings() {
         ImmutableList<EntityGraphFilter> filters = filterListPresenter.getFilters();
-        return EntityGraphSettings.get(filters, ImmutableSet.of(), view.getRankSpacing());
+        return EntityGraphSettings.get(filters, view.getRankSpacing());
     }
 
 

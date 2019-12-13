@@ -29,20 +29,17 @@ public abstract class EntityGraphSettings implements IsSerializable {
 
     public static final String FILTERS = "filters";
 
-    public static final String ACTIVE_FILTERS = "activeFilters";
-
     public static final String RANK_SPACING = "rankSpacing";
 
     @JsonCreator
     public static EntityGraphSettings get(@Nonnull @JsonProperty(FILTERS) ImmutableList<EntityGraphFilter> criteria,
-                                          @Nonnull @JsonProperty(ACTIVE_FILTERS)ImmutableSet<FilterName> activeFilters,
                                           @JsonProperty(value = RANK_SPACING, defaultValue = "1.0") double rankSpacing) {
-        return new AutoValue_EntityGraphSettings(criteria, activeFilters, rankSpacing);
+        return new AutoValue_EntityGraphSettings(criteria, rankSpacing);
     }
 
     @Nonnull
     public static EntityGraphSettings getDefault() {
-        return get(ImmutableList.of(), ImmutableSet.of(), 1.0);
+        return get(ImmutableList.of(), 1.0);
     }
 
 
@@ -55,10 +52,6 @@ public abstract class EntityGraphSettings implements IsSerializable {
     @JsonProperty(FILTERS)
     public abstract ImmutableList<EntityGraphFilter> getFilters();
 
-    @Nonnull
-    @JsonProperty(ACTIVE_FILTERS)
-    public abstract ImmutableSet<FilterName> getActiveFilters();
-
     @JsonProperty(RANK_SPACING)
     public abstract double getRankSpacing();
 
@@ -66,7 +59,7 @@ public abstract class EntityGraphSettings implements IsSerializable {
     @Nonnull
     public CompositeEdgeCriteria getCombinedActiveFilterCriteria() {
         ImmutableList<EdgeCriteria> combined = getFilters().stream()
-//                    .filter(filter -> getActiveFilters().contains(filter.getName()))
+                    .filter(EntityGraphFilter::isActive)
                     .map(EntityGraphFilter::getCombinedCriteria)
                     .collect(toImmutableList());
         return CompositeEdgeCriteria.get(combined, MultiMatchType.ALL);

@@ -42,7 +42,8 @@ public class EntityGraphFilter_TestCase {
         filter = EntityGraphFilter.get(filterName,
                                        THE_DESCRIPTION,
                                        inclusionCriteria,
-                                       exclusionCriteria);
+                                       exclusionCriteria,
+                                       true);
     }
 
     @Test

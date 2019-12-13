@@ -26,20 +26,25 @@ public abstract class EntityGraphFilter {
 
     private static final String EXCLUSION_CRITERIA = "exclusionCriteria";
 
+    private static final String ACTIVE = "active";
+
+
     @JsonCreator
     public static EntityGraphFilter get(@Nonnull @JsonProperty(NAME) FilterName name,
                                         @Nonnull @JsonProperty(DESCRIPTION) String description,
                                         @Nonnull @JsonProperty(INCLUSION_CRITERIA) CompositeEdgeCriteria inclusionCriteria,
-                                        @Nonnull @JsonProperty(EXCLUSION_CRITERIA) CompositeEdgeCriteria exclusionCriteria) {
-        return new AutoValue_EntityGraphFilter(name, description, inclusionCriteria, exclusionCriteria);
+                                        @Nonnull @JsonProperty(EXCLUSION_CRITERIA) CompositeEdgeCriteria exclusionCriteria,
+                                        @JsonProperty(ACTIVE) boolean active) {
+        return new AutoValue_EntityGraphFilter(name, description, inclusionCriteria, exclusionCriteria, active);
     }
 
     @Null
     public static EntityGraphFilter getDefault() {
         return get(FilterName.get(""),
                    "",
+                   CompositeEdgeCriteria.get(MultiMatchType.ANY, AnyEdgeCriteria.get()),
                    CompositeEdgeCriteria.empty(),
-                   CompositeEdgeCriteria.empty());
+                   false);
     }
 
     @Nonnull
@@ -67,4 +72,7 @@ public abstract class EntityGraphFilter {
     @Nonnull
     @JsonProperty(EXCLUSION_CRITERIA)
     public abstract CompositeEdgeCriteria getExclusionCriteria();
+
+    @JsonProperty(ACTIVE)
+    public abstract boolean isActive();
 }

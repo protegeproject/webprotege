@@ -33,9 +33,22 @@ public class EntityGraphFilterViewImpl extends Composite implements EntityGraphF
     @UiField
     TextBox descriptionField;
 
+    @UiField
+    CheckBox activeCheckBox;
+
     @Inject
     public EntityGraphFilterViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Override
+    public boolean isActive() {
+        return activeCheckBox.getValue();
+    }
+
+    @Override
+    public void setActive(boolean active) {
+        activeCheckBox.setValue(active);
     }
 
     @Override

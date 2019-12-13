@@ -20,7 +20,8 @@ public class EntityGraphFilter_SerializationTestCase {
         testSerialization(EntityGraphFilter.get(FilterName.get("TheName"),
                                                 "TheDescription",
                                                 CompositeEdgeCriteria.empty(),
-                                                CompositeEdgeCriteria.empty()));
+                                                CompositeEdgeCriteria.empty(),
+                                                true));
     }
 
     private static <V extends EntityGraphFilter> void testSerialization(V value) throws IOException {

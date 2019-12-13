@@ -12,6 +12,10 @@ import javax.annotation.Nonnull;
  */
 public interface EntityGraphFilterView extends IsWidget {
 
+    boolean isActive();
+
+    void setActive(boolean active);
+
     void setName(@Nonnull String name);
 
     @Nonnull

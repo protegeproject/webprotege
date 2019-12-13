@@ -42,6 +42,7 @@ public class EntityGraphFilterPresenter {
     public void setFilter(@Null EntityGraphFilter filter) {
         this.view.setName(filter.getName().getName());
         this.view.setDescription(filter.getDescription());
+        this.view.setActive(filter.isActive());
         inclusionCriteriaPresenter.setCriteria(filter.getInclusionCriteria());
         exclusionCriteriaPresenter.setCriteria(filter.getExclusionCriteria());
 
@@ -53,7 +54,8 @@ public class EntityGraphFilterPresenter {
                         FilterName.get(view.getName()),
                         view.getDescription(),
                         inclusionCriteriaPresenter.getCriteria().get(),
-                        exclusionCriteriaPresenter.getCriteria().get()
+                        exclusionCriteriaPresenter.getCriteria().get(),
+                        view.isActive()
                 )
         );
     }
@@ -64,5 +66,6 @@ public class EntityGraphFilterPresenter {
         inclusionCriteriaPresenter.setMatchTextPrefix("");
         exclusionCriteriaPresenter.start(view.getExclusionCriteriaContainer());
         exclusionCriteriaPresenter.setMatchTextPrefix("");
+
     }
 }
