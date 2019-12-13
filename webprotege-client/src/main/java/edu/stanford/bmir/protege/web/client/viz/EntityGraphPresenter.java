@@ -102,6 +102,10 @@ public class EntityGraphPresenter {
         this.largeGraphHandler = checkNotNull(largeGraphHandler);
     }
 
+    public void setViewSettingsHandler(ViewSettingsHandler viewSettingsHandler) {
+        view.setViewSettingsHandler(viewSettingsHandler);
+    }
+
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         addHandlersToView();
@@ -394,5 +398,14 @@ public class EntityGraphPresenter {
             view.getMostRecentTargetNode()
                 .ifPresent(EntityGraphPresenter.this::navigateToEntity);
         }
+    }
+
+
+    interface DownloadHandler {
+        void handleDownload();
+    }
+
+    interface ViewSettingsHandler {
+        void handleViewSettings();
     }
 }

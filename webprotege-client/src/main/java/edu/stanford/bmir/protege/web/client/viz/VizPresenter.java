@@ -87,6 +87,7 @@ public class VizPresenter {
 
         entityGraphPresenter.setLargeGraphHandler(this::displayLargeGraphMessage);
         entityGraphPresenter.setHasBusy(hasBusy);
+        entityGraphPresenter.setViewSettingsHandler(this::displaySettingsView);
 
         largeGraphMessagePresenter.setDisplayGraphHandler(this::displayLargeGraph);
         largeGraphMessagePresenter.setDisplaySettingsHandler(this::displaySettingsView);

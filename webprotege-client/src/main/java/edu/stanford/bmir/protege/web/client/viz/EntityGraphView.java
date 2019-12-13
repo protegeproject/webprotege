@@ -33,7 +33,9 @@ public interface EntityGraphView extends IsWidget {
 
     void updateGraph(Graph graph);
 
-    void setDownloadHandler(@Nonnull Runnable handler);
+    void setDownloadHandler(@Nonnull EntityGraphPresenter.DownloadHandler handler);
+
+    void setViewSettingsHandler(@Nonnull EntityGraphPresenter.ViewSettingsHandler handler);
 
     boolean isVisible();
 
@@ -55,9 +57,4 @@ public interface EntityGraphView extends IsWidget {
     void setNodeMouseEnterHandler(BiConsumer<NodeDetails, Event> nodeMouseEnterHandler);
 
     void setNodeMouseLeaveHandler(BiConsumer<NodeDetails, Event> nodeMouseLeaveHandler);
-
-    interface DownloadHandler {
-
-        void handleDownload();
-    }
 }

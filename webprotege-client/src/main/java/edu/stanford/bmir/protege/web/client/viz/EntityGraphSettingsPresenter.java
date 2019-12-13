@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 
@@ -64,6 +65,15 @@ public class EntityGraphSettingsPresenter {
         filterListPresenter.start(view.getFilterListContainer());
         view.setApplySettingsHandler(this::handleApplySettings);
         view.setCancelSettingsHandler(this::handleCancel);
+        dispatchServiceManager.execute(new GetUserProjectEntityGraphCriteriaAction(projectId),
+                                       hasBusy,
+                                       this::displaySettings);
+    }
+
+    private void displaySettings(GetUserProjectEntityGraphCriteriaResult result) {
+        EntityGraphSettings settings = result.getSettings();
+        view.setRankSpacing(settings.getRankSpacing());
+        filterListPresenter.setFilters(settings.getFilters());
     }
 
     private void handleCancel() {

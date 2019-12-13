@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.graphlib.Graph2Svg;
 import edu.stanford.bmir.protege.web.client.graphlib.NodeDetails;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
+import edu.stanford.bmir.protege.web.client.viz.EntityGraphPresenter.DownloadHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import elemental.dom.Element;
 import elemental.events.Event;
@@ -34,6 +35,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.viz.EntityGraphPresenter.*;
 
 /**
  * Matthew Horridge
@@ -42,7 +44,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityGraphViewImpl extends Composite implements EntityGraphView {
 
-    private Runnable downloadHandler = () -> {};
+    private DownloadHandler downloadHandler = () -> {};
+
+    private ViewSettingsHandler viewSettingsHandler = () -> {};
 
     interface EntityGraphViewImplUiBinder extends UiBinder<HTMLPanel, EntityGraphViewImpl> {
 
@@ -57,6 +61,7 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
     public EntityGraphViewImpl() {
         popupMenu = new PopupMenu();
         initWidget(ourUiBinder.createAndBindUi(this));
+        viewSettingsButton.addClickHandler(event -> viewSettingsHandler.handleViewSettings());
     }
 
 
@@ -69,6 +74,9 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
 
     @UiField
     TextMeasurerImpl textMeasurer;
+
+    @UiField
+    Button viewSettingsButton;
 
     private Consumer<NodeDetails> nodeClickHandler = n -> {
     };
@@ -171,7 +179,7 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
     @UiHandler("downloadButton")
     public void downloadButtonClick(ClickEvent event) {
         Element e = (Element) canvas.getElement().getElementsByTagName("svg").getItem(0);
-//        downloadHandler.handleDownload();
+        downloadHandler.handleDownload();
     }
 
     @Override
@@ -212,8 +220,8 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
     }
 
     @Override
-    public void setDownloadHandler(@Nonnull Runnable runnable) {
-        this.downloadHandler = checkNotNull(runnable);
+    public void setDownloadHandler(@Nonnull DownloadHandler handler) {
+        this.downloadHandler = checkNotNull(handler);
     }
 
 
@@ -306,6 +314,11 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
         Element canvasElement = getCanvasElement();
         Graph2Svg graph2Svg = createGraph2Svg(graph);
         graph2Svg.updateSvg(canvasElement.getFirstElementChild(), graph);
+    }
+
+    @Override
+    public void setViewSettingsHandler(@Nonnull ViewSettingsHandler handler) {
+        this.viewSettingsHandler = checkNotNull(handler);
     }
 
     private Graph2Svg createGraph2Svg(Graph graph) {

@@ -18,7 +18,7 @@
         .buttonBar {
             display: flex;
             flex-direction: row;
-            justify-content: flex-start;
+            justify-content: flex-end;
             padding: 3px;
             flex-grow: 0;
             flex-shrink: 0;

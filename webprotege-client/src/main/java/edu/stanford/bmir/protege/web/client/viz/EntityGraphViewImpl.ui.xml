@@ -58,11 +58,9 @@
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
         <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
+            <g:Button ui:field="viewSettingsButton" title="Settings" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.settings}"/>
             <div class="{style.spacer}"/>
-            <g:Button ui:field="downloadButton" title="download" addStyleNames="{style.download} {wp.buttons.btnGlyph} {wp.buttons.download}"/>
+            <g:Button ui:field="downloadButton" title="Download" addStyleNames="{style.download} {wp.buttons.btnGlyph} {wp.buttons.download}"/>
         </g:HTMLPanel>
-        <!--<g:HTMLPanel addStyleNames="{style.canvasHolder}">-->
-            <!---->
-        <!--</g:HTMLPanel>-->
     </g:HTMLPanel>
 </ui:UiBinder>
