@@ -32,7 +32,7 @@
             flex-shrink: 1;
             overflow: scroll;
             padding: 1em;
-            width: 100%;
+            justify-content: stretch;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
