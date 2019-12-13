@@ -4,7 +4,6 @@ import com.google.common.base.Stopwatch;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -83,6 +82,8 @@ public class EntityGraphPresenter {
     private EntityDisplay entityDisplay;
 
     private LargeGraphHandler largeGraphHandler = () -> {};
+
+    private int rankSpacing = 10;
 
     @Inject
     public EntityGraphPresenter(@Nonnull EntityGraphView view,
@@ -172,7 +173,7 @@ public class EntityGraphPresenter {
         currentEntity.ifPresent(entity -> {
             dispatch.execute(new GetEntityGraphAction(projectId, entity),
                              hasBusy,
-                             this::handleRendering);
+                             this::handleEntityGraph);
         });
     }
 
@@ -325,6 +326,7 @@ public class EntityGraphPresenter {
             stopwatch.stop();
             GWT.log("[VizPresenter] Created graph in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
         }
+        currentGraph.setRankSep(rankSpacing);
         currentGraph.setMarginX(10);
         currentGraph.setMarginY(10);
         currentGraph.setRankDirBottomToTop();
@@ -348,10 +350,11 @@ public class EntityGraphPresenter {
         saver.save(element, currentGraph.getWidth(), currentGraph.getHeight(), "entity-graph");
     }
 
-    private void handleRendering(@Nonnull GetEntityGraphResult result) {
+    private void handleEntityGraph(@Nonnull GetEntityGraphResult result) {
         if(result.getEntityGraph().equals(currentEntityGraph)) {
             return;
         }
+        this.rankSpacing = (int)(20 * result.getRankSpacing());
         currentEntityGraph = result.getEntityGraph();
         if (entityDisplay != null) {
             entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
