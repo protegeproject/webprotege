@@ -16,6 +16,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.viz.ProjectUserEntityGraphSettings.PROJECT_ID;
 import static edu.stanford.bmir.protege.web.shared.viz.ProjectUserEntityGraphSettings.USER_ID;
@@ -44,7 +47,7 @@ public class EntityGraphSettingsRepositoryImpl implements EntityGraphSettingsRep
     @Override
     public void saveSettings(@Nonnull ProjectUserEntityGraphSettings settings) {
         var document = objectMapper.convertValue(settings, Document.class);
-        var filter = getFilter(settings.getProjectId(), settings.getUserId()
+        var filter = getUpsertFilter(settings.getProjectId(), settings.getUserId()
                                                                 .orElse(null));
         var replaceOptions = new ReplaceOptions().upsert(true);
         getCollection().replaceOne(filter, document, replaceOptions);
@@ -53,7 +56,7 @@ public class EntityGraphSettingsRepositoryImpl implements EntityGraphSettingsRep
     @Nonnull
     @Override
     public ProjectUserEntityGraphSettings getProjectDefaultSettings(@Nonnull ProjectId projectId) {
-        var filter = getFilter(projectId, null);
+        var filter = getGetFilter(projectId, null);
         return getProjectEntityGraphSettings(projectId, filter);
     }
 
@@ -71,19 +74,26 @@ public class EntityGraphSettingsRepositoryImpl implements EntityGraphSettingsRep
     @Override
     public ProjectUserEntityGraphSettings getSettingsForUserOrProjectDefault(@Nonnull ProjectId projectId,
                                                                   @Nullable UserId userId) {
-        var filter = getFilter(projectId, userId);
+        var filter = getGetFilter(projectId, userId);
         return getProjectEntityGraphSettings(projectId, filter);
     }
 
-    public static Document getFilter(@Nonnull ProjectId projectId,
+    public static Document getGetFilter(@Nonnull ProjectId projectId,
                                      @Nullable UserId userId) {
         var doc = new Document(PROJECT_ID, projectId.getId());
         if(userId == null) {
             doc.append(USER_ID, null);
         }
         else {
-            doc.append(USER_ID, userId.getUserName());
+            doc.append("$or", Arrays.asList(new Document(USER_ID, userId.getUserName()), new Document(USER_ID, null)));
         }
+        return doc;
+    }
+
+    public static Document getUpsertFilter(@Nonnull ProjectId projectId,
+                                           @Nullable UserId userId) {
+        var doc = new Document(PROJECT_ID, projectId.getId());
+        doc.append(USER_ID, userId == null ? null : userId.getUserName());
         return doc;
     }
 

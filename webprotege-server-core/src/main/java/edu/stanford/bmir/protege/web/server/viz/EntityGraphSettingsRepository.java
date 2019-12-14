@@ -29,7 +29,7 @@ public interface EntityGraphSettingsRepository extends Repository {
      */
     @Nonnull
     ProjectUserEntityGraphSettings getSettingsForUserOrProjectDefault(@Nonnull ProjectId projectId,
-                                                           @Nonnull UserId userId);
+                                                                      @Nonnull UserId userId);
 
 
 }
