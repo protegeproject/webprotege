@@ -71,7 +71,7 @@ public class EntityGraphBuilder_TestCase {
                                               objectPropertyAssertionsIndex,
                                               subClassOfAxiomIndex,
                                               classAssertionAxiomsIndex,
-                                              equivalentClassesAxiomsIndex, edgeMatcher);
+                                              equivalentClassesAxiomsIndex, 100, edgeMatcher);
         when(projectOntologiesIndex.getOntologyIds())
                 .thenAnswer(inv -> Stream.of(ontId));
     }

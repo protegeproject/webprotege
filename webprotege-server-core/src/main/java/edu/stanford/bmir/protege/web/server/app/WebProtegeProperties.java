@@ -135,4 +135,16 @@ public class WebProtegeProperties implements Serializable {
     public Optional<String> getDBAuthenticationSource() {
         return getOptionalString(MONGO_DB_AUTH_SOURCE);
     }
+
+    public Optional<Integer> getEntityGraphEdgeLimit() {
+        return getOptionalString(WebProtegePropertyName.ENTITY_GRAPH_EDGE_LIMIT)
+                .map(edgeLimit -> {
+                    try {
+                        return Integer.parseInt(edgeLimit);
+                    } catch(NumberFormatException e) {
+                        return Integer.parseInt(ENTITY_GRAPH_EDGE_LIMIT.getDefaultValue().orElseThrow());
+                    }
+                });
+
+    }
 }

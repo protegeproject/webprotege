@@ -81,6 +81,9 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
     @UiField
     SimplePanel filterTokenContainer;
 
+    @UiField
+    Label prunedMessage;
+
     private Consumer<NodeDetails> nodeClickHandler = n -> {
     };
 
@@ -270,6 +273,11 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
         Element element = getCanvasElement();
         element.appendChild(svg);
         setupZoom();
+    }
+
+    @Override
+    public void setPrunedToLimit(boolean b) {
+        prunedMessage.setVisible(b);
     }
 
 

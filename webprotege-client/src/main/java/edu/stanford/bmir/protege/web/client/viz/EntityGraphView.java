@@ -34,6 +34,8 @@ public interface EntityGraphView extends IsWidget {
 
     void setGraph(@Nonnull OWLEntity rootEntity, @Nonnull Graph graph);
 
+    void setPrunedToLimit(boolean b);
+
     void updateGraph(Graph graph);
 
     void setDownloadHandler(@Nonnull EntityGraphPresenter.DownloadHandler handler);

@@ -372,6 +372,7 @@ public class EntityGraphPresenter {
         this.rankSpacing = (int)(20 * entityGraphSettings
                                             .getRankSpacing());
         currentEntityGraph = result.getEntityGraph();
+        view.setPrunedToLimit(currentEntityGraph.isPrunedToEdgeLimit());
         if (entityDisplay != null) {
             entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
         }

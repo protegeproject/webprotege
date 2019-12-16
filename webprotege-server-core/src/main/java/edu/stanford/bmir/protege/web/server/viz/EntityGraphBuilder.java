@@ -55,12 +55,14 @@ public class EntityGraphBuilder {
     @Nonnull
     private final Set<OWLEntity> processed = new HashSet<>();
 
+    private final int edgeLimit;
 
     @Nonnull
     private final Queue<OWLEntity> queue = new ArrayDeque<>();
 
     private final EdgeMatcher edgeMatcher;
 
+    private boolean edgeLimitReached = false;
 
     @AutoFactory
     @Inject
@@ -70,6 +72,7 @@ public class EntityGraphBuilder {
                               @Nonnull @Provided SubClassOfAxiomsBySubClassIndex subClassOfAxioms,
                               @Nonnull @Provided ClassAssertionAxiomsByIndividualIndex classAssertionAxioms,
                               @Nonnull @Provided EquivalentClassesAxiomsIndex equivalentClassesAxioms,
+                              @Provided @EntityGraphEdgeLimit int edgeLimit,
                               @Nonnull EdgeMatcher edgeMatcher) {
         this.renderer = checkNotNull(renderer);
         this.projectOntologiesIndex = projectOntologiesIndex;
@@ -77,6 +80,7 @@ public class EntityGraphBuilder {
         this.subClassOfAxioms = subClassOfAxioms;
         this.classAssertionAxioms = classAssertionAxioms;
         this.equivalentClassesAxioms = equivalentClassesAxioms;
+        this.edgeLimit = edgeLimit;
         this.edgeMatcher = edgeMatcher;
     }
 
@@ -296,13 +300,18 @@ public class EntityGraphBuilder {
     public EntityGraph createGraph(@Nonnull OWLEntity root) {
         processed.clear();
         queue.add(root);
+        edgeLimitReached = false;
         var edges = createGraph();
-        return EntityGraph.create(renderer.getRendering(root), edges);
+        return EntityGraph.create(renderer.getRendering(root), edges, edgeLimitReached);
     }
 
     private ImmutableSet<Edge> createGraph() {
         @Nonnull var edges = new LinkedHashSet<Edge>();
         while(!queue.isEmpty()) {
+            if(edges.size() >= edgeLimit) {
+                edgeLimitReached = true;
+                return ImmutableSet.copyOf(edges);
+            }
             var entity = queue.poll();
             if(entity.isOWLClass()) {
                 var cls = entity.asOWLClass();

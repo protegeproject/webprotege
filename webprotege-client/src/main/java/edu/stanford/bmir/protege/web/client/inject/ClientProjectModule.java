@@ -474,6 +474,7 @@ public class ClientProjectModule {
     EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
         return impl;
     }
+
 }
 
 

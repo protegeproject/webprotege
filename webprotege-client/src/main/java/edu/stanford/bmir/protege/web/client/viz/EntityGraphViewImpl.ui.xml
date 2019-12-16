@@ -58,12 +58,16 @@
             height: auto;
             white-space: nowrap;
         }
+        .prunedLabel {
+            font-size: 1em;
+            margin-bottom: 0.2em;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
         <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
+        <g:Label ui:field="prunedMessage" visible="false" addStyleNames="{wp.style.warningLabel} {style.prunedLabel}" text="This graph has been pruned because it is large.  Try adding filters to hide or reveal the parts of the graph that you would like to view."/>
         <g:SimplePanel ui:field="filterTokenContainer" addStyleNames="{style.filterContainer}">
-
         </g:SimplePanel>
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
             <g:Button ui:field="viewSettingsButton" title="Settings" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.settings}"/>

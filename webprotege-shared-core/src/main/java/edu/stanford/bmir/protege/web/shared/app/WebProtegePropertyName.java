@@ -48,7 +48,10 @@ public enum WebProtegePropertyName {
     MONGO_DB_AUTH_PASSWORD("mongodb.auth.password", PropertyValue.ofString("")),
 
     @WebProtegePropertiesDocumentation(description = "The time in milliseconds after which a project becomes dormant and is purgable from memory", example = "180000")
-    PROJECT_DORMANT_TIME("project.dormant.time", PropertyValue.ofInteger(180_000));
+    PROJECT_DORMANT_TIME("project.dormant.time", PropertyValue.ofInteger(180_000)),
+
+    @WebProtegePropertiesDocumentation(description = "The edge limit for the entity graph", example = "1000")
+    ENTITY_GRAPH_EDGE_LIMIT("entitygraph.edgelimit", PropertyValue.ofInteger(1_000));
 
     private static class PropertyValue {
 
