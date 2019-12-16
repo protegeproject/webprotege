@@ -16,10 +16,11 @@
             margin-top: 0.2rem;
             margin-bottom: 0.2rem;
             margin-left: 0.5rem;
+            cursor: default;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.token}">
         <g:Label ui:field="labelField"/>
-        <g:Button ui:field="removeButton" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.btnGlyphSmall} {wp.buttons.cross}"/>
+        <g:Button ui:field="removeButton" title="Remove filter" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.btnGlyphSmall} {wp.buttons.cross}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

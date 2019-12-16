@@ -99,9 +99,11 @@ public class EntityGraphSettingsPresenter {
     }
 
     private void displaySettings(GetUserProjectEntityGraphCriteriaResult result) {
+        dispatchServiceManager.beginBatch();
         EntityGraphSettings settings = result.getSettings();
         view.setRankSpacing(settings.getRankSpacing());
         filterListPresenter.setFilters(settings.getFilters());
+        dispatchServiceManager.executeCurrentBatch();
     }
 
     private void handleCancel() {
