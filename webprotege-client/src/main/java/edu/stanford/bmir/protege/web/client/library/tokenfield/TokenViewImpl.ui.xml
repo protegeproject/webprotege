@@ -18,9 +18,12 @@
             margin-left: 0.5rem;
             cursor: default;
         }
+        .label {
+            white-space: nowrap;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.token}">
-        <g:Label ui:field="labelField"/>
+        <g:Label ui:field="labelField" addStyleNames="{style.label}"/>
         <g:Button ui:field="removeButton" title="Remove filter" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.btnGlyphSmall} {wp.buttons.cross}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
