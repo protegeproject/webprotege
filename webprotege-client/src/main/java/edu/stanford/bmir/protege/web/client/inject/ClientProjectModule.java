@@ -24,6 +24,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.*;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.*;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupView;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
@@ -450,6 +451,27 @@ public class ClientProjectModule {
 
     @Provides
     EntityGraphView provideEntityGraphView(EntityGraphViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TokenFieldPresenter<FilterName> provideTokenFieldPresenter(TokenFieldView view,
+                                                               TokenPresenterFactory presenterFactory) {
+        return new TokenFieldPresenter<>(view, presenterFactory);
+    }
+
+    @Provides
+    TokenView provideTokenView(TokenViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
         return impl;
     }
 }

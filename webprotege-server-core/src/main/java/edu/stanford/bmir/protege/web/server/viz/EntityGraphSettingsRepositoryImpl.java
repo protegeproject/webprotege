@@ -57,15 +57,21 @@ public class EntityGraphSettingsRepositoryImpl implements EntityGraphSettingsRep
     @Override
     public ProjectUserEntityGraphSettings getProjectDefaultSettings(@Nonnull ProjectId projectId) {
         var filter = getGetFilter(projectId, null);
-        return getProjectEntityGraphSettings(projectId, filter);
+        var settings = getProjectEntityGraphSettings(filter);
+        if(settings == null) {
+            return ProjectUserEntityGraphSettings.get(projectId, null, EntityGraphSettings.getDefault());
+        }
+        else {
+            return settings;
+        }
     }
 
-    private ProjectUserEntityGraphSettings getProjectEntityGraphSettings(@Nonnull ProjectId projectId,
-                                                              Document filter) {
+    @Nullable
+    private ProjectUserEntityGraphSettings getProjectEntityGraphSettings(Document filter) {
         var found = getCollection().find(filter);
         var firstDocument = found.first();
         if(firstDocument == null) {
-            return ProjectUserEntityGraphSettings.getDefault(projectId, null);
+            return null;
         }
         return objectMapper.convertValue(firstDocument, ProjectUserEntityGraphSettings.class);
     }
@@ -74,8 +80,15 @@ public class EntityGraphSettingsRepositoryImpl implements EntityGraphSettingsRep
     @Override
     public ProjectUserEntityGraphSettings getSettingsForUserOrProjectDefault(@Nonnull ProjectId projectId,
                                                                   @Nullable UserId userId) {
-        var filter = getGetFilter(projectId, userId);
-        return getProjectEntityGraphSettings(projectId, filter);
+        ProjectUserEntityGraphSettings userSettings = getProjectEntityGraphSettings(getUpsertFilter(projectId, userId));
+        if(userSettings != null) {
+            return userSettings;
+        }
+        ProjectUserEntityGraphSettings defaultSettings = getProjectEntityGraphSettings(getGetFilter(projectId, null));
+        if(defaultSettings != null) {
+            return defaultSettings;
+        }
+        return ProjectUserEntityGraphSettings.getDefault(projectId, userId);
     }
 
     public static Document getGetFilter(@Nonnull ProjectId projectId,
@@ -85,7 +98,7 @@ public class EntityGraphSettingsRepositoryImpl implements EntityGraphSettingsRep
             doc.append(USER_ID, null);
         }
         else {
-            doc.append("$or", Arrays.asList(new Document(USER_ID, userId.getUserName()), new Document(USER_ID, null)));
+            doc.append(USER_ID, userId.getUserName());
         }
         return doc;
     }

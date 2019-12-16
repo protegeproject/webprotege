@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -27,11 +28,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -54,6 +53,9 @@ public class EntityGraphPresenter {
     private static final int FIRST = 0;
 
     private static final int SECOND = 1;
+
+    @Nonnull
+    private final EntityGraphFilterTokenPresenter filterTokenPresenter;
 
     @Nonnull
     private final ProjectId projectId;
@@ -87,11 +89,13 @@ public class EntityGraphPresenter {
 
     @Inject
     public EntityGraphPresenter(@Nonnull EntityGraphView view,
+                                @Nonnull EntityGraphFilterTokenPresenter filterTokenPresenter,
                                 @Nonnull ProjectId projectId,
                                 @Nonnull DispatchServiceManager dispatch,
                                 @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper,
                                 @Nonnull PlaceController placeController) {
         this.view = view;
+        this.filterTokenPresenter = filterTokenPresenter;
         this.projectId = projectId;
         this.dispatch = dispatch;
         this.typePerspectiveMapper = typePerspectiveMapper;
@@ -109,7 +113,17 @@ public class EntityGraphPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        filterTokenPresenter.start(view.getFilterContainer());
+        filterTokenPresenter.setActiveFiltersChangedHandler(this::handleActiveFiltersChanged);
         addHandlersToView();
+    }
+
+    private void handleActiveFiltersChanged() {
+        List<FilterName> activeFilters = filterTokenPresenter.getActiveFilters();
+        dispatch.execute(new SetEntityGraphActiveFiltersAction(projectId,
+                                                               ImmutableList.copyOf(activeFilters)),
+                         hasBusy,
+                         result -> redisplayCurrentEntity());
     }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
@@ -354,11 +368,16 @@ public class EntityGraphPresenter {
         if(result.getEntityGraph().equals(currentEntityGraph)) {
             return;
         }
-        this.rankSpacing = (int)(20 * result.getRankSpacing());
+        EntityGraphSettings entityGraphSettings = result.getEntityGraphSettings();
+        this.rankSpacing = (int)(20 * entityGraphSettings
+                                            .getRankSpacing());
         currentEntityGraph = result.getEntityGraph();
         if (entityDisplay != null) {
             entityDisplay.setDisplayedEntity(Optional.of(result.getEntityGraph().getRoot()));
         }
+        ImmutableList<FilterName> activeFilters = entityGraphSettings.getActiveFilterNames();
+        filterTokenPresenter.setActiveFilters(activeFilters);
+        filterTokenPresenter.setFilters(entityGraphSettings.getFilterNames());
         resetCurrentGraph();
     }
 

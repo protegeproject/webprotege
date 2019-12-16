@@ -51,6 +51,7 @@ import edu.stanford.bmir.protege.web.server.tag.UpdateEntityTagsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.viz.GetEntityGraphActionHandler;
 import edu.stanford.bmir.protege.web.server.viz.GetUserProjectEntityGraphCriteriaActionHandler;
+import edu.stanford.bmir.protege.web.server.viz.SetEntityGraphActiveFiltersActionHandler;
 import edu.stanford.bmir.protege.web.server.viz.SetUserProjectEntityGraphCriteriaActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
@@ -605,6 +606,11 @@ public class ProjectActionHandlersModule {
     @Provides @IntoSet
     public ProjectActionHandler providesSetUserProjectEntityGraphCriteriaActionHandler(
             SetUserProjectEntityGraphCriteriaActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideSetEntityGraphActiveFiltersActionHandler(SetEntityGraphActiveFiltersActionHandler handler) {
         return handler;
     }
 }

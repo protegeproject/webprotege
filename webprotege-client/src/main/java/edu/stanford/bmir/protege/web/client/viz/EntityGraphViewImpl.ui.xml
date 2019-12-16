@@ -29,6 +29,11 @@
             height: 100%;
         }
 
+        .filterContainer {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
         .settingsBar {
             flex-grow: 0;
             flex-shrink: 0;
@@ -57,6 +62,9 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <viz:TextMeasurerImpl ui:field="textMeasurer" addStyleNames="{style.textMeasurer}"/>
         <g:HTMLPanel ui:field="canvas" addStyleNames="{style.canvas}"/>
+        <g:SimplePanel ui:field="filterTokenContainer" addStyleNames="{style.filterContainer}">
+
+        </g:SimplePanel>
         <g:HTMLPanel addStyleNames="{style.settingsBar} {wp.style.panelFilled}">
             <g:Button ui:field="viewSettingsButton" title="Settings" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.settings}"/>
             <div class="{style.spacer}"/>

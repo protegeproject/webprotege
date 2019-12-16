@@ -16,12 +16,13 @@ import javax.annotation.Nonnull;
 public abstract class GetEntityGraphResult implements Result {
 
     public static GetEntityGraphResult get(@Nonnull EntityGraph entityGraph,
-                                           double rankSpacing) {
-        return new AutoValue_GetEntityGraphResult(entityGraph, rankSpacing);
+                                           @Nonnull EntityGraphSettings settings) {
+        return new AutoValue_GetEntityGraphResult(entityGraph, settings);
     }
 
     @Nonnull
     public abstract EntityGraph getEntityGraph();
 
-    public abstract double getRankSpacing();
+    @Nonnull
+    public abstract EntityGraphSettings getEntityGraphSettings();
 }

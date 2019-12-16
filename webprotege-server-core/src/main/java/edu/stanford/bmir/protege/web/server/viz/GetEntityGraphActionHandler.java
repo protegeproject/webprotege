@@ -56,6 +56,7 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
         Stopwatch stopwatch = Stopwatch.createStarted();
         var projectId = action.getProjectId();
         var userId = executionContext.getUserId();
+        logger.info("Getting entity graph settings for " + userId);
         var projectUserSettings = entityGraphSettingsRepository.getSettingsForUserOrProjectDefault(projectId, userId);
         var entityGraphSettings = projectUserSettings.getSettings();
         var criteria = projectUserSettings.getSettings()
@@ -68,6 +69,6 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
                     graph.getNodes().size(),
                     graph.getEdges().size(),
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        return GetEntityGraphResult.get(graph, entityGraphSettings.getRankSpacing());
+        return GetEntityGraphResult.get(graph, entityGraphSettings);
     }
 }

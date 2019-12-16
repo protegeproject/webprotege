@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -63,5 +64,22 @@ public abstract class EntityGraphSettings implements IsSerializable {
                     .map(EntityGraphFilter::getCombinedCriteria)
                     .collect(toImmutableList());
         return CompositeEdgeCriteria.get(combined, MultiMatchType.ALL);
+    }
+
+    @JsonIgnore
+    @Nonnull
+    public ImmutableList<FilterName> getActiveFilterNames() {
+        return getFilters().stream()
+                           .filter(EntityGraphFilter::isActive)
+                           .map(EntityGraphFilter::getName)
+                           .collect(toImmutableList());
+    }
+
+    @JsonIgnore
+    @Nonnull
+    public ImmutableSet<FilterName> getFilterNames() {
+        return getFilters().stream()
+                .map(EntityGraphFilter::getName)
+                .collect(toImmutableSet());
     }
 }

@@ -78,6 +78,9 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
     @UiField
     Button viewSettingsButton;
 
+    @UiField
+    SimplePanel filterTokenContainer;
+
     private Consumer<NodeDetails> nodeClickHandler = n -> {
     };
 
@@ -230,6 +233,12 @@ public class EntityGraphViewImpl extends Composite implements EntityGraphView {
     @Override
     public TextMeasurer getTextMeasurer() {
         return textMeasurer;
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getFilterContainer() {
+        return filterTokenContainer;
     }
 
     @Override

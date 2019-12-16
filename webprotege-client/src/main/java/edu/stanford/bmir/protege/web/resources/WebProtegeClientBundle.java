@@ -604,6 +604,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn-g")
         String btnGlyph();
 
+        @ClassName("wp-btn-g--small")
+        String btnGlyphSmall();
+
         @ClassName("wp-btn-g--sync-selection")
         String syncSelection();
 
@@ -666,6 +669,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--filter")
         String filter();
+
+        @ClassName("wp-btn-g--cross")
+        String cross();
     }
 
     interface SettingsPageCss extends CssResource {

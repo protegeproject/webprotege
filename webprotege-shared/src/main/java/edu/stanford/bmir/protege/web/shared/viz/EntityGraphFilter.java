@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -75,4 +76,16 @@ public abstract class EntityGraphFilter {
 
     @JsonProperty(ACTIVE)
     public abstract boolean isActive();
+
+    @JsonIgnore
+    public EntityGraphFilter withActive(boolean active) {
+        if(isActive() == active) {
+            return this;
+        }
+        return get(getName(),
+                   getDescription(),
+                   getInclusionCriteria(),
+                   getExclusionCriteria(),
+                   active);
+    }
 }

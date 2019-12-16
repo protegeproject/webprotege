@@ -23,6 +23,9 @@ import java.util.function.Consumer;
 public interface EntityGraphView extends IsWidget {
 
 
+    @Nonnull
+    AcceptsOneWidget getFilterContainer();
+
     Element getSvgElement();
 
     void clearGraph();
