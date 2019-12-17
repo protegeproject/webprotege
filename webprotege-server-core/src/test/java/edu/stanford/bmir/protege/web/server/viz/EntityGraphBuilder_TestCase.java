@@ -39,6 +39,8 @@ import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.*;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityGraphBuilder_TestCase {
 
+    private static final int EDGE_LIMIT = 2000;
+
     private EntityGraphBuilder graphBuilder;
 
     @Mock
@@ -71,7 +73,7 @@ public class EntityGraphBuilder_TestCase {
                                               objectPropertyAssertionsIndex,
                                               subClassOfAxiomIndex,
                                               classAssertionAxiomsIndex,
-                                              equivalentClassesAxiomsIndex, 100, edgeMatcher);
+                                              equivalentClassesAxiomsIndex, EDGE_LIMIT, edgeMatcher);
         when(projectOntologiesIndex.getOntologyIds())
                 .thenAnswer(inv -> Stream.of(ontId));
     }
