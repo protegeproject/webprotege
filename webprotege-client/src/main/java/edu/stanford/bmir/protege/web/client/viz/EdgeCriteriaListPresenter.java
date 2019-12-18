@@ -34,6 +34,11 @@ public class EdgeCriteriaListPresenter extends CriteriaListPresenter<EdgeCriteri
     }
 
     @Override
+    public Optional<CompositeEdgeCriteria> getCriteria() {
+        return (Optional<CompositeEdgeCriteria>) super.getCriteria();
+    }
+
+    @Override
     protected CompositeEdgeCriteria createCompositeCriteria(@Nonnull ImmutableList<? extends EdgeCriteria> criteriaList) {
         return CompositeEdgeCriteria.get(criteriaList, getMultiMatchType());
     }

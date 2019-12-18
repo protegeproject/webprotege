@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.viz;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.viz.CompositeEdgeCriteria;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraphFilter;
 import edu.stanford.bmir.protege.web.shared.viz.FilterName;
 
@@ -49,12 +50,16 @@ public class EntityGraphFilterPresenter {
     }
 
     public Optional<EntityGraphFilter> getFilter() {
+        CompositeEdgeCriteria inclusionCriteria = inclusionCriteriaPresenter.getCriteria()
+                                                                            .orElse(CompositeEdgeCriteria.anyEdge());
+        CompositeEdgeCriteria exclusionCriteria = exclusionCriteriaPresenter.getCriteria()
+                                                                            .orElse(CompositeEdgeCriteria.empty());
         return Optional.of(
                 EntityGraphFilter.get(
                         FilterName.get(view.getName()),
                         view.getDescription(),
-                        inclusionCriteriaPresenter.getCriteria().get(),
-                        exclusionCriteriaPresenter.getCriteria().get(),
+                        inclusionCriteria,
+                        exclusionCriteria,
                         view.isActive()
                 )
         );

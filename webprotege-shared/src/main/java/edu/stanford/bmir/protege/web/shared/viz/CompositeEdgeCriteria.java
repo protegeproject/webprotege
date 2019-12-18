@@ -41,6 +41,11 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
         return get(ImmutableList.of(), MultiMatchType.ANY);
     }
 
+    @Nonnull
+    public static CompositeEdgeCriteria anyEdge() {
+        return get(ImmutableList.of(AnyEdgeCriteria.get()), MultiMatchType.ANY);
+    }
+
     @Override
     public <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
