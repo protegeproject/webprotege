@@ -36,14 +36,11 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
     @UiField(provided = true)
     LanguageMapEditor labelField;
 
-    @UiField
-    Button addElementButton;
 
     @Inject
     public FormDescriptorViewImpl(@Nonnull LanguageMapEditor labelEditor) {
         this.labelField = checkNotNull(labelEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
-        addElementButton.addClickHandler(this::handleAddElement);
     }
 
     private void handleAddElement(ClickEvent clickEvent) {
@@ -54,7 +51,6 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
     public void setEnabled(boolean enabled) {
         formIdField.setEnabled(enabled);
         labelField.setEnabled(enabled);
-        addElementButton.setEnabled(enabled);
     }
 
     @Nonnull

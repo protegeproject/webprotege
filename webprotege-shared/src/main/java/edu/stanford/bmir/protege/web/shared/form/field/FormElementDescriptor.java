@@ -32,7 +32,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
                                             @JsonProperty("owlBinding") @Nullable OwlBinding owlBinding,
                                             @JsonProperty("label") @Nullable LanguageMap formLabel,
                                             @JsonProperty("elementRun") @Nullable ElementRun elementRun,
-                                            @JsonProperty("fieldDescriptor") @Nonnull FormControlDescriptor fieldDescriptor,
+                                            @JsonProperty("formControlDescriptor") @Nonnull FormControlDescriptor fieldDescriptor,
                                             @JsonProperty("repeatability") @Nullable Repeatability repeatability,
                                             @JsonProperty("optionality") @Nullable Optionality optionality,
                                             @JsonProperty("help") @Nullable LanguageMap help,

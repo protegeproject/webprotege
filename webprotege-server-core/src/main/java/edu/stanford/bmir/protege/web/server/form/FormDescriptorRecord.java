@@ -19,7 +19,7 @@ public abstract class FormDescriptorRecord {
     @JsonCreator
     public static FormDescriptorRecord get(@JsonProperty("projectId") @Nonnull ProjectId projectId,
                                            @JsonProperty("formDescriptor") @Nonnull FormDescriptor formDescriptor) {
-        return new AutoValue_FormDescriptorRecord(projectId, formDescriptor);
+        return new AutoValue_FormDescriptorRecord(projectId, formDescriptor == null ? FormDescriptor.empty() : formDescriptor);
     }
 
     @JsonProperty("projectId")
