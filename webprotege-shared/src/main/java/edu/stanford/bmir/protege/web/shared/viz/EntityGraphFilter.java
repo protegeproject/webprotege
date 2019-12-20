@@ -8,6 +8,7 @@ import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.validation.constraints.Null;
 import java.util.Optional;
 
@@ -33,11 +34,11 @@ public abstract class EntityGraphFilter {
 
     @JsonCreator
     public static EntityGraphFilter get(@Nonnull @JsonProperty(NAME) FilterName name,
-                                        @Nonnull @JsonProperty(value = DESCRIPTION, defaultValue = "") String description,
+                                        @Nullable @JsonProperty(DESCRIPTION) String description,
                                         @Nonnull @JsonProperty(INCLUSION_CRITERIA) CompositeEdgeCriteria inclusionCriteria,
                                         @Nonnull @JsonProperty(EXCLUSION_CRITERIA) CompositeEdgeCriteria exclusionCriteria,
                                         @JsonProperty(ACTIVE) boolean active) {
-        return new AutoValue_EntityGraphFilter(name, description, inclusionCriteria, exclusionCriteria, active);
+        return new AutoValue_EntityGraphFilter(name, description == null ? "" : description, inclusionCriteria, exclusionCriteria, active);
     }
 
     /**
