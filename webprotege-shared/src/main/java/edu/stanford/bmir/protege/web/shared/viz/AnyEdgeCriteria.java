@@ -27,4 +27,10 @@ public abstract class AnyEdgeCriteria implements EdgeCriteria {
     public <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @Nonnull
+    @Override
+    public EdgeCriteria simplify() {
+        return this;
+    }
 }

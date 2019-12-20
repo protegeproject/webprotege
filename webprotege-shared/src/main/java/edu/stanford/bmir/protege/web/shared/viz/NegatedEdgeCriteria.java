@@ -30,4 +30,17 @@ public abstract class NegatedEdgeCriteria implements EdgeCriteria {
     public <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @Nonnull
+    @Override
+    public EdgeCriteria simplify() {
+        EdgeCriteria negatedCriteria = getNegatedCriteria().simplify();
+        if(negatedCriteria instanceof NoEdgeCriteria) {
+            // Remove double negative
+            return AnyEdgeCriteria.get();
+        }
+        else {
+            return NegatedEdgeCriteria.get(negatedCriteria);
+        }
+    }
 }

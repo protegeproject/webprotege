@@ -28,4 +28,6 @@ public interface EdgeCriteriaVisitor<R> {
     R visit(@Nonnull AnyNodeCriteria criteria);
 
     R visit(@Nonnull NegatedEdgeCriteria criteria);
+
+    R visit(@Nonnull NoEdgeCriteria noEdgeCriteria);
 }

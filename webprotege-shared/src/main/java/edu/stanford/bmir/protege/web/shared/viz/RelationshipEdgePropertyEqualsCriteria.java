@@ -31,4 +31,10 @@ public abstract class RelationshipEdgePropertyEqualsCriteria implements EdgeCrit
 
     @Nonnull
     public abstract OWLProperty getProperty();
+
+    @Nonnull
+    @Override
+    public EdgeCriteria simplify() {
+        return this;
+    }
 }

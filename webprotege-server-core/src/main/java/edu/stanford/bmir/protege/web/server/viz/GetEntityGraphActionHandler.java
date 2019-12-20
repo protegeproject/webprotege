@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.viz;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
@@ -33,15 +35,20 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
     @Nonnull
     private final EntityGraphSettingsRepository entityGraphSettingsRepository;
 
+    @Nonnull
+    private final ObjectMapper objectMapper;
+
     @Inject
     public GetEntityGraphActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull EntityGraphBuilderFactory graphBuilderFactory,
                                        @Nonnull EdgeMatcherFactory edgeMatcherFactory,
-                                       @Nonnull EntityGraphSettingsRepository entityGraphSettingsRepository) {
+                                       @Nonnull EntityGraphSettingsRepository entityGraphSettingsRepository,
+                                       @Nonnull ObjectMapper objectMapper) {
         super(accessManager);
         this.graphBuilderFactory = checkNotNull(graphBuilderFactory);
         this.edgeMatcherFactory = checkNotNull(edgeMatcherFactory);
         this.entityGraphSettingsRepository = checkNotNull(entityGraphSettingsRepository);
+        this.objectMapper = objectMapper;
     }
 
     @Nonnull
@@ -61,7 +68,14 @@ public class GetEntityGraphActionHandler extends AbstractProjectActionHandler<Ge
         var entityGraphSettings = projectUserSettings.getSettings();
         var criteria = projectUserSettings.getSettings()
                                           .getCombinedActiveFilterCriteria();;
-        var edgeMatcher = edgeMatcherFactory.createMatcher(criteria);
+        var edgeMatcher = edgeMatcherFactory.createMatcher(criteria.simplify());
+        try {
+            logger.info("Criteria: " + objectMapper.writeValueAsString(criteria));
+            logger.info("Simplified Criteria: " + objectMapper.writeValueAsString(criteria.simplify()));
+        } catch(JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         var graph = graphBuilderFactory.create(edgeMatcher)
                                        .createGraph(action.getEntity());
         stopwatch.stop();

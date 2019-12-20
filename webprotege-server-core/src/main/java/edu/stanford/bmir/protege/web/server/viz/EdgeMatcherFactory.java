@@ -66,6 +66,11 @@ public class EdgeMatcherFactory {
             }
 
             @Override
+            public EdgeMatcher visit(@Nonnull NoEdgeCriteria noEdgeCriteria) {
+                return edge -> false;
+            }
+
+            @Override
             public EdgeMatcher visit(@Nonnull TailNodeMatchesCriteria criteria) {
                 return edge -> matcherFactory.getMatcher(criteria.getNodeCriteria()).matches(edge.getTail().getEntity());
             }
@@ -106,9 +111,11 @@ public class EdgeMatcherFactory {
         @Override
         public boolean matches(@Nonnull Edge edge) {
             if(multiMatchType == MultiMatchType.ALL) {
+                // NB Logical FOR ALL – allMatch is true if the stream is empty
                 return matchers.stream().allMatch(m -> m.matches(edge));
             }
             else {
+                // NB Logical EXISTS – anyMatch is false is stream is empty
                 return matchers.stream().anyMatch(m -> m.matches(edge));
             }
         }

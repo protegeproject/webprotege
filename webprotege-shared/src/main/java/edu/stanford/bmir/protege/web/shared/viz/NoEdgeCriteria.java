@@ -10,17 +10,16 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-12-05
+ * 2019-12-19
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("AnyRelationshipEdge")
-public class AnyRelationshipEdgeCriteria implements EdgeTypeCriteria {
+@JsonTypeName("NoEdge")
+public abstract class NoEdgeCriteria implements EdgeCriteria {
 
     @JsonCreator
-    @Nonnull
-    public static AnyRelationshipEdgeCriteria get() {
-        return new AutoValue_AnyRelationshipEdgeCriteria();
+    public static NoEdgeCriteria get() {
+        return new AutoValue_NoEdgeCriteria();
     }
 
     @Override

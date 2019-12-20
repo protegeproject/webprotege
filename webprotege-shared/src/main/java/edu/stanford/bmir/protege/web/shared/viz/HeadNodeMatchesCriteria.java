@@ -28,4 +28,10 @@ public abstract class HeadNodeMatchesCriteria implements NodeMatchesCriteria {
     public <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @Nonnull
+    @Override
+    public EdgeCriteria simplify() {
+        return this;
+    }
 }

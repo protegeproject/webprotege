@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.viz;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -19,6 +20,7 @@ import javax.annotation.Nonnull;
 )
 @JsonSubTypes({
         @Type(AnyEdgeCriteria.class),
+        @Type(NoEdgeCriteria.class),
         @Type(AnyInstanceOfEdgeCriteria.class),
         @Type(AnySubClassOfEdgeCriteria.class),
         @Type(AnyRelationshipEdgeCriteria.class),
@@ -31,4 +33,8 @@ import javax.annotation.Nonnull;
 public interface EdgeCriteria extends Criteria {
 
     <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor);
+
+    @JsonIgnore
+    @Nonnull
+    EdgeCriteria simplify();
 }

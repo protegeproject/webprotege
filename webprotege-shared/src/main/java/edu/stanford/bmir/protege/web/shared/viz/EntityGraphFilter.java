@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.Null;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -39,22 +40,6 @@ public abstract class EntityGraphFilter {
         return new AutoValue_EntityGraphFilter(name, description, inclusionCriteria, exclusionCriteria, active);
     }
 
-    @Null
-    public static EntityGraphFilter getDefault() {
-        return get(FilterName.get(""),
-                   "",
-                   CompositeEdgeCriteria.get(MultiMatchType.ANY, AnyEdgeCriteria.get()),
-                   CompositeEdgeCriteria.empty(),
-                   false);
-    }
-
-    @Nonnull
-    public CompositeEdgeCriteria getCombinedCriteria() {
-        return CompositeEdgeCriteria.get(MultiMatchType.ALL,
-                                         getInclusionCriteria(),
-                                         NegatedEdgeCriteria.get(getExclusionCriteria()));
-    }
-
     /**
      * Gets the filter name.  May be an empty string.
      */
@@ -73,6 +58,13 @@ public abstract class EntityGraphFilter {
     @Nonnull
     @JsonProperty(EXCLUSION_CRITERIA)
     public abstract CompositeEdgeCriteria getExclusionCriteria();
+
+    @Nonnull
+    public EdgeCriteria getCombinedCriteria() {
+        return CompositeEdgeCriteria.get(MultiMatchType.ALL,
+                                         getInclusionCriteria(),
+                                         NegatedEdgeCriteria.get(getExclusionCriteria()));
+    }
 
     @JsonProperty(ACTIVE)
     public abstract boolean isActive();

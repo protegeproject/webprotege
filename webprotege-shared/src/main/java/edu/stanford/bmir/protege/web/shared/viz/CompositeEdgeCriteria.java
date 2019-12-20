@@ -12,6 +12,9 @@ import jsinterop.annotations.JsProperty;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -41,6 +44,16 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
         return get(ImmutableList.of(), MultiMatchType.ANY);
     }
 
+    @Nonnull
+    public static CompositeEdgeCriteria anyEdge() {
+        return get(ImmutableList.of(AnyEdgeCriteria.get()), MultiMatchType.ANY);
+    }
+
+    @Nonnull
+    public static CompositeEdgeCriteria noEdge() {
+        return get(ImmutableList.of(NoEdgeCriteria.get()), MultiMatchType.ANY);
+    }
+
     @Override
     public <R> R accept(@Nonnull EdgeCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
@@ -51,4 +64,23 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
 
     @Nonnull
     public abstract MultiMatchType getMatchType();
+
+    @Nonnull
+    @Override
+    public EdgeCriteria simplify() {
+        ImmutableList<EdgeCriteria> simplified = getCriteria().stream()
+                                                         .map(EdgeCriteria::simplify)
+                                                         // Remove vacuously true criteria
+                                                         .filter(c -> !(c instanceof AnyEdgeCriteria))
+                                                         .collect(toImmutableList());
+        if(simplified.size() == 0) {
+            return AnyEdgeCriteria.get();
+        }
+        else if(simplified.size() == 1) {
+            return simplified.get(0);
+        }
+        else {
+            return CompositeEdgeCriteria.get(simplified, getMatchType());
+        }
+    }
 }
