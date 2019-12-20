@@ -40,11 +40,6 @@ public abstract class CompositeEdgeCriteria implements EdgeCriteria {
     }
 
     @Nonnull
-    public static CompositeEdgeCriteria empty() {
-        return get(ImmutableList.of(), MultiMatchType.ANY);
-    }
-
-    @Nonnull
     public static CompositeEdgeCriteria anyEdge() {
         return get(ImmutableList.of(AnyEdgeCriteria.get()), MultiMatchType.ANY);
     }
