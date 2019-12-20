@@ -35,7 +35,7 @@ public class EdgeCriteriaListPresenter extends CriteriaListPresenter<EdgeCriteri
 
     @Override
     public Optional<CompositeEdgeCriteria> getCriteria() {
-        return (Optional<CompositeEdgeCriteria>)super.getCriteria();
+        return (Optional<CompositeEdgeCriteria>) super.getCriteria();
     }
 
     @Override

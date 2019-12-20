@@ -54,7 +54,6 @@ public class EntityGraphFilterPresenter {
                                                                             .orElse(CompositeEdgeCriteria.anyEdge());
         CompositeEdgeCriteria exclusionCriteria = exclusionCriteriaPresenter.getCriteria()
                                                                             .orElse(CompositeEdgeCriteria.noEdge());
-
         return Optional.of(
                 EntityGraphFilter.get(
                         FilterName.get(view.getName()),

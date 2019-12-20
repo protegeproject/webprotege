@@ -89,11 +89,10 @@ public class ProjectTagsPresenter implements Presenter {
         settingsPresenter.setSettingsTitle(messages.tags_projectTagsTitle());
         permissionChecker.hasPermission(EDIT_ENTITY_TAGS, canEditTags -> {
             if(canEditTags) {
-                settingsPresenter.setBusy(container, false);
                 settingsPresenter.addSection(messages.tags_EditProjectTags())
                                  .setWidget(projectTagsView);
                 tagCriteriaListPresenter.start(settingsPresenter.addSection(messages.tags_tagAssigments_Title()));
-                displayProjectTags();
+                displayProjectTags(container);
             }
             else {
                 container.setWidget(forbiddenView);
@@ -134,16 +133,19 @@ public class ProjectTagsPresenter implements Presenter {
 
     }
 
-    private void displayProjectTags() {
+    private void displayProjectTags(AcceptsOneWidget container) {
         dispatchServiceManager.execute(new GetProjectTagsAction(projectId),
-                                       this::displayProjectTags);
+                                       result -> displayProjectTags(result, container));
     }
 
-    private void displayProjectTags(GetProjectTagsResult result) {
+    private void displayProjectTags(GetProjectTagsResult result, AcceptsOneWidget container) {
+        dispatchServiceManager.beginBatch();
         List<Tag> tags = result.getTags();
         projectTagsView.setTags(tags, result.getTagUsage());
         tagCriteriaListPresenter.setAvailableTags(tags.stream().map(Tag::getLabel).collect(Collectors.toList()));
         tagCriteriaListPresenter.setTags(tags);
+        dispatchServiceManager.executeCurrentBatch();
+        settingsPresenter.setBusy(container, false);
     }
 
 
