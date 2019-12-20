@@ -19,8 +19,8 @@ public class EntityGraphFilter_SerializationTestCase {
     public void shouldSerialize_EntityGraphFilter() throws IOException {
         testSerialization(EntityGraphFilter.get(FilterName.get("TheName"),
                                                 "TheDescription",
-                                                CompositeEdgeCriteria.empty(),
-                                                CompositeEdgeCriteria.empty(),
+                                                CompositeEdgeCriteria.anyEdge(),
+                                                CompositeEdgeCriteria.noEdge(),
                                                 true));
     }
 

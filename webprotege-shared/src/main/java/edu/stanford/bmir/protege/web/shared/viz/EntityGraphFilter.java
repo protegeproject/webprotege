@@ -33,7 +33,7 @@ public abstract class EntityGraphFilter {
 
     @JsonCreator
     public static EntityGraphFilter get(@Nonnull @JsonProperty(NAME) FilterName name,
-                                        @Nonnull @JsonProperty(DESCRIPTION) String description,
+                                        @Nonnull @JsonProperty(value = DESCRIPTION, defaultValue = "") String description,
                                         @Nonnull @JsonProperty(INCLUSION_CRITERIA) CompositeEdgeCriteria inclusionCriteria,
                                         @Nonnull @JsonProperty(EXCLUSION_CRITERIA) CompositeEdgeCriteria exclusionCriteria,
                                         @JsonProperty(ACTIVE) boolean active) {
