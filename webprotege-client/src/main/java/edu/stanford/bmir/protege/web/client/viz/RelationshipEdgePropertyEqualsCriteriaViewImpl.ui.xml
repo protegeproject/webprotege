@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+        .propertyNameField {
+            min-width: 170px;
+            max-width: 170px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <primitive:PrimitiveDataEditor ui:field="propertyEditor" placeholder="Enter property name" objectPropertiesAllowed="true" addStyleNames="{style.propertyNameField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

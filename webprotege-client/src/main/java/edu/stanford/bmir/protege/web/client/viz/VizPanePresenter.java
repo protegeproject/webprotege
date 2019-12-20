@@ -48,7 +48,7 @@ public class VizPanePresenter implements EditorPanePresenter {
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, WebProtegeEventBus eventBus) {
-        presenter.start(container, eventBus);
+        presenter.start(container);
     }
 
     @Override

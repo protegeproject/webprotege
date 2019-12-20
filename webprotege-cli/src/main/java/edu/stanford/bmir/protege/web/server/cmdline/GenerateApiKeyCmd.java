@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.cmdline;
 
 import com.mongodb.MongoClient;
-import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
-import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
 import edu.stanford.bmir.protege.web.server.api.ApiKeyHasher;
 import edu.stanford.bmir.protege.web.server.api.ApiKeyManager;
 import edu.stanford.bmir.protege.web.server.api.UserApiKeyStoreImpl;
@@ -35,7 +32,8 @@ public class GenerateApiKeyCmd extends Cmd {
 
     @Override
     public void run(@Nonnull List<String> args) {
-        MongoClient mongoClient = new MongoClient();
+        Console console = System.console();
+        MongoClient mongoClient = WebProtegeCli.getMongoClient();
         MorphiaProvider morphiaProvider = new MorphiaProvider(
                 new UserIdConverter(),
                 new OWLEntityConverter(new OWLDataFactoryImpl()),
@@ -47,7 +45,6 @@ public class GenerateApiKeyCmd extends Cmd {
         Datastore datastore = morphia.createDatastore(mongoClient, "webprotege");
         ApiKeyManager keyManager = new ApiKeyManager(new ApiKeyHasher(), new UserApiKeyStoreImpl(datastore));
 
-        Console console = System.console();
         console.printf("Please enter the user name that they key will be generated from\n");
         String userName = console.readLine();
         console.printf("Please enter a purpose for the API key\n");
@@ -64,6 +61,5 @@ public class GenerateApiKeyCmd extends Cmd {
         console.printf("Please keep this API key safe.  Treat it as a password.\n");
         console.printf("You should NOT distribute it or store it in version control repositories.\n");
         console.printf("This API key cannot be recovered.  You will need to generate a new key if you lose this one.\n");
-
     }
 }

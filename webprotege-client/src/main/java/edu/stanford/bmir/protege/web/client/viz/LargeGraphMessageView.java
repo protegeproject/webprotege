@@ -12,13 +12,11 @@ import javax.annotation.Nonnull;
  */
 public interface LargeGraphMessageView extends IsWidget {
 
-    interface DisplayGraphHandler {
-        void handleDisplayGraph();
-    }
-
     void setDisplayMessage(@Nonnull OWLEntityData entity,
                            int nodeCount,
                            int edgeCount);
 
-    void setDisplayGraphHandler(@Nonnull DisplayGraphHandler handler);
+    void setDisplayGraphHandler(@Nonnull Runnable handler);
+
+    void setDisplaySettingsHandler(@Nonnull Runnable handler);
 }

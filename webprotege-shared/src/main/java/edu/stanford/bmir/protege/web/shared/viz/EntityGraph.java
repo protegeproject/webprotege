@@ -25,7 +25,8 @@ public abstract class EntityGraph {
     private transient ImmutableSet<OWLEntityData> edgeLabels = null;
 
     @Nonnull
-    public static EntityGraph create(OWLEntityData root, ImmutableSet<Edge> edges) {
+    public static EntityGraph create(OWLEntityData root, ImmutableSet<Edge> edges,
+                                     boolean isPrunedToEdgeLimit) {
         final ImmutableSet.Builder<OWLEntityData> builder = ImmutableSet.builder();
         final ImmutableSetMultimap.Builder<OWLEntityData, Edge> edgesByTailNode = ImmutableSetMultimap.builder();
         builder.add(root);
@@ -35,7 +36,7 @@ public abstract class EntityGraph {
             edgesByTailNode.put(e.getTail(), e);
         });
         ImmutableSet<OWLEntityData> nodes = builder.build();
-        return new AutoValue_EntityGraph(root, nodes.size(), nodes, edges.size(), edges, edgesByTailNode.build());
+        return new AutoValue_EntityGraph(root, nodes.size(), nodes, edges.size(), edges, isPrunedToEdgeLimit, edgesByTailNode.build());
     }
 
     @Nonnull
@@ -55,6 +56,8 @@ public abstract class EntityGraph {
     public OWLEntity getRootEntity() {
         return getRoot().getEntity();
     }
+
+    public abstract boolean isPrunedToEdgeLimit();
 
     @Nonnull
     public abstract ImmutableSetMultimap<OWLEntityData, Edge> getEdgesByTailNode();

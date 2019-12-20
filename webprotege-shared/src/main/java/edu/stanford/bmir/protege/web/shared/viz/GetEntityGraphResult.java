@@ -15,11 +15,14 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class GetEntityGraphResult implements Result {
 
-    public static GetEntityGraphResult get(@Nonnull EntityGraph entityGraph) {
-        return new AutoValue_GetEntityGraphResult(entityGraph);
+    public static GetEntityGraphResult get(@Nonnull EntityGraph entityGraph,
+                                           @Nonnull EntityGraphSettings settings) {
+        return new AutoValue_GetEntityGraphResult(entityGraph, settings);
     }
 
     @Nonnull
     public abstract EntityGraph getEntityGraph();
 
+    @Nonnull
+    public abstract EntityGraphSettings getEntityGraphSettings();
 }

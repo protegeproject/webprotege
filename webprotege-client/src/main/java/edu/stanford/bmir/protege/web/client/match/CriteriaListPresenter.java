@@ -25,6 +25,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class CriteriaListPresenter<C extends Criteria, F extends C> implements CriteriaPresenter<F> {
 
     @Nonnull
+    private MultiMatchType defaultMatchType = MultiMatchType.ALL;
+
+    @Nonnull
     private final CriteriaListView view;
 
     @Nonnull
@@ -39,6 +42,8 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
     @Nonnull
     private final List<CriteriaListCriteriaViewContainer> viewContainers = new ArrayList<>();
 
+    private boolean displayAtLeastOneCriteria = true;
+
     public CriteriaListPresenter(@Nonnull CriteriaListView view,
                                  @Nonnull Provider<CriteriaListCriteriaViewContainer> viewContainerProvider,
                                  @Nonnull CriteriaPresenterFactory<C> presenterFactory) {
@@ -47,12 +52,17 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
         this.presenterFactory = checkNotNull(presenterFactory);
     }
 
+    public void setDisplayAtLeastOneCriteria(boolean displayAtLeastOneCriteria) {
+        this.displayAtLeastOneCriteria = displayAtLeastOneCriteria;
+    }
+
     @Override
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        if (criteriaPresenters.isEmpty()) {
+        if (displayAtLeastOneCriteria && criteriaPresenters.isEmpty()) {
             addCriteriaPresenter();
         }
+        view.setMultiMatchType(defaultMatchType);
         view.setAddCriteriaHandler(this::handleAddCriteria);
     }
 
@@ -60,6 +70,9 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
         view.setMatchTextPrefix(checkNotNull(prefix));
     }
 
+    public void setDefaultMatchType(@Nonnull MultiMatchType defaultMatchType) {
+        this.defaultMatchType = checkNotNull(defaultMatchType);
+    }
 
     private void handleAddCriteria() {
         addCriteriaPresenter();
@@ -98,7 +111,7 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
     }
 
     private void updateRemoveButtonVisibility() {
-        boolean removeVisible = viewContainers.size() > 1;
+        boolean removeVisible = !displayAtLeastOneCriteria || viewContainers.size() > 1;
         viewContainers.forEach(c -> c.setRemoveButtonVisible(removeVisible));
     }
 

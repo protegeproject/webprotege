@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.cmdline;
 
 import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
@@ -13,6 +14,8 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import java.io.Console;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -22,7 +25,7 @@ public class RebuildPermissions {
 
     public void run() {
         System.out.println("Rebuilding permissions...");
-        MongoClient mongoClient = new MongoClient();
+        MongoClient mongoClient = WebProtegeCli.getMongoClient();
         MorphiaProvider morphiaProvider = new MorphiaProvider(
                 new UserIdConverter(),
                 new OWLEntityConverter(new OWLDataFactoryImpl()),

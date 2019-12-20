@@ -52,10 +52,12 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addDeserializer(OWLEntity.class, new OWLEntityDeserializer(dataFactory));
         module.addDeserializer(OWLProperty.class, new OWLPropertyDeserializer(dataFactory));
         module.addDeserializer(OWLClass.class, new OWLClassDeserializer(dataFactory));
+        module.addDeserializer(OWLProperty.class, new OWLPropertyDeserializer(dataFactory));
         module.addDeserializer(IRI.class, new IriDeserializer());
         module.addDeserializer(FormDataValue.class, new FormDataValueDeserializer(dataFactory));
+        module.addSerializer(OWLLiteral.class, new OWLLiteralSerializer());
+        module.addDeserializer(OWLLiteral.class, new OWLLiteralDeserializer(dataFactory));
         module.addSerializer(IRI.class, new IriSerializer());
-
         mapper.registerModule(module);
         return mapper;
     }

@@ -22,6 +22,9 @@
 @url changesIconUrl svgChangesIcon;
 @url vizIconUrl vizIcon;
 @url downloadIconUrl downloadIcon;
+@url settingsIconUrl settingsIcon;
+@url filterIconUrl filterIcon;
+@url crossIconUrl svgCrossIcon;
 
 .wp-btn {
     border: none;
@@ -318,6 +321,11 @@
     opacity: 0.3;
 }
 
+.wp-btn-g--small {
+    width: 18px;
+    height: 18px;
+}
+
 .wp-btn-g--sync-selection {
     mask-image:  syncSelectionIconUrl;
     -webkit-mask-image:  syncSelectionIconUrl;
@@ -416,4 +424,19 @@
     mask-image: downloadIconUrl;
     -webkit-mask-image: downloadIconUrl;
 
+}
+
+.wp-btn-g--settings {
+    mask-image: settingsIconUrl;
+    -webkit-mask-image: settingsIconUrl;
+}
+
+.wp-btn-g--filter {
+    mask-image: filterIconUrl;
+    -webkit-mask-image: filterIconUrl;
+}
+
+.wp-btn-g--cross {
+    mask-image: crossIconUrl;
+    -webkit-mask-image: crossIconUrl;
 }

@@ -49,6 +49,9 @@ import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
 import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
+import edu.stanford.bmir.protege.web.server.viz.EntityGraphEdgeLimit;
+import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepository;
+import edu.stanford.bmir.protege.web.server.viz.EntityGraphSettingsRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
@@ -364,7 +367,20 @@ public class ApplicationModule {
     }
 
     @Provides
+    @ApplicationSingleton
+    EntityGraphSettingsRepository provideProjectEntityGraphSettingsRepository(
+            EntityGraphSettingsRepositoryImpl impl) {
+        return impl;
+    }
+
+    @Provides
     EntityFormSelectorRepository provideFormSelectorRepository(EntityFormSelectorRepositoryImpl impl) {
         return impl;
+    }
+
+    @Provides
+    @EntityGraphEdgeLimit
+    int provideEntityGraphEdgeLimit(WebProtegeProperties properties) {
+        return properties.getEntityGraphEdgeLimit().orElse(3000);
     }
 }

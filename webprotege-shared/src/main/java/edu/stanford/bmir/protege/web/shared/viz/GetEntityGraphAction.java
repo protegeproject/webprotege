@@ -20,7 +20,8 @@ public class GetEntityGraphAction implements ProjectAction<GetEntityGraphResult>
 
     private OWLEntity entity;
 
-    public GetEntityGraphAction(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+    public GetEntityGraphAction(@Nonnull ProjectId projectId,
+                                @Nonnull OWLEntity entity) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
     }

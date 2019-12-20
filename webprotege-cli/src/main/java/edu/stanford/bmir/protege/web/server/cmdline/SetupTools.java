@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.cmdline.WebProtegeCli.getMongoClient;
 
 /**
  * Matthew Horridge
@@ -129,18 +130,6 @@ public class SetupTools {
         }
     }
 
-    private static MongoClient getMongoClient() throws IOException {
-        WebProtegeProperties properties = getWebProtegeProperties();
-        String dbHost = properties.getDBHost().orElse("localhost");
-        int dbPort = Integer.parseInt(properties.getDBPort().orElse(WebProtegePropertyName.MONGO_DB_PORT.toString()));
-        MongoCredentialProvider mongoCredentialProvider = new MongoCredentialProvider(
-                properties.getDBUserName().orElse(""),
-                properties.getDBAuthenticationSource().orElse(""),
-                properties.getDBPassword().map(String::toCharArray).orElse(new char [0])
-        );
-        var credential = mongoCredentialProvider.get();
-        return new MongoClientProvider(dbHost, dbPort, credential, new ApplicationDisposablesManager(new DisposableObjectManager())).get();
-    }
 
     private static Morphia getMorphia() {
         return new MorphiaProvider(
@@ -150,12 +139,5 @@ public class SetupTools {
                 new ThreadIdConverter(),
                 new CommentIdConverter(),
                 new CollectionIdConverter(), new FormIdConverter(), new TagIdConverter(), new ColorConverter()).get();
-    }
-
-    @Nonnull
-    private static WebProtegeProperties getWebProtegeProperties() throws IOException {
-        ConfigInputStreamSupplier configInputStreamSupplier = new ConfigInputStreamSupplier(new ConfigDirectorySupplier());
-        WebProtegePropertiesProvider propertiesProvider = new WebProtegePropertiesProvider(configInputStreamSupplier);
-        return propertiesProvider.get();
     }
 }

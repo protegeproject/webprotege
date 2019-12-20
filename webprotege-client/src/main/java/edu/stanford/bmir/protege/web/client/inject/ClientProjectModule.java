@@ -24,6 +24,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.*;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.*;
+import edu.stanford.bmir.protege.web.client.library.tokenfield.*;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupView;
 import edu.stanford.bmir.protege.web.client.list.EntityNodeListPopupViewImpl;
 import edu.stanford.bmir.protege.web.client.match.*;
@@ -45,10 +46,7 @@ import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
-import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageView;
-import edu.stanford.bmir.protege.web.client.viz.LargeGraphMessageViewImpl;
-import edu.stanford.bmir.protege.web.client.viz.VizView;
-import edu.stanford.bmir.protege.web.client.viz.VizViewImpl;
+import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -56,6 +54,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -234,6 +233,16 @@ public class ClientProjectModule {
     }
 
     @Provides
+    EntityRelationshipCriteriaView provideEntityRelationshipCriteriaView(EntityRelationshipCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    RelationValueThatIsEqualToView provideRelationValueThatIsEqualToView(RelationValueThatIsEqualToViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     EntityTypeCriteriaView provideEntityTypeCriteriaView(EntityTypeCriteriaViewImpl impl) {
         return impl;
     }
@@ -399,6 +408,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    RelationshipEdgePropertyEqualsCriteriaView provideRelationshipEdgePropertyEqualsCriteriaView(RelationshipEdgePropertyEqualsCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     FormElementDescriptorView provideFormElementDescriptorEditorView(FormElementDescriptorViewImpl impl) {
         return impl;
     }
@@ -460,7 +474,37 @@ public class ClientProjectModule {
     }
 
     @Provides
+    BlankEdgeCriteriaPresenter<AnyRelationshipEdgeCriteria> providAnyRelationshipEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    BlankEdgeCriteriaPresenter<AnySubClassOfEdgeCriteria> providAnySubClassOfEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    BlankEdgeCriteriaPresenter<AnyInstanceOfEdgeCriteria> providAnyInstanceOfEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    BlankEdgeCriteriaPresenter<AnyEdgeCriteria> provideAnyEdgeCriteriaPresenter(BlankCriteriaView view) {
+        return new BlankEdgeCriteriaPresenter<>(view);
+    }
+
+    @Provides
+    EntityGraphSettingsView provideVizSettingsView(EntityGraphSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     LanguageMapEntryView provideLanguageMapEntryView(LanguageMapEntryViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityIsCriteriaView provideEntityIsCriteriaView(EntityIsCriteriaViewImpl impl) {
         return impl;
     }
 
@@ -470,7 +514,17 @@ public class ClientProjectModule {
     }
 
     @Provides
+    EntityGraphFilterView provideEntityGraphFilterView(EntityGraphFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     ImageDescriptorView provideImageDescriptorView(ImageDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityGraphFilterListItemView provideEntityGraphFilterListItemView(EntityGraphFilterListItemViewImpl impl) {
         return impl;
     }
 
@@ -480,7 +534,17 @@ public class ClientProjectModule {
     }
 
     @Provides
+    EntityGraphFilterListView provideEntityGraphFilterListView(EntityGraphFilterListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     SubFormControlDescriptorView provideSubFormFieldDescriptorView(@Nonnull SubFormControlDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityGraphView provideEntityGraphView(EntityGraphViewImpl impl) {
         return impl;
     }
 
@@ -495,7 +559,23 @@ public class ClientProjectModule {
     }
 
     @Provides
+    TokenFieldPresenter<FilterName> provideTokenFieldPresenter(TokenFieldView view,
+                                                               TokenPresenterFactory presenterFactory) {
+        return new TokenFieldPresenter<>(view, presenterFactory);
+    }
+
+    @Provides
+    TokenView provideTokenView(TokenViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     GridRowView provideGridRowView(GridRowViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+        TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
         return impl;
     }
 
@@ -578,7 +658,11 @@ public class ClientProjectModule {
     GridHeaderColumnView provideGridColumnHeaderView(GridHeaderColumnViewImpl view) {
         return view;
     }
-
+    
+    @Provides
+    EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
+        return impl;
+    }
 }
 
 

@@ -266,6 +266,16 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource downloadIcon();
 
+
+    @Source("settings.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource settingsIcon();
+
+
+    @Source("filter.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource filterIcon();
+
     @Source("glyphs.css")
     Glyphs glyphs();
 
@@ -629,6 +639,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn-g")
         String btnGlyph();
 
+        @ClassName("wp-btn-g--small")
+        String btnGlyphSmall();
+
         @ClassName("wp-btn-g--sync-selection")
         String syncSelection();
 
@@ -685,6 +698,15 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--download")
         String download();
+
+        @ClassName("wp-btn-g--settings")
+        String settings();
+
+        @ClassName("wp-btn-g--filter")
+        String filter();
+
+        @ClassName("wp-btn-g--cross")
+        String cross();
     }
 
     interface SettingsPageCss extends CssResource {

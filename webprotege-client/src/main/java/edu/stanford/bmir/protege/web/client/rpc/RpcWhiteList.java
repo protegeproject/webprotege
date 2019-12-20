@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
@@ -31,9 +32,7 @@ import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
-import edu.stanford.bmir.protege.web.shared.viz.EntityGraph;
-import edu.stanford.bmir.protege.web.shared.viz.IsAEdge;
-import edu.stanford.bmir.protege.web.shared.viz.RelationshipEdge;
+import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 
 /**
@@ -135,6 +134,48 @@ public class RpcWhiteList implements Action, Result {
         this.gridColumnDescriptor = gridColumnDescriptor;
     }
 
+    EntityGraphFilter entityGraphFilter;
+
+    public FilterName getFilterName() {
+        return filterName;
+    }
+
+    public void setFilterName(FilterName filterName) {
+        this.filterName = filterName;
+    }
+
+    FilterName filterName;
+
+    public EntityGraphFilter getEntityGraphFilter() {
+        return entityGraphFilter;
+    }
+
+    public void setEntityGraphFilter(EntityGraphFilter entityGraphFilter) {
+        this.entityGraphFilter = entityGraphFilter;
+    }
+
+    public ProjectUserEntityGraphSettings getProjectUserEntityGraphSettings() {
+        return projectUserEntityGraphSettings;
+    }
+
+    public void setProjectUserEntityGraphSettings(ProjectUserEntityGraphSettings projectUserEntityGraphSettings) {
+        this.projectUserEntityGraphSettings = projectUserEntityGraphSettings;
+    }
+
+
+
+    ProjectUserEntityGraphSettings projectUserEntityGraphSettings;
+
+    public EntityGraphSettings getEntityGraphSettings() {
+        return entityGraphSettings;
+    }
+
+    public void setEntityGraphSettings(EntityGraphSettings entityGraphSettings) {
+        this.entityGraphSettings = entityGraphSettings;
+    }
+
+    EntityGraphSettings entityGraphSettings;
+
     public ActionExecutionResult getActionExecutionResult() {
         return actionExecutionResult;
     }
@@ -218,6 +259,27 @@ public class RpcWhiteList implements Action, Result {
     }
 
     LanguageMap languageMap;
+
+    public EdgeCriteria getEdgeCriteria() {
+        return edgeCriteria;
+    }
+
+    public void setEdgeCriteria(EdgeCriteria edgeCriteria) {
+        this.edgeCriteria = edgeCriteria;
+    }
+
+    EdgeCriteria edgeCriteria;
+
+    public RelationshipPresence getRelationshipPresence() {
+        return relationshipPresence;
+    }
+
+    public void setRelationshipPresence(RelationshipPresence relationshipPresence) {
+        this.relationshipPresence = relationshipPresence;
+    }
+
+    RelationshipPresence relationshipPresence;
+
 
     public RpcWhiteList() {
     }

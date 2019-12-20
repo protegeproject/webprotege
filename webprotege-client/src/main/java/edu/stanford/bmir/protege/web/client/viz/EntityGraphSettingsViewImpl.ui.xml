@@ -1,0 +1,72 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+        .container {
+            padding: 1em;
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow: auto;
+        }
+        .buttonBar {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            padding: 3px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            border-top: 1px solid literal("var(--alternate--separator--color)");
+        }
+        .buttonBar button+button {
+            margin-left: 1em;
+        }
+        .criteria {
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow: scroll;
+            padding: 1em;
+            justify-content: stretch;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
+        <g:HTMLPanel addStyleNames="{style.criteria}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label addStyleNames="{wp.style.formLabel}" text="Spacing"/>
+                <g:HTMLPanel>
+                    <g:ListBox ui:field="ranksepListBox">
+                        <g:item value="0.50">x 0.5</g:item>
+                        <g:item value="1.00">x 1</g:item>
+                        <g:item value="2.00">x 2</g:item>
+                        <g:item value="3.00">x 3</g:item>
+                        <g:item value="3.00">x 4</g:item>
+                        <g:item value="3.00">x 5</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
+            </g:HTMLPanel>
+
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label addStyleNames="{wp.style.formLabel}" text="Filters"/>
+                <g:SimplePanel ui:field="filterListContainer"/>
+            </g:HTMLPanel>
+
+            <g:HTMLPanel>
+                <g:Button ui:field="applyProjectDefaultButton" text="Set as project defaults"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.alternateButton}"/>
+            </g:HTMLPanel>
+
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.buttonBar}">
+                <g:Button ui:field="applyButton" text="{msg.dialog_apply}"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.primaryButton}"/>
+                <g:Button ui:field="cancelButton" text="{msg.dialog_cancel}"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.escapeButton}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

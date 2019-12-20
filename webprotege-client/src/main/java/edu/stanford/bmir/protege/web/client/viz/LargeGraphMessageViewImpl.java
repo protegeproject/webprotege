@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,16 +36,20 @@ public class LargeGraphMessageViewImpl extends Composite implements LargeGraphMe
     @UiField
     FlowPanel edgeList;
 
+    @Inject
     public LargeGraphMessageViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-    private DisplayGraphHandler displayGraphHandler = () -> {};
+    @Nonnull
+    private Runnable displayGraphHandler = () -> {};
 
+    @Nonnull
+    private Runnable displaySettingsHandler = () -> {};
 
     @UiHandler("displayButton")
     public void displayButtonClick(ClickEvent event) {
-        displayGraphHandler.handleDisplayGraph();
+        displayGraphHandler.run();
     }
 
     @Override
@@ -54,7 +59,12 @@ public class LargeGraphMessageViewImpl extends Composite implements LargeGraphMe
     }
 
     @Override
-    public void setDisplayGraphHandler(@Nonnull DisplayGraphHandler handler) {
+    public void setDisplayGraphHandler(@Nonnull Runnable handler) {
         this.displayGraphHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setDisplaySettingsHandler(@Nonnull Runnable handler) {
+        this.displaySettingsHandler = checkNotNull(handler);
     }
 }

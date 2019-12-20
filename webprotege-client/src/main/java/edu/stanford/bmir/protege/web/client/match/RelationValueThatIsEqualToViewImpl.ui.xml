@@ -1,0 +1,19 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+        .valueField {
+            min-width: 250px;
+            max-width: 250px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <primitive:PrimitiveDataEditor ui:field="valueField"
+                                       placeholder="Enter relationship value"
+                                       classesAllowed="true"
+                                       namedIndividualsAllowed="true"
+                                       literalAllowed="true"
+                                       datatypesAllowed="true"
+                                       addStyleNames="{style.valueField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

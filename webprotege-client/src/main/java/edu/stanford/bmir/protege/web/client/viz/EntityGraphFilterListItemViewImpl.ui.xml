@@ -1,0 +1,21 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            margin: 1em;
+            padding-bottom: 2em;
+            margin-bottom: 2em;
+            border-bottom: 1px solid literal("var(--alternate--separator--color)");
+        }
+        .button {
+            align-self: flex-start;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:SimplePanel ui:field="container"/>
+        <g:Button ui:field="deleteButton" text="Delete filter" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .token {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            padding-left: 0.4rem;
+            padding-right: 0.2rem;
+            background-color: literal("var(--alternate--background-color)");
+            border: 1px solid literal("var(--alternate--separator--color)");
+            border-radius: 0.7rem;
+            height: 1.4rem;
+            margin-top: 0.2rem;
+            margin-bottom: 0.2rem;
+            margin-left: 0.5rem;
+            cursor: default;
+        }
+        .label {
+            white-space: nowrap;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.token}">
+        <g:Label ui:field="labelField" addStyleNames="{style.label}"/>
+        <g:Button ui:field="removeButton" title="Remove filter" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.btnGlyphSmall} {wp.buttons.cross}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
