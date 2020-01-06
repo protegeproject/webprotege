@@ -240,7 +240,7 @@ public class FormPresenter {
             formControl.clearValue();
         }
         updateRequiredValuePresent(elementView);
-        formView.addFormElementView(elementView, elementDescriptor.getElementRun());
+        formView.addFormElementView(elementView, elementDescriptor.getFieldRun());
     }
 
     private FormControl createSubFormElement(@Nonnull FormFieldDescriptor elementDescriptor) {

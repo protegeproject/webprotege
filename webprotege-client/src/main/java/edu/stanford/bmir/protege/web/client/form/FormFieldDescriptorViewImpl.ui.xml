@@ -63,9 +63,9 @@
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Flow" addStyleNames="{wp.style.formLabel}"/>
-                            <g:RadioButton name="elementRun-{counter.getValue}" text="Start new line"
+                            <g:RadioButton name="fieldRun-{counter.getValue}" text="Start new line"
                                            ui:field="elementRunStartRadio"/>
-                            <g:RadioButton name="elementRun-{counter.getValue}" text="Continue previous line"
+                            <g:RadioButton name="fieldRun-{counter.getValue}" text="Continue previous line"
                                            ui:field="elementRunContinueRadio"/>
                         </g:HTMLPanel>
                     </g:HTMLPanel>

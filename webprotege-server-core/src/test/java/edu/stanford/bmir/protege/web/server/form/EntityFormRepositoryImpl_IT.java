@@ -52,7 +52,7 @@ public class EntityFormRepositoryImpl_IT {
                               FormFieldId.get("Brand"),
                               OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_COMMENT.getIRI())),
                               languageMap,
-                              ElementRun.START,
+                              FieldRun.START,
                               new TextControlDescriptor(
                                       LanguageMap.of("en", "Enter brand name"),
                                       StringType.SIMPLE_STRING,

@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
+import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -44,12 +42,12 @@ public class FormViewImpl extends Composite implements FormView {
 
     @Override
     public void addFormElementView(FormElementView view,
-                                   ElementRun elementRun) {
+                                   FieldRun fieldRun) {
 
         if(currentRow == null) {
             createAndAddNewRow();
         }
-        else if(elementRun.isStart()) {
+        else if(fieldRun.isStart()) {
             createAndAddNewRow();
         }
         currentRow.add(view);

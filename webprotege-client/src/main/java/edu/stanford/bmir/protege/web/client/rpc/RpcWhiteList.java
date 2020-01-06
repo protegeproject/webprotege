@@ -228,7 +228,7 @@ public class RpcWhiteList implements Action, Result {
 
     ImmutableSetMultimap immutableSetMultimap;
 
-    ElementRun elementRun;
+    FieldRun fieldRun;
 
     Optionality optionality;
 
@@ -500,12 +500,12 @@ public class RpcWhiteList implements Action, Result {
         this.formFieldId = formFieldId;
     }
 
-    public ElementRun getElementRun() {
-        return elementRun;
+    public FieldRun getFieldRun() {
+        return fieldRun;
     }
 
-    public void setElementRun(ElementRun elementRun) {
-        this.elementRun = elementRun;
+    public void setFieldRun(FieldRun fieldRun) {
+        this.fieldRun = fieldRun;
     }
 
     public Optionality getOptionality() {

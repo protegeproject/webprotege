@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
-import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
+import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
@@ -25,17 +25,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormElementDescriptorViewImpl extends Composite implements FormElementDescriptorView {
+public class FormFieldDescriptorViewImpl extends Composite implements FormFieldDescriptorView {
 
     @Nonnull
     private Consumer<FormFieldId> elementIdChangedHandler = (elementId) -> {};
 
-    interface FormElementDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorViewImpl> {
+    interface FormFieldDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormFieldDescriptorViewImpl> {
 
     }
 
-    private static FormElementDescriptorEditorViewImplUiBinder ourUiBinder = GWT.create(
-            FormElementDescriptorEditorViewImplUiBinder.class);
+    private static FormFieldDescriptorEditorViewImplUiBinder ourUiBinder = GWT.create(
+            FormFieldDescriptorEditorViewImplUiBinder.class);
 
     @UiField
     TextBox elementIdField;
@@ -78,9 +78,9 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     SimplePanel fieldViewContainer;
 
     @Inject
-    public FormElementDescriptorViewImpl(LanguageMapEditor labelEditor,
-                                         LanguageMapEditor helpEditor,
-                                         PrimitiveDataEditor propertyBindingField) {
+    public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
+                                       LanguageMapEditor helpEditor,
+                                       PrimitiveDataEditor propertyBindingField) {
         counter.increment();
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
@@ -93,13 +93,13 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     }
 
     @Override
-    public void setFormElementId(@Nonnull String id) {
+    public void setFormFieldId(@Nonnull String id) {
         elementIdField.setText(id);
     }
 
     @Nonnull
     @Override
-    public String getFormElementId() {
+    public String getFormFieldId() {
         return elementIdField.getText();
     }
 
@@ -132,8 +132,8 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     }
 
     @Override
-    public void setElementRun(ElementRun elementRun) {
-        if(elementRun == ElementRun.CONTINUE) {
+    public void setFieldRun(@Nonnull FieldRun fieldRun) {
+        if(fieldRun == FieldRun.CONTINUE) {
             elementRunContinueRadio.setValue(true);
         }
         else {
@@ -141,19 +141,20 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
         }
     }
 
+    @Nonnull
     @Override
-    public ElementRun getElementRun() {
+    public FieldRun getFieldRun() {
         if(elementRunContinueRadio.getValue()) {
-            return ElementRun.CONTINUE;
+            return FieldRun.CONTINUE;
         }
         else {
-            return ElementRun.START;
+            return FieldRun.START;
         }
     }
 
     @Override
     public void setOptionality(@Nonnull Optionality optionality) {
-        GWT.log("[FormElementDescriptorViewImpl] setOptionality");
+        GWT.log("[FormFieldDescriptorViewImpl] setOptionality");
         if(optionality == Optionality.OPTIONAL) {
             optionalRadio.setValue(true);
         }

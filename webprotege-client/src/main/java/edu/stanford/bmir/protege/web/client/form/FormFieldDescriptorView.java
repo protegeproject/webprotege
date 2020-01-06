@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
-import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
+import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
@@ -18,14 +18,14 @@ import java.util.function.Consumer;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public interface FormElementDescriptorView extends IsWidget {
+public interface FormFieldDescriptorView extends IsWidget {
 
     void clearOwlProperty();
 
-    void setFormElementId(@Nonnull String id);
+    void setFormFieldId(@Nonnull String id);
 
     @Nonnull
-    String getFormElementId();
+    String getFormFieldId();
 
     void setHelp(@Nonnull LanguageMap help);
 
@@ -37,9 +37,10 @@ public interface FormElementDescriptorView extends IsWidget {
     @Nonnull
     LanguageMap getLabel();
 
-    void setElementRun(ElementRun elementRun);
+    void setFieldRun(@Nonnull FieldRun fieldRun);
 
-    ElementRun getElementRun();
+    @Nonnull
+    FieldRun getFieldRun();
 
     void setOptionality(@Nonnull Optionality optionality);
 

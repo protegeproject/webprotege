@@ -31,7 +31,7 @@ public abstract class FormFieldDescriptor implements HasFormElementId, HasRepeat
     public static FormFieldDescriptor get(@JsonProperty("id") @Nonnull FormFieldId id,
                                           @JsonProperty("owlBinding") @Nullable OwlBinding owlBinding,
                                           @JsonProperty("label") @Nullable LanguageMap formLabel,
-                                          @JsonProperty("elementRun") @Nullable ElementRun elementRun,
+                                          @JsonProperty("fieldRun") @Nullable FieldRun fieldRun,
                                           @JsonProperty("formControlDescriptor") @Nonnull FormControlDescriptor fieldDescriptor,
                                           @JsonProperty("repeatability") @Nullable Repeatability repeatability,
                                           @JsonProperty("optionality") @Nullable Optionality optionality,
@@ -40,7 +40,7 @@ public abstract class FormFieldDescriptor implements HasFormElementId, HasRepeat
         return new AutoValue_FormFieldDescriptor(id,
                                                  owlBinding,
                                                  formLabel == null ? LanguageMap.empty() : formLabel,
-                                                 elementRun == null ? ElementRun.START : elementRun,
+                                                 fieldRun == null ? FieldRun.START : fieldRun,
                                                  fieldDescriptor,
                                                  optionality == null ? Optionality.REQUIRED : optionality,
                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
@@ -53,7 +53,7 @@ public abstract class FormFieldDescriptor implements HasFormElementId, HasRepeat
                 FormFieldId.get(""),
                 null,
                 LanguageMap.empty(),
-                ElementRun.START,
+                FieldRun.START,
                 new TextControlDescriptor(LanguageMap.empty(),
                                           StringType.SIMPLE_STRING,
                                           LineMode.SINGLE_LINE,
@@ -89,7 +89,7 @@ public abstract class FormFieldDescriptor implements HasFormElementId, HasRepeat
     public abstract LanguageMap getLabel();
 
     @Nonnull
-    public abstract ElementRun getElementRun();
+    public abstract FieldRun getFieldRun();
 
     @Nonnull
     public abstract FormControlDescriptor getFormControlDescriptor();

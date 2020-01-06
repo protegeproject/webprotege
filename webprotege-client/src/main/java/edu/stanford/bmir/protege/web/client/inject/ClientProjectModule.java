@@ -413,7 +413,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    FormElementDescriptorView provideFormElementDescriptorEditorView(FormElementDescriptorViewImpl impl) {
+    FormFieldDescriptorView provideFormElementDescriptorEditorView(FormFieldDescriptorViewImpl impl) {
         return impl;
     }
 

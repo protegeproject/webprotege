@@ -31,7 +31,7 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormField
     private ProjectId projectId;
 
     @Nonnull
-    private final FormElementDescriptorView view;
+    private final FormFieldDescriptorView view;
 
     @Nonnull
     private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
@@ -41,7 +41,7 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormField
 
     @Inject
     public FormElementDescriptorPresenter(@Nonnull ProjectId projectId,
-                                          @Nonnull FormElementDescriptorView view,
+                                          @Nonnull FormFieldDescriptorView view,
                                           @Nonnull FormControlDescriptorChooserPresenter fieldChooserPresenter,
                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
@@ -53,7 +53,7 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormField
     @Nonnull
     @Override
     public String getHeaderLabel() {
-        return view.getFormElementId();
+        return view.getFormFieldId();
     }
 
     @Override
@@ -67,13 +67,13 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormField
         if(!formFieldDescriptor.isPresent()) {
             return Optional.empty();
         }
-        FormFieldDescriptor descriptor = FormFieldDescriptor.get(FormFieldId.get(view.getFormElementId()),
+        FormFieldDescriptor descriptor = FormFieldDescriptor.get(FormFieldId.get(view.getFormFieldId()),
                                                                  view.getOwlProperty()
                                                                          .map(OWLPropertyData::getEntity)
                                                                          .map(OwlPropertyBinding::get)
                                                                          .orElse(null),
                                                                  view.getLabel(),
-                                                                 view.getElementRun(),
+                                                                 view.getFieldRun(),
                                                                  formFieldDescriptor.get(),
                                                                  view.getRepeatability(),
                                                                  view.getOptionality(),
@@ -100,9 +100,9 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormField
 
         String elementId = descriptor.getId()
                                      .getId();
-        view.setFormElementId(elementId);
+        view.setFormFieldId(elementId);
 
-        view.setElementRun(descriptor.getElementRun());
+        view.setFieldRun(descriptor.getFieldRun());
 
         view.setLabel(descriptor.getLabel());
 
