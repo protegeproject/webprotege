@@ -12,10 +12,10 @@ import java.util.List;
  */
 public interface FormView extends IsWidget {
 
-    void addFormElementView(FormElementView view,
+    void addFormElementView(FormFieldView view,
                             FieldRun fieldRun);
 
-    List<FormElementView> getElementViews();
+    List<FormFieldView> getElementViews();
 
     void clear();
 

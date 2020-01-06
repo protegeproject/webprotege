@@ -30,7 +30,7 @@ public class FormViewRowImpl extends Composite implements FormViewRow {
     }
 
     @Override
-    public void add(FormElementView elementView) {
+    public void add(FormFieldView elementView) {
         int viewCount = container.getWidgetCount();
         if(viewCount == 0) {
             setSingleColStyle(elementView);

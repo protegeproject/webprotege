@@ -45,7 +45,7 @@ public class FormPresenter {
     private final NoFormView noFormView;
 
     @Nonnull
-    private final Provider<FormElementView> formElementViewProvider;
+    private final Provider<FormFieldView> formElementViewProvider;
 
     @Nonnull
     private final FormControlFactory formControlFactory;
@@ -74,7 +74,7 @@ public class FormPresenter {
     public FormPresenter(@Nonnull @Provided FormView formView,
                          @Nonnull @Provided NoFormView noFormView,
                          @Nonnull @Provided FormControlFactory formControlFactory,
-                         @Nonnull @Provided Provider<FormElementView> formElementViewProvider,
+                         @Nonnull @Provided Provider<FormFieldView> formElementViewProvider,
                          @Nonnull @Provided DispatchServiceManager dispatchServiceManager,
                          @Nonnull FormPresenterFactory formPresenterFactory) {
         this.formView = checkNotNull(formView);
@@ -141,7 +141,7 @@ public class FormPresenter {
     public Optional<FormData> getFormData() {
         return currentFormDescriptor.map(formDescriptor -> {
             Map<FormFieldId, FormDataValue> dataMap = new HashMap<>();
-            for (FormElementView view : formView.getElementViews()) {
+            for (FormFieldView view : formView.getElementViews()) {
                 view.getId().ifPresent(id -> view.getEditor().getValue().ifPresent(
                         v -> dataMap.put(id, v)
                 ));
@@ -153,7 +153,7 @@ public class FormPresenter {
     public void clearData() {
         clearDirty();
         currentSubject = Optional.empty();
-        for(FormElementView view : formView.getElementViews()) {
+        for(FormFieldView view : formView.getElementViews()) {
             view.getEditor().clearValue();
             updateRequiredValuePresent(view);
         }
@@ -220,7 +220,7 @@ public class FormPresenter {
 
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
         String langTag = localeInfo.getLocaleName();
-        FormElementView elementView = formElementViewProvider.get();
+        FormFieldView elementView = formElementViewProvider.get();
         elementView.setId(elementDescriptor.getId());
         elementView.setFormLabel(elementDescriptor.getLabel().get(langTag));
         elementView.setEditor(formControl);
@@ -263,7 +263,7 @@ public class FormPresenter {
      *
      * @param elementView The element view.
      */
-    private void updateRequiredValuePresent(@Nonnull FormElementView elementView) {
+    private void updateRequiredValuePresent(@Nonnull FormFieldView elementView) {
         if (elementView.getRequired() == REQUIRED) {
             Optional<FormDataValue> val = elementView.getEditor().getValue();
             if (val.isPresent()) {

@@ -11,7 +11,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public interface FormElementView extends IsWidget {
+public interface FormFieldView extends IsWidget {
 
     void addStylePropertyValue(String cssProperty, String cssValue);
 

@@ -32,7 +32,7 @@ public class FormViewImpl extends Composite implements FormView {
 
     private FormViewRow currentRow;
 
-    private List<FormElementView> elementViews = new ArrayList<>();
+    private List<FormFieldView> elementViews = new ArrayList<>();
 
     @Inject
     public FormViewImpl(Provider<FormViewRow> rowProvider) {
@@ -41,7 +41,7 @@ public class FormViewImpl extends Composite implements FormView {
     }
 
     @Override
-    public void addFormElementView(FormElementView view,
+    public void addFormElementView(FormFieldView view,
                                    FieldRun fieldRun) {
 
         if(currentRow == null) {
@@ -60,7 +60,7 @@ public class FormViewImpl extends Composite implements FormView {
     }
 
     @Override
-    public List<FormElementView> getElementViews() {
+    public List<FormFieldView> getElementViews() {
         return new ArrayList<>(elementViews);
     }
 

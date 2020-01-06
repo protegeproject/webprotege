@@ -9,5 +9,5 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface FormViewRow extends IsWidget {
 
-    void add(FormElementView elementView);
+    void add(FormFieldView elementView);
 }

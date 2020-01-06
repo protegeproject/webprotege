@@ -22,13 +22,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class FormElementViewImpl extends Composite implements FormElementView {
+public class FormFieldViewImpl extends Composite implements FormFieldView {
 
-    interface FormElementViewImplUiBinder extends UiBinder<HTMLPanel, FormElementViewImpl> {
+    interface FormFieldViewImplUiBinder extends UiBinder<HTMLPanel, FormFieldViewImpl> {
 
     }
 
-    private static FormElementViewImplUiBinder ourUiBinder = GWT.create(FormElementViewImplUiBinder.class);
+    private static FormFieldViewImplUiBinder ourUiBinder = GWT.create(FormFieldViewImplUiBinder.class);
 
     private FormFieldId formFieldId = null;
 
@@ -44,7 +44,7 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     FormControl editor;
 
     @Inject
-    public FormElementViewImpl() {
+    public FormFieldViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

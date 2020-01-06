@@ -439,7 +439,7 @@ public class ClientProjectModule {
 
 
     @Provides
-    FormElementView provideFormElementView(FormElementViewImpl impl) {
+    FormFieldView provideFormElementView(FormFieldViewImpl impl) {
         return impl;
     }
 
