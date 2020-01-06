@@ -44,11 +44,11 @@ public class FormDescriptorPresenter implements Presenter {
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         container.setWidget(view);
         elementDescriptorListPresenter.start(
-                view.getElementDescriptorListContainer(),
+                view.getFieldDescriptorListContainer(),
                 eventBus);
         // TODO: Resource bundle
         elementDescriptorListPresenter.setAddObjectText("Add field");
-        view.setAddFormElementHandler(this::handleAddFormElement);
+        view.setAddFormFieldHandler(this::handleAddFormElement);
     }
 
     private void handleAddFormElement() {

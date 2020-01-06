@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormDescriptorViewImpl extends Composite implements FormDescriptorView {
 
-    private AddFormElementHandler handler = () -> {};
+    private AddFormFieldHandler handler = () -> {};
 
     interface FormDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, FormDescriptorViewImpl> {
 
@@ -41,7 +41,7 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
     }
 
     private void handleAddElement(ClickEvent clickEvent) {
-        handler.handleAddForm();
+        handler.handleAddFormField();
     }
 
     @Override
@@ -62,12 +62,12 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
 
     @Nonnull
     @Override
-    public AcceptsOneWidget getElementDescriptorListContainer() {
+    public AcceptsOneWidget getFieldDescriptorListContainer() {
         return elementDescriptorListContainer;
     }
 
     @Override
-    public void setAddFormElementHandler(@Nonnull AddFormElementHandler handler) {
+    public void setAddFormFieldHandler(@Nonnull AddFormFieldHandler handler) {
         this.handler = checkNotNull(handler);
     }
 }

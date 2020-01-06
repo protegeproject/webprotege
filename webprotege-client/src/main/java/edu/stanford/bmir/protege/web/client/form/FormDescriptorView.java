@@ -15,8 +15,8 @@ public interface FormDescriptorView extends IsWidget {
 
     void setEnabled(boolean b);
 
-    interface AddFormElementHandler {
-        void handleAddForm();
+    interface AddFormFieldHandler {
+        void handleAddFormField();
     }
 
     @Nonnull
@@ -25,8 +25,8 @@ public interface FormDescriptorView extends IsWidget {
     void setLabel(@Nonnull LanguageMap label);
 
     @Nonnull
-    AcceptsOneWidget getElementDescriptorListContainer();
+    AcceptsOneWidget getFieldDescriptorListContainer();
 
-    void setAddFormElementHandler(@Nonnull AddFormElementHandler handler);
+    void setAddFormFieldHandler(@Nonnull AddFormFieldHandler handler);
 }
 
