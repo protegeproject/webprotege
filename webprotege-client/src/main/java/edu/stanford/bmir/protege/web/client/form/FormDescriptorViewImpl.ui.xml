@@ -19,7 +19,7 @@
                 </g:HTMLPanel>
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                <g:Label text="Form Elements" addStyleNames="{wp.style.formLabel}"/>
+                <g:Label text="Form Fields" addStyleNames="{wp.style.formLabel}"/>
                 <g:SimplePanel ui:field="elementDescriptorListContainer" addStyleNames="{style.formElementsContainer}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
