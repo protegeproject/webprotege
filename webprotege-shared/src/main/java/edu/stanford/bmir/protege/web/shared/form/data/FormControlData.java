@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class FormFieldData {
+public abstract class FormControlData {
 
     @Nonnull
     public abstract String getType();

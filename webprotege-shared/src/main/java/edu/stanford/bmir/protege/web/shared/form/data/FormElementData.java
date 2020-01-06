@@ -20,5 +20,5 @@ public abstract class FormElementData extends FormDataValue {
     public abstract FormFieldDescriptor getDescriptor();
 
     @Nonnull
-    public abstract ImmutableList<FormFieldData> getFormDataValue();
+    public abstract ImmutableList<FormControlData> getFormDataValue();
 }
