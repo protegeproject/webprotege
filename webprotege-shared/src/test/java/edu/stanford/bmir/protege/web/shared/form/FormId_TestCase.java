@@ -14,7 +14,7 @@ public class FormId_TestCase {
 
     private FormId formId;
 
-    private String id = "The id";
+    private String id = "12345678-1234-1234-1234-123456789abc";
 
     @Before
     public void setUp() {
