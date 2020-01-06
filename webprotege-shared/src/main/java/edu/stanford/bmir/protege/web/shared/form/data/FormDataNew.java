@@ -20,5 +20,5 @@ public abstract class FormDataNew implements ComplexFormControlValue {
     public abstract FormControlDescriptor getFormFieldDescriptor();
 
     @Nonnull
-    public abstract ImmutableList<FormElementData> getElementData();
+    public abstract ImmutableList<FormFieldData> getElementData();
 }

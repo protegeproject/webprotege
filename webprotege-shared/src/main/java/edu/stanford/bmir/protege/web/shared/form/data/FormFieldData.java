@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class FormElementData extends FormDataValue {
+public abstract class FormFieldData extends FormDataValue {
 
     @Nonnull
     public abstract FormFieldDescriptor getDescriptor();
