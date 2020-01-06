@@ -81,13 +81,6 @@ public class Tag_TestCase {
     public void shouldReturnSupplied_tagLabel() {
         assertThat(tag.getLabel(), is(this.tagLabel));
     }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_description_IsNull() {
-        Tag.get(tagId, projectId, tagLabel, null, color, backgroundColor, criteria);
-    }
-
     @Test
     public void shouldReturnSupplied_description() {
         assertThat(tag.getDescription(), is(this.description));
