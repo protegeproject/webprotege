@@ -3,8 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +17,7 @@ import javax.annotation.Nonnull;
 public abstract class FormElementData extends FormDataValue {
 
     @Nonnull
-    public abstract FormElementDescriptor getDescriptor();
+    public abstract FormFieldDescriptor getDescriptor();
 
     @Nonnull
     public abstract ImmutableList<FormFieldData> getFormDataValue();

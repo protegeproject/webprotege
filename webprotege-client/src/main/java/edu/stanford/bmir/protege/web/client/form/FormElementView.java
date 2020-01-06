@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
 import java.util.Optional;
@@ -15,9 +15,9 @@ public interface FormElementView extends IsWidget {
 
     void addStylePropertyValue(String cssProperty, String cssValue);
 
-    void setId(FormElementId elementId);
+    void setId(FormFieldId elementId);
 
-    Optional<FormElementId> getId();
+    Optional<FormFieldId> getId();
 
     void setFormLabel(String formLabel);
 

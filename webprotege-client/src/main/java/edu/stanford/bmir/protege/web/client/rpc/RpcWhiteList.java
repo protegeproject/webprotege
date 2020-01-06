@@ -96,7 +96,7 @@ public class RpcWhiteList implements Action, Result {
 
     ActionExecutionResult actionExecutionResult;
 
-    FormElementId formElementId;
+    FormFieldId formFieldId;
 
     OwlPropertyBinding owlPropertyBinding;
 
@@ -492,12 +492,12 @@ public class RpcWhiteList implements Action, Result {
         this.tag = tag;
     }
 
-    public FormElementId getFormElementId() {
-        return formElementId;
+    public FormFieldId getFormFieldId() {
+        return formFieldId;
     }
 
-    public void setFormElementId(FormElementId formElementId) {
-        this.formElementId = formElementId;
+    public void setFormFieldId(FormFieldId formFieldId) {
+        this.formFieldId = formFieldId;
     }
 
     public ElementRun getElementRun() {

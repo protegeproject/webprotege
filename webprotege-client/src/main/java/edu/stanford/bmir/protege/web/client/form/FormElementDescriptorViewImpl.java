@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormElementDescriptorViewImpl extends Composite implements FormElementDescriptorView {
 
     @Nonnull
-    private Consumer<FormElementId> elementIdChangedHandler = (elementId) -> {};
+    private Consumer<FormFieldId> elementIdChangedHandler = (elementId) -> {};
 
     interface FormElementDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormElementDescriptorViewImpl> {
 
@@ -87,8 +87,8 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
         this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
         elementIdField.addValueChangeHandler(event -> {
-            FormElementId formElementId = FormElementId.get(elementIdField.getValue());
-            elementIdChangedHandler.accept(formElementId);
+            FormFieldId formFieldId = FormFieldId.get(elementIdField.getValue());
+            elementIdChangedHandler.accept(formFieldId);
         });
     }
 
@@ -209,7 +209,7 @@ public class FormElementDescriptorViewImpl extends Composite implements FormElem
     }
 
     @Override
-    public void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> handler) {
+    public void setElementIdChangedHandler(@Nonnull Consumer<FormFieldId> handler) {
         this.elementIdChangedHandler = checkNotNull(handler);
     }
 

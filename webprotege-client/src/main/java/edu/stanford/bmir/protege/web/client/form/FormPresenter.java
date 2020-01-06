@@ -10,8 +10,8 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -140,7 +140,7 @@ public class FormPresenter {
     @Nonnull
     public Optional<FormData> getFormData() {
         return currentFormDescriptor.map(formDescriptor -> {
-            Map<FormElementId, FormDataValue> dataMap = new HashMap<>();
+            Map<FormFieldId, FormDataValue> dataMap = new HashMap<>();
             for (FormElementView view : formView.getElementViews()) {
                 view.getId().ifPresent(id -> view.getEditor().getValue().ifPresent(
                         v -> dataMap.put(id, v)
@@ -169,7 +169,7 @@ public class FormPresenter {
                                           @Nonnull FormData formData) {
         formView.clear();
         dispatchServiceManager.beginBatch();
-        for (FormElementDescriptor elementDescriptor : formDescriptor.getElements()) {
+        for (FormFieldDescriptor elementDescriptor : formDescriptor.getElements()) {
             Optional<FormDataValue> dataValue = formData.getFormElementData(elementDescriptor.getId());
             addFormElement(elementDescriptor, dataValue);
         }
@@ -184,9 +184,9 @@ public class FormPresenter {
         this.currentSubject = formData.getSubject();
         dispatchServiceManager.beginBatch();
         formView.getElementViews().forEach(view -> {
-            Optional<FormElementId> theId = view.getId();
+            Optional<FormFieldId> theId = view.getId();
             if (theId.isPresent()) {
-                FormElementId id = theId.get();
+                FormFieldId id = theId.get();
                 Optional<FormDataValue> formElementData = formData.getFormElementData(id);
                 if (formElementData.isPresent()) {
                     view.getEditor().setValue(formElementData.get());
@@ -203,7 +203,7 @@ public class FormPresenter {
         dispatchServiceManager.executeCurrentBatch();
     }
 
-    private void addFormElement(@Nonnull FormElementDescriptor elementDescriptor,
+    private void addFormElement(@Nonnull FormFieldDescriptor elementDescriptor,
                                 @Nonnull Optional<FormDataValue> formDataValue) {
         FormControl formControl;
         if(elementDescriptor.isComposite()) {
@@ -243,7 +243,7 @@ public class FormPresenter {
         formView.addFormElementView(elementView, elementDescriptor.getElementRun());
     }
 
-    private FormControl createSubFormElement(@Nonnull FormElementDescriptor elementDescriptor) {
+    private FormControl createSubFormElement(@Nonnull FormFieldDescriptor elementDescriptor) {
         return new FormControlImpl(() -> {
             SubFormControlDescriptor subFormFieldDescriptor = (SubFormControlDescriptor) elementDescriptor.getFormControlDescriptor();
 
@@ -282,7 +282,7 @@ public class FormPresenter {
      * @return An editor for the form element described by the descriptor.
      */
     @Nonnull
-    private Optional<FormControl> createFormElementEditor(@Nonnull FormElementDescriptor descriptor) {
+    private Optional<FormControl> createFormElementEditor(@Nonnull FormFieldDescriptor descriptor) {
         Optional<ValueEditorFactory<FormDataValue>> editorFactory = formControlFactory.getValueEditorFactory(descriptor.getFormControlDescriptor());
         return editorFactory.map(valueEditorFactory -> new FormControlImpl(
                 valueEditorFactory,

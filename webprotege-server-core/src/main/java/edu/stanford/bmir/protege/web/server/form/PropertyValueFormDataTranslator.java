@@ -64,19 +64,19 @@ public class PropertyValueFormDataTranslator {
 //     */
 //    public FormData toFormData(@Nonnull OWLEntity subject,
 //                               @Nonnull Set<PropertyValue> propertyValues,
-//                               @Nonnull Map<OWLProperty, FormElementId> binding) {
-//        ListMultimap<FormElementId, FormDataValue> dataMultiMap = ArrayListMultimap.create();
+//                               @Nonnull Map<OWLProperty, FormFieldId> binding) {
+//        ListMultimap<FormFieldId, FormDataValue> dataMultiMap = ArrayListMultimap.create();
 //        propertyValues.forEach(propertyValue -> {
 //            OWLProperty entity = propertyValue.getProperty().getEntity();
-//            FormElementId formElementId = binding.get(entity);
+//            FormFieldId formElementId = binding.get(entity);
 //            if (formElementId != null) {
 //                OWLPrimitiveData owlVal = propertyValue.getValue();
 //                FormDataValue val = toFormDataValue(owlVal);
 //                dataMultiMap.put(formElementId, val);
 //            }
 //        });
-//        Map<FormElementId, FormDataValue> dataMap = new HashMap<>();
-//        for (FormElementId formElementId : dataMultiMap.keySet()) {
+//        Map<FormFieldId, FormDataValue> dataMap = new HashMap<>();
+//        for (FormFieldId formElementId : dataMultiMap.keySet()) {
 //            List<FormDataValue> dataValues = dataMultiMap.get(formElementId);
 //            if (dataValues.size() == 1) {
 //                dataMap.put(formElementId, dataValues.get(0));
@@ -93,8 +93,8 @@ public class PropertyValueFormDataTranslator {
 //    }
 //
 //    public Set<PropertyValue> toPropertyValues(@Nonnull FormData formData,
-//                                               @Nonnull Map<FormElementId, OWLProperty> binding) {
-//        Map<FormElementId, FormDataValue> data = formData.getData();
+//                                               @Nonnull Map<FormFieldId, OWLProperty> binding) {
+//        Map<FormFieldId, FormDataValue> data = formData.getData();
 //        Set<PropertyValue> propertyValues = new HashSet<>();
 //        data.forEach((formElementId, dataValue) -> {
 //            Set<OWLObject> owlObjects = toOWLObject(dataValue);

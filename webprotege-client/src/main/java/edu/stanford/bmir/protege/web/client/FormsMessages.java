@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 /**
  * Matthew Horridge

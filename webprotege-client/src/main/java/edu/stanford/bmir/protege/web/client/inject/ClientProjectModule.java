@@ -50,7 +50,7 @@ import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -590,14 +590,14 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ObjectListPresenter<FormElementDescriptor> provideFormElementDescriptorListPresenter(@Nonnull ObjectListView view,
-                                                                                         @Nonnull Provider<ObjectPresenter<FormElementDescriptor>> objectPresenterProvider,
-                                                                                         @Nonnull Provider<ObjectListViewHolder> objectViewHolderProvider) {
-        return new ObjectListPresenter<>(view, objectPresenterProvider, objectViewHolderProvider, FormElementDescriptor::getDefault);
+    ObjectListPresenter<FormFieldDescriptor> provideFormElementDescriptorListPresenter(@Nonnull ObjectListView view,
+                                                                                       @Nonnull Provider<ObjectPresenter<FormFieldDescriptor>> objectPresenterProvider,
+                                                                                       @Nonnull Provider<ObjectListViewHolder> objectViewHolderProvider) {
+        return new ObjectListPresenter<>(view, objectPresenterProvider, objectViewHolderProvider, FormFieldDescriptor::getDefault);
     }
 
     @Provides
-    ObjectPresenter<FormElementDescriptor> providesFormElementDescriptorPresenter(FormElementDescriptorPresenter presenter) {
+    ObjectPresenter<FormFieldDescriptor> providesFormElementDescriptorPresenter(FormElementDescriptorPresenter presenter) {
         return presenter;
     }
 

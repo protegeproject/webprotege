@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CompositeFieldDescriptorEntry implements Serializable, IsSerializable {
 
-    private FormElementDescriptor descriptor;
+    private FormFieldDescriptor descriptor;
 
     private double flexBasis;
 
@@ -29,7 +29,7 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
 
     public CompositeFieldDescriptorEntry(double flexGrow,
                                          double flexShrink,
-                                         FormElementDescriptor descriptor, double flexBasis) {
+                                         FormFieldDescriptor descriptor, double flexBasis) {
         this.descriptor = checkNotNull(descriptor);
         this.flexGrow = flexGrow;
         this.flexShrink = flexShrink;
@@ -56,7 +56,7 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
     }
 
     @JsonUnwrapped
-    public FormElementDescriptor getDescriptor() {
+    public FormFieldDescriptor getDescriptor() {
         return descriptor;
     }
 

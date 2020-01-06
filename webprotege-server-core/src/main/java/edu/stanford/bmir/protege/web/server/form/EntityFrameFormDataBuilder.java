@@ -55,7 +55,7 @@ public class EntityFrameFormDataBuilder {
                             .accept(new PrimitiveDataConverter());
     }
 
-    private Optional<OWLProperty> getAssociatedOwlProperty(FormElementDescriptor descriptor) {
+    private Optional<OWLProperty> getAssociatedOwlProperty(FormFieldDescriptor descriptor) {
         return descriptor.getOwlBinding().flatMap(OwlBinding::getOwlProperty);
     }
 
@@ -116,7 +116,7 @@ public class EntityFrameFormDataBuilder {
 
     }
 
-    //    private Optional<OWLProperty> toOwlProperty(FormElementId formElementId) {
+    //    private Optional<OWLProperty> toOwlProperty(FormFieldId formElementId) {
     //        return EntityFormElementId.toProperty(formElementId,
     //                                              entityProvider);
     //    }
@@ -124,8 +124,8 @@ public class EntityFrameFormDataBuilder {
     private FormData toFormData(OWLEntity subject,
                                 Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
                                 FormDescriptor formDescriptor) {
-        var map = new HashMap<FormElementId, FormDataValue>();
-        for(FormElementDescriptor descriptor : formDescriptor.getElements()) {
+        var map = new HashMap<FormFieldId, FormDataValue>();
+        for(FormFieldDescriptor descriptor : formDescriptor.getElements()) {
             var associatedOwlProperty = getAssociatedOwlProperty(descriptor);
             if(associatedOwlProperty.isPresent()) {
                 var theProperty = associatedOwlProperty.get();
@@ -147,7 +147,7 @@ public class EntityFrameFormDataBuilder {
      * @param propertyValues The values for the particular field.  The values will all have the same property.
      * @return A single {@link FormDataValue} that encompases the translation of the property values
      */
-    private FormDataValue toFormDataValue(FormElementDescriptor descriptor, Collection<PropertyValue> propertyValues) {
+    private FormDataValue toFormDataValue(FormFieldDescriptor descriptor, Collection<PropertyValue> propertyValues) {
         return toFormDataValue(propertyValues, descriptor.getFormControlDescriptor());
     }
 

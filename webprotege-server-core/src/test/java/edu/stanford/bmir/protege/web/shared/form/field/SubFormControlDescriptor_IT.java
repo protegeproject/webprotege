@@ -39,8 +39,8 @@ public class SubFormControlDescriptor_IT {
         var formDescriptor = new FormDescriptor(FormId.get("SubFormId"),
                                                 LanguageMap.of("en", "The sub form"),
                                                 Arrays.asList(
-                                                        FormElementDescriptor.get(
-                                                                FormElementId.get("Label"),
+                                                        FormFieldDescriptor.get(
+                                                                FormFieldId.get("Label"),
                                                                 OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_LABEL.getIRI())),
                                                                 LanguageMap.of("en", "The Label"),
                                                                 ElementRun.START,

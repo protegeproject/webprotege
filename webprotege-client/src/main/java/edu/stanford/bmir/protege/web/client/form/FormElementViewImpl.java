@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ public class FormElementViewImpl extends Composite implements FormElementView {
 
     private static FormElementViewImplUiBinder ourUiBinder = GWT.create(FormElementViewImplUiBinder.class);
 
-    private FormElementId formElementId = null;
+    private FormFieldId formFieldId = null;
 
     private Optionality required = Optionality.OPTIONAL;
 
@@ -49,8 +49,8 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     }
 
     @Override
-    public void setId(FormElementId elementId) {
-        formElementId = elementId;
+    public void setId(FormFieldId elementId) {
+        formFieldId = elementId;
     }
 
     @Override
@@ -76,8 +76,8 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     }
 
     @Override
-    public Optional<FormElementId> getId() {
-        return Optional.ofNullable(formElementId);
+    public Optional<FormFieldId> getId() {
+        return Optional.ofNullable(formFieldId);
     }
 
     @Override

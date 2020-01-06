@@ -33,8 +33,8 @@ public class FormDataRepository_IT {
 //
 ////    @Test
 //    public void shouldStoreData() throws Exception {
-//        Map<FormElementId, FormDataValue> map = new HashMap<>();
-//        map.put(FormElementId.get("FirstName"), FormDataPrimitive.get("John"));
+//        Map<FormFieldId, FormDataValue> map = new HashMap<>();
+//        map.put(FormFieldId.get("FirstName"), FormDataPrimitive.get("John"));
 //        FormData formData = new FormData(null, map, formDescriptor);
 //        repository.store(projectId,
 //                         collectionId,
@@ -45,22 +45,22 @@ public class FormDataRepository_IT {
 //
 ////    @Test
 //    public void shouldRetriveData() throws Exception {
-//        Map<FormElementId, FormDataValue> map = new HashMap<>();
-//        map.put(FormElementId.get("FirstName"), FormDataPrimitive.get("John"));
-//        map.put(FormElementId.get("LastName"), FormDataPrimitive.get("Smith"));
-//        map.put(FormElementId.get("Age"), FormDataPrimitive.get(62));
-//        map.put(FormElementId.get("Tenure"), FormDataPrimitive.get(true));
+//        Map<FormFieldId, FormDataValue> map = new HashMap<>();
+//        map.put(FormFieldId.get("FirstName"), FormDataPrimitive.get("John"));
+//        map.put(FormFieldId.get("LastName"), FormDataPrimitive.get("Smith"));
+//        map.put(FormFieldId.get("Age"), FormDataPrimitive.get(62));
+//        map.put(FormFieldId.get("Tenure"), FormDataPrimitive.get(true));
 //        Map<String, FormDataValue> val = new HashMap<>();
 //        val.put("Street", FormDataPrimitive.get("1265 Welch Road"));
 //        val.put("City", FormDataPrimitive.get("Stanford"));
 //        val.put("State", FormDataPrimitive.get("CA"));
 //        val.put("Zip", FormDataPrimitive.get(94304));
 //        FormDataObject address = new FormDataObject(val);
-//        map.put(FormElementId.get("Address"), address);
-//        map.put(FormElementId.get("Projects"), new FormDataList(
+//        map.put(FormFieldId.get("Address"), address);
+//        map.put(FormFieldId.get("Projects"), new FormDataList(
 //                Arrays.asList(FormDataPrimitive.get("Protégé Project"),
 //                              FormDataPrimitive.get("Bioportal"))));
-//        map.put(FormElementId.get("Homepage"), FormDataPrimitive.get(IRI.create("http://www.stanford.edu/~johnsmith")));
+//        map.put(FormFieldId.get("Homepage"), FormDataPrimitive.get(IRI.create("http://www.stanford.edu/~johnsmith")));
 //        FormData formData = new FormData(null, map, formDescriptor);
 //        FormId formId = FormId.get("MyForm");
 //        repository.store(projectId,

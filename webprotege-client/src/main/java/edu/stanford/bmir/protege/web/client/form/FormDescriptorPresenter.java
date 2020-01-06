@@ -5,7 +5,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -28,14 +28,14 @@ public class FormDescriptorPresenter implements Presenter {
     private final FormDescriptorView view;
 
     @Nonnull
-    private final ObjectListPresenter<FormElementDescriptor> elementDescriptorListPresenter;
+    private final ObjectListPresenter<FormFieldDescriptor> elementDescriptorListPresenter;
 
     @Nullable
     private FormId formId;
 
     @Inject
     public FormDescriptorPresenter(@Nonnull FormDescriptorView view,
-                                   @Nonnull ObjectListPresenter<FormElementDescriptor> elementDescriptorListPresenter) {
+                                   @Nonnull ObjectListPresenter<FormFieldDescriptor> elementDescriptorListPresenter) {
         this.view = checkNotNull(view);
         this.elementDescriptorListPresenter = checkNotNull(elementDescriptorListPresenter);
     }
@@ -64,7 +64,7 @@ public class FormDescriptorPresenter implements Presenter {
     @Nonnull
     public FormDescriptor getFormDescriptor() {
         LanguageMap label = view.getLabel();
-        List<FormElementDescriptor> elementDescriptors = elementDescriptorListPresenter.getValues();
+        List<FormFieldDescriptor> elementDescriptors = elementDescriptorListPresenter.getValues();
 
         return new FormDescriptor(this.formId, label, elementDescriptors, Optional.empty());
     }

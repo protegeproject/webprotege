@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public class FormElementDescriptor_Serialization_IT {
+public class FormFieldDescriptor_Serialization_IT {
 
     private ObjectMapper objectMapper;
 
@@ -31,8 +31,8 @@ public class FormElementDescriptor_Serialization_IT {
 
     @Test
     public void shouldSerializeElementWithoutOwlBinding() throws IOException {
-        var formElementDescriptor = FormElementDescriptor.get(
-                FormElementId.get("TheFormElementId"),
+        var formElementDescriptor = FormFieldDescriptor.get(
+                FormFieldId.get("TheFormFieldId"),
                 null,
                 LanguageMap.empty(),
                 ElementRun.START,
@@ -43,14 +43,14 @@ public class FormElementDescriptor_Serialization_IT {
                 Collections.emptyMap()
         );
         var serialized = objectMapper.writeValueAsString(formElementDescriptor);
-        var deserialized = objectMapper.readerFor(FormElementDescriptor.class).readValue(serialized);
+        var deserialized = objectMapper.readerFor(FormFieldDescriptor.class).readValue(serialized);
         assertThat(formElementDescriptor, is(deserialized));
     }
 
     @Test
     public void shouldSerializeElementWithOwlPropertyBinding() throws IOException {
-        var formElementDescriptor = FormElementDescriptor.get(
-                FormElementId.get("TheFormElementId"),
+        var formElementDescriptor = FormFieldDescriptor.get(
+                FormFieldId.get("TheFormFieldId"),
                 OwlPropertyBinding.get(new OWLObjectPropertyImpl(IRI.create("http://example.org/prop"))),
                 LanguageMap.empty(),
                 ElementRun.START,
@@ -62,14 +62,14 @@ public class FormElementDescriptor_Serialization_IT {
         );
         var serialized = objectMapper.writeValueAsString(formElementDescriptor);
         System.out.println(serialized);
-        var deserialized = objectMapper.readerFor(FormElementDescriptor.class).readValue(serialized);
+        var deserialized = objectMapper.readerFor(FormFieldDescriptor.class).readValue(serialized);
         assertThat(deserialized, is(formElementDescriptor));
     }
 
     @Test
     public void shouldSerializeElementWithOwlClassBinding() throws IOException {
-        var formElementDescriptor = FormElementDescriptor.get(
-                FormElementId.get("TheFormElementId"),
+        var formElementDescriptor = FormFieldDescriptor.get(
+                FormFieldId.get("TheFormFieldId"),
                 OwlClassBinding.get(),
                 LanguageMap.empty(),
                 ElementRun.START,
@@ -81,15 +81,15 @@ public class FormElementDescriptor_Serialization_IT {
         );
         var serialized = objectMapper.writeValueAsString(formElementDescriptor);
         System.out.println(serialized);
-        var deserialized = objectMapper.readerFor(FormElementDescriptor.class).readValue(serialized);
+        var deserialized = objectMapper.readerFor(FormFieldDescriptor.class).readValue(serialized);
         assertThat(deserialized, is(formElementDescriptor));
     }
 
     @Test
     public void shouldParseWithNoOwlBinding() throws IOException {
-        var serializedForm = "{\"id\":\"TheFormElementId\",\"label\":{},\"elementRun\":\"START\",\"fieldDescriptor\":{\"type\":\"TEXT\",\"placeholder\":{},\"stringType\":\"SIMPLE_STRING\",\"lineMode\":\"SINGLE_LINE\",\"patternViolationErrorMessage\":{}},\"repeatability\":\"NON_REPEATABLE\",\"optionality\":\"REQUIRED\",\"help\":{}}";
-        FormElementDescriptor deserializedForm = objectMapper.readerFor(FormElementDescriptor.class)
-                    .readValue(serializedForm);
+        var serializedForm = "{\"id\":\"TheFormFieldId\",\"label\":{},\"elementRun\":\"START\",\"formControlDescriptor\":{\"type\":\"TEXT\",\"placeholder\":{},\"stringType\":\"SIMPLE_STRING\",\"lineMode\":\"SINGLE_LINE\",\"patternViolationErrorMessage\":{}},\"repeatability\":\"NON_REPEATABLE\",\"optionality\":\"REQUIRED\",\"help\":{}}";
+        FormFieldDescriptor deserializedForm = objectMapper.readerFor(FormFieldDescriptor.class)
+                                                           .readValue(serializedForm);
         assertThat(deserializedForm.getOwlBinding().isEmpty(), is(true));
 
     }

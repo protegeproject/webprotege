@@ -5,8 +5,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormElementDescriptorPresenter implements ObjectPresenter<FormElementDescriptor> {
+public class FormElementDescriptorPresenter implements ObjectPresenter<FormFieldDescriptor> {
 
     @Nonnull
     private ProjectId projectId;
@@ -62,27 +62,27 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormEleme
     }
 
     @Nonnull
-    public Optional<FormElementDescriptor> getValue() {
+    public Optional<FormFieldDescriptor> getValue() {
         Optional<FormControlDescriptor> formFieldDescriptor = fieldDescriptorChooserPresenter.getFormFieldDescriptor();
         if(!formFieldDescriptor.isPresent()) {
             return Optional.empty();
         }
-        FormElementDescriptor descriptor = FormElementDescriptor.get(FormElementId.get(view.getFormElementId()),
-                                                                     view.getOwlProperty()
+        FormFieldDescriptor descriptor = FormFieldDescriptor.get(FormFieldId.get(view.getFormElementId()),
+                                                                 view.getOwlProperty()
                                                                          .map(OWLPropertyData::getEntity)
                                                                          .map(OwlPropertyBinding::get)
                                                                          .orElse(null),
-                                                                     view.getLabel(),
-                                                                     view.getElementRun(),
-                                                                     formFieldDescriptor.get(),
-                                                                     view.getRepeatability(),
-                                                                     view.getOptionality(),
-                                                                     view.getHelp(),
-                                                                     Collections.emptyMap());
+                                                                 view.getLabel(),
+                                                                 view.getElementRun(),
+                                                                 formFieldDescriptor.get(),
+                                                                 view.getRepeatability(),
+                                                                 view.getOptionality(),
+                                                                 view.getHelp(),
+                                                                 Collections.emptyMap());
         return Optional.of(descriptor);
     }
 
-    public void setValue(@Nonnull FormElementDescriptor descriptor) {
+    public void setValue(@Nonnull FormFieldDescriptor descriptor) {
 
         view.clearOwlProperty();
         Optional<OWLProperty> owlProperty = descriptor.getOwlProperty();

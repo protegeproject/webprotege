@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 
 /**
  * Matthew Horridge
@@ -9,5 +9,5 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
  */
 public interface HasFormElementId {
 
-    FormElementId getId();
+    FormFieldId getId();
 }

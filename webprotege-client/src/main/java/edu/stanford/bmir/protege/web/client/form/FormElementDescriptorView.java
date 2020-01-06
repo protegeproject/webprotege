@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.ElementRun;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -56,7 +56,7 @@ public interface FormElementDescriptorView extends IsWidget {
     @Nonnull
     Repeatability getRepeatability();
 
-    void setElementIdChangedHandler(@Nonnull Consumer<FormElementId> runnable);
+    void setElementIdChangedHandler(@Nonnull Consumer<FormFieldId> runnable);
 
     @Nonnull
     AcceptsOneWidget getFieldDescriptorViewContainer();

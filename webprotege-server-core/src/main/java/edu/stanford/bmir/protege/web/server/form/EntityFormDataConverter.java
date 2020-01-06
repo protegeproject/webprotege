@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -55,7 +55,7 @@ public class EntityFormDataConverter {
     }
 
     private void addFormElementPropertyValuesToSession(FormData formData,
-                                                       FormElementId elementId,
+                                                       FormFieldId elementId,
                                                        FormDataValue dataValue,
                                                        EntityFormDataConverterSession session) {
         var property = formData.getOwlProperty(elementId);

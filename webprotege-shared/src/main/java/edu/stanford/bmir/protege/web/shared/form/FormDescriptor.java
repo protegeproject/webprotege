@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.shared.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -14,7 +13,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -33,7 +31,7 @@ public class FormDescriptor implements Serializable {
 
     private LanguageMap label = LanguageMap.empty();
 
-    private List<FormElementDescriptor> elements;
+    private List<FormFieldDescriptor> elements;
 
     @Nullable
     private EntityFormSubjectFactoryDescriptor subjectFactoryDescriptor;
@@ -44,11 +42,11 @@ public class FormDescriptor implements Serializable {
 
     public FormDescriptor(FormId id,
                           LanguageMap label,
-                          List<FormElementDescriptor> formElementDescriptors,
+                          List<FormFieldDescriptor> formFieldDescriptors,
                           Optional<EntityFormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
         this.formId = id;
         this.label = label;
-        this.elements = new ArrayList<>(formElementDescriptors);
+        this.elements = new ArrayList<>(formFieldDescriptors);
         this.subjectFactoryDescriptor = subjectFactoryDescriptor.orElse(null);
     }
 
@@ -69,7 +67,7 @@ public class FormDescriptor implements Serializable {
     @Nonnull
     public ImmutableSet<OWLProperty> getOwlProperties() {
         return elements.stream()
-                       .map(FormElementDescriptor::getOwlBinding)
+                       .map(FormFieldDescriptor::getOwlBinding)
                        .filter(Optional::isPresent)
                        .map(Optional::get)
                        .filter(binding -> binding instanceof OwlPropertyBinding)
@@ -78,10 +76,10 @@ public class FormDescriptor implements Serializable {
                        .collect(toImmutableSet());
     }
 
-    public Optional<OWLProperty> getOwlProperty(@Nonnull FormElementId formElementId) {
+    public Optional<OWLProperty> getOwlProperty(@Nonnull FormFieldId formFieldId) {
         return elements.stream()
-                .filter(element -> element.getId().equals(formElementId))
-                       .map(FormElementDescriptor::getOwlProperty)
+                .filter(element -> element.getId().equals(formFieldId))
+                       .map(FormFieldDescriptor::getOwlProperty)
                        .filter(Optional::isPresent)
                        .map(Optional::get)
                        .findFirst();
@@ -92,7 +90,7 @@ public class FormDescriptor implements Serializable {
         return Optional.ofNullable(subjectFactoryDescriptor);
     }
 
-    public List<FormElementDescriptor> getElements() {
+    public List<FormFieldDescriptor> getElements() {
         return elements;
     }
 
@@ -136,7 +134,7 @@ public class FormDescriptor implements Serializable {
 
         private LanguageMap label = LanguageMap.empty();
 
-        private final List<FormElementDescriptor> builder_elementDescriptors = new ArrayList<>();
+        private final List<FormFieldDescriptor> builder_elementDescriptors = new ArrayList<>();
 
 
         public Builder(FormId formId) {
@@ -148,7 +146,7 @@ public class FormDescriptor implements Serializable {
             return this;
         }
 
-        public Builder addDescriptor(FormElementDescriptor descriptor) {
+        public Builder addDescriptor(FormFieldDescriptor descriptor) {
             builder_elementDescriptors.add(descriptor);
             return this;
         }

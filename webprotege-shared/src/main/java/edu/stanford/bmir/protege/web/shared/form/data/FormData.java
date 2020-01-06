@@ -7,7 +7,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -43,7 +43,7 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
     }
 
     public FormData(@Nullable OWLEntity subject,
-                    @Nonnull Map<FormElementId, FormDataValue> data,
+                    @Nonnull Map<FormFieldId, FormDataValue> data,
                     @Nonnull FormDescriptor formDescriptor) {
         this.formDescriptor = checkNotNull(formDescriptor);
         checkNotNull(data);
@@ -60,8 +60,8 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
         return Optional.of(this);
     }
 
-    public Optional<OWLProperty> getOwlProperty(FormElementId formElementId) {
-        return formDescriptor.getOwlProperty(formElementId);
+    public Optional<OWLProperty> getOwlProperty(FormFieldId formFieldId) {
+        return formDescriptor.getOwlProperty(formFieldId);
     }
 
     @Nonnull
@@ -89,9 +89,9 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
         return Optional.empty();
     }
 
-    public Map<FormElementId, FormDataValue> getData() {
-        Map<FormElementId, FormDataValue> result = new HashMap<>();
-        data.forEach((id, val) -> result.put(FormElementId.get(id), val));
+    public Map<FormFieldId, FormDataValue> getData() {
+        Map<FormFieldId, FormDataValue> result = new HashMap<>();
+        data.forEach((id, val) -> result.put(FormFieldId.get(id), val));
         return result;
     }
 
@@ -113,8 +113,8 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
     }
 
     @JsonIgnore
-    public Optional<FormDataValue> getFormElementData(FormElementId formElementId) {
-        return Optional.ofNullable(data.get(formElementId.getId()));
+    public Optional<FormDataValue> getFormElementData(FormFieldId formFieldId) {
+        return Optional.ofNullable(data.get(formFieldId.getId()));
     }
 
     public static Builder builder(FormDescriptor formDescriptor) {
@@ -140,7 +140,7 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
 
     public static class Builder {
 
-        private final ListMultimap<FormElementId, FormDataValue> builder_data = ArrayListMultimap.create();
+        private final ListMultimap<FormFieldId, FormDataValue> builder_data = ArrayListMultimap.create();
 
         private final FormDescriptor formDescriptor;
 
@@ -148,14 +148,14 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
             this.formDescriptor = formDescriptor;
         }
 
-        public Builder addData(FormElementId elementId, FormDataValue dataValue) {
+        public Builder addData(FormFieldId elementId, FormDataValue dataValue) {
             builder_data.put(elementId, dataValue);
             return this;
         }
 
         public FormData build() {
-            Map<FormElementId, FormDataValue> map = new HashMap<>();
-            for(FormElementId elementId : builder_data.keys()) {
+            Map<FormFieldId, FormDataValue> map = new HashMap<>();
+            for(FormFieldId elementId : builder_data.keys()) {
                 map.put(elementId, new FormDataList(builder_data.get(elementId)));
             }
             return new FormData(null, map, formDescriptor);

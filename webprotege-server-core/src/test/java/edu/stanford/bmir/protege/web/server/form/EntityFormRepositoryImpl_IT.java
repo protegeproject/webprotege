@@ -48,8 +48,8 @@ public class EntityFormRepositoryImpl_IT {
                                      .build();
         var formId = FormId.get("TonicWater");
         var formDescriptor = FormDescriptor.builder(formId)
-                      .addDescriptor(FormElementDescriptor.get(
-                              FormElementId.get("Brand"),
+                      .addDescriptor(FormFieldDescriptor.get(
+                              FormFieldId.get("Brand"),
                               OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_COMMENT.getIRI())),
                               languageMap,
                               ElementRun.START,

@@ -23,34 +23,34 @@ import java.util.Optional;
 @JsonPropertyOrder({"id", "owlProperty", "label", "elementRun", "fieldDescriptor", "repeatability", "optionality", "help"})
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormElementDescriptor implements HasFormElementId, HasRepeatability, Serializable {
+public abstract class FormFieldDescriptor implements HasFormElementId, HasRepeatability, Serializable {
 
 
     @JsonCreator
     @Nonnull
-    public static FormElementDescriptor get(@JsonProperty("id") @Nonnull FormElementId id,
-                                            @JsonProperty("owlBinding") @Nullable OwlBinding owlBinding,
-                                            @JsonProperty("label") @Nullable LanguageMap formLabel,
-                                            @JsonProperty("elementRun") @Nullable ElementRun elementRun,
-                                            @JsonProperty("formControlDescriptor") @Nonnull FormControlDescriptor fieldDescriptor,
-                                            @JsonProperty("repeatability") @Nullable Repeatability repeatability,
-                                            @JsonProperty("optionality") @Nullable Optionality optionality,
-                                            @JsonProperty("help") @Nullable LanguageMap help,
-                                            @JsonProperty("style") @Nullable Map<String, String> style) {
-        return new AutoValue_FormElementDescriptor(id,
-                                                   owlBinding,
-                                                   formLabel == null ? LanguageMap.empty() : formLabel,
-                                                   elementRun == null ? ElementRun.START : elementRun,
-                                                   fieldDescriptor,
-                                                   optionality == null ? Optionality.REQUIRED : optionality,
-                                                   repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
-                                                   help == null ? LanguageMap.empty() : help,
-                                                   style == null ? ImmutableMap.of() : style);
+    public static FormFieldDescriptor get(@JsonProperty("id") @Nonnull FormFieldId id,
+                                          @JsonProperty("owlBinding") @Nullable OwlBinding owlBinding,
+                                          @JsonProperty("label") @Nullable LanguageMap formLabel,
+                                          @JsonProperty("elementRun") @Nullable ElementRun elementRun,
+                                          @JsonProperty("formControlDescriptor") @Nonnull FormControlDescriptor fieldDescriptor,
+                                          @JsonProperty("repeatability") @Nullable Repeatability repeatability,
+                                          @JsonProperty("optionality") @Nullable Optionality optionality,
+                                          @JsonProperty("help") @Nullable LanguageMap help,
+                                          @JsonProperty("style") @Nullable Map<String, String> style) {
+        return new AutoValue_FormFieldDescriptor(id,
+                                                 owlBinding,
+                                                 formLabel == null ? LanguageMap.empty() : formLabel,
+                                                 elementRun == null ? ElementRun.START : elementRun,
+                                                 fieldDescriptor,
+                                                 optionality == null ? Optionality.REQUIRED : optionality,
+                                                 repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
+                                                 help == null ? LanguageMap.empty() : help,
+                                                 style == null ? ImmutableMap.of() : style);
     }
 
-    public static FormElementDescriptor getDefault() {
-        return FormElementDescriptor.get(
-                FormElementId.get(""),
+    public static FormFieldDescriptor getDefault() {
+        return FormFieldDescriptor.get(
+                FormFieldId.get(""),
                 null,
                 LanguageMap.empty(),
                 ElementRun.START,
@@ -69,7 +69,7 @@ public abstract class FormElementDescriptor implements HasFormElementId, HasRepe
     @Nonnull
     @Override
     @JsonProperty("id")
-    public abstract FormElementId getId();
+    public abstract FormFieldId getId();
 
     @JsonIgnore
     @Nullable

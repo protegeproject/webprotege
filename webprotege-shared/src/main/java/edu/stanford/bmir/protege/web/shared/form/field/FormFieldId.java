@@ -6,7 +6,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 
 import javax.annotation.Nonnull;
-import java.io.Serializable;
 
 /**
  * Matthew Horridge
@@ -15,12 +14,12 @@ import java.io.Serializable;
  */
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormElementId {
+public abstract class FormFieldId {
 
     @JsonCreator
     @Nonnull
-    public static FormElementId get(@Nonnull String id) {
-        return new AutoValue_FormElementId(id);
+    public static FormFieldId get(@Nonnull String id) {
+        return new AutoValue_FormFieldId(id);
     }
 
     @JsonValue

@@ -10,10 +10,10 @@ import java.lang.reflect.Type;
  * Stanford Center for Biomedical Informatics Research
  * 11/04/16
  */
-public class FormElementDescriptorDeserializer implements JsonDeserializer<FormElementDescriptor> {
+public class FormElementDescriptorDeserializer implements JsonDeserializer<FormFieldDescriptor> {
 
     @Override
-    public FormElementDescriptor deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public FormFieldDescriptor deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 //        if(!jsonElement.isJsonObject()) {
 //            throw new FormDescriptorParseException("Found " + jsonElement + " but expected Object");
 //        }
@@ -26,7 +26,7 @@ public class FormElementDescriptorDeserializer implements JsonDeserializer<FormE
 //            Repeatability repeatability = Repeatability.valueOf(repeatabilityValue);
 //            Optionality required = Optionality.valueOf(requiredValue);
 //            FormControlDescriptor fieldDescriptor = jsonDeserializationContext.deserialize(jsonObject.getAsJsonObject("fieldDescriptor"), FormControlDescriptor.class);
-//            return new FormElementDescriptor(FormElementId.get(id), label, fieldDescriptor, repeatability, required, "");
+//            return new FormFieldDescriptor(FormFieldId.get(id), label, fieldDescriptor, repeatability, required, "");
 //        } catch (IllegalArgumentException e) {
 //            throw new FormDescriptorParseException("Encountered "
 //                    + jsonObject.getAsJsonPrimitive("repeatability").getAsString()
