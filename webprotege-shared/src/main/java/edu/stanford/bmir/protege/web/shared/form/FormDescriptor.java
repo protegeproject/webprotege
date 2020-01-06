@@ -52,8 +52,8 @@ public class FormDescriptor implements Serializable {
         this.subjectFactoryDescriptor = subjectFactoryDescriptor.orElse(null);
     }
 
-    public static FormDescriptor empty() {
-        return new FormDescriptor(FormId.get("EmptyForm"), LanguageMap.empty(), Collections.emptyList(),
+    public static FormDescriptor empty(FormId formId) {
+        return new FormDescriptor(formId, LanguageMap.empty(), Collections.emptyList(),
                                   Optional.empty());
     }
 

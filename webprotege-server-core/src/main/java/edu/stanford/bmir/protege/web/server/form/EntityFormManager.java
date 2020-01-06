@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -40,7 +38,7 @@ public class EntityFormManager {
 
     public Optional<FormDescriptor> getFormDescriptor(@Nonnull OWLEntity entity,
                                                       @Nonnull ProjectId projectId) {
-        var formId = entityFormSelectorRepository.findFormTriggers(projectId)
+        var formId = entityFormSelectorRepository.findFormSelectors(projectId)
                                     .filter(selector -> matchingEngine.matches(entity,
                                                                                selector.getCriteria()))
                                     .map(EntityFormSelector::getFormId)

@@ -48,7 +48,7 @@ public class SubFormControl implements FormControl, HasValueChangeHandlers<Optio
     public void start() {
         formPresenter.start(container);
         formPresenter.setFormDataChangedHandler(this::handleFormDataChanged);
-        formPresenter.displayForm(formDescriptor, FormData.empty());
+        formPresenter.displayForm(formDescriptor, FormData.empty(formDescriptor.getFormId()));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SubFormControl implements FormControl, HasValueChangeHandlers<Optio
 
     @Override
     public Optional<FormDataValue> getValue() {
-        return Optional.of(formPresenter.getFormData());
+        return formPresenter.getFormData().map(fd -> fd);
     }
 
     @Override

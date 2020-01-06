@@ -30,9 +30,6 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
     @UiField
     SimplePanel elementDescriptorListContainer;
 
-    @UiField
-    TextBox formIdField;
-
     @UiField(provided = true)
     LanguageMapEditor labelField;
 
@@ -49,19 +46,7 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
 
     @Override
     public void setEnabled(boolean enabled) {
-        formIdField.setEnabled(enabled);
         labelField.setEnabled(enabled);
-    }
-
-    @Nonnull
-    @Override
-    public String getFormId() {
-        return formIdField.getText();
-    }
-
-    @Override
-    public void setFormId(@Nonnull String formId) {
-        formIdField.setText(formId);
     }
 
     @Nonnull

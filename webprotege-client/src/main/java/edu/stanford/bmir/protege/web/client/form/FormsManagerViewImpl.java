@@ -63,14 +63,6 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
         return formDescriptorContainer;
     }
 
-    @Override
-    public void displayCreateFormIdPrompt(FormIdEnteredHandler handler) {
-        inputBox.showDialog("Enter form Id",
-                            false,
-                            "",
-                            handler::handleAcceptFormName);
-    }
-
     @Nonnull
     @Override
     public Optional<FormId> getCurrentFormId() {

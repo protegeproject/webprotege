@@ -4,8 +4,10 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormResult;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -48,12 +50,11 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         OWLEntity entity = action.getEntity();
         return formManager.getFormDescriptor(entity, projectId)
                           .map(formDescriptor -> {
-                              System.out.println("[GetEntityFormActionHandler] " + formDescriptor);
                               var formData = formDataBuilder.getFormData(entity, formDescriptor);
                               return new GetEntityFormResult(formDescriptor, formData);
 
                           })
-                          .orElse(new GetEntityFormResult());
+                          .orElse(new GetEntityFormResult(null, FormData.empty(FormId.generate())));
 
 
     }

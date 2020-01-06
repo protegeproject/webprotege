@@ -85,10 +85,6 @@ public class FormPresenter {
         this.formPresenterFactory = formPresenterFactory;
     }
 
-    public FormDescriptor getFormDescriptor() {
-        return currentFormDescriptor.orElse(FormDescriptor.empty());
-    }
-
     /**
      * Starts the form presenter.  The form will be placed into the specified container.
      * @param container The container.
@@ -142,7 +138,7 @@ public class FormPresenter {
      * @return The {@link FormData} entered into the form.
      */
     @Nonnull
-    public FormData getFormData() {
+    public Optional<FormData> getFormData() {
         return currentFormDescriptor.map(formDescriptor -> {
             Map<FormElementId, FormDataValue> dataMap = new HashMap<>();
             for (FormElementView view : formView.getElementViews()) {
@@ -151,7 +147,7 @@ public class FormPresenter {
                 ));
             }
             return new FormData(currentSubject.orElse(null), dataMap, formDescriptor);
-        }).orElse(FormData.empty());
+        });
     }
 
     public void clearData() {

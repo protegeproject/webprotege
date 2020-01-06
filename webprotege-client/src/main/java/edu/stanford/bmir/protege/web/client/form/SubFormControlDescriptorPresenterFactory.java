@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 
@@ -40,7 +41,7 @@ public class SubFormControlDescriptorPresenterFactory implements FormControlDesc
     @Nonnull
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
-        return new SubFormControlDescriptor(FormDescriptor.empty());
+        return new SubFormControlDescriptor(FormDescriptor.empty(FormId.get("12345678-1234-1234-1234-123456789abc")));
     }
 
     @Nonnull

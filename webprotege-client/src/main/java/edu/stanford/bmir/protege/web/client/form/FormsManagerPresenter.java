@@ -119,12 +119,13 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     }
 
     private void handleAddForm() {
-        formManagerView.displayCreateFormIdPrompt(newFormId -> {
-            saveCurrentFormDescriptor();
-            FormId formId = FormId.get(newFormId);
-            formManagerView.addFormId(formId);
-            displayFormDescriptor(formId);
-        });
+//        dispatchServiceManager.execute(GetNew);
+//        formManagerView.displayCreateFormIdPrompt(newFnormId -> {
+//            saveCurrentFormDescriptor();
+//            FormId formId = FormId.get(newFormId);
+//            formManagerView.addFormId(formId);
+//            displayFormDescriptor(formId);
+//        });
     }
 
     private void handleFormSelectionChanged() {

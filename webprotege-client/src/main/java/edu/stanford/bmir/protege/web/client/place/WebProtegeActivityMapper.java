@@ -10,9 +10,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ApplicationSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.form.FormsActivity;
-import edu.stanford.bmir.protege.web.client.form.FormsPlace;
-import edu.stanford.bmir.protege.web.client.form.FormsManagerPresenter;
+import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
@@ -65,6 +63,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     private Optional<FormsManagerPresenter> lastFormsPresenter = Optional.empty();
 
     private Optional<UserId> lastUser = Optional.empty();
+
+    private Optional<FormEditorPresenter> lastFormEditorPresent = Optional.empty();
 
     @Inject
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
@@ -200,6 +200,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new FormsActivity(formsManagerPresenter, formsPlace);
         }
 
+        if(place instanceof EditFormPlace) {
+            EditFormPlace editFormPlace = (EditFormPlace) place;
+            FormEditorPresenter formEditorPresenter = getFormEditorPresenter(editFormPlace);
+            return new EditFormActivity(formEditorPresenter, editFormPlace);
+        }
+
         return null;
     }
 
@@ -251,6 +257,18 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             FormsManagerPresenter formsManagerPresenter = projectComponent.getFormsPresenter();
             lastFormsPresenter = Optional.of(formsManagerPresenter);
             return formsManagerPresenter;
+        }
+    }
+
+    private FormEditorPresenter getFormEditorPresenter(EditFormPlace place) {
+        if(lastFormEditorPresent.isPresent()) {
+            return lastFormEditorPresent.get();
+        }
+        else {
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(new ClientProjectModule(place.getProjectId()));
+            FormEditorPresenter formEditorPresenter = projectComponent.getFormEditorPresenter();
+            lastFormEditorPresent = Optional.of(formEditorPresenter);
+            return formEditorPresenter;
         }
     }
 

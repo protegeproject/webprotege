@@ -20,11 +20,6 @@ public interface FormDescriptorView extends IsWidget {
     }
 
     @Nonnull
-    String getFormId();
-
-    void setFormId(@Nonnull String formId);
-
-    @Nonnull
     LanguageMap getLabel();
 
     void setLabel(@Nonnull LanguageMap label);

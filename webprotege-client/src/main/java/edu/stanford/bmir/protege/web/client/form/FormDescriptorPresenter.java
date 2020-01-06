@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import java.util.List;
@@ -28,6 +29,9 @@ public class FormDescriptorPresenter implements Presenter {
 
     @Nonnull
     private final ObjectListPresenter<FormElementDescriptor> elementDescriptorListPresenter;
+
+    @Nullable
+    private FormId formId;
 
     @Inject
     public FormDescriptorPresenter(@Nonnull FormDescriptorView view,
@@ -50,18 +54,16 @@ public class FormDescriptorPresenter implements Presenter {
     }
 
     public void setFormDescriptor(@Nonnull FormDescriptor formDescriptor) {
-        FormId formId = formDescriptor.getFormId();
-        view.setFormId(formId.getId());
+        this.formId = formDescriptor.getFormId();
         view.setLabel(formDescriptor.getLabel());
         elementDescriptorListPresenter.setValues(formDescriptor.getElements());
     }
 
     @Nonnull
     public FormDescriptor getFormDescriptor() {
-        FormId formId = FormId.get(view.getFormId().trim());
         LanguageMap label = view.getLabel();
         List<FormElementDescriptor> elementDescriptors = elementDescriptorListPresenter.getValues();
 
-        return new FormDescriptor(formId, label, elementDescriptors, Optional.empty());
+        return new FormDescriptor(this.formId, label, elementDescriptors, Optional.empty());
     }
 }

@@ -54,7 +54,7 @@ public class FormDataRepository {
                                          .field("subjectId").equal(entity.toString())
                                          .get();
         if (record == null) {
-            return FormData.empty();
+            return FormData.empty(FormId.generate());
         }
         else {
             return record.getData();

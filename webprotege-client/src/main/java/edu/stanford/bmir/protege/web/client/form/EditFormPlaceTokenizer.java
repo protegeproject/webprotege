@@ -3,23 +3,24 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.Optional;
+import static edu.stanford.bmir.protege.web.shared.util.UUIDUtil.UUID_PATTERN;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-17
+ * 2019-12-20
  */
-public class FormsPlaceTokenizer implements WebProtegePlaceTokenizer<FormsPlace> {
+public class EditFormPlaceTokenizer implements WebProtegePlaceTokenizer<EditFormPlace> {
 
     private static final String PROJECTS = "projects/";
 
-    private static final String FORMS = "/forms";
+    private static final String FORMS = "/forms/";
 
-    private static RegExp regExp = RegExp.compile(PROJECTS + "(.{36})" + FORMS + "$");
+    private static RegExp regExp = RegExp.compile(PROJECTS + "(" +  UUID_PATTERN + ")" + FORMS + "(" + UUID_PATTERN + ")");
 
     @Override
     public boolean matches(String token) {
@@ -28,21 +29,23 @@ public class FormsPlaceTokenizer implements WebProtegePlaceTokenizer<FormsPlace>
 
     @Override
     public boolean isTokenizerFor(Place place) {
-        return place instanceof FormsPlace;
+        return place instanceof EditFormPlace;
     }
 
     @Override
-    public FormsPlace getPlace(String token) {
+    public EditFormPlace getPlace(String token) {
         MatchResult result = regExp.exec(token);
         ProjectId projectId = ProjectId.get(result.getGroup(1));
-        return FormsPlace.get(projectId, Optional.empty());
+        FormId formId = FormId.get(result.getGroup(2));
+        return EditFormPlace.get(projectId, formId);
     }
 
     @Override
-    public String getToken(FormsPlace place) {
+    public String getToken(EditFormPlace place) {
         return PROJECTS +
                 place.getProjectId()
                      .getId() +
-                FORMS;
+                FORMS +
+                place.getFormId().getId();
     }
 }

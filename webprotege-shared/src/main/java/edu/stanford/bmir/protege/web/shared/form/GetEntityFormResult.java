@@ -26,9 +26,7 @@ public class GetEntityFormResult implements Result {
         this.formData = formData;
     }
 
-    public GetEntityFormResult() {
-        this.formDescriptor = null;
-        this.formData = FormData.empty();
+    private GetEntityFormResult() {
     }
 
     @Nonnull

@@ -15,5 +15,5 @@ public interface EntityFormSelectorRepository extends Repository {
 
     void save(EntityFormSelector entityFormSelector);
 
-    Stream<EntityFormSelector> findFormTriggers(@Nonnull ProjectId projectId);
+    Stream<EntityFormSelector> findFormSelectors(@Nonnull ProjectId projectId);
 }

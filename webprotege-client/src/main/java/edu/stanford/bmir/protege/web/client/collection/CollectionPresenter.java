@@ -92,7 +92,7 @@ public class CollectionPresenter implements Presenter {
                                                                      subject.getCollectionId(),
                                                                      selection,
                                                                      subject.getFormId(),
-                                                                     FormData.empty()),
+                                                                     FormData.empty(subject.getFormId())),
                                                result -> formPresenter.clearData());
             });
 
@@ -138,16 +138,20 @@ public class CollectionPresenter implements Presenter {
 
     private void submitFormData() {
         GWT.log("[CollectionPresenter] Submitting form data.  Current place is " + current);
-        FormData formData = formPresenter.getFormData();
+        Optional<FormData> formData = formPresenter.getFormData();
+
         current.ifPresent(subject -> {
             GWT.log("[CollectionPresenter] Saving data for " + subject.getSelection());
-            dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
-                                                                 subject.getCollectionId(),
-                                                                 subject.getSelection().get(),
-                                                                 subject.getFormId(),
-                                                                 formData),
-                                           result -> {
-                                           });
+            formData.ifPresent(fd -> {
+                dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
+                                                                     subject.getCollectionId(),
+                                                                     subject.getSelection().get(),
+                                                                     subject.getFormId(),
+                                                                     fd),
+                                               result -> {
+                                               });
+            });
+
         });
 
     }

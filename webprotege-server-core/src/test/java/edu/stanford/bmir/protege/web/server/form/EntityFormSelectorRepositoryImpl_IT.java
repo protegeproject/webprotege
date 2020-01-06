@@ -47,7 +47,7 @@ public class EntityFormSelectorRepositoryImpl_IT {
                                                  criteria,
                                                  theFormId);
         repository.save(formTrigger);
-        var deserializedFormTrigger = repository.findFormTriggers(projectId).findFirst().orElseThrow();
+        var deserializedFormTrigger = repository.findFormSelectors(projectId).findFirst().orElseThrow();
         assertThat(deserializedFormTrigger, is(formTrigger));
     }
 

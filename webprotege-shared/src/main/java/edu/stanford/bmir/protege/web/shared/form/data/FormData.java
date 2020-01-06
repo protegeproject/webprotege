@@ -6,6 +6,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -37,8 +38,8 @@ public class FormData extends FormDataValue implements Serializable, IsSerializa
     private FormData() {
     }
 
-    public static FormData empty() {
-        return new FormData(null, Collections.emptyMap(), FormDescriptor.empty());
+    public static FormData empty(FormId formId) {
+        return new FormData(null, Collections.emptyMap(), FormDescriptor.empty(formId));
     }
 
     public FormData(@Nullable OWLEntity subject,

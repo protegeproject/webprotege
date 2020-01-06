@@ -44,8 +44,4 @@ public interface FormsManagerView extends IsWidget {
 
     @Nonnull
     AcceptsOneWidget getFormDescriptorContainer();
-
-    void displayCreateFormIdPrompt(FormIdEnteredHandler handler);
-
-
 }

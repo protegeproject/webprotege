@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class EntityFormSelectorRepositoryImpl implements EntityFormSelectorRepository {
 
-    public static final String COLLECTION_NAME = "FormTriggers";
+    public static final String COLLECTION_NAME = "FormSelectors";
 
     @Nonnull
     private final MongoDatabase database;
@@ -45,7 +45,7 @@ public class EntityFormSelectorRepositoryImpl implements EntityFormSelectorRepos
     }
 
     @Override
-    public Stream<EntityFormSelector> findFormTriggers(@Nonnull ProjectId projectId) {
+    public Stream<EntityFormSelector> findFormSelectors(@Nonnull ProjectId projectId) {
         var collection = database.getCollection(COLLECTION_NAME);
         var filter = new Document("projectId", projectId.getId());
         List<EntityFormSelector> resultList = new ArrayList<>();
