@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class FormElementDescriptorPresenter implements ObjectPresenter<FormFieldDescriptor> {
+public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDescriptor> {
 
     @Nonnull
     private ProjectId projectId;
@@ -40,10 +40,10 @@ public class FormElementDescriptorPresenter implements ObjectPresenter<FormField
     private DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public FormElementDescriptorPresenter(@Nonnull ProjectId projectId,
-                                          @Nonnull FormFieldDescriptorView view,
-                                          @Nonnull FormControlDescriptorChooserPresenter fieldChooserPresenter,
-                                          @Nonnull DispatchServiceManager dispatchServiceManager) {
+    public FormFieldDescriptorPresenter(@Nonnull ProjectId projectId,
+                                        @Nonnull FormFieldDescriptorView view,
+                                        @Nonnull FormControlDescriptorChooserPresenter fieldChooserPresenter,
+                                        @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.view = checkNotNull(view);
         this.fieldDescriptorChooserPresenter = fieldChooserPresenter;

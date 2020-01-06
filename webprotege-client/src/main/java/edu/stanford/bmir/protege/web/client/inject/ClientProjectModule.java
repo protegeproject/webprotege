@@ -597,7 +597,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ObjectPresenter<FormFieldDescriptor> providesFormElementDescriptorPresenter(FormElementDescriptorPresenter presenter) {
+    ObjectPresenter<FormFieldDescriptor> providesFormElementDescriptorPresenter(FormFieldDescriptorPresenter presenter) {
         return presenter;
     }
 
