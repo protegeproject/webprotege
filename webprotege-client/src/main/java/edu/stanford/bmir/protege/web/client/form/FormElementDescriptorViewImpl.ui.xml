@@ -31,7 +31,7 @@
                 <g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-                            <g:Label text="Element Id" addStyleNames="{wp.style.formLabel}"/>
+                            <g:Label text="Field Id" addStyleNames="{wp.style.formLabel}"/>
                             <g:TextBox ui:field="elementIdField"/>
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
