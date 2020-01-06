@@ -46,6 +46,8 @@ public class FormDescriptorPresenter implements Presenter {
         elementDescriptorListPresenter.start(
                 view.getElementDescriptorListContainer(),
                 eventBus);
+        // TODO: Resource bundle
+        elementDescriptorListPresenter.setAddObjectText("Add field");
         view.setAddFormElementHandler(this::handleAddFormElement);
     }
 

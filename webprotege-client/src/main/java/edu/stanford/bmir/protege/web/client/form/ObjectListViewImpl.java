@@ -96,6 +96,12 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     }
 
     @Override
+    public void setAddObjectText(@Nonnull String addObjectText) {
+        addObjectButton.setText(checkNotNull(addObjectText));
+    }
+
+
+    @Override
     public void setAddObjectHandler(Runnable handler) {
         this.addObjectHandler = checkNotNull(handler);
     }

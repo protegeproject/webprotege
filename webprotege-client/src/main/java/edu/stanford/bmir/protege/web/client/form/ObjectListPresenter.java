@@ -58,6 +58,10 @@ public class ObjectListPresenter<T> implements Presenter {
         addValue(value);
     }
 
+    public void setAddObjectText(@Nonnull String addObjectText) {
+        view.setAddObjectText(addObjectText);
+    }
+
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         container.setWidget(view);

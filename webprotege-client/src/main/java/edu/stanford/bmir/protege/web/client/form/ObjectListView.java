@@ -24,5 +24,7 @@ public interface ObjectListView extends IsWidget {
 
     void moveDown(@Nonnull ObjectListViewHolder viewHolder);
 
+    void setAddObjectText(@Nonnull String addObjectText);
+
     void setAddObjectHandler(Runnable handler);
 }
