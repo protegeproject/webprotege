@@ -31,12 +31,12 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
 
     private Runnable addObjectHandler = () -> {};
 
-    interface FormElementDescriptorListViewImplUiBinder extends UiBinder<HTMLPanel, ObjectListViewImpl> {
+    interface ObjectListViewImplUiBinder extends UiBinder<HTMLPanel, ObjectListViewImpl> {
 
     }
 
-    private static FormElementDescriptorListViewImplUiBinder ourUiBinder = GWT.create(
-            FormElementDescriptorListViewImplUiBinder.class);
+    private static ObjectListViewImplUiBinder ourUiBinder = GWT.create(
+            ObjectListViewImplUiBinder.class);
 
     @UiField
     HTMLPanel elementDescriptorViewContainer;

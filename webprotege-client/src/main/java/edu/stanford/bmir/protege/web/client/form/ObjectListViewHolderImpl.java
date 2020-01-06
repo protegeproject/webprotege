@@ -19,12 +19,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ObjectListViewHolderImpl extends Composite implements ObjectListViewHolder {
 
-    interface FormElementDescriptorListViewHolderUiBinder extends UiBinder<HTMLPanel, ObjectListViewHolderImpl> {
+    interface ObjectListViewHolderUiBinder extends UiBinder<HTMLPanel, ObjectListViewHolderImpl> {
 
     }
 
-    private static FormElementDescriptorListViewHolderUiBinder ourUiBinder = GWT.create(
-            FormElementDescriptorListViewHolderUiBinder.class);
+    private static ObjectListViewHolderUiBinder ourUiBinder = GWT.create(
+            ObjectListViewHolderUiBinder.class);
 
     @UiField
     HTMLPanel container;
