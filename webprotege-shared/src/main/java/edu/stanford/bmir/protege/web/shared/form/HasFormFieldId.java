@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public interface HasFormElementId {
+public interface HasFormFieldId {
 
     FormFieldId getId();
 }
