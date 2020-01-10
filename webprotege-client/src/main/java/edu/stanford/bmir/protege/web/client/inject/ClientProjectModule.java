@@ -605,7 +605,7 @@ public class ClientProjectModule {
     ImmutableList<FormControlDescriptorPresenterFactory> provideFormFieldDescriptorPresenterFactories(
             TextControlDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
             NumberControlDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
-            ChoiceControlDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
+            SingleChoiceControlDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
             ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
             EntityNameControlDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
             SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,

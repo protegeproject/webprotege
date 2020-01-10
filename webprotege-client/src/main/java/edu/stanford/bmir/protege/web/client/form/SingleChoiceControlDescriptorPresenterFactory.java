@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,22 +16,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class ChoiceControlDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
+public class SingleChoiceControlDescriptorPresenterFactory implements FormControlDescriptorPresenterFactory {
 
 
     @Nonnull
-    private final Provider<ChoiceControlDescriptorPresenter> presenterProvider;
+    private final Provider<SingleControlDescriptorPresenter> presenterProvider;
 
 
     @Inject
-    public ChoiceControlDescriptorPresenterFactory(@Nonnull Provider<ChoiceControlDescriptorPresenter> presenterProvider) {
+    public SingleChoiceControlDescriptorPresenterFactory(@Nonnull Provider<SingleControlDescriptorPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 
     @Nonnull
     @Override
     public String getDescriptorLabel() {
-        return "Choice";
+        return "Single choice";
     }
 
     @Nonnull

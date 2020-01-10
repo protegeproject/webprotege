@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class ChoiceControlDescriptorPresenter implements FormControlDescriptorPresenter {
+public class SingleControlDescriptorPresenter implements FormControlDescriptorPresenter {
 
     private static final SingleChoiceControlDescriptor DEFAULT_DESCRIPTOR = SingleChoiceControlDescriptor.get(
             SingleChoiceControlType.SEGMENTED_BUTTON,
@@ -28,7 +28,7 @@ public class ChoiceControlDescriptorPresenter implements FormControlDescriptorPr
     private final ChoiceControlDescriptorView view;
 
     @Inject
-    public ChoiceControlDescriptorPresenter(@Nonnull ChoiceControlDescriptorView view) {
+    public SingleControlDescriptorPresenter(@Nonnull ChoiceControlDescriptorView view) {
         this.view = checkNotNull(view);
     }
 
