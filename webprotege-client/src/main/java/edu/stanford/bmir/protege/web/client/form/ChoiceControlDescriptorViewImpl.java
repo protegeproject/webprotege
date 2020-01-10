@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -10,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlType;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,7 +43,7 @@ public class ChoiceControlDescriptorViewImpl extends Composite implements Choice
     RadioButton radioRadio;
 
     @UiField
-    RadioButton checkBoxRadio;
+    RadioButton comboBoxRadio;
 
     @UiField(provided = true)
     static Counter counter = new Counter();
@@ -58,25 +59,25 @@ public class ChoiceControlDescriptorViewImpl extends Composite implements Choice
 
     @Nonnull
     @Override
-    public ChoiceControlType getWidgetType() {
-        if(checkBoxRadio.getValue()) {
-            return ChoiceControlType.RADIO_BUTTON;
+    public SingleChoiceControlType getWidgetType() {
+        if(comboBoxRadio.getValue()) {
+            return SingleChoiceControlType.COMBO_BOX;
         }
         else if(radioRadio.getValue()) {
-            return ChoiceControlType.RADIO_BUTTON;
+            return SingleChoiceControlType.RADIO_BUTTON;
         }
         else {
-            return ChoiceControlType.SEGMENTED_BUTTON;
+            return SingleChoiceControlType.SEGMENTED_BUTTON;
         }
     }
 
     @Override
-    public void setWidgetType(@Nonnull ChoiceControlType widgetType) {
-        if(widgetType == ChoiceControlType.CHECK_BOX) {
-            checkBoxRadio.setValue(true);
-        }
-        else if(widgetType == ChoiceControlType.RADIO_BUTTON) {
+    public void setWidgetType(@Nonnull SingleChoiceControlType widgetType) {
+        if(widgetType == SingleChoiceControlType.RADIO_BUTTON) {
             radioRadio.setValue(true);
+        }
+        else if(widgetType == SingleChoiceControlType.COMBO_BOX) {
+            comboBoxRadio.setValue(true);
         }
         else {
             segmentedRadio.setValue(true);
@@ -90,7 +91,7 @@ public class ChoiceControlDescriptorViewImpl extends Composite implements Choice
 
     @Nonnull
     @Override
-    public List<ChoiceDescriptor> getChoiceDescriptors() {
-        return choiceListEditor.getEditorValue().orElse(Collections.emptyList());
+    public ImmutableList<ChoiceDescriptor> getChoiceDescriptors() {
+        return choiceListEditor.getEditorValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
     }
 }

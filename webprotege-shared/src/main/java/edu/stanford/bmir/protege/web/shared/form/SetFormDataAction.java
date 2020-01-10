@@ -55,7 +55,7 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
     }
 
 
-    public FormData getFormData() {
+    public FormData getFormValue() {
         return formData;
     }
 

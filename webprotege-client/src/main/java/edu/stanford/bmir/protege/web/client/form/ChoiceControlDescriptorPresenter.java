@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlType;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -19,9 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChoiceControlDescriptorPresenter implements FormControlDescriptorPresenter {
 
-    private static final ChoiceControlDescriptor DEFAULT_DESCRIPTOR = new ChoiceControlDescriptor(ChoiceControlType.SEGMENTED_BUTTON,
-                                                                                                  Collections.emptyList(),
-                                                                                                  Collections.emptyList());
+    private static final SingleChoiceControlDescriptor DEFAULT_DESCRIPTOR = SingleChoiceControlDescriptor.get(
+            SingleChoiceControlType.SEGMENTED_BUTTON,
+            ImmutableList.of());
 
     @Nonnull
     private final ChoiceControlDescriptorView view;
@@ -34,24 +35,23 @@ public class ChoiceControlDescriptorPresenter implements FormControlDescriptorPr
     @Nonnull
     @Override
     public FormControlDescriptor getFormFieldDescriptor() {
-        return new ChoiceControlDescriptor(
+        return SingleChoiceControlDescriptor.get(
                 view.getWidgetType(),
-                view.getChoiceDescriptors(),
-                Collections.emptyList()
+                view.getChoiceDescriptors()
         );
     }
 
     @Override
     public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
         checkNotNull(formControlDescriptor);
-        if(!(formControlDescriptor instanceof ChoiceControlDescriptor)) {
+        if(!(formControlDescriptor instanceof SingleChoiceControlDescriptor)) {
             return;
         }
-        updateView((ChoiceControlDescriptor) formControlDescriptor);
+        updateView((SingleChoiceControlDescriptor) formControlDescriptor);
 
     }
 
-    public void updateView(@Nonnull ChoiceControlDescriptor formFieldDescriptor) {
+    public void updateView(@Nonnull SingleChoiceControlDescriptor formFieldDescriptor) {
         view.setWidgetType(formFieldDescriptor.getWidgetType());
         view.setChoiceDescriptors(formFieldDescriptor.getChoices());
     }

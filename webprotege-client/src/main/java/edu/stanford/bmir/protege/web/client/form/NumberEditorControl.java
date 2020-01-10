@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -14,13 +15,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlValue;
+import edu.stanford.bmir.protege.web.shared.form.data.NumberControlData;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlRange;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,11 +38,25 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  * Stanford Center for Biomedical Informatics Research
  * 3 Jul 2017
  */
-public class NumberEditorControl extends Composite implements ValueEditor<FormDataValue>, FormControl, HasPlaceholder {
+public class NumberEditorControl extends Composite implements FormControl, HasPlaceholder {
 
     private NumberFormat format = NumberFormat.getFormat("0.00");
 
     private NumberControlRange range = NumberControlRange.all();
+
+    private NumberControlDescriptor descriptor;
+
+    public void setDescriptor(NumberControlDescriptor formFieldDescriptor) {
+        this.descriptor = formFieldDescriptor;
+        setFormat(formFieldDescriptor.getFormat());
+        setRange(formFieldDescriptor.getRange());
+        setLength(formFieldDescriptor.getLength());
+        LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
+        String localeName = localeInfo.getLocaleName();
+        String placeholder = formFieldDescriptor.getPlaceholder()
+                                                .get(localeName);
+        setPlaceholder(placeholder);
+    }
 
     interface NumberEditorControlUiBinder extends UiBinder<HTMLPanel, NumberEditorControl> {
 
@@ -74,21 +92,16 @@ public class NumberEditorControl extends Composite implements ValueEditor<FormDa
     }
 
     @Override
-    public void setValue(FormDataValue object) {
-        if (!(object instanceof FormDataPrimitive)) {
+    public void setValue(FormControlData object) {
+        if (!(object instanceof LiteralFormControlValue)) {
             clearValue();
             return;
         }
-        FormDataPrimitive primitive = (FormDataPrimitive) object;
-        if (primitive.isNumber()) {
+        LiteralFormControlValue primitive = (LiteralFormControlValue) object;
+        try {
             double v = primitive.getValueAsDouble();
             numberField.setText(format.format(v));
-        }
-        else if(primitive.asLiteral().isPresent()) {
-            double v = Double.parseDouble(primitive.asLiteral().get().getLiteral());
-            numberField.setText(format.format(v));
-        }
-        else {
+        } catch(NumberFormatException e) {
             clearValue();
         }
         validate();
@@ -100,10 +113,10 @@ public class NumberEditorControl extends Composite implements ValueEditor<FormDa
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
+    public Optional<FormControlData> getValue() {
         try {
             double v = format.parse(numberField.getText().trim());
-            return Optional.of(FormDataPrimitive.get(v));
+            return Optional.of(NumberControlData.get(descriptor, v));
         } catch (NumberFormatException e) {
             GWT.log("[NumberEditorControl] Invalid number format (" + format.getPattern() + ") " + e.getMessage());
             return Optional.empty();
@@ -111,7 +124,7 @@ public class NumberEditorControl extends Composite implements ValueEditor<FormDa
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         GWT.log("[NumberEditorControl] addValueChangeHandler");
         return addHandler(handler, ValueChangeEvent.getType());
     }

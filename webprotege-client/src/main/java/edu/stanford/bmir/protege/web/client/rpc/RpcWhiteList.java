@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.common.collect.ImmutableSetMultimap;
+import edu.stanford.bmir.protege.web.client.form.FormFieldControl;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -34,6 +36,10 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
 
 /**
  * Matthew Horridge
@@ -45,10 +51,6 @@ import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
  */
 public class RpcWhiteList implements Action, Result {
 
-
-    private Color color;
-
-    private Criteria criteria;
 
     MultiMatchType multiMatchType;
 
@@ -104,13 +106,7 @@ public class RpcWhiteList implements Action, Result {
 
     OwlBinding owlBinding;
 
-    public GridColumnId getColumnId() {
-        return columnId;
-    }
-
-    public void setColumnId(GridColumnId columnId) {
-        this.columnId = columnId;
-    }
+    FormControlData formControlData;
 
     GridColumnId columnId;
 
@@ -118,107 +114,31 @@ public class RpcWhiteList implements Action, Result {
 
     GridColumnDescriptor gridColumnDescriptor;
 
-    public GridControlDescriptor getGridFieldDescriptor() {
-        return gridFieldDescriptor;
-    }
+    SingleChoiceControlType singleChoiceControlType;
 
-    public void setGridFieldDescriptor(GridControlDescriptor gridFieldDescriptor) {
-        this.gridFieldDescriptor = gridFieldDescriptor;
-    }
+    GridControlData gridControlData;
 
-    public GridColumnDescriptor getGridColumnDescriptor() {
-        return gridColumnDescriptor;
-    }
+    GridRowData gridRowData;
 
-    public void setGridColumnDescriptor(GridColumnDescriptor gridColumnDescriptor) {
-        this.gridColumnDescriptor = gridColumnDescriptor;
-    }
+    GridCellData gridCellData;
+
+    IRI iri;
+
+    OWLLiteral literal;
+
+    OWLLiteralImplPlain literalImplPlain;
 
     EntityGraphFilter entityGraphFilter;
 
-    public FilterName getFilterName() {
-        return filterName;
-    }
-
-    public void setFilterName(FilterName filterName) {
-        this.filterName = filterName;
-    }
-
     FilterName filterName;
-
-    public EntityGraphFilter getEntityGraphFilter() {
-        return entityGraphFilter;
-    }
-
-    public void setEntityGraphFilter(EntityGraphFilter entityGraphFilter) {
-        this.entityGraphFilter = entityGraphFilter;
-    }
-
-    public ProjectUserEntityGraphSettings getProjectUserEntityGraphSettings() {
-        return projectUserEntityGraphSettings;
-    }
-
-    public void setProjectUserEntityGraphSettings(ProjectUserEntityGraphSettings projectUserEntityGraphSettings) {
-        this.projectUserEntityGraphSettings = projectUserEntityGraphSettings;
-    }
-
-
 
     ProjectUserEntityGraphSettings projectUserEntityGraphSettings;
 
-    public EntityGraphSettings getEntityGraphSettings() {
-        return entityGraphSettings;
-    }
-
-    public void setEntityGraphSettings(EntityGraphSettings entityGraphSettings) {
-        this.entityGraphSettings = entityGraphSettings;
-    }
-
     EntityGraphSettings entityGraphSettings;
-
-    public ActionExecutionResult getActionExecutionResult() {
-        return actionExecutionResult;
-    }
-
-    public void setActionExecutionResult(ActionExecutionResult actionExecutionResult) {
-        this.actionExecutionResult = actionExecutionResult;
-    }
-
-    public Operation getOperation() {
-        return operation;
-    }
-
-    public void setOperation(Operation operation) {
-        this.operation = operation;
-    }
 
     Operation operation;
 
     Tag tag;
-
-    public EntityGraph getEntityGraph() {
-        return entityGraph;
-    }
-
-    public void setEntityGraph(EntityGraph entityGraph) {
-        this.entityGraph = entityGraph;
-    }
-
-    public IsAEdge getIsAEdge() {
-        return isAEdge;
-    }
-
-    public void setIsAEdge(IsAEdge isAEdge) {
-        this.isAEdge = isAEdge;
-    }
-
-    public RelationshipEdge getRelationshipEdge() {
-        return relationshipEdge;
-    }
-
-    public void setRelationshipEdge(RelationshipEdge relationshipEdge) {
-        this.relationshipEdge = relationshipEdge;
-    }
 
     EntityGraph entityGraph;
 
@@ -242,142 +162,33 @@ public class RpcWhiteList implements Action, Result {
 
     SubFormControlDescriptor subFormFieldDescriptor;
 
-    ChoiceControlDescriptor choiceFieldDescriptor;
+    SingleChoiceControlDescriptor choiceFieldDescriptor;
 
     ChoiceDescriptor choiceDescriptor;
 
     ImageControlDescriptor imageFieldDescriptor;
 
-
-
-    public LanguageMap getLanguageMap() {
-        return languageMap;
-    }
-
-    public void setLanguageMap(LanguageMap languageMap) {
-        this.languageMap = languageMap;
-    }
+    FormFieldData formFieldData;
 
     LanguageMap languageMap;
 
-    public EdgeCriteria getEdgeCriteria() {
-        return edgeCriteria;
-    }
-
-    public void setEdgeCriteria(EdgeCriteria edgeCriteria) {
-        this.edgeCriteria = edgeCriteria;
-    }
-
     EdgeCriteria edgeCriteria;
-
-    public RelationshipPresence getRelationshipPresence() {
-        return relationshipPresence;
-    }
-
-    public void setRelationshipPresence(RelationshipPresence relationshipPresence) {
-        this.relationshipPresence = relationshipPresence;
-    }
 
     RelationshipPresence relationshipPresence;
 
+    private Color color;
+
+    private Criteria criteria;
 
     public RpcWhiteList() {
     }
 
-    public ImmutableSetMultimap getImmutableSetMultimap() {
-        return immutableSetMultimap;
+    public ActionExecutionResult getActionExecutionResult() {
+        return actionExecutionResult;
     }
 
-    public void setImmutableSetMultimap(ImmutableSetMultimap immutableSetMultimap) {
-        this.immutableSetMultimap = immutableSetMultimap;
-    }
-
-    public Criteria getCriteria() {
-        return criteria;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public void setCriteria(Criteria criteria) {
-        this.criteria = criteria;
-    }
-
-    public MultiMatchType getMultiMatchType() {
-        return multiMatchType;
-    }
-
-    public void setMultiMatchType(MultiMatchType multiMatchType) {
-        this.multiMatchType = multiMatchType;
-    }
-
-    public HierarchyFilterType getHierarchyFilterType() {
-        return hierarchyFilterType;
-    }
-
-    public void setHierarchyFilterType(HierarchyFilterType hierarchyFilterType) {
-        this.hierarchyFilterType = hierarchyFilterType;
-    }
-
-    public WebhookSettings getWebhookSettings() {
-        return webhookSettings;
-    }
-
-    public void setWebhookSettings(WebhookSettings webhookSettings) {
-        this.webhookSettings = webhookSettings;
-    }
-
-    public WebhookSetting getWebhookSetting() {
-        return webhookSetting;
-    }
-
-    public void setWebhookSetting(WebhookSetting webhookSetting) {
-        this.webhookSetting = webhookSetting;
-    }
-
-    public ProjectWebhookEventType getProjectWebhookEventType() {
-        return projectWebhookEventType;
-    }
-
-    public void setProjectWebhookEventType(ProjectWebhookEventType projectWebhookEventType) {
-        this.projectWebhookEventType = projectWebhookEventType;
-    }
-
-    public ProjectSettings getProjectSettings() {
-        return projectSettings;
-    }
-
-    public void setProjectSettings(ProjectSettings projectSettings) {
-        this.projectSettings = projectSettings;
-    }
-
-    public SlackIntegrationSettings getSlackIntegrationSettings() {
-        return slackIntegrationSettings;
-    }
-
-    public void setSlackIntegrationSettings(SlackIntegrationSettings slackIntegrationSettings) {
-        this.slackIntegrationSettings = slackIntegrationSettings;
-    }
-
-    public DictionaryLanguageData getDictionaryLanguageData() {
-        return dictionaryLanguageData;
-    }
-
-    public void setDictionaryLanguageData(DictionaryLanguageData dictionaryLanguageData) {
-        this.dictionaryLanguageData = dictionaryLanguageData;
-    }
-
-    public DictionaryLanguage getDictionaryLanguage() {
-        return dictionaryLanguage;
-    }
-
-    public void setDictionaryLanguage(DictionaryLanguage dictionaryLanguage) {
-        this.dictionaryLanguage = dictionaryLanguage;
+    public void setActionExecutionResult(ActionExecutionResult actionExecutionResult) {
+        this.actionExecutionResult = actionExecutionResult;
     }
 
     public AvailableProject getAvailableProject() {
@@ -388,60 +199,60 @@ public class RpcWhiteList implements Action, Result {
         this.availableProject = availableProject;
     }
 
-    public ProjectDetails getProjectDetails() {
-        return projectDetails;
+    public ChoiceDescriptor getChoiceDescriptor() {
+        return choiceDescriptor;
     }
 
-    public void setProjectDetails(ProjectDetails projectDetails) {
-        this.projectDetails = projectDetails;
+    public void setChoiceDescriptor(ChoiceDescriptor choiceDescriptor) {
+        this.choiceDescriptor = choiceDescriptor;
     }
 
-    public OWLPrimitiveData getPrimitiveData() {
-        return primitiveData;
+    public SingleChoiceControlDescriptor getChoiceFieldDescriptor() {
+        return choiceFieldDescriptor;
     }
 
-    public void setPrimitiveData(OWLPrimitiveData primitiveData) {
-        this.primitiveData = primitiveData;
+    public void setChoiceFieldDescriptor(SingleChoiceControlDescriptor choiceFieldDescriptor) {
+        this.choiceFieldDescriptor = choiceFieldDescriptor;
     }
 
-    public State getState() {
-        return state;
+    public Color getColor() {
+        return color;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
-    public ObjectPropertyCharacteristic getObjectPropertyCharacteristic() {
-        return objectPropertyCharacteristic;
+    public GridColumnId getColumnId() {
+        return columnId;
     }
 
-    public void setObjectPropertyCharacteristic(ObjectPropertyCharacteristic objectPropertyCharacteristic) {
-        this.objectPropertyCharacteristic = objectPropertyCharacteristic;
+    public void setColumnId(GridColumnId columnId) {
+        this.columnId = columnId;
     }
 
-    public PropertyValueDescriptor getPropertyValueDescriptor() {
-        return propertyValueDescriptor;
+    public Criteria getCriteria() {
+        return criteria;
     }
 
-    public void setPropertyValueDescriptor(PropertyValueDescriptor propertyValueDescriptor) {
-        this.propertyValueDescriptor = propertyValueDescriptor;
+    public void setCriteria(Criteria criteria) {
+        this.criteria = criteria;
     }
 
-    public PropertyValue getPropertyValue() {
-        return propertyValue;
+    public DictionaryLanguage getDictionaryLanguage() {
+        return dictionaryLanguage;
     }
 
-    public void setPropertyValue(PropertyValue propertyValue) {
-        this.propertyValue = propertyValue;
+    public void setDictionaryLanguage(DictionaryLanguage dictionaryLanguage) {
+        this.dictionaryLanguage = dictionaryLanguage;
     }
 
-    public DisplayNameSettings getDisplayNameSettings() {
-        return displayNameSettings;
+    public DictionaryLanguageData getDictionaryLanguageData() {
+        return dictionaryLanguageData;
     }
 
-    public void setDisplayNameSettings(DisplayNameSettings displayNameSettings) {
-        this.displayNameSettings = displayNameSettings;
+    public void setDictionaryLanguageData(DictionaryLanguageData dictionaryLanguageData) {
+        this.dictionaryLanguageData = dictionaryLanguageData;
     }
 
     public DictionaryLanguageUsage getDictionaryLanguageUsage() {
@@ -452,20 +263,52 @@ public class RpcWhiteList implements Action, Result {
         this.dictionaryLanguageUsage = dictionaryLanguageUsage;
     }
 
-    public EntityNameMatchType getEntityNameMatchType() {
-        return entityNameMatchType;
+    public DisplayNameSettings getDisplayNameSettings() {
+        return displayNameSettings;
     }
 
-    public PrefixNameMatchType getPrefixNameMatchType() {
-        return prefixNameMatchType;
+    public void setDisplayNameSettings(DisplayNameSettings displayNameSettings) {
+        this.displayNameSettings = displayNameSettings;
     }
 
-    public void setEntityNameMatchType(EntityNameMatchType entityNameMatchType) {
-        this.entityNameMatchType = entityNameMatchType;
+    public EdgeCriteria getEdgeCriteria() {
+        return edgeCriteria;
     }
 
-    public void setPrefixNameMatchType(PrefixNameMatchType prefixNameMatchType) {
-        this.prefixNameMatchType = prefixNameMatchType;
+    public void setEdgeCriteria(EdgeCriteria edgeCriteria) {
+        this.edgeCriteria = edgeCriteria;
+    }
+
+    public EntityGraph getEntityGraph() {
+        return entityGraph;
+    }
+
+    public void setEntityGraph(EntityGraph entityGraph) {
+        this.entityGraph = entityGraph;
+    }
+
+    public EntityGraphFilter getEntityGraphFilter() {
+        return entityGraphFilter;
+    }
+
+    public void setEntityGraphFilter(EntityGraphFilter entityGraphFilter) {
+        this.entityGraphFilter = entityGraphFilter;
+    }
+
+    public EntityGraphSettings getEntityGraphSettings() {
+        return entityGraphSettings;
+    }
+
+    public void setEntityGraphSettings(EntityGraphSettings entityGraphSettings) {
+        this.entityGraphSettings = entityGraphSettings;
+    }
+
+    public EntityNameControlDescriptor getEntityNameFieldDescriptor() {
+        return entityNameFieldDescriptor;
+    }
+
+    public void setEntityNameFieldDescriptor(EntityNameControlDescriptor entityNameFieldDescriptor) {
+        this.entityNameFieldDescriptor = entityNameFieldDescriptor;
     }
 
     public EntityNameMatchResult getEntityNameMatchResult() {
@@ -476,28 +319,12 @@ public class RpcWhiteList implements Action, Result {
         this.entityNameMatchResult = entityNameMatchResult;
     }
 
-    public InstanceRetrievalMode getInstanceRetrievalMode() {
-        return instanceRetrievalMode;
+    public EntityNameMatchType getEntityNameMatchType() {
+        return entityNameMatchType;
     }
 
-    public void setInstanceRetrievalMode(InstanceRetrievalMode instanceRetrievalMode) {
-        this.instanceRetrievalMode = instanceRetrievalMode;
-    }
-
-    public Tag getTag() {
-        return tag;
-    }
-
-    public void setTag(Tag tag) {
-        this.tag = tag;
-    }
-
-    public FormFieldId getFormFieldId() {
-        return formFieldId;
-    }
-
-    public void setFormFieldId(FormFieldId formFieldId) {
-        this.formFieldId = formFieldId;
+    public void setEntityNameMatchType(EntityNameMatchType entityNameMatchType) {
+        this.entityNameMatchType = entityNameMatchType;
     }
 
     public FieldRun getFieldRun() {
@@ -508,64 +335,188 @@ public class RpcWhiteList implements Action, Result {
         this.fieldRun = fieldRun;
     }
 
-    public Optionality getOptionality() {
-        return optionality;
+    public FilterName getFilterName() {
+        return filterName;
     }
 
-    public void setOptionality(Optionality optionality) {
-        this.optionality = optionality;
+    public void setFilterName(FilterName filterName) {
+        this.filterName = filterName;
     }
 
-    public Repeatability getRepeatability() {
-        return repeatability;
+    public FormControlData getFormControlData() {
+        return formControlData;
     }
 
-    public void setRepeatability(Repeatability repeatability) {
-        this.repeatability = repeatability;
+    public void setFormControlData(FormControlData formControlData) {
+        this.formControlData = formControlData;
     }
 
-    public TextControlDescriptor getTextFieldDescriptor() {
-        return textFieldDescriptor;
+    public FormFieldData getFormFieldData() {
+        return formFieldData;
     }
 
-    public NumberControlDescriptor getNumberFieldDescriptor() {
-        return numberFieldDescriptor;
+    public void setFormFieldData(FormFieldData formFieldData) {
+        this.formFieldData = formFieldData;
     }
 
-    public EntityNameControlDescriptor getEntityNameFieldDescriptor() {
-        return entityNameFieldDescriptor;
+    public FormFieldId getFormFieldId() {
+        return formFieldId;
     }
 
-    public SubFormControlDescriptor getSubFormFieldDescriptor() {
-        return subFormFieldDescriptor;
+    public void setFormFieldId(FormFieldId formFieldId) {
+        this.formFieldId = formFieldId;
     }
 
-    public ChoiceControlDescriptor getChoiceFieldDescriptor() {
-        return choiceFieldDescriptor;
+    public GridCellData getGridCellData() {
+        return gridCellData;
     }
 
-    public ChoiceDescriptor getChoiceDescriptor() {
-        return choiceDescriptor;
+    public void setGridCellData(GridCellData gridCellData) {
+        this.gridCellData = gridCellData;
+    }
+
+    public GridColumnDescriptor getGridColumnDescriptor() {
+        return gridColumnDescriptor;
+    }
+
+    public void setGridColumnDescriptor(GridColumnDescriptor gridColumnDescriptor) {
+        this.gridColumnDescriptor = gridColumnDescriptor;
+    }
+
+    public GridControlData getGridControlData() {
+        return gridControlData;
+    }
+
+    public void setGridControlData(GridControlData gridControlData) {
+        this.gridControlData = gridControlData;
+    }
+
+    public GridControlDescriptor getGridFieldDescriptor() {
+        return gridFieldDescriptor;
+    }
+
+    public void setGridFieldDescriptor(GridControlDescriptor gridFieldDescriptor) {
+        this.gridFieldDescriptor = gridFieldDescriptor;
+    }
+
+    public GridRowData getGridRowData() {
+        return gridRowData;
+    }
+
+    public void setGridRowData(GridRowData gridRowData) {
+        this.gridRowData = gridRowData;
+    }
+
+    public HierarchyFilterType getHierarchyFilterType() {
+        return hierarchyFilterType;
+    }
+
+    public void setHierarchyFilterType(HierarchyFilterType hierarchyFilterType) {
+        this.hierarchyFilterType = hierarchyFilterType;
     }
 
     public ImageControlDescriptor getImageFieldDescriptor() {
         return imageFieldDescriptor;
     }
 
-    public OwlPropertyBinding getOwlPropertyBinding() {
-        return owlPropertyBinding;
+    public void setImageFieldDescriptor(ImageControlDescriptor imageFieldDescriptor) {
+        this.imageFieldDescriptor = imageFieldDescriptor;
     }
 
-    public void setOwlPropertyBinding(OwlPropertyBinding owlPropertyBinding) {
-        this.owlPropertyBinding = owlPropertyBinding;
+    public ImmutableSetMultimap getImmutableSetMultimap() {
+        return immutableSetMultimap;
     }
 
-    public OwlClassBinding getOwlClassBinding() {
-        return owlClassBinding;
+    public void setImmutableSetMultimap(ImmutableSetMultimap immutableSetMultimap) {
+        this.immutableSetMultimap = immutableSetMultimap;
     }
 
-    public void setOwlClassBinding(OwlClassBinding owlClassBinding) {
-        this.owlClassBinding = owlClassBinding;
+    public InstanceRetrievalMode getInstanceRetrievalMode() {
+        return instanceRetrievalMode;
+    }
+
+    public void setInstanceRetrievalMode(InstanceRetrievalMode instanceRetrievalMode) {
+        this.instanceRetrievalMode = instanceRetrievalMode;
+    }
+
+    public IRI getIri() {
+        return iri;
+    }
+
+    public void setIri(IRI iri) {
+        this.iri = iri;
+    }
+
+    public IsAEdge getIsAEdge() {
+        return isAEdge;
+    }
+
+    public void setIsAEdge(IsAEdge isAEdge) {
+        this.isAEdge = isAEdge;
+    }
+
+    public LanguageMap getLanguageMap() {
+        return languageMap;
+    }
+
+    public void setLanguageMap(LanguageMap languageMap) {
+        this.languageMap = languageMap;
+    }
+
+    public OWLLiteral getLiteral() {
+        return literal;
+    }
+
+    public void setLiteral(OWLLiteral literal) {
+        this.literal = literal;
+    }
+
+    public OWLLiteralImplPlain getLiteralImplPlain() {
+        return literalImplPlain;
+    }
+
+    public void setLiteralImplPlain(OWLLiteralImplPlain literalImplPlain) {
+        this.literalImplPlain = literalImplPlain;
+    }
+
+    public MultiMatchType getMultiMatchType() {
+        return multiMatchType;
+    }
+
+    public void setMultiMatchType(MultiMatchType multiMatchType) {
+        this.multiMatchType = multiMatchType;
+    }
+
+    public NumberControlDescriptor getNumberFieldDescriptor() {
+        return numberFieldDescriptor;
+    }
+
+    public void setNumberFieldDescriptor(NumberControlDescriptor numberFieldDescriptor) {
+        this.numberFieldDescriptor = numberFieldDescriptor;
+    }
+
+    public ObjectPropertyCharacteristic getObjectPropertyCharacteristic() {
+        return objectPropertyCharacteristic;
+    }
+
+    public void setObjectPropertyCharacteristic(ObjectPropertyCharacteristic objectPropertyCharacteristic) {
+        this.objectPropertyCharacteristic = objectPropertyCharacteristic;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    public Optionality getOptionality() {
+        return optionality;
+    }
+
+    public void setOptionality(Optionality optionality) {
+        this.optionality = optionality;
     }
 
     public OwlBinding getOwlBinding() {
@@ -576,33 +527,180 @@ public class RpcWhiteList implements Action, Result {
         this.owlBinding = owlBinding;
     }
 
-    public void setTextFieldDescriptor(TextControlDescriptor textFieldDescriptor) {
-        this.textFieldDescriptor = textFieldDescriptor;
+    public OwlClassBinding getOwlClassBinding() {
+        return owlClassBinding;
     }
 
-    public void setNumberFieldDescriptor(NumberControlDescriptor numberFieldDescriptor) {
-        this.numberFieldDescriptor = numberFieldDescriptor;
+    public void setOwlClassBinding(OwlClassBinding owlClassBinding) {
+        this.owlClassBinding = owlClassBinding;
     }
 
-    public void setEntityNameFieldDescriptor(EntityNameControlDescriptor entityNameFieldDescriptor) {
-        this.entityNameFieldDescriptor = entityNameFieldDescriptor;
+    public OwlPropertyBinding getOwlPropertyBinding() {
+        return owlPropertyBinding;
+    }
+
+    public void setOwlPropertyBinding(OwlPropertyBinding owlPropertyBinding) {
+        this.owlPropertyBinding = owlPropertyBinding;
+    }
+
+    public PrefixNameMatchType getPrefixNameMatchType() {
+        return prefixNameMatchType;
+    }
+
+    public void setPrefixNameMatchType(PrefixNameMatchType prefixNameMatchType) {
+        this.prefixNameMatchType = prefixNameMatchType;
+    }
+
+    public OWLPrimitiveData getPrimitiveData() {
+        return primitiveData;
+    }
+
+    public void setPrimitiveData(OWLPrimitiveData primitiveData) {
+        this.primitiveData = primitiveData;
+    }
+
+    public ProjectDetails getProjectDetails() {
+        return projectDetails;
+    }
+
+    public void setProjectDetails(ProjectDetails projectDetails) {
+        this.projectDetails = projectDetails;
+    }
+
+    public ProjectSettings getProjectSettings() {
+        return projectSettings;
+    }
+
+    public void setProjectSettings(ProjectSettings projectSettings) {
+        this.projectSettings = projectSettings;
+    }
+
+    public ProjectUserEntityGraphSettings getProjectUserEntityGraphSettings() {
+        return projectUserEntityGraphSettings;
+    }
+
+    public void setProjectUserEntityGraphSettings(ProjectUserEntityGraphSettings projectUserEntityGraphSettings) {
+        this.projectUserEntityGraphSettings = projectUserEntityGraphSettings;
+    }
+
+    public ProjectWebhookEventType getProjectWebhookEventType() {
+        return projectWebhookEventType;
+    }
+
+    public void setProjectWebhookEventType(ProjectWebhookEventType projectWebhookEventType) {
+        this.projectWebhookEventType = projectWebhookEventType;
+    }
+
+    public PropertyValue getPropertyValue() {
+        return propertyValue;
+    }
+
+    public void setPropertyValue(PropertyValue propertyValue) {
+        this.propertyValue = propertyValue;
+    }
+
+    public PropertyValueDescriptor getPropertyValueDescriptor() {
+        return propertyValueDescriptor;
+    }
+
+    public void setPropertyValueDescriptor(PropertyValueDescriptor propertyValueDescriptor) {
+        this.propertyValueDescriptor = propertyValueDescriptor;
+    }
+
+    public RelationshipEdge getRelationshipEdge() {
+        return relationshipEdge;
+    }
+
+    public void setRelationshipEdge(RelationshipEdge relationshipEdge) {
+        this.relationshipEdge = relationshipEdge;
+    }
+
+    public RelationshipPresence getRelationshipPresence() {
+        return relationshipPresence;
+    }
+
+    public void setRelationshipPresence(RelationshipPresence relationshipPresence) {
+        this.relationshipPresence = relationshipPresence;
+    }
+
+    public PrimitiveFormControlData getPrimitiveFormControlData() {
+        return primitiveFormControlData;
+    }
+
+    private PrimitiveFormControlData primitiveFormControlData;
+
+    public Repeatability getRepeatability() {
+        return repeatability;
+    }
+
+    public void setRepeatability(Repeatability repeatability) {
+        this.repeatability = repeatability;
+    }
+
+    public SingleChoiceControlType getSingleChoiceControlType() {
+        return singleChoiceControlType;
+    }
+
+    public void setSingleChoiceControlType(SingleChoiceControlType singleChoiceControlType) {
+        this.singleChoiceControlType = singleChoiceControlType;
+    }
+
+    public SlackIntegrationSettings getSlackIntegrationSettings() {
+        return slackIntegrationSettings;
+    }
+
+    public void setSlackIntegrationSettings(SlackIntegrationSettings slackIntegrationSettings) {
+        this.slackIntegrationSettings = slackIntegrationSettings;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public SubFormControlDescriptor getSubFormFieldDescriptor() {
+        return subFormFieldDescriptor;
     }
 
     public void setSubFormFieldDescriptor(SubFormControlDescriptor subFormFieldDescriptor) {
         this.subFormFieldDescriptor = subFormFieldDescriptor;
     }
 
-    public void setChoiceFieldDescriptor(ChoiceControlDescriptor choiceFieldDescriptor) {
-        this.choiceFieldDescriptor = choiceFieldDescriptor;
+    public Tag getTag() {
+        return tag;
     }
 
-    public void setChoiceDescriptor(ChoiceDescriptor choiceDescriptor) {
-        this.choiceDescriptor = choiceDescriptor;
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 
-    public void setImageFieldDescriptor(ImageControlDescriptor imageFieldDescriptor) {
-        this.imageFieldDescriptor = imageFieldDescriptor;
+    public TextControlDescriptor getTextFieldDescriptor() {
+        return textFieldDescriptor;
     }
+
+    public void setTextFieldDescriptor(TextControlDescriptor textFieldDescriptor) {
+        this.textFieldDescriptor = textFieldDescriptor;
+    }
+
+    public WebhookSetting getWebhookSetting() {
+        return webhookSetting;
+    }
+
+    public void setWebhookSetting(WebhookSetting webhookSetting) {
+        this.webhookSetting = webhookSetting;
+    }
+
+    public WebhookSettings getWebhookSettings() {
+        return webhookSettings;
+    }
+
+    public void setWebhookSettings(WebhookSettings webhookSettings) {
+        this.webhookSettings = webhookSettings;
+    }
+
 
 
 }

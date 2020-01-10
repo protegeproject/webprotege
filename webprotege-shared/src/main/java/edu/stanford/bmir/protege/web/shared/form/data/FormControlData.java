@@ -1,23 +1,18 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.annotations.GwtCompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-27
+ * 2019-11-30
  */
-@AutoValue
-@GwtCompatible(serializable = true)
-public abstract class FormControlData {
+public interface FormControlData extends IsSerializable {
 
-    @Nonnull
-    public abstract String getType();
-
-    @Nonnull
-    public abstract Optional<FormDataValue> getValue();
 }

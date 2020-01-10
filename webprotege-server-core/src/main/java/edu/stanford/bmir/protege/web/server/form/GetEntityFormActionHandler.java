@@ -50,11 +50,11 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         OWLEntity entity = action.getEntity();
         return formManager.getFormDescriptor(entity, projectId)
                           .map(formDescriptor -> {
-                              var formData = formDataBuilder.getFormData(entity, formDescriptor);
+                              var formData = formDataBuilder.toFormData(entity, formDescriptor);
                               return new GetEntityFormResult(formDescriptor, formData);
 
                           })
-                          .orElse(new GetEntityFormResult(null, FormData.empty(FormId.generate())));
+                          .orElse(new GetEntityFormResult(null, FormData.empty(entity, FormId.generate())));
 
 
     }

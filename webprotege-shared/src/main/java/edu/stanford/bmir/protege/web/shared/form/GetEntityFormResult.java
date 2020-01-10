@@ -18,10 +18,9 @@ public class GetEntityFormResult implements Result {
     @Nullable
     private FormDescriptor formDescriptor;
 
-    @Nonnull
     private FormData formData;
 
-    public GetEntityFormResult(@Nonnull FormDescriptor formDescriptor, @Nonnull FormData formData) {
+    public GetEntityFormResult(FormDescriptor formDescriptor, @Nonnull FormData formData) {
         this.formDescriptor = formDescriptor;
         this.formData = formData;
     }

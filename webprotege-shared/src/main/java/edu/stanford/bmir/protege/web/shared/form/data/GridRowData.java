@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 
@@ -14,11 +13,12 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridControlValue implements ComplexFormControlValue {
+public abstract class GridRowData {
+
+    public static GridRowData get(@Nonnull ImmutableList<GridCellData> cellData) {
+        return new AutoValue_GridRowData(cellData);
+    }
 
     @Nonnull
-    public abstract GridControlDescriptor getDescriptor();
-
-    @Nonnull
-    public abstract ImmutableList<GridRowValue> getRows();
+    public abstract ImmutableList<GridCellData> getCells();
 }

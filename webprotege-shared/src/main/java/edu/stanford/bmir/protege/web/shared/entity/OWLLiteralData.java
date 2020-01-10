@@ -85,4 +85,9 @@ public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexi
     public Optional<OWLEntity> asEntity() {
         return Optional.empty();
     }
+
+    @Override
+    public Optional<OWLLiteral> asLiteral() {
+        return Optional.of(getLiteral());
+    }
 }

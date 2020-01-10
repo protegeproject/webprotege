@@ -14,9 +14,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,9 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 31/03/16
  */
-public class ComboBoxChoiceControl extends Composite implements MutuallyExclusiveChoiceControl {
+public class ComboBoxChoiceControl extends Composite implements SingleChoiceControl {
+
+    private SingleChoiceControlDescriptor descriptor;
 
     interface ComboBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
 
@@ -40,7 +46,7 @@ public class ComboBoxChoiceControl extends Composite implements MutuallyExclusiv
 
     private final List<ChoiceDescriptor> choiceDescriptors = new ArrayList<>();
 
-    private Optional<FormDataValue> defaultChoice = Optional.empty();
+    private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
     public ComboBoxChoiceControl() {
@@ -52,7 +58,6 @@ public class ComboBoxChoiceControl extends Composite implements MutuallyExclusiv
         ValueChangeEvent.fire(this, getValue());
     }
 
-    @Override
     public void setChoices(List<ChoiceDescriptor> choices) {
         comboBox.clear();
         choiceDescriptors.clear();
@@ -66,30 +71,35 @@ public class ComboBoxChoiceControl extends Composite implements MutuallyExclusiv
     }
 
     @Override
-    public void setDefaultChoices(List<FormDataValue> defaultChoices) {
-        if(defaultChoices.isEmpty()) {
-            defaultChoice = Optional.empty();
-        }
-        else {
-            defaultChoice = Optional.of(defaultChoices.get(0));
-        }
+    public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
+        this.descriptor = descriptor;
+        setChoices(descriptor.getChoices());
+        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+    }
+
+    private void setDefaultChoice(@Nonnull ChoiceDescriptor defaultChoice) {
+        this.defaultChoice = Optional.of(defaultChoice.getValue());
     }
 
     private void selectDefaultChoice() {
         comboBox.setSelectedIndex(0);
-        defaultChoice.ifPresent(this::setValue);
     }
 
     @Override
-    public void setValue(FormDataValue value) {
-        FormDataValue first = value.asList().get(0);
-        int index = 1;
-        for(ChoiceDescriptor descriptor : choiceDescriptors) {
-            if(descriptor.getValue().equals(first)) {
-                comboBox.setSelectedIndex(index);
-                break;
+    public void setValue(FormControlData value) {
+        clearValue();
+        if(value instanceof SingleChoiceControlData) {
+            Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) value).getChoice();
+            if(choice.isPresent()) {
+                int index = 1;
+                for(ChoiceDescriptor descriptor : choiceDescriptors) {
+                    if(descriptor.getValue().equals(choice.get())) {
+                        comboBox.setSelectedIndex(index);
+                        break;
+                    }
+                    index++;
+                }
             }
-            index++;
         }
     }
 
@@ -99,13 +109,13 @@ public class ComboBoxChoiceControl extends Composite implements MutuallyExclusiv
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
+    public Optional<FormControlData> getValue() {
         int selIndex = comboBox.getSelectedIndex();
         if(selIndex < 1) {
             return Optional.empty();
         }
-        FormDataValue selData = choiceDescriptors.get(selIndex - 1).getValue();
-        return Optional.of(selData);
+        PrimitiveFormControlData choice = choiceDescriptors.get(selIndex - 1).getValue();
+        return Optional.of(SingleChoiceControlData.get(descriptor, choice));
     }
 
     @Override
@@ -119,7 +129,7 @@ public class ComboBoxChoiceControl extends Composite implements MutuallyExclusiv
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

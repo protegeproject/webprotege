@@ -40,4 +40,9 @@ public class ImageControlDescriptor implements FormControlDescriptor {
     public int hashCode() {
         return 33;
     }
+
+    @Override
+    public <R> R accept(@Nonnull FormControlDescriptorVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
 }

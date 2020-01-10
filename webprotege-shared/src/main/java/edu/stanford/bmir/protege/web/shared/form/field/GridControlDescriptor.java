@@ -41,4 +41,8 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
     @Nonnull
     public abstract ImmutableList<GridColumnDescriptor> getColumns();
 
+    @Override
+    public <R> R accept(@Nonnull FormControlDescriptorVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
 }

@@ -55,6 +55,11 @@ public class SubFormControlDescriptor implements FormControlDescriptor {
     }
 
     @Override
+    public <R> R accept(@Nonnull FormControlDescriptorVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hashCode(formDescriptor);
     }

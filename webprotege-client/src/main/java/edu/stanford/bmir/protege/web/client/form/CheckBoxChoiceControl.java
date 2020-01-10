@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -15,12 +16,19 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.MultiChoiceControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -30,6 +38,8 @@ import java.util.*;
 public class CheckBoxChoiceControl extends Composite implements MultiValueChoiceControl {
 
     private ValueChangeHandler<Boolean> checkBoxValueChangedHandler;
+
+    private MultiChoiceControlDescriptor descriptor;
 
     interface CheckBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, CheckBoxChoiceControl> {
 
@@ -42,7 +52,7 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
 
     private final Map<CheckBox, ChoiceDescriptor> checkBoxes = new LinkedHashMap<>();
 
-    private final List<FormDataValue> defaultChoices = new ArrayList<>();
+    private final List<PrimitiveFormControlData> defaultChoices = new ArrayList<>();
 
     @Inject
     public CheckBoxChoiceControl() {
@@ -50,8 +60,13 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
         checkBoxValueChangedHandler = event -> ValueChangeEvent.fire(CheckBoxChoiceControl.this, getValue());
     }
 
-    @Override
-    public void setChoices(List<ChoiceDescriptor> choices) {
+    public void setDescriptor(@Nonnull MultiChoiceControlDescriptor descriptor) {
+        this.descriptor = checkNotNull(descriptor);
+        setChoices(descriptor.getChoices());
+        setDefaultChoices(descriptor.getDefaultChoices());
+    }
+
+    private void setChoices(List<ChoiceDescriptor> choices) {
         container.clear();
         checkBoxes.clear();
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
@@ -73,30 +88,30 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
         }
     }
 
-    @Override
-    public void setDefaultChoices(List<FormDataValue> defaultChoices) {
+    private void setDefaultChoices(List<ChoiceDescriptor> defaultChoices) {
         this.defaultChoices.clear();
-        this.defaultChoices.addAll(defaultChoices);
+        defaultChoices.stream()
+                      .map(ChoiceDescriptor::getValue)
+                      .forEach(this.defaultChoices::add);
         selectDefaultChoices();
     }
 
     @Override
-    public void setValue(FormDataValue value) {
-        clearValue();
-        for(FormDataValue data : value.asList()) {
+    public void setValue(FormControlData value) {
+        // Should be a SingleChoice
+        if(value instanceof SingleChoiceControlData) {
+            SingleChoiceControlData singleChoiceControlData = (SingleChoiceControlData) value;
             for(CheckBox checkBox : checkBoxes.keySet()) {
-                if(checkBoxes.get(checkBox).getValue().equals(data)) {
-                    checkBox.setValue(true);
-                }
+                checkBox.setValue(singleChoiceControlData.getChoice().equals(Optional.of(checkBoxes.get(checkBox).getValue())));
             }
         }
-//        selectDefaultChoices();
+        else {
+            clearValue();
+        }
     }
 
     private void selectDefaultChoices() {
-        if (!defaultChoices.isEmpty()) {
-            setValue(new FormDataList(defaultChoices));
-        }
+        // TODO
     }
 
     @Override
@@ -107,15 +122,14 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
-        List<FormDataValue> selected = new ArrayList<>();
-        for(CheckBox checkBox : checkBoxes.keySet()) {
-            if(checkBox.getValue()) {
-                selected.add(checkBoxes.get(checkBox).getValue());
-            }
-        }
-
-        return Optional.of(new FormDataList(selected));
+    public Optional<FormControlData> getValue() {
+        ImmutableList<PrimitiveFormControlData> selectedValues = checkBoxes.keySet()
+                                                                  .stream()
+                                                                  .filter(CheckBox::getValue)
+                                                                  .map(checkBoxes::get)
+                                                                  .map(ChoiceDescriptor::getValue)
+                                                                  .collect(toImmutableList());
+        return Optional.of(MultiChoiceControlData.get(descriptor, selectedValues));
     }
 
     @Override
@@ -129,7 +143,7 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

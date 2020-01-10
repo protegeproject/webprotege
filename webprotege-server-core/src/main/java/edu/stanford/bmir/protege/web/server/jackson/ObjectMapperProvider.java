@@ -9,8 +9,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import edu.stanford.bmir.protege.web.server.form.FormDataValueDeserializer;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.server.form.FormControlValueDeserializer;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -54,11 +55,12 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addDeserializer(OWLClass.class, new OWLClassDeserializer(dataFactory));
         module.addDeserializer(OWLProperty.class, new OWLPropertyDeserializer(dataFactory));
         module.addDeserializer(IRI.class, new IriDeserializer());
-        module.addDeserializer(FormDataValue.class, new FormDataValueDeserializer(dataFactory));
         module.addSerializer(OWLLiteral.class, new OWLLiteralSerializer());
         module.addDeserializer(OWLLiteral.class, new OWLLiteralDeserializer(dataFactory));
+        module.addDeserializer(PrimitiveFormControlData.class, new FormControlValueDeserializer(dataFactory));
         module.addSerializer(IRI.class, new IriSerializer());
         mapper.registerModule(module);
+
         return mapper;
     }
 }

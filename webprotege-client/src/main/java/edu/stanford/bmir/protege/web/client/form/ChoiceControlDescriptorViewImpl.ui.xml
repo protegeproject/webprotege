@@ -15,7 +15,7 @@
             <g:Label addStyleNames="{wp.style.formLabel}" text="Widget Type"/>
             <g:RadioButton name="widgetType-{counter.getValue}" text="Segmented radio button" ui:field="segmentedRadio"/>
             <g:RadioButton name="widgetType-{counter.getValue}" text="Radio button" ui:field="radioRadio"/>
-            <g:RadioButton name="widgetType-{counter.getValue}" text="Check box" ui:field="checkBoxRadio"/>
+            <g:RadioButton name="widgetType-{counter.getValue}" text="Combo box" ui:field="comboBoxRadio"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:Label text="Choices" addStyleNames="{wp.style.formLabel}"/>

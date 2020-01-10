@@ -75,4 +75,9 @@ public abstract class IRIData extends OWLPrimitiveData {
     public Optional<OWLEntity> asEntity() {
         return Optional.empty();
     }
+
+    @Override
+    public Optional<IRI> asIRI() {
+        return Optional.of(getObject());
+    }
 }

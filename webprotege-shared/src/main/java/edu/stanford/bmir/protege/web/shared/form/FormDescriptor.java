@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
@@ -16,16 +17,14 @@ import java.util.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class FormDescriptor implements Serializable {
+public class FormDescriptor implements IsSerializable {
 
     private FormId formId;
 
@@ -90,7 +89,7 @@ public class FormDescriptor implements Serializable {
         return Optional.ofNullable(subjectFactoryDescriptor);
     }
 
-    public List<FormFieldDescriptor> getElements() {
+    public List<FormFieldDescriptor> getFields() {
         return elements;
     }
 

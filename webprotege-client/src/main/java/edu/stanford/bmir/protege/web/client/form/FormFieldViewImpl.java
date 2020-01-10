@@ -40,8 +40,7 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     SimplePanel editorHolder;
 
-
-    FormControl editor;
+    FormFieldControl editor;
 
     @Inject
     public FormFieldViewImpl() {
@@ -87,13 +86,13 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     }
 
     @Override
-    public void setEditor(FormControl editor) {
+    public void setEditor(FormFieldControl editor) {
         this.editor = checkNotNull(editor);
         editorHolder.setWidget(editor);
     }
 
     @Override
-    public FormControl getEditor() {
+    public FormFieldControl getEditor() {
         return checkNotNull(editor);
     }
 

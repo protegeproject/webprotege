@@ -15,22 +15,30 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 11 Jul 2017
  */
-public class SegmentedButtonChoiceControl extends Composite implements MutuallyExclusiveChoiceControl {
+public class SegmentedButtonChoiceControl extends Composite implements SingleChoiceControl {
 
     private static final int SEGMENT_SIZE = 120;
+
+    private SingleChoiceControlDescriptor descriptor;
 
     interface SegmentedButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
 
@@ -48,11 +56,11 @@ public class SegmentedButtonChoiceControl extends Composite implements MutuallyE
 
     private boolean dirty = false;
 
-    private final List<FormDataValue> choices = new ArrayList<>();
+    private final List<PrimitiveFormControlData> choices = new ArrayList<>();
 
     private final List<InlineLabel> choiceWidgets = new ArrayList<>();
 
-    private Optional<FormDataValue> defaultChoice = Optional.empty();
+    private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
     public SegmentedButtonChoiceControl() {
@@ -75,7 +83,13 @@ public class SegmentedButtonChoiceControl extends Composite implements MutuallyE
     }
 
     @Override
-    public void setChoices(List<ChoiceDescriptor> choices) {
+    public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
+        this.descriptor = checkNotNull(descriptor);
+        setChoices(descriptor.getChoices());
+        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+    }
+
+    private void setChoices(List<ChoiceDescriptor> choices) {
         dirty = false;
         segmentContainer.clear();
         choiceWidgets.clear();
@@ -99,7 +113,7 @@ public class SegmentedButtonChoiceControl extends Composite implements MutuallyE
         defaultChoice.ifPresent(v -> setSelection(v, false));
     }
 
-    private void setSelection(FormDataValue dataValue, boolean fireEvents) {
+    private void setSelection(PrimitiveFormControlData dataValue, boolean fireEvents) {
         int nextIndex = choices.indexOf(dataValue);
         if(nextIndex != selectedIndex) {
             selectedIndex = nextIndex;
@@ -126,18 +140,23 @@ public class SegmentedButtonChoiceControl extends Composite implements MutuallyE
     }
 
     @Override
-    public void setValue(FormDataValue object) {
-        setSelection(object, false);
-    }
-
-    @Override
-    public void setDefaultChoices(List<FormDataValue> defaultChoices) {
-        if(defaultChoices.isEmpty()) {
-            defaultChoice = Optional.empty();
+    public void setValue(FormControlData object) {
+        if(object instanceof SingleChoiceControlData) {
+            Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) object).getChoice();
+            if(choice.isPresent()) {
+                setSelection(choice.get(), false);
+            }
+            else {
+                clearValue();
+            }
         }
         else {
-            defaultChoice = Optional.of(defaultChoices.get(0));
+            clearValue();
         }
+    }
+
+    public void setDefaultChoice(@Nonnull ChoiceDescriptor choice) {
+        defaultChoice = Optional.of(choice.getValue());
     }
 
     @Override
@@ -149,30 +168,30 @@ public class SegmentedButtonChoiceControl extends Composite implements MutuallyE
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
+    public Optional<FormControlData> getValue() {
         if(selectedIndex == -1) {
             return Optional.empty();
         }
-        FormDataValue dataValue = choices.get(selectedIndex);
-        return Optional.of(dataValue);
+        PrimitiveFormControlData dataValue = choices.get(selectedIndex);
+        return Optional.of(SingleChoiceControlData.get(descriptor, dataValue));
     }
 
     private void incrementSelection() {
         if(selectedIndex + 1 < choices.size()) {
-            FormDataValue choice = choices.get(selectedIndex + 1);
+            PrimitiveFormControlData choice = choices.get(selectedIndex + 1);
             setSelection(choice, true);
         }
     }
 
     private void decrementSelection() {
         if(selectedIndex - 1 > -1) {
-            FormDataValue choice = choices.get(selectedIndex - 1);
+            PrimitiveFormControlData choice = choices.get(selectedIndex - 1);
             setSelection(choice, true);
         }
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

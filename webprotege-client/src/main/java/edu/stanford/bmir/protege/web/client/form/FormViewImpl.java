@@ -60,7 +60,7 @@ public class FormViewImpl extends Composite implements FormView {
     }
 
     @Override
-    public List<FormFieldView> getElementViews() {
+    public List<FormFieldView> getFieldViews() {
         return new ArrayList<>(elementViews);
     }
 

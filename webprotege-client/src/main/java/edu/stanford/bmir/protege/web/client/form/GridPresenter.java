@@ -3,9 +3,8 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -14,9 +13,9 @@ import javax.inject.Provider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -59,7 +58,7 @@ public class GridPresenter {
     public void requestFocus() {
         rowPresenters.stream()
                      .findFirst()
-                     .ifPresent(gridRowPresenter -> gridRowPresenter.requestFocus());
+                     .ifPresent(GridRowPresenter::requestFocus);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
@@ -81,27 +80,24 @@ public class GridPresenter {
         view.clear();
     }
 
-    public void setValue(FormDataValue value) {
+    public void setValue(GridControlData value) {
         clear();
         // List of objects
-        value.asList()
+        value.getRows()
              .forEach(rowDataValue -> {
-                 if(rowDataValue instanceof FormDataObject) {
-                     FormDataObject formDataObject = (FormDataObject) rowDataValue;
                      GridRowPresenter rowPresenter = rowPresenterProvider.get();
                      AcceptsOneWidget rowContainer = view.addRow();
                      rowPresenter.start(rowContainer);
                      rowPresenter.setColumnDescriptors(descriptor.getColumns());
-                     rowPresenter.setValue(formDataObject);
-                 }
+                     rowPresenter.setValue(rowDataValue);
              });
     }
 
-    public FormDataValue getValue() {
-        List<FormDataValue> dataValues = rowPresenters.stream()
-                     .map(GridRowPresenter::getFormDataValue)
-                     .collect(Collectors.toList());
-        return FormDataList.of(dataValues);
+    public GridControlData getValue() {
+        ImmutableList<GridRowData> rows = rowPresenters.stream()
+                                                    .map(GridRowPresenter::getFormDataValue)
+                                                    .collect(toImmutableList());
+        return GridControlData.get(descriptor, rows);
     }
 
 

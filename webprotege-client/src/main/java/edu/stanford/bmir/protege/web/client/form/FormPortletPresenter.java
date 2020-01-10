@@ -118,7 +118,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         GWT.log("[FormPortletPresenter] Display form result: " + result);
         Optional<FormDescriptor> formDescriptor = result.getFormDescriptor();
         if(formDescriptor.isPresent()) {
-            formPresenter.displayForm(formDescriptor.get(), result.getFormData());
+            formPresenter.displayForm(result.getFormData());
         }
         else {
             formPresenter.clear();

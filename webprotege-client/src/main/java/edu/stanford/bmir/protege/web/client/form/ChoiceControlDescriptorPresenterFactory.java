@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlType;
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -37,16 +38,15 @@ public class ChoiceControlDescriptorPresenterFactory implements FormControlDescr
     @Nonnull
     @Override
     public String getDescriptorType() {
-        return ChoiceControlDescriptor.getType();
+        return SingleChoiceControlDescriptor.getType();
     }
 
     @Nonnull
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
-        return new ChoiceControlDescriptor(
-                ChoiceControlType.SEGMENTED_BUTTON,
-                Collections.emptyList(),
-                Collections.emptyList()
+        return SingleChoiceControlDescriptor.get(
+                SingleChoiceControlType.SEGMENTED_BUTTON,
+                ImmutableList.of()
         );
     }
 

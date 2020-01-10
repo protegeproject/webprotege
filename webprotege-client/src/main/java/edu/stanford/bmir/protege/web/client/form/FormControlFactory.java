@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.i18n.client.LocaleInfo;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -44,6 +43,12 @@ public class FormControlFactory {
     @Nonnull
     private final Provider<GridControl> gridControlProvider;
 
+    @Nonnull
+    private final Provider<FormPresenter> formPresenterProvider;
+
+    @Nonnull
+    private final Provider<SubFormControl> subFormControlProvider;
+
     @Inject
     public FormControlFactory(@Nonnull Provider<TextControl> textFieldEditorProvider,
                               @Nonnull Provider<RadioButtonChoiceControl> choiceFieldRadioButtonEditorProvider,
@@ -53,7 +58,9 @@ public class FormControlFactory {
                               @Nonnull Provider<EntityNameControl> classNameFieldEditorProvider,
                               @Nonnull Provider<ImageControl> imageFieldEditorProvider,
                               @Nonnull Provider<NumberEditorControl> numberFieldEditorProvider,
-                              @Nonnull Provider<GridControl> gridControlProvider) {
+                              @Nonnull Provider<GridControl> gridControlProvider,
+                              @Nonnull Provider<FormPresenter> formPresenterProvider,
+                              @Nonnull Provider<SubFormControl> subFormControlProvider) {
         this.textFieldEditorProvider = textFieldEditorProvider;
         this.choiceFieldRadioButtonEditorProvider = choiceFieldRadioButtonEditorProvider;
         this.choiceFieldCheckBoxEditorProvider = choiceFieldCheckBoxEditorProvider;
@@ -63,127 +70,134 @@ public class FormControlFactory {
         this.imageFieldEditorProvider = imageFieldEditorProvider;
         this.numberFieldEditorProvider = numberFieldEditorProvider;
         this.gridControlProvider = gridControlProvider;
+        this.formPresenterProvider = formPresenterProvider;
+        this.subFormControlProvider = subFormControlProvider;
     }
 
     /**
-     * Get the value editor for the specified {@link FormControlDescriptor}.  If an editor for
-     * specified descriptor cannot be found then an {@link Optional#empty()} value will be
-     * returned.
+     * Get the value editor for the specified {@link FormControlDescriptor}.
+     *
      * @param formControlDescriptor The form field descriptor that describes the editor to be
-     *                            created.
+     *                              created.
      * @return The {@link ValueEditorFactory} for the specified descriptor.
      */
     @Nonnull
-    public Optional<ValueEditorFactory<FormDataValue>> getValueEditorFactory(@Nonnull FormControlDescriptor formControlDescriptor) {
-        if (formControlDescriptor.getAssociatedType().equals(TextControlDescriptor.getType())) {
-            return getTextFieldEditorFactory((TextControlDescriptor) formControlDescriptor);
-        }
-        else if (formControlDescriptor.getAssociatedType().equals(ChoiceControlDescriptor.getType())) {
-            return getChoiceFieldEditorFactory((ChoiceControlDescriptor) formControlDescriptor);
-        }
-        else if (formControlDescriptor.getAssociatedType().equals(EntityNameControlDescriptor.getFieldTypeId())) {
-            return getEntityNameEditorFactory((EntityNameControlDescriptor) formControlDescriptor);
-        }
-        else if(formControlDescriptor.getAssociatedType().equals(ImageControlDescriptor.getFieldTypeId())) {
-            return getImageFieldEditorFactory();
-        }
-        else if(formControlDescriptor.getAssociatedType().equals(NumberControlDescriptor.getTypeId())) {
-            return getNumberFieldEditorFactory((NumberControlDescriptor) formControlDescriptor);
-        }
-        else if(formControlDescriptor.getAssociatedType().equals(GridControlDescriptor.getType())) {
-            return getGridFieldEditorFactory((GridControlDescriptor) formControlDescriptor);
-        }
-        else {
-            return Optional.empty();
-        }
+    public ValueEditorFactory<FormControlData> getValueEditorFactory(@Nonnull FormControlDescriptor formControlDescriptor) {
+        return formControlDescriptor.accept(new FormControlDescriptorVisitor<ValueEditorFactory<FormControlData>>() {
+            @Override
+            public ValueEditorFactory<FormControlData> visit(TextControlDescriptor textControlDescriptor) {
+                return getTextFieldEditorFactory(textControlDescriptor);
+            }
+
+            @Override
+            public ValueEditorFactory<FormControlData> visit(NumberControlDescriptor numberControlDescriptor) {
+                return getNumberFieldEditorFactory(numberControlDescriptor);
+            }
+
+            @Override
+            public ValueEditorFactory<FormControlData> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
+                return getSingleChoiceFieldEditorFactory(singleChoiceControlDescriptor);
+            }
+
+            @Override
+            public ValueEditorFactory<FormControlData> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
+                return getMultiChoiceFieldEditorFactory(multiChoiceControlDescriptor);
+            }
+
+            @Override
+            public ValueEditorFactory<FormControlData> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
+                return getEntityNameEditorFactory(entityNameControlDescriptor);
+            }
+
+            @Override
+            public ValueEditorFactory<FormControlData> visit(ImageControlDescriptor imageControlDescriptor) {
+                return getImageFieldEditorFactory(imageControlDescriptor);
+            }
+
+            @Override
+            public ValueEditorFactory<FormControlData> visit(GridControlDescriptor gridControlDescriptor) {
+                return getGridFieldEditorFactory(gridControlDescriptor);
+            }
+
+            @Override
+            public ValueEditorFactory<FormControlData> visit(SubFormControlDescriptor subFormControlDescriptor) {
+                return getSubFormControlFactory(subFormControlDescriptor);
+            }
+        });
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getNumberFieldEditorFactory(NumberControlDescriptor formFieldDescriptor) {
-        return Optional.of(
-                () -> {
+    private ValueEditorFactory<FormControlData> getTextFieldEditorFactory(TextControlDescriptor formFieldDescriptor) {
+        return () -> {
+                    TextControl textControl = textFieldEditorProvider.get();
+                    textControl.setDescriptor(formFieldDescriptor);
+                    return textControl;
+                };
+    }
+
+    @Nonnull
+    private ValueEditorFactory<FormControlData> getNumberFieldEditorFactory(NumberControlDescriptor formFieldDescriptor) {
+        return () -> {
                     NumberEditorControl editor = numberFieldEditorProvider.get();
-                    editor.setFormat(formFieldDescriptor.getFormat());
-                    editor.setRange(formFieldDescriptor.getRange());
-                    editor.setLength(formFieldDescriptor.getLength());
-                    LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
-                    String localeName = localeInfo.getLocaleName();
-                    String placeholder = formFieldDescriptor.getPlaceholder().get(localeName);
-                    editor.setPlaceholder(placeholder);
+                    editor.setDescriptor(formFieldDescriptor);
                     return editor;
-                }
-        );
+                };
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getImageFieldEditorFactory() {
-        return Optional.of(
-                imageFieldEditorProvider::get
-        );
-    }
-
-    @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getEntityNameEditorFactory(EntityNameControlDescriptor formFieldDescriptor) {
-        return Optional.of(
-                () -> {
-                    EntityNameControl editor = classNameFieldEditorProvider.get();
-                    LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
-                    editor.setPlaceholder(formFieldDescriptor.getPlaceholder().get(localeInfo.getLocaleName()));
-                    return editor;
-                }
-        );
-    }
-
-    @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getChoiceFieldEditorFactory(ChoiceControlDescriptor formFieldDescriptor) {
-        return Optional.of(
-                () -> {
-                    ChoiceControl editor;
-                    if (formFieldDescriptor.getWidgetType() == ChoiceControlType.RADIO_BUTTON) {
+    private ValueEditorFactory<FormControlData> getSingleChoiceFieldEditorFactory(SingleChoiceControlDescriptor formFieldDescriptor) {
+        return () -> {
+                    SingleChoiceControl editor;
+                    if(formFieldDescriptor.getWidgetType() == SingleChoiceControlType.RADIO_BUTTON) {
                         editor = choiceFieldRadioButtonEditorProvider.get();
                     }
-                    else if (formFieldDescriptor.getWidgetType() == ChoiceControlType.CHECK_BOX) {
-                        editor = choiceFieldCheckBoxEditorProvider.get();
-                    }
-                    else if(formFieldDescriptor.getWidgetType() == ChoiceControlType.SEGMENTED_BUTTON) {
+                    else if(formFieldDescriptor.getWidgetType() == SingleChoiceControlType.SEGMENTED_BUTTON) {
                         editor = choiceFieldSegmentedEditorProvider.get();
                     }
                     else {
                         editor = choiceFieldComboBoxEditorProvider.get();
                     }
-                    editor.setChoices(formFieldDescriptor.getChoices());
-                    editor.setDefaultChoices(formFieldDescriptor.getDefaultChoices());
+                    editor.setDescriptor(formFieldDescriptor);
                     return editor;
-                }
-        );
+                };
+    }
+
+    private ValueEditorFactory<FormControlData> getMultiChoiceFieldEditorFactory(MultiChoiceControlDescriptor descriptor) {
+        return () -> {
+            MultiValueChoiceControl editor = choiceFieldCheckBoxEditorProvider.get();
+            editor.setDescriptor(descriptor);
+            return editor;
+        };
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getTextFieldEditorFactory(TextControlDescriptor formFieldDescriptor) {
-        return Optional.of(
-                () -> {
-                    String localeName = LocaleInfo.getCurrentLocale().getLocaleName();
-                    TextControl textControl = textFieldEditorProvider.get();
-                    textControl.setPlaceholder(formFieldDescriptor.getPlaceholder().get(localeName));
-                    textControl.setLineMode(formFieldDescriptor.getLineMode());
-                    textControl.setStringType(formFieldDescriptor.getStringType());
-                    if (!formFieldDescriptor.getPattern().isEmpty()) {
-                        textControl.setPattern(formFieldDescriptor.getPattern());
-                        textControl.setPatternViolationErrorMessage(formFieldDescriptor.getPatternViolationErrorMessage().get(localeName));
-                    }
-                    return textControl;
-                }
-        );
+    private ValueEditorFactory<FormControlData> getEntityNameEditorFactory(EntityNameControlDescriptor formFieldDescriptor) {
+        return () -> {
+            EntityNameControl editor = classNameFieldEditorProvider.get();
+            editor.setDescriptor(formFieldDescriptor);
+            return editor;
+        };
     }
 
     @Nonnull
-    private Optional<ValueEditorFactory<FormDataValue>> getGridFieldEditorFactory(GridControlDescriptor descriptor) {
-        return Optional.of(
-                () -> {
+    private ValueEditorFactory<FormControlData> getImageFieldEditorFactory(ImageControlDescriptor imageControlDescriptor) {
+        return imageFieldEditorProvider::get;
+    }
+
+    @Nonnull
+    private ValueEditorFactory<FormControlData> getGridFieldEditorFactory(GridControlDescriptor descriptor) {
+        return () -> {
                     GridControl gridControl = gridControlProvider.get();
                     gridControl.setDescriptor(descriptor);
                     return gridControl;
-                }
-        );
+                };
+    }
+
+    private ValueEditorFactory<FormControlData> getSubFormControlFactory(SubFormControlDescriptor subFormControlDescriptor) {
+        return () -> {
+            SubFormControl subFormControl = subFormControlProvider.get();
+            subFormControl.start();
+            return subFormControl;
+        };
     }
 }

@@ -7,10 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public enum ChoiceControlType {
-
-    @JsonProperty("CheckBox")
-    CHECK_BOX,
+public enum SingleChoiceControlType {
 
     @JsonProperty("RadioButton")
     RADIO_BUTTON,

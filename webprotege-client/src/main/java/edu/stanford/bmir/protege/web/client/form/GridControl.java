@@ -5,13 +5,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -46,8 +45,13 @@ public class GridControl implements FormControl {
     }
 
     @Override
-    public void setValue(FormDataValue object) {
-        gridPresenter.setValue(object);
+    public void setValue(FormControlData object) {
+        if(object instanceof GridControlData) {
+            gridPresenter.setValue((GridControlData) object);
+        }
+        else {
+            gridPresenter.clearValue();
+        }
     }
 
     @Override
@@ -56,12 +60,12 @@ public class GridControl implements FormControl {
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
+    public Optional<FormControlData> getValue() {
         return Optional.of(gridPresenter.getValue());
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
 

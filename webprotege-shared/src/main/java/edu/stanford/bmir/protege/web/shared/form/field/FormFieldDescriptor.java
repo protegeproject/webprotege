@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableMap;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.HasFormFieldId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @JsonPropertyOrder({"id", "owlProperty", "label", "elementRun", "fieldDescriptor", "repeatability", "optionality", "help"})
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatability, Serializable {
+public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatability, IsSerializable, BoundControlDescriptor {
 
 
     @JsonCreator
@@ -75,6 +76,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     @Nullable
     protected abstract OwlBinding getOwlBindingInternal();
 
+    @Override
     @Nonnull
     public Optional<OwlBinding> getOwlBinding() {
         return Optional.ofNullable(getOwlBindingInternal());
@@ -91,6 +93,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     @Nonnull
     public abstract FieldRun getFieldRun();
 
+    @Override
     @Nonnull
     public abstract FormControlDescriptor getFormControlDescriptor();
 

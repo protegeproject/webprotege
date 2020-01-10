@@ -5,6 +5,7 @@
         .row {
             display: flex;
             flex-direction: row;
+            align-items: baseline;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.formGridRow}">

@@ -1,30 +1,22 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
-import com.google.common.collect.*;
-import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
-import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
-import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.frame.EntityFrameProvider;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.PrimitiveDataConverter;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
-import edu.stanford.bmir.protege.web.shared.frame.HasPropertyValues;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -33,208 +25,152 @@ import static java.util.stream.Collectors.toList;
  */
 public class EntityFrameFormDataBuilder {
 
-    private final ClassFrameTranslator classFrameTranslator;
-
-    private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
-
     @Nonnull
-    private final OWLEntityProvider entityProvider;
+    private final EntityFrameProvider entityFrameProvider;
 
     @AutoFactory
     @Inject
-    public EntityFrameFormDataBuilder(@Nonnull @Provided ClassFrameTranslator classFrameTranslator,
-                                      @Nonnull @Provided NamedIndividualFrameTranslator namedIndividualFrameTranslator,
-                                      @Nonnull @Provided OWLEntityProvider entityProvider) {
-        this.classFrameTranslator = classFrameTranslator;
-        this.namedIndividualFrameTranslator = namedIndividualFrameTranslator;
-        this.entityProvider = entityProvider;
+    public EntityFrameFormDataBuilder(@Nonnull EntityFrameProvider entityFrameProvider) {
+        this.entityFrameProvider = checkNotNull(entityFrameProvider);
     }
 
-    private static FormDataValue toFormDataValue(PropertyValue propertyValue) {
-        return propertyValue.getValue()
-                            .accept(new PrimitiveDataConverter());
-    }
+    private ImmutableList<FormControlData> toFormControlValues(@Nonnull OWLEntity subject,
+                                                               @Nonnull BoundControlDescriptor descriptor) {
+        var owlBinding = descriptor.getOwlBinding();
+        if(owlBinding.isEmpty()) {
+            return ImmutableList.of();
+        }
+        var theBinding = owlBinding.get();
+        var entityFrame = entityFrameProvider.getEntityFrame(subject);
+        var entityFrameMapper = new EntityFrameMapper(entityFrame);
+        var values = entityFrameMapper.getValues(theBinding);
 
-    private Optional<OWLProperty> getAssociatedOwlProperty(FormFieldDescriptor descriptor) {
-        return descriptor.getOwlBinding().flatMap(OwlBinding::getOwlProperty);
-    }
 
-    @Nonnull
-    public FormData getFormData(@Nonnull OWLEntity entity,
-                                @Nonnull FormDescriptor formDescriptor) {
-        var propertyValuesByProperty = getPropertyValues(entity);
-        return toFormData(entity, propertyValuesByProperty, formDescriptor);
-    }
-
-    private Multimap<OWLProperty, PropertyValue> getPropertyValues(OWLEntity entity) {
-        HasPropertyValues propertyValues = entity.accept(new OWLEntityVisitorEx<>() {
-            @Nonnull
+        var formControlDescriptor = descriptor.getFormControlDescriptor();
+        return formControlDescriptor.accept(new FormControlDescriptorVisitor<ImmutableList<FormControlData>>() {
             @Override
-            public HasPropertyValues visit(@Nonnull OWLClass cls) {
-                return classFrameTranslator.getFrame(OWLClassData.get(cls, "", ImmutableMap.of()));
+            public ImmutableList<FormControlData> visit(TextControlDescriptor textControlDescriptor) {
+                return values.stream()
+                             .map(OWLPrimitiveData::asLiteral)
+                             .flatMap(Optional::stream)
+                             .map(literal -> TextControlData.get(textControlDescriptor, literal))
+                             .collect(toImmutableList());
             }
 
-            @Nonnull
             @Override
-            public HasPropertyValues visit(@Nonnull OWLObjectProperty property) {
-                return ImmutableSet::of;
+            public ImmutableList<FormControlData> visit(NumberControlDescriptor numberControlDescriptor) {
+                return values.stream()
+                             .map(OWLPrimitiveData::asLiteral)
+                             .flatMap(Optional::stream)
+                             .map(literal -> toDouble(literal))
+                             .flatMap(Optional::stream)
+                             .map(value -> NumberControlData.get(numberControlDescriptor, value))
+                             .collect(toImmutableList());
             }
 
-            @Nonnull
             @Override
-            public HasPropertyValues visit(@Nonnull OWLDataProperty property) {
-                return ImmutableSet::of;
+            public ImmutableList<FormControlData> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
+                PrimitiveDataConverter converter = new PrimitiveDataConverter();
+                return values.stream()
+                             .map(value -> value.accept(converter))
+                             .map(value -> SingleChoiceControlData.get(singleChoiceControlDescriptor,
+                                                                       value))
+                             .collect(toImmutableList());
             }
 
-            @Nonnull
             @Override
-            public HasPropertyValues visit(@Nonnull OWLNamedIndividual individual) {
-                return namedIndividualFrameTranslator.getFrame(OWLNamedIndividualData.get(individual,
-                                                                                          "",
-                                                                                          ImmutableMap.of()));
+            public ImmutableList<FormControlData> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
+                PrimitiveDataConverter converter = new PrimitiveDataConverter();
+                var vals = values.stream()
+                                 .map(value -> value.accept(converter))
+                                 .collect(toImmutableList());
+                return ImmutableList.of(MultiChoiceControlData.get(multiChoiceControlDescriptor,
+                                                                   vals));
             }
 
-            @Nonnull
             @Override
-            public HasPropertyValues visit(@Nonnull OWLDatatype datatype) {
-                return ImmutableSet::of;
+            public ImmutableList<FormControlData> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
+                return values.stream()
+                      .map(OWLPrimitiveData::asEntity)
+                      .flatMap(Optional::stream)
+                      .map(entity -> EntityNameControlData.get(entityNameControlDescriptor, entity))
+                      .collect(toImmutableList());
             }
 
-            @Nonnull
             @Override
-            public HasPropertyValues visit(@Nonnull OWLAnnotationProperty property) {
-                return ImmutableSet::of;
+            public ImmutableList<FormControlData> visit(ImageControlDescriptor imageControlDescriptor) {
+                return values.stream()
+                             .map(OWLPrimitiveData::asIRI)
+                             .flatMap(Optional::stream)
+                             .map(iri -> ImageControlData.get(imageControlDescriptor, iri))
+                             .collect(toImmutableList());
+            }
+
+            @Override
+            public ImmutableList<FormControlData> visit(GridControlDescriptor gridControlDescriptor) {
+                return ImmutableList.of(toGridControlData(values, gridControlDescriptor));
+            }
+
+            @Override
+            public ImmutableList<FormControlData> visit(SubFormControlDescriptor subFormControlDescriptor) {
+                // TODO: CHECK FOR CYCLES
+                FormDescriptor subFormDescriptor = subFormControlDescriptor.getFormDescriptor();
+                return values.stream()
+                             .map(OWLPrimitiveData::asEntity)
+                             .flatMap(Optional::stream)
+                             .map(entity -> toFormData(entity, subFormDescriptor))
+                             .collect(toImmutableList());
             }
         });
-        return propertyValues.getPropertyValues()
-                             .stream()
-                             .collect(ImmutableListMultimap.toImmutableListMultimap(
-                                     propertyValue -> propertyValue.getProperty()
-                                                                   .getEntity(),
-                                     propertyValue -> propertyValue
-                             ));
-
     }
 
-    //    private Optional<OWLProperty> toOwlProperty(FormFieldId formElementId) {
-    //        return EntityFormElementId.toProperty(formElementId,
-    //                                              entityProvider);
-    //    }
-
-    private FormData toFormData(OWLEntity subject,
-                                Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
-                                FormDescriptor formDescriptor) {
-        var map = new HashMap<FormFieldId, FormDataValue>();
-        for(FormFieldDescriptor descriptor : formDescriptor.getElements()) {
-            var associatedOwlProperty = getAssociatedOwlProperty(descriptor);
-            if(associatedOwlProperty.isPresent()) {
-                var theProperty = associatedOwlProperty.get();
-                var propertyValues = subjectPropertyValuesByProperty.get(theProperty);
-                var formDataValueForProperty = toFormDataValue(descriptor, propertyValues);
-                map.put(descriptor.getId(), formDataValueForProperty);
-            }
-        }
-        return new FormData(subject, map, formDescriptor);
-    }
-
-    /**
-     * Translates the property values to a form data value object.
-     * If there are multiple values then a list object will be returned.  Individual values will either be simple
-     * form data values or they will be a form data object depending upon whether the descriptor is a composite
-     * descriptor or not.
-     *
-     * @param descriptor     The descriptor for the particular field.
-     * @param propertyValues The values for the particular field.  The values will all have the same property.
-     * @return A single {@link FormDataValue} that encompases the translation of the property values
-     */
-    private FormDataValue toFormDataValue(FormFieldDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        return toFormDataValue(propertyValues, descriptor.getFormControlDescriptor());
-    }
-
-    private FormDataValue toSimpleFormDataValues(Collection<PropertyValue> propertyValues) {
-        if(propertyValues.size() == 1) {
-            return toFormDataValue(propertyValues.iterator()
-                                                 .next());
-        }
-        var formDataValues = propertyValues.stream()
-                                           .map(EntityFrameFormDataBuilder::toFormDataValue)
-                                           .collect(toList());
-        return new FormDataList(formDataValues);
-    }
-
-    @Nonnull
-    private FormDataValue toGridFormDataValue(GridControlDescriptor descriptor,
-                                              Collection<PropertyValue> propertyValues) {
-        // Property values should be entities
-        var valueList = propertyValues.stream()
-                                      .map(PropertyValue::getValue)
-                                      .map(OWLPrimitiveData::asEntity)
-                                      .flatMap(Optional::stream)
-                                      // Property values that are entities
-                                      .map(entityValue -> toFormDataObject(entityValue, getPropertyValues(entityValue), descriptor.getColumns()))
-                                      .collect(Collectors.toList());
-        if(valueList.size() == 1) {
-            return valueList.get(0);
-        }
-        else {
-            return new FormDataList(valueList);
+    public Optional<Double> toDouble(OWLLiteral literal) {
+        try {
+            return Optional.of(Double.parseDouble(literal.getLiteral()));
+        } catch(NumberFormatException e) {
+           return Optional.empty();
         }
     }
 
-    private FormDataObject toFormDataObject(OWLEntity subject,
-                                            Multimap<OWLProperty, PropertyValue> subjectPropertyValuesByProperty,
-                                            ImmutableList<GridColumnDescriptor> columnDescriptors) {
-        var map = new HashMap<String, FormDataValue>();
-        for(GridColumnDescriptor descriptor : columnDescriptors) {
-            var associatedOwlProperty = descriptor.getOwlBinding().flatMap(OwlBinding::getOwlProperty);
-            if(associatedOwlProperty.isPresent()) {
-                var theProperty = associatedOwlProperty.get();
-                var propertyValues = subjectPropertyValuesByProperty.get(theProperty);
-                var formDataValueForProperty = toFormDataValue(descriptor, propertyValues);
-                map.put(descriptor.getId().getId(), formDataValueForProperty);
-            }
-        }
-        return new FormDataObject(map);
-    }
-
-    private FormDataValue toFormDataValue(GridColumnDescriptor descriptor, Collection<PropertyValue> propertyValues) {
-        return toFormDataValue(propertyValues, descriptor.getFieldDescriptor());
-    }
-
-    private FormDataValue toFormDataValue(Collection<PropertyValue> propertyValues,
-                                          FormControlDescriptor fieldDescriptor) {
-        if(fieldDescriptor instanceof SubFormControlDescriptor) {
-            return toSubFormDataValue((SubFormControlDescriptor) fieldDescriptor, propertyValues);
-        }
-        else if(fieldDescriptor instanceof GridControlDescriptor) {
-            return toGridFormDataValue((GridControlDescriptor) fieldDescriptor, propertyValues);
-        }
-        else {
-            return toSimpleFormDataValues(propertyValues);
-        }
-    }
-
-
-    private FormDataValue toSubFormDataValue(SubFormControlDescriptor descriptor,
-                                             Collection<PropertyValue> propertyValues) {
-        // Property values should be entities
-        var valueList = propertyValues.stream()
-                                      .map(PropertyValue::getValue)
-                                      .map(OWLPrimitiveData::asEntity)
-                                      .flatMap(Optional::stream)
-                                      // Property values that are entities
-                                      .map(entityValue -> {
-                                          FormDescriptor subFormDescriptor = descriptor.getFormDescriptor();
-                                          return toFormData(entityValue, getPropertyValues(entityValue), subFormDescriptor);
+    public FormData toFormData(@Nonnull OWLEntity subject, FormDescriptor formDescriptor) {
+        var fieldData = formDescriptor.getFields()
+                                      .stream()
+                                      .map(field -> {
+                                          var controlValues = toFormControlValues(subject, field);
+                                          return FormFieldData.get(field, controlValues);
                                       })
-                                      .collect(Collectors.toList());
-        if(valueList.size() == 1) {
-            return valueList.get(0);
-        }
-        else {
-            return new FormDataList(valueList);
-        }
-
+                                      .collect(toImmutableList());
+        return FormData.get(Optional.of(subject), formDescriptor, fieldData);
     }
 
+    private GridControlData toGridControlData(ImmutableList<OWLPrimitiveData> subjects,
+                                              GridControlDescriptor gridControlDescriptor) {
+        var rowData = subjects.stream()
+                              .map(OWLPrimitiveData::asEntity)
+                              .flatMap(Optional::stream)
+                              .map(entity -> {
+                                  var columnDescriptors = gridControlDescriptor.getColumns();
+                                  // To Cells
+                                  var cellData = columnDescriptors.stream()
+                                                                  .map(columnDescriptor -> {
+                                                                      var formControlData = toFormControlValues(entity,
+                                                                                                                columnDescriptor);
+                                                                      // What should happen here?  There are multiple values binding
+                                                                      // for a given subject - i.e. multiple values per cell
+                                                                      if(formControlData.isEmpty()) {
+                                                                          return GridCellData.get(columnDescriptor.getId(),
+                                                                                                  null);
+                                                                      }
+                                                                      else {
+                                                                          var firstValue = formControlData.get(0);
+                                                                          return GridCellData.get(columnDescriptor.getId(),
+                                                                                                  firstValue);
+                                                                      }
+                                                                  })
+                                                                  .collect(toImmutableList());
+                                  return GridRowData.get(cellData);
+                              })
+                              .collect(toImmutableList());
+        return GridControlData.get(gridControlDescriptor, rowData);
+    }
 }

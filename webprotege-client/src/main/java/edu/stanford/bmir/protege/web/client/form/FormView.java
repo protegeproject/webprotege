@@ -15,7 +15,7 @@ public interface FormView extends IsWidget {
     void addFormElementView(FormFieldView view,
                             FieldRun fieldRun);
 
-    List<FormFieldView> getElementViews();
+    List<FormFieldView> getFieldViews();
 
     void clear();
 

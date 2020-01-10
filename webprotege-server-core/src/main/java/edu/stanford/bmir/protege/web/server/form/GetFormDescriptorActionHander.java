@@ -18,9 +18,6 @@ import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -89,12 +86,13 @@ public class GetFormDescriptorActionHander extends AbstractProjectActionHandler<
 
 
 
+
 //        try {
 //
 //
 //            var collectionItemData = repository.find(collectionId, elementId);
 //
-//            var formData = collectionItemData.getFormData().orElse(FormData.empty());
+//            var formData = collectionItemData.getFormValue().orElse(FormData.empty());
 //
 //            return new GetFormDescriptorResult(
 //                    projectId,

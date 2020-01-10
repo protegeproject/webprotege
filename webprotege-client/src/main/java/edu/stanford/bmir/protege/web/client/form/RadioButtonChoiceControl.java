@@ -14,9 +14,13 @@ import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -25,11 +29,13 @@ import java.util.*;
  * Stanford Center for Biomedical Informatics Research
  * 31/03/16
  */
-public class RadioButtonChoiceControl extends Composite implements MutuallyExclusiveChoiceControl {
+public class RadioButtonChoiceControl extends Composite implements SingleChoiceControl {
 
     private static int nameCounter = 0;
 
     private ValueChangeHandler<Boolean> radioButtonValueChangedHandler;
+
+    private SingleChoiceControlDescriptor descriptor;
 
     interface RadioButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, RadioButtonChoiceControl> {
 
@@ -42,7 +48,7 @@ public class RadioButtonChoiceControl extends Composite implements MutuallyExclu
 
     private Map<RadioButton, ChoiceDescriptor> choiceButtons = new LinkedHashMap<>();
 
-    private Optional<FormDataValue> defaultChoice = Optional.empty();
+    private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
     public RadioButtonChoiceControl() {
@@ -51,7 +57,13 @@ public class RadioButtonChoiceControl extends Composite implements MutuallyExclu
     }
 
     @Override
-    public void setChoices(List<ChoiceDescriptor> choices) {
+    public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
+        this.descriptor = descriptor;
+        setChoices(descriptor.getChoices());
+        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+    }
+
+    private void setChoices(List<ChoiceDescriptor> choices) {
         container.clear();
         choiceButtons.clear();
         nameCounter++;
@@ -74,28 +86,36 @@ public class RadioButtonChoiceControl extends Composite implements MutuallyExclu
         selectDefaultChoice();
     }
 
-    @Override
-    public void setDefaultChoices(List<FormDataValue> defaultChoices) {
-        if(defaultChoices.isEmpty()) {
-            defaultChoice = Optional.empty();
-        }
-        else {
-            defaultChoice = Optional.of(defaultChoices.get(0));
-        }
-        selectDefaultChoice();
+    private void setDefaultChoice(@Nonnull ChoiceDescriptor choice) {
+        defaultChoice = Optional.of(choice.getValue());
     }
 
     private void selectDefaultChoice() {
-        defaultChoice.ifPresent(this::setValue);
+        setChoice(defaultChoice);
     }
 
     @Override
-    public void setValue(FormDataValue value) {
-        for(RadioButton radioButton : choiceButtons.keySet()) {
-            ChoiceDescriptor choiceDescriptor = choiceButtons.get(radioButton);
-            if(choiceDescriptor.getValue().equals(value)) {
-                radioButton.setValue(true);
+    public void setValue(FormControlData value) {
+        if(value instanceof SingleChoiceControlData) {
+            Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) value).getChoice();
+            setChoice(choice);
+        }
+        else {
+            clearValue();
+        }
+    }
+
+    public void setChoice(Optional<PrimitiveFormControlData> choice) {
+        if(choice.isPresent()) {
+            for(RadioButton radioButton : choiceButtons.keySet()) {
+                ChoiceDescriptor choiceDescriptor = choiceButtons.get(radioButton);
+                if(choiceDescriptor.getValue().equals(choice.get())) {
+                    radioButton.setValue(true);
+                }
             }
+        }
+        else {
+            clearValue();
         }
     }
 
@@ -108,11 +128,11 @@ public class RadioButtonChoiceControl extends Composite implements MutuallyExclu
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
+    public Optional<FormControlData> getValue() {
         for(RadioButton radioButton : choiceButtons.keySet()) {
             if(radioButton.getValue()) {
-                ChoiceDescriptor descriptor = choiceButtons.get(radioButton);
-                return Optional.of(descriptor.getValue());
+                ChoiceDescriptor choiceDescriptor = choiceButtons.get(radioButton);
+                return Optional.of(SingleChoiceControlData.get(descriptor, choiceDescriptor.getValue()));
             }
         }
         return Optional.empty();
@@ -129,7 +149,7 @@ public class RadioButtonChoiceControl extends Composite implements MutuallyExclu
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

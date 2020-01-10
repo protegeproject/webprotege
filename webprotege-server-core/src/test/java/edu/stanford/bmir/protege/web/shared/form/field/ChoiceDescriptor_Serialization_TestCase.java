@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class ChoiceDescriptor_Serialization_TestCase {
     @Test
     public void shouldSerializeAndDeserializeChoiceDescriptor() throws IOException {
         var label = LanguageMap.of("en", "Hello World");
-        var value = FormDataPrimitive.get(new OWLClassImpl(IRI.create("http://example.org/A")));
+        var value = PrimitiveFormControlData.get(new OWLClassImpl(IRI.create("http://example.org/A")));
         var choiceDescriptor = ChoiceDescriptor.choice(label, value);
         var serialized = objectMapper.writeValueAsString(choiceDescriptor);
         System.out.println(serialized);

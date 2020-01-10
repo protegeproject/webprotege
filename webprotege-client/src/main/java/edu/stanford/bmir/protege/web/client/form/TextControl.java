@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -16,12 +17,14 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.TextControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
+import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collections;
@@ -38,6 +41,8 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 public class TextControl extends Composite implements FormControl {
 
     private StringType stringType = StringType.SIMPLE_STRING;
+
+    private TextControlDescriptor descriptor = null;
 
     interface TextControlUiBinder extends UiBinder<HTMLPanel, TextControl> {
 
@@ -76,21 +81,34 @@ public class TextControl extends Composite implements FormControl {
         editor.setShowLinksForEntities(false);
     }
 
+    public void setDescriptor(@Nonnull TextControlDescriptor descriptor) {
+        this.descriptor = descriptor;
+        String localeName = LocaleInfo.getCurrentLocale()
+                                      .getLocaleName();
+        setPlaceholder(descriptor.getPlaceholder().get(localeName));
+        setLineMode(descriptor.getLineMode());
+        setStringType(descriptor.getStringType());
+        if(!descriptor.getPattern().isEmpty()) {
+            setPattern(descriptor.getPattern());
+            setPatternViolationErrorMessage(descriptor.getPatternViolationErrorMessage()
+                                                                           .get(localeName));
+        }
+    }
+
     @Override
     public void requestFocus() {
         editor.requestFocus();
     }
 
-    public void setPlaceholder(String placeholder) {
+    private void setPlaceholder(String placeholder) {
         editor.setPlaceholder(placeholder);
     }
 
-    public void setPattern(String pattern) {
-        GWT.log("[TextControl] Pattern: " + pattern);
+    private void setPattern(String pattern) {
         this.pattern = Optional.of(checkNotNull(pattern));
     }
 
-    public void setPatternViolationErrorMessage(String patternViolationErrorMessage) {
+    private void setPatternViolationErrorMessage(String patternViolationErrorMessage) {
         this.patternViolationErrorMessage = Optional.of(checkNotNull(patternViolationErrorMessage));
     }
 
@@ -131,7 +149,7 @@ public class TextControl extends Composite implements FormControl {
         patternViolationErrorMessageLabel.setVisible(true);
     }
 
-    public void setStringType(StringType stringType) {
+    private void setStringType(StringType stringType) {
         if(stringType == StringType.SIMPLE_STRING) {
             languageEditor.setVisible(false);
         }
@@ -141,7 +159,7 @@ public class TextControl extends Composite implements FormControl {
         this.stringType = stringType;
     }
 
-    public void setLineMode(LineMode lineMode) {
+    private void setLineMode(LineMode lineMode) {
         if (lineMode == LineMode.MULTI_LINE) {
             editor.setMode(PrimitiveDataEditorView.Mode.MULTI_LINE);
         }
@@ -151,17 +169,20 @@ public class TextControl extends Composite implements FormControl {
     }
 
     @Override
-    public void setValue(FormDataValue object) {
-        GWT.log("[TextControl] " + object);
-        Optional<OWLLiteral> primitive = object.asLiteral();
-        if(!primitive.isPresent()) {
-            clearValue();
+    public void setValue(FormControlData object) {
+        if(object instanceof TextControlData) {
+            Optional<OWLLiteral> value = ((TextControlData) object).getValue();
+            if(!value.isPresent()) {
+                clearValue();
+            }
+            else {
+                editor.setValue(OWLLiteralData.get(value.get()));
+                validateInput();
+            }
         }
         else {
-            editor.setValue(OWLLiteralData.get(primitive.get()));
-            validateInput();
+            clearValue();
         }
-
     }
 
     @Override
@@ -171,7 +192,7 @@ public class TextControl extends Composite implements FormControl {
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
+    public Optional<FormControlData> getValue() {
         Optional<OWLPrimitiveData> editedValue = editor.getValue();
         if(!editedValue.isPresent()) {
             return Optional.empty();
@@ -183,14 +204,14 @@ public class TextControl extends Composite implements FormControl {
         if(stringType == StringType.SIMPLE_STRING) {
             // Preserve lang if one was originally set
             if(literalData.getLang().isEmpty()) {
-                return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral()));
+                return Optional.of(TextControlData.get(descriptor, literalData.getLiteral()));
             }
             else {
-                return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral(), literalData.getLang()));
+                return Optional.of(TextControlData.get(descriptor, literalData.getLiteral()));
             }
         }
         else {
-            return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral(), literalData.getLang()));
+            return Optional.of(TextControlData.get(descriptor, literalData.getLiteral()));
         }
 
     }
@@ -206,7 +227,7 @@ public class TextControl extends Composite implements FormControl {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

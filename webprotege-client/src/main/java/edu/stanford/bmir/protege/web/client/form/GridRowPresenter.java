@@ -2,18 +2,21 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
+import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -32,6 +35,8 @@ public class GridRowPresenter {
     @Nonnull
     private final List<GridCellPresenter> cellPresenters = new ArrayList<>();
 
+    private final Map<GridColumnId, GridCellPresenter> cellPresentersById = new HashMap<>();
+
     private ImmutableList<GridColumnDescriptor> columnDescriptors = ImmutableList.of();
 
     @Inject
@@ -42,22 +47,19 @@ public class GridRowPresenter {
     }
 
     @Nonnull
-    public FormDataValue getFormDataValue() {
-        Map<String, FormDataValue> map =
+    public GridRowData getFormDataValue() {
+        ImmutableList<GridCellData> cellData =
                 cellPresenters.stream()
                               .filter(GridCellPresenter::isPresent)
-                              .collect(toMap(
-                                      presenter -> presenter.getIdOrThrow()
-                                                            .getId(),
-                                      GridCellPresenter::getValueOrThrow
-                              ));
-        return new FormDataObject(map);
+                              .map(GridCellPresenter::getValue)
+                              .collect(toImmutableList());
+        return GridRowData.get(cellData);
     }
 
     public void requestFocus() {
         cellPresenters.stream()
                       .findFirst()
-                      .ifPresent(cellPresenter -> cellPresenter.requestFocus());
+                      .ifPresent(GridCellPresenter::requestFocus);
     }
 
     public void setColumnDescriptors(ImmutableList<GridColumnDescriptor> columnDescriptors) {
@@ -65,6 +67,7 @@ public class GridRowPresenter {
             return;
         }
         cellPresenters.clear();
+        cellPresentersById.clear();
         view.clear();
         this.columnDescriptors = checkNotNull(columnDescriptors);
         this.columnDescriptors.forEach(column -> {
@@ -73,18 +76,20 @@ public class GridRowPresenter {
             cellPresenter.start(cellContainer);
             cellPresenter.setDescriptor(column);
             cellPresenters.add(cellPresenter);
+            cellPresentersById.put(column.getId(), cellPresenter);
         });
 
     }
 
-    public void setValue(FormDataObject formDataObject) {
-        cellPresenters.forEach(cellPresenter -> {
-            cellPresenter.getId()
-                         .ifPresent(id -> {
-                             formDataObject.get(id.getId())
-                                           .ifPresent(cellPresenter::setValue);
-                         });
-        });
+    public void setValue(GridRowData formDataObject) {
+        cellPresenters.forEach(GridCellPresenter::clear);
+        formDataObject.getCells()
+                      .forEach(cellData -> {
+                          GridCellPresenter cellPresenter = cellPresentersById.get(cellData.getColumnId());
+                          if(cellPresenter != null) {
+                              cellPresenter.setValue(cellData);
+                          }
+                      });
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

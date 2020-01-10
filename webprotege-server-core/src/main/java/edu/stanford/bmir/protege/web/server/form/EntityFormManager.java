@@ -44,7 +44,9 @@ public class EntityFormManager {
                                     .map(EntityFormSelector::getFormId)
                                     .findFirst();
 
-        return formId.flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id));
+        return entityFormRepository.findFormDescriptors(projectId).findFirst();
+
+//        return formId.flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id));
     }
 
 }

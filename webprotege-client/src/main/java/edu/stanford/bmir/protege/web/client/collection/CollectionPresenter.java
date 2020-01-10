@@ -86,17 +86,17 @@ public class CollectionPresenter implements Presenter {
     }
 
     private void handleClearElementData() {
-        current.ifPresent(subject -> {
-            subject.getSelection().ifPresent(selection -> {
-                dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
-                                                                     subject.getCollectionId(),
-                                                                     selection,
-                                                                     subject.getFormId(),
-                                                                     FormData.empty(subject.getFormId())),
-                                               result -> formPresenter.clearData());
-            });
-
-        });
+//        current.ifPresent(subject -> {
+//            subject.getSelection().ifPresent(selection -> {
+//                dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
+//                                                                     subject.getCollectionId(),
+//                                                                     selection,
+//                                                                     subject.getFormId(),
+//                                                                     FormData.empty(subject.getFormId())),
+//                                               result -> formPresenter.clearData());
+//            });
+//
+//        });
     }
 
     private void handleAddCollectionItems() {
@@ -157,20 +157,20 @@ public class CollectionPresenter implements Presenter {
     }
 
     private void displayForm(CollectionViewPlace place) {
-        view.setCollectionTitle(place.getCollectionId().getId());
-        current = Optional.empty();
-        GWT.log("[CollectionPresenter] Clearing form");
-        place.getSelection().ifPresent(sel -> {
-            view.setItem(sel);
-            current = Optional.of(place);
-            GWT.log("[CollectionPresenter] Selection: " + sel);
-            dispatchServiceManager.execute(new GetFormDescriptorAction(
-                                                   place.getProjectId(),
-                                                   place.getCollectionId(),
-                                                   place.getFormId(),
-                                                   sel),
-                                           result -> formPresenter.displayForm(result.getFormDescriptor(),
-                                                                               result.getFormData()));
-        });
+//        view.setCollectionTitle(place.getCollectionId().getId());
+//        current = Optional.empty();
+//        GWT.log("[CollectionPresenter] Clearing form");
+//        place.getSelection().ifPresent(sel -> {
+//            view.setItem(sel);
+//            current = Optional.of(place);
+//            GWT.log("[CollectionPresenter] Selection: " + sel);
+//            dispatchServiceManager.execute(new GetFormDescriptorAction(
+//                                                   place.getProjectId(),
+//                                                   place.getCollectionId(),
+//                                                   place.getFormId(),
+//                                                   sel),
+//                                           result -> formPresenter.displayForm(result.getFormDescriptor(),
+//                                                                               result.getFormData()));
+//        });
     }
 }

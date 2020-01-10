@@ -90,7 +90,7 @@ public class SubFormControlDescriptorPresenter implements FormControlDescriptorP
         FormDescriptor aug = new FormDescriptor(
                 subFormDescriptor.getFormId(),
                 subFormDescriptor.getLabel(),
-                subFormDescriptor.getElements(),
+                subFormDescriptor.getFields(),
                 Optional.of(subjectFactoryDescriptor)
         );
         return new SubFormControlDescriptor(aug);

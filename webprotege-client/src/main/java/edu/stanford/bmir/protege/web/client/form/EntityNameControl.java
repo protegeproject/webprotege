@@ -4,20 +4,21 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -28,12 +29,16 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 06/04/16
  */
-public class EntityNameControl extends Composite implements ValueEditor<FormDataValue>, HasPlaceholder {
+public class EntityNameControl extends Composite implements FormControl, HasPlaceholder {
+
+    private EntityNameControlDescriptor descriptor;
 
     interface EntityNameControlUiBinder extends UiBinder<HTMLPanel, EntityNameControl> {
 
@@ -51,7 +56,7 @@ public class EntityNameControl extends Composite implements ValueEditor<FormData
     private final DispatchServiceManager dispatchServiceManager;
 
 
-    private Optional<OWLClass> currentValue = Optional.empty();
+    private Optional<OWLEntity> currentValue = Optional.empty();
 
     @Inject
     public EntityNameControl(@Nonnull ProjectId projectId,
@@ -66,6 +71,13 @@ public class EntityNameControl extends Composite implements ValueEditor<FormData
         this.dispatchServiceManager = dispatchServiceManager;
     }
 
+    public void setDescriptor(@Nonnull EntityNameControlDescriptor descriptor) {
+        this.descriptor = checkNotNull(descriptor);
+        LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
+        editor.setPlaceholder(descriptor.getPlaceholder()
+                                        .get(localeInfo.getLocaleName()));
+    }
+
     private void handleEditorValueChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
         currentValue = event.getValue()
                             .filter(val -> val instanceof OWLClassData)
@@ -75,17 +87,22 @@ public class EntityNameControl extends Composite implements ValueEditor<FormData
     }
 
     @Override
-    public void setValue(FormDataValue object) {
-        Optional<OWLEntity> entity = object.asOWLEntity();
-        this.currentValue = entity.filter(OWLEntity::isOWLClass)
-                                  .map(OWLEntity::asOWLClass);
-        entity.ifPresent(e -> {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, e),
-                                           result -> editor.setValue(result.getEntityData()));
-        });
-        if(!entity.isPresent()) {
-            editor.clearValue();
+    public void setValue(FormControlData object) {
+        clearValue();
+        if(object instanceof EntityNameControlData) {
+            EntityNameControlData data = (EntityNameControlData) object;
+            this.currentValue = data.getEntity();
+            currentValue.ifPresent(e -> {
+                dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, e),
+                                               result -> editor.setValue(result.getEntityData()));
+            });
         }
+
+    }
+
+    @Override
+    public void requestFocus() {
+        editor.requestFocus();
     }
 
     @Override
@@ -105,8 +122,12 @@ public class EntityNameControl extends Composite implements ValueEditor<FormData
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
-        return currentValue.map(FormDataPrimitive::get);
+    public Optional<FormControlData> getValue() {
+        return editor.getValue()
+                .map(OWLPrimitiveData::asEntity)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(entity -> EntityNameControlData.get(descriptor, entity));
     }
 
     @Override
@@ -120,7 +141,7 @@ public class EntityNameControl extends Composite implements ValueEditor<FormData
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

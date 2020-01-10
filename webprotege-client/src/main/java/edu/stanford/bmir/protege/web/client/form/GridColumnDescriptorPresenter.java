@@ -48,6 +48,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
         view.setLabel(descriptor.getLabel());
         bindingPresenter.clear();
         descriptor.getOwlBinding().ifPresent(bindingPresenter::setBinding);
+        fieldDescriptorChooserPresenter.setFormFieldDescriptor(descriptor.getFormControlDescriptor());
     }
 
     @Nonnull

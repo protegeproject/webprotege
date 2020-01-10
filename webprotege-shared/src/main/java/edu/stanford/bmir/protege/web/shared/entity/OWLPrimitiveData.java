@@ -20,6 +20,10 @@ import java.util.Optional;
  */
 public abstract class OWLPrimitiveData extends ObjectData {
 
+    public Optional<IRI> asIRI() {
+        return Optional.empty();
+    }
+
     @Nonnull
     @Override
     public abstract OWLPrimitive getObject();
@@ -47,4 +51,8 @@ public abstract class OWLPrimitiveData extends ObjectData {
     public abstract Optional<OWLAnnotationValue> asAnnotationValue();
 
     public abstract Optional<OWLEntity> asEntity();
+
+    public Optional<OWLLiteral> asLiteral() {
+        return Optional.empty();
+    }
 }

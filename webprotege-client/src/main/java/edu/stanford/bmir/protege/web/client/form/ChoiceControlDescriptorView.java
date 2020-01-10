@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceControlType;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -15,12 +16,12 @@ import java.util.List;
 public interface ChoiceControlDescriptorView extends IsWidget {
 
     @Nonnull
-    ChoiceControlType getWidgetType();
+    SingleChoiceControlType getWidgetType();
 
-    void setWidgetType(@Nonnull ChoiceControlType widgetType);
+    void setWidgetType(@Nonnull SingleChoiceControlType widgetType);
 
     void setChoiceDescriptors(@Nonnull List<ChoiceDescriptor> choiceDescriptors);
 
     @Nonnull
-    List<ChoiceDescriptor> getChoiceDescriptors();
+    ImmutableList<ChoiceDescriptor> getChoiceDescriptors();
 }

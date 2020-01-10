@@ -63,6 +63,16 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
     }
 
     @Override
+    public void setOwlClassBinding(boolean classBinding) {
+        classRadioButton.setValue(classBinding);
+    }
+
+    @Override
+    public boolean isOwlClassBinding() {
+        return classRadioButton.getValue();
+    }
+
+    @Override
     public void setProperty(@Nonnull OWLEntityData entity) {
         primitiveDataField.setValue(entity);
         primitiveDataField.setEnabled(true);

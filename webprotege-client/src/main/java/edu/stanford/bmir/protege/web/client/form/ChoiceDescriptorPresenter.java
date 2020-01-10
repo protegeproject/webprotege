@@ -14,7 +14,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.form.PrimitiveDataConverter;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -58,11 +59,11 @@ public class ChoiceDescriptorPresenter implements ValueEditor<ChoiceDescriptor>,
     @Override
     public void setValue(ChoiceDescriptor object) {
         view.setLabel(object.getLabel());
-        object.getValue().asOWLEntity().ifPresent(entity -> {
+        object.getValue().asEntity().ifPresent(entity -> {
             dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, entity),
                                            result -> view.setPrimitiveData(result.getEntityData()));
         });
-        object.getValue().asIRI().ifPresent(iri -> {
+        object.getValue().asIri().ifPresent(iri -> {
             view.setPrimitiveData(IRIData.get(iri, ImmutableMap.of()));
         });
         object.getValue().asLiteral().ifPresent(literal -> {
@@ -78,7 +79,7 @@ public class ChoiceDescriptorPresenter implements ValueEditor<ChoiceDescriptor>,
     @Override
     public Optional<ChoiceDescriptor> getValue() {
         return view.getDataValue().map(primitiveData -> {
-            FormDataValue dataValue = primitiveData.accept(new PrimitiveDataConverter());
+            PrimitiveFormControlData dataValue = primitiveData.accept(new PrimitiveDataConverter());
             return ChoiceDescriptor.choice(view.getLabel(), dataValue);
         });
     }

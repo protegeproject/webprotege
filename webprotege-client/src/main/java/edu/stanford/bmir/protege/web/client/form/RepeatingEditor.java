@@ -9,8 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,13 +19,13 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class RepeatingEditor implements ValueEditor<FormDataValue> {
+public class RepeatingEditor implements ValueEditor<List<FormControlData>> {
 
-    private ValueListEditor<FormDataValue> delegate;
+    private ValueListEditor<FormControlData> delegate;
 
     private HandlerManager handlerManager;
 
-    public RepeatingEditor(ValueListEditor<FormDataValue> delegate) {
+    public RepeatingEditor(ValueListEditor<FormControlData> delegate) {
         this.delegate = delegate;
         this.handlerManager = new HandlerManager(this);
         this.delegate.setEnabled(true);
@@ -37,8 +36,8 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
     }
 
     @Override
-    public void setValue(FormDataValue object) {
-        delegate.setValue(object.asList());
+    public void setValue(List<FormControlData> object) {
+        delegate.setValue(object);
     }
 
     @Override
@@ -47,11 +46,8 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
-        Optional<List<FormDataValue>> value = delegate.getValue();
-        // Always returns a value
-        return Optional.of(value.map(FormDataList::new)
-                                .orElse(FormDataList.empty()));
+    public Optional<List<FormControlData>> getValue() {
+        return delegate.getValue();
     }
 
     @Override
@@ -65,7 +61,7 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<FormControlData>>> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
 

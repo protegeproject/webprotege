@@ -18,14 +18,14 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridColumnDescriptor {
+public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @JsonCreator
     @Nonnull
     public static GridColumnDescriptor get(@Nonnull @JsonProperty("id") GridColumnId id,
                                            @Nullable @JsonProperty("owlBinding") OwlBinding owlBinding,
                                            @Nonnull @JsonProperty("label") LanguageMap columnLabel,
-                                           @Nonnull @JsonProperty("fieldDescriptor") FormControlDescriptor formControlDescriptor) {
+                                           @Nonnull @JsonProperty("formControlDescriptor") FormControlDescriptor formControlDescriptor) {
         return new AutoValue_GridColumnDescriptor(id, owlBinding, columnLabel, formControlDescriptor);
     }
 
@@ -45,6 +45,7 @@ public abstract class GridColumnDescriptor {
     @Nullable
     protected abstract OwlBinding getOwlBindingInternal();
 
+    @Override
     @Nonnull
     public Optional<OwlBinding> getOwlBinding() {
         return Optional.ofNullable(getOwlBindingInternal());
@@ -53,8 +54,9 @@ public abstract class GridColumnDescriptor {
     @Nonnull
     public abstract LanguageMap getLabel();
 
+    @Override
     @Nonnull
-    public abstract FormControlDescriptor getFieldDescriptor();
+    public abstract FormControlDescriptor getFormControlDescriptor();
 
     // TODO: Column width, grow, shrink
 

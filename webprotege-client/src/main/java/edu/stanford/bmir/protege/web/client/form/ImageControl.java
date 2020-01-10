@@ -15,8 +15,9 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.ImageControlData;
+import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
@@ -34,6 +35,8 @@ public class ImageControl extends Composite implements FormControl {
 
     @Nonnull
     private final InputBox inputBox;
+
+    private ImageControlDescriptor descriptor;
 
     interface ImageControlUiBinder extends UiBinder<HTMLPanel, ImageControl> {
 
@@ -73,10 +76,19 @@ public class ImageControl extends Composite implements FormControl {
         });
     }
 
+    public void setDescriptor(ImageControlDescriptor descriptor) {
+        this.descriptor = checkNotNull(descriptor);
+    }
+
     @Override
-    public void setValue(FormDataValue object) {
-        theIRI = object.asIRI();
-        updateUi();
+    public void setValue(FormControlData object) {
+        if(object instanceof ImageControlData) {
+            theIRI = ((ImageControlData) object).getIri();
+            updateUi();
+        }
+        else {
+            clearValue();
+        }
     }
 
     private void updateUi() {
@@ -143,8 +155,8 @@ public class ImageControl extends Composite implements FormControl {
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
-        return theIRI.map(FormDataPrimitive::get);
+    public Optional<FormControlData> getValue() {
+        return theIRI.map(iri -> ImageControlData.get(descriptor, iri));
     }
 
     @Override
@@ -158,7 +170,7 @@ public class ImageControl extends Composite implements FormControl {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> valueChangeHandler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> valueChangeHandler) {
         return addHandler(valueChangeHandler, ValueChangeEvent.getType());
     }
 

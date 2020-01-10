@@ -56,6 +56,11 @@ public class NumberControlDescriptor implements FormControlDescriptor {
     }
 
     @Override
+    public <R> R accept(@Nonnull FormControlDescriptorVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if(obj == this) {
             return true;

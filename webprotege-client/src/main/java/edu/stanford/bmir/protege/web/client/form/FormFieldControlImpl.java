@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -13,9 +15,10 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorDirection;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,9 +26,9 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class FormControlImpl extends Composite implements FormFieldControl {
+public class FormFieldControlImpl extends Composite implements FormFieldControl {
 
-    interface FormElementEditorImplUiBinder extends UiBinder<HTMLPanel, FormControlImpl> {
+    interface FormElementEditorImplUiBinder extends UiBinder<HTMLPanel, FormFieldControlImpl> {
 
     }
 
@@ -36,12 +39,14 @@ public class FormControlImpl extends Composite implements FormFieldControl {
     @UiField
     SimplePanel editorHolder;
 
-    private final ValueEditor<FormDataValue> delegateEditor;
+    private final HandlerManager handlerManager = new HandlerManager(this);
 
-    public FormControlImpl(ValueEditorFactory<FormDataValue> editorFactory, Repeatability repeatability) {
+    private final ValueEditor<List<FormControlData>> delegateEditor;
+
+    public FormFieldControlImpl(ValueEditorFactory<FormControlData> editorFactory, Repeatability repeatability) {
         initWidget(ourUiBinder.createAndBindUi(this));
         if(repeatability == Repeatability.REPEATABLE_HORIZONTALLY || repeatability == Repeatability.REPEATABLE_VERTICALLY) {
-            ValueListFlexEditorImpl<FormDataValue> delegate = new ValueListFlexEditorImpl<>(editorFactory);
+            ValueListFlexEditorImpl<FormControlData> delegate = new ValueListFlexEditorImpl<>(editorFactory);
             delegateEditor = new RepeatingEditor(delegate);
             if (repeatability == Repeatability.REPEATABLE_HORIZONTALLY) {
                 delegate.setDirection(ValueListFlexEditorDirection.ROW);
@@ -62,8 +67,8 @@ public class FormControlImpl extends Composite implements FormFieldControl {
     }
 
     @Override
-    public void setValue(FormDataValue value) {
-        delegateEditor.setValue(value);
+    public void setValue(List<FormControlData> object) {
+        delegateEditor.setValue(object);
     }
 
     @Override
@@ -72,7 +77,7 @@ public class FormControlImpl extends Composite implements FormFieldControl {
     }
 
     @Override
-    public Optional<FormDataValue> getValue() {
+    public Optional<List<FormControlData>> getValue() {
         return delegateEditor.getValue();
     }
 
@@ -87,8 +92,8 @@ public class FormControlImpl extends Composite implements FormFieldControl {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataValue>> handler) {
-        return delegateEditor.addValueChangeHandler(handler);
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<FormControlData>>> handler) {
+        return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
 
     @Override

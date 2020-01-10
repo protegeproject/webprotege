@@ -60,21 +60,17 @@ public class OwlBindingPresenter {
                                                   result -> view.setProperty(result.getEntityData()));
                });
         if(binding instanceof OwlClassBinding) {
-
+            view.setOwlClassBinding(true);
         }
 
     }
 
     @Nonnull
     public Optional<OwlBinding> getBinding() {
+        if(view.isOwlClassBinding()) {
+            return Optional.of(OwlClassBinding.get());
+        }
         return view.getEntity().map(OWLEntityData::getEntity)
-            .map(entity -> {
-                if(entity.isOWLClass()) {
-                    return OwlClassBinding.get();
-                }
-                else {
-                    return OwlPropertyBinding.get((OWLProperty) entity);
-                }
-            });
+            .map(entity -> OwlPropertyBinding.get((OWLProperty) entity));
     }
 }

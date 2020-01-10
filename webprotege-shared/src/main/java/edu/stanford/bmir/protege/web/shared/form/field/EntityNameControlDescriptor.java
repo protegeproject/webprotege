@@ -65,6 +65,11 @@ public abstract class EntityNameControlDescriptor implements FormControlDescript
         return TYPE;
     }
 
+    @Override
+    public <R> R accept(@Nonnull FormControlDescriptorVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
+
     @Nonnull
     public abstract LanguageMap getPlaceholder();
 

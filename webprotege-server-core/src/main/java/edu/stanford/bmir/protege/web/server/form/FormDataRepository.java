@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -54,7 +55,7 @@ public class FormDataRepository {
                                          .field("subjectId").equal(entity.toString())
                                          .get();
         if (record == null) {
-            return FormData.empty(FormId.generate());
+            return FormData.empty(entity, FormId.generate());
         }
         else {
             return record.getData();
