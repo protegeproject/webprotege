@@ -8,6 +8,13 @@
         .checkBoxContainer .gwt-CheckBox {
             margin: 0;
             padding: 1px;
+            display: flex !important;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .checkBoxContainer .gwt-CheckBox input {
+            flex-shrink: 0;
+            flex-grow: 0;
         }
     </ui:style>
     <g:HTMLPanel ui:field="container" addStyleNames="{style.checkBoxContainer}">
