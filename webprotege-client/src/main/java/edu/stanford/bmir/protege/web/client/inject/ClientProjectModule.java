@@ -469,7 +469,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ChoiceControlDescriptorView provideChoiceFieldDescriptorView(ChoiceControlDescriptorViewImpl impl) {
+    SingleChoiceControlDescriptorView provideChoiceFieldDescriptorView(SingleChoiceControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -606,6 +606,7 @@ public class ClientProjectModule {
             TextControlDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
             NumberControlDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
             SingleChoiceControlDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
+            MultiChoiceControlDescriptorPresenterFactory multiChoiceControlDescriptorPresenterFactory,
             ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
             EntityNameControlDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
             SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,
@@ -613,6 +614,7 @@ public class ClientProjectModule {
         return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
                                 numberFieldDescriptorPresenterFactory,
                                 choiceFieldDescriptorPresenterFactory,
+                                multiChoiceControlDescriptorPresenterFactory,
                                 imageDescriptorPresenterFactory,
                                 entityNameFieldDescriptorPresenterFactory,
                                 subFormControlDescriptorPresenterFactory,
@@ -666,6 +668,11 @@ public class ClientProjectModule {
 
     @Provides
     FormEditorView provideFormEditorView(FormEditorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    MultiChoiceControlDescriptorView provideMultiChoiceControlDescriptorView(MultiChoiceControlDescriptorViewImpl impl) {
         return impl;
     }
 }

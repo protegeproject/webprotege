@@ -9,8 +9,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.util.Collections;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -25,10 +23,10 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
             ImmutableList.of());
 
     @Nonnull
-    private final ChoiceControlDescriptorView view;
+    private final SingleChoiceControlDescriptorView view;
 
     @Inject
-    public SingleControlDescriptorPresenter(@Nonnull ChoiceControlDescriptorView view) {
+    public SingleControlDescriptorPresenter(@Nonnull SingleChoiceControlDescriptorView view) {
         this.view = checkNotNull(view);
     }
 

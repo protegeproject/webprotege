@@ -99,10 +99,13 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     @Override
     public void setValue(FormControlData value) {
         // Should be a SingleChoice
-        if(value instanceof SingleChoiceControlData) {
-            SingleChoiceControlData singleChoiceControlData = (SingleChoiceControlData) value;
+        if(value instanceof MultiChoiceControlData) {
+            MultiChoiceControlData multiChoiceControlData = (MultiChoiceControlData) value;
+            ImmutableList<PrimitiveFormControlData> values = multiChoiceControlData.getValues();
+
             for(CheckBox checkBox : checkBoxes.keySet()) {
-                checkBox.setValue(singleChoiceControlData.getChoice().equals(Optional.of(checkBoxes.get(checkBox).getValue())));
+                boolean sel = values.contains(checkBoxes.get(checkBox).getValue());
+                checkBox.setValue(sel);
             }
         }
         else {

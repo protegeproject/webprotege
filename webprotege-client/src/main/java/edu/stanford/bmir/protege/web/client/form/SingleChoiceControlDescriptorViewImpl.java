@@ -16,7 +16,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,9 +23,9 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public class ChoiceControlDescriptorViewImpl extends Composite implements ChoiceControlDescriptorView {
+public class SingleChoiceControlDescriptorViewImpl extends Composite implements SingleChoiceControlDescriptorView {
 
-    interface ChoiceControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, ChoiceControlDescriptorViewImpl> {
+    interface ChoiceControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, SingleChoiceControlDescriptorViewImpl> {
 
     }
 
@@ -49,7 +48,7 @@ public class ChoiceControlDescriptorViewImpl extends Composite implements Choice
     static Counter counter = new Counter();
 
     @Inject
-    public ChoiceControlDescriptorViewImpl(Provider<ChoiceDescriptorPresenter> choiceDescriptorPresenterProvider) {
+    public SingleChoiceControlDescriptorViewImpl(Provider<ChoiceDescriptorPresenter> choiceDescriptorPresenterProvider) {
         choiceListEditor = new ValueListFlexEditorImpl<>(choiceDescriptorPresenterProvider::get);
         choiceListEditor.setEnabled(true);
         choiceListEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);

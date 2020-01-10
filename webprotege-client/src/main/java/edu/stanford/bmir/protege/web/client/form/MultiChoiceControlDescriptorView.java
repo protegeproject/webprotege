@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -11,14 +10,9 @@ import java.util.List;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-18
+ * 2020-01-10
  */
-public interface ChoiceControlDescriptorView extends IsWidget {
-
-    @Nonnull
-    SingleChoiceControlType getWidgetType();
-
-    void setWidgetType(@Nonnull SingleChoiceControlType widgetType);
+public interface MultiChoiceControlDescriptorView extends IsWidget {
 
     void setChoiceDescriptors(@Nonnull List<ChoiceDescriptor> choiceDescriptors);
 
