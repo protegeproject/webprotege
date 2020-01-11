@@ -180,10 +180,6 @@ public class RpcWhiteList implements Action, Result {
 
     private Criteria criteria;
 
-    public void setPrimitiveFormControlData(PrimitiveFormControlData primitiveFormControlData) {
-        this.primitiveFormControlData = primitiveFormControlData;
-    }
-
     public MultiChoiceControlDescriptor getMultiChoiceControlDescriptor() {
         return multiChoiceControlDescriptor;
     }

@@ -100,6 +100,19 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         updateEnabled();
     }
 
+    @Override
+    public void requestFocus() {
+        if(currentEditors.isEmpty()) {
+            addButton.setFocus(true);
+        }
+        else {
+            ValueEditor<O> firstEditor = currentEditors.get(0);
+            if(firstEditor instanceof HasRequestFocus) {
+                ((HasRequestFocus) firstEditor).requestFocus();
+            }
+        }
+    }
+
     private Optional<ValueEditor<O>> getFocusedEditor() {
         return currentEditors.stream()
                       .filter(ElementalUtil::isWidgetOrDescendantWidgetActive)

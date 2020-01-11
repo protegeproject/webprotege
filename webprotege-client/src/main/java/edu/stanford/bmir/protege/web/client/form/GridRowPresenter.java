@@ -46,6 +46,10 @@ public class GridRowPresenter {
         this.cellPresenterProvider = checkNotNull(cellPresenterProvider);
     }
 
+    public void clear() {
+
+    }
+
     @Nonnull
     public GridRowData getFormDataValue() {
         ImmutableList<GridCellData> cellData =
@@ -54,6 +58,10 @@ public class GridRowPresenter {
                               .map(GridCellPresenter::getValue)
                               .collect(toImmutableList());
         return GridRowData.get(cellData);
+    }
+
+    public boolean isDirty() {
+        return false;
     }
 
     public void requestFocus() {

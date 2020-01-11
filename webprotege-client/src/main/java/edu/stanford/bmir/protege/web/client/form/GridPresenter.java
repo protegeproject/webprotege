@@ -13,6 +13,7 @@ import javax.inject.Provider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -34,8 +35,6 @@ public class GridPresenter {
     private final Provider<GridRowPresenter> rowPresenterProvider;
 
     @Nonnull
-    private final List<GridRowPresenter> rowPresenters = new ArrayList<>();
-
     private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of());
 
     @Inject
@@ -48,7 +47,7 @@ public class GridPresenter {
     }
 
     public void clearValue() {
-        rowPresenters.clear();
+        view.clear();
     }
 
     public IsWidget getView() {
@@ -56,9 +55,7 @@ public class GridPresenter {
     }
 
     public void requestFocus() {
-        rowPresenters.stream()
-                     .findFirst()
-                     .ifPresent(GridRowPresenter::requestFocus);
+        view.requestFocus();
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
@@ -73,28 +70,34 @@ public class GridPresenter {
         clear();
         this.descriptor = checkNotNull(descriptor);
         headerPresenter.setColumns(descriptor.getColumns());
+        view.setNewRowHandler(() -> {
+            GridRowPresenter rowPresenter = rowPresenterProvider.get();
+            rowPresenter.setColumnDescriptors(descriptor.getColumns());
+            return rowPresenter;
+        });
     }
 
     public void clear() {
-        rowPresenters.clear();
         view.clear();
     }
 
     public void setValue(GridControlData value) {
         clear();
         // List of objects
-        value.getRows()
-             .forEach(rowDataValue -> {
+        List<GridRowPresenter> rows = value.getRows()
+             .stream()
+             .map(rowDataValue -> {
                      GridRowPresenter rowPresenter = rowPresenterProvider.get();
-                     AcceptsOneWidget rowContainer = view.addRow();
-                     rowPresenter.start(rowContainer);
                      rowPresenter.setColumnDescriptors(descriptor.getColumns());
                      rowPresenter.setValue(rowDataValue);
-             });
+                     return rowPresenter;
+             })
+             .collect(Collectors.toList());
+        view.setRows(rows);
     }
 
     public GridControlData getValue() {
-        ImmutableList<GridRowData> rows = rowPresenters.stream()
+        ImmutableList<GridRowData> rows = view.getRows().stream()
                                                     .map(GridRowPresenter::getFormDataValue)
                                                     .collect(toImmutableList());
         return GridControlData.get(descriptor, rows);

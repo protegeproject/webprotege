@@ -440,11 +440,11 @@
 }
 
 .wp-form__grid__row {
-    border-bottom: 1px solid literal("var(--separator--color)");
+
 }
 
 .wp-form__grid__header-row {
     background-color: literal("var(--separator--color)");
     font-weight: bold;
-    padding: 0.2em;
+    padding: 0.5em;
 }

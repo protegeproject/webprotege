@@ -12,7 +12,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/06/2013
  */
-public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled {
+public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled, HasRequestFocus {
 
     enum NewRowMode {
         AUTOMATIC,

@@ -1,8 +1,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel addStyleNames="{wp.style.formGrid}">
         <g:SimplePanel ui:field="headerContainer"/>
-        <g:FlowPanel ui:field="rowContainer"/>
+        <editor:ValueListEditor ui:field="rowEditor" enabled="true" newRowMode="MANUAL"/>
     </g:HTMLPanel>
 </ui:UiBinder>
