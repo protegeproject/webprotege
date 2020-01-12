@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.field.FixedChoiceListSourceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 
@@ -41,7 +42,7 @@ public class MultiChoiceControlDescriptorPresenterFactory implements FormControl
     @Override
     public FormControlDescriptor createDefaultDescriptor() {
         return MultiChoiceControlDescriptor.get(
-                ImmutableList.of(),
+                FixedChoiceListSourceDescriptor.get(ImmutableList.of()),
                 ImmutableList.of()
         );
     }

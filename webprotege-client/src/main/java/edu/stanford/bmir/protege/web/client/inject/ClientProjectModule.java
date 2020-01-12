@@ -675,6 +675,21 @@ public class ClientProjectModule {
     MultiChoiceControlDescriptorView provideMultiChoiceControlDescriptorView(MultiChoiceControlDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    ChoiceListSourceDescriptorView provideChoiceListSourceDescriptorView(ChoiceListSourceDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FixedChoiceListSourceDescriptorView provideFixedChoiceListSourceDescriptorView(FixedChoiceListSourceDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DynamicChoiceListSourceDescriptorView provideDynamicChoiceListSourceDescriptorView(DynamicChoiceListSourceDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 

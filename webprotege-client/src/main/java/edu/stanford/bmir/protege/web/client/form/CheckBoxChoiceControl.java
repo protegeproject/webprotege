@@ -37,9 +37,14 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class CheckBoxChoiceControl extends Composite implements MultiValueChoiceControl {
 
+    @Nonnull
+    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
+
     private ValueChangeHandler<Boolean> checkBoxValueChangedHandler;
 
     private MultiChoiceControlDescriptor descriptor;
+
+    private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
     interface CheckBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, CheckBoxChoiceControl> {
 
@@ -55,14 +60,15 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     private final List<PrimitiveFormControlData> defaultChoices = new ArrayList<>();
 
     @Inject
-    public CheckBoxChoiceControl() {
+    public CheckBoxChoiceControl(@Nonnull ChoiceDescriptorSupplier choiceDescriptorSupplier) {
+        this.choiceDescriptorSupplier = checkNotNull(choiceDescriptorSupplier);
         initWidget(ourUiBinder.createAndBindUi(this));
         checkBoxValueChangedHandler = event -> ValueChangeEvent.fire(CheckBoxChoiceControl.this, getValue());
     }
 
     public void setDescriptor(@Nonnull MultiChoiceControlDescriptor descriptor) {
         this.descriptor = checkNotNull(descriptor);
-        setChoices(descriptor.getChoices());
+        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
         setDefaultChoices(descriptor.getDefaultChoices());
     }
 
@@ -86,6 +92,7 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
                 checkBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
             });
         }
+        mostRecentSetValue.ifPresent(this::setValue);
     }
 
     private void setDefaultChoices(List<ChoiceDescriptor> defaultChoices) {
@@ -98,8 +105,8 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
 
     @Override
     public void setValue(FormControlData value) {
-        // Should be a SingleChoice
         if(value instanceof MultiChoiceControlData) {
+            this.mostRecentSetValue = Optional.of(value);
             MultiChoiceControlData multiChoiceControlData = (MultiChoiceControlData) value;
             ImmutableList<PrimitiveFormControlData> values = multiChoiceControlData.getValues();
 

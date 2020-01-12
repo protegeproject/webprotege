@@ -4,9 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
@@ -32,8 +30,7 @@ public class SingleChoiceControlDescriptorViewImpl extends Composite implements 
     private static ChoiceControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(
             ChoiceControlDescriptorViewImplUiBinder.class);
 
-    @UiField(provided = true)
-    ValueListEditor<ChoiceDescriptor> choiceListEditor;
+
 
     @UiField
     RadioButton segmentedRadio;
@@ -44,16 +41,22 @@ public class SingleChoiceControlDescriptorViewImpl extends Composite implements 
     @UiField
     RadioButton comboBoxRadio;
 
+    @UiField
+    SimplePanel sourceContainer;
+
     @UiField(provided = true)
     static Counter counter = new Counter();
 
     @Inject
     public SingleChoiceControlDescriptorViewImpl(Provider<ChoiceDescriptorPresenter> choiceDescriptorPresenterProvider) {
-        choiceListEditor = new ValueListFlexEditorImpl<>(choiceDescriptorPresenterProvider::get);
-        choiceListEditor.setEnabled(true);
-        choiceListEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
-        counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
+        counter.increment();
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getSourceContainer() {
+        return sourceContainer;
     }
 
     @Nonnull
@@ -81,16 +84,5 @@ public class SingleChoiceControlDescriptorViewImpl extends Composite implements 
         else {
             segmentedRadio.setValue(true);
         }
-    }
-
-    @Override
-    public void setChoiceDescriptors(@Nonnull List<ChoiceDescriptor> choiceDescriptors) {
-        choiceListEditor.setValue(choiceDescriptors);
-    }
-
-    @Nonnull
-    @Override
-    public ImmutableList<ChoiceDescriptor> getChoiceDescriptors() {
-        return choiceListEditor.getEditorValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
     }
 }

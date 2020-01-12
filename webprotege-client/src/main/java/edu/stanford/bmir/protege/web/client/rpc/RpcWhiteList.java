@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.common.collect.ImmutableSetMultimap;
-import edu.stanford.bmir.protege.web.client.form.FormFieldControl;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -38,7 +37,6 @@ import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
 
 /**
@@ -179,6 +177,8 @@ public class RpcWhiteList implements Action, Result {
     private Color color;
 
     private Criteria criteria;
+
+    ChoiceListSourceDescriptor choiceListSourceDescriptor;
 
     public MultiChoiceControlDescriptor getMultiChoiceControlDescriptor() {
         return multiChoiceControlDescriptor;

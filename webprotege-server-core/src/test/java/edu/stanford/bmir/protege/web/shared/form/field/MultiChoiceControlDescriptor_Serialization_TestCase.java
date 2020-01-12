@@ -32,7 +32,7 @@ public class MultiChoiceControlDescriptor_Serialization_TestCase {
     @Test
     public void shouldSerialize_AnnotationComponentCriteria() throws IOException {
         testSerialization(
-                MultiChoiceControlDescriptor.get(choices, ImmutableList.of())
+                MultiChoiceControlDescriptor.get(FixedChoiceListSourceDescriptor.get(choices), ImmutableList.of())
         );
     }
 

@@ -38,6 +38,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     private static final int SEGMENT_SIZE = 120;
 
+    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
+
     private SingleChoiceControlDescriptor descriptor;
 
     interface SegmentedButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
@@ -63,7 +65,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
-    public SegmentedButtonChoiceControl() {
+    public SegmentedButtonChoiceControl(ChoiceDescriptorSupplier choiceDescriptorSupplier) {
+        this.choiceDescriptorSupplier = checkNotNull(choiceDescriptorSupplier);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -85,7 +88,7 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     @Override
     public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
         this.descriptor = checkNotNull(descriptor);
-        setChoices(descriptor.getChoices());
+        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
         descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
     }
 

@@ -10,6 +10,12 @@
         .radioButtonContainer .gwt-RadioButton {
             margin: 0;
             padding: 1px;
+            display: flex;
+            flex-direction: row;
+        }
+        .radioButtonContainer .gwt-RadioButton input {
+            flex-grow: 0;
+            flex-shrink: 0;
         }
     </ui:style>
     <g:HTMLPanel ui:field="container" addStyleNames="{style.radioButtonContainer}">

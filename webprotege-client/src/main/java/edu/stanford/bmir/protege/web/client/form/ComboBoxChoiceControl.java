@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -33,7 +35,11 @@ import java.util.Optional;
  */
 public class ComboBoxChoiceControl extends Composite implements SingleChoiceControl {
 
+    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
+
     private SingleChoiceControlDescriptor descriptor;
+
+    private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
     interface ComboBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
 
@@ -49,7 +55,8 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
-    public ComboBoxChoiceControl() {
+    public ComboBoxChoiceControl(ChoiceDescriptorSupplier choiceDescriptorSupplier) {
+        this.choiceDescriptorSupplier = checkNotNull(choiceDescriptorSupplier);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -68,13 +75,14 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
             comboBox.addItem(descriptor.getLabel().get(langTag));
         }
         selectDefaultChoice();
+        mostRecentSetValue.ifPresent(this::setValue);
     }
 
     @Override
     public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
         this.descriptor = descriptor;
-        setChoices(descriptor.getChoices());
         descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
     }
 
     private void setDefaultChoice(@Nonnull ChoiceDescriptor defaultChoice) {
@@ -87,8 +95,8 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     @Override
     public void setValue(FormControlData value) {
-        clearValue();
         if(value instanceof SingleChoiceControlData) {
+            this.mostRecentSetValue = Optional.of(value);
             Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) value).getChoice();
             if(choice.isPresent()) {
                 int index = 1;
@@ -101,11 +109,15 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
                 }
             }
         }
+        else {
+            clearValue();
+        }
     }
 
     @Override
     public void clearValue() {
         selectDefaultChoice();
+        mostRecentSetValue = Optional.empty();
     }
 
     @Override

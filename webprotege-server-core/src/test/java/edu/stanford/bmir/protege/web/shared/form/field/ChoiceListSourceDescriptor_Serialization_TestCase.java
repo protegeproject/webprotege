@@ -1,23 +1,26 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlValue;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
 import org.junit.Before;
 import org.junit.Test;
+import org.semanticweb.owlapi.model.EntityType;
 
 import java.io.IOException;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2020-01-08
+ * 2020-01-11
  */
-public class SingleChoiceControlDescriptor_Serialization_TestCase {
+public class ChoiceListSourceDescriptor_Serialization_TestCase {
 
-    private ImmutableList<ChoiceDescriptor> choices;
+    ImmutableList<ChoiceDescriptor> choices;
 
     @Before
     public void setUp() {
@@ -30,14 +33,20 @@ public class SingleChoiceControlDescriptor_Serialization_TestCase {
     }
 
     @Test
-    public void shouldSerialize_AnnotationComponentCriteria() throws IOException {
+    public void shouldSerialize_FixedList() throws IOException {
         testSerialization(
-                SingleChoiceControlDescriptor.get(SingleChoiceControlType.SEGMENTED_BUTTON,
-                                                  FixedChoiceListSourceDescriptor.get(choices))
+                FixedChoiceListSourceDescriptor.get(choices)
         );
     }
 
-    private static <V extends SingleChoiceControlDescriptor> void testSerialization(V value) throws IOException {
-        JsonSerializationTestUtil.testSerialization(value, SingleChoiceControlDescriptor.class);
+    @Test
+    public void shouldSerialize_DynamicList() throws IOException {
+        testSerialization(
+                DynamicChoiceListSourceDescriptor.get(EntityTypeIsOneOfCriteria.get(ImmutableSet.of(EntityType.CLASS)))
+        );
+    }
+
+    private static <V extends ChoiceListSourceDescriptor> void testSerialization(V value) throws IOException {
+        JsonSerializationTestUtil.testSerialization(value, ChoiceListSourceDescriptor.class);
     }
 }

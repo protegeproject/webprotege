@@ -33,9 +33,14 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
 
     private static int nameCounter = 0;
 
+    @Nonnull
+    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
+
     private ValueChangeHandler<Boolean> radioButtonValueChangedHandler;
 
     private SingleChoiceControlDescriptor descriptor;
+
+    private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
     interface RadioButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, RadioButtonChoiceControl> {
 
@@ -51,7 +56,8 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
-    public RadioButtonChoiceControl() {
+    public RadioButtonChoiceControl(@Nonnull ChoiceDescriptorSupplier choiceDescriptorSupplier) {
+        this.choiceDescriptorSupplier = choiceDescriptorSupplier;
         initWidget(ourUiBinder.createAndBindUi(this));
         radioButtonValueChangedHandler = event -> ValueChangeEvent.fire(RadioButtonChoiceControl.this, getValue());
     }
@@ -59,7 +65,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Override
     public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
         this.descriptor = descriptor;
-        setChoices(descriptor.getChoices());
+        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
         descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
     }
 
@@ -84,6 +90,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
             choiceButtons.put(radioButton, descriptor);
         }
         selectDefaultChoice();
+        mostRecentSetValue.ifPresent(this::setValue);
     }
 
     private void setDefaultChoice(@Nonnull ChoiceDescriptor choice) {
@@ -91,12 +98,13 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     }
 
     private void selectDefaultChoice() {
-        setChoice(defaultChoice);
+
     }
 
     @Override
     public void setValue(FormControlData value) {
         if(value instanceof SingleChoiceControlData) {
+            this.mostRecentSetValue = Optional.of(value);
             Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) value).getChoice();
             setChoice(choice);
         }
@@ -125,6 +133,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
             radioButton.setValue(false);
         }
         selectDefaultChoice();
+        mostRecentSetValue = Optional.empty();
     }
 
     @Override

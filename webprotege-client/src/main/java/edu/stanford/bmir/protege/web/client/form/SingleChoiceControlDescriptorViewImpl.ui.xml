@@ -20,7 +20,7 @@
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:Label text="Choices" addStyleNames="{wp.style.formLabel}"/>
             <g:HTMLPanel addStyleNames="{style.choiceList}">
-                <editor:ValueListEditor ui:field="choiceListEditor"/>
+                <g:SimplePanel ui:field="sourceContainer"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>

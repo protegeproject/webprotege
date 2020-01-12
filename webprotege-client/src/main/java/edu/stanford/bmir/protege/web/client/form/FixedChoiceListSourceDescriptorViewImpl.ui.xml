@@ -12,9 +12,8 @@
     </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label text="Choices" addStyleNames="{wp.style.formLabel}"/>
             <g:HTMLPanel addStyleNames="{style.choiceList}">
-                <g:SimplePanel ui:field="sourceContainer"/>
+                <editor:ValueListEditor ui:field="choiceListEditor"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.field.FixedChoiceListSourceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
@@ -45,7 +46,7 @@ public class SingleChoiceControlDescriptorPresenterFactory implements FormContro
     public FormControlDescriptor createDefaultDescriptor() {
         return SingleChoiceControlDescriptor.get(
                 SingleChoiceControlType.SEGMENTED_BUTTON,
-                ImmutableList.of()
+                FixedChoiceListSourceDescriptor.get(ImmutableList.of())
         );
     }
 

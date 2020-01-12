@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.form.field.FixedChoiceListSourceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlType;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
@@ -20,14 +21,19 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
 
     private static final SingleChoiceControlDescriptor DEFAULT_DESCRIPTOR = SingleChoiceControlDescriptor.get(
             SingleChoiceControlType.SEGMENTED_BUTTON,
-            ImmutableList.of());
+            FixedChoiceListSourceDescriptor.get(ImmutableList.of()));
 
     @Nonnull
     private final SingleChoiceControlDescriptorView view;
 
+    @Nonnull
+    private final ChoiceListSourceDescriptorPresenter choiceListSourceDescriptorPresenter;
+
     @Inject
-    public SingleControlDescriptorPresenter(@Nonnull SingleChoiceControlDescriptorView view) {
+    public SingleControlDescriptorPresenter(@Nonnull SingleChoiceControlDescriptorView view,
+                                            @Nonnull ChoiceListSourceDescriptorPresenter choiceListSourceDescriptorPresenter) {
         this.view = checkNotNull(view);
+        this.choiceListSourceDescriptorPresenter = checkNotNull(choiceListSourceDescriptorPresenter);
     }
 
     @Nonnull
@@ -35,7 +41,7 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
     public FormControlDescriptor getFormFieldDescriptor() {
         return SingleChoiceControlDescriptor.get(
                 view.getWidgetType(),
-                view.getChoiceDescriptors()
+                choiceListSourceDescriptorPresenter.getDescriptor()
         );
     }
 
@@ -43,6 +49,7 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
     public void setFormFieldDescriptor(@Nonnull FormControlDescriptor formControlDescriptor) {
         checkNotNull(formControlDescriptor);
         if(!(formControlDescriptor instanceof SingleChoiceControlDescriptor)) {
+            clear();
             return;
         }
         updateView((SingleChoiceControlDescriptor) formControlDescriptor);
@@ -51,7 +58,7 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
 
     public void updateView(@Nonnull SingleChoiceControlDescriptor formFieldDescriptor) {
         view.setWidgetType(formFieldDescriptor.getWidgetType());
-        view.setChoiceDescriptors(formFieldDescriptor.getChoices());
+        choiceListSourceDescriptorPresenter.setDescriptor(formFieldDescriptor.getSource());
     }
 
     @Override
@@ -62,5 +69,6 @@ public class SingleControlDescriptorPresenter implements FormControlDescriptorPr
     @Override
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        choiceListSourceDescriptorPresenter.start(view.getSourceContainer());
     }
 }

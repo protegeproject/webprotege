@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
@@ -30,32 +32,22 @@ public class MultiChoiceControlDescriptorViewImpl extends Composite implements M
 
     }
 
-    @UiField(provided = true)
-    ValueListEditor<ChoiceDescriptor> choiceListEditor;
-
-    @UiField(provided = true)
-    static Counter counter = new Counter();
 
     private static MultiChoiceControlDescriptorViewImplUiBinder ourUiBinder = GWT.create(
             MultiChoiceControlDescriptorViewImplUiBinder.class);
 
+    @UiField
+    SimplePanel sourceContainer;
+
     @Inject
     public MultiChoiceControlDescriptorViewImpl(Provider<ChoiceDescriptorPresenter> choiceDescriptorPresenterProvider) {
-        choiceListEditor = new ValueListFlexEditorImpl<>(choiceDescriptorPresenterProvider::get);
-        choiceListEditor.setEnabled(true);
-        choiceListEditor.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
-        counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
-    }
-
-    @Override
-    public void setChoiceDescriptors(@Nonnull List<ChoiceDescriptor> choiceDescriptors) {
-        choiceListEditor.setValue(choiceDescriptors);
     }
 
     @Nonnull
     @Override
-    public ImmutableList<ChoiceDescriptor> getChoiceDescriptors() {
-        return choiceListEditor.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
+    public AcceptsOneWidget getSourceContainer() {
+        return sourceContainer;
     }
+
 }
