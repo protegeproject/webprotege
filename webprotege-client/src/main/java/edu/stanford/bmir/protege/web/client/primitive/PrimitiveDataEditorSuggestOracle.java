@@ -8,9 +8,12 @@ import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,6 +46,10 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 //        this.mode = mode;
         allowedPrimitiveTypes.add(PrimitiveType.CLASS);
         allowedPrimitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
+    }
+
+    public void setCriteria(CompositeRootCriteria entityMatchCriteria) {
+        delegate.setCriteria(entityMatchCriteria);
     }
 
     public void setFreshEntityStrategy(FreshEntitySuggestStrategy strategy) {

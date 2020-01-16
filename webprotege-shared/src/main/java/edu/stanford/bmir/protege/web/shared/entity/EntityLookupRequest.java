@@ -3,12 +3,18 @@ package edu.stanford.bmir.protege.web.shared.entity;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,6 +32,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EntityLookupRequest implements Serializable, IsSerializable {
 
     public static final int DEFAULT_MATCH_LIMIT = 20;
+
+    @Nullable
+    private CompositeRootCriteria entityMatchCriteria;
 
     private String searchString;
 
@@ -61,7 +70,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public EntityLookupRequest(String searchString, SearchType searchType) {
-        this(searchString, searchType, DEFAULT_MATCH_LIMIT, EntityType.values());
+        this(searchString, searchType, DEFAULT_MATCH_LIMIT, EntityType.values(), null);
     }
 
     /**
@@ -72,13 +81,15 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
      * @param searchedEntityTypes The types of entities to be searched.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public EntityLookupRequest(String searchString, SearchType searchType, int searchLimit, Collection<EntityType<?>> searchedEntityTypes) {
+    public EntityLookupRequest(String searchString, SearchType searchType, int searchLimit, Collection<EntityType<?>> searchedEntityTypes,
+                               @Nullable CompositeRootCriteria entityMatchCriteria) {
         this.searchString = checkNotNull(searchString);
         this.searchType = checkNotNull(searchType);
         if(searchLimit < 0) {
             throw new IllegalArgumentException("Search limit must not be less than zero");
         }
         this.searchLimit = searchLimit;
+        this.entityMatchCriteria = entityMatchCriteria;
         this.searchedEntityTypes = ImmutableSet.copyOf(checkNotNull(searchedEntityTypes));
     }
 
@@ -109,6 +120,11 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
 
     public Set<EntityType<?>> getSearchedEntityTypes() {
         return searchedEntityTypes;
+    }
+
+    @Nonnull
+    public Optional<CompositeRootCriteria> getEntityMatchCriteria() {
+        return Optional.ofNullable(entityMatchCriteria);
     }
 
     @Override

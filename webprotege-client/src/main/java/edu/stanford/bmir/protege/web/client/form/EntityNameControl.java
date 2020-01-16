@@ -67,12 +67,18 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
         editor.addValueChangeHandler(this::handleEditorValueChanged);
         editor.setAutoSelectSuggestions(true);
         editor.setClassesAllowed(true);
+        editor.setNamedIndividualsAllowed(true);
+        editor.setObjectPropertiesAllowed(true);
+        editor.setDataPropertiesAllowed(true);
+        editor.setAnnotationPropertiesAllowed(true);
+        editor.setDatatypesAllowed(true);
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void setDescriptor(@Nonnull EntityNameControlDescriptor descriptor) {
         this.descriptor = checkNotNull(descriptor);
+        descriptor.getMatchCriteria().ifPresent(c -> editor.setCriteria(c));
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
         editor.setPlaceholder(descriptor.getPlaceholder()
                                         .get(localeInfo.getLocaleName()));

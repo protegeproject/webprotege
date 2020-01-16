@@ -61,7 +61,13 @@ public class GridControl implements FormControl {
 
     @Override
     public Optional<FormControlData> getValue() {
-        return Optional.of(gridPresenter.getValue());
+        GridControlData value = gridPresenter.getValue();
+        if(value.getRows().isEmpty()) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(value);
+        }
     }
 
     @Override

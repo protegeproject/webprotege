@@ -6,11 +6,14 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +41,8 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
     }
 
     @Override
-    public void lookupEntity(String displayName, final Set<EntityType<?>> allowedEntityTypes, final AsyncCallback<Optional<OWLEntityData>> callback) {
+    public void lookupEntity(String displayName, final Set<EntityType<?>> allowedEntityTypes, @Nullable
+            CompositeRootCriteria entityMatchCriteria, final AsyncCallback<Optional<OWLEntityData>> callback) {
         final String trimmedContent = displayName.trim();
         if(allowedEntityTypes.isEmpty()) {
             callback.onSuccess(Optional.empty());
@@ -54,7 +58,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
                 return;
             }
         }
-        final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
+        final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes, entityMatchCriteria);
         dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), result -> {
             List<EntityLookupResult> results = result.getEntityLookupResults();
             Optional<OWLEntityData> entityData = getMatchingEntity(results, trimmedContent, projectId, allowedEntityTypes);

@@ -12,9 +12,12 @@ import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -244,5 +247,11 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
     Optional<OWLAnnotationPropertyData> getValueAsAnnotationPropertyData();
 
     void addStyleName(@Nonnull String styleName);
+
+    /**
+     * Sets the criteria for filtering matches
+     * @param entityMatchCriteria The criteria
+     */
+    void setCriteria(@Nonnull CompositeRootCriteria entityMatchCriteria);
     
 }
