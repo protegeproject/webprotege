@@ -63,7 +63,12 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     public CheckBoxChoiceControl(@Nonnull ChoiceDescriptorSupplier choiceDescriptorSupplier) {
         this.choiceDescriptorSupplier = checkNotNull(choiceDescriptorSupplier);
         initWidget(ourUiBinder.createAndBindUi(this));
-        checkBoxValueChangedHandler = event -> ValueChangeEvent.fire(CheckBoxChoiceControl.this, getValue());
+        checkBoxValueChangedHandler = event -> handleCheckBoxValueChanged();
+    }
+
+    public void handleCheckBoxValueChanged() {
+        mostRecentSetValue = getValue();
+        ValueChangeEvent.fire(CheckBoxChoiceControl.this, getValue());
     }
 
     public void setDescriptor(@Nonnull MultiChoiceControlDescriptor descriptor) {
@@ -93,6 +98,7 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
             });
         }
         mostRecentSetValue.ifPresent(this::setValue);
+        ValueChangeEvent.fire(this, getValue());
     }
 
     private void setDefaultChoices(List<ChoiceDescriptor> defaultChoices) {
@@ -129,17 +135,26 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
         for(CheckBox checkBox : checkBoxes.keySet()) {
             checkBox.setValue(false);
         }
+        ValueChangeEvent.fire(this, getValue());
     }
 
     @Override
     public Optional<FormControlData> getValue() {
+        if(checkBoxes.isEmpty()) {
+            return mostRecentSetValue;
+        }
         ImmutableList<PrimitiveFormControlData> selectedValues = checkBoxes.keySet()
                                                                   .stream()
                                                                   .filter(CheckBox::getValue)
                                                                   .map(checkBoxes::get)
                                                                   .map(ChoiceDescriptor::getValue)
                                                                   .collect(toImmutableList());
-        return Optional.of(MultiChoiceControlData.get(descriptor, selectedValues));
+        if(selectedValues.isEmpty()) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(MultiChoiceControlData.get(descriptor, selectedValues));
+        }
     }
 
     @Override

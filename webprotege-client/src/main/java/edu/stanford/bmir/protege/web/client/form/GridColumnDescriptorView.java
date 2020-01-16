@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -18,6 +19,10 @@ public interface GridColumnDescriptorView extends IsWidget {
 
     @Nonnull
     GridColumnId getId();
+
+    void setOptionality(Optionality optionality);
+
+    Optionality getOptionality();
 
     void setLabel(@Nonnull LanguageMap label);
 

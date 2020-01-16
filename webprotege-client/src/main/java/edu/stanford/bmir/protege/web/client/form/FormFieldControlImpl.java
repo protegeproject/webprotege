@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorDirection;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
@@ -39,8 +40,6 @@ public class FormFieldControlImpl extends Composite implements FormFieldControl 
     @UiField
     SimplePanel editorHolder;
 
-    private final HandlerManager handlerManager = new HandlerManager(this);
-
     private final ValueEditor<List<FormControlData>> delegateEditor;
 
     public FormFieldControlImpl(ValueEditorFactory<FormControlData> editorFactory, Repeatability repeatability) {
@@ -63,7 +62,9 @@ public class FormFieldControlImpl extends Composite implements FormFieldControl 
 
     @Override
     public void requestFocus() {
-        
+        if(delegateEditor instanceof HasRequestFocus) {
+            ((HasRequestFocus) delegateEditor).requestFocus();
+        }
     }
 
     @Override
@@ -93,7 +94,7 @@ public class FormFieldControlImpl extends Composite implements FormFieldControl 
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<FormControlData>>> handler) {
-        return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
+        return delegateEditor.addValueChangeHandler(handler);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,5 +42,15 @@ public class GridCellViewImpl extends Composite implements GridCellView {
     @Override
     public void requestFocus() {
 
+    }
+
+    @Override
+    public void setRequiredValueNotPresentVisible(boolean requiredValueNotPresent) {
+        if(requiredValueNotPresent) {
+            editorContainer.addStyleName(WebProtegeClientBundle.BUNDLE.style().formEditorError());
+        }
+        else {
+            editorContainer.removeStyleName(WebProtegeClientBundle.BUNDLE.style().formEditorError());
+        }
     }
 }

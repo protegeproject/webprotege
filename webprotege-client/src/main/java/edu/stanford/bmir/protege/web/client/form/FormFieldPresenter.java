@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.client.LocaleInfo;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
@@ -71,8 +73,8 @@ public class FormFieldPresenter {
         style.forEach(view::addStylePropertyValue);
         // Update the required value missing display when the value changes
         formControl.addValueChangeHandler(event -> {
+            GWT.log("[FormFieldPresenter] Value changed in " + formFieldDescriptor.getId());
             updateRequiredValuePresent();
-            //            formDataChangedHandler.handleFormDataChanged();
         });
         updateRequiredValuePresent();
         return view;
@@ -113,8 +115,15 @@ public class FormFieldPresenter {
      * Updates the specified view so that there is a visual indication if the value is required but not present.
      */
     private void updateRequiredValuePresent() {
+        GWT.log("[FormFieldPresenter] updating required " + formFieldDescriptor.getId());
         if (formFieldDescriptor.getOptionality() == REQUIRED) {
-            boolean requiredValueNotPresent = view.getEditor().getValue().map(List::isEmpty).orElse(true);
+            Optional<List<FormControlData>> value = view.getEditor()
+                                                        .getValue();
+            GWT.log("[FormFieldPresenter] Value: " + value);
+            boolean requiredValueNotPresent = value
+                                                  .map(List::isEmpty)
+                                                  .orElse(true);
+            GWT.log("[FormFieldPresenter] Required value not present: " + requiredValueNotPresent);
             view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
         }
         else {

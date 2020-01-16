@@ -17,4 +17,6 @@ public interface GridCellView extends IsWidget, HasRequestFocus {
     AcceptsOneWidget getEditorContainer();
 
     void requestFocus();
+
+    void setRequiredValueNotPresentVisible(boolean requiredValueNotPresent);
 }

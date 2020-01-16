@@ -2,10 +2,16 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Column Id" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="idField"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
+            <g:RadioButton name="col-optionality-{counter.getValue}" text="Required" ui:field="requiredRadio"/>
+            <g:RadioButton name="col-optionality-{counter.getValue}" text="Optional" ui:field="optionalRadio"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label text="Binding" addStyleNames="{wp.style.formLabel}"/>

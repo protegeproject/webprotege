@@ -13,9 +13,11 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIRED;
 
 /**
  * Matthew Horridge
@@ -44,6 +46,7 @@ public class GridCellPresenter implements HasRequestFocus {
 
     public void clear() {
         editor.clearValue();
+        updateValueRequired();
     }
 
     public Optional<GridColumnId> getId() {
@@ -69,6 +72,7 @@ public class GridCellPresenter implements HasRequestFocus {
     public void setValue(GridCellData data) {
         editor.clearValue();
         data.getValue().ifPresent(value -> editor.setValue(value));
+        updateValueRequired();
     }
 
     public GridCellData getValue() {
@@ -83,4 +87,17 @@ public class GridCellPresenter implements HasRequestFocus {
     public boolean isPresent() {
         return getId().isPresent();
     }
+
+    private void updateValueRequired() {
+        descriptor.ifPresent(descriptor -> {
+            if (descriptor.getOptionality() == REQUIRED) {
+                boolean requiredValueNotPresent = !editor.getValue().isPresent();
+                view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
+            }
+            else {
+                view.setRequiredValueNotPresentVisible(false);
+            }
+        });
+    }
+
 }

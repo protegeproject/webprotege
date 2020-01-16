@@ -123,10 +123,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
 
     @Override
     public Optional<FormControlData> getValue() {
-        return editor.getValue()
-                .map(OWLPrimitiveData::asEntity)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        return currentValue
                 .map(entity -> EntityNameControlData.get(descriptor, entity));
     }
 

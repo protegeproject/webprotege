@@ -23,15 +23,19 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     @JsonCreator
     @Nonnull
     public static GridColumnDescriptor get(@Nonnull @JsonProperty("id") GridColumnId id,
+                                           @Nullable @JsonProperty("optionality") Optionality optionality,
                                            @Nullable @JsonProperty("owlBinding") OwlBinding owlBinding,
                                            @Nonnull @JsonProperty("label") LanguageMap columnLabel,
                                            @Nonnull @JsonProperty("formControlDescriptor") FormControlDescriptor formControlDescriptor) {
-        return new AutoValue_GridColumnDescriptor(id, owlBinding, columnLabel, formControlDescriptor);
+        return new AutoValue_GridColumnDescriptor(id,
+                                                  optionality == null ? Optionality.REQUIRED : optionality,
+                                                  owlBinding, columnLabel, formControlDescriptor);
     }
 
     public static GridColumnDescriptor getDefaultColumnDescriptor() {
         return GridColumnDescriptor.get(
                 GridColumnId.get(""),
+                Optionality.REQUIRED,
                 null,
                 LanguageMap.empty(),
                 TextControlDescriptor.getDefault()
@@ -40,6 +44,9 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @Nonnull
     public abstract GridColumnId getId();
+
+    @Nonnull
+    public abstract Optionality getOptionality();
 
     @JsonIgnore
     @Nullable
@@ -57,6 +64,7 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     @Override
     @Nonnull
     public abstract FormControlDescriptor getFormControlDescriptor();
+
 
     // TODO: Column width, grow, shrink
 

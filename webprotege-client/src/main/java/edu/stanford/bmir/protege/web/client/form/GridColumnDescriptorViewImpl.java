@@ -4,7 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -35,10 +37,20 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
     @UiField
     SimplePanel bindingViewContainer;
 
+    @UiField(provided = true)
+    static Counter counter = new Counter();
+
+    @UiField
+    RadioButton requiredRadio;
+
+    @UiField
+    RadioButton optionalRadio;
+
     @Inject
     public GridColumnDescriptorViewImpl(LanguageMapEditor labelField) {
         this.labelField = labelField;
         initWidget(ourUiBinder.createAndBindUi(this));
+        counter.increment();
     }
 
     @Override
@@ -50,6 +62,26 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
     @Override
     public GridColumnId getId() {
         return GridColumnId.get(idField.getText().trim());
+    }
+
+    @Override
+    public void setOptionality(Optionality optionality) {
+        if(optionality == Optionality.REQUIRED) {
+            requiredRadio.setValue(true);
+        }
+        else {
+            optionalRadio.setValue(true);
+        }
+    }
+
+    @Override
+    public Optionality getOptionality() {
+        if(requiredRadio.getValue()) {
+            return Optionality.REQUIRED;
+        }
+        else {
+            return Optionality.OPTIONAL;
+        }
     }
 
     @Override

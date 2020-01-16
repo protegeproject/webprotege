@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -21,11 +20,11 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     @Nonnull
     private final GridColumnDescriptorView view;
 
-    private Optional<GridColumnDescriptor> descriptor = Optional.empty();
-
     private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
     private final OwlBindingPresenter bindingPresenter;
+
+    private Optional<GridColumnDescriptor> descriptor = Optional.empty();
 
     @Inject
     public GridColumnDescriptorPresenter(@Nonnull GridColumnDescriptorView view,
@@ -36,39 +35,44 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
         this.bindingPresenter = bindingPresenter;
     }
 
-    public void start(@Nonnull AcceptsOneWidget container) {
-        container.setWidget(view);
-        fieldDescriptorChooserPresenter.start(view.getFieldDescriptorChooserContainer());
-        bindingPresenter.start(view.getBindingViewContainer());
-    }
-
-    public void setValue(@Nonnull GridColumnDescriptor descriptor) {
-        this.descriptor = Optional.of(descriptor);
-        view.setId(descriptor.getId());
-        view.setLabel(descriptor.getLabel());
-        bindingPresenter.clear();
-        descriptor.getOwlBinding().ifPresent(bindingPresenter::setBinding);
-        fieldDescriptorChooserPresenter.setFormFieldDescriptor(descriptor.getFormControlDescriptor());
+    @Nonnull
+    @Override
+    public String getHeaderLabel() {
+        return view.getId()
+                   .getId() + " Column";
     }
 
     @Nonnull
     @Override
     public Optional<GridColumnDescriptor> getValue() {
         return fieldDescriptorChooserPresenter.getFormFieldDescriptor()
-                .map(fieldDescriptor -> GridColumnDescriptor.get(view.getId(),
-                                                             bindingPresenter.getBinding().orElse(null),
-                                                             view.getLabel(),
-                                                             fieldDescriptor));
+                                              .map(fieldDescriptor -> GridColumnDescriptor.get(view.getId(),
+                                                                                               view.getOptionality(),
+                                                                                               bindingPresenter.getBinding()
+                                                                                                               .orElse(null),
+                                                                                               view.getLabel(),
+                                                                                               fieldDescriptor));
     }
 
-    @Nonnull
-    @Override
-    public String getHeaderLabel() {
-        return view.getId().getId() + " Column";
+    public void setValue(@Nonnull GridColumnDescriptor descriptor) {
+        this.descriptor = Optional.of(descriptor);
+        view.setId(descriptor.getId());
+        view.setOptionality(descriptor.getOptionality());
+        view.setLabel(descriptor.getLabel());
+        bindingPresenter.clear();
+        descriptor.getOwlBinding()
+                  .ifPresent(bindingPresenter::setBinding);
+        fieldDescriptorChooserPresenter.setFormFieldDescriptor(descriptor.getFormControlDescriptor());
     }
 
     @Override
     public void setHeaderLabelChangedHandler(Consumer<String> headerLabelHandler) {
 
+    }
+
+    public void start(@Nonnull AcceptsOneWidget container) {
+        container.setWidget(view);
+        fieldDescriptorChooserPresenter.start(view.getFieldDescriptorChooserContainer());
+        bindingPresenter.start(view.getBindingViewContainer());
     }
 }

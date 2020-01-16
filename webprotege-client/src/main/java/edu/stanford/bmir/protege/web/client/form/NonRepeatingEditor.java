@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class NonRepeatingEditor implements ValueEditor<List<FormControlData>> {
+public class NonRepeatingEditor implements ValueEditor<List<FormControlData>>, HasRequestFocus {
 
     private final ValueEditor<FormControlData> delegate;
 
@@ -42,13 +43,21 @@ public class NonRepeatingEditor implements ValueEditor<List<FormControlData>> {
     }
 
     @Override
+    public void requestFocus() {
+        if(delegate instanceof HasRequestFocus) {
+            ((HasRequestFocus) delegate).requestFocus();
+        }
+    }
+
+    @Override
     public void clearValue() {
         delegate.clearValue();
     }
 
     @Override
     public Optional<List<FormControlData>> getValue() {
-        return delegate.getValue().map(Collections::singletonList);
+        return delegate.getValue()
+                .map(Collections::singletonList);
     }
 
     @Override
