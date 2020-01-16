@@ -180,6 +180,20 @@ public class RpcWhiteList implements Action, Result {
 
     ChoiceListSourceDescriptor choiceListSourceDescriptor;
 
+    public FormEntitySubject getFormEntitySubject() {
+        return formEntitySubject;
+    }
+
+    public void setFormEntitySubject(FormEntitySubject formEntitySubject) {
+        this.formEntitySubject = formEntitySubject;
+    }
+
+    public void setPrimitiveFormControlData(PrimitiveFormControlData primitiveFormControlData) {
+        this.primitiveFormControlData = primitiveFormControlData;
+    }
+
+    private FormEntitySubject formEntitySubject;
+
     public MultiChoiceControlDescriptor getMultiChoiceControlDescriptor() {
         return multiChoiceControlDescriptor;
     }

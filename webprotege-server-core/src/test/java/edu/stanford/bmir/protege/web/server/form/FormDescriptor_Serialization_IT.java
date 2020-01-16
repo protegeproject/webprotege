@@ -3,7 +3,8 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
-import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -30,25 +32,26 @@ public class FormDescriptor_Serialization_IT {
 
     private static final String SUPPLIED_NAME_TEMPLATE = "${type}-${uuid}";
 
-    private static final ImmutableList<String> AXIOM_TEMPLATES = ImmutableList.of("SubClassOf(${subject.iri} <http://example.org/A>)");
-
     private static final FormId FORM_ID = FormId.get("TheFormId");
 
     private static final LanguageMap LABEL = LanguageMap.of("en", "The label");
+
+    private OWLClass parent;
 
     private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
+        parent = DataFactory.getOWLThing();
         objectMapper = new ObjectMapperProvider().get();
     }
 
     @Test
     public void shouldSerializeFormDescriptor() throws IOException {
-        var subjectFactoryDescriptor = EntityFormSubjectFactoryDescriptor.get(
+        var subjectFactoryDescriptor = FormSubjectFactoryDescriptor.get(
                 EntityType.CLASS,
                 SUPPLIED_NAME_TEMPLATE,
-                AXIOM_TEMPLATES,
+                parent,
                 Optional.of(IRI.create("http://example.org/target-ontology"))
         );
         var formDescriptor = new FormDescriptor(
@@ -65,10 +68,10 @@ public class FormDescriptor_Serialization_IT {
 
     @Test
     public void shouldSerializeFormDescriptorWithoutTargetOntologyIri() throws IOException {
-        var subjectFactoryDescriptor = EntityFormSubjectFactoryDescriptor.get(
+        var subjectFactoryDescriptor = FormSubjectFactoryDescriptor.get(
                 EntityType.CLASS,
                 SUPPLIED_NAME_TEMPLATE,
-                AXIOM_TEMPLATES,
+                parent,
                 Optional.empty()
         );
         var formDescriptor = new FormDescriptor(

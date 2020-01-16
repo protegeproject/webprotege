@@ -34,6 +34,15 @@ public abstract class DataPropertyFrame implements EntityFrame<OWLDataPropertyDa
                                                functional);
     }
 
+    @Nonnull
+    public static DataPropertyFrame empty(@Nonnull OWLDataPropertyData subject) {
+        return get(subject,
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   false);
+    }
+
     @Override
     public abstract OWLDataPropertyData getSubject();
 

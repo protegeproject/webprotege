@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -45,6 +46,8 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Nonnull
     private Optional<PortletUi> portletUi = Optional.empty();
+
+    private Optional<FormData> currentFormData = Optional.empty();
 
     @Inject
     public FormPortletPresenter(SelectionModel selectionModel,
@@ -101,10 +104,14 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private void saveCurrentFormData() {
         currentSubject.ifPresent(subject -> {
+            if(!currentFormData.equals(formPresenter.getFormData())) {
+                GWT.log("Form data changed: " + currentFormData + "       TO:     " + formPresenter.getFormData());
+            }
             formPresenter.getFormData()
                          .ifPresent(formData -> {
                              dispatchServiceManager.execute(new SetEntityFormDataAction(projectId,
                                                                                         subject,
+                                                                                        currentFormData.get(),
                                                                                         formData),
                                                             this,
                                                             result -> {
@@ -115,6 +122,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void displayFormResult(GetEntityFormResult result) {
+        currentFormData = Optional.of(result.getFormData());
         GWT.log("[FormPortletPresenter] Display form result: " + result);
         Optional<FormDescriptor> formDescriptor = result.getFormDescriptor();
         if(formDescriptor.isPresent()) {

@@ -32,6 +32,14 @@ public abstract class NamedIndividualFrame implements EntityFrame<OWLNamedIndivi
     }
 
     @Nonnull
+    public static NamedIndividualFrame empty(@Nonnull OWLNamedIndividualData subject) {
+        return get(subject,
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of());
+    }
+
+    @Nonnull
     public abstract OWLNamedIndividualData getSubject();
 
     @Nonnull

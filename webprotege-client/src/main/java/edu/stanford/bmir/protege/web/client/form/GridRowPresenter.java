@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
@@ -10,10 +11,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -39,6 +37,8 @@ public class GridRowPresenter {
 
     private ImmutableList<GridColumnDescriptor> columnDescriptors = ImmutableList.of();
 
+    private Optional<FormSubject> subject = Optional.empty();
+
     @Inject
     public GridRowPresenter(@Nonnull GridRowView view,
                             Provider<GridCellPresenter> cellPresenterProvider) {
@@ -57,7 +57,7 @@ public class GridRowPresenter {
                               .filter(GridCellPresenter::isPresent)
                               .map(GridCellPresenter::getValue)
                               .collect(toImmutableList());
-        return GridRowData.get(cellData);
+        return GridRowData.get(subject.orElse(null), cellData);
     }
 
     public boolean isDirty() {
@@ -90,6 +90,7 @@ public class GridRowPresenter {
     }
 
     public void setValue(GridRowData formDataObject) {
+        this.subject = formDataObject.getSubject();
         cellPresenters.forEach(GridCellPresenter::clear);
         formDataObject.getCells()
                       .forEach(cellData -> {

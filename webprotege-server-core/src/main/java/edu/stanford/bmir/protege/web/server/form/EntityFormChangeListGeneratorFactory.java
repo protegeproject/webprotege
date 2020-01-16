@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGeneratorFactory;
-import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
+import edu.stanford.bmir.protege.web.server.frame.EmptyEntityFrameFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
-import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
-import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
@@ -22,25 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EntityFormChangeListGeneratorFactory {
 
     @Nonnull
-    private final AxiomTemplatesParser axiomTemplatesParser;
-
-    @Nonnull
     private final EntityFormDataConverter entityFormDataConverter;
-
-    @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
-    private final ClassFrameTranslator classFrameTranslator;
-
-    @Nonnull
-    private final NamedIndividualFrameTranslator individualFrameTranslator;
-
-    @Nonnull
-    private final FrameChangeGeneratorFactory frameChangeGenerator;
-
-    @Nonnull
-    private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Nonnull
     private final ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory;
@@ -48,38 +28,45 @@ public class EntityFormChangeListGeneratorFactory {
     @Nonnull
     private final MessageFormatter messageFormatter;
 
+    @Nonnull
+    private final FrameChangeGeneratorFactory frameChangeGeneratorFactory;
+
+    @Nonnull
+    private final FormFrameConverter formFrameConverter;
+
+    @Nonnull
+    private final EmptyEntityFrameFactory emptyEntityFrameFactory;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
-    public EntityFormChangeListGeneratorFactory(@Nonnull AxiomTemplatesParser axiomTemplatesParser,
-                                                @Nonnull EntityFormDataConverter entityFormDataConverter,
-                                                @Nonnull RenderingManager renderingManager,
-                                                @Nonnull ClassFrameTranslator classFrameTranslator,
-                                                @Nonnull NamedIndividualFrameTranslator individualFrameTranslator,
-                                                @Nonnull FrameChangeGeneratorFactory frameChangeGenerator,
-                                                @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
+    public EntityFormChangeListGeneratorFactory(@Nonnull EntityFormDataConverter entityFormDataConverter,
                                                 @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory,
-                                                @Nonnull MessageFormatter messageFormatter) {
-        this.axiomTemplatesParser = axiomTemplatesParser;
+                                                @Nonnull MessageFormatter messageFormatter,
+                                                @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
+                                                @Nonnull FormFrameConverter formFrameConverter,
+                                                @Nonnull EmptyEntityFrameFactory emptyEntityFrameFactory,
+                                                @Nonnull RenderingManager renderingManager) {
         this.entityFormDataConverter = entityFormDataConverter;
-        this.renderingManager = renderingManager;
-        this.classFrameTranslator = classFrameTranslator;
-        this.individualFrameTranslator = individualFrameTranslator;
-        this.frameChangeGenerator = frameChangeGenerator;
-        this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.reverseEngineeredChangeDescriptionGeneratorFactory = reverseEngineeredChangeDescriptionGeneratorFactory;
         this.messageFormatter = messageFormatter;
+        this.frameChangeGeneratorFactory = frameChangeGeneratorFactory;
+        this.formFrameConverter = formFrameConverter;
+        this.emptyEntityFrameFactory = emptyEntityFrameFactory;
+        this.renderingManager = renderingManager;
     }
 
-    public EntityFormChangeListGenerator create(@Nonnull FormData formData) {
+    public EntityFormChangeListGenerator create(@Nonnull FormData pristineFormData,
+                                                @Nonnull FormData formData) {
         checkNotNull(formData);
-        return new EntityFormChangeListGenerator(formData,
-                                                 this.axiomTemplatesParser,
+        checkNotNull(pristineFormData);
+        return new EntityFormChangeListGenerator(pristineFormData,
+                                                 formData,
                                                  this.entityFormDataConverter,
-                                                 this.renderingManager,
-                                                 this.classFrameTranslator,
-                                                 this.individualFrameTranslator,
-                                                 this.frameChangeGenerator,
-                                                 this.defaultOntologyIdManager,
                                                  this.reverseEngineeredChangeDescriptionGeneratorFactory,
-                                                 this.messageFormatter);
+                                                 this.messageFormatter,
+                                                 frameChangeGeneratorFactory,
+                                                 formFrameConverter, emptyEntityFrameFactory, renderingManager);
     }
 }

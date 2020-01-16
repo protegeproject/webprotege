@@ -13,5 +13,8 @@ import javax.annotation.Nonnull;
 public interface GridControlDescriptorView extends IsWidget {
 
     @Nonnull
+    AcceptsOneWidget getFormSubjectFactoryDescriptorContainer();
+
+    @Nonnull
     AcceptsOneWidget getViewContainer();
 }

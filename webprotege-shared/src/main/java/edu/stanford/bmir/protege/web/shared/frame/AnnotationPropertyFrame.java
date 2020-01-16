@@ -23,6 +23,14 @@ import java.util.Set;
 public abstract class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationPropertyData>, HasPropertyValueList {
 
     @Nonnull
+    public static AnnotationPropertyFrame empty(@Nonnull OWLAnnotationPropertyData subject) {
+        return get(subject,
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of());
+    }
+
+    @Nonnull
     public abstract OWLAnnotationPropertyData getSubject();
 
     @Nonnull

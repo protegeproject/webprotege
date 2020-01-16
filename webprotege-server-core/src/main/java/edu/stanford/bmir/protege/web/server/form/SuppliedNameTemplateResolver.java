@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import edu.stanford.bmir.protege.web.shared.form.EntityFormSubjectFactoryDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.inject.Inject;

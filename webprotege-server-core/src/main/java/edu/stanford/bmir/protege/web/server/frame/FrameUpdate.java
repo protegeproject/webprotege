@@ -14,8 +14,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class FrameUpdate {
 
-    public static <F extends Frame<S>, S extends OWLEntityData> FrameUpdate get(F from,
-                                                                                F to) {
+    public static FrameUpdate get(Frame from, Frame to) {
         if(!from.getClass().equals(to.getClass())) {
             throw new RuntimeException("Frames must be of the same type");
         }

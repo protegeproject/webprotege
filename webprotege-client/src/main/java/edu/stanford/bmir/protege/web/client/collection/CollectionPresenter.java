@@ -170,7 +170,7 @@ public class CollectionPresenter implements Presenter {
 //                                                   place.getFormId(),
 //                                                   sel),
 //                                           result -> formPresenter.displayForm(result.getFormDescriptor(),
-//                                                                               result.getFormData()));
+//                                                                               result.getNewformData()));
 //        });
     }
 }

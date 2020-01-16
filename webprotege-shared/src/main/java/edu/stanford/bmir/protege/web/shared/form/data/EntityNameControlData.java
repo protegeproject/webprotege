@@ -27,6 +27,16 @@ public abstract class EntityNameControlData implements FormControlData {
         return new AutoValue_EntityNameControlData(descriptor, entity);
     }
 
+    @Override
+    public <R> R accept(@Nonnull FormControlDataVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public void accept(@Nonnull FormControlDataVisitor visitor) {
+        visitor.visit(this);
+    }
+
     @Nonnull
     public abstract EntityNameControlDescriptor getDescriptor();
 

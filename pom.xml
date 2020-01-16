@@ -263,7 +263,8 @@
                     <executions>
                         <execution>
                             <id>attach-sources</id>
-                            <phase>package</phase>
+                            <phase>process-classes</phase>
+                            <!--<phase>package</phase>-->
                             <goals>
                                 <goal>jar-no-fork</goal>
                             </goals>
@@ -383,6 +384,7 @@
             <properties>
                 <data.directory>/srv/webprotege</data.directory>
             </properties>
+
         </profile>
         <profile>
             <id>skip-gwt-compilation</id>

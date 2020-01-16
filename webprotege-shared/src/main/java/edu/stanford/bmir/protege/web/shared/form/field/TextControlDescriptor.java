@@ -52,7 +52,7 @@ public class TextControlDescriptor implements FormControlDescriptor {
         return TYPE;
     }
 
-    public static FormControlDescriptor getDefault() {
+    public static TextControlDescriptor getDefault() {
         return new TextControlDescriptor(
                 LanguageMap.empty(),
                 StringType.SIMPLE_STRING,

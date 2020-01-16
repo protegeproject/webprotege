@@ -19,15 +19,8 @@ public interface SubFormControlDescriptorView extends IsWidget {
     void clear();
 
     @Nonnull
-    List<OWLPrimitiveData> getParents();
+    AcceptsOneWidget getFormSubjectDescriptorViewContainr();
 
     @Nonnull
     AcceptsOneWidget getSubFormContainer();
-
-    @Nonnull
-    EntityType<?> getEntityType();
-
-    void setEntityType(@Nonnull EntityType<?> entityType);
-
-    void setParents(@Nonnull List<OWLPrimitiveData> parents);
 }

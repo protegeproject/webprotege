@@ -42,6 +42,10 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
                                         propertyValues);
     }
 
+    public static ClassFrame empty(@Nonnull OWLClassData subject) {
+        return get(subject, ImmutableSet.of(), ImmutableSet.of());
+    }
+
     /**
      * Gets the subject of this class frame.
      *

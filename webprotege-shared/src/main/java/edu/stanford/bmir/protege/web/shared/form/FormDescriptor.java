@@ -12,7 +12,6 @@ import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -33,7 +32,7 @@ public class FormDescriptor implements IsSerializable {
     private List<FormFieldDescriptor> elements;
 
     @Nullable
-    private EntityFormSubjectFactoryDescriptor subjectFactoryDescriptor;
+    private FormSubjectFactoryDescriptor subjectFactoryDescriptor;
 
     private FormDescriptor() {
         this.elements = new ArrayList<>();
@@ -42,7 +41,7 @@ public class FormDescriptor implements IsSerializable {
     public FormDescriptor(FormId id,
                           LanguageMap label,
                           List<FormFieldDescriptor> formFieldDescriptors,
-                          Optional<EntityFormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
+                          Optional<FormSubjectFactoryDescriptor> subjectFactoryDescriptor) {
         this.formId = id;
         this.label = label;
         this.elements = new ArrayList<>(formFieldDescriptors);
@@ -85,7 +84,7 @@ public class FormDescriptor implements IsSerializable {
     }
 
     @Nonnull
-    public Optional<EntityFormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
+    public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
         return Optional.ofNullable(subjectFactoryDescriptor);
     }
 

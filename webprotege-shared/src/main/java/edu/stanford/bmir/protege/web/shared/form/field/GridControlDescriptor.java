@@ -1,13 +1,17 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -33,8 +37,10 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
 
     @JsonCreator
     @Nonnull
-    public static GridControlDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors) {
-        return new AutoValue_GridControlDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors);
+    public static GridControlDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors,
+                                            @Nullable @JsonProperty("subjectFactoryDescriptor") FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+        return new AutoValue_GridControlDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors,
+                                                   subjectFactoryDescriptor);
     }
 
     @JsonProperty("columns")
@@ -45,4 +51,13 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
     public <R> R accept(@Nonnull FormControlDescriptorVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @JsonIgnore
+    @Nullable
+    protected abstract FormSubjectFactoryDescriptor getSubjectFactoryDescriptorInternal();
+
+    public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
+        return Optional.ofNullable(getSubjectFactoryDescriptorInternal());
+    }
+
 }

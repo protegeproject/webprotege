@@ -18,6 +18,9 @@ import javax.inject.Inject;
  */
 public class GridControlDescriptorViewImpl extends Composite implements GridControlDescriptorView {
 
+    @UiField
+    protected AcceptsOneWidget formSubjectFactoryDescriptorContainer;
+
     interface GridControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, GridControlDescriptorViewImpl> {
 
     }
@@ -30,6 +33,12 @@ public class GridControlDescriptorViewImpl extends Composite implements GridCont
     @Inject
     public GridControlDescriptorViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getFormSubjectFactoryDescriptorContainer() {
+        return formSubjectFactoryDescriptorContainer;
     }
 
     @Nonnull

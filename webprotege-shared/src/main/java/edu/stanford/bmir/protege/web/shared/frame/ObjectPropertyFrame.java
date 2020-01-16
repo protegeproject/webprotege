@@ -37,6 +37,16 @@ public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectProper
     }
 
     @Nonnull
+    public static ObjectPropertyFrame empty(@Nonnull OWLObjectPropertyData subject) {
+        return get(subject,
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of());
+    }
+
+    @Nonnull
     public abstract OWLObjectPropertyData getSubject();
 
     @Nonnull

@@ -93,6 +93,9 @@ public class FormFieldPresenter {
         if(formControl == null) {
             return;
         }
+        if(!formFieldData.getFormFieldDescriptor().equals(formFieldDescriptor)) {
+            throw new RuntimeException("FormFieldDescriptor mismatch for field: " + formFieldDescriptor.getId());
+        }
         checkNotNull(formFieldData);
         formControl.setValue(formFieldData.getFormControlData());
         updateRequiredValuePresent();

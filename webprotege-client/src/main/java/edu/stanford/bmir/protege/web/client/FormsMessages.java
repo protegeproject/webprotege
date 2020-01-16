@@ -80,6 +80,10 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("subForm.subject.parents")
     String subFormSubjectParents();
 
+    @DefaultMessage("Subject generated name pattern")
+    @Key("subForm.subject.pattern")
+    String subFormSubjectGeneratedNamePattern();
+
     @DefaultMessage("Subject type")
     @Key("subForm.subject.type")
     String subFormSubjectType();

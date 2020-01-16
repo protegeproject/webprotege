@@ -281,8 +281,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     private void ensureBlank() {
         if (isEnabled()) {
-            if (currentEditors.isEmpty()
-                    || (newRowMode == NewRowMode.AUTOMATIC && currentEditors.get(currentEditors.size() - 1).getValue().isPresent())) {
+            if ((newRowMode == NewRowMode.AUTOMATIC && (currentEditors.isEmpty() || currentEditors.get(currentEditors.size() - 1).getValue().isPresent()))) {
                 addValueEditor(false);
             }
         }

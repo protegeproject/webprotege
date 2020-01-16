@@ -35,7 +35,8 @@ public class GridPresenter {
     private final Provider<GridRowPresenter> rowPresenterProvider;
 
     @Nonnull
-    private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of());
+    private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of(),
+                                                                         null);
 
     @Inject
     public GridPresenter(@Nonnull GridView view,

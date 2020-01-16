@@ -26,6 +26,16 @@ public abstract class TextControlData implements FormControlData {
         return new AutoValue_TextControlData(descriptor, value);
     }
 
+    @Override
+    public <R> R accept(@Nonnull FormControlDataVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public void accept(@Nonnull FormControlDataVisitor visitor) {
+        visitor.visit(this);
+    }
+
     @JsonProperty("descriptor")
     @Nonnull
     public abstract TextControlDescriptor getDescriptor();

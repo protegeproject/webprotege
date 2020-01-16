@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -15,17 +19,26 @@ import javax.inject.Provider;
 public class EntityFormDataConverter {
 
     @Nonnull
+    private final OWLDataFactory dataFactory;
+
+    @Nonnull
     private final RenderingManager renderingManager;
 
     @Nonnull
-    private final Provider<EntityFormDataConverterSession> sessionFactory;
+    private final Provider<FormFrameBuilder> formFrameBuilderProvider;
 
+    @Nonnull
+    private final Provider<FormSubjectResolver> formSubjectResolverProvider;
 
     @Inject
-    public EntityFormDataConverter(@Nonnull RenderingManager renderingManager,
-                                   @Nonnull Provider<EntityFormDataConverterSession> sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public EntityFormDataConverter(@Nonnull OWLDataFactory dataFactory,
+                                   @Nonnull RenderingManager renderingManager,
+                                   @Nonnull Provider<FormFrameBuilder> formFrameBuilderProvider,
+                                   @Nonnull Provider<FormSubjectResolver> formSubjectResolverProvider) {
+        this.dataFactory = dataFactory;
         this.renderingManager = renderingManager;
+        this.formFrameBuilderProvider = formFrameBuilderProvider;
+        this.formSubjectResolverProvider = formSubjectResolverProvider;
     }
 
     /**
@@ -33,166 +46,139 @@ public class EntityFormDataConverter {
      * @param formData
      * @return
      */
-    public EntityFormDataConverterSession convert(@Nonnull FormData formData) {
-        var session = sessionFactory.get();
-        session.addFormData(formData);
-//        addFormPropertyValuesToSession(formData, session);
-        return session;
+    public FormFrame convert(@Nonnull FormData formData) {
+        FormFrameBuilder formFrameBuilder = buildFormFrame(formData);
+        var formSubjectResolver = formSubjectResolverProvider.get();
+        return formFrameBuilder.build(formSubjectResolver);
     }
 
-//    private void addFormPropertyValuesToSession(FormData formData,
-//                                                EntityFormDataConverterSession session) {
-//        formData.getData()
-//                .forEach((formElementId, formDataValue) -> {
-//                        addFormElementPropertyValuesToSession(formData, formElementId, formDataValue, session);
-//                });
-//    }
-//
-//    private void addFormElementPropertyValuesToSession(FormData formData,
-//                                                       FormFieldId elementId,
-//                                                       FormDataValue dataValue,
-//                                                       EntityFormDataConverterSession session) {
-//        var property = formData.getOwlProperty(elementId);
-//        property.ifPresent(theProperty -> addPropertyValuesToSession(formData,
-//                                                                     theProperty,
-//                                                                     dataValue.asList(),
-//                                                                     session));
-//    }
-//
-//
-//
-//    private void addPropertyValuesToSession(FormData formData,
-//                                            OWLProperty property,
-//                                            List<FormDataValue> formDataValues,
-//                                            EntityFormDataConverterSession session) {
-//        if(property.isOWLAnnotationProperty()) {
-//            addAnnotationPropertyPropertyValuesToSession(formData,
-//                                                         property.asOWLAnnotationProperty(),
-//                                                         formDataValues,
-//                                                         session);
-//        }
-//        else if(property.isOWLObjectProperty()) {
-//            convertObjectPropertyBasedFormDataToPropertyValues(formData,
-//                                                               property.asOWLObjectProperty(),
-//                                                               formDataValues,
-//                                                               session);
-//        }
-//        else if(property.isOWLDataProperty()) {
-//            addDataPropertyPropertyValuesToSession(formData,
-//                                                   property.asOWLDataProperty(),
-//                                                   formDataValues,
-//                                                   session);
-//        }
-//    }
-//
-//    private void convertObjectPropertyBasedFormDataToPropertyValues(FormData formData,
-//                                                                    OWLObjectProperty property,
-//                                                                    List<FormDataValue> formDataValues,
-//                                                                    EntityFormDataConverterSession session) {
-//        formDataValues.forEach(formDataValue -> {
-//
-//            formDataValue.asOWLEntity()
-//                         .ifPresent(entity -> addObjectPropertyPropertyValuesToSession(formData, property, entity, session));
-//
-//            formDataValue.asFormData()
-//                         .ifPresent(subFormData -> {
-//                             session.addFormData(subFormData);
-//                             var subFormSubject = session.getSubject(subFormData);
-//                             subFormSubject.ifPresent(nestedSubject -> {
-//                                 addObjectPropertyPropertyValuesToSession(formData,
-//                                                                          property,
-//                                                                          nestedSubject, session
-//                                 );
-//                                 addFormPropertyValuesToSession(subFormData,
-//                                                                session);
-//                             });
-//                         });
-//        });
-//    }
-//
-//    private void addObjectPropertyPropertyValuesToSession(FormData formData,
-//                                                          OWLObjectProperty property,
-//                                                          OWLEntity value,
-//                                                          EntityFormDataConverterSession session) {
-//        if(value.isOWLClass()) {
-//            var pv = PropertyClassValue.get(
-//                    renderingManager.getObjectPropertyData(property),
-//                    renderingManager.getClassData(value.asOWLClass()),
-//                    State.ASSERTED  // Sort this!
-//            );
-//            session.putPropertyValue(formData, pv);
-//        }
-//        else if(value.isOWLNamedIndividual()) {
-//            var pv = PropertyIndividualValue.get(
-//                    renderingManager.getObjectPropertyData(property),
-//                    renderingManager.getIndividualData(value.asOWLNamedIndividual()),
-//                    State.ASSERTED  // Sort this!
-//            );
-//            session.putPropertyValue(formData, pv);
-//        }
-//    }
-//
-//    private void addAnnotationPropertyPropertyValuesToSession(FormData formData,
-//                                                              OWLAnnotationProperty property,
-//                                                              List<FormDataValue> formDataValues,
-//                                                              EntityFormDataConverterSession session) {
-//        formDataValues.forEach(formDataValue -> {
-//            formDataValue.asLiteral()
-//                         .ifPresent(literal -> {
-//                             var pv = PropertyAnnotationValue.get(
-//                                     renderingManager.getAnnotationPropertyData(property),
-//                                     OWLLiteralData.get(literal),
-//                                     State.ASSERTED
-//                             );
-//                             session.putPropertyValue(formData, pv);
-//                         });
-//            formDataValue.asIRI()
-//                         .ifPresent(iri -> {
-//                             var pv = PropertyAnnotationValue.get(
-//                                     renderingManager.getAnnotationPropertyData(property),
-//                                     renderingManager.getRendering(iri),
-//                                     State.ASSERTED
-//                             );
-//                             session.putPropertyValue(formData, pv);
-//                         });
-//            formDataValue.asOWLEntity()
-//                         .map(OWLEntity::getIRI)
-//                         .ifPresent(iri -> {
-//                             var pv = PropertyAnnotationValue.get(
-//                                     renderingManager.getAnnotationPropertyData(property),
-//                                     renderingManager.getRendering(iri),
-//                                     State.ASSERTED
-//                             );
-//                             session.putPropertyValue(formData, pv);
-//                         });
-//        });
-//    }
-//
-//    private void addDataPropertyPropertyValuesToSession(FormData formData,
-//                                                        OWLDataProperty property,
-//                                                        List<FormDataValue> formDataValues,
-//                                                        EntityFormDataConverterSession session) {
-//        formDataValues.forEach(formDataValue -> {
-//            formDataValue.asOWLEntity()
-//                         .ifPresent(entity -> {
-//                             if(entity.isOWLDatatype()) {
-//                                 var pv = PropertyDatatypeValue.get(
-//                                         renderingManager.getDataPropertyData(property),
-//                                         renderingManager.getDatatypeData(entity.asOWLDatatype()),
-//                                         State.ASSERTED  // Sort this!
-//                                 );
-//                                 session.putPropertyValue(formData, pv);
-//                             }
-//                         });
-//            formDataValue.asLiteral()
-//                         .ifPresent(literal -> {
-//                             var pv = PropertyLiteralValue.get(
-//                                     renderingManager.getDataPropertyData(property),
-//                                     OWLLiteralData.get(literal),
-//                                     State.ASSERTED
-//                             );
-//                             session.putPropertyValue(formData, pv);
-//                         });
-//        });
-//    }
+    public FormFrameBuilder buildFormFrame(@Nonnull FormData formData) {
+        var formFrameBuilder = formFrameBuilderProvider.get();
+        formData.getSubject()
+                .ifPresent(formFrameBuilder::setSubject);
+        formData.getFormDescriptor()
+                .getSubjectFactoryDescriptor()
+                .ifPresent(formFrameBuilder::setSubjectFactoryDescriptor);
+        formData.getFormFieldData()
+                .forEach(formFieldData -> processFormFieldData(formFieldData, formFrameBuilder));
+        return formFrameBuilder;
+    }
+
+
+    private void processFormFieldData(FormFieldData formFieldData,
+                                      FormFrameBuilder formFrameBuilder) {
+        var formFieldDescriptor = formFieldData.getFormFieldDescriptor();
+        var owlBinding = formFieldDescriptor.getOwlBinding();
+        owlBinding.ifPresent(binding -> {
+            var formControlData = formFieldData.getFormControlData();
+            formControlData.forEach(fcd -> processFormControlData(binding, fcd, formFrameBuilder));
+
+        });
+    }
+
+    private void processFormControlData(@Nonnull OwlBinding binding,
+                                        @Nonnull FormControlData formControlData,
+                                        @Nonnull FormFrameBuilder formFrameBuilder) {
+        formControlData.accept(new FormControlDataVisitor() {
+            @Override
+            public void visit(@Nonnull EntityNameControlData entityNameControlData) {
+                entityNameControlData.getEntity()
+                                     .ifPresent(entity -> formFrameBuilder.add(binding, entity));
+            }
+
+            @Override
+            public void visit(@Nonnull FormData formData) {
+                var nestedFormFrameBuilder = buildFormFrame(formData);
+                formFrameBuilder.add(binding, nestedFormFrameBuilder);
+            }
+
+            @Override
+            public void visit(@Nonnull GridControlData gridControlData) {
+                addGridControlData(binding, gridControlData, formFrameBuilder);
+            }
+
+            @Override
+            public void visit(@Nonnull ImageControlData imageControlData) {
+                imageControlData.getIri().ifPresent(iri -> formFrameBuilder.add(binding, iri));
+            }
+
+            @Override
+            public void visit(@Nonnull MultiChoiceControlData multiChoiceControlData) {
+                multiChoiceControlData.getValues()
+                                      .forEach(primitiveFormControlData -> {
+                                          addPrimitiveFormControlData(binding,
+                                                                      primitiveFormControlData,
+                                                                      formFrameBuilder);
+                                      });
+            }
+
+            @Override
+            public void visit(@Nonnull SingleChoiceControlData singleChoiceControlData) {
+                singleChoiceControlData.getChoice().ifPresent(primitiveFormControlData -> {
+                    addPrimitiveFormControlData(binding,
+                                                primitiveFormControlData,
+                                                formFrameBuilder);
+                });
+            }
+
+            @Override
+            public void visit(@Nonnull NumberControlData numberControlData) {
+                numberControlData.getValue().ifPresent(value -> {
+                    formFrameBuilder.add(binding,
+                                                DataFactory.getOWLLiteral(Double.toString(value),
+                                                                          DataFactory.getXSDDecimal()));
+                });
+            }
+
+            @Override
+            public void visit(@Nonnull TextControlData textControlData) {
+                textControlData.getValue().ifPresent(literal ->
+                        formFrameBuilder.add(binding, literal));
+            }
+        });
+    }
+
+    public void addGridControlData(@Nonnull OwlBinding binding,
+                                   @Nonnull GridControlData gridControlData,
+                                   @Nonnull FormFrameBuilder formFrameBuilder) {
+
+        for(GridRowData gridRowData : gridControlData.getRows()) {
+            var rowFrameBuilder = formFrameBuilderProvider.get();
+
+            var rowSubject = gridRowData.getSubject();
+            rowSubject.ifPresent(rowFrameBuilder::setSubject);
+
+            var gridControlDescriptor = gridControlData.getDescriptor();
+            var columnDescriptors = gridControlDescriptor
+                                                   .getColumns();
+            var rowCells = gridRowData.getCells();
+            for(int i = 0; i < columnDescriptors.size(); i++) {
+                var columnDescriptor = columnDescriptors.get(i);
+                var gridCellData = rowCells.get(i);
+                var cellBinding = columnDescriptor.getOwlBinding();
+                cellBinding.ifPresent(theCellBinding -> {
+                    gridCellData.getValue()
+                                .ifPresent(cellControlData -> {
+                                    processFormControlData(theCellBinding,
+                                                           cellControlData,
+                                                           rowFrameBuilder);
+                                });
+                });
+            }
+            gridControlDescriptor
+                           .getSubjectFactoryDescriptor()
+                           .ifPresent(rowFrameBuilder::setSubjectFactoryDescriptor);
+            formFrameBuilder.add(binding, rowFrameBuilder);
+        }
+    }
+
+    public void addPrimitiveFormControlData(OwlBinding binding,
+                                            PrimitiveFormControlData primitiveFormControlData,
+                                            FormFrameBuilder formFrameBuilder) {
+        primitiveFormControlData.asEntity().ifPresent(entity -> formFrameBuilder.add(binding, entity));
+        primitiveFormControlData.asLiteral().ifPresent(literal -> formFrameBuilder.add(binding, literal));
+        primitiveFormControlData.asIri().ifPresent(iri -> formFrameBuilder.add(binding, iri));
+    }
+
+
 }

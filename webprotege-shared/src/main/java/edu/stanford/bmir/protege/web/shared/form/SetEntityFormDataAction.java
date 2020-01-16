@@ -21,14 +21,18 @@ public class SetEntityFormDataAction implements ProjectAction<SetEntityFormDataR
 
     private OWLEntity entity;
 
-    private FormData formData;
+    private FormData pristineFormData;
+
+    private FormData newFormData;
 
     public SetEntityFormDataAction(ProjectId projectId,
                                    OWLEntity entity,
-                                   FormData formData) {
+                                   FormData pristineFormData,
+                                   FormData newFormData) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
-        this.formData = checkNotNull(formData);
+        this.pristineFormData = checkNotNull(pristineFormData);
+        this.newFormData = checkNotNull(newFormData);
     }
 
     @GwtSerializationConstructor
@@ -45,7 +49,12 @@ public class SetEntityFormDataAction implements ProjectAction<SetEntityFormDataR
         return entity;
     }
 
-    public FormData getFormData() {
-        return formData;
+    public FormData getPristineFormData() {
+        return pristineFormData;
+    }
+
+    @Nonnull
+    public FormData getNewFormData() {
+        return newFormData;
     }
 }

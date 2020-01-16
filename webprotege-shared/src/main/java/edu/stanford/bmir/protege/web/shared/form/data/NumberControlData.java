@@ -26,6 +26,16 @@ public abstract class NumberControlData implements FormControlData {
         return new AutoValue_NumberControlData(descriptor, value);
     }
 
+    @Override
+    public <R> R accept(@Nonnull FormControlDataVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public void accept(@Nonnull FormControlDataVisitor visitor) {
+        visitor.visit(this);
+    }
+
     @Nonnull
     public abstract NumberControlDescriptor getDescriptor();
 

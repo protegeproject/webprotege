@@ -26,6 +26,16 @@ public abstract class ImageControlData implements FormControlData {
         return new AutoValue_ImageControlData(descriptor, iri);
     }
 
+    @Override
+    public <R> R accept(@Nonnull FormControlDataVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public void accept(@Nonnull FormControlDataVisitor visitor) {
+        visitor.visit(this);
+    }
+
     @JsonProperty("descriptor")
     @Nonnull
     public abstract ImageControlDescriptor getDescriptor();

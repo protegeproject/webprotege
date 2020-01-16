@@ -140,7 +140,7 @@ public class EntityFrameFormDataBuilder {
                                           return FormFieldData.get(field, controlValues);
                                       })
                                       .collect(toImmutableList());
-        return FormData.get(Optional.of(subject), formDescriptor, fieldData);
+        return FormData.get(Optional.of(FormEntitySubject.get(subject)), formDescriptor, fieldData);
     }
 
     private GridControlData toGridControlData(ImmutableList<OWLPrimitiveData> subjects,
@@ -168,7 +168,8 @@ public class EntityFrameFormDataBuilder {
                                                                       }
                                                                   })
                                                                   .collect(toImmutableList());
-                                  return GridRowData.get(cellData);
+                                  var formSubject = FormEntitySubject.get(entity);
+                                  return GridRowData.get(formSubject, cellData);
                               })
                               .collect(toImmutableList());
         return GridControlData.get(gridControlDescriptor, rowData);

@@ -71,11 +71,12 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
     @Override
     protected ChangeListGenerator<OWLEntityData> getChangeListGenerator(SetEntityFormDataAction action,
                                                                         ExecutionContext executionContext) {
-        var formData = action.getFormData();
+        var formData = action.getNewFormData();
         if(formData.getSubject().isEmpty()) {
             var entityData = renderingManager.getRendering(action.getEntity());
-            return new FixedChangeListGenerator<OWLEntityData>(Collections.emptyList(), entityData, "");
+            return new FixedChangeListGenerator<>(Collections.emptyList(), entityData, "");
         }
-        return changeListGeneratorFactory.create(formData);
+        return changeListGeneratorFactory.create(action.getPristineFormData(),
+                                                 formData);
     }
 }

@@ -20,20 +20,28 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
     @Nonnull
     private final GridControlDescriptorView view;
 
+
+    @Nonnull
+    private final FormSubjectFactoryDescriptorPresenter formSubjectFactoryDescriptorPresenter;
+
     @Nonnull
     private final ObjectListPresenter<GridColumnDescriptor> columnListPresenter;
 
+
     @Inject
     public GridControlDescriptorPresenter(@Nonnull GridControlDescriptorView view,
+                                          @Nonnull FormSubjectFactoryDescriptorPresenter formSubjectFactoryDescriptorPresenter,
                                           @Nonnull ObjectListPresenter<GridColumnDescriptor> columnListPresenter) {
         this.view = view;
+        this.formSubjectFactoryDescriptorPresenter = formSubjectFactoryDescriptorPresenter;
         this.columnListPresenter = columnListPresenter;
     }
 
     @Nonnull
     @Override
     public FormControlDescriptor getFormFieldDescriptor() {
-        return GridControlDescriptor.get(ImmutableList.copyOf(columnListPresenter.getValues()));
+        return GridControlDescriptor.get(ImmutableList.copyOf(columnListPresenter.getValues()),
+                                         formSubjectFactoryDescriptorPresenter.getDescriptor().orElse(null));
     }
 
     @Override
@@ -43,6 +51,7 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
         }
         GridControlDescriptor gridFieldDescriptor = (GridControlDescriptor) formControlDescriptor;
         columnListPresenter.setValues(gridFieldDescriptor.getColumns());
+        gridFieldDescriptor.getSubjectFactoryDescriptor().ifPresent(formSubjectFactoryDescriptorPresenter::setDescriptor);
     }
 
     @Override
@@ -55,5 +64,6 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
         container.setWidget(view);
         columnListPresenter.start(view.getViewContainer(), new SimpleEventBus());
         columnListPresenter.setAddObjectText("Add column");
+        formSubjectFactoryDescriptorPresenter.start(view.getFormSubjectFactoryDescriptorContainer());
     }
 }

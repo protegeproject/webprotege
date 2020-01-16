@@ -1,32 +1,29 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
+import edu.stanford.bmir.protege.web.server.frame.EmptyEntityFrameFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameUpdate;
-import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
+import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.frame.*;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.model.OWLProperty;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -36,192 +33,179 @@ import static java.util.stream.Collectors.toSet;
 public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEntityData> {
 
     @Nonnull
-    private final AxiomTemplatesParser axiomTemplatesParser;
-
-    @Nonnull
     private final EntityFormDataConverter entityFormDataConverter;
-
-    @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
-    private final ClassFrameTranslator classFrameTranslator;
-
-    @Nonnull
-    private final NamedIndividualFrameTranslator individualFrameTranslator;
-
-    @Nonnull
-    private final FrameChangeGeneratorFactory frameChangeGenerator;
-
-    @Nonnull
-    private final DefaultOntologyIdManager defaultOntologyIdManager;
-
-    @Nonnull
-    private final ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory;
 
     @Nonnull
     private final MessageFormatter messageFormatter;
 
     @Nonnull
-    private final FormData formData;
-    
-    private OWLEntity subject;
+    private final FormData pristineFormData;
+
+    @Nonnull
+    private final FormData editedFormData;
+
+    @Nonnull
+    private final FrameChangeGeneratorFactory frameChangeGeneratorFactory;
+
+    @Nonnull
+    private final FormFrameConverter formFrameConverter;
+
+    @Nonnull
+    private final EmptyEntityFrameFactory emptyEntityFrameFactory;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
+
 
     @Inject
-    public EntityFormChangeListGenerator(@Nonnull FormData formData,
-                                         @Nonnull AxiomTemplatesParser axiomTemplatesParser,
+    public EntityFormChangeListGenerator(@Nonnull FormData pristineFormData,
+                                         @Nonnull FormData editedFormData,
                                          @Nonnull EntityFormDataConverter entityFormDataConverter,
-                                         @Nonnull RenderingManager renderingManager,
-                                         @Nonnull ClassFrameTranslator classFrameTranslator,
-                                         @Nonnull NamedIndividualFrameTranslator individualFrameTranslator,
-                                         @Nonnull FrameChangeGeneratorFactory frameChangeGenerator,
-                                         @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                                          @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory,
-                                         @Nonnull MessageFormatter messageFormatter) {
-        this.formData = checkNotNull(formData);
-        this.axiomTemplatesParser = checkNotNull(axiomTemplatesParser);
+                                         @Nonnull MessageFormatter messageFormatter,
+                                         @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
+                                         @Nonnull FormFrameConverter formFrameConverter,
+                                         @Nonnull EmptyEntityFrameFactory emptyEntityFrameFactory,
+                                         @Nonnull RenderingManager renderingManager) {
+        this.pristineFormData = checkNotNull(pristineFormData);
+        this.editedFormData = checkNotNull(editedFormData);
         this.entityFormDataConverter = checkNotNull(entityFormDataConverter);
-        this.renderingManager = checkNotNull(renderingManager);
-        this.classFrameTranslator = checkNotNull(classFrameTranslator);
-        this.individualFrameTranslator = checkNotNull(individualFrameTranslator);
-        this.frameChangeGenerator = checkNotNull(frameChangeGenerator);
-        this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
-        this.reverseEngineeredChangeDescriptionGeneratorFactory = reverseEngineeredChangeDescriptionGeneratorFactory;
-        this.messageFormatter = messageFormatter;
+        this.messageFormatter = checkNotNull(messageFormatter);
+        this.frameChangeGeneratorFactory = checkNotNull(frameChangeGeneratorFactory);
+        this.formFrameConverter = checkNotNull(formFrameConverter);
+        this.emptyEntityFrameFactory = emptyEntityFrameFactory;
+        this.renderingManager = renderingManager;
     }
 
     @Override
     public OntologyChangeList<OWLEntityData> generateChanges(ChangeGenerationContext context) {
+        var pristineFormFrame = entityFormDataConverter.convert(pristineFormData);
+        var editedFormFrame = entityFormDataConverter.convert(editedFormData);
 
-        var session = entityFormDataConverter.convert(formData);
-        this.subject = session.getSubject(formData).orElseThrow();
-
-
-        var ontologyChanges = generateChangesForPropertyValues(context,
-                                                               session);
-        var axiomsTemplates = session.getAdditionalAxiomTemplates();
-        var axioms = axiomTemplatesParser.parseAxiomTemplate(axiomsTemplates);
-        var builder = OntologyChangeList.<OWLEntityData>builder();
-        axioms.forEach(ax -> builder.addAxiom(getTargetOntologyId(session), ax));
-        return builder.addAll(ontologyChanges)
-                      .build(renderingManager.getRendering(subject));
-    }
-
-    private List<OntologyChange> generateChangesForPropertyValues(ChangeGenerationContext context,
-                                                                  EntityFormDataConverterSession session) {
-
-        return session.getFormData()
-                      .stream()
-                      .flatMap(formData -> getChangesForFormData(formData, session, context).stream())
-                      .collect(toList());
-    }
-
-    private OWLOntologyID getTargetOntologyId(EntityFormDataConverterSession session) {
-        return session.getTargetOntologyIri()
-                      .map(OWLOntologyID::new)
-                      .orElse(defaultOntologyIdManager.getDefaultOntologyId());
-    }
-
-    private List<OntologyChange> getChangesForFormData(FormData formData,
-                                                       EntityFormDataConverterSession session,
-                                                       ChangeGenerationContext context) {
-        // The subject entity must be present for us to generate actual
-        // ontology changes
-        var subject = session.getSubject(formData);
-        return subject.map(theSubject -> getChangesFormFormDataSubject(formData, theSubject, session, context))
-                      .orElse(Collections.emptyList());
-    }
-
-    private List<OntologyChange> getChangesFormFormDataSubject(FormData formData,
-                                                               OWLEntity theSubject,
-                                                               EntityFormDataConverterSession session,
-                                                               ChangeGenerationContext context) {
-        var formProperties = formData.getFormDescriptor()
-                                     .getOwlProperties();
-
-        var propertyValues = session.getFormDataPropertyValues(formData);
-
-        if(theSubject.isOWLClass()) {
-            return generateChangesForClass(theSubject.asOWLClass(),
-                                           formProperties,
-                                           propertyValues,
-                                           context);
+        if(pristineFormFrame.equals(editedFormFrame)) {
+            return emptyChangeList();
         }
-        else if(theSubject.isOWLNamedIndividual()) {
-            return generateChangesForIndividual(theSubject.asOWLNamedIndividual(),
-                                                formProperties,
-                                                propertyValues,
-                                                context);
+
+        var pristineFramesBySubject = getFormFrameClosureBySubject(pristineFormFrame);
+        var editedFramesBySubject = getFormFrameClosureBySubject(editedFormFrame);
+
+        var changes = generateChangesForFormFrames(pristineFramesBySubject, editedFramesBySubject, context);
+        if(changes.isEmpty()) {
+            return emptyChangeList();
         }
         else {
-            return Collections.emptyList();
+            return combineIndividualChangeLists(changes);
         }
     }
 
-    private List<OntologyChange> generateChangesForClass(OWLEntity entity,
-                                                         ImmutableSet<OWLProperty> formProperties,
-                                                         Collection<PropertyValue> propertyValues,
-                                                         ChangeGenerationContext context) {
-        var frameSubject = renderingManager.getClassData(entity.asOWLClass());
-
-        // Current frame – may be a superset of the form frame
-        // as forms may only edit a subset of properties
-        var currentFrame = classFrameTranslator.getFrame(frameSubject);
-
-        var mergedPropertyValues = getMergedPropertyValues(formProperties, propertyValues, currentFrame);
-        var finalFrame = ClassFrame.get(frameSubject, currentFrame.getClassEntries(), mergedPropertyValues);
-        var frameUpdate = FrameUpdate.get(currentFrame, finalFrame);
-        return frameChangeGenerator.create(frameUpdate)
-                                   .generateChanges(context)
-                                   .getChanges();
+    private OntologyChangeList<OWLEntityData> emptyChangeList() {
+        var formSubject = pristineFormData.getSubject()
+                        .orElseThrow();
+        var entity = ((FormEntitySubject) formSubject).getEntity();
+        var entityData = renderingManager.getRendering(entity);
+        return OntologyChangeList.<OWLEntityData>builder().build(entityData);
     }
 
-    private List<OntologyChange> generateChangesForIndividual(OWLNamedIndividual entity,
-                                                              ImmutableSet<OWLProperty> formProperties,
-                                                              Collection<PropertyValue> propertyValues,
-                                                              ChangeGenerationContext context) {
-        var frameSubject = renderingManager.getIndividualData(entity);
+    /**
+     * Combines a list of change lists
+     * @param changes the list of changes lists
+     * @return the combined list with the subject equal to the subject of the first change in the list
+     */
+    @Nonnull
+    public OntologyChangeList<OWLEntityData> combineIndividualChangeLists(List<OntologyChangeList<OWLEntityData>> changes) {
+        var firstChangeList = changes.get(0);
+        var combinedChanges = changes.stream()
+                                     .map(OntologyChangeList::getChanges)
+                                     .flatMap(List::stream)
+                                     .collect(toImmutableList());
 
-        // Current frame – may be a superset of the form frame
-        // as forms may only edit a subset of properties
-        var currentFrame = individualFrameTranslator.getFrame(frameSubject);
-        var mergedPropertyValues = getMergedPropertyValues(formProperties,
-                                                           propertyValues,
-                                                           currentFrame);
-
-        var finalFrame = NamedIndividualFrame.get(frameSubject,
-                                                  currentFrame.getClasses(),
-                                                  mergedPropertyValues,
-                                                  currentFrame.getSameIndividuals());
-        var frameUpdate = FrameUpdate.get(currentFrame, finalFrame);
-        return frameChangeGenerator.create(frameUpdate)
-                                   .generateChanges(context)
-                                   .getChanges();
+        return OntologyChangeList.<OWLEntityData>builder()
+                .addAll(combinedChanges)
+                .build(firstChangeList.getResult());
     }
 
-    private ImmutableSet<PropertyValue> getMergedPropertyValues(ImmutableSet<OWLProperty> formProperties,
-                                                                Collection<PropertyValue> editedPropertyValues,
-                                                                HasPropertyValues existingFrame) {
-        var currentPropertyValues = existingFrame.getPropertyValues();
-        // Non-form property values get to stay in the final set
-        // as the form does not display these
-        var nonFormPropertyValues = currentPropertyValues.stream()
-                                                         .filter(propertyValue -> !formProperties.contains(
-                                                                 propertyValue.getProperty()
-                                                                              .getEntity()))
-                                                         .collect(toSet());
+    private static ImmutableMap<OWLEntity, FormFrame> getFormFrameClosureBySubject(FormFrame formFrame) {
+        // Important: ImmutableMap preserves iteration order
+        var result = ImmutableMap.<OWLEntity, FormFrame>builder();
+        List<FormFrame> framesToProcess = new ArrayList<>();
+        framesToProcess.add(formFrame);
+        while(!framesToProcess.isEmpty()) {
+            var frame = framesToProcess.remove(0);
+            frame.getSubject()
+                 .accept(new FormSubject.FormDataSubjectVisitor() {
+                     @Override
+                     public void visit(@Nonnull FormEntitySubject formDataEntitySubject) {
+                         result.put(formDataEntitySubject.getEntity(), frame);
+                     }
 
-        return ImmutableSet.<PropertyValue>builder()
-                .addAll(nonFormPropertyValues)
-                .addAll(editedPropertyValues)
-                .build();
+                     @Override
+                     public void visit(@Nonnull FormIriSubject formDataIriSubject) {
+
+                     }
+                 });
+            framesToProcess.addAll(frame.getNestedFrames());
+        }
+        return result.build();
+    }
+
+    private List<OntologyChangeList<OWLEntityData>> generateChangesForFormFrames(ImmutableMap<OWLEntity, FormFrame> pristineFramesBySubject,
+                                                                                 ImmutableMap<OWLEntity, FormFrame> editedFramesBySubject,
+                                                                                 ChangeGenerationContext context) {
+
+        var resultBuilder = ImmutableList.<OntologyChangeList<OWLEntityData>>builder();
+        for(OWLEntity entity : pristineFramesBySubject.keySet()) {
+            var pristineFrame = pristineFramesBySubject.get(entity);
+            var editedFrame = editedFramesBySubject.get(entity);
+
+            var pristineEntityFrame = formFrameConverter.toEntityFrame(pristineFrame)
+                                                        .orElseThrow();
+
+            if(editedFrame == null) {
+                // Deleted
+                var emptyEditedFrame = emptyEntityFrameFactory.getEmptyEntityFrame(entity);
+                var changes = generateChangeListForFrames(pristineEntityFrame, emptyEditedFrame, context);
+                resultBuilder.add(changes);
+            }
+            else {
+                // Edited, possibly
+                var editedEntityFrame = formFrameConverter.toEntityFrame(editedFrame)
+                                                          .orElseThrow();
+                var changes = generateChangeListForFrames(pristineEntityFrame, editedEntityFrame, context);
+                resultBuilder.add(changes);
+            }
+        }
+
+        for(OWLEntity entity : editedFramesBySubject.keySet()) {
+            var pristineFrame = pristineFramesBySubject.get(entity);
+            if(pristineFrame == null) {
+                // Added
+                var emptyPristineFrame = emptyEntityFrameFactory.getEmptyEntityFrame(entity);
+                var addedFormFrame = editedFramesBySubject.get(entity);
+                var addedEntityFrame = formFrameConverter.toEntityFrame(addedFormFrame)
+                                                         .orElseThrow();
+                var changes = generateChangeListForFrames(emptyPristineFrame, addedEntityFrame, context);
+                resultBuilder.add(changes);
+            }
+        }
+        return resultBuilder.build();
+    }
+
+
+    private OntologyChangeList<OWLEntityData> generateChangeListForFrames(EntityFrame pristineFrame,
+                                                                          EntityFrame editedFrame,
+                                                                          ChangeGenerationContext context) {
+        var frameUpdate = FrameUpdate.get(pristineFrame, editedFrame);
+        var changeGeneratorFactory = frameChangeGeneratorFactory.create(frameUpdate);
+
+        return changeGeneratorFactory.generateChanges(context);
     }
 
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<OWLEntityData> result) {
-        var msg = messageFormatter.format("Edited the details of {0}", subject);
-        return reverseEngineeredChangeDescriptionGeneratorFactory.get(msg).generateChangeDescription(result);
+        return messageFormatter.format("Edited {0}",
+                                       result.getSubject()
+                                             .asEntity());
     }
 
     @Override

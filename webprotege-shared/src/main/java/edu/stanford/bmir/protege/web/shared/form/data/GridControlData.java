@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -21,6 +22,16 @@ public abstract class GridControlData implements ComplexFormControlValue {
     public static GridControlData get(@Nonnull GridControlDescriptor descriptor,
                                       @Nonnull ImmutableList<GridRowData> rows) {
         return new AutoValue_GridControlData(descriptor, rows);
+    }
+
+    @Override
+    public <R> R accept(@Nonnull FormControlDataVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public void accept(@Nonnull FormControlDataVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Nonnull

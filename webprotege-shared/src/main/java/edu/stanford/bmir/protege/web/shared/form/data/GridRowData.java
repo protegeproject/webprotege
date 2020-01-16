@@ -3,8 +3,11 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -15,8 +18,18 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class GridRowData {
 
-    public static GridRowData get(@Nonnull ImmutableList<GridCellData> cellData) {
-        return new AutoValue_GridRowData(cellData);
+    public static GridRowData get(@Nullable FormSubject subject,
+                                  @Nonnull ImmutableList<GridCellData> cellData) {
+        return new AutoValue_GridRowData(subject, cellData);
+    }
+
+
+    @Nullable
+    protected abstract FormSubject getSubjectInternal();
+
+    @Nonnull
+    public Optional<FormSubject> getSubject() {
+        return Optional.ofNullable(getSubjectInternal());
     }
 
     @Nonnull

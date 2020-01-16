@@ -7,13 +7,7 @@
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.subFormSubjectType}"/>
-            <g:RadioButton value="true" name="subjectEntityType-{counter.getValue}" text="Class" ui:field="classRadio"/>
-            <g:RadioButton name="subjectEntityType-{counter.getValue}" text="Individual" ui:field="individualRadio"/>
-        </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.subFormSubjectParents}"/>
-            <editor:ValueListEditor ui:field="parentsList"/>
+            <g:SimplePanel ui:field="subjectFactoryDescriptorContainer"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:SimplePanel ui:field="subFormContainer"/>

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -41,6 +42,8 @@ public class ChoiceDescriptorSupplier {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    private ListMultimap<ChoiceListSourceDescriptor, ChoiceDescriptor> choicesCache = ArrayListMultimap.create();
+
     @Inject
     public ChoiceDescriptorSupplier(@Nonnull ProjectId projectId,
                                     @Nonnull DispatchServiceManager dispatchServiceManager) {
@@ -60,11 +63,17 @@ public class ChoiceDescriptorSupplier {
 
     private void getDynamicChoices(DynamicChoiceListSourceDescriptor sourceDescriptor,
                                    ChoicesHandler handler) {
+        List<ChoiceDescriptor> cachedChoices = choicesCache.get(sourceDescriptor);
+        if(!cachedChoices.isEmpty()) {
+            handler.handleChoices(ImmutableList.copyOf(cachedChoices));
+            return;
+        }
         dispatchServiceManager.execute(new GetMatchingEntitiesAction(sourceDescriptor.getCriteria(),
                                                                      projectId,
                                                                      PageRequest.requestPageWithSize(1, 200)),
                                        result -> {
                                            ImmutableList<ChoiceDescriptor> choiceDescriptors = getChoiceDescriptors(result);
+                                           choicesCache.putAll(sourceDescriptor, choiceDescriptors);
                                            handler.handleChoices(choiceDescriptors);
                                        });
     }

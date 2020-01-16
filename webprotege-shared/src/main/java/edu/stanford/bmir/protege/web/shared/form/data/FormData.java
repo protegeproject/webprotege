@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class FormData implements FormControlData {
 
-    public static FormData get(@Nonnull Optional<OWLEntity> subject,
+    public static FormData get(@Nonnull Optional<FormSubject> subject,
                                @Nonnull FormDescriptor formDescriptor,
                                @Nonnull ImmutableList<FormFieldData> formFieldData) {
         return new AutoValue_FormData(subject.orElse(null), formDescriptor, formFieldData);
@@ -28,18 +29,29 @@ public abstract class FormData implements FormControlData {
 
     public static FormData empty(@Nonnull OWLEntity entity,
                                  @Nonnull FormId formId) {
-        return get(Optional.of(entity),
+        return get(Optional.of(FormSubject.get(entity)),
                    FormDescriptor.empty(formId),
                    ImmutableList.of());
     }
 
-    @Nullable
-    protected abstract OWLEntity getSubjectInternal();
+    @Override
+    public <R> R accept(@Nonnull FormControlDataVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public void accept(@Nonnull FormControlDataVisitor visitor) {
+        visitor.visit(this);
+    }
 
     @Nonnull
-    public Optional<OWLEntity> getSubject() {
+    public Optional<FormSubject> getSubject() {
         return Optional.ofNullable(getSubjectInternal());
     }
+
+    @JsonIgnore
+    @Nullable
+    protected abstract FormSubject getSubjectInternal();
 
     public abstract FormDescriptor getFormDescriptor();
 

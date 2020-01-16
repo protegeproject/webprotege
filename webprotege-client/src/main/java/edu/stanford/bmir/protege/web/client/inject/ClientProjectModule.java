@@ -690,6 +690,11 @@ public class ClientProjectModule {
     DynamicChoiceListSourceDescriptorView provideDynamicChoiceListSourceDescriptorView(DynamicChoiceListSourceDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    FormSubjectFactoryDescriptorView provideFormSubjectFactoryDescriptorView(FormSubjectFactoryDescriptorViewImpl impl) {
+        return impl;
+    }
 }
 
 

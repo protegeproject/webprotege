@@ -24,6 +24,14 @@ import java.util.List;
  */
 public class SubFormControlDescriptorViewImpl extends Composite implements SubFormControlDescriptorView {
 
+    @Override
+    public void clear() {
+
+    }
+
+    @UiField
+    protected SimplePanel subjectFactoryDescriptorContainer;
+
     interface SubFormControlDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, SubFormControlDescriptorViewImpl> {
 
     }
@@ -34,29 +42,8 @@ public class SubFormControlDescriptorViewImpl extends Composite implements SubFo
     @UiField
     SimplePanel subFormContainer;
 
-    @UiField(provided = true)
-    protected static Counter counter = new Counter();
-
-    @UiField(provided = true)
-    ValueListEditor<OWLPrimitiveData> parentsList;
-
-    @UiField
-    RadioButton classRadio;
-
-    @UiField
-    RadioButton individualRadio;
-
     @Inject
     public SubFormControlDescriptorViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
-        counter.increment();
-        parentsList = new ValueListFlexEditorImpl<>(() -> {
-            PrimitiveDataEditor editor = primitiveDataEditorProvider.get();
-            editor.setEnabled(true);
-            editor.setClassesAllowed(true);
-            return editor;
-        });
-        parentsList.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
-        parentsList.setEnabled(true);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -68,38 +55,7 @@ public class SubFormControlDescriptorViewImpl extends Composite implements SubFo
 
     @Nonnull
     @Override
-    public EntityType<?> getEntityType() {
-        if(individualRadio.getValue()) {
-            return EntityType.NAMED_INDIVIDUAL;
-        }
-        else {
-            return EntityType.CLASS;
-        }
-    }
-
-    @Override
-    public void setEntityType(@Nonnull EntityType<?> entityType) {
-        if(entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
-            individualRadio.setValue(true);
-        }
-        else {
-            classRadio.setValue(true);
-        }
-    }
-
-    @Override
-    public void setParents(@Nonnull List<OWLPrimitiveData> parents) {
-        parentsList.setValue(parents);
-    }
-
-    @Override
-    public void clear() {
-        parentsList.clearValue();
-    }
-
-    @Nonnull
-    @Override
-    public List<OWLPrimitiveData> getParents() {
-        return parentsList.getEditorValue().orElse(Collections.emptyList());
+    public AcceptsOneWidget getFormSubjectDescriptorViewContainr() {
+        return subjectFactoryDescriptorContainer;
     }
 }
