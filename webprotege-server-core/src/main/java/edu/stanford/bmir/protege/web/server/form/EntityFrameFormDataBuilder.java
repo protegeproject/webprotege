@@ -73,8 +73,8 @@ public class EntityFrameFormDataBuilder {
                 PrimitiveDataConverter converter = new PrimitiveDataConverter();
                 return values.stream()
                              .map(value -> value.accept(converter))
-                             .map(value -> SingleChoiceControlData.get(singleChoiceControlDescriptor,
-                                                                       value))
+                             .map(value -> SingleChoiceControlData.get(singleChoiceControlDescriptor, value))
+                             .limit(1)
                              .collect(toImmutableList());
             }
 
@@ -137,7 +137,15 @@ public class EntityFrameFormDataBuilder {
                                       .stream()
                                       .map(field -> {
                                           var controlValues = toFormControlValues(subject, field);
-                                          return FormFieldData.get(field, controlValues);
+                                          if(field.getRepeatability() == Repeatability.NON_REPEATABLE) {
+                                              var limitedControlValues = controlValues.stream()
+                                                      .limit(1)
+                                                      .collect(toImmutableList());
+                                              return FormFieldData.get(field, limitedControlValues);
+                                          }
+                                          else {
+                                              return FormFieldData.get(field, controlValues);
+                                          }
                                       })
                                       .collect(toImmutableList());
         return FormData.get(Optional.of(FormEntitySubject.get(subject)), formDescriptor, fieldData);
