@@ -3,10 +3,13 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.match.RootCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +41,20 @@ public class FormDescriptorPresenter implements Presenter {
                                    @Nonnull ObjectListPresenter<FormFieldDescriptor> elementDescriptorListPresenter) {
         this.view = checkNotNull(view);
         this.elementDescriptorListPresenter = checkNotNull(elementDescriptorListPresenter);
+    }
+
+    public void clear() {
+        formId = null;
+        elementDescriptorListPresenter.clear();
+    }
+
+    @Nonnull
+    public LanguageMap getFormLabel() {
+        return view.getLabel();
+    }
+
+    public void setFormId(@Nonnull FormId formId) {
+        this.formId = checkNotNull(formId);
     }
 
     @Override

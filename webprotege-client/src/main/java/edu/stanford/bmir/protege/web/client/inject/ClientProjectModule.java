@@ -695,6 +695,12 @@ public class ClientProjectModule {
     FormSubjectFactoryDescriptorView provideFormSubjectFactoryDescriptorView(FormSubjectFactoryDescriptorViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntityFormSelectorView provideEntityFormSelectorView(EntityFormSelectorViewImpl impl) {
+        return impl;
+    }
+
 }
 
 

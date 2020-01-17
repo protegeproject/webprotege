@@ -15,33 +15,18 @@ import java.util.Optional;
  */
 public interface FormsManagerView extends IsWidget {
 
-    @Nonnull
-    Optional<FormId> getCurrentFormId();
 
     interface AddFormHandler {
         void handleAddForm();
     }
 
-    interface FormSelectionChangedHandler {
-        void handleFormSelectionChanged();
-    }
-
-    void setFormSelectionChangedHandler(@Nonnull FormSelectionChangedHandler handler);
-
-    interface FormIdEnteredHandler {
-        void handleAcceptFormName(@Nonnull String formId);
+    interface FormSelectedHandler {
+        void handleFormSelected(FormId formId);
     }
 
     void setAddFormHandler(@Nonnull AddFormHandler handler);
 
+    void setFormSelectedHandler(@Nonnull FormSelectedHandler handler);
+
     void clear();
-
-    void setFormIds(@Nonnull List<FormId> formIds);
-
-    void addFormId(@Nonnull FormId formId);
-
-    void setCurrentFormId(@Nonnull FormId formId);
-
-    @Nonnull
-    AcceptsOneWidget getFormDescriptorContainer();
 }

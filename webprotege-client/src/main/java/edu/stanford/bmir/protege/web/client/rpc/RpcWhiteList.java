@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
@@ -177,6 +178,24 @@ public class RpcWhiteList implements Action, Result {
     private Color color;
 
     private Criteria criteria;
+
+    public EntityFormSelector getEntityFormSelector() {
+        return entityFormSelector;
+    }
+
+    public void setEntityFormSelector(EntityFormSelector entityFormSelector) {
+        this.entityFormSelector = entityFormSelector;
+    }
+
+    public ChoiceListSourceDescriptor getChoiceListSourceDescriptor() {
+        return choiceListSourceDescriptor;
+    }
+
+    public void setChoiceListSourceDescriptor(ChoiceListSourceDescriptor choiceListSourceDescriptor) {
+        this.choiceListSourceDescriptor = choiceListSourceDescriptor;
+    }
+
+    EntityFormSelector entityFormSelector;
 
     ChoiceListSourceDescriptor choiceListSourceDescriptor;
 

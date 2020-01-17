@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
 import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.After;
@@ -41,8 +44,11 @@ public class EntityFormSelectorRepositoryImpl_IT {
     @Test
     public void shouldSaveFormTrigger() {
         var projectId = ProjectId.get("609767c5-e12a-43b8-beba-b9f250b35a3a");
-        var criteria = SubClassOfCriteria.get(new OWLClassImpl(IRI.create("http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#SpecificAminoAcid")), HierarchyFilterType.DIRECT);
-        var theFormId = FormId.get("AminoAcidDetails");
+        var criteria = CompositeRootCriteria.get(
+                ImmutableList.of(SubClassOfCriteria.get(new OWLClassImpl(IRI.create("http://www.co-ode.org/ontologies/amino-acid/2006/05/18/amino-acid.owl#SpecificAminoAcid")), HierarchyFilterType.DIRECT)),
+                MultiMatchType.ALL
+        );
+        var theFormId = FormId.get("12345678-1234-1234-1234-12345678abcd");
         var formTrigger = EntityFormSelector.get(projectId,
                                                  criteria,
                                                  theFormId);

@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -16,10 +14,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,16 +38,13 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     private final FormDescriptorPresenter formDescriptorPresenter;
 
     @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
-
-    @Nonnull
-    private final NoFormDescriptorSelectedView noFormDescriptorSelectedView;
+    private final DispatchServiceManager dispatch;
 
     @Nonnull
     private final FormsMessages formsMessages;
 
     @Nonnull
-    private final Map<FormId, FormDescriptor> formDescriptors = new LinkedHashMap<>();
+    private final PlaceController placeController;
 
     @Inject
     public FormsManagerPresenter(@Nonnull ProjectId projectId,
@@ -62,103 +53,51 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
                                  @Nonnull FormDescriptorPresenter formDescriptorPresenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
                                  @Nonnull NoFormDescriptorSelectedView noFormDescriptorSelectedView,
-                                 @Nonnull FormsMessages formsMessages) {
+                                 @Nonnull FormsMessages formsMessages,
+                                 @Nonnull PlaceController placeController) {
         this.projectId = checkNotNull(projectId);
         this.formManagerView = checkNotNull(formManagerView);
         this.settingsPresenter = settingsPresenter;
         this.formDescriptorPresenter = formDescriptorPresenter;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.noFormDescriptorSelectedView = noFormDescriptorSelectedView;
+        this.dispatch = dispatchServiceManager;
         this.formsMessages = formsMessages;
+        this.placeController = placeController;
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         settingsPresenter.start(container);
         settingsPresenter.setSettingsTitle(formsMessages.forms_Title());
-        settingsPresenter.setApplySettingsHandler(this::saveForms);
+        settingsPresenter.setApplySettingsHandler(this::handleApply);
         AcceptsOneWidget section = settingsPresenter.addSection(formsMessages.projectForms_Title());
         section.setWidget(formManagerView);
         formManagerView.setAddFormHandler(this::handleAddForm);
-        formManagerView.setFormSelectionChangedHandler(this::handleFormSelectionChanged);
-        formManagerView.getFormDescriptorContainer().setWidget(noFormDescriptorSelectedView);
-        retrieveAndDisplayFormDescriptors();
+        retrieveAndDisplayFormsList();
     }
 
-    private void saveForms() {
-        FormDescriptor currentFormDescriptor = formDescriptorPresenter.getFormDescriptor();
-        this.formDescriptors.put(currentFormDescriptor.getFormId(), currentFormDescriptor);
-        ImmutableList<FormDescriptor> formDescriptors = ImmutableList.copyOf(this.formDescriptors.values());
-        GWT.log(formDescriptors.toString());
-        dispatchServiceManager.execute(new SetProjectFormDescriptorsAction(projectId,
-                                                                           formDescriptors),
-                                       result -> {});
+    private void handleApply() {
+
     }
 
-    private void displayFormDescriptor(FormId formId) {
-        FormDescriptor formDescriptor = formDescriptors.get(formId);
-        if(formDescriptor == null) {
-            formDescriptor = FormDescriptor.builder(formId)
-                                           .build();
-            formDescriptors.put(formId, formDescriptor);
-        }
-        displayFormDescriptor(formDescriptor);
-    }
-
-    private void displayFormDescriptor(FormDescriptor formDescriptor) {
-        try {
-            dispatchServiceManager.beginBatch();
-            FormId formId = formDescriptor.getFormId();
-            formManagerView.setCurrentFormId(formId);
-            AcceptsOneWidget descriptorContainer = formManagerView.getFormDescriptorContainer();
-            formDescriptorPresenter.start(descriptorContainer, new SimpleEventBus());
-            formDescriptorPresenter.setFormDescriptor(formDescriptor);
-        } finally {
-            dispatchServiceManager.executeCurrentBatch();
-        }
-    }
 
     private void handleAddForm() {
-//        dispatchServiceManager.execute(GetNew);
-//        formManagerView.displayCreateFormIdPrompt(newFnormId -> {
-//            saveCurrentFormDescriptor();
-//            FormId formId = FormId.get(newFormId);
-//            formManagerView.addFormId(formId);
-//            displayFormDescriptor(formId);
-//        });
+        dispatch.execute(new GetFreshFormIdAction(projectId),
+                         result -> goToFreshFormPlace(result.getFormId()));
     }
 
-    private void handleFormSelectionChanged() {
-        saveCurrentFormDescriptor();
-        formManagerView.getCurrentFormId()
-            .ifPresent(this::displayFormDescriptor);
+    private void goToFreshFormPlace(@Nonnull FormId formId) {
+        placeController.goTo(EditFormPlace.get(projectId, formId));
     }
 
-    private void loadFormDescriptors(GetProjectFormDescriptorsResult result) {
-        ImmutableList<FormDescriptor> formDescriptors = result.getFormDescriptors();
-        this.formDescriptors.clear();
-        formDescriptors.forEach(formDescriptor -> this.formDescriptors.put(formDescriptor.getFormId(),
-                                                                           formDescriptor));
-        List<FormId> formIds = formDescriptors.stream()
-                                              .map(FormDescriptor::getFormId)
-                                              .collect(Collectors.toList());
-        formManagerView.setFormIds(formIds);
-        this.formDescriptors.values()
-                            .stream()
-                            .findFirst()
-                            .ifPresent(this::displayFormDescriptor);
-    }
-
-    private void retrieveAndDisplayFormDescriptors() {
-        dispatchServiceManager.execute(new GetProjectFormDescriptorsAction(projectId),
-                                       this,
-                                       this::loadFormDescriptors);
+    private void displayFormsList(GetProjectFormDescriptorsResult result) {
 
     }
 
-    private void saveCurrentFormDescriptor() {
-        FormDescriptor formDescriptor = formDescriptorPresenter.getFormDescriptor();
-        formDescriptors.put(formDescriptor.getFormId(), formDescriptor);
+    private void retrieveAndDisplayFormsList() {
+        dispatch.execute(new GetProjectFormDescriptorsAction(projectId),
+                         this,
+                         this::displayFormsList);
+
     }
 
     @Override

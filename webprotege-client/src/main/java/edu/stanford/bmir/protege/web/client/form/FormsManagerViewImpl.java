@@ -25,12 +25,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormsManagerViewImpl extends Composite implements FormsManagerView {
 
-    @Nonnull
-    private final InputBox inputBox;
-
     private AddFormHandler addFormHandler = () -> {};
 
-    private FormSelectionChangedHandler formSelectionChangedHandler = () -> {};
+    private FormSelectedHandler formSelectedHandler = (formId) -> {};
 
     interface FormsManagerViewImplUiBinder extends UiBinder<HTMLPanel, FormsManagerViewImpl> {
 
@@ -39,40 +36,14 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     private static FormsManagerViewImplUiBinder ourUiBinder = GWT.create(FormsManagerViewImplUiBinder.class);
 
     @UiField
-    SimplePanel formDescriptorContainer;
-
-    @UiField
-    ListBox formSelector;
-
-    @UiField
     Button addFormButton;
 
 
 
     @Inject
-    public FormsManagerViewImpl(@Nonnull InputBox inputBox) {
-        this.inputBox = checkNotNull(inputBox);
+    public FormsManagerViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         addFormButton.addClickHandler(this::handleAddForm);
-        formSelector.addChangeHandler(event -> formSelectionChangedHandler.handleFormSelectionChanged());
-    }
-
-    @Nonnull
-    @Override
-    public AcceptsOneWidget getFormDescriptorContainer() {
-        return formDescriptorContainer;
-    }
-
-    @Nonnull
-    @Override
-    public Optional<FormId> getCurrentFormId() {
-        return Optional.ofNullable(formSelector.getSelectedValue())
-                .map(FormId::get);
-    }
-
-    @Override
-    public void setFormSelectionChangedHandler(@Nonnull FormSelectionChangedHandler handler) {
-        this.formSelectionChangedHandler = checkNotNull(handler);
     }
 
     @Override
@@ -81,36 +52,15 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     }
 
     @Override
+    public void setFormSelectedHandler(@Nonnull FormSelectedHandler handler) {
+        this.formSelectedHandler = checkNotNull(handler);
+    }
+
+    @Override
     public void clear() {
     }
 
     private void handleAddForm(ClickEvent clickEvent) {
         addFormHandler.handleAddForm();
-    }
-
-    @Override
-    public void setFormIds(@Nonnull List<FormId> formIds) {
-        formSelector.clear();
-        formIds.stream()
-               .map(FormId::getId)
-               .forEach(formSelector::addItem);
-        if(formSelector.getItemCount() > 0) {
-            formSelector.setSelectedIndex(0);
-        }
-    }
-
-    @Override
-    public void addFormId(@Nonnull FormId formId) {
-        formSelector.addItem(formId.getId());
-    }
-
-    @Override
-    public void setCurrentFormId(@Nonnull FormId formId) {
-        for(int i = 0; i < formSelector.getItemCount(); i++) {
-            if(formSelector.getValue(i).equals(formId.getId())) {
-                formSelector.setSelectedIndex(i);
-                return;
-            }
-        }
     }
 }

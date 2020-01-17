@@ -33,7 +33,6 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
     @UiField(provided = true)
     LanguageMapEditor labelField;
 
-
     @Inject
     public FormDescriptorViewImpl(@Nonnull LanguageMapEditor labelEditor) {
         this.labelField = checkNotNull(labelEditor);
@@ -42,6 +41,12 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
 
     private void handleAddElement(ClickEvent clickEvent) {
         handler.handleAddFormField();
+    }
+
+    @Override
+    public void clear() {
+        labelField.clearValue();
+        elementDescriptorListContainer.clear();
     }
 
     @Override
@@ -70,4 +75,6 @@ public class FormDescriptorViewImpl extends Composite implements FormDescriptorV
     public void setAddFormFieldHandler(@Nonnull AddFormFieldHandler handler) {
         this.handler = checkNotNull(handler);
     }
+
+
 }

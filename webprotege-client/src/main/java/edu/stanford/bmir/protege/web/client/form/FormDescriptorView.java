@@ -13,6 +13,8 @@ import javax.annotation.Nonnull;
  */
 public interface FormDescriptorView extends IsWidget {
 
+    void clear();
+
     void setEnabled(boolean b);
 
     interface AddFormFieldHandler {

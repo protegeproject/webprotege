@@ -12,12 +12,5 @@
             <g:Button ui:field="addFormButton" text="{msg.addForm}"
                       addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
         </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label text="{msg.availableForms}" addStyleNames="{wp.style.formLabel}"/>
-            <g:ListBox ui:field="formSelector"/>
-        </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:SimplePanel ui:field="formDescriptorContainer"/>
-        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

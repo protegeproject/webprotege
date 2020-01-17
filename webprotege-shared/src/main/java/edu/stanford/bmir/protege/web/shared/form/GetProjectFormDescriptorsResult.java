@@ -20,8 +20,9 @@ public abstract class GetProjectFormDescriptorsResult implements Result, HasProj
 
     @Nonnull
     public static GetProjectFormDescriptorsResult get(@Nonnull ProjectId projectId,
-                                                      @Nonnull ImmutableList<FormDescriptor> formDescriptors) {
-        return new AutoValue_GetProjectFormDescriptorsResult(projectId, formDescriptors);
+                                                      @Nonnull ImmutableList<FormDescriptor> formDescriptors,
+                                                      @Nonnull ImmutableList<EntityFormSelector> selectionCriteria) {
+        return new AutoValue_GetProjectFormDescriptorsResult(projectId, formDescriptors, selectionCriteria);
     }
 
     @Nonnull
@@ -30,4 +31,6 @@ public abstract class GetProjectFormDescriptorsResult implements Result, HasProj
 
     @Nonnull
     public abstract ImmutableList<FormDescriptor> getFormDescriptors();
+
+    public abstract ImmutableList<EntityFormSelector> getFormSelectors();
 }

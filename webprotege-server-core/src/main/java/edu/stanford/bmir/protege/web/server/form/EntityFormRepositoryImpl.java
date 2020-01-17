@@ -1,11 +1,17 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.Indexes;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,6 +33,12 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
 
     private static final String COLLECTION_NAME = "Forms";
 
+    private static final String PROJECT_ID = "projectId";
+
+    private static final String FORM_DESCRIPTOR = "formDescriptor";
+
+    private static final String FORM_ID = "formId";
+
     private final ObjectMapper objectMapper;
 
     private final MongoDatabase database;
@@ -41,14 +53,16 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
     public void saveFormDescriptor(@Nonnull ProjectId projectId, @Nonnull FormDescriptor formDescriptor) {
         var record = FormDescriptorRecord.get(projectId, formDescriptor);
         var document = objectMapper.convertValue(record, Document.class);
-        database.getCollection(COLLECTION_NAME).insertOne(document);
+        var filter = getProjectIdFormIdFilter(projectId, formDescriptor.getFormId());
+        getCollection()
+                .findOneAndReplace(filter, document, new FindOneAndReplaceOptions().upsert(true));
     }
 
     @Override
     public Stream<FormDescriptor> findFormDescriptors(@Nonnull ProjectId projectId) {
-        return StreamSupport.stream(database.getCollection(COLLECTION_NAME)
+        return StreamSupport.stream(getCollection()
                                             .find(new Document("projectId", projectId.getId())).spliterator(),
-                                        false
+                                    false
                                     )
                 .map(doc -> objectMapper.convertValue(doc, FormDescriptorRecord.class))
                             .map(FormDescriptorRecord::getFormDescriptor)
@@ -58,7 +72,7 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
 
     @Override
     public void setProjectFormDescriptors(@Nonnull ProjectId projectId, @Nonnull List<FormDescriptor> formDescriptors) {
-        var collection = database.getCollection(COLLECTION_NAME);
+        var collection = getCollection();
         collection.deleteMany(new Document("projectId", projectId.getId()));
         var docs = formDescriptors.stream()
                                   .map(formDescriptor -> FormDescriptorRecord.get(projectId, formDescriptor))
@@ -67,12 +81,14 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
         collection.insertMany(docs);
     }
 
+    public MongoCollection<Document> getCollection() {
+        return database.getCollection(COLLECTION_NAME);
+    }
+
     @Override
     public Optional<FormDescriptor> findFormDescriptor(@Nonnull ProjectId projectId, @Nonnull FormId formId) {
-        var filter = new Document();
-        filter.put("projectId", projectId.getId());
-//        filter.put("formDescriptor", new Document("formId", formId.getId()));
-        var foundFormDocument = database.getCollection(COLLECTION_NAME)
+        Bson filter = getProjectIdFormIdFilter(projectId, formId);
+        var foundFormDocument = getCollection()
                 .find(filter)
                 .first();
         if(foundFormDocument == null) {
@@ -84,8 +100,20 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
         }
     }
 
+    public static Bson getProjectIdFormIdFilter(@Nonnull ProjectId projectId,
+                                         @Nonnull FormId formId) {
+        var projectIdFilter = Filters.eq(PROJECT_ID, projectId.getId());
+        var formIdFilter = Filters.eq(FORM_DESCRIPTOR + "." + FORM_ID, formId.getId());
+        return Filters.and(projectIdFilter, formIdFilter);
+    }
+
     @Override
     public void ensureIndexes() {
-
+        var collection = getCollection();
+        var projectIdAsc = Indexes.ascending("projectId");
+        var formDescriptor_formId_Asc = Indexes.ascending("formDescriptor.formId");
+        var compoundIndex = Indexes.compoundIndex(projectIdAsc, formDescriptor_formId_Asc);
+        var indexOptions = new IndexOptions().unique(true);
+        collection.createIndex(compoundIndex, indexOptions);
     }
 }

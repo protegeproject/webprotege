@@ -26,11 +26,16 @@ public class GetProjectFormDescriptorsActionHandler extends AbstractProjectActio
     @Nonnull
     private final EntityFormRepository entityFormRepository;
 
+    @Nonnull
+    private final EntityFormSelectorRepository selectorRepository;
+
     @Inject
     public GetProjectFormDescriptorsActionHandler(@Nonnull AccessManager accessManager,
-                                                  @Nonnull EntityFormRepository entityFormRepository) {
+                                                  @Nonnull EntityFormRepository entityFormRepository,
+                                                  @Nonnull EntityFormSelectorRepository selectorRepository) {
         super(accessManager);
         this.entityFormRepository = checkNotNull(entityFormRepository);
+        this.selectorRepository = checkNotNull(selectorRepository);
     }
 
     @Nonnull
@@ -51,6 +56,9 @@ public class GetProjectFormDescriptorsActionHandler extends AbstractProjectActio
                                                    @Nonnull ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
         var formDescriptors = entityFormRepository.findFormDescriptors(projectId).collect(toImmutableList());
-        return GetProjectFormDescriptorsResult.get(projectId, formDescriptors);
+        var selectors = selectorRepository.findFormSelectors(projectId)
+                                          .collect(toImmutableList());
+
+        return GetProjectFormDescriptorsResult.get(projectId, formDescriptors, selectors);
     }
 }

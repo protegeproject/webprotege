@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;

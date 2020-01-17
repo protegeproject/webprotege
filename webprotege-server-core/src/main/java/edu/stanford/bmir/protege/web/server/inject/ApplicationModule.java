@@ -363,6 +363,7 @@ public class ApplicationModule {
 
     @Provides
     EntityFormRepository provideEntityFormRepository(EntityFormRepositoryImpl impl) {
+        impl.ensureIndexes();
         return impl;
     }
 
@@ -375,6 +376,7 @@ public class ApplicationModule {
 
     @Provides
     EntityFormSelectorRepository provideFormSelectorRepository(EntityFormSelectorRepositoryImpl impl) {
+        impl.ensureIndexes();
         return impl;
     }
 

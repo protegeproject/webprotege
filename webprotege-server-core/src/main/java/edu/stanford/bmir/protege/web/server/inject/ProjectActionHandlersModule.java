@@ -632,4 +632,19 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler provideSetEntityGraphActiveFiltersActionHandler(SetEntityGraphActiveFiltersActionHandler handler) {
         return handler;
     }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityFormDescriptorActionHandler(GetEntityFormDescriptorActionHandler actionHandler) {
+        return actionHandler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideSetEntityFormDescriptorActionHandler(SetEntityFormDescriptorActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetFreshFormIdActionHandler(GetFreshFormIdActionHandler handler) {
+        return handler;
+    }
 }

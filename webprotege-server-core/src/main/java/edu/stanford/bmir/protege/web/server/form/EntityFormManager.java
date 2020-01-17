@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
+import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -44,9 +45,7 @@ public class EntityFormManager {
                                     .map(EntityFormSelector::getFormId)
                                     .findFirst();
 
-        return entityFormRepository.findFormDescriptors(projectId).findFirst();
-
-//        return formId.flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id));
+        return formId.flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id));
     }
 
 }

@@ -1,10 +1,10 @@
-package edu.stanford.bmir.protege.web.server.form;
+package edu.stanford.bmir.protege.web.shared.form;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -21,7 +21,7 @@ public abstract class EntityFormSelector {
 
     @JsonCreator
     public static EntityFormSelector get(@Nonnull @JsonProperty("projectId") ProjectId projectId,
-                                         @Nonnull @JsonProperty("criteria") EntityMatchCriteria criteria,
+                                         @Nonnull @JsonProperty("criteria") CompositeRootCriteria criteria,
                                          @Nonnull @JsonProperty("formId") FormId formId) {
         return new AutoValue_EntityFormSelector(projectId, criteria, formId);
     }
@@ -30,7 +30,7 @@ public abstract class EntityFormSelector {
     public abstract ProjectId getProjectId();
 
     @JsonProperty("criteria")
-    public abstract EntityMatchCriteria getCriteria();
+    public abstract CompositeRootCriteria getCriteria();
 
     @JsonProperty("formId")
     public abstract FormId getFormId();
