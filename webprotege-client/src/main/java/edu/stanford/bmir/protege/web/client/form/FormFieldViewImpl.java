@@ -4,14 +4,13 @@ import com.google.common.base.CaseFormat;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -23,6 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 30/03/16
  */
 public class FormFieldViewImpl extends Composite implements FormFieldView {
+
+    private Optional<Tooltip> helpTooltip = Optional.empty();
 
     interface FormFieldViewImplUiBinder extends UiBinder<HTMLPanel, FormFieldViewImpl> {
 
@@ -39,6 +40,9 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
 
     @UiField
     SimplePanel editorHolder;
+
+    @UiField
+    HTMLPanel helpIcon;
 
     FormFieldControl editor;
 
@@ -101,5 +105,27 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
         String camelCaseProperty = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, cssProperty);
         String camelCaseValue = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, cssValue);
         getElement().getStyle().setProperty(camelCaseProperty, camelCaseValue);
+    }
+
+    @Override
+    public void setHelpText(@Nonnull String helpText) {
+        if(!helpTooltip.isPresent()) {
+            Tooltip helpTooltip = Tooltip.createOnBottom(helpIcon, helpText);
+            this.helpTooltip = Optional.of(helpTooltip);
+        }
+        this.helpTooltip.ifPresent(tt -> tt.updateTitleContent(helpText));
+        helpIcon.setVisible(!helpText.trim().isEmpty());
+    }
+
+    @Override
+    public void clearHelpText() {
+        helpIcon.setTitle("");
+        helpIcon.setVisible(false);
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        this.helpTooltip.ifPresent(Tooltip::dispose);
     }
 }

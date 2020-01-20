@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -13,6 +14,10 @@ import java.util.Optional;
  * 30/03/16
  */
 public interface FormFieldView extends IsWidget {
+
+    void setHelpText(@Nonnull String helpText);
+
+    void clearHelpText();
 
     void addStylePropertyValue(String cssProperty, String cssValue);
 

@@ -23,6 +23,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource busy();
 
+    @Source("help.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgHelpIcon();
+
     @Source("class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgClassIcon();
@@ -424,6 +428,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-form__grid__column")
         String formGridColumn();
+
+        @ClassName("wp-help-icon")
+        String helpIcon();
     }
 
     interface DateTimePicker extends CssResource {

@@ -6,9 +6,27 @@
             /*width: 100%;*/
             /*height: 100%;*/
         }
+        .labelHeader {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            align-items: center;
+        }
+        .helpIcon {
+            justify-self: flex-end;
+            width: 1.7em;
+            height: 1.7em;
+        }
+        .label {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.formGroup} {style.main}">
-        <g:Label ui:field="label" addStyleNames="{wp.style.formLabel}"/>
+        <g:HTMLPanel addStyleNames="{style.labelHeader}">
+            <g:Label ui:field="label" addStyleNames="{wp.style.formLabel} {style.label}"/>
+            <g:HTMLPanel ui:field="helpIcon" addStyleNames="{wp.style.helpIcon} {style.helpIcon}"/>
+        </g:HTMLPanel>
         <g:SimplePanel ui:field="editorHolder"/>
     </g:HTMLPanel>
 </ui:UiBinder>

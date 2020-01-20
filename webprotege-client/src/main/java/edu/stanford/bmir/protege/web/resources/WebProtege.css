@@ -18,6 +18,7 @@
 @url eyeIconUrl eyeIcon;
 @url datetimeIconUrl dateTimeIcon;
 @url homeIconUrl homeIcon;
+@url helpIconUrl svgHelpIcon;
 
 .gwt-TabLayoutPanelTab {
     background-color: #c0c0c0;
@@ -447,4 +448,17 @@
     background-color: literal("var(--separator--color)");
     font-weight: bold;
     padding: 0.5em;
+}
+
+
+.wp-help-icon {
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-image: helpIconUrl;
+    -webkit-mask-image: helpIconUrl;
+    background-color: literal("var(--secondary--color)");
+}
+
+.wp-help-icon:hover {
+    background-color: literal("var(--primary--color)");
 }

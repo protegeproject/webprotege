@@ -69,6 +69,7 @@ public class FormFieldPresenter {
         view.setFormLabel(formFieldDescriptor.getLabel().get(langTag));
         view.setEditor(formControl);
         view.setRequired(formFieldDescriptor.getOptionality());
+        view.setHelpText(formFieldDescriptor.getHelp().get(langTag));
         Map<String, String> style = formFieldDescriptor.getStyle();
         style.forEach(view::addStylePropertyValue);
         // Update the required value missing display when the value changes
