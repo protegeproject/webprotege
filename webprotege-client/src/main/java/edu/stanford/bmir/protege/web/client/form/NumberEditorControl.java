@@ -46,6 +46,8 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private NumberControlDescriptor descriptor;
 
+    private Optional<Double> currentValue;
+
     public void setDescriptor(NumberControlDescriptor formFieldDescriptor) {
         this.descriptor = formFieldDescriptor;
         setFormat(formFieldDescriptor.getFormat());
@@ -56,6 +58,11 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
         String placeholder = formFieldDescriptor.getPlaceholder()
                                                 .get(localeName);
         setPlaceholder(placeholder);
+        numberField.addValueChangeHandler(this::handleValueChanged);
+    }
+
+    private void handleValueChanged(ValueChangeEvent<String> event) {
+        dirty = true;
     }
 
     interface NumberEditorControlUiBinder extends UiBinder<HTMLPanel, NumberEditorControl> {
@@ -69,6 +76,8 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     @UiField
     Label errorLabel;
+
+    private boolean dirty = false;
 
     @Inject
     public NumberEditorControl() {
@@ -93,14 +102,20 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     @Override
     public void setValue(FormControlData object) {
-        if (!(object instanceof LiteralFormControlValue)) {
+        if (!(object instanceof NumberControlData)) {
             clearValue();
             return;
         }
-        LiteralFormControlValue primitive = (LiteralFormControlValue) object;
+        NumberControlData data = (NumberControlData) object;
         try {
-            double v = primitive.getValueAsDouble();
-            numberField.setText(format.format(v));
+            currentValue = data.getValue();
+            if(currentValue.isPresent()) {
+                numberField.setText(format.format(currentValue.get()));
+            }
+            else {
+                numberField.setText("");
+            }
+            dirty = false;
         } catch(NumberFormatException e) {
             clearValue();
         }
@@ -110,13 +125,21 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     @Override
     public void clearValue() {
         numberField.setText("");
+        currentValue = Optional.empty();
+        dirty = false;
     }
 
     @Override
     public Optional<FormControlData> getValue() {
         try {
-            double v = format.parse(numberField.getText().trim());
-            return Optional.of(NumberControlData.get(descriptor, v));
+            if(dirty) {
+                double v = Double.parseDouble(numberField.getText().trim());
+                return Optional.of(NumberControlData.get(descriptor, v));
+            }
+            else {
+                return currentValue.map(v -> NumberControlData.get(descriptor, v));
+
+            }
         } catch (NumberFormatException e) {
             GWT.log("[NumberEditorControl] Invalid number format (" + format.getPattern() + ") " + e.getMessage());
             return Optional.empty();
@@ -131,7 +154,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     @Override
     public boolean isDirty() {
-        return false;
+        return dirty;
     }
 
     public void setLength(int length) {
