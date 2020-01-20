@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -48,6 +49,11 @@ public class NumberControlRangeViewImpl extends Composite implements NumberContr
     public NumberControlRangeViewImpl() {
         counter.increment();
         initWidget(ourUiBinder.createAndBindUi(this));
+        lowerBound.addValueChangeHandler(this::handleBoundChanged);
+    }
+
+    private void handleBoundChanged(ValueChangeEvent<String> event) {
+        setAnyNumber(false);
     }
 
     @Override

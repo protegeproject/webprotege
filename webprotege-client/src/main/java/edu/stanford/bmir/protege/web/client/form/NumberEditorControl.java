@@ -63,6 +63,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private void handleValueChanged(ValueChangeEvent<String> event) {
         dirty = true;
+        ValueChangeEvent.fire(this, getValue());
     }
 
     interface NumberEditorControlUiBinder extends UiBinder<HTMLPanel, NumberEditorControl> {
@@ -134,6 +135,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
         try {
             if(dirty) {
                 double v = Double.parseDouble(numberField.getText().trim());
+                GWT.log("[NumberEditorControl] Value: " + v);
                 return Optional.of(NumberControlData.get(descriptor, v));
             }
             else {
@@ -233,9 +235,21 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     }
 
     private String formatRange() {
-        String lower = format.format(range.getLowerBound());
-        String upper = format.format(range.getUpperBound());
-        return range.getLowerBoundType().getLowerSymbol() + " " + lower + " and " + range.getUpperBoundType().getUpperSymbol() + " " + upper;
+        String msg = "";
+        double lowerBound = range.getLowerBound();
+        if(lowerBound != Double.MIN_VALUE) {
+            String lower = format.format(lowerBound);
+            msg = range.getLowerBoundType().getLowerSymbol() + " " + lower;
+        }
+        double upperBound = range.getUpperBound();
+        if(upperBound != Double.MAX_VALUE) {
+            if(lowerBound != Double.MIN_VALUE) {
+                msg += " and ";
+            }
+            String upper = range.getUpperBoundType().getUpperSymbol() + " " + format.format(upperBound);
+            msg += upper;
+        }
+        return  msg;
     }
 
 }
