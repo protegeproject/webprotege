@@ -13,6 +13,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("about")
     String about();
 
+    @DefaultMessage("Back")
+    @Key("back")
+    String back();
     
     @DefaultMessage("Add tab")
     @Key("addTab")

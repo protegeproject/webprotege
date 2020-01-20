@@ -29,6 +29,7 @@ public class EditFormActivity extends AbstractActivity {
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
         presenter.start(panel, eventBus);
         presenter.setFormId(place.getFormId());
+        presenter.setNextPlace(place.getNextPlace());
     }
 
     @Override

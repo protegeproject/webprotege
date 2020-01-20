@@ -37,7 +37,7 @@ public class EditFormPlaceTokenizer implements WebProtegePlaceTokenizer<EditForm
         MatchResult result = regExp.exec(token);
         ProjectId projectId = ProjectId.get(result.getGroup(1));
         FormId formId = FormId.get(result.getGroup(2));
-        return EditFormPlace.get(projectId, formId);
+        return EditFormPlace.get(projectId, formId, null);
     }
 
     @Override

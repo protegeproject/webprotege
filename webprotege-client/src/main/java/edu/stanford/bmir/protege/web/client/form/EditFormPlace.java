@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -17,8 +19,9 @@ import javax.annotation.Nonnull;
 public abstract class EditFormPlace extends Place implements HasProjectId {
 
     public static EditFormPlace get(@Nonnull ProjectId projectId,
-                                    @Nonnull FormId formId) {
-        return new AutoValue_EditFormPlace(projectId, formId);
+                                    @Nonnull FormId formId,
+                                    @Nullable Place nextPlace) {
+        return new AutoValue_EditFormPlace(projectId, formId, nextPlace);
     }
 
     @Nonnull
@@ -27,4 +30,13 @@ public abstract class EditFormPlace extends Place implements HasProjectId {
 
     @Nonnull
     public abstract FormId getFormId();
+
+    @Nullable
+    protected abstract Place getNextPlaceInternal();
+
+    @Nonnull
+    public Optional<Place> getNextPlace() {
+        return Optional.ofNullable(getNextPlaceInternal());
+    }
+
 }

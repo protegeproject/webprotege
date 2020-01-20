@@ -701,6 +701,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    FormIdView provideFormIdView(FormIdViewImpl impl) {
+        return impl;
+    }
 }
 
 

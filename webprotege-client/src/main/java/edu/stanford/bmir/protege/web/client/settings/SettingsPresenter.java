@@ -76,6 +76,18 @@ public class SettingsPresenter {
         this.cancelSettingsHandler = checkNotNull(cancelSettingsHandler);
     }
 
+    public void setCancelButtonVisible(boolean visible) {
+        view.setCancelButtonVisible(visible);
+    }
+
+    public void setApplyButtonText(@Nonnull String text) {
+        view.setApplyButtonText(checkNotNull(text));
+    }
+
+    public void setCancelButtonText(@Nonnull String text) {
+        view.setCancelButtonText(text);
+    }
+
     @Nonnull
     public AcceptsOneWidget addSection(@Nonnull String sectionName) {
         SettingsSectionViewContainer viewContainer = viewContainerProvider.get();

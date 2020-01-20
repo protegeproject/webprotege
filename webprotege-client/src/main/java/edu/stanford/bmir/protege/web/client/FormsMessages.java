@@ -30,6 +30,15 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("addForm")
     String addForm();
 
+    @DefaultMessage("Delete form")
+    @Key("deleteForm")
+    String deleteForm();
+
+    @DefaultMessage("Edit form")
+    @Key("editForm")
+    String editForm();
+
+
     @DefaultMessage("Add form element")
     @Key("addFormElement")
     String addFormElement();
@@ -68,7 +77,7 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("deleteFormElementConfirmation.title")
     String deleteFormElementConfirmation_Title(String formElementId);
 
-    @DefaultMessage("Are you sure that you want to delete the <b>{0}</b> form element?  This cannot be undone.")
+    @DefaultMessage("Are you sure that you want to delete the <b>{0}</b> form?  This cannot be undone.")
     @Key("deleteFormElementConfirmation.message")
     String deleteFormElementConfirmation_Message(String formElementId);
 

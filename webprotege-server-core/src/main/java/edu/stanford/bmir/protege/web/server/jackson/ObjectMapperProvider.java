@@ -41,7 +41,6 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
         mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new Jdk8Module());
         mapper.registerModule(new GuavaModule());
