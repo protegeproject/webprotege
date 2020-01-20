@@ -46,7 +46,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private NumberControlDescriptor descriptor;
 
-    private Optional<Double> currentValue;
+    private Optional<OWLLiteral> currentValue;
 
     public void setDescriptor(NumberControlDescriptor formFieldDescriptor) {
         this.descriptor = formFieldDescriptor;
@@ -111,7 +111,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
         try {
             currentValue = data.getValue();
             if(currentValue.isPresent()) {
-                numberField.setText(format.format(currentValue.get()));
+                numberField.setText(currentValue.get().getLiteral());
             }
             else {
                 numberField.setText("");
@@ -134,7 +134,8 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     public Optional<FormControlData> getValue() {
         try {
             if(dirty) {
-                double v = Double.parseDouble(numberField.getText().trim());
+                OWLLiteral v = DataFactory.getOWLLiteral(numberField.getText().trim(),
+                                                         DataFactory.getXSDDecimal());
                 GWT.log("[NumberEditorControl] Value: " + v);
                 return Optional.of(NumberControlData.get(descriptor, v));
             }

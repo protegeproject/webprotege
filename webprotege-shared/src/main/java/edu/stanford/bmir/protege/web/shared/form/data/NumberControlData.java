@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +24,7 @@ public abstract class NumberControlData implements FormControlData {
 
     @JsonCreator
     public static NumberControlData get(@Nonnull NumberControlDescriptor descriptor,
-                                        @Nullable Double value) {
+                                        @Nullable OWLLiteral value) {
         return new AutoValue_NumberControlData(descriptor, value);
     }
 
@@ -41,11 +43,11 @@ public abstract class NumberControlData implements FormControlData {
 
     @JsonProperty("value")
     @Nullable
-    protected abstract Double getValueInternal();
+    protected abstract OWLLiteral getValueInternal();
 
     @Nonnull
     @JsonIgnore
-    public Optional<Double> getValue() {
+    public Optional<OWLLiteral> getValue() {
         return Optional.ofNullable(getValueInternal());
     }
 }

@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -203,9 +204,10 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<OWLEntityData> result) {
-        return messageFormatter.format("Edited {0}",
-                                       result.getSubject()
-                                             .asEntity());
+        Optional<OWLEntity> owlEntity = result.getSubject()
+                                              .asEntity();
+        return owlEntity.map(entity -> messageFormatter.format("Edited {0}",
+                                                               entity)).orElse("Edited entity");
     }
 
     @Override

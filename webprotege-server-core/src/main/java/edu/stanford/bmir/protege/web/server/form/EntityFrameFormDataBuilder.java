@@ -62,8 +62,6 @@ public class EntityFrameFormDataBuilder {
                 return values.stream()
                              .map(OWLPrimitiveData::asLiteral)
                              .flatMap(Optional::stream)
-                             .map(literal -> toDouble(literal))
-                             .flatMap(Optional::stream)
                              .map(value -> NumberControlData.get(numberControlDescriptor, value))
                              .collect(toImmutableList());
             }

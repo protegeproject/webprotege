@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -124,9 +125,7 @@ public class EntityFormDataConverter {
             @Override
             public void visit(@Nonnull NumberControlData numberControlData) {
                 numberControlData.getValue().ifPresent(value -> {
-                    formFrameBuilder.add(binding,
-                                                DataFactory.getOWLLiteral(Double.toString(value),
-                                                                          DataFactory.getXSDDecimal()));
+                    formFrameBuilder.add(binding, value);
                 });
             }
 
