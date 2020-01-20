@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -168,6 +169,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
         try {
             GWT.log("[NumberEditorControl] Set number format to " + numberFormat);
             format = NumberFormat.getFormat(checkNotNull(numberFormat));
+            validate();
         } catch(NumberFormatException e) {
             GWT.log("[NumberEditorControl] Invalid number format (" + numberFormat + "): " + e.getMessage());
         }
@@ -211,8 +213,15 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     }
 
     private void validate() {
+        String trimmedText = numberField.getText()
+                                        .trim();
+        try {
+            format.parse(trimmedText);
+        } catch(NumberFormatException e) {
+            displayErrorMessage("Incorrect number format");
+        }
         Range<Double> r = range.toRange();
-        double v = format.parse(numberField.getText().trim());
+        double v = format.parse(trimmedText);
         if(!r.contains(v)) {
             displayErrorMessage("Value must be " + formatRange());
         }
