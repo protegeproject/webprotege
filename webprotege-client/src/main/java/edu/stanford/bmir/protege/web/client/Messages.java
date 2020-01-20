@@ -332,7 +332,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("forgotUserNameOrPassword")
     String forgotUserNameOrPassword();
 
-    
+    @DefaultMessage("Forms")
+    @Key("editProjectForms")
+    String forms_EditProjectForms();
+
+
     @DefaultMessage("Annotations")
     @Key("frame.annotations")
     String frame_annotations();
