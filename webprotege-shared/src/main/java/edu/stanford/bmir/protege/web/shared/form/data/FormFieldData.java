@@ -18,8 +18,9 @@ import javax.annotation.Nonnull;
 public abstract class FormFieldData implements IsSerializable {
 
     public static FormFieldData get(@Nonnull FormFieldDescriptor descriptor,
-                                    @Nonnull ImmutableList<FormControlData> formControlData) {
-        return new AutoValue_FormFieldData(descriptor, formControlData);
+                                    @Nonnull ImmutableList<FormControlData> formControlData,
+                                    int formControlDataCount) {
+        return new AutoValue_FormFieldData(descriptor, formControlData, formControlDataCount);
     }
 
     @Nonnull
@@ -31,4 +32,6 @@ public abstract class FormFieldData implements IsSerializable {
      */
     @Nonnull
     public abstract ImmutableList<FormControlData> getFormControlData();
+
+    public abstract int getFormControlDataCount();
 }

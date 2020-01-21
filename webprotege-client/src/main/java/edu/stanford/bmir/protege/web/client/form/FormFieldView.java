@@ -31,6 +31,10 @@ public interface FormFieldView extends IsWidget {
 
     FormFieldControl getEditor();
 
+    void clearLimitedValuesDisplayed();
+
+    void setLimitedValuesDisplayed(int size, int formControlDataCount);
+
     void setRequiredValueNotPresentVisible(boolean visible);
 
     void setRequired(Optionality required);

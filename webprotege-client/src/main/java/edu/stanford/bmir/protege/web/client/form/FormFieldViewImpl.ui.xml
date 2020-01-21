@@ -21,6 +21,11 @@
             flex-grow: 1;
             flex-shrink: 1;
         }
+        .limitedValuesMessage {
+            color: literal("var(--tertiary--color)");
+            background-color: rgb(255, 250, 230);
+            padding: 4px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.formGroup} {style.main}">
         <g:HTMLPanel addStyleNames="{style.labelHeader}">
@@ -28,5 +33,6 @@
             <g:HTMLPanel ui:field="helpIcon" addStyleNames="{wp.style.helpIcon} {style.helpIcon}"/>
         </g:HTMLPanel>
         <g:SimplePanel ui:field="editorHolder"/>
+        <g:Label ui:field="limitedValuesDisplayedMessage" visible="false" addStyleNames="{style.limitedValuesMessage}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

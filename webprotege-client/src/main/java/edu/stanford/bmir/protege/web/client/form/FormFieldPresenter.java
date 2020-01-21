@@ -83,13 +83,13 @@ public class FormFieldPresenter {
 
     public FormFieldData getValue() {
         if(formControl == null) {
-            return FormFieldData.get(formFieldDescriptor, ImmutableList.of());
+            return FormFieldData.get(formFieldDescriptor, ImmutableList.of(), 0);
         }
         ImmutableList<FormControlData> formControlData = formControl.getEditorValue()
                                                                     .map(ImmutableList::copyOf)
                                                                     .orElse(ImmutableList.of());
 
-        return FormFieldData.get(formFieldDescriptor, formControlData);
+        return FormFieldData.get(formFieldDescriptor, formControlData, formControlData.size());
     }
 
     public void setValue(@Nonnull FormFieldData formFieldData) {
@@ -100,7 +100,12 @@ public class FormFieldPresenter {
             throw new RuntimeException("FormFieldDescriptor mismatch for field: " + formFieldDescriptor.getId());
         }
         checkNotNull(formFieldData);
-        formControl.setValue(formFieldData.getFormControlData());
+        ImmutableList<FormControlData> formControlData = formFieldData.getFormControlData();
+        formControl.setValue(formControlData);
+        int formControlDataCount = formFieldData.getFormControlDataCount();
+        if(formControlDataCount > formControlData.size()) {
+            view.setLimitedValuesDisplayed(formControlData.size(), formControlDataCount);
+        }
         updateRequiredValuePresent();
     }
 

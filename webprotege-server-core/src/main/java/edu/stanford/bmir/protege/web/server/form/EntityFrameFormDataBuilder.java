@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
@@ -24,6 +25,11 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableList;
  * 2019-10-31
  */
 public class EntityFrameFormDataBuilder {
+
+    /**
+     * This is too arbitrary but safer for now in the case of very large ontologies
+     */
+    private static final int MAX_FIELD_SIZE = 50;
 
     @Nonnull
     private final EntityFrameProvider entityFrameProvider;
@@ -126,16 +132,19 @@ public class EntityFrameFormDataBuilder {
         var fieldData = formDescriptor.getFields()
                                       .stream()
                                       .map(field -> {
-                                          var controlValues = toFormControlValues(subject, field);
+                                          ImmutableList<FormControlData> formControlValues = toFormControlValues(subject,
+                                                                                                               field);
+                                          var controlValuesStream = formControlValues.stream();
                                           if(field.getRepeatability() == Repeatability.NON_REPEATABLE) {
-                                              var limitedControlValues = controlValues.stream()
-                                                      .limit(1)
-                                                      .collect(toImmutableList());
-                                              return FormFieldData.get(field, limitedControlValues);
+                                              controlValuesStream = controlValuesStream.limit(1);
                                           }
                                           else {
-                                              return FormFieldData.get(field, controlValues);
+                                              controlValuesStream = controlValuesStream.limit(MAX_FIELD_SIZE);
                                           }
+                                          var limitedFormControlValues = controlValuesStream.collect(toImmutableList());
+                                          return FormFieldData.get(field,
+                                                                   limitedFormControlValues,
+                                                                   formControlValues.size());
                                       })
                                       .collect(toImmutableList());
         return FormData.get(Optional.of(FormEntitySubject.get(subject)), formDescriptor, fieldData);

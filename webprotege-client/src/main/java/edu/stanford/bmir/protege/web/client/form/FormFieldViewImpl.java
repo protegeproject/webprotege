@@ -44,6 +44,9 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     HTMLPanel helpIcon;
 
+    @UiField
+    Label limitedValuesDisplayedMessage;
+
     FormFieldControl editor;
 
     @Inject
@@ -98,6 +101,18 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Override
     public FormFieldControl getEditor() {
         return checkNotNull(editor);
+    }
+
+    @Override
+    public void clearLimitedValuesDisplayed() {
+        limitedValuesDisplayedMessage.setText("");
+        limitedValuesDisplayedMessage.setVisible(false);
+    }
+
+    @Override
+    public void setLimitedValuesDisplayed(int size, int formControlDataCount) {
+        limitedValuesDisplayedMessage.setText("Displaying " + size + " of " + formControlDataCount + " values");
+        limitedValuesDisplayedMessage.setVisible(true);
     }
 
     @Override
