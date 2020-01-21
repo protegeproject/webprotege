@@ -181,7 +181,11 @@ public class FormControlFactory {
 
     @Nonnull
     private ValueEditorFactory<FormControlData> getImageFieldEditorFactory(ImageControlDescriptor imageControlDescriptor) {
-        return imageFieldEditorProvider::get;
+        return () -> {
+            ImageControl imageControl = imageFieldEditorProvider.get();
+            imageControl.setDescriptor(imageControlDescriptor);
+            return imageControl;
+        };
     }
 
     @Nonnull
