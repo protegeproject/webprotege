@@ -121,15 +121,7 @@ public class EntityFrameFormDataBuilder {
             }
         });
     }
-
-    public Optional<Double> toDouble(OWLLiteral literal) {
-        try {
-            return Optional.of(Double.parseDouble(literal.getLiteral()));
-        } catch(NumberFormatException e) {
-           return Optional.empty();
-        }
-    }
-
+    
     public FormData toFormData(@Nonnull OWLEntity subject, FormDescriptor formDescriptor) {
         var fieldData = formDescriptor.getFields()
                                       .stream()
