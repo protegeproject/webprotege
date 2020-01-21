@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -13,8 +14,9 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataAction;
+import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataResult;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler<OWLEntityData, SetEntityFormDataAction, SetEntityFormDataResult> {
+public class SetEntityFormsDataActionHandler extends AbstractProjectChangeHandler<OWLEntityData, SetEntityFormsDataAction, SetEntityFormDataResult> {
 
     @Nonnull
     private final EntityFormChangeListGeneratorFactory changeListGeneratorFactory;
@@ -38,11 +40,11 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
 
 
     @Inject
-    public SetEntityFormDataActionHandler(@Nonnull AccessManager accessManager,
-                                          EventManager<ProjectEvent<?>> eventManager,
-                                          HasApplyChanges applyChanges,
-                                          @Nonnull EntityFormChangeListGeneratorFactory changeListGeneratorFactory,
-                                          @Nonnull RenderingManager renderingManager) {
+    public SetEntityFormsDataActionHandler(@Nonnull AccessManager accessManager,
+                                           @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                           @Nonnull HasApplyChanges applyChanges,
+                                           @Nonnull EntityFormChangeListGeneratorFactory changeListGeneratorFactory,
+                                           @Nonnull RenderingManager renderingManager) {
         super(accessManager, eventManager, applyChanges);
         this.changeListGeneratorFactory = checkNotNull(changeListGeneratorFactory);
         this.renderingManager = checkNotNull(renderingManager);
@@ -56,7 +58,7 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
 
     @Override
     protected SetEntityFormDataResult createActionResult(ChangeApplicationResult<OWLEntityData> changeApplicationResult,
-                                                         SetEntityFormDataAction action,
+                                                         SetEntityFormsDataAction action,
                                                          ExecutionContext executionContext,
                                                          EventList<ProjectEvent<?>> eventList) {
         return new SetEntityFormDataResult(eventList);
@@ -64,19 +66,20 @@ public class SetEntityFormDataActionHandler extends AbstractProjectChangeHandler
 
     @Nonnull
     @Override
-    public Class<SetEntityFormDataAction> getActionClass() {
-        return SetEntityFormDataAction.class;
+    public Class<SetEntityFormsDataAction> getActionClass() {
+        return SetEntityFormsDataAction.class;
     }
 
     @Override
-    protected ChangeListGenerator<OWLEntityData> getChangeListGenerator(SetEntityFormDataAction action,
+    protected ChangeListGenerator<OWLEntityData> getChangeListGenerator(SetEntityFormsDataAction action,
                                                                         ExecutionContext executionContext) {
-        var formData = action.getNewFormData();
-        if(formData.getSubject().isEmpty()) {
-            var entityData = renderingManager.getRendering(action.getEntity());
-            return new FixedChangeListGenerator<>(Collections.emptyList(), entityData, "");
-        }
-        return changeListGeneratorFactory.create(action.getPristineFormData(),
-                                                 formData);
+
+
+        var pristineFormsData = action.getPristineFormsData();
+        var editedFormsData = action.getEditedFormsData();
+        var subject = action.getEntity();
+        return changeListGeneratorFactory.create(subject,
+                                                 pristineFormsData,
+                                                 editedFormsData);
     }
 }

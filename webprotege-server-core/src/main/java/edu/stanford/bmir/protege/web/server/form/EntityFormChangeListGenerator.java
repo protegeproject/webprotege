@@ -40,10 +40,10 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     private final MessageFormatter messageFormatter;
 
     @Nonnull
-    private final FormData pristineFormData;
+    private final ImmutableList<FormData> pristineFormsData;
 
     @Nonnull
-    private final FormData editedFormData;
+    private final ImmutableList<FormData> editedFormsData;
 
     @Nonnull
     private final FrameChangeGeneratorFactory frameChangeGeneratorFactory;
@@ -57,10 +57,14 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final OWLEntity subject;
+
 
     @Inject
-    public EntityFormChangeListGenerator(@Nonnull FormData pristineFormData,
-                                         @Nonnull FormData editedFormData,
+    public EntityFormChangeListGenerator(@Nonnull OWLEntity subject,
+                                         @Nonnull ImmutableList<FormData> pristineFormsData,
+                                         @Nonnull ImmutableList<FormData> editedFormData,
                                          @Nonnull EntityFormDataConverter entityFormDataConverter,
                                          @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory,
                                          @Nonnull MessageFormatter messageFormatter,
@@ -68,8 +72,9 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                          @Nonnull FormFrameConverter formFrameConverter,
                                          @Nonnull EmptyEntityFrameFactory emptyEntityFrameFactory,
                                          @Nonnull RenderingManager renderingManager) {
-        this.pristineFormData = checkNotNull(pristineFormData);
-        this.editedFormData = checkNotNull(editedFormData);
+        this.subject = checkNotNull(subject);
+        this.pristineFormsData = checkNotNull(pristineFormsData);
+        this.editedFormsData = checkNotNull(editedFormData);
         this.entityFormDataConverter = checkNotNull(entityFormDataConverter);
         this.messageFormatter = checkNotNull(messageFormatter);
         this.frameChangeGeneratorFactory = checkNotNull(frameChangeGeneratorFactory);
@@ -80,30 +85,32 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
 
     @Override
     public OntologyChangeList<OWLEntityData> generateChanges(ChangeGenerationContext context) {
-        var pristineFormFrame = entityFormDataConverter.convert(pristineFormData);
-        var editedFormFrame = entityFormDataConverter.convert(editedFormData);
+        var allChanges = new ArrayList<OntologyChangeList<OWLEntityData>>();
+        for(int i = 0; i < pristineFormsData.size(); i++) {
+            var pristineFormData = pristineFormsData.get(i);
+            var editedFormData = editedFormsData.get(i);
+            var pristineFormFrame = entityFormDataConverter.convert(pristineFormData);
+            var editedFormFrame = entityFormDataConverter.convert(editedFormData);
 
-        if(pristineFormFrame.equals(editedFormFrame)) {
-            return emptyChangeList();
+            if(!pristineFormFrame.equals(editedFormFrame)) {
+                var pristineFramesBySubject = getFormFrameClosureBySubject(pristineFormFrame);
+                var editedFramesBySubject = getFormFrameClosureBySubject(editedFormFrame);
+
+                var changes = generateChangesForFormFrames(pristineFramesBySubject, editedFramesBySubject, context);
+                allChanges.addAll(changes);
+            }
         }
 
-        var pristineFramesBySubject = getFormFrameClosureBySubject(pristineFormFrame);
-        var editedFramesBySubject = getFormFrameClosureBySubject(editedFormFrame);
-
-        var changes = generateChangesForFormFrames(pristineFramesBySubject, editedFramesBySubject, context);
-        if(changes.isEmpty()) {
+        if(allChanges.isEmpty()) {
             return emptyChangeList();
         }
         else {
-            return combineIndividualChangeLists(changes);
+            return combineIndividualChangeLists(allChanges);
         }
     }
 
     private OntologyChangeList<OWLEntityData> emptyChangeList() {
-        var formSubject = pristineFormData.getSubject()
-                        .orElseThrow();
-        var entity = ((FormEntitySubject) formSubject).getEntity();
-        var entityData = renderingManager.getRendering(entity);
+        var entityData = renderingManager.getRendering(subject);
         return OntologyChangeList.<OWLEntityData>builder().build(entityData);
     }
 

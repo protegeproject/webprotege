@@ -121,7 +121,7 @@ public class EntityFrameFormDataBuilder {
             }
         });
     }
-    
+
     public FormData toFormData(@Nonnull OWLEntity subject, FormDescriptor formDescriptor) {
         var fieldData = formDescriptor.getFields()
                                       .stream()

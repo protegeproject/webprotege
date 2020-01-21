@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -37,15 +39,14 @@ public class EntityFormManager {
         this.matchingEngine = matchingEngine;
     }
 
-    public Optional<FormDescriptor> getFormDescriptor(@Nonnull OWLEntity entity,
-                                                      @Nonnull ProjectId projectId) {
-        var formId = entityFormSelectorRepository.findFormSelectors(projectId)
+    public ImmutableList<FormDescriptor> getFormDescriptors(@Nonnull OWLEntity entity,
+                                                           @Nonnull ProjectId projectId) {
+        return entityFormSelectorRepository.findFormSelectors(projectId)
                                     .filter(selector -> matchingEngine.matches(entity,
                                                                                selector.getCriteria()))
                                     .map(EntityFormSelector::getFormId)
-                                    .findFirst();
-
-        return formId.flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id));
+                                    .flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id).stream())
+                .collect(toImmutableList());
     }
 
 }

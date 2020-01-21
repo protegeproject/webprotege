@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
@@ -13,36 +14,26 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class GetEntityFormResult implements Result {
+public class GetEntityFormsResult implements Result {
 
-    @Nullable
-    private FormDescriptor formDescriptor;
+    private ImmutableList<FormData> formData;
 
-    private FormData formData;
-
-    public GetEntityFormResult(FormDescriptor formDescriptor, @Nonnull FormData formData) {
-        this.formDescriptor = formDescriptor;
+    public GetEntityFormsResult(@Nonnull ImmutableList<FormData> formData) {
         this.formData = formData;
     }
 
-    private GetEntityFormResult() {
+    private GetEntityFormsResult() {
     }
 
     @Nonnull
-    public Optional<FormDescriptor> getFormDescriptor() {
-        return Optional.ofNullable(formDescriptor);
-    }
-
-    @Nonnull
-    public FormData getFormData() {
+    public ImmutableList<FormData> getFormData() {
         return formData;
     }
 
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper("GetEntityFormResult")
-                .addValue(formDescriptor)
+        return MoreObjects.toStringHelper("GetEntityFormsResult")
                 .addValue(formData)
                 .toString();
     }

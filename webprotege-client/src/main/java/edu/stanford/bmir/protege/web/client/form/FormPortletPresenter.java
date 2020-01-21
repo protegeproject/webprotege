@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -18,6 +18,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,7 +38,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final FormPresenter formPresenter;
+    private final FormStackPresenter formStackPresenter;
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -47,17 +49,18 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Nonnull
     private Optional<PortletUi> portletUi = Optional.empty();
 
-    private Optional<FormData> currentFormData = Optional.empty();
+    @Nonnull
+    private final List<FormData> pristineFormsData = new ArrayList<>();
 
     @Inject
     public FormPortletPresenter(SelectionModel selectionModel,
                                 @Nonnull ProjectId projectId,
-                                @Nonnull FormPresenter formPresenter,
+                                @Nonnull FormStackPresenter formStackPresenter,
                                 @Nonnull DispatchServiceManager dispatchServiceManager,
                                 DisplayNameRenderer displayNameRenderer) {
         super(selectionModel, projectId, displayNameRenderer);
         this.projectId = projectId;
-        this.formPresenter = formPresenter;
+        this.formStackPresenter = formStackPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
     }
 
@@ -69,7 +72,6 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
             setNothingSelectedVisible(false);
         }
         else {
-            formPresenter.clear();
             setNothingSelectedVisible(true);
         }
     }
@@ -77,7 +79,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         this.portletUi = Optional.of(portletUi);
-        formPresenter.start(portletUi);
+        formStackPresenter.start(portletUi);
         setDisplaySelectedEntityNameAsSubtitle(true);
 
         eventBus.addProjectEventHandler(projectId, CLASS_FRAME_CHANGED, this::handleClassFrameChanged);
@@ -86,7 +88,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     private void handleClassFrameChanged(ClassFrameChangedEvent event) {
         GWT.log("[FormPortletPresenter] handleClassFrameChanged");
         if(currentSubject.equals(Optional.of(event.getEntity()))) {
-            if(!formPresenter.isDirty()) {
+            if(!formStackPresenter.isDirty()) {
                 setSubject(event.getEntity());
             }
         }
@@ -94,44 +96,32 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private void setSubject(@Nonnull final OWLEntity entity) {
         checkNotNull(entity);
-        if(formPresenter.isDirty()) {
+        if(formStackPresenter.isDirty()) {
             saveCurrentFormData();
         }
         currentSubject = Optional.of(entity);
-        dispatchServiceManager.execute(new GetEntityFormAction(projectId, entity),
+        dispatchServiceManager.execute(new GetEntityFormsAction(projectId, entity),
                                        this::displayFormResult);
     }
 
     private void saveCurrentFormData() {
         currentSubject.ifPresent(subject -> {
-            if(!currentFormData.equals(formPresenter.getFormData())) {
-                GWT.log("Form data changed: " + currentFormData + "       TO:     " + formPresenter.getFormData());
-            }
-            formPresenter.getFormData()
-                         .ifPresent(formData -> {
-                             dispatchServiceManager.execute(new SetEntityFormDataAction(projectId,
-                                                                                        subject,
-                                                                                        currentFormData.get(),
-                                                                                        formData),
-                                                            this,
-                                                            result -> {
-                                                            });
-                         });
-
+            ImmutableList<FormData> editedForms = formStackPresenter.getForms();
+            dispatchServiceManager.execute(new SetEntityFormsDataAction(projectId,
+                                                                        subject,
+                                                                        ImmutableList.copyOf(pristineFormsData),
+                                                                        editedForms),
+                                           this,
+                                           result -> {});
         });
     }
 
-    private void displayFormResult(GetEntityFormResult result) {
-        currentFormData = Optional.of(result.getFormData());
+    private void displayFormResult(GetEntityFormsResult result) {
         GWT.log("[FormPortletPresenter] Display form result: " + result);
-        Optional<FormDescriptor> formDescriptor = result.getFormDescriptor();
-        if(formDescriptor.isPresent()) {
-            formPresenter.displayForm(result.getFormData());
-        }
-        else {
-            formPresenter.clear();
-        }
-        String formLabel = getFormLabel(formDescriptor);
+        pristineFormsData.clear();
+        pristineFormsData.addAll(result.getFormData());
+        formStackPresenter.setForms(result.getFormData());
+        String formLabel = "Forms";
         portletUi.ifPresent(ui -> ui.setTitle(formLabel));
 
     }

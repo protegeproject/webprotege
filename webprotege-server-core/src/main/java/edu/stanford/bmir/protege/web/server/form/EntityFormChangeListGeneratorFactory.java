@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.frame.EmptyEntityFrameFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -57,12 +59,14 @@ public class EntityFormChangeListGeneratorFactory {
         this.renderingManager = renderingManager;
     }
 
-    public EntityFormChangeListGenerator create(@Nonnull FormData pristineFormData,
-                                                @Nonnull FormData formData) {
-        checkNotNull(formData);
-        checkNotNull(pristineFormData);
-        return new EntityFormChangeListGenerator(pristineFormData,
-                                                 formData,
+    public EntityFormChangeListGenerator create(@Nonnull OWLEntity subject,
+                                                @Nonnull ImmutableList<FormData> pristineFormsData,
+                                                @Nonnull ImmutableList<FormData> formsData) {
+        checkNotNull(formsData);
+        checkNotNull(pristineFormsData);
+        return new EntityFormChangeListGenerator(subject,
+                                                 pristineFormsData,
+                                                 formsData,
                                                  this.entityFormDataConverter,
                                                  this.reverseEngineeredChangeDescriptionGeneratorFactory,
                                                  this.messageFormatter,
