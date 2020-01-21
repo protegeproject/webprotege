@@ -42,6 +42,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     private SingleChoiceControlDescriptor descriptor;
 
+    private Optional<PrimitiveFormControlData> mostRecentSetValue = Optional.empty();
+
     interface SegmentedButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
 
     }
@@ -108,6 +110,7 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
                 setSelection(choice.getValue(), true);
             });
         }
+        mostRecentSetValue.ifPresent(setValue -> setSelection(setValue, true));
         segmentContainer.getElement().getStyle().setProperty("maxWidth", SEGMENT_SIZE * choices.size(), Style.Unit.PX);
         setDefaultChoiceSelected();
     }
@@ -144,8 +147,10 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     @Override
     public void setValue(FormControlData object) {
+        mostRecentSetValue = Optional.empty();
         if(object instanceof SingleChoiceControlData) {
             Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) object).getChoice();
+            mostRecentSetValue = choice;
             if(choice.isPresent()) {
                 setSelection(choice.get(), false);
             }
