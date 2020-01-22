@@ -38,6 +38,8 @@ public class FormFieldPresenter {
 
     private FormFieldControl formControl;
 
+    private Optional<FormFieldData> mostRecentSetValue = Optional.empty();
+
     public FormFieldPresenter(@Nonnull FormFieldView view,
                               @Nonnull FormFieldDescriptor formFieldDescriptor,
                               @Nonnull FormControlFactory formControlFactory) {
@@ -106,6 +108,7 @@ public class FormFieldPresenter {
         if(formControlDataCount > formControlData.size()) {
             view.setLimitedValuesDisplayed(formControlData.size(), formControlDataCount);
         }
+        this.mostRecentSetValue = Optional.of(formFieldData);
         updateRequiredValuePresent();
     }
 
@@ -114,6 +117,7 @@ public class FormFieldPresenter {
             return;
         }
         formControl.clearValue();
+        this.mostRecentSetValue = Optional.empty();
         updateRequiredValuePresent();
     }
 
@@ -123,12 +127,7 @@ public class FormFieldPresenter {
     private void updateRequiredValuePresent() {
         GWT.log("[FormFieldPresenter] updating required " + formFieldDescriptor.getId());
         if (formFieldDescriptor.getOptionality() == REQUIRED) {
-            Optional<List<FormControlData>> value = view.getEditor()
-                                                        .getValue();
-            GWT.log("[FormFieldPresenter] Value: " + value);
-            boolean requiredValueNotPresent = value
-                                                  .map(List::isEmpty)
-                                                  .orElse(true);
+            boolean requiredValueNotPresent = !mostRecentSetValue.isPresent();
             GWT.log("[FormFieldPresenter] Required value not present: " + requiredValueNotPresent);
             view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
         }
