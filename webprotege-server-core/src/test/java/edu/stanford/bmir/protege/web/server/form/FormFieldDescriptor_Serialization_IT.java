@@ -51,7 +51,7 @@ public class FormFieldDescriptor_Serialization_IT {
     public void shouldSerializeElementWithOwlPropertyBinding() throws IOException {
         var formElementDescriptor = FormFieldDescriptor.get(
                 FormFieldId.get("TheFormFieldId"),
-                OwlPropertyBinding.get(new OWLObjectPropertyImpl(IRI.create("http://example.org/prop"))),
+                OwlPropertyBinding.get(new OWLObjectPropertyImpl(IRI.create("http://example.org/prop")), null),
                 LanguageMap.empty(),
                 FieldRun.START,
                 new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),

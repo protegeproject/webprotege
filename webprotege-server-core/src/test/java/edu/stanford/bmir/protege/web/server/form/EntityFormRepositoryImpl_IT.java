@@ -50,7 +50,8 @@ public class EntityFormRepositoryImpl_IT {
         var formDescriptor = FormDescriptor.builder(formId)
                       .addDescriptor(FormFieldDescriptor.get(
                               FormFieldId.get("Brand"),
-                              OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_COMMENT.getIRI())),
+                              OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_COMMENT.getIRI()),
+                                                     null),
                               languageMap,
                               FieldRun.START,
                               new TextControlDescriptor(

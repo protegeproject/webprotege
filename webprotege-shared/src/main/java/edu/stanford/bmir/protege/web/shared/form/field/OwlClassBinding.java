@@ -7,10 +7,12 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -27,8 +29,13 @@ public abstract class OwlClassBinding implements OwlBinding {
 
     @JsonCreator
     @Nonnull
+    public static OwlClassBinding get(@JsonProperty(VALUES_FILTER) @Nullable CompositeRootCriteria valuesFilter) {
+        return new AutoValue_OwlClassBinding(valuesFilter);
+    }
+
+    @Nonnull
     public static OwlClassBinding get() {
-        return new AutoValue_OwlClassBinding();
+        return get(null);
     }
 
     @Nonnull
