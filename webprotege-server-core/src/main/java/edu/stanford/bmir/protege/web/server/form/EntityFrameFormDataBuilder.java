@@ -155,6 +155,7 @@ public class EntityFrameFormDataBuilder {
         var rowData = subjects.stream()
                               .map(OWLPrimitiveData::asEntity)
                               .flatMap(Optional::stream)
+                              .limit(MAX_FIELD_SIZE)
                               .map(entity -> {
                                   var columnDescriptors = gridControlDescriptor.getColumns();
                                   // To Cells
