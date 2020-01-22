@@ -1,6 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
-        <g:SimplePanel ui:field="editorContainer"/>
+        <g:SimplePanel ui:field="editorContainer" addStyleNames="{wp.style.formGridCell}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

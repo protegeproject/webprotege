@@ -437,11 +437,19 @@
 }
 
 .wp-form__grid__column {
-    width: 100px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
 }
 
 .wp-form__grid__row {
 
+}
+
+.wp-form__grid__cell {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
 }
 
 .wp-form__grid__header-row {

@@ -429,6 +429,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form__grid__column")
         String formGridColumn();
 
+        @ClassName("wp-form__grid__cell")
+        String formGridCell();
+
         @ClassName("wp-help-icon")
         String helpIcon();
     }
