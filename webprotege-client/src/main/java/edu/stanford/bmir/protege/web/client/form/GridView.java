@@ -33,4 +33,6 @@ public interface GridView extends IsWidget, HasRequestFocus {
     void setNewRowHandler(@Nonnull NewRowHandler newRowHandler);
 
     void clear();
+
+    void setLimitedRowsDisplayed(int visibleRows, int totalRows);
 }

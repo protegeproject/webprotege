@@ -42,6 +42,9 @@ public class GridViewImpl extends Composite implements GridView {
     @UiField(provided = true)
     ValueListEditor<GridRowPresenter> rowEditor;
 
+    @UiField
+    Label limitedRowsDisplayedMessage;
+
     @Inject
     public GridViewImpl(Provider<GridRowPresenter> rowPresenterProvider) {
         rowEditor = new ValueListFlexEditorImpl<>(() -> {
@@ -85,5 +88,12 @@ public class GridViewImpl extends Composite implements GridView {
     @Override
     public void clear() {
         rowEditor.clearValue();
+    }
+
+    @Override
+    public void setLimitedRowsDisplayed(int visibleRows, int totalRows) {
+        limitedRowsDisplayedMessage.setVisible(true);
+        limitedRowsDisplayedMessage.setText("Displaying " + visibleRows + " of " + totalRows + " rows");
+
     }
 }

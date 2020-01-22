@@ -95,13 +95,16 @@ public class GridPresenter {
              })
              .collect(Collectors.toList());
         view.setRows(rows);
+        if(value.getRowCount() != rows.size()) {
+            view.setLimitedRowsDisplayed(rows.size(), value.getRowCount());
+        }
     }
 
     public GridControlData getValue() {
         ImmutableList<GridRowData> rows = view.getRows().stream()
                                                     .map(GridRowPresenter::getFormDataValue)
                                                     .collect(toImmutableList());
-        return GridControlData.get(descriptor, rows);
+        return GridControlData.get(descriptor, rows, -1);
     }
 
 

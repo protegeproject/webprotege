@@ -180,6 +180,6 @@ public class EntityFrameFormDataBuilder {
                                   return GridRowData.get(formSubject, cellData);
                               })
                               .collect(toImmutableList());
-        return GridControlData.get(gridControlDescriptor, rowData);
+        return GridControlData.get(gridControlDescriptor, rowData, subjects.size());
     }
 }

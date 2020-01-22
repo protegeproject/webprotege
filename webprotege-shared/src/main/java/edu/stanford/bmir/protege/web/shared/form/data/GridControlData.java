@@ -20,8 +20,9 @@ public abstract class GridControlData implements ComplexFormControlValue {
 
     @Nonnull
     public static GridControlData get(@Nonnull GridControlDescriptor descriptor,
-                                      @Nonnull ImmutableList<GridRowData> rows) {
-        return new AutoValue_GridControlData(descriptor, rows);
+                                      @Nonnull ImmutableList<GridRowData> rows,
+                                      int rowCount) {
+        return new AutoValue_GridControlData(descriptor, rows, rowCount);
     }
 
     @Override
@@ -39,4 +40,6 @@ public abstract class GridControlData implements ComplexFormControlValue {
 
     @Nonnull
     public abstract ImmutableList<GridRowData> getRows();
+
+    public abstract int getRowCount();
 }
