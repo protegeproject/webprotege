@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.frame.MinimalContextRenderer;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owlapi.model.*;
@@ -46,6 +47,9 @@ public class MatcherFactory {
 
     private EntityRelationshipMatcherFactory entityRelationshipMatcherFactory;
 
+    @Nonnull
+    private final MinimalContextRenderer minimalContextRenderer;
+
     @Inject
     public MatcherFactory(@Nonnull SubClassOfMatcherFactory subClassOfMatcherFactory,
                           @Nonnull InstanceOfMatcherFactory instanceOfMatcherFactory,
@@ -55,7 +59,8 @@ public class MatcherFactory {
                           @Nonnull NonUniqueLangTagsMatcherFactory nonUniqueLangTagsMatcherFactory,
                           @Nonnull EntityAnnotationMatcherFactory entityAnnotationMatcherFactory,
                           @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory,
-                          @Nonnull EntityRelationshipMatcherFactory entityRelationshipMatcherFactory) {
+                          @Nonnull EntityRelationshipMatcherFactory entityRelationshipMatcherFactory,
+                          @Nonnull MinimalContextRenderer minimalContextRenderer) {
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
         this.instanceOfMatcherFactory = checkNotNull(instanceOfMatcherFactory);
         this.conflictingBooleanValuesMatcherFactory = checkNotNull(conflictingBooleanValuesMatcherFactory);
@@ -65,6 +70,7 @@ public class MatcherFactory {
         this.entityAnnotationMatcherFactory = checkNotNull(entityAnnotationMatcherFactory);
         this.iriAnnotationsMatcherFactory = checkNotNull(iriAnnotationsMatcherFactory);
         this.entityRelationshipMatcherFactory = entityRelationshipMatcherFactory;
+        this.minimalContextRenderer = minimalContextRenderer;
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
@@ -164,7 +170,8 @@ public class MatcherFactory {
                 var valueMatcher = getRelationshipValueMatcher(valueCriteria);
                 var propertyValueMatcher = new PropertyValueMatcher(propertyMatcher, valueMatcher);
                 return entityRelationshipMatcherFactory.create(criteria.getRelationshipPresence(),
-                                                               propertyValueMatcher);
+                                                               propertyValueMatcher,
+                                                               minimalContextRenderer);
             }
 
             @Nonnull

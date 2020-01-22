@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -61,6 +62,15 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
                                                 @Nonnull OWLAxiom axiom,
                                                 @Nonnull State initialState) {
         var axiomTranslator = axiomTranslatorFactory.create(subject, axiom, initialState);
+        return axiomTranslator.translate();
+    }
+
+    @Nonnull
+    public Set<PropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
+                                                @Nonnull OWLAxiom axiom,
+                                                @Nonnull State initialState,
+                                                @Nonnull ContextRenderer renderer) {
+        var axiomTranslator = axiomTranslatorFactory.create(subject, axiom, initialState, renderer);
         return axiomTranslator.translate();
     }
 

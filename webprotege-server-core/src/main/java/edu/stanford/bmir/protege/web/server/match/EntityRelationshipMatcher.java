@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.frame.AxiomPropertyValueTranslator;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
@@ -42,19 +43,24 @@ public class EntityRelationshipMatcher implements EntityFrameMatcher {
     @Nonnull
     private final AxiomPropertyValueTranslator translator;
 
+    @Nonnull
+    private final ContextRenderer minimalContextRenderer;
+
     @AutoFactory
     public EntityRelationshipMatcher(@Nonnull @Provided ProjectOntologiesIndex projectOntologiesIndex,
                                      @Nonnull RelationshipPresence relationshipPresence,
                                      @Nonnull PropertyValueMatcher propertyValueMatcher,
                                      @Nonnull @Provided SubClassOfAxiomsBySubClassIndex subClassOfAxiomsBySubClassIndex,
                                      @Nonnull @Provided PropertyAssertionAxiomsBySubjectIndex propertyAssertionAxiomsBySubjectIndex,
-                                     @Nonnull @Provided AxiomPropertyValueTranslator axiomTranslator) {
+                                     @Nonnull @Provided AxiomPropertyValueTranslator axiomTranslator,
+                                     @Nonnull ContextRenderer minimalContextRenderer) {
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.relationshipPresence = relationshipPresence;
         this.propertyValueMatcher = propertyValueMatcher;
         this.subClassOfAxiomsBySubClassIndex = subClassOfAxiomsBySubClassIndex;
         this.propertyAssertionAxiomsBySubjectIndex = propertyAssertionAxiomsBySubjectIndex;
         this.translator = axiomTranslator;
+        this.minimalContextRenderer = minimalContextRenderer;
     }
 
     @Override
@@ -80,7 +86,7 @@ public class EntityRelationshipMatcher implements EntityFrameMatcher {
             axiomStream = Stream.empty();
         }
 
-        Stream<PropertyValue> propertyValueStream = axiomStream.flatMap(ax -> translator.getPropertyValues(entity, ax, State.ASSERTED).stream());
+        Stream<PropertyValue> propertyValueStream = axiomStream.flatMap(ax -> translator.getPropertyValues(entity, ax, State.ASSERTED, minimalContextRenderer).stream());
 
 
         if (relationshipPresence == RelationshipPresence.AT_LEAST_ONE) {

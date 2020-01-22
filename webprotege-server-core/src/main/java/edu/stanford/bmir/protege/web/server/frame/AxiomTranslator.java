@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
@@ -85,13 +86,12 @@ class AxiomTranslator {
     };
 
     @Inject
-    @AutoFactory
     public AxiomTranslator(@Nonnull OWLEntity subject,
                            @Nonnull OWLAxiom axiom,
                            @Nonnull State initialState,
-                           @Provided ContextRenderer renderer,
-                           @Provided @Nonnull ClassExpressionTranslator classExpressionTranslator,
-                           @Provided @Nonnull AnnotationTranslator annotationTranslator) {
+                           @Nonnull ContextRenderer renderer,
+                           @Nonnull ClassExpressionTranslator classExpressionTranslator,
+                           @Nonnull AnnotationTranslator annotationTranslator) {
         this.subject = checkNotNull(subject);
         this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
