@@ -88,7 +88,7 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         settingsPresenter.setApplySettingsHandler(this::handleApply);
         settingsPresenter.start(container);
         settingsPresenter.setCancelButtonVisible(false);
-        settingsPresenter.setApplyButtonText(messages.back());
+        settingsPresenter.setApplyButtonText(messages.dialog_ok());
         AcceptsOneWidget section = settingsPresenter.addSection(formsMessages.projectForms_Title());
         section.setWidget(formManagerView);
         formManagerView.clear();
