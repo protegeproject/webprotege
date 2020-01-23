@@ -280,6 +280,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource filterIcon();
 
+    @Source("expand-all.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgExpandAllIcon();
+
+    @Source("collapse-all.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgCollapseAllIcon();
+
     @Source("glyphs.css")
     Glyphs glyphs();
 
@@ -717,6 +725,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--cross")
         String cross();
+
+        @ClassName("wp-btn-g--expand-all")
+        String expandAll();
+
+        @ClassName("wp-btn-g--collapse-all")
+        String collapseAll();
+
+
     }
 
     interface SettingsPageCss extends CssResource {

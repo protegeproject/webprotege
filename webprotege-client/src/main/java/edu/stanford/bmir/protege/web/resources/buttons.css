@@ -25,6 +25,8 @@
 @url settingsIconUrl settingsIcon;
 @url filterIconUrl filterIcon;
 @url crossIconUrl svgCrossIcon;
+@url expandAllIconUrl svgExpandAllIcon;
+@url collapseAllIconUrl svgCollapseAllIcon;
 
 .wp-btn {
     border: none;
@@ -439,4 +441,15 @@
 .wp-btn-g--cross {
     mask-image: crossIconUrl;
     -webkit-mask-image: crossIconUrl;
+}
+
+
+.wp-btn-g--expand-all {
+    mask-image: expandAllIconUrl;
+    -webkit-mask-image: expandAllIconUrl;
+}
+
+.wp-btn-g--collapse-all {
+    mask-image: collapseAllIconUrl;
+    -webkit-mask-image: collapseAllIconUrl;
 }

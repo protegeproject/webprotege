@@ -3,9 +3,11 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
+import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
@@ -79,6 +81,8 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         this.portletUi = Optional.of(portletUi);
+        portletUi.addAction(new PortletAction("Expand all", "wp-btn-g--expand-all", formStackPresenter::expandAllFields));
+        portletUi.addAction(new PortletAction("Collapse all", "wp-btn-g--collapse-all", formStackPresenter::collapseAllFields));
         formStackPresenter.start(portletUi);
         setDisplaySelectedEntityNameAsSubtitle(true);
 

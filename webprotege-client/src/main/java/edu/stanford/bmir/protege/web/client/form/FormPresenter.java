@@ -145,6 +145,14 @@ public class FormPresenter {
         });
     }
 
+    public void expandAll() {
+        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.EXPANDED));
+    }
+
+    public void collapseAll() {
+        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED));
+    }
+
     private void addFormField(@Nonnull FormFieldData formFieldData) {
         FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);

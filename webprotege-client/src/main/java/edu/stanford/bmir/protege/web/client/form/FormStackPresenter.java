@@ -60,6 +60,14 @@ public class FormStackPresenter {
                              .collect(toImmutableList());
     }
 
+    public void expandAllFields() {
+        formPresenters.forEach(FormPresenter::expandAll);
+    }
+
+    public void collapseAllFields() {
+        formPresenters.forEach(FormPresenter::collapseAll);
+    }
+
     public void setForms(@Nonnull ImmutableList<FormData> forms) {
         List<FormDescriptor> currentFormDescriptors = formPresenters.stream()
                                                      .map(p -> p.getFormData()
