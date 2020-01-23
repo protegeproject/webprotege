@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -54,6 +55,8 @@ public class FormPresenter {
 
     private FormFieldPresenterFactory formFieldPresenterFactory;
 
+    private Set<FormFieldId> collapsedFields = new HashSet<>();
+
     @AutoFactory
     @Inject
     public FormPresenter(@Nonnull @Provided FormView formView,
@@ -78,6 +81,7 @@ public class FormPresenter {
      */
     public void displayForm(@Nonnull FormData formData) {
         checkNotNull(formData);
+        saveExpansionState();
         currentSubject = formData.getSubject();
         if(currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()))) {
             updateFormData(formData);
@@ -124,16 +128,31 @@ public class FormPresenter {
     }
 
     public void clear() {
+        saveExpansionState();
         fieldPresenters.clear();
         formView.clear();
         currentFormDescriptor = Optional.empty();
         container.ifPresent(c -> c.setWidget(noFormView));
     }
 
+    public void saveExpansionState() {
+        collapsedFields.clear();
+        fieldPresenters.forEach(p -> {
+            if(p.getExpansionState() == FormFieldPresenter.ExpansionState.COLLAPSED) {
+                FormFieldId id = p.getValue().getFormFieldDescriptor().getId();
+                collapsedFields.add(id);
+            }
+        });
+    }
+
     private void addFormField(@Nonnull FormFieldData formFieldData) {
         FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         fieldPresenters.add(presenter);
+        if(collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
+            GWT.log("[FormPresenter] Setting collapsed");
+            presenter.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED);
+        }
         // TODO : Change handler
         presenter.setValue(formFieldData);
         FormFieldView formFieldView = presenter.getFormFieldView();

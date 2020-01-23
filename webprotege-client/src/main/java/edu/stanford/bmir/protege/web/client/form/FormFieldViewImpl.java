@@ -2,13 +2,19 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.base.CaseFormat;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
+import edu.stanford.protege.gwt.graphtree.client.TreeNodeViewResources;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -24,6 +30,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormFieldViewImpl extends Composite implements FormFieldView {
 
     private Optional<Tooltip> helpTooltip = Optional.empty();
+
+    private HeaderClickedHandler headerClickedHandler = () -> {};
 
     interface FormFieldViewImplUiBinder extends UiBinder<HTMLPanel, FormFieldViewImpl> {
 
@@ -47,11 +55,24 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     Label limitedValuesDisplayedMessage;
 
+    @UiField
+    Image expansionHandle;
+
+    @UiField
+    HTMLPanel fieldHeader;
+
+    @UiField
+    HTMLPanel content;
+
     FormFieldControl editor;
 
     @Inject
     public FormFieldViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        fieldHeader.sinkEvents(Event.MOUSEEVENTS);
+        fieldHeader.addDomHandler(event -> {
+            headerClickedHandler.handleHeaderClicked();
+        }, ClickEvent.getType());
     }
 
     @Override
@@ -120,6 +141,23 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
         String camelCaseProperty = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, cssProperty);
         String camelCaseValue = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, cssValue);
         getElement().getStyle().setProperty(camelCaseProperty, camelCaseValue);
+    }
+
+    @Override
+    public void collapse() {
+        content.setVisible(false);
+        expansionHandle.setUrl(TreeNodeViewResources.RESOURCES.collapsed().getSafeUri());
+    }
+
+    @Override
+    public void expand() {
+        expansionHandle.setUrl(TreeNodeViewResources.RESOURCES.expanded().getSafeUri());
+        content.setVisible(true);
+    }
+
+    @Override
+    public void setHeaderClickedHandler(@Nonnull HeaderClickedHandler headerClickedHandler) {
+        this.headerClickedHandler = checkNotNull(headerClickedHandler);
     }
 
     @Override

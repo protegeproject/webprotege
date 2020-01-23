@@ -15,6 +15,16 @@ import java.util.Optional;
  */
 public interface FormFieldView extends IsWidget {
 
+    void collapse();
+
+    void expand();
+
+    interface HeaderClickedHandler {
+        void handleHeaderClicked();
+    }
+
+    void setHeaderClickedHandler(@Nonnull HeaderClickedHandler headerClickedHandler);
+
     void setHelpText(@Nonnull String helpText);
 
     void clearHelpText();

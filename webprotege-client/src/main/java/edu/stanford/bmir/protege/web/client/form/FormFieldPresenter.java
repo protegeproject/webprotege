@@ -27,6 +27,11 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  */
 public class FormFieldPresenter {
 
+    enum ExpansionState {
+        EXPANDED,
+        COLLAPSED
+    }
+
     @Nonnull
     private final FormFieldView view;
 
@@ -39,6 +44,8 @@ public class FormFieldPresenter {
     private FormFieldControl formControl;
 
     private Optional<FormFieldData> mostRecentSetValue = Optional.empty();
+
+    private ExpansionState expansionState = ExpansionState.EXPANDED;
 
     public FormFieldPresenter(@Nonnull FormFieldView view,
                               @Nonnull FormFieldDescriptor formFieldDescriptor,
@@ -79,8 +86,34 @@ public class FormFieldPresenter {
             GWT.log("[FormFieldPresenter] Value changed in " + formFieldDescriptor.getId());
             updateRequiredValuePresent();
         });
+        view.setHeaderClickedHandler(this::toggleExpansionState);
         updateRequiredValuePresent();
         return view;
+    }
+
+    @Nonnull
+    public ExpansionState getExpansionState() {
+        return expansionState;
+    }
+
+    public void toggleExpansionState() {
+        if(expansionState == ExpansionState.EXPANDED) {
+            setExpansionState(ExpansionState.COLLAPSED);
+        }
+        else {
+            setExpansionState(ExpansionState.EXPANDED);
+        }
+    }
+
+    public void setExpansionState(ExpansionState expansionState) {
+        this.expansionState = expansionState;
+        if(expansionState == ExpansionState.EXPANDED) {
+            view.expand();
+        }
+        else {
+            view.collapse();
+        }
+
     }
 
     public FormFieldData getValue() {
