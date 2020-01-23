@@ -47,8 +47,10 @@
     <g:HTMLPanel addStyleNames="{wp.style.formGroup} {style.main}">
         <g:HTMLPanel ui:field="fieldHeader" addStyleNames="{style.labelHeader}">
             <g:Label ui:field="label" addStyleNames="{wp.style.formLabel} {style.label}"/>
-            <g:Image ui:field="expansionHandle" url="{tn.expanded.getSafeUri.asString}" addStyleNames="{style.handle}"/>
-            <g:HTMLPanel addStyleNames="{style.helpIconHolder}">
+            <g:HTMLPanel>
+                <g:Image ui:field="expansionHandle" url="{tn.expanded.getSafeUri.asString}"
+                         addStyleNames="{style.handle}"/>
+            </g:HTMLPanel><g:HTMLPanel addStyleNames="{style.helpIconHolder}">
                 <g:HTMLPanel ui:field="helpIcon" addStyleNames="{wp.style.helpIcon} {style.helpIcon}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
