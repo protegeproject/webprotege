@@ -47,7 +47,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private NumberControlDescriptor descriptor;
 
-    private Optional<OWLLiteral> currentValue;
+    private Optional<OWLLiteral> currentValue = Optional.empty();
 
     public void setDescriptor(NumberControlDescriptor formFieldDescriptor) {
         this.descriptor = formFieldDescriptor;

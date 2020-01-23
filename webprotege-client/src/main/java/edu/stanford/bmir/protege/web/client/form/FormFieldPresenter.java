@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 
 import javax.annotation.Nonnull;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +25,10 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * 2020-01-08
  */
 public class FormFieldPresenter {
+
+    private void handleFormControlValueChanged(ValueChangeEvent<Optional<List<FormControlData>>> event) {
+        updateRequiredValuePresent();
+    }
 
     enum ExpansionState {
         EXPANDED,
@@ -42,8 +45,6 @@ public class FormFieldPresenter {
     private final FormControlFactory formControlFactory;
 
     private FormFieldControl formControl;
-
-    private Optional<FormFieldData> mostRecentSetValue = Optional.empty();
 
     private ExpansionState expansionState = ExpansionState.EXPANDED;
 
@@ -82,10 +83,7 @@ public class FormFieldPresenter {
         Map<String, String> style = formFieldDescriptor.getStyle();
         style.forEach(view::addStylePropertyValue);
         // Update the required value missing display when the value changes
-        formControl.addValueChangeHandler(event -> {
-            GWT.log("[FormFieldPresenter] Value changed in " + formFieldDescriptor.getId());
-            updateRequiredValuePresent();
-        });
+        formControl.addValueChangeHandler(this::handleFormControlValueChanged);
         view.setHeaderClickedHandler(this::toggleExpansionState);
         updateRequiredValuePresent();
         return view;
@@ -141,7 +139,6 @@ public class FormFieldPresenter {
         if(formControlDataCount > formControlData.size()) {
             view.setLimitedValuesDisplayed(formControlData.size(), formControlDataCount);
         }
-        this.mostRecentSetValue = Optional.of(formFieldData);
         updateRequiredValuePresent();
     }
 
@@ -150,7 +147,6 @@ public class FormFieldPresenter {
             return;
         }
         formControl.clearValue();
-        this.mostRecentSetValue = Optional.empty();
         updateRequiredValuePresent();
     }
 
@@ -158,13 +154,18 @@ public class FormFieldPresenter {
      * Updates the specified view so that there is a visual indication if the value is required but not present.
      */
     private void updateRequiredValuePresent() {
+        if(formControl == null) {
+            view.setRequiredValueNotPresentVisible(false);
+            return;
+        }
         GWT.log("[FormFieldPresenter] updating required " + formFieldDescriptor.getId());
         if (formFieldDescriptor.getOptionality() == REQUIRED) {
-            boolean requiredValueNotPresent = !mostRecentSetValue.isPresent();
+            boolean requiredValueNotPresent = !formControl.getValue().isPresent();
             GWT.log("[FormFieldPresenter] Required value not present: " + requiredValueNotPresent);
             view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
         }
         else {
+            GWT.log("[FormFieldPresenter] NOT REQUIRED");
             view.setRequiredValueNotPresentVisible(false);
         }
     }
