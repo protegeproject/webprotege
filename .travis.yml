@@ -1,6 +1,8 @@
 language: java
 jdk:
   - oraclejdk11
+before_script:
+  - mkdir /var/log/webprotege
 script: mvn verify
 sudo: false
 services: mongodb
