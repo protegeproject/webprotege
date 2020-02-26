@@ -23,7 +23,7 @@
         <file>${logsdir}/webprotege.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${logsdir}/webprotege.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${logsdir}/webprotege.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -35,7 +35,7 @@
         <file>${logsdir}/webprotege-all.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${logsdir}/webprotege-all.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${logsdir}/webprotege-all.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">

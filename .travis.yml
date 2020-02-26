@@ -1,6 +1,8 @@
 language: java
 jdk:
   - oraclejdk11
+before_script:
+  - sudo mkdir /var/log/webprotege && sudo chown travis /var/log/webprotege
 script: mvn verify
 sudo: false
 services: mongodb
