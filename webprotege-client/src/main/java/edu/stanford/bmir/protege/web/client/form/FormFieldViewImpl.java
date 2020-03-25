@@ -175,10 +175,4 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
         helpIcon.setTitle("");
         helpIcon.setVisible(false);
     }
-
-    @Override
-    protected void onDetach() {
-        super.onDetach();
-        this.helpTooltip.ifPresent(Tooltip::dispose);
-    }
 }

@@ -710,6 +710,11 @@ public class ClientProjectModule {
     FormStackView provideFormStackView(FormStackViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    RelationshipValueCriteriaView provideRelationshipValueCriteriaView(RelationshipValueCriteriaViewImpl impl) {
+        return impl;
+    }
 }
 
 

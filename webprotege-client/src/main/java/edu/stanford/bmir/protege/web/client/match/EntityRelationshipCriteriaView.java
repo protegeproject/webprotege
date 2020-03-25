@@ -15,12 +15,6 @@ import java.util.Optional;
  */
 public interface EntityRelationshipCriteriaView extends IsWidget {
 
-    void setValueMatchTypeChangedHandler(@Nonnull Runnable runnable);
-
-    void setValueMatchType(@Nonnull RelationshipValueMatchType matchType);
-
-    RelationshipValueMatchType getValueMatchType();
-
     void clearProperty();
 
     void setProperty(@Nonnull OWLPropertyData propertyData);
@@ -32,5 +26,5 @@ public interface EntityRelationshipCriteriaView extends IsWidget {
 
 
     @Nonnull
-    AcceptsOneWidget getValueEntityCriteriaContainer();
+    AcceptsOneWidget getValueCriteriaContainer();
 }

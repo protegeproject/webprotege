@@ -5,10 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import org.semanticweb.owlapi.model.OWLClass;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
@@ -29,8 +28,8 @@ public abstract class OwlClassBinding implements OwlBinding {
 
     @JsonCreator
     @Nonnull
-    public static OwlClassBinding get(@JsonProperty(VALUES_FILTER) @Nullable CompositeRootCriteria valuesFilter) {
-        return new AutoValue_OwlClassBinding(valuesFilter);
+    public static OwlClassBinding get(@JsonProperty(VALUES_CRITERIA) @Nullable EntityMatchCriteria valuesFilter) {
+        return new AutoValue_OwlClassBinding();
     }
 
     @Nonnull

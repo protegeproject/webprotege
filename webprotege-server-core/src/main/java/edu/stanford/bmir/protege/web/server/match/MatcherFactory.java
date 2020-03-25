@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType.ALL;
+import static edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType.ANY;
 
 /**
  * Matthew Horridge
@@ -218,6 +220,22 @@ public class MatcherFactory {
             @Override
             public Matcher<OWLPrimitive> visit(RelationshipValueEqualsLiteralCriteria criteria) {
                 return primitive -> primitive.equals(criteria.getValue());
+            }
+
+            @Override
+            public Matcher<OWLPrimitive> visit(CompositeRelationshipValueCriteria criteria) {
+                var matchers = criteria.getCriteria()
+                                                  .stream()
+                                                  .map(c -> getRelationshipValueMatcher(c))
+                                                  .collect(toImmutableList());
+                switch (criteria.getMultiMatchType()) {
+                    case ALL:
+                        return new AndMatcher<>(matchers);
+                    case ANY:
+                        return new OrMatcher<>(matchers);
+                    default:
+                        throw new IllegalStateException();
+                }
             }
         });
     }

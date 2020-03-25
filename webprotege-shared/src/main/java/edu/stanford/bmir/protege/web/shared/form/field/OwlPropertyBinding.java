@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
@@ -27,8 +27,8 @@ public abstract class OwlPropertyBinding implements OwlBinding {
 
     @JsonCreator
     public static OwlPropertyBinding get(@JsonProperty(PROPERTY) @Nonnull OWLProperty property,
-                                         @JsonProperty(VALUES_FILTER) @Nullable CompositeRootCriteria valuesFilter) {
-        return new AutoValue_OwlPropertyBinding(valuesFilter, property);
+                                         @JsonProperty(VALUES_CRITERIA) @Nullable CompositeRelationshipValueCriteria criteria) {
+        return new AutoValue_OwlPropertyBinding(property, criteria);
     }
 
     public static OwlPropertyBinding get(@JsonProperty(PROPERTY) @Nonnull OWLProperty property) {
@@ -44,4 +44,15 @@ public abstract class OwlPropertyBinding implements OwlBinding {
     public Optional<OWLProperty> getOwlProperty() {
         return Optional.of(getProperty());
     }
+
+
+    @JsonIgnore
+    @Nonnull
+    public Optional<CompositeRelationshipValueCriteria> getValuesCriteria() {
+        return Optional.ofNullable(getValuesCriteriaInternal());
+    }
+
+    @JsonProperty(VALUES_CRITERIA)
+    @Nullable
+    protected abstract CompositeRelationshipValueCriteria getValuesCriteriaInternal();
 }

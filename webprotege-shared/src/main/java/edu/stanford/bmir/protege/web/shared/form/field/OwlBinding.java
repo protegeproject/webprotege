@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
@@ -28,24 +27,9 @@ import java.util.Optional;
               })
 public interface OwlBinding {
 
-    String VALUES_FILTER = "valuesFilter";
+    String VALUES_CRITERIA = "valuesCriteria";
 
     @JsonIgnore
     @Nonnull
     Optional<OWLProperty> getOwlProperty();
-
-    @JsonIgnore
-    @Nonnull
-    default Optional<CompositeRootCriteria> getValuesFilter() {
-        return Optional.ofNullable(getValuesFilterInternal());
-    }
-
-    @JsonProperty(VALUES_FILTER)
-    @Nullable
-    CompositeRootCriteria getValuesFilterInternal();
-
-
-
-
-
 }

@@ -62,7 +62,6 @@ public class OwlBindingPresenter {
         if(binding instanceof OwlClassBinding) {
             view.setOwlClassBinding(true);
         }
-
     }
 
     @Nonnull
