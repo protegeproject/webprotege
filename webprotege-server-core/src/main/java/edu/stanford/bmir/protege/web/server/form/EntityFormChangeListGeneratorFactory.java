@@ -5,8 +5,10 @@ import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescri
 import edu.stanford.bmir.protege.web.server.frame.EmptyEntityFrameFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -42,6 +44,12 @@ public class EntityFormChangeListGeneratorFactory {
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
+    @Nonnull
+    private final DefaultOntologyIdManager rootOntologyProvider;
+
     @Inject
     public EntityFormChangeListGeneratorFactory(@Nonnull EntityFormDataConverter entityFormDataConverter,
                                                 @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory,
@@ -49,7 +57,9 @@ public class EntityFormChangeListGeneratorFactory {
                                                 @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
                                                 @Nonnull FormFrameConverter formFrameConverter,
                                                 @Nonnull EmptyEntityFrameFactory emptyEntityFrameFactory,
-                                                @Nonnull RenderingManager renderingManager) {
+                                                @Nonnull RenderingManager renderingManager,
+                                                @Nonnull OWLDataFactory dataFactory,
+                                                @Nonnull DefaultOntologyIdManager rootOntologyProvider) {
         this.entityFormDataConverter = entityFormDataConverter;
         this.reverseEngineeredChangeDescriptionGeneratorFactory = reverseEngineeredChangeDescriptionGeneratorFactory;
         this.messageFormatter = messageFormatter;
@@ -57,6 +67,8 @@ public class EntityFormChangeListGeneratorFactory {
         this.formFrameConverter = formFrameConverter;
         this.emptyEntityFrameFactory = emptyEntityFrameFactory;
         this.renderingManager = renderingManager;
+        this.dataFactory = dataFactory;
+        this.rootOntologyProvider = rootOntologyProvider;
     }
 
     public EntityFormChangeListGenerator create(@Nonnull OWLEntity subject,
@@ -71,6 +83,8 @@ public class EntityFormChangeListGeneratorFactory {
                                                  this.reverseEngineeredChangeDescriptionGeneratorFactory,
                                                  this.messageFormatter,
                                                  frameChangeGeneratorFactory,
-                                                 formFrameConverter, emptyEntityFrameFactory, renderingManager);
+                                                 formFrameConverter, emptyEntityFrameFactory, renderingManager,
+                                                 dataFactory,
+                                                 rootOntologyProvider);
     }
 }

@@ -8,8 +8,10 @@ import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameUpdate;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
@@ -25,6 +27,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -60,6 +63,12 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     @Nonnull
     private final OWLEntity subject;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
+    @Nonnull
+    private final DefaultOntologyIdManager defaultOntologyIdManager;
+
 
     @Inject
     public EntityFormChangeListGenerator(@Nonnull OWLEntity subject,
@@ -71,7 +80,9 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                          @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
                                          @Nonnull FormFrameConverter formFrameConverter,
                                          @Nonnull EmptyEntityFrameFactory emptyEntityFrameFactory,
-                                         @Nonnull RenderingManager renderingManager) {
+                                         @Nonnull RenderingManager renderingManager,
+                                         @Nonnull OWLDataFactory dataFactory,
+                                         @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.subject = checkNotNull(subject);
         this.pristineFormsData = checkNotNull(pristineFormsData);
         this.editedFormsData = checkNotNull(editedFormData);
@@ -81,6 +92,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
         this.formFrameConverter = checkNotNull(formFrameConverter);
         this.emptyEntityFrameFactory = emptyEntityFrameFactory;
         this.renderingManager = renderingManager;
+        this.dataFactory = dataFactory;
+        this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
 
     @Override
@@ -173,6 +186,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                 var emptyEditedFrame = emptyEntityFrameFactory.getEmptyEntityFrame(entity);
                 var changes = generateChangeListForFrames(pristineEntityFrame, emptyEditedFrame, context);
                 resultBuilder.add(changes);
+                var emptyFormFrame = FormFrame.get(FormSubject.get(entity));
+                generateChangesForInstances(entity, pristineFrame, emptyFormFrame, resultBuilder);
             }
             else {
                 // Edited, possibly
@@ -180,6 +195,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                                           .orElseThrow();
                 var changes = generateChangeListForFrames(pristineEntityFrame, editedEntityFrame, context);
                 resultBuilder.add(changes);
+                // Compute diff of class assertions
+                generateChangesForInstances(entity, pristineFrame, editedFrame, resultBuilder);
             }
         }
 
@@ -193,6 +210,11 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                                          .orElseThrow();
                 var changes = generateChangeListForFrames(emptyPristineFrame, addedEntityFrame, context);
                 resultBuilder.add(changes);
+                // Add all class assertions for instances
+                generateChangesForInstances(entity,
+                                            FormFrame.get(FormSubject.get(entity)),
+                                            addedFormFrame,
+                                            resultBuilder);
             }
         }
         return resultBuilder.build();
@@ -206,6 +228,36 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
         var changeGeneratorFactory = frameChangeGeneratorFactory.create(frameUpdate);
 
         return changeGeneratorFactory.generateChanges(context);
+    }
+
+    private void generateChangesForInstances(OWLEntity subject,
+                                             FormFrame pristineFrame,
+                                             FormFrame editedFrame,
+                                             ImmutableList.Builder<OntologyChangeList<OWLEntityData>> changeListBuilder) {
+        if(!(subject instanceof OWLClass)) {
+            return;
+        }
+        var ontologyChangeList = OntologyChangeList.<OWLEntityData>builder();
+        var subjectCls = (OWLClass) subject;
+        var pristineInstances = pristineFrame.getInstances().stream().map(OWLNamedIndividualData::getEntity).collect(toSet());
+        var editedInstances = editedFrame.getInstances().stream().map(OWLNamedIndividualData::getEntity).collect(toSet());
+        for(var pristineInstance : pristineInstances) {
+            if(!editedInstances.contains(pristineInstance)) {
+                // Deleted
+                var axiom = dataFactory.getOWLClassAssertionAxiom(subjectCls, pristineInstance);
+                // TODO: Project ontologies?
+                ontologyChangeList.removeAxiom(defaultOntologyIdManager.getDefaultOntologyId(), axiom);
+            }
+        }
+        for(var editedInstance : editedInstances) {
+            if(!pristineInstances.contains(editedInstance)) {
+                // Added
+                var axiom = dataFactory.getOWLClassAssertionAxiom(subjectCls, editedInstance);
+                ontologyChangeList.addAxiom(defaultOntologyIdManager.getDefaultOntologyId(), axiom);
+            }
+        }
+        changeListBuilder.add(ontologyChangeList.build(renderingManager.getClassData(subjectCls)));
+
     }
 
     @Nonnull

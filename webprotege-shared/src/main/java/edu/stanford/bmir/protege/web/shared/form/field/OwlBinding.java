@@ -23,7 +23,8 @@ import java.util.Optional;
         property = "type")
 @JsonSubTypes({
                       @JsonSubTypes.Type(value = OwlPropertyBinding.class, name = OwlPropertyBinding.TYPE),
-                      @JsonSubTypes.Type(value = OwlClassBinding.class, name = OwlClassBinding.TYPE)
+                      @JsonSubTypes.Type(value = OwlClassBinding.class, name = OwlClassBinding.TYPE),
+                      @JsonSubTypes.Type(value = OwlInstanceBinding.class, name = OwlInstanceBinding.TYPE)
               })
 public interface OwlBinding {
 

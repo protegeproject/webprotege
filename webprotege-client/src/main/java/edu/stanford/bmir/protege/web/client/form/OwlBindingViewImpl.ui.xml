@@ -16,5 +16,6 @@
                                            dataPropertiesAllowed="true" annotationPropertiesAllowed="true"/>
         </g:HTMLPanel>
         <g:RadioButton ui:field="classRadioButton" name="binding-{counter.getValue}" text="Class"/>
+        <g:RadioButton ui:field="instanceRadioButton" name="binding-{counter.getValue}" text="Instance"/>
     </g:HTMLPanel>
 </ui:UiBinder>

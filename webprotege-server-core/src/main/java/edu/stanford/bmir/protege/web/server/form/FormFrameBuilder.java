@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlClassBinding;
+import edu.stanford.bmir.protege.web.shared.form.field.OwlInstanceBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
@@ -38,6 +39,9 @@ public class FormFrameBuilder {
 
     @Nonnull
     private final ImmutableSet.Builder<OWLClassData> classes = ImmutableSet.builder();
+
+    @Nonnull
+    private final ImmutableSet.Builder<OWLNamedIndividualData> instances = ImmutableSet.builder();
 
     @Nonnull
     private final ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
@@ -75,6 +79,11 @@ public class FormFrameBuilder {
                 addClass((OWLClass) value);
             }
         }
+        else if(binding instanceof OwlInstanceBinding) {
+            if(value instanceof OWLNamedIndividual) {
+                addIndividual((OWLNamedIndividual) value);
+            }
+        }
         else {
             // Mapped to property value
             var propertyBinding = (OwlPropertyBinding) binding;
@@ -87,6 +96,11 @@ public class FormFrameBuilder {
     private void addClass(@Nonnull OWLClass value) {
         var clsData = renderingManager.getClassData(value);
         classes.add(clsData);
+    }
+
+    private void addIndividual(@Nonnull OWLNamedIndividual value) {
+        var individualData = renderingManager.getIndividualData(value);
+        instances.add(individualData);
     }
 
     private void addPropertyValue(OwlPropertyBinding propertyBinding, @Nonnull OWLObject value) {
@@ -258,6 +272,7 @@ public class FormFrameBuilder {
         var resolvedSubject = subjectResolver.resolveSubject(this).orElseThrow();
         return FormFrame.get(resolvedSubject,
                              classes.build(),
+                             instances.build(),
                              propertyValues.build(),
                              nestedFramesBuilder.build());
     }

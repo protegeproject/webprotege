@@ -6,10 +6,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
@@ -38,9 +35,19 @@ public abstract class FormFrame {
     @Nonnull
     public static FormFrame get(@Nonnull FormSubject formSubject,
                                 @Nonnull ImmutableSet<OWLClassData> classes,
+                                @Nonnull ImmutableSet<OWLNamedIndividualData> instances,
                                 @Nonnull ImmutableSet<PropertyValue> propertyValues,
                                 @Nonnull ImmutableSet<FormFrame> nestedFrames) {
-        return new AutoValue_FormFrame(formSubject, classes, propertyValues, nestedFrames);
+        return new AutoValue_FormFrame(formSubject, classes, instances, propertyValues, nestedFrames);
+    }
+
+    @Nonnull
+    public static FormFrame get(@Nonnull FormSubject formSubject) {
+        return get(formSubject,
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of());
     }
 
     @Nonnull
@@ -48,6 +55,9 @@ public abstract class FormFrame {
 
     @Nonnull
     public abstract ImmutableSet<OWLClassData> getClasses();
+
+    @Nonnull
+    public abstract ImmutableSet<OWLNamedIndividualData> getInstances();
 
     @Nonnull
     public abstract ImmutableSet<PropertyValue> getPropertyValues();

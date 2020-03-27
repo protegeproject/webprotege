@@ -19,6 +19,10 @@ public interface OwlBindingView extends IsWidget {
 
     boolean isOwlClassBinding();
 
+    void setOwlInstanceBinding(boolean instanceBinding);
+
+    boolean isOwlInstanceBinding();
+
     void setProperty(@Nonnull OWLEntityData entity);
 
     Optional<OWLEntityData> getEntity();

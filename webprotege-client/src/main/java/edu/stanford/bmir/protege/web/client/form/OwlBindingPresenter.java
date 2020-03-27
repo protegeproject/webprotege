@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlClassBinding;
+import edu.stanford.bmir.protege.web.shared.form.field.OwlInstanceBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -62,12 +63,18 @@ public class OwlBindingPresenter {
         if(binding instanceof OwlClassBinding) {
             view.setOwlClassBinding(true);
         }
+        else if(binding instanceof OwlInstanceBinding) {
+            view.setOwlInstanceBinding(true);
+        }
     }
 
     @Nonnull
     public Optional<OwlBinding> getBinding() {
         if(view.isOwlClassBinding()) {
             return Optional.of(OwlClassBinding.get());
+        }
+        else if(view.isOwlInstanceBinding()) {
+            return Optional.of(OwlInstanceBinding.get());
         }
         return view.getEntity().map(OWLEntityData::getEntity)
             .map(entity -> OwlPropertyBinding.get((OWLProperty) entity));

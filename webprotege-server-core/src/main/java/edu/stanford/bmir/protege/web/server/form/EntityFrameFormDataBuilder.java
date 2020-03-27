@@ -9,12 +9,10 @@ import edu.stanford.bmir.protege.web.shared.form.PrimitiveDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
@@ -34,10 +32,15 @@ public class EntityFrameFormDataBuilder {
     @Nonnull
     private final EntityFrameProvider entityFrameProvider;
 
+    @Nonnull
+    private final EntityFrameMapperFactory entityFrameMapperFactory;
+
     @AutoFactory
     @Inject
-    public EntityFrameFormDataBuilder(@Nonnull EntityFrameProvider entityFrameProvider) {
+    public EntityFrameFormDataBuilder(@Nonnull EntityFrameProvider entityFrameProvider,
+                                      @Nonnull EntityFrameMapperFactory entityFrameMapperFactory) {
         this.entityFrameProvider = checkNotNull(entityFrameProvider);
+        this.entityFrameMapperFactory = checkNotNull(entityFrameMapperFactory);
     }
 
     private ImmutableList<FormControlData> toFormControlValues(@Nonnull OWLEntity subject,
@@ -48,7 +51,7 @@ public class EntityFrameFormDataBuilder {
         }
         var theBinding = owlBinding.get();
         var entityFrame = entityFrameProvider.getEntityFrame(subject);
-        var entityFrameMapper = new EntityFrameMapper(entityFrame);
+        var entityFrameMapper = entityFrameMapperFactory.create(entityFrame);
         var values = entityFrameMapper.getValues(theBinding);
 
 

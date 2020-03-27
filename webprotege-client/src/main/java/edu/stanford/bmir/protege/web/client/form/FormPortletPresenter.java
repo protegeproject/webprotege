@@ -100,15 +100,16 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private void setSubject(@Nonnull final OWLEntity entity) {
         checkNotNull(entity);
-        if(formStackPresenter.isDirty()) {
+//        if(formStackPresenter.isDirty()) {
             saveCurrentFormData();
-        }
+//        }
         currentSubject = Optional.of(entity);
         dispatchServiceManager.execute(new GetEntityFormsAction(projectId, entity),
                                        this::displayFormResult);
     }
 
     private void saveCurrentFormData() {
+        GWT.log("[FormPortletPresenter] Saving form data");
         currentSubject.ifPresent(subject -> {
             ImmutableList<FormData> editedForms = formStackPresenter.getForms();
             dispatchServiceManager.execute(new SetEntityFormsDataAction(projectId,
