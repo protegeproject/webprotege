@@ -10,6 +10,7 @@
             border-left: 1px solid transparent;
             border-right: 1px solid transparent;
             width: 100%;
+            box-sizing: border-box;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
