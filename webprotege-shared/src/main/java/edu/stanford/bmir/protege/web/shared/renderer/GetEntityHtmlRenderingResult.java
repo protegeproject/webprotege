@@ -9,22 +9,33 @@ import javax.annotation.Nonnull;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 2020-03-27
  */
-public class GetEntityRenderingResult implements Result {
+public class GetEntityHtmlRenderingResult implements Result {
 
     private OWLEntityData entityData;
 
+    private String rendering;
+
     @GwtSerializationConstructor
-    private GetEntityRenderingResult() {
+    private GetEntityHtmlRenderingResult() {
     }
 
-    public GetEntityRenderingResult(@Nonnull OWLEntityData entityData) {
+    public GetEntityHtmlRenderingResult(OWLEntityData entityData,
+                                        @Nonnull String rendering) {
         this.entityData = checkNotNull(entityData);
+        this.rendering = checkNotNull(rendering);
     }
 
     @Nonnull
     public OWLEntityData getEntityData() {
         return entityData;
+    }
+
+    @Nonnull
+    public String getRendering() {
+        return rendering;
     }
 }

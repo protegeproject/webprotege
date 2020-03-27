@@ -27,6 +27,7 @@ import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsAc
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsPageContainingIndividualActionHandler;
 import edu.stanford.bmir.protege.web.server.issues.*;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityHtmlRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.match.GetMatchingEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
@@ -56,6 +57,7 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 
@@ -642,6 +644,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideGetFreshFormIdActionHandler(GetFreshFormIdActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityHtmlRenderingActionHandler(GetEntityHtmlRenderingActionHandler handler) {
         return handler;
     }
 }
