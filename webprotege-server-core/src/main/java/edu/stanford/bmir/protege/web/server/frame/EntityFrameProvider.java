@@ -46,7 +46,8 @@ public class EntityFrameProvider {
     }
 
     @Nonnull
-    public EntityFrame<? extends OWLEntityData> getEntityFrame(@Nonnull OWLEntity entity) {
+    public EntityFrame<? extends OWLEntityData> getEntityFrame(@Nonnull OWLEntity entity,
+                                                               boolean includeDerivedInfo) {
         return entity.accept(new OWLEntityVisitorEx<>() {
             @Nonnull
             @Override
@@ -76,7 +77,8 @@ public class EntityFrameProvider {
             @Override
             public EntityFrame<? extends OWLEntityData> visit(@Nonnull OWLNamedIndividual individual) {
                 return namedIndividualFrameTranslator.getFrame(
-                        OWLNamedIndividualData.get(individual, "", ImmutableMap.of())
+                        OWLNamedIndividualData.get(individual, "", ImmutableMap.of()),
+                        includeDerivedInfo
                 );
             }
 

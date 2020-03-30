@@ -33,10 +33,13 @@ public class EntityFormSubjectFactory {
     }
 
     @Nonnull
-    public OWLEntity createSubject(@Nonnull String suppliedNameTample,
+    public OWLEntity createSubject(@Nonnull String suppliedNameTemplate,
                                    @Nonnull EntityType<?> entityType,
                                    @Nonnull Optional<String> langTag) {
-        var resolvedTemplate = templateResolver.resolveTemplateVariables(suppliedNameTample, entityType);
+        if(suppliedNameTemplate.isBlank()) {
+            throw new RuntimeException("Supplied name template is blank");
+        }
+        var resolvedTemplate = templateResolver.resolveTemplateVariables(suppliedNameTemplate, entityType);
         return DataFactory.getFreshOWLEntity(entityType, resolvedTemplate, langTag, dataFactory);
     }
 }

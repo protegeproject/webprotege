@@ -145,9 +145,15 @@ public class EntityFormDataConverter {
             var rowFrameBuilder = formFrameBuilderProvider.get();
 
             var rowSubject = gridRowData.getSubject();
+            // Set subject if it is present.  If it is not present
+            // then a subject should be generated
             rowSubject.ifPresent(rowFrameBuilder::setSubject);
 
             var gridControlDescriptor = gridControlData.getDescriptor();
+            gridControlDescriptor
+                    .getSubjectFactoryDescriptor()
+                    .ifPresent(rowFrameBuilder::setSubjectFactoryDescriptor);
+
             var columnDescriptors = gridControlDescriptor
                                                    .getColumns();
             var rowCells = gridRowData.getCells();
@@ -164,9 +170,6 @@ public class EntityFormDataConverter {
                                 });
                 });
             }
-            gridControlDescriptor
-                           .getSubjectFactoryDescriptor()
-                           .ifPresent(rowFrameBuilder::setSubjectFactoryDescriptor);
             formFrameBuilder.add(binding, rowFrameBuilder);
         }
     }

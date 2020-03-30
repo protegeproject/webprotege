@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.access;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
@@ -33,6 +35,8 @@ public class AccessManagerImpl implements AccessManager {
 
     private final Datastore datastore;
 
+    private final Cache<AccessManagerCacheKey, Boolean> permissionCache = CacheBuilder.newBuilder().build();
+
     /**
      * Constructs an {@link AccessManager} that is backed by MongoDb.
      *
@@ -49,6 +53,8 @@ public class AccessManagerImpl implements AccessManager {
     public void setAssignedRoles(@Nonnull Subject subject,
                                  @Nonnull Resource resource,
                                  @Nonnull Collection<RoleId> roleIds) {
+        invalidateCacheOfrSubjectAndResource(subject, resource);
+
         String userName = toUserName(subject);
         String projectId = toProjectId(resource);
         List<String> assignedRoles = roleIds.stream().map(RoleId::getId).collect(toList());
@@ -61,6 +67,15 @@ public class AccessManagerImpl implements AccessManager {
                                                        actionClosure);
         datastore.delete(withUserAndTarget(subject, resource));
         datastore.save(assignment);
+    }
+
+    private void invalidateCacheOfrSubjectAndResource(@Nonnull Subject subject,
+                                                     @Nonnull Resource resource) {
+        var currentActionClosure = getActionClosure(subject, resource);
+        for(var actionId : currentActionClosure) {
+            var cacheKey = AccessManagerCacheKey.get(subject, resource, actionId);
+            permissionCache.invalidate(cacheKey);
+        }
     }
 
     private List<String> getActionClosure(@Nonnull Collection<RoleId> roleIds) {
@@ -146,9 +161,16 @@ public class AccessManagerImpl implements AccessManager {
 
     @Override
     public boolean hasPermission(@Nonnull Subject subject, @Nonnull Resource resource, @Nonnull ActionId actionId) {
+        var cacheKey = AccessManagerCacheKey.get(subject, resource, actionId);
+        var permission = permissionCache.getIfPresent(cacheKey);
+        if(permission != null && permission.equals(Boolean.TRUE)) {
+            return true;
+        }
         Query<RoleAssignment> query = withUserOrAnyUserAndTarget(subject, resource)
                 .field(ACTION_CLOSURE).equal(actionId.getId());
-        return query.count(new CountOptions().limit(1)) == 1;
+        var hasPermission = query.count(new CountOptions().limit(1)) == 1;
+        permissionCache.put(cacheKey, hasPermission);
+        return hasPermission;
     }
 
     @Override

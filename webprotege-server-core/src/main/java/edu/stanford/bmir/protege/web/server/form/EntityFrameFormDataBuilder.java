@@ -50,7 +50,7 @@ public class EntityFrameFormDataBuilder {
             return ImmutableList.of();
         }
         var theBinding = owlBinding.get();
-        var entityFrame = entityFrameProvider.getEntityFrame(subject);
+        var entityFrame = entityFrameProvider.getEntityFrame(subject, false);
         var entityFrameMapper = entityFrameMapperFactory.create(entityFrame);
         var values = entityFrameMapper.getValues(theBinding);
 

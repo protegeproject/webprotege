@@ -35,7 +35,7 @@ public abstract class FormSubjectFactoryDescriptor {
     }
 
     public static String getDefaultGeneratedNamePattern() {
-        return "${type}-${uuid}";
+        return "id-${uuid}";
     }
 
     @Nonnull

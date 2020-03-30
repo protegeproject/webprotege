@@ -64,7 +64,7 @@ public class FormSubjectFactoryDescriptorPresenter {
     public Optional<FormSubjectFactoryDescriptor> getDescriptor() {
         EntityType<?> entityType = view.getEntityType();
         OWLClass parent = view.getParentClass().map(OWLClassData::getEntity).orElse(null);
-        String suppliedNameTemplate = "";
+        String suppliedNameTemplate = view.getGeneratedNamePattern();
         return Optional.of(FormSubjectFactoryDescriptor.get(entityType,
                                                             suppliedNameTemplate,
                                                             parent,

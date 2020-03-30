@@ -100,10 +100,17 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     @Nonnull
     @Override
     public NamedIndividualFrame getFrame(@Nonnull OWLNamedIndividualData subject) {
-        return translateToNamedIndividualFrame(subject);
+        return translateToNamedIndividualFrame(subject, true);
     }
 
-    private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividualData subject) {
+    @Nonnull
+    public NamedIndividualFrame getFrame(@Nonnull OWLNamedIndividualData subject,
+                                         boolean includeDerivedInformation) {
+        return translateToNamedIndividualFrame(subject, false);
+    }
+
+    private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividualData subject,
+                                                                 boolean includeDerived) {
         var subjectIndividual = subject.getEntity();
         var relevantAxioms = getRelevantAxioms(subjectIndividual);
 
@@ -122,16 +129,22 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
                 relevantAxioms.stream()
                 .flatMap(ax -> toAssertedPropertyValues(subjectIndividual, ax));
 
-        var derivedPropertyValues =
-                getClassAssertionAxioms(subjectIndividual)
-                .map(OWLClassAssertionAxiom::getClassExpression)
-                .filter(OWLClassExpression::isNamed)
-                .map(OWLClassExpression::asOWLClass)
-                .map(toClassData())
-                .map(clsData -> translatorProvider.get().getFrame(clsData))
-                .flatMap(translator -> translator.getPropertyValues().stream())
-                .filter(PropertyValue::isLogical)
-                .map(propertyValue -> propertyValue.setState(State.DERIVED));
+        Stream<PropertyValue> derivedPropertyValues;
+
+        if(includeDerived) {
+            derivedPropertyValues = getClassAssertionAxioms(subjectIndividual)
+                    .map(OWLClassAssertionAxiom::getClassExpression)
+                    .filter(OWLClassExpression::isNamed)
+                    .map(OWLClassExpression::asOWLClass)
+                    .map(toClassData())
+                    .map(clsData -> translatorProvider.get().getFrame(clsData))
+                    .flatMap(translator -> translator.getPropertyValues().stream())
+                    .filter(PropertyValue::isLogical)
+                    .map(propertyValue -> propertyValue.setState(State.DERIVED));
+        }
+        else {
+            derivedPropertyValues = Stream.empty();
+        }
 
         var propertyValues =
                 Streams.concat(assertedPropertyValues, derivedPropertyValues)

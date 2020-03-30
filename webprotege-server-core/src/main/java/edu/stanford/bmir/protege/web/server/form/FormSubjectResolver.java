@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 
@@ -38,11 +39,14 @@ public class FormSubjectResolver {
             var subject = formFrame.getSubject();
             if(subject.isEmpty()) {
                 var freshSubject = formFrame.getSubjectFactoryDescriptor()
-                                            .map(s -> entityFormSubjectFactory.createSubject(
-                                                    s.getGeneratedNamePattern(),
-                                                    s.getEntityType(),
-                                                    Optional.empty()
-                                            ))
+                                            .map(subjectFactoryDescriptor -> {
+                                                String pattern = getGeneratedNamePattern(subjectFactoryDescriptor);
+                                                return entityFormSubjectFactory.createSubject(
+                                                        pattern,
+                                                        subjectFactoryDescriptor.getEntityType(),
+                                                        Optional.empty()
+                                                );
+                                            })
                                             .map(FormEntitySubject::get);
                 theSubject = freshSubject.map(s -> s);
             }
@@ -51,5 +55,17 @@ public class FormSubjectResolver {
             }
             theSubject.ifPresent(s -> formFrameFormSubjectMap.put(formFrame, s));
             return theSubject;
+    }
+
+    public String getGeneratedNamePattern(FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+        var generatedNamePattern = subjectFactoryDescriptor.getGeneratedNamePattern();
+        String pattern;
+        if(generatedNamePattern.isBlank()) {
+            pattern = FormSubjectFactoryDescriptor.getDefaultGeneratedNamePattern();
+        }
+        else {
+            pattern = generatedNamePattern;
+        }
+        return pattern;
     }
 }

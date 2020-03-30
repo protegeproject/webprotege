@@ -111,11 +111,15 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     private void saveCurrentFormData() {
         GWT.log("[FormPortletPresenter] Saving form data");
         currentSubject.ifPresent(subject -> {
-            ImmutableList<FormData> editedForms = formStackPresenter.getForms();
+            ImmutableList<FormData> editedFormsData = formStackPresenter.getForms();
+            if(editedFormsData.equals(pristineFormsData)) {
+                GWT.log("[FormPortletPresenter] Form data has not changed.  Nothing to save.");
+                return;
+            }
             dispatchServiceManager.execute(new SetEntityFormsDataAction(projectId,
                                                                         subject,
                                                                         ImmutableList.copyOf(pristineFormsData),
-                                                                        editedForms),
+                                                                        editedFormsData),
                                            this,
                                            result -> {});
         });
