@@ -31,6 +31,9 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     private final FormFieldDescriptorView view;
 
     @Nonnull
+    private final OwlBindingPresenter bindingPresenter;
+
+    @Nonnull
     private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
     @Nonnull
@@ -39,12 +42,14 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     @Inject
     public FormFieldDescriptorPresenter(@Nonnull ProjectId projectId,
                                         @Nonnull FormFieldDescriptorView view,
+                                        @Nonnull OwlBindingPresenter bindingPresenter,
                                         @Nonnull FormControlDescriptorChooserPresenter fieldChooserPresenter,
                                         @Nonnull DispatchServiceManager dispatchServiceManager) {
-        this.projectId = projectId;
+        this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
-        this.fieldDescriptorChooserPresenter = fieldChooserPresenter;
-        this.dispatchServiceManager = dispatchServiceManager;
+        this.bindingPresenter = checkNotNull(bindingPresenter);
+        this.fieldDescriptorChooserPresenter = checkNotNull(fieldChooserPresenter);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     @Nonnull
@@ -65,10 +70,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
             return Optional.empty();
         }
         FormFieldDescriptor descriptor = FormFieldDescriptor.get(FormFieldId.get(view.getFormFieldId()),
-                                                                 view.getOwlProperty()
-                                                                         .map(OWLPropertyData::getEntity)
-                                                                         .map(OwlPropertyBinding::get)
-                                                                         .orElse(null),
+                                                                 bindingPresenter.getBinding().orElse(null),
                                                                  view.getLabel(),
                                                                  view.getFieldRun(),
                                                                  formFieldDescriptor.get(),
@@ -80,20 +82,8 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     }
 
     public void setValue(@Nonnull FormFieldDescriptor descriptor) {
-
-        view.clearOwlProperty();
-        Optional<OWLProperty> owlProperty = descriptor.getOwlProperty();
-        owlProperty.ifPresent(property -> {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(projectId,
-                                                                        property),
-                                           result -> {
-                                               OWLEntityData entityData = result.getEntityData();
-                                               if(entityData instanceof OWLPropertyData) {
-                                                   view.setOwlProperty((OWLPropertyData) entityData);
-                                               }
-            });
-        });
-
+        bindingPresenter.clear();
+        descriptor.getOwlBinding().ifPresent(bindingPresenter::setBinding);
 
         String elementId = descriptor.getId()
                                      .getId();
@@ -118,5 +108,6 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         fieldDescriptorChooserPresenter.start(view.getFieldDescriptorViewContainer());
+        bindingPresenter.start(view.getOwlBindingViewContainer());
     }
 }

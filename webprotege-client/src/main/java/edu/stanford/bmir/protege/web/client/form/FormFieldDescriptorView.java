@@ -20,8 +20,6 @@ import java.util.function.Consumer;
  */
 public interface FormFieldDescriptorView extends IsWidget {
 
-    void clearOwlProperty();
-
     void setFormFieldId(@Nonnull String id);
 
     @Nonnull
@@ -47,10 +45,8 @@ public interface FormFieldDescriptorView extends IsWidget {
     @Nonnull
     Optionality getOptionality();
 
-    void setOwlProperty(@Nonnull OWLPropertyData property);
-
     @Nonnull
-    Optional<OWLPropertyData> getOwlProperty();
+    AcceptsOneWidget getOwlBindingViewContainer();
 
     void setRepeatability(@Nonnull Repeatability repeatability);
 

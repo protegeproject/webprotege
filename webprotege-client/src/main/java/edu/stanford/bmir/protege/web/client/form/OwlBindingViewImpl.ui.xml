@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .propertyBindingEditor {
             margin-left: 3em;
@@ -11,7 +12,7 @@
     </ui:style>
     <g:HTMLPanel>
         <g:RadioButton ui:field="propertyRadioButton" name="binding-{counter.getValue}" text="Property"/>
-        <g:HTMLPanel addStyleNames="{style.propertyBindingEditor}">
+        <g:HTMLPanel addStyleNames="{style.propertyBindingEditor} {wp.style.formGroupNarrow}">
             <primitive:PrimitiveDataEditor ui:field="primitiveDataField" objectPropertiesAllowed="true"
                                            dataPropertiesAllowed="true" annotationPropertiesAllowed="true"/>
         </g:HTMLPanel>

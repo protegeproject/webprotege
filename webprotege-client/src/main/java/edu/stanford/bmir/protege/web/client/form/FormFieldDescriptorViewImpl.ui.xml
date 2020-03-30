@@ -29,18 +29,13 @@
         <g:HTMLPanel addStyleNames="{style.elementColumn}">
             <g:HTMLPanel addStyleNames="{style.elementContent}">
                 <g:HTMLPanel>
-                    <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
-                        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-                            <g:Label text="Field Id" addStyleNames="{wp.style.formLabel}"/>
-                            <g:TextBox ui:field="elementIdField"/>
-                        </g:HTMLPanel>
-                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                            <g:Label text="Property binding" addStyleNames="{wp.style.formLabel}"/>
-                            <primitive:PrimitiveDataEditor objectPropertiesAllowed="true"
-                                                           dataPropertiesAllowed="true"
-                                                           annotationPropertiesAllowed="true"
-                                                           ui:field="propertyBindingField"/>
-                        </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+                        <g:Label text="Field Id" addStyleNames="{wp.style.formLabel}"/>
+                        <g:TextBox ui:field="elementIdField"/>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                        <g:Label text="Binding" addStyleNames="{wp.style.formLabel}"/>
+                        <g:SimplePanel ui:field="bindingViewContainer"/>
                     </g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                         <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>

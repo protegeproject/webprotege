@@ -69,22 +69,20 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     RadioButton elementRunContinueRadio;
 
     @UiField(provided = true)
-    PrimitiveDataEditor propertyBindingField;
-
-    @UiField(provided = true)
     protected static Counter counter = new Counter();
 
     @UiField
     SimplePanel fieldViewContainer;
 
+    @UiField
+    SimplePanel bindingViewContainer;
+
     @Inject
     public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
-                                       LanguageMapEditor helpEditor,
-                                       PrimitiveDataEditor propertyBindingField) {
+                                       LanguageMapEditor helpEditor) {
         counter.increment();
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
-        this.propertyBindingField = propertyBindingField;
         initWidget(ourUiBinder.createAndBindUi(this));
         elementIdField.addValueChangeHandler(event -> {
             FormFieldId formFieldId = FormFieldId.get(elementIdField.getValue());
@@ -101,12 +99,6 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     @Override
     public String getFormFieldId() {
         return elementIdField.getText();
-    }
-
-
-    @Override
-    public void clearOwlProperty() {
-        propertyBindingField.clearValue();
     }
 
     @Override
@@ -169,17 +161,10 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
         return optionalRadio.getValue() ? Optionality.OPTIONAL : Optionality.REQUIRED;
     }
 
-    @Override
-    public void setOwlProperty(@Nonnull OWLPropertyData property) {
-        propertyBindingField.setValue(property);
-    }
-
     @Nonnull
     @Override
-    public Optional<OWLPropertyData> getOwlProperty() {
-        return propertyBindingField.getValue()
-                .filter(property -> property instanceof OWLPropertyData)
-                .map(property -> (OWLPropertyData) property);
+    public AcceptsOneWidget getOwlBindingViewContainer() {
+        return bindingViewContainer;
     }
 
     @Override
