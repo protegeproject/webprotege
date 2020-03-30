@@ -11,12 +11,12 @@
         }
     </ui:style>
     <g:HTMLPanel>
-        <g:RadioButton ui:field="propertyRadioButton" name="binding-{counter.getValue}" text="Property"/>
+        <g:RadioButton ui:field="propertyRadioButton" name="binding-{counter.getValue}" text="Relationship"/>
         <g:HTMLPanel addStyleNames="{style.propertyBindingEditor} {wp.style.formGroupNarrow}">
-            <primitive:PrimitiveDataEditor ui:field="primitiveDataField" objectPropertiesAllowed="true"
-                                           dataPropertiesAllowed="true" annotationPropertiesAllowed="true"/>
+            <primitive:PrimitiveDataEditor ui:field="propertyField" objectPropertiesAllowed="true"
+                                           dataPropertiesAllowed="true" annotationPropertiesAllowed="true" placeholder="Enter property name"/>
         </g:HTMLPanel>
-        <g:RadioButton ui:field="classRadioButton" name="binding-{counter.getValue}" text="Class"/>
+        <g:RadioButton ui:field="classRadioButton" name="binding-{counter.getValue}" text="Parent Class/Type"/>
         <g:RadioButton ui:field="instanceRadioButton" name="binding-{counter.getValue}" text="Instance"/>
     </g:HTMLPanel>
 </ui:UiBinder>

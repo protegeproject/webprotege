@@ -8,9 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,7 +31,7 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
     private static OwlBindingViewImplUiBinder ourUiBinder = GWT.create(OwlBindingViewImplUiBinder.class);
 
     @UiField(provided = true)
-    PrimitiveDataEditor primitiveDataField;
+    PrimitiveDataEditor propertyField;
 
     @UiField(provided = true)
     static Counter counter = new Counter();
@@ -48,20 +46,20 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
     RadioButton propertyRadioButton;
 
     @Inject
-    public OwlBindingViewImpl(PrimitiveDataEditor primitiveDataEditor) {
+    public OwlBindingViewImpl(PrimitiveDataEditor propertyField) {
         counter.increment();
-        this.primitiveDataField = checkNotNull(primitiveDataEditor);
+        this.propertyField = checkNotNull(propertyField);
         initWidget(ourUiBinder.createAndBindUi(this));
         propertyRadioButton.addValueChangeHandler(event -> {
-           primitiveDataEditor.setEnabled(event.getValue());
+           propertyField.setEnabled(event.getValue());
         });
     }
 
     @Override
     public void clear() {
         propertyRadioButton.setValue(true);
-        primitiveDataField.setEnabled(true);
-        primitiveDataField.clearValue();
+        propertyField.setEnabled(true);
+        propertyField.clearValue();
 
     }
 
@@ -87,13 +85,13 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
 
     @Override
     public void setProperty(@Nonnull OWLEntityData entity) {
-        primitiveDataField.setValue(entity);
-        primitiveDataField.setEnabled(true);
+        propertyField.setValue(entity);
+        propertyField.setEnabled(true);
         propertyRadioButton.setValue(true);
     }
 
     @Override
     public Optional<OWLEntityData> getEntity() {
-        return primitiveDataField.getValue().map(pd -> (OWLEntityData) pd);
+        return propertyField.getValue().map(pd -> (OWLEntityData) pd);
     }
 }
