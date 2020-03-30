@@ -30,9 +30,9 @@ import static org.mockito.Mockito.mock;
  */
 public class FormDescriptor_Serialization_IT {
 
-    private static final String SUPPLIED_NAME_TEMPLATE = "${type}-${uuid}";
+    private static final String SUPPLIED_NAME_TEMPLATE = "id-${uuid}";
 
-    private static final FormId FORM_ID = FormId.get("TheFormId");
+    private static final FormId FORM_ID = FormId.get("12345678-1234-1234-1234-123456789abc");
 
     private static final LanguageMap LABEL = LanguageMap.of("en", "The label");
 
