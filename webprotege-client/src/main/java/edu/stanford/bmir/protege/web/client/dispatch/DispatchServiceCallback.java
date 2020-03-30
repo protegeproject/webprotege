@@ -124,7 +124,7 @@ public class DispatchServiceCallback<T> {
     }
 
     protected String getErrorMessage(Throwable throwable) {
-        return "An error has occurred.  Please try again. " + throwable.getMessage();
+        return throwable.getMessage();
     }
 
 
