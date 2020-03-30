@@ -11,11 +11,11 @@
             <g:RadioButton value="true" name="subjectEntityType-{counter.getValue}" text="Class" ui:field="classRadio"/>
             <g:RadioButton name="subjectEntityType-{counter.getValue}" text="Individual" ui:field="individualRadio"/>
         </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.subFormSubjectParents}"/>
             <primitive:PrimitiveDataEditor ui:field="parentEditor" classesAllowed="true"/>
         </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.subFormSubjectGeneratedNamePattern}"/>
             <g:TextBox ui:field="generatedNamePattern"/>
         </g:HTMLPanel>
