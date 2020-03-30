@@ -3,7 +3,10 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.entity.IRIData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
@@ -20,7 +23,6 @@ import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -46,28 +48,30 @@ public class FormFrameBuilder {
     @Nonnull
     private final ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
 
+    @Nonnull
+    private final Map<FormFrameBuilder, OwlBinding> nestedFrames = new HashMap<>();
+
     @Nullable
     private FormSubject subject = null;
 
     @Nullable
     private FormSubjectFactoryDescriptor subjectFactoryDescriptor = null;
 
-    @Nonnull
-    private final Map<FormFrameBuilder, OwlBinding> nestedFrames = new HashMap<>();
+    private ImmutableSet.Builder<OWLAxiom> placementAxioms = ImmutableSet.builder();
 
     @Inject
     public FormFrameBuilder(@Nonnull RenderingManager renderingManager) {
         this.renderingManager = checkNotNull(renderingManager);
     }
 
-    @Nonnull
-    public Optional<FormSubject> getSubject() {
-        return Optional.ofNullable(subject);
-    }
-
     public void add(@Nonnull OwlBinding binding,
                     @Nonnull OWLEntity entity) {
         addObject(binding, entity);
+    }
+
+    public void add(@Nonnull OwlBinding binding,
+                    @Nonnull OWLLiteral literal) {
+        addObject(binding, literal);
     }
 
     private void addObject(@Nonnull OwlBinding binding,
@@ -90,7 +94,6 @@ public class FormFrameBuilder {
             addPropertyValue(propertyBinding, value);
         }
     }
-
 
 
     private void addClass(@Nonnull OWLClass value) {
@@ -241,11 +244,6 @@ public class FormFrameBuilder {
     }
 
     public void add(@Nonnull OwlBinding binding,
-                    @Nonnull OWLLiteral literal) {
-        addObject(binding, literal);
-    }
-
-    public void add(@Nonnull OwlBinding binding,
                     @Nonnull IRI iri) {
         addObject(binding, iri);
     }
@@ -253,28 +251,6 @@ public class FormFrameBuilder {
     public void add(@Nonnull OwlBinding binding,
                     @Nonnull FormFrameBuilder formFrameBuilder) {
         nestedFrames.put(formFrameBuilder, binding);
-    }
-
-    public FormFrame build(@Nonnull FormSubjectResolver subjectResolver) {
-        var nestedFramesBuilder = ImmutableSet.<FormFrame>builder();
-        nestedFrames.forEach((nestedFrameBuilder, binding) -> {
-            var resolvedNestedSubject = subjectResolver.resolveSubject(nestedFrameBuilder);
-            resolvedNestedSubject.ifPresent(s -> {
-                // Add property value to the resolved subject
-                FormFrameBuilder.this.add(binding, s);
-                // Reset the resolved subject in the nested frame builder
-                nestedFrameBuilder.setSubject(s);
-                // Build and add the nested frame to this frame
-                var nestedFrame = nestedFrameBuilder.build(subjectResolver);
-                nestedFramesBuilder.add(nestedFrame);
-            });
-        });
-        var resolvedSubject = subjectResolver.resolveSubject(this).orElseThrow();
-        return FormFrame.get(resolvedSubject,
-                             classes.build(),
-                             instances.build(),
-                             propertyValues.build(),
-                             nestedFramesBuilder.build());
     }
 
     public void add(OwlBinding binding, FormSubject value) {
@@ -291,18 +267,52 @@ public class FormFrameBuilder {
         });
     }
 
-    public void setSubject(@Nonnull FormSubject subject) {
-        this.subject = subject;
+    private void addPlacementAxiom(OWLAxiom axiom) {
+        placementAxioms.add(axiom);
     }
 
-    public void setSubjectFactoryDescriptor(@Nullable FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
-        this.subjectFactoryDescriptor = checkNotNull(subjectFactoryDescriptor);
+    public FormFrame build(@Nonnull FormSubjectResolver subjectResolver) {
+        var nestedFramesBuilder = ImmutableSet.<FormFrame>builder();
+        nestedFrames.forEach((nestedFrameBuilder, binding) -> {
+            var resolvedNestedSubject = subjectResolver.resolveSubject(nestedFrameBuilder);
+            resolvedNestedSubject.ifPresent(subj -> {
+                // Add binding to the resolved nested subject
+                FormFrameBuilder.this.add(binding, subj);
+                // Reset the resolved subject in the nested frame builder
+                nestedFrameBuilder.setSubject(subj);
+                // Add placement to parents
+                subjectResolver.getResolvedParents(nestedFrameBuilder)
+                               .forEach(nestedFrameBuilder::addClass);
+                // Build and add the nested frame to this frame
+                var nestedFrame = nestedFrameBuilder.build(subjectResolver);
+                nestedFramesBuilder.add(nestedFrame);
+            });
+        });
+        var resolvedSubject = subjectResolver.resolveSubject(this)
+                                             .orElseThrow();
+        // Add placement axioms
+
+        return FormFrame.get(resolvedSubject,
+                             classes.build(),
+                             instances.build(),
+                             propertyValues.build(),
+                             nestedFramesBuilder.build());
+    }
+
+    @Nonnull
+    public Optional<FormSubject> getSubject() {
+        return Optional.ofNullable(subject);
+    }
+
+    public void setSubject(@Nonnull FormSubject subject) {
+        this.subject = subject;
     }
 
     public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
         return Optional.ofNullable(this.subjectFactoryDescriptor);
     }
 
-
-
+    public void setSubjectFactoryDescriptor(@Nullable FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+        this.subjectFactoryDescriptor = checkNotNull(subjectFactoryDescriptor);
+    }
 }

@@ -1,14 +1,14 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormSubjectResolver {
 
     private final Map<FormFrameBuilder, FormSubject> formFrameFormSubjectMap = new IdentityHashMap<>();
+
+    private final Map<FormFrameBuilder, Set<OWLClass>> resolvedParentMap = new IdentityHashMap<>();
 
     @Nonnull
     private final EntityFormSubjectFactory entityFormSubjectFactory;
@@ -36,10 +38,13 @@ public class FormSubjectResolver {
                 return Optional.of(existingSubject);
             }
             final Optional<FormSubject> theSubject;
+            final Set<OWLClass> parents = new HashSet<>(1);
             var subject = formFrame.getSubject();
             if(subject.isEmpty()) {
                 var freshSubject = formFrame.getSubjectFactoryDescriptor()
                                             .map(subjectFactoryDescriptor -> {
+                                                subjectFactoryDescriptor.getParent()
+                                                                        .ifPresent(parents::add);
                                                 String pattern = getGeneratedNamePattern(subjectFactoryDescriptor);
                                                 return entityFormSubjectFactory.createSubject(
                                                         pattern,
@@ -53,8 +58,22 @@ public class FormSubjectResolver {
             else {
                 theSubject = subject;
             }
-            theSubject.ifPresent(s -> formFrameFormSubjectMap.put(formFrame, s));
+            theSubject.ifPresent(s -> {
+                formFrameFormSubjectMap.put(formFrame, s);
+                resolvedParentMap.put(formFrame, parents);
+            });
             return theSubject;
+    }
+
+    @Nonnull
+    public Set<OWLClass> getResolvedParents(FormFrameBuilder formFrameBuilder) {
+        var resolvedParent = resolvedParentMap.get(formFrameBuilder);
+        if(resolvedParent == null) {
+            return ImmutableSet.of();
+        }
+        else {
+            return ImmutableSet.copyOf(resolvedParent);
+        }
     }
 
     public String getGeneratedNamePattern(FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
