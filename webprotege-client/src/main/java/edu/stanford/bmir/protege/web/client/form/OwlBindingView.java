@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -26,4 +28,7 @@ public interface OwlBindingView extends IsWidget {
     void setProperty(@Nonnull OWLEntityData entity);
 
     Optional<OWLEntityData> getEntity();
+
+    @Nonnull
+    AcceptsOneWidget getValuesFilterViewContainer();
 }

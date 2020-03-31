@@ -9,14 +9,26 @@
             margin-top: 0.4em;
             margin-bottom: 0.6em;
         }
+        .relationshipValuesFilter {
+            margin-left: 0.3em;
+        }
     </ui:style>
     <g:HTMLPanel>
         <g:RadioButton ui:field="propertyRadioButton" name="binding-{counter.getValue}" text="Relationship"/>
-        <g:HTMLPanel addStyleNames="{style.propertyBindingEditor} {wp.style.formGroupNarrow}">
-            <primitive:PrimitiveDataEditor ui:field="propertyField" objectPropertiesAllowed="true"
-                                           dataPropertiesAllowed="true" annotationPropertiesAllowed="true" placeholder="Enter property name"/>
+        <g:HTMLPanel addStyleNames="{style.propertyBindingEditor}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}  {wp.style.formGroupNarrow}">
+                <g:Label text="Relationship property" addStyleNames="{wp.style.formLabel}"/>
+                <primitive:PrimitiveDataEditor ui:field="propertyField" objectPropertiesAllowed="true"
+                                               dataPropertiesAllowed="true" annotationPropertiesAllowed="true" placeholder="Enter property name"/>
+
+            </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {style.relationshipValuesFilter}">
+                <g:Label text="Relationship values filter" addStyleNames="{wp.style.formLabel}"/>
+                <g:SimplePanel ui:field="valuesFilterViewContainer"/>
+            </g:HTMLPanel>
         </g:HTMLPanel>
         <g:RadioButton ui:field="classRadioButton" name="binding-{counter.getValue}" text="Parent Class/Type"/>
         <g:RadioButton ui:field="instanceRadioButton" name="binding-{counter.getValue}" text="Instance"/>
+
     </g:HTMLPanel>
 </ui:UiBinder>

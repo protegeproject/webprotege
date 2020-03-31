@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -44,6 +42,9 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
 
     @UiField
     RadioButton propertyRadioButton;
+
+    @UiField
+    SimplePanel valuesFilterViewContainer;
 
     @Inject
     public OwlBindingViewImpl(PrimitiveDataEditor propertyField) {
@@ -93,5 +94,11 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
     @Override
     public Optional<OWLEntityData> getEntity() {
         return propertyField.getValue().map(pd -> (OWLEntityData) pd);
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getValuesFilterViewContainer() {
+        return valuesFilterViewContainer;
     }
 }

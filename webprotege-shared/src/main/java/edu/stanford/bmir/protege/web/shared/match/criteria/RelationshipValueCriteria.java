@@ -16,7 +16,8 @@ import javax.annotation.Nonnull;
                 @JsonSubTypes.Type(AnyRelationshipValueCriteria.class),
                 @JsonSubTypes.Type(RelationshipValueEqualsEntityCriteria.class),
                 @JsonSubTypes.Type(RelationshipValueEqualsLiteralCriteria.class),
-                @JsonSubTypes.Type(RelationshipValueMatchesCriteria.class)
+                @JsonSubTypes.Type(RelationshipValueMatchesCriteria.class),
+                @JsonSubTypes.Type(CompositeRelationshipValueCriteria.class)
         }
 )
 public interface RelationshipValueCriteria extends Criteria {

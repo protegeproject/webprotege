@@ -2,12 +2,15 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.match.RelationshipValueCriteriaListPresenter;
+import edu.stanford.bmir.protege.web.client.match.RelationshipValueCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlClassBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlInstanceBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -35,12 +38,17 @@ public class OwlBindingPresenter {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final RelationshipValueCriteriaListPresenter relationshipValueCriteriaListPresenter;
+
     @Inject
     public OwlBindingPresenter(@Nonnull ProjectId projectId,
                                @Nonnull OwlBindingView view,
-                               @Nonnull DispatchServiceManager dispatchServiceManager) {
+                               @Nonnull DispatchServiceManager dispatchServiceManager,
+                               @Nonnull RelationshipValueCriteriaListPresenter relationshipValueCriteriaListPresenter) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
+        this.relationshipValueCriteriaListPresenter = relationshipValueCriteriaListPresenter;
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
@@ -59,6 +67,8 @@ public class OwlBindingPresenter {
                    dispatchServiceManager.execute(new GetEntityRenderingAction(projectId,
                                                                                property),
                                                   result -> view.setProperty(result.getEntityData()));
+                   ((OwlPropertyBinding) binding).getValuesCriteria()
+                                                 .ifPresent(relationshipValueCriteriaListPresenter::setCriteria);
                });
         if(binding instanceof OwlClassBinding) {
             view.setOwlClassBinding(true);
@@ -66,6 +76,7 @@ public class OwlBindingPresenter {
         else if(binding instanceof OwlInstanceBinding) {
             view.setOwlInstanceBinding(true);
         }
+        relationshipValueCriteriaListPresenter.start(view.getValuesFilterViewContainer());
     }
 
     @Nonnull
@@ -77,6 +88,11 @@ public class OwlBindingPresenter {
             return Optional.of(OwlInstanceBinding.get());
         }
         return view.getEntity().map(OWLEntityData::getEntity)
-            .map(entity -> OwlPropertyBinding.get((OWLProperty) entity));
+            .map(entity -> {
+                CompositeRelationshipValueCriteria filterCriteria = relationshipValueCriteriaListPresenter.getCriteria()
+                                                                                                          .orElse(null);
+
+                return OwlPropertyBinding.get((OWLProperty) entity, filterCriteria);
+            });
     }
 }

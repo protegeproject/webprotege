@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
@@ -178,6 +179,8 @@ public class RpcWhiteList implements Action, Result {
     private Color color;
 
     private Criteria criteria;
+
+    private CompositeRelationshipValueCriteria compositeRelationshipValueCriteria;
 
     public EntityFormSelector getEntityFormSelector() {
         return entityFormSelector;
@@ -745,5 +748,11 @@ public class RpcWhiteList implements Action, Result {
     }
 
 
+    public CompositeRelationshipValueCriteria getCompositeRelationshipValueCriteria() {
+        return compositeRelationshipValueCriteria;
+    }
 
+    public void setCompositeRelationshipValueCriteria(CompositeRelationshipValueCriteria compositeRelationshipValueCriteria) {
+        this.compositeRelationshipValueCriteria = compositeRelationshipValueCriteria;
+    }
 }
