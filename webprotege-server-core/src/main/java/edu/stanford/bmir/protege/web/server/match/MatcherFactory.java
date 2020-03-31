@@ -200,7 +200,7 @@ public class MatcherFactory {
         });
     }
 
-    private Matcher<OWLPrimitive> getRelationshipValueMatcher(RelationshipValueCriteria criteria) {
+    public Matcher<OWLPrimitive> getRelationshipValueMatcher(RelationshipValueCriteria criteria) {
         return criteria.accept(new RelationshipValueCriteriaVisitor<>() {
             @Override
             public Matcher<OWLPrimitive> visit(AnyRelationshipValueCriteria criteria) {

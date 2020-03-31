@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
@@ -12,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
 
@@ -38,15 +38,20 @@ public class EntityFrameMapper {
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final MatcherFactory matcherFactory;
+
 
     public EntityFrameMapper(@Nonnull EntityFrame<?> frame,
                              @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                              @Nonnull ClassAssertionAxiomsByClassIndex index,
-                             @Nonnull RenderingManager renderingManager) {
+                             @Nonnull RenderingManager renderingManager,
+                             @Nonnull MatcherFactory matcherFactory) {
         this.frame = checkNotNull(frame);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.index = checkNotNull(index);
         this.renderingManager = checkNotNull(renderingManager);
+        this.matcherFactory = checkNotNull(matcherFactory);
     }
 
     public ImmutableList<OWLPrimitiveData> getValues(@Nonnull OwlBinding binding) {
@@ -79,11 +84,15 @@ public class EntityFrameMapper {
         }
         else {
             var propertyBinding = (OwlPropertyBinding) binding;
+            var matcher = propertyBinding.getValuesCriteria()
+                    .map(matcherFactory::getRelationshipValueMatcher)
+                    .orElse(p -> true);
             if(frame instanceof HasPropertyValues) {
                 return ((HasPropertyValues) frame).getPropertyValues()
                         .stream()
                         .filter(propertyValue -> propertyValue.getProperty().getEntity().equals(propertyBinding.getProperty()))
-                        .map(PropertyValue::getValue)
+                        .filter(propertyValue -> matcher.matches(propertyValue.getValue().getObject()))
+                                                  .map(PropertyValue::getValue)
                         .collect(toImmutableList());
             }
             else {

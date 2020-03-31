@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 
@@ -26,16 +27,22 @@ public class EntityFrameMapperFactory {
     @Nonnull
     private RenderingManager renderingManager;
 
+    @Nonnull
+    private final MatcherFactory matcherFactory;
+
     @Inject
     public EntityFrameMapperFactory(@Nonnull ClassAssertionAxiomsByClassIndex classAssertionAxiomsIndex,
                                     @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                    @Nonnull RenderingManager renderingManager) {
+                                    @Nonnull RenderingManager renderingManager,
+                                    @Nonnull MatcherFactory matcherFactory) {
         this.classAssertionAxiomsIndex = checkNotNull(classAssertionAxiomsIndex);
-        this.projectOntologiesIndex = projectOntologiesIndex;
-        this.renderingManager = renderingManager;
+        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
+        this.renderingManager = checkNotNull(renderingManager);
+        this.matcherFactory = checkNotNull(matcherFactory);
     }
 
     public EntityFrameMapper create(@Nonnull EntityFrame<?> entityFrame) {
-        return new EntityFrameMapper(entityFrame, projectOntologiesIndex, classAssertionAxiomsIndex, renderingManager);
+        return new EntityFrameMapper(entityFrame, projectOntologiesIndex, classAssertionAxiomsIndex, renderingManager,
+                                     matcherFactory);
     }
 }
