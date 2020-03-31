@@ -34,11 +34,11 @@ public abstract class FormFrame {
 
     @Nonnull
     public static FormFrame get(@Nonnull FormSubject formSubject,
-                                @Nonnull ImmutableSet<OWLClassData> classes,
+                                @Nonnull ImmutableSet<OWLClassData> parents,
                                 @Nonnull ImmutableSet<OWLNamedIndividualData> instances,
                                 @Nonnull ImmutableSet<PropertyValue> propertyValues,
                                 @Nonnull ImmutableSet<FormFrame> nestedFrames) {
-        return new AutoValue_FormFrame(formSubject, classes, instances, propertyValues, nestedFrames);
+        return new AutoValue_FormFrame(formSubject, parents, instances, propertyValues, nestedFrames);
     }
 
     @Nonnull

@@ -1,12 +1,8 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,14 +12,10 @@ import javax.inject.Provider;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-13
+ *
+ * Converts raw {@link FormData} into a {@link FormFrame}, which is a step closer to an {@link EntityFrame}.
  */
 public class EntityFormDataConverter {
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
-
-    @Nonnull
-    private final RenderingManager renderingManager;
 
     @Nonnull
     private final Provider<FormFrameBuilder> formFrameBuilderProvider;
@@ -32,28 +24,58 @@ public class EntityFormDataConverter {
     private final Provider<FormSubjectResolver> formSubjectResolverProvider;
 
     @Inject
-    public EntityFormDataConverter(@Nonnull OWLDataFactory dataFactory,
-                                   @Nonnull RenderingManager renderingManager,
-                                   @Nonnull Provider<FormFrameBuilder> formFrameBuilderProvider,
+    public EntityFormDataConverter(@Nonnull Provider<FormFrameBuilder> formFrameBuilderProvider,
                                    @Nonnull Provider<FormSubjectResolver> formSubjectResolverProvider) {
-        this.dataFactory = dataFactory;
-        this.renderingManager = renderingManager;
         this.formFrameBuilderProvider = formFrameBuilderProvider;
         this.formSubjectResolverProvider = formSubjectResolverProvider;
     }
 
-    /**
-     * Converts the specified {@link FormData} into various
-     * @param formData
-     * @return
-     */
-    public FormFrame convert(@Nonnull FormData formData) {
-        FormFrameBuilder formFrameBuilder = buildFormFrame(formData);
-        var formSubjectResolver = formSubjectResolverProvider.get();
-        return formFrameBuilder.build(formSubjectResolver);
+    public void addGridControlData(@Nonnull OwlBinding binding,
+                                   @Nonnull GridControlData gridControlData,
+                                   @Nonnull FormFrameBuilder formFrameBuilder) {
+
+        for(GridRowData gridRowData : gridControlData.getRows()) {
+            var rowFrameBuilder = formFrameBuilderProvider.get();
+
+            var rowSubject = gridRowData.getSubject();
+            // Set subject if it is present.  If it is not present
+            // then a subject should be generated
+            rowSubject.ifPresent(rowFrameBuilder::setSubject);
+
+            var gridControlDescriptor = gridControlData.getDescriptor();
+            gridControlDescriptor
+                    .getSubjectFactoryDescriptor()
+                    .ifPresent(rowFrameBuilder::setSubjectFactoryDescriptor);
+
+            var columnDescriptors = gridControlDescriptor
+                    .getColumns();
+            var rowCells = gridRowData.getCells();
+            for(int i = 0; i < columnDescriptors.size(); i++) {
+                var columnDescriptor = columnDescriptors.get(i);
+                var gridCellData = rowCells.get(i);
+                var cellBinding = columnDescriptor.getOwlBinding();
+                cellBinding.ifPresent(cb -> gridCellData.getValue()
+                                                        .ifPresent(cellControlData -> processFormControlData(
+                                                                cb,
+                                                                cellControlData,
+                                                                rowFrameBuilder)));
+            }
+            formFrameBuilder.add(binding, rowFrameBuilder);
+        }
     }
 
-    public FormFrameBuilder buildFormFrame(@Nonnull FormData formData) {
+    public void addPrimitiveFormControlData(OwlBinding binding,
+                                            PrimitiveFormControlData primitiveFormControlData,
+                                            FormFrameBuilder formFrameBuilder) {
+        primitiveFormControlData.asEntity()
+                                .ifPresent(entity -> formFrameBuilder.add(binding, entity));
+        primitiveFormControlData.asLiteral()
+                                .ifPresent(literal -> formFrameBuilder.add(binding, literal));
+        primitiveFormControlData.asIri()
+                                .ifPresent(iri -> formFrameBuilder.add(binding, iri));
+    }
+
+    private FormFrameBuilder buildFormFrame(@Nonnull FormData formData) {
         var formFrameBuilder = formFrameBuilderProvider.get();
         formData.getSubject()
                 .ifPresent(formFrameBuilder::setSubject);
@@ -65,16 +87,13 @@ public class EntityFormDataConverter {
         return formFrameBuilder;
     }
 
-
-    private void processFormFieldData(FormFieldData formFieldData,
-                                      FormFrameBuilder formFrameBuilder) {
-        var formFieldDescriptor = formFieldData.getFormFieldDescriptor();
-        var owlBinding = formFieldDescriptor.getOwlBinding();
-        owlBinding.ifPresent(binding -> {
-            var formControlData = formFieldData.getFormControlData();
-            formControlData.forEach(fcd -> processFormControlData(binding, fcd, formFrameBuilder));
-
-        });
+    /**
+     * Converts the specified {@link FormData} into its equivalent {@link FormFrame}.
+     */
+    public FormFrame convert(@Nonnull FormData formData) {
+        FormFrameBuilder formFrameBuilder = buildFormFrame(formData);
+        var formSubjectResolver = formSubjectResolverProvider.get();
+        return formFrameBuilder.build(formSubjectResolver);
     }
 
     private void processFormControlData(@Nonnull OwlBinding binding,
@@ -100,86 +119,50 @@ public class EntityFormDataConverter {
 
             @Override
             public void visit(@Nonnull ImageControlData imageControlData) {
-                imageControlData.getIri().ifPresent(iri -> formFrameBuilder.add(binding, iri));
+                imageControlData.getIri()
+                                .ifPresent(iri -> formFrameBuilder.add(binding, iri));
             }
 
             @Override
             public void visit(@Nonnull MultiChoiceControlData multiChoiceControlData) {
                 multiChoiceControlData.getValues()
-                                      .forEach(primitiveFormControlData -> {
-                                          addPrimitiveFormControlData(binding,
-                                                                      primitiveFormControlData,
-                                                                      formFrameBuilder);
-                                      });
+                                      .forEach(data -> addPrimitiveFormControlData(binding,
+                                                                                   data,
+                                                                                   formFrameBuilder));
             }
 
             @Override
             public void visit(@Nonnull SingleChoiceControlData singleChoiceControlData) {
-                singleChoiceControlData.getChoice().ifPresent(primitiveFormControlData -> {
-                    addPrimitiveFormControlData(binding,
-                                                primitiveFormControlData,
-                                                formFrameBuilder);
-                });
+                singleChoiceControlData.getChoice()
+                                       .ifPresent(data -> addPrimitiveFormControlData(binding,
+                                                                                      data,
+                                                                                      formFrameBuilder));
             }
 
             @Override
             public void visit(@Nonnull NumberControlData numberControlData) {
-                numberControlData.getValue().ifPresent(value -> {
-                    formFrameBuilder.add(binding, value);
-                });
+                numberControlData.getValue()
+                                 .ifPresent(value -> formFrameBuilder.add(binding, value));
             }
 
             @Override
             public void visit(@Nonnull TextControlData textControlData) {
-                textControlData.getValue().ifPresent(literal ->
-                        formFrameBuilder.add(binding, literal));
+                textControlData.getValue()
+                               .ifPresent(literal ->
+                                                  formFrameBuilder.add(binding, literal));
             }
         });
     }
 
-    public void addGridControlData(@Nonnull OwlBinding binding,
-                                   @Nonnull GridControlData gridControlData,
-                                   @Nonnull FormFrameBuilder formFrameBuilder) {
+    private void processFormFieldData(FormFieldData formFieldData,
+                                      FormFrameBuilder formFrameBuilder) {
+        var formFieldDescriptor = formFieldData.getFormFieldDescriptor();
+        var owlBinding = formFieldDescriptor.getOwlBinding();
+        owlBinding.ifPresent(binding -> {
+            var formControlData = formFieldData.getFormControlData();
+            formControlData.forEach(fcd -> processFormControlData(binding, fcd, formFrameBuilder));
 
-        for(GridRowData gridRowData : gridControlData.getRows()) {
-            var rowFrameBuilder = formFrameBuilderProvider.get();
-
-            var rowSubject = gridRowData.getSubject();
-            // Set subject if it is present.  If it is not present
-            // then a subject should be generated
-            rowSubject.ifPresent(rowFrameBuilder::setSubject);
-
-            var gridControlDescriptor = gridControlData.getDescriptor();
-            gridControlDescriptor
-                    .getSubjectFactoryDescriptor()
-                    .ifPresent(rowFrameBuilder::setSubjectFactoryDescriptor);
-
-            var columnDescriptors = gridControlDescriptor
-                                                   .getColumns();
-            var rowCells = gridRowData.getCells();
-            for(int i = 0; i < columnDescriptors.size(); i++) {
-                var columnDescriptor = columnDescriptors.get(i);
-                var gridCellData = rowCells.get(i);
-                var cellBinding = columnDescriptor.getOwlBinding();
-                cellBinding.ifPresent(theCellBinding -> {
-                    gridCellData.getValue()
-                                .ifPresent(cellControlData -> {
-                                    processFormControlData(theCellBinding,
-                                                           cellControlData,
-                                                           rowFrameBuilder);
-                                });
-                });
-            }
-            formFrameBuilder.add(binding, rowFrameBuilder);
-        }
-    }
-
-    public void addPrimitiveFormControlData(OwlBinding binding,
-                                            PrimitiveFormControlData primitiveFormControlData,
-                                            FormFrameBuilder formFrameBuilder) {
-        primitiveFormControlData.asEntity().ifPresent(entity -> formFrameBuilder.add(binding, entity));
-        primitiveFormControlData.asLiteral().ifPresent(literal -> formFrameBuilder.add(binding, literal));
-        primitiveFormControlData.asIri().ifPresent(iri -> formFrameBuilder.add(binding, iri));
+        });
     }
 
 
