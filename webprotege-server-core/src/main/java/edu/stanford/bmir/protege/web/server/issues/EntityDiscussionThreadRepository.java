@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.mongodb.BasicDBObject;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
@@ -22,6 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
+@ApplicationSingleton
 public class EntityDiscussionThreadRepository {
 
     public static final String MATCHED_COMMENT_PATH = "comments.$";
