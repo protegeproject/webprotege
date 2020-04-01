@@ -87,7 +87,7 @@ public class NamedIndividualFrameTranslator {
     @Nonnull
     public PlainNamedIndividualFrame getFrame(@Nonnull OWLNamedIndividual subject,
                                          boolean includeDerivedInformation) {
-        return translateToNamedIndividualFrame(subject, false);
+        return translateToNamedIndividualFrame(subject, includeDerivedInformation);
     }
 
     public void setMinimizePropertyValues(boolean mimimizePropertyValues) {
