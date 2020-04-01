@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
-import org.semanticweb.owlapi.model.EntityType;
+import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,12 +9,6 @@ import org.semanticweb.owlapi.model.EntityType;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/01/2013
  */
-public interface EntityFrameTranslator<F extends EntityFrame<E>, E extends OWLEntityData> extends FrameTranslator<F, E> {
-
-    /**
-     * Gets the entity type that this translator translates.
-     * @return The entity type.  Not {@code null}.
-     */
-    EntityType<?> getEntityType();
+public interface EntityFrameTranslator extends FrameTranslator<PlainEntityFrame, OWLEntity> {
 
 }

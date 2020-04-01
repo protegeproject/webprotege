@@ -83,8 +83,9 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
         return getPropertyValueList().getLogicalPropertyValues();
     }
 
+    @Override
     @Nonnull
-    public PlainClassFrame toPlainEntityFrame() {
+    public PlainClassFrame toPlainFrame() {
         return PlainClassFrame.get(
                 getSubject().getEntity(),
                 getClassEntries().stream().map(OWLClassData::getEntity).collect(toImmutableSet()),

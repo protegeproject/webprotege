@@ -13,8 +13,8 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.form.PrimitiveDataConverter;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.OWLEntity2FormControlDataVisitor;
+import edu.stanford.bmir.protege.web.shared.form.OWLPrimitive2FormControlDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -79,7 +79,8 @@ public class ChoiceDescriptorPresenter implements ValueEditor<ChoiceDescriptor>,
     @Override
     public Optional<ChoiceDescriptor> getValue() {
         return view.getDataValue().map(primitiveData -> {
-            PrimitiveFormControlData dataValue = primitiveData.accept(new PrimitiveDataConverter());
+            OWLPrimitive2FormControlDataConverter converter = new OWLPrimitive2FormControlDataConverter(new OWLEntity2FormControlDataVisitor());
+            PrimitiveFormControlData dataValue = converter.toFormControlData(primitiveData.getObject());
             return ChoiceDescriptor.choice(view.getLabel(), dataValue);
         });
     }

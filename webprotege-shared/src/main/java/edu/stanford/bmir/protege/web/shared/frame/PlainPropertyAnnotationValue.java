@@ -43,17 +43,26 @@ public abstract class PlainPropertyAnnotationValue extends PlainPropertyValue {
 
     @Nonnull
     @Override
-    protected PlainPropertyAnnotationValue withState(State state) {
+    public PlainPropertyAnnotationValue withState(State state) {
         return get(getProperty(), getValue(), state);
     }
 
     @Nonnull
     @Override
-    public PropertyAnnotationValue toPropertyValue(@Nonnull PrimitiveRenderer renderer) {
+    public PropertyAnnotationValue toPropertyValue(@Nonnull FrameComponentRenderer renderer) {
         return PropertyAnnotationValue.get(
                 renderer.getRendering(getProperty()),
                 renderer.getRendering(getValue()),
                 getState()
         );
+    }
+
+    @Override
+    public boolean isLogical() {
+        return false;
+    }
+    @Override
+    public boolean isAnnotation() {
+        return true;
     }
 }

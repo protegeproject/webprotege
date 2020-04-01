@@ -4,8 +4,9 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -29,19 +30,14 @@ public class AnnotationTranslator {
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesIndex;
 
-    @Nonnull
-    private final ContextRenderer renderer;
-
     @AutoFactory
     @Inject
-    public AnnotationTranslator(@Provided  @Nonnull EntitiesInProjectSignatureByIriIndex entitiesIndex,
-                                @Provided @Nonnull ContextRenderer renderer) {
+    public AnnotationTranslator(@Provided  @Nonnull EntitiesInProjectSignatureByIriIndex entitiesIndex) {
         this.entitiesIndex = checkNotNull(entitiesIndex);
-        this.renderer = checkNotNull(renderer);
     }
 
     @Nonnull
-    public Set<PropertyValue> translate(@Nonnull OWLAnnotation annotation,
+    public Set<PlainPropertyValue> translate(@Nonnull OWLAnnotation annotation,
                                         @Nonnull State state) {
         if(annotation.getValue() instanceof IRI) {
             var entities = entitiesIndex.getEntitiesInSignature((IRI) annotation.getValue()).collect(Collectors.toSet());
@@ -49,19 +45,21 @@ public class AnnotationTranslator {
                 return entities
                         .stream()
                         .sorted()
-                        .map(entity -> toPropertyValue(entity, annotation, state))
+                        .map(entity -> toPlainPropertyValue(entity, annotation, state))
                         .collect(Collectors.toSet());
             }
         }
-        return Collections.singleton(PropertyAnnotationValue.get(renderer.getAnnotationPropertyData(annotation.getProperty()), renderer.getAnnotationValueData(annotation.getValue()), State.ASSERTED));
+        return Collections.singleton(PlainPropertyAnnotationValue.get(annotation.getProperty(),
+                                                                      annotation.getValue(),
+                                                                      State.ASSERTED));
 
     }
 
-    private PropertyAnnotationValue toPropertyValue(@Nonnull OWLEntity entity,
-                                                    @Nonnull OWLAnnotation annotation,
-                                                    @Nonnull State state) {
-        return PropertyAnnotationValue.get(renderer.getAnnotationPropertyData(annotation.getProperty()),
-                                           renderer.getEntityData(entity),
+    private PlainPropertyAnnotationValue toPlainPropertyValue(@Nonnull OWLEntity entity,
+                                                              @Nonnull OWLAnnotation annotation,
+                                                              @Nonnull State state) {
+        return PlainPropertyAnnotationValue.get(annotation.getProperty(),
+                                           entity.getIRI(),
                                            state);
     }
 }

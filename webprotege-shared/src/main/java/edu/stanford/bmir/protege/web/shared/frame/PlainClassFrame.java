@@ -52,11 +52,10 @@ public abstract class PlainClassFrame extends PlainEntityFrame {
      * @return The (possibly empty) set of property values in this frame. Not {@code null}.  The returned set is unmodifiable.
      */
     @Nonnull
-    @Override
     public abstract ImmutableSet<PlainPropertyValue> getPropertyValues();
 
     @Nonnull
-    public ClassFrame toEntityFrame(@Nonnull PrimitiveRenderer renderer) {
+    public ClassFrame toEntityFrame(@Nonnull FrameComponentRenderer renderer) {
         OWLClassData subject = renderer.getRendering(getSubject());
         ImmutableSet<OWLClassData> parents = getParents().stream()
                                 .map(renderer::getRendering)
@@ -72,4 +71,9 @@ public abstract class PlainClassFrame extends PlainEntityFrame {
         );
     }
 
+    @Nonnull
+    @Override
+    public PlainClassFrame toPlainFrame() {
+        return this;
+    }
 }

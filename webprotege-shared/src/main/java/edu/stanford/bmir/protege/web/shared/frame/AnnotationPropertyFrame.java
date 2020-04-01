@@ -12,6 +12,8 @@ import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -56,5 +58,15 @@ public abstract class AnnotationPropertyFrame implements EntityFrame<OWLAnnotati
     @Override
     public PropertyValueList getPropertyValueList() {
         return new PropertyValueList(getPropertyValues());
+    }
+
+    @Nonnull
+    @Override
+    public PlainAnnotationPropertyFrame toPlainFrame() {
+        return PlainAnnotationPropertyFrame.get(
+                getSubject().getEntity(),
+                getPropertyValues().stream().map(PropertyAnnotationValue::toPlainPropertyValue).collect(toImmutableSet()),
+                getDomains().stream().map(OWLEntityData::getEntity).map(OWLEntity::getIRI).collect(toImmutableSet()),
+                getRanges().stream().map(OWLEntityData::getEntity).map(OWLEntity::getIRI).collect(toImmutableSet()));
     }
 }

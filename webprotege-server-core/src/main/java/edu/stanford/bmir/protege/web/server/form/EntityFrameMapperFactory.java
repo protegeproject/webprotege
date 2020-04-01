@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,7 +42,7 @@ public class EntityFrameMapperFactory {
         this.matcherFactory = checkNotNull(matcherFactory);
     }
 
-    public EntityFrameMapper create(@Nonnull EntityFrame<?> entityFrame) {
+    public EntityFrameMapper create(@Nonnull PlainEntityFrame entityFrame) {
         return new EntityFrameMapper(entityFrame, projectOntologiesIndex, classAssertionAxiomsIndex, renderingManager,
                                      matcherFactory);
     }

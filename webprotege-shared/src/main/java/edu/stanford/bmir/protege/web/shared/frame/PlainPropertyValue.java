@@ -23,10 +23,14 @@ public abstract class PlainPropertyValue {
 
     public abstract <R> R accept(PlainPropertyValueVisitor<R> visitor);
 
-    @Nonnull
-    protected abstract PlainPropertyValue withState(State state);
+    public abstract boolean isAnnotation();
 
     @Nonnull
-    public abstract PropertyValue toPropertyValue(@Nonnull PrimitiveRenderer renderer);
+    public abstract PlainPropertyValue withState(State state);
+
+    @Nonnull
+    public abstract PropertyValue toPropertyValue(@Nonnull FrameComponentRenderer renderer);
+
+    public abstract boolean isLogical();
 
 }

@@ -3,12 +3,14 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.EntityFrameProvider;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.PrimitiveDataConverter;
+import edu.stanford.bmir.protege.web.shared.form.OWLPrimitive2FormControlDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,12 +37,17 @@ public class EntityFrameFormDataBuilder {
     @Nonnull
     private final EntityFrameMapperFactory entityFrameMapperFactory;
 
+    @Nonnull
+    private final OWLPrimitive2FormControlDataConverter converter;
+
     @AutoFactory
     @Inject
     public EntityFrameFormDataBuilder(@Nonnull EntityFrameProvider entityFrameProvider,
-                                      @Nonnull EntityFrameMapperFactory entityFrameMapperFactory) {
+                                      @Nonnull EntityFrameMapperFactory entityFrameMapperFactory,
+                                      @Nonnull OWLPrimitive2FormControlDataConverter converter) {
         this.entityFrameProvider = checkNotNull(entityFrameProvider);
         this.entityFrameMapperFactory = checkNotNull(entityFrameMapperFactory);
+        this.converter = converter;
     }
 
     private ImmutableList<FormControlData> toFormControlValues(@Nonnull OWLEntity subject,
@@ -56,12 +63,12 @@ public class EntityFrameFormDataBuilder {
 
 
         var formControlDescriptor = descriptor.getFormControlDescriptor();
-        return formControlDescriptor.accept(new FormControlDescriptorVisitor<ImmutableList<FormControlData>>() {
+        return formControlDescriptor.accept(new FormControlDescriptorVisitor<>() {
             @Override
             public ImmutableList<FormControlData> visit(TextControlDescriptor textControlDescriptor) {
                 return values.stream()
-                             .map(OWLPrimitiveData::asLiteral)
-                             .flatMap(Optional::stream)
+                             .filter(p -> p instanceof OWLLiteral)
+                             .map(p -> (OWLLiteral) p)
                              .map(literal -> TextControlData.get(textControlDescriptor, literal))
                              .collect(toImmutableList());
             }
@@ -69,17 +76,16 @@ public class EntityFrameFormDataBuilder {
             @Override
             public ImmutableList<FormControlData> visit(NumberControlDescriptor numberControlDescriptor) {
                 return values.stream()
-                             .map(OWLPrimitiveData::asLiteral)
-                             .flatMap(Optional::stream)
+                             .filter(p -> p instanceof OWLLiteral)
+                             .map(p -> (OWLLiteral) p)
                              .map(value -> NumberControlData.get(numberControlDescriptor, value))
                              .collect(toImmutableList());
             }
 
             @Override
             public ImmutableList<FormControlData> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
-                PrimitiveDataConverter converter = new PrimitiveDataConverter();
                 return values.stream()
-                             .map(value -> value.accept(converter))
+                             .map(converter::toFormControlData)
                              .map(value -> SingleChoiceControlData.get(singleChoiceControlDescriptor, value))
                              .limit(1)
                              .collect(toImmutableList());
@@ -87,9 +93,8 @@ public class EntityFrameFormDataBuilder {
 
             @Override
             public ImmutableList<FormControlData> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
-                PrimitiveDataConverter converter = new PrimitiveDataConverter();
                 var vals = values.stream()
-                                 .map(value -> value.accept(converter))
+                                 .map(converter::toFormControlData)
                                  .collect(toImmutableList());
                 return ImmutableList.of(MultiChoiceControlData.get(multiChoiceControlDescriptor,
                                                                    vals));
@@ -98,17 +103,17 @@ public class EntityFrameFormDataBuilder {
             @Override
             public ImmutableList<FormControlData> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
                 return values.stream()
-                      .map(OWLPrimitiveData::asEntity)
-                      .flatMap(Optional::stream)
-                      .map(entity -> EntityNameControlData.get(entityNameControlDescriptor, entity))
-                      .collect(toImmutableList());
+                             .filter(p -> p instanceof OWLEntity)
+                             .map(p -> (OWLEntity) p)
+                             .map(entity -> EntityNameControlData.get(entityNameControlDescriptor, entity))
+                             .collect(toImmutableList());
             }
 
             @Override
             public ImmutableList<FormControlData> visit(ImageControlDescriptor imageControlDescriptor) {
                 return values.stream()
-                             .map(OWLPrimitiveData::asIRI)
-                             .flatMap(Optional::stream)
+                             .filter(p -> p instanceof IRI)
+                             .map(p -> (IRI) p)
                              .map(iri -> ImageControlData.get(imageControlDescriptor, iri))
                              .collect(toImmutableList());
             }
@@ -123,8 +128,8 @@ public class EntityFrameFormDataBuilder {
                 // TODO: CHECK FOR CYCLES
                 FormDescriptor subFormDescriptor = subFormControlDescriptor.getFormDescriptor();
                 return values.stream()
-                             .map(OWLPrimitiveData::asEntity)
-                             .flatMap(Optional::stream)
+                             .filter(p -> p instanceof OWLEntity)
+                             .map(p -> (OWLEntity) p)
                              .map(entity -> toFormData(entity, subFormDescriptor))
                              .collect(toImmutableList());
             }
@@ -153,11 +158,11 @@ public class EntityFrameFormDataBuilder {
         return FormData.get(Optional.of(FormEntitySubject.get(subject)), formDescriptor, fieldData);
     }
 
-    private GridControlData toGridControlData(ImmutableList<OWLPrimitiveData> subjects,
+    private GridControlData toGridControlData(ImmutableList<OWLPrimitive> subjects,
                                               GridControlDescriptor gridControlDescriptor) {
         var rowData = subjects.stream()
-                              .map(OWLPrimitiveData::asEntity)
-                              .flatMap(Optional::stream)
+                              .filter(p -> p instanceof OWLEntity)
+                              .map(p -> (OWLEntity) p)
                               .limit(MAX_FIELD_SIZE)
                               .map(entity -> {
                                   var columnDescriptors = gridControlDescriptor.getColumns();

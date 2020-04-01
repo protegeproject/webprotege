@@ -3,18 +3,16 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -30,18 +28,18 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
     private static Logger logger = LoggerFactory.getLogger(GetNamedIndividualFrameActionHandler.class);
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final Provider<NamedIndividualFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final NamedIndividualFrameTranslator translator;
+    private final FrameComponentSessionRendererFactory rendererFactory;
 
     @Inject
     public GetNamedIndividualFrameActionHandler(@Nonnull AccessManager accessManager,
-                                                @Nonnull RenderingManager renderingManager,
-                                                @Nonnull NamedIndividualFrameTranslator translator) {
+                                                @Nonnull Provider<NamedIndividualFrameTranslator> translatorProvider,
+                                                @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
         super(accessManager);
-        this.renderingManager = renderingManager;
-        this.translator = translator;
+        this.translatorProvider = translatorProvider;
+        this.rendererFactory = rendererFactory;
     }
 
     /**
@@ -64,15 +62,18 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
     @Override
     public GetNamedIndividualFrameResult execute(@Nonnull GetNamedIndividualFrameAction action,
                                                  @Nonnull ExecutionContext executionContext) {
-        OWLNamedIndividualData individualData = renderingManager.getIndividualData(action.getSubject());
-        NamedIndividualFrame frame = translator.getFrame(individualData);
+        var translator = translatorProvider.get();
+        translator.setMinimizePropertyValues(true);
+        var plainFrame = translator.getFrame(action.getSubject());
+        var renderer = rendererFactory.create();
+        var renderedFrame = plainFrame.toEntityFrame(renderer);
         logger.info(BROWSING,
                      "{} {} retrieved NamedIndividual frame for {} ({})",
                     action.getProjectId(),
                     executionContext.getUserId(),
                     action.getSubject(),
-                    frame.getSubject().getBrowserText());
-        return new GetNamedIndividualFrameResult(frame);
+                    renderedFrame.getSubject().getBrowserText());
+        return new GetNamedIndividualFrameResult(renderedFrame);
 
     }
 }

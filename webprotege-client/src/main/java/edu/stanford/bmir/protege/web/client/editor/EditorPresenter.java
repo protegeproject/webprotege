@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -165,7 +166,7 @@ public class EditorPresenter implements HasDispose {
         }
         final C editorCtx = editorState.getEditorContext();
         EditorManager<C, O, A, R> editorManager = editorState.getEditorManager();
-        UpdateObjectAction<O> updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx);
+        UpdateFrameAction updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx);
         setEditorState(editedValue, editorCtx, editorManager);
         dispatchServiceManager.execute(updateAction, result -> {});
     }

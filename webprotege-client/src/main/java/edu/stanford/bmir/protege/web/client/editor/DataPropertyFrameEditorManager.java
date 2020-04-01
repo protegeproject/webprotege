@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.DataPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
-import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
-import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
-import edu.stanford.bmir.protege.web.shared.frame.UpdateDataPropertyFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.*;
 
 import javax.inject.Inject;
 
@@ -40,8 +37,10 @@ public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityCo
     }
 
     @Override
-    public UpdateObjectAction<DataPropertyFrame> createUpdateObjectAction(DataPropertyFrame pristineObject, DataPropertyFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateDataPropertyFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
+    public UpdateFrameAction createUpdateObjectAction(DataPropertyFrame pristineObject, DataPropertyFrame editedObject, OWLEntityContext editorContext) {
+        return new UpdateDataPropertyFrameAction(editorContext.getProjectId(),
+                                                 pristineObject.toPlainFrame(),
+                                                 editedObject.toPlainFrame());
     }
 
     @Override

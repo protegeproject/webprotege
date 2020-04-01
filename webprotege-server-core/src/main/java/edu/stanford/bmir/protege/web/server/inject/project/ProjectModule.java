@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
+import edu.stanford.bmir.protege.web.server.frame.FrameComponentRendererImpl;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
@@ -55,6 +56,7 @@ import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -672,6 +674,11 @@ public class ProjectModule {
     @Provides
     IRIOrdinalProvider provideIRIIndexProvider() {
         return IRIOrdinalProvider.withDefaultAnnotationPropertyOrdering();
+    }
+
+    @Provides
+    FrameComponentRenderer provideFrameComponentRenderer(FrameComponentRendererImpl impl) {
+        return impl;
     }
 
 }

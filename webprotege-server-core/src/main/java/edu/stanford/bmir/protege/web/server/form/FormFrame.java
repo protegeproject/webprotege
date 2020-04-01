@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
 
@@ -34,9 +35,9 @@ public abstract class FormFrame {
 
     @Nonnull
     public static FormFrame get(@Nonnull FormSubject formSubject,
-                                @Nonnull ImmutableSet<OWLClassData> parents,
-                                @Nonnull ImmutableSet<OWLNamedIndividualData> instances,
-                                @Nonnull ImmutableSet<PropertyValue> propertyValues,
+                                @Nonnull ImmutableSet<OWLClass> parents,
+                                @Nonnull ImmutableSet<OWLNamedIndividual> instances,
+                                @Nonnull ImmutableSet<PlainPropertyValue> propertyValues,
                                 @Nonnull ImmutableSet<FormFrame> nestedFrames) {
         return new AutoValue_FormFrame(formSubject, parents, instances, propertyValues, nestedFrames);
     }
@@ -54,13 +55,13 @@ public abstract class FormFrame {
     public abstract FormSubject getSubject();
 
     @Nonnull
-    public abstract ImmutableSet<OWLClassData> getClasses();
+    public abstract ImmutableSet<OWLClass> getClasses();
 
     @Nonnull
-    public abstract ImmutableSet<OWLNamedIndividualData> getInstances();
+    public abstract ImmutableSet<OWLNamedIndividual> getInstances();
 
     @Nonnull
-    public abstract ImmutableSet<PropertyValue> getPropertyValues();
+    public abstract ImmutableSet<PlainPropertyValue> getPropertyValues();
 
     @Nonnull
     public abstract ImmutableSet<FormFrame> getNestedFrames();

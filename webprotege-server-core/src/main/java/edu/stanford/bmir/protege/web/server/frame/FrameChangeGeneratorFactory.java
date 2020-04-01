@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescri
 import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;
@@ -46,6 +47,9 @@ public class FrameChangeGeneratorFactory {
     @Nonnull
     private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
     public FrameChangeGeneratorFactory(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                        @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
@@ -55,7 +59,8 @@ public class FrameChangeGeneratorFactory {
                                        @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                        @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                        @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
-                                       @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator) {
+                                       @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator,
+                                       @Nonnull RenderingManager renderingManager) {
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.factory = factory;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
@@ -65,6 +70,7 @@ public class FrameChangeGeneratorFactory {
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
         this.namedIndividualFrameTranslator = namedIndividualFrameTranslator;
+        this.renderingManager = renderingManager;
     }
 
     @Nonnull
@@ -78,6 +84,7 @@ public class FrameChangeGeneratorFactory {
                                         this.objectPropertyFrameTranslator,
                                         this.dataPropertyFrameTranslator,
                                         this.annotationPropertyFrameTranslator,
-                                        this.namedIndividualFrameTranslator);
+                                        this.namedIndividualFrameTranslator,
+                                        renderingManager);
     }
 }

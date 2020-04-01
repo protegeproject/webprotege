@@ -31,17 +31,17 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
     private static Logger logger = LoggerFactory.getLogger(GetObjectPropertyFrameAction.class);
 
     @Nonnull
-    private final RenderingManager rm;
+    private final Provider<ObjectPropertyFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final Provider<ObjectPropertyFrameTranslator> translatorProvider;
+    private final FrameComponentSessionRendererFactory rendererFactory;
 
     @Inject
     public GetObjectPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
-                                               @Nonnull RenderingManager rm,
-                                               @Nonnull Provider<ObjectPropertyFrameTranslator> translatorProvider) {
+                                               @Nonnull Provider<ObjectPropertyFrameTranslator> translatorProvider,
+                                               @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
         super(accessManager);
-        this.rm = rm;
+        this.rendererFactory = rendererFactory;
         this.translatorProvider = translatorProvider;
     }
 
@@ -53,16 +53,16 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
 
     @Nonnull
     public GetObjectPropertyFrameResult execute(@Nonnull GetObjectPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        ObjectPropertyFrameTranslator translator = translatorProvider.get();
-        OWLObjectPropertyData objectPropertyData = rm.getObjectPropertyData(action.getSubject());
-        ObjectPropertyFrame f = translator.getFrame(objectPropertyData);
+        var translator = translatorProvider.get();
+        var plainFrame = translator.getFrame(action.getSubject());
+        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create());
         logger.info(BROWSING,
                      "{} {} retrieved ObjectProperty frame for {} ({})",
                      action.getProjectId(),
                      executionContext.getUserId(),
                      action.getSubject(),
-                     f.getSubject().getBrowserText());
-        return new GetObjectPropertyFrameResult(f);
+                     renderedFrame.getSubject().getBrowserText());
+        return new GetObjectPropertyFrameResult(renderedFrame);
     }
 
     @Nonnull

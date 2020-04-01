@@ -31,18 +31,18 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     private static final Logger logger = LoggerFactory.getLogger(GetDataPropertyFrameActionHandler.class);
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final Provider<DataPropertyFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final Provider<DataPropertyFrameTranslator> translatorProvider;
+    private final FrameComponentSessionRendererFactory rendererFactory;
 
     @Inject
     public GetDataPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
-                                             @Nonnull RenderingManager renderingManager,
-                                             @Nonnull Provider<DataPropertyFrameTranslator> translatorProvider) {
+                                             @Nonnull Provider<DataPropertyFrameTranslator> translatorProvider,
+                                             @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
         super(accessManager);
-        this.renderingManager = renderingManager;
         this.translatorProvider = translatorProvider;
+        this.rendererFactory = rendererFactory;
     }
 
     @Nullable
@@ -54,17 +54,16 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     @Nonnull
     @Override
     public GetDataPropertyFrameResult execute(@Nonnull GetDataPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        DataPropertyFrameTranslator translator = translatorProvider.get();
-        OWLDataPropertyData dataPropertyData = renderingManager.getDataPropertyData(action.getSubject());
-        DataPropertyFrame frame = translator.getFrame(dataPropertyData);
-        String displayName = renderingManager.getShortForm(action.getSubject());
+        var translator = translatorProvider.get();
+        var plainFrame = translator.getFrame(action.getSubject());
+        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create());
         logger.info(BROWSING,
                     "{} {} retrieved DataProperty frame for {} ({})",
                     action.getProjectId(),
                     executionContext.getUserId(),
                     action.getSubject(),
-                    displayName);
-        return new GetDataPropertyFrameResult(frame);
+                    renderedFrame.getSubject().getBrowserText());
+        return new GetDataPropertyFrameResult(renderedFrame);
     }
 
     @Nonnull

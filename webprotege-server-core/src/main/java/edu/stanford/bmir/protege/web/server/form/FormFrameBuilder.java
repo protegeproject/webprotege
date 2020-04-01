@@ -40,13 +40,13 @@ public class FormFrameBuilder {
     private final RenderingManager renderingManager;
 
     @Nonnull
-    private final ImmutableSet.Builder<OWLClassData> classes = ImmutableSet.builder();
+    private final ImmutableSet.Builder<OWLClass> classes = ImmutableSet.builder();
 
     @Nonnull
-    private final ImmutableSet.Builder<OWLNamedIndividualData> instances = ImmutableSet.builder();
+    private final ImmutableSet.Builder<OWLNamedIndividual> instances = ImmutableSet.builder();
 
     @Nonnull
-    private final ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
+    private final ImmutableSet.Builder<PlainPropertyValue> propertyValues = ImmutableSet.builder();
 
     @Nonnull
     private final Map<FormFrameBuilder, OwlBinding> nestedFrames = new HashMap<>();
@@ -97,13 +97,11 @@ public class FormFrameBuilder {
 
 
     private void addClass(@Nonnull OWLClass value) {
-        var clsData = renderingManager.getClassData(value);
-        classes.add(clsData);
+        classes.add(value);
     }
 
     private void addIndividual(@Nonnull OWLNamedIndividual value) {
-        var individualData = renderingManager.getIndividualData(value);
-        instances.add(individualData);
+        instances.add(value);
     }
 
     private void addPropertyValue(OwlPropertyBinding propertyBinding, @Nonnull OWLObject value) {
@@ -130,21 +128,13 @@ public class FormFrameBuilder {
         value.accept(new OWLObjectVisitorAdapter() {
             @Override
             public void visit(OWLNamedIndividual individual) {
-                var pv = PropertyIndividualValue.get(
-                        renderingManager.getObjectPropertyData(property),
-                        renderingManager.getIndividualData(individual),
-                        State.ASSERTED
-                );
+                var pv = PlainPropertyIndividualValue.get(property, individual, State.ASSERTED);
                 propertyValues.add(pv);
             }
 
             @Override
             public void visit(OWLClass cls) {
-                var pv = PropertyClassValue.get(
-                        renderingManager.getObjectPropertyData(property),
-                        renderingManager.getClassData(cls),
-                        State.ASSERTED
-                );
+                var pv = PlainPropertyClassValue.get(property, cls, State.ASSERTED);
                 propertyValues.add(pv);
             }
         });
@@ -155,21 +145,13 @@ public class FormFrameBuilder {
         value.accept(new OWLObjectVisitorAdapter() {
             @Override
             public void visit(OWLDatatype datatype) {
-                var pv = PropertyDatatypeValue.get(
-                        renderingManager.getDataPropertyData(property),
-                        renderingManager.getDatatypeData(datatype),
-                        State.ASSERTED
-                );
+                var pv = PlainPropertyDatatypeValue.get(property, datatype, State.ASSERTED);
                 propertyValues.add(pv);
             }
 
             @Override
             public void visit(OWLLiteral literal) {
-                var pv = PropertyLiteralValue.get(
-                        renderingManager.getDataPropertyData(property),
-                        OWLLiteralData.get(literal),
-                        State.ASSERTED
-                );
+                var pv = PlainPropertyLiteralValue.get(property, literal, State.ASSERTED);
                 propertyValues.add(pv);
             }
         });
@@ -226,20 +208,13 @@ public class FormFrameBuilder {
 
     public void addAnnotationPropertyLiteral(OWLLiteral literal,
                                              @Nonnull OWLAnnotationProperty property) {
-        var pv = PropertyAnnotationValue.get(
-                renderingManager.getAnnotationPropertyData(property),
-                OWLLiteralData.get(literal),
-                State.ASSERTED
-        );
+        var pv = PlainPropertyAnnotationValue.get(
+                property, literal, State.ASSERTED);
         propertyValues.add(pv);
     }
 
     public void addAnnotationPropertyIri(IRI iri, @Nonnull OWLAnnotationProperty property) {
-        var pv = PropertyAnnotationValue.get(
-                renderingManager.getAnnotationPropertyData(property),
-                IRIData.get(iri, ImmutableMap.of()),
-                State.ASSERTED
-        );
+        var pv = PlainPropertyAnnotationValue.get(property, iri, State.ASSERTED);
         propertyValues.add(pv);
     }
 

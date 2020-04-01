@@ -1,10 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
-import edu.stanford.bmir.protege.web.server.frame.ObjectPropertyFrameTranslator;
-import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -46,54 +42,43 @@ public class EntityFrameProvider {
     }
 
     @Nonnull
-    public EntityFrame<? extends OWLEntityData> getEntityFrame(@Nonnull OWLEntity entity,
-                                                               boolean includeDerivedInfo) {
+    public PlainEntityFrame getEntityFrame(@Nonnull OWLEntity entity,
+                                           boolean includeDerivedInfo) {
         return entity.accept(new OWLEntityVisitorEx<>() {
             @Nonnull
             @Override
-            public EntityFrame<? extends OWLEntityData> visit(@Nonnull OWLClass cls) {
-                return classFrameTranslator.getFrame(
-                        OWLClassData.get(cls, "", ImmutableMap.of())
-                );
+            public PlainEntityFrame visit(@Nonnull OWLClass cls) {
+                return classFrameTranslator.getFrame(cls);
             }
 
             @Nonnull
             @Override
-            public EntityFrame<? extends OWLEntityData> visit(@Nonnull OWLObjectProperty property) {
-                return objectPropertyFrameTranslator.getFrame(
-                        OWLObjectPropertyData.get(property, "", ImmutableMap.of())
-                );
+            public PlainEntityFrame visit(@Nonnull OWLObjectProperty property) {
+                return objectPropertyFrameTranslator.getFrame(property);
             }
 
             @Nonnull
             @Override
-            public EntityFrame<? extends OWLEntityData> visit(@Nonnull OWLDataProperty property) {
-                return dataPropertyFrameTranslator.getFrame(
-                        OWLDataPropertyData.get(property, "", ImmutableMap.of())
-                );
+            public PlainEntityFrame visit(@Nonnull OWLDataProperty property) {
+                return dataPropertyFrameTranslator.getFrame(property);
             }
 
             @Nonnull
             @Override
-            public EntityFrame<? extends OWLEntityData> visit(@Nonnull OWLNamedIndividual individual) {
-                return namedIndividualFrameTranslator.getFrame(
-                        OWLNamedIndividualData.get(individual, "", ImmutableMap.of()),
-                        includeDerivedInfo
-                );
+            public PlainEntityFrame visit(@Nonnull OWLNamedIndividual individual) {
+                return namedIndividualFrameTranslator.getFrame(individual, includeDerivedInfo);
             }
 
             @Nonnull
             @Override
-            public EntityFrame<? extends OWLEntityData> visit(@Nonnull OWLDatatype datatype) {
+            public PlainEntityFrame visit(@Nonnull OWLDatatype datatype) {
                 throw new RuntimeException("Datatypes are not supported");
             }
 
             @Nonnull
             @Override
-            public EntityFrame<? extends OWLEntityData> visit(@Nonnull OWLAnnotationProperty property) {
-                return annotationPropertyFrameTranslator.getFrame(
-                        OWLAnnotationPropertyData.get(property, "", ImmutableMap.of())
-                );
+            public PlainEntityFrame visit(@Nonnull OWLAnnotationProperty property) {
+                return annotationPropertyFrameTranslator.getFrame(property);
             }
         });
     }

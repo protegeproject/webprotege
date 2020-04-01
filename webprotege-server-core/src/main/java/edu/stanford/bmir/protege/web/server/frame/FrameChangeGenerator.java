@@ -8,10 +8,9 @@ import edu.stanford.bmir.protege.web.server.index.OntologyAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
-import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.*;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 14/01/2013
  */
-public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntityData> {
+public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity> {
 
     @Nonnull
     private final FrameUpdate frameUpdate;
@@ -59,6 +58,9 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     @Nonnull
     private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
     public FrameChangeGenerator(@Nonnull FrameUpdate frameUpdate,
                                 @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
@@ -69,7 +71,8 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
                                 @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                 @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                 @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
-                                @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator) {
+                                @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator,
+                                @Nonnull RenderingManager renderingManager) {
         this.frameUpdate = checkNotNull(frameUpdate);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.factory = checkNotNull(factory);
@@ -80,35 +83,36 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
         this.namedIndividualFrameTranslator = namedIndividualFrameTranslator;
+        this.renderingManager = renderingManager;
     }
 
     @Override
-    public OntologyChangeList<OWLEntityData> generateChanges(ChangeGenerationContext context) {
-        var builder = new OntologyChangeList.Builder<OWLEntityData>();
+    public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
+        var builder = new OntologyChangeList.Builder<OWLEntity>();
         builder.addAll(createChanges());
         return builder.build(frameUpdate.getToFrame().getSubject());
     }
 
     private Set<OWLAxiom> getAxiomsForFrame(Frame<?> frame, Mode mode) {
-        if(frame instanceof ClassFrame) {
-            var classFrame = (ClassFrame) frame;
+        if(frame instanceof PlainClassFrame) {
+            var classFrame = (PlainClassFrame) frame;
             return classFrameTranslator.getAxioms(classFrame, mode);
         }
-        else if(frame instanceof ObjectPropertyFrame) {
-            var objectPropertyFrame = (ObjectPropertyFrame) frame;
+        else if(frame instanceof PlainObjectPropertyFrame) {
+            var objectPropertyFrame = (PlainObjectPropertyFrame) frame;
             return objectPropertyFrameTranslator.getAxioms(objectPropertyFrame, mode);
         }
-        else if(frame instanceof DataPropertyFrame) {
-            var dataPropertyFrame = (DataPropertyFrame) frame;
+        else if(frame instanceof PlainDataPropertyFrame) {
+            var dataPropertyFrame = (PlainDataPropertyFrame) frame;
             return dataPropertyFrameTranslator.getAxioms(dataPropertyFrame, mode);
         }
-        else if(frame instanceof AnnotationPropertyFrame) {
-            var annotationPropertyFrame = (AnnotationPropertyFrame) frame;
+        else if(frame instanceof PlainAnnotationPropertyFrame) {
+            var annotationPropertyFrame = (PlainAnnotationPropertyFrame) frame;
             return annotationPropertyFrameTranslator.getAxioms(annotationPropertyFrame, mode);
 
         }
-        else if(frame instanceof NamedIndividualFrame) {
-            var namedIndividualFrame = (NamedIndividualFrame) frame;
+        else if(frame instanceof PlainNamedIndividualFrame) {
+            var namedIndividualFrame = (PlainNamedIndividualFrame) frame;
             return namedIndividualFrameTranslator.getAxioms(namedIndividualFrame, mode);
 
         }
@@ -117,22 +121,21 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         }
     }
 
-    private Frame<?> getFrameForSubject(OWLEntityData subject) {
-        if(subject instanceof OWLClassData) {
-            return classFrameTranslator.getFrame((OWLClassData) subject);
+    private Frame<?> getFrameForSubject(OWLEntity subject) {
+        if(subject instanceof OWLClass) {
+            return classFrameTranslator.getFrame((OWLClass) subject);
         }
-        else if(subject instanceof OWLObjectPropertyData) {
-            return objectPropertyFrameTranslator.getFrame((OWLObjectPropertyData) subject);
+        else if(subject instanceof OWLObjectProperty) {
+            return objectPropertyFrameTranslator.getFrame((OWLObjectProperty) subject);
         }
-        else if(subject instanceof OWLDataPropertyData) {
-            return dataPropertyFrameTranslator.getFrame((OWLDataPropertyData) subject);
+        else if(subject instanceof OWLDataProperty) {
+            return dataPropertyFrameTranslator.getFrame((OWLDataProperty) subject);
         }
-        else if(subject instanceof OWLAnnotationPropertyData) {
-            return annotationPropertyFrameTranslator.getFrame((OWLAnnotationPropertyData) subject);
-
+        else if(subject instanceof OWLAnnotationProperty) {
+            return annotationPropertyFrameTranslator.getFrame((OWLAnnotationProperty) subject);
         }
-        else if(subject instanceof OWLNamedIndividualData) {
-            return namedIndividualFrameTranslator.getFrame((OWLNamedIndividualData) subject);
+        else if(subject instanceof OWLNamedIndividual) {
+            return namedIndividualFrameTranslator.getFrame((OWLNamedIndividual) subject);
         }
         else {
             throw new RuntimeException("Cannot determine translator type");
@@ -236,15 +239,14 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     }
 
     @Override
-    public OWLEntityData getRenamedResult(OWLEntityData result, RenameMap renameMap) {
+    public OWLEntity getRenamedResult(OWLEntity result, RenameMap renameMap) {
         return renameMap.getRenamedEntity(result);
     }
 
     @Nonnull
     @Override
-    public String getMessage(ChangeApplicationResult<OWLEntityData> result) {
-        return factory.get("Edited " + frameUpdate.getFromFrame().getSubject()
-                                                  .getBrowserText())
+    public String getMessage(ChangeApplicationResult<OWLEntity> result) {
+        return factory.get("Edited " + renderingManager.getRendering(frameUpdate.getFromFrame().getSubject()))
                 .generateChangeDescription(result);
     }
 }

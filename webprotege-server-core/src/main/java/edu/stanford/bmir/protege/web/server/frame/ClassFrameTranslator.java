@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.SubClassOfAxiomsBySubClassIndex;
-import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.State;
+import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -33,10 +30,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * A translator that converts sets of axioms to class frames and vice-versa.
  * </p>
  */
-public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, OWLClassData> {
-
-    @Nonnull
-    private final ContextRenderer ren;
+public class ClassFrameTranslator {
 
     @Nonnull
     private final ProjectOntologiesIndex ontologiesIndex;
@@ -60,25 +54,21 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     private final PropertyValueMinimiser propertyValueMinimiser;
 
     @Nonnull
-    private final PropertyValueComparator propertyValueComparator;
-
-    @Nonnull
     private final AxiomPropertyValueTranslator axiomPropertyValueTranslator;
 
     private boolean includeAncestorFrames = false;
 
+    private boolean minimizePropertyValues = false;
+
     @Inject
-    public ClassFrameTranslator(@Nonnull ContextRenderer renderer,
-                                @Nonnull ProjectOntologiesIndex ontologiesIndex,
+    public ClassFrameTranslator(@Nonnull ProjectOntologiesIndex ontologiesIndex,
                                 @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
                                 @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
                                 @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsIndex,
                                 @Nonnull OWLDataFactory dataFactory,
                                 @Nonnull HasGetAncestors<OWLClass> ancestorsProvider,
                                 @Nonnull PropertyValueMinimiser propertyValueMinimiser,
-                                @Nonnull PropertyValueComparator propertyValueComparator,
                                 @Nonnull AxiomPropertyValueTranslator axiomPropertyValueTranslator) {
-        this.ren = checkNotNull(renderer);
         this.ontologiesIndex = ontologiesIndex;
         this.subClassOfAxiomsIndex = checkNotNull(subClassOfAxiomsIndex);
         this.equivalentClassesAxiomsIndex = checkNotNull(equivalentClassesAxiomsIndex);
@@ -86,7 +76,6 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         this.dataFactory = checkNotNull(dataFactory);
         this.ancestorsProvider = checkNotNull(ancestorsProvider);
         this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
-        this.propertyValueComparator = checkNotNull(propertyValueComparator);
         this.axiomPropertyValueTranslator = checkNotNull(axiomPropertyValueTranslator);
     }
 
@@ -98,42 +87,32 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         this.includeAncestorFrames = includeAncestorFrames;
     }
 
-    /**
-     * Gets the entity type that this translator translates.
-     *
-     * @return The entity type.  Not {@code null}.
-     */
-    @Override
-    public EntityType<OWLClass> getEntityType() {
-        return EntityType.CLASS;
+    public void setMinimizePropertyValues(boolean minimizePropertyValues) {
+        this.minimizePropertyValues = minimizePropertyValues;
     }
 
     @Nonnull
-    @Override
-    public ClassFrame getFrame(@Nonnull OWLClassData subject) {
+    public PlainClassFrame getFrame(@Nonnull OWLClass subject) {
         return translateToClassFrame(subject);
     }
 
     @Nonnull
-    @Override
-    public Set<OWLAxiom> getAxioms(@Nonnull ClassFrame frame, @Nonnull Mode mode) {
+    public Set<OWLAxiom> getAxioms(@Nonnull PlainClassFrame frame, @Nonnull Mode mode) {
         return translateToAxioms(frame.getSubject(), frame, mode);
     }
 
-    private Set<OWLAxiom> translateToAxioms(OWLClassData subject, ClassFrame classFrame, Mode mode) {
+    private Set<OWLAxiom> translateToAxioms(OWLClass subject, PlainClassFrame classFrame, Mode mode) {
         var result = new HashSet<OWLAxiom>();
-        for (OWLClassData cls : classFrame.getClassEntries()) {
-            result.add(dataFactory.getOWLSubClassOfAxiom(subject.getEntity(), cls.getEntity()));
+        for (OWLClass parent : classFrame.getParents()) {
+            result.add(dataFactory.getOWLSubClassOfAxiom(subject, parent));
         }
-        for (PropertyValue propertyValue : classFrame.getPropertyValues()) {
-            result.addAll(axiomPropertyValueTranslator.getAxioms(subject.getEntity(), propertyValue, mode));
+        for (PlainPropertyValue propertyValue : classFrame.getPropertyValues()) {
+            result.addAll(axiomPropertyValueTranslator.getAxioms(subject, propertyValue, mode));
         }
         return result;
     }
 
-    private ClassFrame translateToClassFrame(OWLClassData subject) {
-        var cls = subject.getEntity();
-        var subjectData = ren.getClassData(cls);
+    private PlainClassFrame translateToClassFrame(OWLClass cls) {
         var relevantAxioms = getRelevantAxioms(cls, true);
         var propertyValues = new ArrayList<>(translateAxiomsToPropertyValues(cls,
                                                                              relevantAxioms,
@@ -153,16 +132,19 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                 .filter(OWLClassExpression::isNamed)
                 .map(OWLClassExpression::asOWLClass)
                 .distinct()
-                .map(ren::getClassData)
                 .collect(toImmutableSet());
 
-        var propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues)
-                .sorted(propertyValueComparator)
-                .collect(toImmutableSet());
+        var propertyValuesMin = ImmutableSet.copyOf(propertyValues);
 
-        return ClassFrame.get(subjectData,
-                              parents,
-                              propertyValuesMin);
+
+        if(minimizePropertyValues) {
+            propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues)
+                                .collect(toImmutableSet());
+        }
+
+        return PlainClassFrame.get(cls,
+                                   parents,
+                                   propertyValuesMin);
     }
 
     private Set<OWLAxiom> getRelevantAxioms(OWLClass subject,
@@ -196,9 +178,9 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         .flatMap(ontId -> annotationAssertionAxiomsIndex.getAxiomsForSubject(subject.getIRI(), ontId));
     }
 
-    private List<PropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
-                                                                Set<OWLAxiom> relevantAxioms,
-                                                                State initialState) {
+    private List<PlainPropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
+                                                                     Set<OWLAxiom> relevantAxioms,
+                                                                     State initialState) {
         return relevantAxioms.stream()
                 .flatMap(axiom -> axiomPropertyValueTranslator.getPropertyValues(subject, axiom, initialState).stream())
                 .collect(Collectors.toList());

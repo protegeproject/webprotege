@@ -11,19 +11,14 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-03-31
  */
-public abstract class PlainEntityFrame {
+public abstract class PlainEntityFrame implements Frame<OWLEntity> {
 
     @Nonnull
     public abstract OWLEntity getSubject();
 
-    /**
-     * Gets the {@link PropertyValue}s in this frame.
-     *
-     * @return The (possibly empty) set of property values in this frame. Not {@code null}.  The returned set is unmodifiable.
-     */
     @Nonnull
-    public abstract ImmutableSet<PlainPropertyValue> getPropertyValues();
+    public abstract ImmutableSet<? extends PlainPropertyValue> getPropertyValues();
 
     @Nonnull
-    public abstract EntityFrame<? extends OWLEntityData> toEntityFrame(PrimitiveRenderer renderer);
+    public abstract EntityFrame<? extends OWLEntityData> toEntityFrame(FrameComponentRenderer renderer);
 }

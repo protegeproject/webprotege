@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -19,4 +21,7 @@ public interface Frame<S> extends IsSerializable {
      * @return The subject. Not {@code null}.
      */
     S getSubject();
+
+    @Nonnull
+    PlainEntityFrame toPlainFrame();
 }

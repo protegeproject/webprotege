@@ -31,17 +31,18 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
     private Logger logger = LoggerFactory.getLogger(GetAnnotationPropertyFrameActionHandler.class);
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final Provider<AnnotationPropertyFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final Provider<AnnotationPropertyFrameTranslator> translatorProvider;
+    private final FrameComponentSessionRenderer renderer;
 
     @Inject
     public GetAnnotationPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
                                                    @Nonnull RenderingManager renderingManager,
-                                                   @Nonnull Provider<AnnotationPropertyFrameTranslator> translatorProvider) {
+                                                   @Nonnull Provider<AnnotationPropertyFrameTranslator> translatorProvider,
+                                                   @Nonnull FrameComponentSessionRenderer renderer) {
         super(accessManager);
-        this.renderingManager = renderingManager;
+        this.renderer = renderer;
         this.translatorProvider = translatorProvider;
     }
 
@@ -54,16 +55,16 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
     @Nonnull
     @Override
     public GetAnnotationPropertyFrameResult execute(@Nonnull GetAnnotationPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        AnnotationPropertyFrameTranslator translator = translatorProvider.get();
-        OWLAnnotationPropertyData annotationPropertyData = renderingManager.getAnnotationPropertyData(action.getSubject());
-        AnnotationPropertyFrame frame = translator.getFrame(annotationPropertyData);
+        var translator = translatorProvider.get();
+        var plainFrame = translator.getFrame(action.getSubject());
+        var renderedFrame = plainFrame.toEntityFrame(renderer);
         logger.info(BROWSING,
                      "{} {} retrieved AnnotationProperty frame for {} ({})",
                     action.getProjectId(),
                     executionContext.getUserId(),
                     action.getSubject(),
-                    frame.getSubject().getBrowserText());
-        return new GetAnnotationPropertyFrameResult(frame);
+                    renderedFrame.getSubject().getBrowserText());
+        return new GetAnnotationPropertyFrameResult(renderedFrame);
     }
 
     @Nonnull

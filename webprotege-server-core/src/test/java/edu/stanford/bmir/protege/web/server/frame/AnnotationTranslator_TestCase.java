@@ -6,9 +6,7 @@ import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.State;
+import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,75 +40,37 @@ public class AnnotationTranslator_TestCase {
     private EntitiesInProjectSignatureByIriIndex entitiesIndex;
 
     @Mock
-    private ContextRenderer renderer;
-
-    @Mock
     private OWLAnnotationProperty property;
-
-    @Mock
-    private OWLAnnotationPropertyData propertyData;
 
     @Mock
     private OWLLiteral literal;
 
     @Mock
-    private OWLPrimitiveData literalData;
-
-    @Mock
     private IRI iri;
-
-    @Mock
-    private IRIData iriData;
-
-    @Mock
-    private OWLClass cls;
-
-    @Mock
-    private OWLClassData clsData;
 
     @Before
     public void setUp() {
-        translator = new AnnotationTranslator(entitiesIndex, renderer);
-
-        when(renderer.getAnnotationPropertyData(property))
-                .thenReturn(propertyData);
-        when(renderer.getAnnotationValueData(literal))
-                .thenReturn(literalData);
-        when(renderer.getAnnotationValueData(iri))
-                .thenReturn(iriData);
-        when(renderer.getEntityData(cls))
-                .thenReturn(clsData);
+        translator = new AnnotationTranslator(entitiesIndex);
     }
 
     @Test
     public void shouldTranslateAnnotationWithLiteralValue() {
         var annotation = new OWLAnnotationImpl(property, literal, Collections.emptySet());
-        Set<PropertyValue> propertyValues =  translator.translate(annotation, State.ASSERTED);
-        assertThat(propertyValues, Matchers.hasItem(PropertyAnnotationValue.get(propertyData, literalData, State.ASSERTED)));
+        Set<PlainPropertyValue> propertyValues =  translator.translate(annotation, State.ASSERTED);
+        assertThat(propertyValues, Matchers.hasItem(PlainPropertyAnnotationValue.get(property, literal, State.ASSERTED)));
     }
 
     @Test
     public void shouldTranslateSpecifiedState() {
         var annotation = new OWLAnnotationImpl(property, literal, Collections.emptySet());
-        Set<PropertyValue> propertyValues =  translator.translate(annotation, State.DERIVED);
-        assertThat(propertyValues, Matchers.hasItem(PropertyAnnotationValue.get(propertyData, literalData, State.DERIVED)));
+        Set<PlainPropertyValue> propertyValues =  translator.translate(annotation, State.DERIVED);
+        assertThat(propertyValues, Matchers.hasItem(PlainPropertyAnnotationValue.get(property, literal, State.DERIVED)));
     }
 
     @Test
-    public void shouldTranslateIriNotInSignature() {
-        when(entitiesIndex.getEntitiesInSignature(iri))
-                .thenReturn(Stream.empty());
+    public void shouldIri() {
         var annotation = new OWLAnnotationImpl(property, iri, Collections.emptySet());
-        Set<PropertyValue> propertyValues =  translator.translate(annotation, State.ASSERTED);
-        assertThat(propertyValues, Matchers.hasItem(PropertyAnnotationValue.get(propertyData, iriData, State.ASSERTED)));
-    }
-
-    @Test
-    public void shouldTranslateIriInSignature() {
-        when(entitiesIndex.getEntitiesInSignature(iri))
-                .thenReturn(Stream.of(cls));
-        var annotation = new OWLAnnotationImpl(property, iri, Collections.emptySet());
-        Set<PropertyValue> propertyValues =  translator.translate(annotation, State.ASSERTED);
-        assertThat(propertyValues, Matchers.hasItem(PropertyAnnotationValue.get(propertyData, clsData, State.ASSERTED)));
+        Set<PlainPropertyValue> propertyValues =  translator.translate(annotation, State.ASSERTED);
+        assertThat(propertyValues, Matchers.hasItem(PlainPropertyAnnotationValue.get(property, iri, State.ASSERTED)));
     }
 }

@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import javax.annotation.Nonnull;
 import java.io.Serializable;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -67,5 +69,16 @@ public abstract class NamedIndividualFrame implements EntityFrame<OWLNamedIndivi
     @Override
     public PropertyValueList getPropertyValueList() {
         return new PropertyValueList(getPropertyValues());
+    }
+
+    @Nonnull
+    @Override
+    public PlainNamedIndividualFrame toPlainFrame() {
+        return PlainNamedIndividualFrame.get(
+                getSubject().getEntity(),
+                getClasses().stream().map(OWLClassData::getEntity).collect(toImmutableSet()),
+                getSameIndividuals().stream().map(OWLNamedIndividualData::getEntity).collect(toImmutableSet()),
+                getPropertyValues().stream().map(PropertyValue::toPlainPropertyValue).collect(toImmutableSet())
+        );
     }
 }

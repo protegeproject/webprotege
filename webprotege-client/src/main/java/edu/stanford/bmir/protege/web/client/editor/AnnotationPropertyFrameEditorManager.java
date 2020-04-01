@@ -45,7 +45,9 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
     }
 
     @Override
-    public UpdateObjectAction<AnnotationPropertyFrame> createUpdateObjectAction(AnnotationPropertyFrame pristineObject, AnnotationPropertyFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateAnnotationPropertyFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
+    public UpdateAnnotationPropertyFrameAction createUpdateObjectAction(AnnotationPropertyFrame pristineObject, AnnotationPropertyFrame editedObject, OWLEntityContext editorContext) {
+        return new UpdateAnnotationPropertyFrameAction(editorContext.getProjectId(),
+                                                       pristineObject.toPlainFrame(),
+                                                       editedObject.toPlainFrame());
     }
 }

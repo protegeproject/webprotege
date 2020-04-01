@@ -5,6 +5,7 @@ import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.frame.AxiomPropertyValueTranslator;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
@@ -86,7 +87,7 @@ public class EntityRelationshipMatcher implements EntityFrameMatcher {
             axiomStream = Stream.empty();
         }
 
-        Stream<PropertyValue> propertyValueStream = axiomStream.flatMap(ax -> translator.getPropertyValues(entity, ax, State.ASSERTED, minimalContextRenderer).stream());
+        Stream<PlainPropertyValue> propertyValueStream = axiomStream.flatMap(ax -> translator.getPropertyValues(entity, ax, State.ASSERTED, minimalContextRenderer).stream());
 
 
         if (relationshipPresence == RelationshipPresence.AT_LEAST_ONE) {

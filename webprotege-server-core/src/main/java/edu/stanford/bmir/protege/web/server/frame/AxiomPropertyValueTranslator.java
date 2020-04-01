@@ -58,7 +58,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
     }
 
     @Nonnull
-    public Set<PropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
+    public Set<PlainPropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
                                                 @Nonnull OWLAxiom axiom,
                                                 @Nonnull State initialState) {
         var axiomTranslator = axiomTranslatorFactory.create(subject, axiom, initialState);
@@ -66,7 +66,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
     }
 
     @Nonnull
-    public Set<PropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
+    public Set<PlainPropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
                                                 @Nonnull OWLAxiom axiom,
                                                 @Nonnull State initialState,
                                                 @Nonnull ContextRenderer renderer) {
@@ -76,7 +76,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
     @Nonnull
     public Set<OWLAxiom> getAxioms(OWLEntity subject,
-                                   PropertyValue propertyValue,
+                                   PlainPropertyValue propertyValue,
                                    Mode mode) {
         if (propertyValue.getState() == State.DERIVED) {
             return Collections.emptySet();

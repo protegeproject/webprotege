@@ -30,6 +30,10 @@ public abstract class PlainNamedIndividualFrame extends PlainEntityFrame {
                                                        propertyValues);
     }
 
+    public static PlainNamedIndividualFrame empty(OWLNamedIndividual individual) {
+        return PlainNamedIndividualFrame.get(individual, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
+    }
+
     @Nonnull
     @Override
     public abstract OWLNamedIndividual getSubject();
@@ -41,12 +45,11 @@ public abstract class PlainNamedIndividualFrame extends PlainEntityFrame {
     public abstract ImmutableSet<OWLNamedIndividual> getSameIndividuals();
 
     @Nonnull
-    @Override
     public abstract ImmutableSet<PlainPropertyValue> getPropertyValues();
 
     @Nonnull
     @Override
-    public EntityFrame<? extends OWLEntityData> toEntityFrame(PrimitiveRenderer renderer) {
+    public NamedIndividualFrame toEntityFrame(FrameComponentRenderer renderer) {
         return NamedIndividualFrame.get(
                 renderer.getRendering(getSubject()),
                 getParents().stream()
@@ -55,5 +58,11 @@ public abstract class PlainNamedIndividualFrame extends PlainEntityFrame {
                 getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).collect(toImmutableSet()),
                 getSameIndividuals().stream().map(renderer::getRendering).collect(toImmutableSet())
         );
+    }
+
+    @Nonnull
+    @Override
+    public PlainNamedIndividualFrame toPlainFrame() {
+        return this;
     }
 }

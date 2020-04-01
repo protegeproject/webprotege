@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.client.frame.ClassFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.PlainClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 
 import javax.inject.Inject;
 
@@ -40,8 +42,10 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
     }
 
     @Override
-    public UpdateObjectAction<ClassFrame> createUpdateObjectAction(ClassFrame pristineObject, ClassFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateClassFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
+    public UpdateFrameAction createUpdateObjectAction(ClassFrame pristineObject, ClassFrame editedObject, OWLEntityContext editorContext) {
+        return new UpdateClassFrameAction(editorContext.getProjectId(),
+                                          pristineObject.toPlainFrame(),
+                                          editedObject.toPlainFrame());
     }
 
     @Override

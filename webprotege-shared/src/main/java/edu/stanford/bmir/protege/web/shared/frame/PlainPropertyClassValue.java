@@ -43,17 +43,27 @@ public abstract class PlainPropertyClassValue extends PlainPropertyValue {
 
     @Nonnull
     @Override
-    protected PlainPropertyClassValue withState(State state) {
+    public PlainPropertyClassValue withState(State state) {
         return PlainPropertyClassValue.get(getProperty(), getValue(), state);
     }
 
     @Nonnull
     @Override
-    public PropertyClassValue toPropertyValue(@Nonnull PrimitiveRenderer renderer) {
+    public PropertyClassValue toPropertyValue(@Nonnull FrameComponentRenderer renderer) {
         return PropertyClassValue.get(
                 renderer.getRendering(getProperty()),
                 renderer.getRendering(getValue()),
                 getState()
         );
+    }
+
+    @Override
+    public boolean isLogical() {
+        return true;
+    }
+
+    @Override
+    public boolean isAnnotation() {
+        return false;
     }
 }

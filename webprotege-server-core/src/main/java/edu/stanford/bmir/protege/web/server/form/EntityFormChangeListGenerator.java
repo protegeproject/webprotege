@@ -34,7 +34,7 @@ import static java.util.stream.Collectors.toSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEntityData> {
+public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEntity> {
 
     @Nonnull
     private final EntityFormDataConverter entityFormDataConverter;
@@ -97,8 +97,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     }
 
     @Override
-    public OntologyChangeList<OWLEntityData> generateChanges(ChangeGenerationContext context) {
-        var allChanges = new ArrayList<OntologyChangeList<OWLEntityData>>();
+    public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
+        var allChanges = new ArrayList<OntologyChangeList<OWLEntity>>();
         for(int i = 0; i < pristineFormsData.size(); i++) {
             var pristineFormData = pristineFormsData.get(i);
             var editedFormData = editedFormsData.get(i);
@@ -122,9 +122,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
         }
     }
 
-    private OntologyChangeList<OWLEntityData> emptyChangeList() {
-        var entityData = renderingManager.getRendering(subject);
-        return OntologyChangeList.<OWLEntityData>builder().build(entityData);
+    private OntologyChangeList<OWLEntity> emptyChangeList() {
+        return OntologyChangeList.<OWLEntity>builder().build(subject);
     }
 
     /**
@@ -133,14 +132,14 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
      * @return the combined list with the subject equal to the subject of the first change in the list
      */
     @Nonnull
-    public OntologyChangeList<OWLEntityData> combineIndividualChangeLists(List<OntologyChangeList<OWLEntityData>> changes) {
+    public OntologyChangeList<OWLEntity> combineIndividualChangeLists(List<OntologyChangeList<OWLEntity>> changes) {
         var firstChangeList = changes.get(0);
         var combinedChanges = changes.stream()
                                      .map(OntologyChangeList::getChanges)
                                      .flatMap(List::stream)
                                      .collect(toImmutableList());
 
-        return OntologyChangeList.<OWLEntityData>builder()
+        return OntologyChangeList.<OWLEntity>builder()
                 .addAll(combinedChanges)
                 .build(firstChangeList.getResult());
     }
@@ -169,11 +168,11 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
         return result.build();
     }
 
-    private List<OntologyChangeList<OWLEntityData>> generateChangesForFormFrames(ImmutableMap<OWLEntity, FormFrame> pristineFramesBySubject,
+    private List<OntologyChangeList<OWLEntity>> generateChangesForFormFrames(ImmutableMap<OWLEntity, FormFrame> pristineFramesBySubject,
                                                                                  ImmutableMap<OWLEntity, FormFrame> editedFramesBySubject,
                                                                                  ChangeGenerationContext context) {
 
-        var resultBuilder = ImmutableList.<OntologyChangeList<OWLEntityData>>builder();
+        var resultBuilder = ImmutableList.<OntologyChangeList<OWLEntity>>builder();
         for(OWLEntity entity : pristineFramesBySubject.keySet()) {
             var pristineFrame = pristineFramesBySubject.get(entity);
             var editedFrame = editedFramesBySubject.get(entity);
@@ -221,8 +220,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     }
 
 
-    private OntologyChangeList<OWLEntityData> generateChangeListForFrames(EntityFrame pristineFrame,
-                                                                          EntityFrame editedFrame,
+    private OntologyChangeList<OWLEntity> generateChangeListForFrames(PlainEntityFrame pristineFrame,
+                                                                          PlainEntityFrame editedFrame,
                                                                           ChangeGenerationContext context) {
         var frameUpdate = FrameUpdate.get(pristineFrame, editedFrame);
         var changeGeneratorFactory = frameChangeGeneratorFactory.create(frameUpdate);
@@ -233,14 +232,14 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     private void generateChangesForInstances(OWLEntity subject,
                                              FormFrame pristineFrame,
                                              FormFrame editedFrame,
-                                             ImmutableList.Builder<OntologyChangeList<OWLEntityData>> changeListBuilder) {
+                                             ImmutableList.Builder<OntologyChangeList<OWLEntity>> changeListBuilder) {
         if(!(subject instanceof OWLClass)) {
             return;
         }
-        var ontologyChangeList = OntologyChangeList.<OWLEntityData>builder();
+        var ontologyChangeList = OntologyChangeList.<OWLEntity>builder();
         var subjectCls = (OWLClass) subject;
-        var pristineInstances = pristineFrame.getInstances().stream().map(OWLNamedIndividualData::getEntity).collect(toSet());
-        var editedInstances = editedFrame.getInstances().stream().map(OWLNamedIndividualData::getEntity).collect(toSet());
+        var pristineInstances = pristineFrame.getInstances();
+        var editedInstances = editedFrame.getInstances();
         for(var pristineInstance : pristineInstances) {
             if(!editedInstances.contains(pristineInstance)) {
                 // Deleted
@@ -256,21 +255,19 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                 ontologyChangeList.addAxiom(defaultOntologyIdManager.getDefaultOntologyId(), axiom);
             }
         }
-        changeListBuilder.add(ontologyChangeList.build(renderingManager.getClassData(subjectCls)));
+        changeListBuilder.add(ontologyChangeList.build(subject));
 
     }
 
     @Nonnull
     @Override
-    public String getMessage(ChangeApplicationResult<OWLEntityData> result) {
-        Optional<OWLEntity> owlEntity = result.getSubject()
-                                              .asEntity();
-        return owlEntity.map(entity -> messageFormatter.format("Edited {0}",
-                                                               entity)).orElse("Edited entity");
+    public String getMessage(ChangeApplicationResult<OWLEntity> result) {
+        OWLEntity entity = result.getSubject();
+        return messageFormatter.format("Edited {0}", entity);
     }
 
     @Override
-    public OWLEntityData getRenamedResult(OWLEntityData result, RenameMap renameMap) {
-        return result;
+    public OWLEntity getRenamedResult(OWLEntity result, RenameMap renameMap) {
+        return renameMap.getRenamedEntity(result);
     }
 }

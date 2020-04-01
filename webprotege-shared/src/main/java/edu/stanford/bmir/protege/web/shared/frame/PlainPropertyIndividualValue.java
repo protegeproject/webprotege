@@ -40,17 +40,27 @@ public abstract class PlainPropertyIndividualValue extends PlainPropertyValue {
 
     @Nonnull
     @Override
-    protected PlainPropertyValue withState(State state) {
+    public PlainPropertyValue withState(State state) {
         return get(getProperty(), getValue(), state);
     }
 
     @Nonnull
     @Override
-    public PropertyIndividualValue toPropertyValue(@Nonnull PrimitiveRenderer renderer) {
+    public PropertyIndividualValue toPropertyValue(@Nonnull FrameComponentRenderer renderer) {
         return PropertyIndividualValue.get(
                 renderer.getRendering(getProperty()),
                 renderer.getRendering(getValue()),
                 getState()
         );
+    }
+
+    @Override
+    public boolean isLogical() {
+        return true;
+    }
+
+    @Override
+    public boolean isAnnotation() {
+        return false;
     }
 }

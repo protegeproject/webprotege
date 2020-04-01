@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDataResult;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,24 +31,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class SetEntityFormsDataActionHandler extends AbstractProjectChangeHandler<OWLEntityData, SetEntityFormsDataAction, SetEntityFormDataResult> {
+public class SetEntityFormsDataActionHandler extends AbstractProjectChangeHandler<OWLEntity, SetEntityFormsDataAction, SetEntityFormDataResult> {
 
     @Nonnull
     private final EntityFormChangeListGeneratorFactory changeListGeneratorFactory;
-
-    @Nonnull
-    private final RenderingManager renderingManager;
-
 
     @Inject
     public SetEntityFormsDataActionHandler(@Nonnull AccessManager accessManager,
                                            @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                            @Nonnull HasApplyChanges applyChanges,
-                                           @Nonnull EntityFormChangeListGeneratorFactory changeListGeneratorFactory,
-                                           @Nonnull RenderingManager renderingManager) {
+                                           @Nonnull EntityFormChangeListGeneratorFactory changeListGeneratorFactory) {
         super(accessManager, eventManager, applyChanges);
         this.changeListGeneratorFactory = checkNotNull(changeListGeneratorFactory);
-        this.renderingManager = checkNotNull(renderingManager);
     }
 
     @Nullable
@@ -57,7 +52,7 @@ public class SetEntityFormsDataActionHandler extends AbstractProjectChangeHandle
     }
 
     @Override
-    protected SetEntityFormDataResult createActionResult(ChangeApplicationResult<OWLEntityData> changeApplicationResult,
+    protected SetEntityFormDataResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult,
                                                          SetEntityFormsDataAction action,
                                                          ExecutionContext executionContext,
                                                          EventList<ProjectEvent<?>> eventList) {
@@ -71,8 +66,8 @@ public class SetEntityFormsDataActionHandler extends AbstractProjectChangeHandle
     }
 
     @Override
-    protected ChangeListGenerator<OWLEntityData> getChangeListGenerator(SetEntityFormsDataAction action,
-                                                                        ExecutionContext executionContext) {
+    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(SetEntityFormsDataAction action,
+                                                                    ExecutionContext executionContext) {
 
 
         var pristineFormsData = action.getPristineFormsData();

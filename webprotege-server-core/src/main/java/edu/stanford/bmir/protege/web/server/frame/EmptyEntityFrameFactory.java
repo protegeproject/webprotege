@@ -24,42 +24,42 @@ public class EmptyEntityFrameFactory {
         this.renderingManager = checkNotNull(renderingManager);
     }
 
-    public EntityFrame getEmptyEntityFrame(OWLEntity entity) {
-        return entity.accept(new OWLEntityVisitorEx<EntityFrame>() {
+    public PlainEntityFrame getEmptyEntityFrame(OWLEntity entity) {
+        return entity.accept(new OWLEntityVisitorEx<PlainEntityFrame>() {
             @Nonnull
             @Override
-            public EntityFrame visit(@Nonnull OWLClass cls) {
-                return ClassFrame.empty(renderingManager.getClassData(cls));
+            public PlainEntityFrame visit(@Nonnull OWLClass cls) {
+                return PlainClassFrame.empty(cls);
             }
 
             @Nonnull
             @Override
-            public EntityFrame visit(@Nonnull OWLObjectProperty property) {
-                return ObjectPropertyFrame.empty(renderingManager.getObjectPropertyData(property));
+            public PlainEntityFrame visit(@Nonnull OWLObjectProperty property) {
+                return PlainObjectPropertyFrame.empty(property);
             }
 
             @Nonnull
             @Override
-            public EntityFrame visit(@Nonnull OWLDataProperty property) {
-                return DataPropertyFrame.empty(renderingManager.getDataPropertyData(property));
+            public PlainEntityFrame visit(@Nonnull OWLDataProperty property) {
+                return PlainDataPropertyFrame.empty(property);
             }
 
             @Nonnull
             @Override
-            public EntityFrame visit(@Nonnull OWLNamedIndividual individual) {
-                return NamedIndividualFrame.empty(renderingManager.getIndividualData(individual));
+            public PlainEntityFrame visit(@Nonnull OWLNamedIndividual individual) {
+                return PlainNamedIndividualFrame.empty(individual);
             }
 
             @Nonnull
             @Override
-            public EntityFrame visit(@Nonnull OWLDatatype datatype) {
+            public PlainEntityFrame visit(@Nonnull OWLDatatype datatype) {
                 throw new UnsupportedOperationException();
             }
 
             @Nonnull
             @Override
-            public EntityFrame visit(@Nonnull OWLAnnotationProperty property) {
-                return AnnotationPropertyFrame.empty(renderingManager.getAnnotationPropertyData(property));
+            public PlainEntityFrame visit(@Nonnull OWLAnnotationProperty property) {
+                return PlainAnnotationPropertyFrame.empty(property);
             }
         });
     }

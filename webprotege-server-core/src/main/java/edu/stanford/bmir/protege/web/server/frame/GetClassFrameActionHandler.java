@@ -28,18 +28,18 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     private static final Logger logger = LoggerFactory.getLogger(GetClassFrameActionHandler.class);
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final Provider<ClassFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final Provider<ClassFrameTranslator> translatorProvider;
+    private final FrameComponentSessionRendererFactory rendererFactory;
 
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull RenderingManager renderingManager,
-                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
+                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider,
+                                      @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
         super(accessManager);
-        this.renderingManager = renderingManager;
         this.translatorProvider = translatorProvider;
+        this.rendererFactory = rendererFactory;
     }
 
     /**
@@ -62,15 +62,16 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     @Override
     public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
         var subject = action.getSubject();
-        var subjectData = renderingManager.getClassData(subject);
         var translator = translatorProvider.get();
-        var classFrame = translator.getFrame(subjectData);
+        translator.setMinimizePropertyValues(true);
+        var classFrame = translator.getFrame(subject);
+        var renderedFrame = classFrame.toEntityFrame(rendererFactory.create());
         logger.info(BROWSING,
                     "{} {} retrieved Class frame for {} ({})",
                     action.getProjectId(),
                     executionContext.getUserId(),
                     subject,
-                    classFrame.getSubject().getBrowserText());
-        return new GetClassFrameResult(classFrame);
+                    renderedFrame.getSubject().getBrowserText());
+        return new GetClassFrameResult(renderedFrame);
     }
 }

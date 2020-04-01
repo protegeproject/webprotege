@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -10,7 +11,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-03-31
  */
-public interface PrimitiveRenderer {
+public interface FrameComponentRenderer {
 
     @Nonnull
     OWLClassData getRendering(@Nonnull OWLClass cls);
@@ -35,4 +36,7 @@ public interface PrimitiveRenderer {
 
     @Nonnull
     OWLPrimitiveData getRendering(@Nonnull OWLAnnotationValue annotationValue);
+
+    @Nonnull
+    ImmutableSet<OWLEntityData> getRendering(@Nonnull IRI iri);
 }

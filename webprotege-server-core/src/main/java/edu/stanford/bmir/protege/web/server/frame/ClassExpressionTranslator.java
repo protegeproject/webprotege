@@ -21,16 +21,12 @@ import static java.util.stream.Collectors.toSet;
  */
 class ClassExpressionTranslator {
 
-    @Nonnull
-    private final ContextRenderer ren;
-
     @Inject
-    public ClassExpressionTranslator(@Nonnull ContextRenderer ren) {
-        this.ren = checkNotNull(ren);
+    public ClassExpressionTranslator() {
     }
 
     @Nonnull
-    private Set<PropertyValue> translateObjectIntersectionOf(OWLObjectIntersectionOf ce,
+    private Set<PlainPropertyValue> translateObjectIntersectionOf(OWLObjectIntersectionOf ce,
                                                              @Nonnull State state) {
         return ce.asConjunctSet()
                 .stream()
@@ -39,62 +35,62 @@ class ClassExpressionTranslator {
     }
 
     /**
-     * Translates the originally supplied class expression into a set of {@link PropertyValue}s.
-     * @return A set of {@link PropertyValue}s representing the class expression.
+     * Translates the originally supplied class expression into a set of {@link PlainPropertyValue}s.
+     * @return A set of {@link PlainPropertyValue}s representing the class expression.
      */
-    public Set<PropertyValue> translate(
+    public Set<PlainPropertyValue> translate(
             @Nonnull State initialState,
             @Nonnull OWLClassExpression classExpression) {
         return translate(classExpression, initialState);
     }
 
-    private Set<PropertyValue> translate(@Nonnull OWLClassExpression classExpression,
+    private Set<PlainPropertyValue> translate(@Nonnull OWLClassExpression classExpression,
                                          @Nonnull State state) {
-        var visitor = new OWLClassExpressionVisitorExAdapter<Set<PropertyValue>>(Collections
+        var visitor = new OWLClassExpressionVisitorExAdapter<Set<PlainPropertyValue>>(Collections
                                                                        .emptySet()) {
             @Nonnull
             @Override
-            public Set<PropertyValue> visit(OWLObjectIntersectionOf ce) {
+            public Set<PlainPropertyValue> visit(OWLObjectIntersectionOf ce) {
                 return translateObjectIntersectionOf(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLObjectSomeValuesFrom ce) {
+            public Set<PlainPropertyValue> visit(OWLObjectSomeValuesFrom ce) {
                 return translateObjectSomeValuesFrom(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLObjectMinCardinality ce) {
+            public Set<PlainPropertyValue> visit(OWLObjectMinCardinality ce) {
                 return translateObjectMinCardinality(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLObjectExactCardinality ce) {
+            public Set<PlainPropertyValue> visit(OWLObjectExactCardinality ce) {
                 return translateObjectExactCardinality(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLObjectHasValue ce) {
+            public Set<PlainPropertyValue> visit(OWLObjectHasValue ce) {
                 return translateObjectHasValue(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLDataSomeValuesFrom ce) {
+            public Set<PlainPropertyValue> visit(OWLDataSomeValuesFrom ce) {
                 return translateDataSomeValuesFrom(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLDataMinCardinality ce) {
+            public Set<PlainPropertyValue> visit(OWLDataMinCardinality ce) {
                 return translateDataMinCardinality(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLDataExactCardinality ce) {
+            public Set<PlainPropertyValue> visit(OWLDataExactCardinality ce) {
                 return translateDataExactCardinality(ce, state);
             }
 
             @Override
-            public Set<PropertyValue> visit(OWLDataHasValue ce) {
+            public Set<PlainPropertyValue> visit(OWLDataHasValue ce) {
                 return translateDataHasValue(ce, state);
             }
         };
@@ -102,13 +98,13 @@ class ClassExpressionTranslator {
     }
 
     @Nonnull
-    private Set<PropertyValue> translateObjectSomeValuesFrom(OWLObjectSomeValuesFrom desc,
+    private Set<PlainPropertyValue> translateObjectSomeValuesFrom(OWLObjectSomeValuesFrom desc,
                                                              @Nonnull State state) {
         return translateObjectPropertyFiller(desc.getProperty(), desc.getFiller(), state);
     }
 
     @Nonnull
-    private Set<PropertyValue> translateObjectMinCardinality(OWLObjectMinCardinality ce,
+    private Set<PlainPropertyValue> translateObjectMinCardinality(OWLObjectMinCardinality ce,
                                                              @Nonnull State state) {
         // Min cardinality of one is syntactic sugar for SomeValuesFrom
         var nextState = state;
@@ -119,17 +115,17 @@ class ClassExpressionTranslator {
     }
 
     @Nonnull
-    private Set<PropertyValue> translateObjectExactCardinality(OWLObjectExactCardinality ce,
+    private Set<PlainPropertyValue> translateObjectExactCardinality(OWLObjectExactCardinality ce,
                                                                @Nonnull State state) {
         return translateObjectCardinality(ce, State.DERIVED);
     }
 
-    private Set<PropertyValue> translateObjectCardinality(OWLObjectCardinalityRestriction ce,
+    private Set<PlainPropertyValue> translateObjectCardinality(OWLObjectCardinalityRestriction ce,
                                                           @Nonnull State state) {
         return translateObjectPropertyFiller(ce.getProperty(), ce.getFiller(), state);
     }
 
-    private Set<PropertyValue> translateObjectPropertyFiller(OWLObjectPropertyExpression propertyExpression,
+    private Set<PlainPropertyValue> translateObjectPropertyFiller(OWLObjectPropertyExpression propertyExpression,
                                                              OWLClassExpression fillerExpression,
                                                              @Nonnull State state) {
         if(propertyExpression.isAnonymous()) {
@@ -148,14 +144,14 @@ class ClassExpressionTranslator {
                 .stream()
                 .filter(OWLClassExpression::isNamed)
                 .map(OWLClassExpression::asOWLClass)
-                .map(filler -> PropertyClassValue.get(ren.getObjectPropertyData(property),
-                                                      ren.getClassData(filler),
+                .map(filler -> PlainPropertyClassValue.get(property,
+                                                      filler,
                                                       nextState))
                 .collect(toSet());
     }
 
     @Nonnull
-    private Set<PropertyValue> translateObjectHasValue(OWLObjectHasValue desc,
+    private Set<PlainPropertyValue> translateObjectHasValue(OWLObjectHasValue desc,
                                                        @Nonnull State state) {
         if(desc.getProperty().isAnonymous()) {
             return Collections.emptySet();
@@ -165,16 +161,16 @@ class ClassExpressionTranslator {
         }
         var property = desc.getProperty().asOWLObjectProperty();
         var filler = desc.getFiller().asOWLNamedIndividual();
-        return Collections.singleton(PropertyIndividualValue.get(ren.getObjectPropertyData(property), ren.getIndividualData(filler), state));
+        return Collections.singleton(PlainPropertyIndividualValue.get(property, filler, state));
     }
 
     @Nonnull
-    private Set<PropertyValue> translateDataSomeValuesFrom(OWLDataSomeValuesFrom desc,
+    private Set<PlainPropertyValue> translateDataSomeValuesFrom(OWLDataSomeValuesFrom desc,
                                                            @Nonnull State state) {
         return translateDataPropertyFiller(desc.getProperty(), desc.getFiller(), state);
     }
 
-    private Set<PropertyValue> translateDataPropertyFiller(OWLDataPropertyExpression propertyExpression,
+    private Set<PlainPropertyValue> translateDataPropertyFiller(OWLDataPropertyExpression propertyExpression,
                                                            OWLDataRange dataRange,
                                                            @Nonnull State state) {
         if(propertyExpression.isAnonymous()) {
@@ -185,11 +181,11 @@ class ClassExpressionTranslator {
             return Collections.emptySet();
         }
         var filler = dataRange.asOWLDatatype();
-        return Collections.singleton(PropertyDatatypeValue.get(ren.getDataPropertyData(property), ren.getDatatypeData(filler), state));
+        return Collections.singleton(PlainPropertyDatatypeValue.get(property, filler, state));
     }
 
     @Nonnull
-    private Set<PropertyValue> translateDataMinCardinality(OWLDataMinCardinality ce,
+    private Set<PlainPropertyValue> translateDataMinCardinality(OWLDataMinCardinality ce,
                                                            @Nonnull State state) {
         if(ce.getCardinality() != 1) {
             state = State.DERIVED;
@@ -197,22 +193,22 @@ class ClassExpressionTranslator {
         return translateDataCardinality(ce, state);
     }
 
-    private Set<PropertyValue> translateDataCardinality(OWLDataCardinalityRestriction ce,
+    private Set<PlainPropertyValue> translateDataCardinality(OWLDataCardinalityRestriction ce,
                                                         @Nonnull State state) {
         return translateDataPropertyFiller(ce.getProperty(), ce.getFiller(), state);
     }
 
     @Nonnull
-    private Set<PropertyValue> translateDataExactCardinality(OWLDataExactCardinality ce,
+    private Set<PlainPropertyValue> translateDataExactCardinality(OWLDataExactCardinality ce,
                                                              @Nonnull State state) {
         state = State.DERIVED;
         return translateDataCardinality(ce, state);
     }
 
     @Nonnull
-    private Set<PropertyValue> translateDataHasValue(OWLDataHasValue desc,
+    private Set<PlainPropertyValue> translateDataHasValue(OWLDataHasValue desc,
                                                      @Nonnull State state) {
         var property = desc.getProperty().asOWLDataProperty();
-        return Collections.singleton(PropertyLiteralValue.get(ren.getDataPropertyData(property), OWLLiteralData.get(desc.getFiller()), state));
+        return Collections.singleton(PlainPropertyLiteralValue.get(property, desc.getFiller(), state));
     }
 }
