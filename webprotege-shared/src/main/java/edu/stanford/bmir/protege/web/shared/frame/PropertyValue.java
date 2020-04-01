@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -44,4 +45,7 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
     public int compareTo(PropertyValue o) {
         return 0;
     }
+
+    @Nonnull
+    public abstract PlainPropertyValue toPlainPropertyValue();
 }
