@@ -1,9 +1,11 @@
-package edu.stanford.bmir.protege.web.server.frame;
+package edu.stanford.bmir.protege.web.server.frame.translator;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.frame.Mode;
+import edu.stanford.bmir.protege.web.server.frame.PropertyValueMinimiser;
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
@@ -80,7 +82,7 @@ public class ClassFrameTranslator {
                                 @Provided @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                 @Provided @Nonnull AxiomPropertyValueTranslator axiomPropertyValueTranslator,
                                 @Nonnull ClassFrameTranslatorOptions options,
-                                @Nonnull RelationshipMatcherFactory matcherFactory) {
+                                @Nonnull @Provided RelationshipMatcherFactory matcherFactory) {
         this.ontologiesIndex = ontologiesIndex;
         this.subClassOfAxiomsIndex = checkNotNull(subClassOfAxiomsIndex);
         this.equivalentClassesAxiomsIndex = checkNotNull(equivalentClassesAxiomsIndex);

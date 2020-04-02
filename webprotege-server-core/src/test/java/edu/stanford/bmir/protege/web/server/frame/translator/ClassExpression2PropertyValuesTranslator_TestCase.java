@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.server.frame;
+package edu.stanford.bmir.protege.web.server.frame.translator;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.frame.translator.ClassExpression2PropertyValuesTranslator;
 import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.when;
  * 2019-08-13
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ClassExpression2PropertyValueTranslator_TestCase {
+public class ClassExpression2PropertyValuesTranslator_TestCase {
 
     @Mock
     private ContextRenderer renderer;
@@ -192,14 +193,14 @@ public class ClassExpression2PropertyValueTranslator_TestCase {
     }
 
     private void assertThatExpressionIsTranslatedAsTheEmptySet(OWLClassExpression classExpression) {
-        var translated = new ClassExpression2PropertyValueTranslator().translate(State.ASSERTED, classExpression);
+        var translated = new ClassExpression2PropertyValuesTranslator().translate(State.ASSERTED, classExpression);
         assertThat(translated.isEmpty(), Matchers.is(true));
     }
 
     private void assertThatClassExpressionIsTranslatedAs(OWLClassExpression classExpression,
                                                          State expectedState,
                                                          Collection<? extends PropertyValue> expectedPropertyValues) {
-        var translator = new ClassExpression2PropertyValueTranslator();
+        var translator = new ClassExpression2PropertyValuesTranslator();
         var translated = translator.translate(expectedState, classExpression);
         assertThat(translated, containsInAnyOrder(expectedPropertyValues.toArray()));
     }

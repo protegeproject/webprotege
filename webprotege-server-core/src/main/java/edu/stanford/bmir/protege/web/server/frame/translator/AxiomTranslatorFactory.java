@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.frame;
+package edu.stanford.bmir.protege.web.server.frame.translator;
 
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -15,15 +15,15 @@ import javax.inject.Inject;
 public class AxiomTranslatorFactory {
 
     @Nonnull
-    private final ClassExpression2PropertyValueTranslator classExpression2PropertyValueTranslator;
+    private final ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator;
 
     @Nonnull
     private final Annotation2PropertyValueTranslator annotation2PropertyValueTranslator;
 
     @Inject
-    public AxiomTranslatorFactory(@Nonnull ClassExpression2PropertyValueTranslator classExpression2PropertyValueTranslator,
+    public AxiomTranslatorFactory(@Nonnull ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator,
                                   @Nonnull Annotation2PropertyValueTranslator annotation2PropertyValueTranslator) {
-        this.classExpression2PropertyValueTranslator = classExpression2PropertyValueTranslator;
+        this.classExpression2PropertyValuesTranslator = classExpression2PropertyValuesTranslator;
         this.annotation2PropertyValueTranslator = annotation2PropertyValueTranslator;
     }
 
@@ -34,7 +34,7 @@ public class AxiomTranslatorFactory {
         return new Axiom2OutgoingPropertyValuesTranslator(subject,
                                                           axiom,
                                                           initialState,
-                                                          classExpression2PropertyValueTranslator,
+                                                          classExpression2PropertyValuesTranslator,
                                                           annotation2PropertyValueTranslator);
     }
 }

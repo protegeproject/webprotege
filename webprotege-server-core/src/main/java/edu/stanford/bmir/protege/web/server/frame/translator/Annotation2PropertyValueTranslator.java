@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.frame;
+package edu.stanford.bmir.protege.web.server.frame.translator;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;

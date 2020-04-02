@@ -2,11 +2,9 @@ package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.frame.AxiomPropertyValueTranslator;
+import edu.stanford.bmir.protege.web.server.frame.translator.AxiomPropertyValueTranslator;
 import edu.stanford.bmir.protege.web.server.index.*;
-import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import org.semanticweb.owlapi.model.OWLAxiom;

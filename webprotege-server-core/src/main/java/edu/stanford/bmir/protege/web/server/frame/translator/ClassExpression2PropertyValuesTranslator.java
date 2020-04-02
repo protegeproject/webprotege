@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.frame;
+package edu.stanford.bmir.protege.web.server.frame.translator;
 
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
@@ -17,10 +17,10 @@ import static java.util.stream.Collectors.toSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-13
  */
-class ClassExpression2PropertyValueTranslator {
+public class ClassExpression2PropertyValuesTranslator {
 
     @Inject
-    public ClassExpression2PropertyValueTranslator() {
+    public ClassExpression2PropertyValuesTranslator() {
     }
 
     /**

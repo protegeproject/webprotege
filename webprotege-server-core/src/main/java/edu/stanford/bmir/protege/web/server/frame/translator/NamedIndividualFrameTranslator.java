@@ -1,14 +1,14 @@
-package edu.stanford.bmir.protege.web.server.frame;
+package edu.stanford.bmir.protege.web.server.frame.translator;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import edu.stanford.bmir.protege.web.server.frame.Mode;
+import edu.stanford.bmir.protege.web.server.frame.PropertyValueComparator;
+import edu.stanford.bmir.protege.web.server.frame.PropertyValueMinimiser;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.PropertyAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.SameIndividualAxiomsIndex;
-import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;

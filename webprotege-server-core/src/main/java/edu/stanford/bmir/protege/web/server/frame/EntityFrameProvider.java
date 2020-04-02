@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import edu.stanford.bmir.protege.web.server.frame.translator.*;
 import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
 import org.semanticweb.owlapi.model.*;
 
