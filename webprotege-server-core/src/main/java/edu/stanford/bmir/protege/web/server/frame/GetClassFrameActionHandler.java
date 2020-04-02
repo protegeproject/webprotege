@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.frame.translator.ClassFrameTranslatorFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
@@ -33,17 +31,17 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     private static final Logger logger = LoggerFactory.getLogger(GetClassFrameActionHandler.class);
 
     @Nonnull
-    private final ClassFrameTranslatorFactory translatorFactory;
+    private final ClassFrameProvider classFrameProvider;
 
     @Nonnull
     private final FrameComponentSessionRendererFactory rendererFactory;
 
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull ClassFrameTranslatorFactory translatorFactory,
+                                      @Nonnull ClassFrameProvider classFrameProvider,
                                       @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
         super(accessManager);
-        this.translatorFactory = translatorFactory;
+        this.classFrameProvider = classFrameProvider;
         this.rendererFactory = rendererFactory;
     }
 
@@ -65,15 +63,15 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
 
     @Nonnull
     @Override
-    public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
+    public GetClassFrameResult execute(@Nonnull GetClassFrameAction action,
+                                       @Nonnull ExecutionContext executionContext) {
         var subject = action.getSubject();
-        var translationOptions = ClassFrameTranslatorOptions.get(
+        var options = ClassFrameTranslatorOptions.get(
                 INCLUDE_ANCESTORS,
                 RelationshipTranslationOptions.get(allOutgoingRelationships(),
                                                    noIncomingRelationships(),
                                                    MINIMIZED_RELATIONSHIPS));
-        var translator = translatorFactory.create(translationOptions);
-        var classFrame = translator.getFrame(subject);
+        var classFrame = classFrameProvider.getFrame(subject, options);
         var renderedFrame = classFrame.toEntityFrame(rendererFactory.create());
         logger.info(BROWSING,
                     "{} {} retrieved Class frame for {} ({})",

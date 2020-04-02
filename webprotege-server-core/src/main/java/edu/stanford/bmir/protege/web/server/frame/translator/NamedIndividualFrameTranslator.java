@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.frame.translator;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import edu.stanford.bmir.protege.web.server.frame.ClassFrameProvider;
 import edu.stanford.bmir.protege.web.server.frame.Mode;
-import edu.stanford.bmir.protege.web.server.frame.PropertyValueComparator;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueMinimiser;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
@@ -48,7 +48,7 @@ public class NamedIndividualFrameTranslator {
     private final PropertyValueMinimiser propertyValueMinimiser;
 
     @Nonnull
-    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
+    private final ClassFrameProvider classFrameProvider;
 
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
@@ -64,7 +64,7 @@ public class NamedIndividualFrameTranslator {
                                           @Nonnull PropertyAssertionAxiomsBySubjectIndex assertionsBySubject,
                                           @Nonnull SameIndividualAxiomsIndex sameIndividualAxiomsIndex,
                                           @Nonnull PropertyValueMinimiser propertyValueMinimiser,
-                                          @Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
+                                          @Nonnull ClassFrameProvider classFrameProvider,
                                           @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider,
                                           @Nonnull OWLDataFactory dataFactory) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
@@ -73,7 +73,7 @@ public class NamedIndividualFrameTranslator {
         this.sameIndividualAxiomsIndex = checkNotNull(sameIndividualAxiomsIndex);
         this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
         this.axiomPropertyValueTranslatorProvider = checkNotNull(axiomPropertyValueTranslatorProvider);
-        this.classFrameTranslatorFactory = checkNotNull(classFrameTranslatorFactory);
+        this.classFrameProvider = checkNotNull(classFrameProvider);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
@@ -113,12 +113,11 @@ public class NamedIndividualFrameTranslator {
         Stream<PlainPropertyValue> derivedPropertyValues;
 
         if(includeDerived) {
-            var classFrameTranslator = createClassFrameTranslator();
             derivedPropertyValues = getClassAssertionAxioms(subjectindividual)
                     .map(OWLClassAssertionAxiom::getClassExpression)
                     .filter(OWLClassExpression::isNamed)
                     .map(OWLClassExpression::asOWLClass)
-                    .map(classFrameTranslator::getFrame)
+                    .map(this::getClassFrame)
                     .flatMap(translator -> translator.getPropertyValues().stream())
                     .filter(PlainPropertyValue::isLogical)
                     .map(propertyValue -> propertyValue.withState(State.DERIVED));
@@ -151,17 +150,17 @@ public class NamedIndividualFrameTranslator {
                                              propertyValuesMin);
     }
 
-    private ClassFrameTranslator createClassFrameTranslator() {
-        return classFrameTranslatorFactory.create(
-                ClassFrameTranslatorOptions.get(
-                        ClassFrameTranslatorOptions.AncestorsTreatment.INCLUDE_ANCESTORS,
-                        RelationshipTranslationOptions.get(
-                                RelationshipTranslationOptions.allOutgoingRelationships(),
-                                RelationshipTranslationOptions.noIncomingRelationships(),
-                                RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
-                        )
+    @Nonnull
+    private PlainClassFrame getClassFrame(@Nonnull OWLClass subject) {
+        ClassFrameTranslatorOptions options = ClassFrameTranslatorOptions.get(
+                ClassFrameTranslatorOptions.AncestorsTreatment.INCLUDE_ANCESTORS,
+                RelationshipTranslationOptions.get(
+                        RelationshipTranslationOptions.allOutgoingRelationships(),
+                        RelationshipTranslationOptions.noIncomingRelationships(),
+                        RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
                 )
         );
+        return classFrameProvider.getFrame(subject, options);
     }
 
     private Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(OWLNamedIndividual subjectIndividual) {

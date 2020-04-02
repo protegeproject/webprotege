@@ -17,7 +17,7 @@ import javax.inject.Inject;
 public class EntityFrameProvider {
 
     @Nonnull
-    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
+    private final ClassFrameProvider classFrameProvider;
 
     @Nonnull
     private final ObjectPropertyFrameTranslator objectPropertyFrameTranslator;
@@ -32,12 +32,12 @@ public class EntityFrameProvider {
     private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
 
     @Inject
-    public EntityFrameProvider(@Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
+    public EntityFrameProvider(@Nonnull ClassFrameProvider classFrameProvider,
                                @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
                                @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator) {
-        this.classFrameTranslatorFactory = classFrameTranslatorFactory;
+        this.classFrameProvider = classFrameProvider;
         this.objectPropertyFrameTranslator = objectPropertyFrameTranslator;
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
@@ -51,15 +51,15 @@ public class EntityFrameProvider {
             @Nonnull
             @Override
             public PlainEntityFrame visit(@Nonnull OWLClass cls) {
-                var classFrameTranslator = classFrameTranslatorFactory.create(ClassFrameTranslatorOptions.get(
+                var options = ClassFrameTranslatorOptions.get(
                         ClassFrameTranslatorOptions.AncestorsTreatment.EXCLUDE_ANCESTORS,
                         RelationshipTranslationOptions.get(
                                 RelationshipTranslationOptions.allOutgoingRelationships(),
                                 RelationshipTranslationOptions.noIncomingRelationships(),
                                 RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
                         )
-                ));
-                return classFrameTranslator.getFrame(cls);
+                );
+                return classFrameProvider.getFrame(cls, options);
             }
 
             @Nonnull

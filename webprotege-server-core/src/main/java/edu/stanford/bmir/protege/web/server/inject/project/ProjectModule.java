@@ -18,9 +18,7 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
-import edu.stanford.bmir.protege.web.server.frame.FrameComponentRendererImpl;
-import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
-import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
+import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
@@ -685,6 +683,11 @@ public class ProjectModule {
     @Provides
     RelationshipMatcherFactory provideRelationshipMatcherFactory(MatcherFactory matcherFactory) {
         return matcherFactory;
+    }
+
+    @Provides
+    ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
+        return impl;
     }
 
 }

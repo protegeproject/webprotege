@@ -97,7 +97,15 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     private Set<OWLAxiom> getAxiomsForFrame(Frame<?> frame, Mode mode) {
         if(frame instanceof PlainClassFrame) {
             var classFrame = (PlainClassFrame) frame;
-            var classFrameTranslator = classFrameTranslatorFactory.create(ClassFrameTranslatorOptions.defaultOptions());
+            var options = ClassFrameTranslatorOptions.get(
+                    ClassFrameTranslatorOptions.AncestorsTreatment.EXCLUDE_ANCESTORS,
+                    RelationshipTranslationOptions.get(
+                            RelationshipTranslationOptions.allOutgoingRelationships(),
+                            RelationshipTranslationOptions.noIncomingRelationships(),
+                            RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
+                    )
+            );
+            var classFrameTranslator = classFrameTranslatorFactory.create(options);
             return classFrameTranslator.getAxioms(classFrame, mode);
         }
         else if(frame instanceof PlainObjectPropertyFrame) {
