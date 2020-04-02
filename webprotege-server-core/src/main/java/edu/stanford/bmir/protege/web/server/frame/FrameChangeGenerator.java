@@ -45,7 +45,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     private final OntologyAxiomsIndex axiomsIndex;
 
     @Nonnull
-    private final ClassFrameTranslator classFrameTranslator;
+    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
 
     @Nonnull
     private final ObjectPropertyFrameTranslator objectPropertyFrameTranslator;
@@ -68,7 +68,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
                                 @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
                                 @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                                 @Nonnull OntologyAxiomsIndex axiomsIndex,
-                                @Nonnull ClassFrameTranslator classFrameTranslator,
+                                @Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
                                 @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                 @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                 @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
@@ -79,7 +79,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
         this.factory = checkNotNull(factory);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
         this.axiomsIndex = checkNotNull(axiomsIndex);
-        this.classFrameTranslator = checkNotNull(classFrameTranslator);
+        this.classFrameTranslatorFactory = checkNotNull(classFrameTranslatorFactory);
         this.objectPropertyFrameTranslator = objectPropertyFrameTranslator;
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
@@ -97,6 +97,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     private Set<OWLAxiom> getAxiomsForFrame(Frame<?> frame, Mode mode) {
         if(frame instanceof PlainClassFrame) {
             var classFrame = (PlainClassFrame) frame;
+            var classFrameTranslator = classFrameTranslatorFactory.create(ClassFrameTranslatorOptions.defaultOptions());
             return classFrameTranslator.getAxioms(classFrame, mode);
         }
         else if(frame instanceof PlainObjectPropertyFrame) {
@@ -124,6 +125,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
 
     private Frame<?> getFrameForSubject(OWLEntity subject) {
         if(subject instanceof OWLClass) {
+            var classFrameTranslator = classFrameTranslatorFactory.create(ClassFrameTranslatorOptions.defaultOptions());
             return classFrameTranslator.getFrame((OWLClass) subject);
         }
         else if(subject instanceof OWLObjectProperty) {

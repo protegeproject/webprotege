@@ -48,7 +48,7 @@ public class NamedIndividualFrameTranslator {
     private final PropertyValueMinimiser propertyValueMinimiser;
 
     @Nonnull
-    private final Provider<ClassFrameTranslator> translatorProvider;
+    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
 
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
@@ -64,8 +64,7 @@ public class NamedIndividualFrameTranslator {
                                           @Nonnull PropertyAssertionAxiomsBySubjectIndex assertionsBySubject,
                                           @Nonnull SameIndividualAxiomsIndex sameIndividualAxiomsIndex,
                                           @Nonnull PropertyValueMinimiser propertyValueMinimiser,
-                                          @Nonnull PropertyValueComparator propertyValueComparator,
-                                          @Nonnull Provider<ClassFrameTranslator> translatorProvider,
+                                          @Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
                                           @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider,
                                           @Nonnull OWLDataFactory dataFactory) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
@@ -73,8 +72,8 @@ public class NamedIndividualFrameTranslator {
         this.assertionsBySubject = checkNotNull(assertionsBySubject);
         this.sameIndividualAxiomsIndex = checkNotNull(sameIndividualAxiomsIndex);
         this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
-        this.translatorProvider = checkNotNull(translatorProvider);
         this.axiomPropertyValueTranslatorProvider = checkNotNull(axiomPropertyValueTranslatorProvider);
+        this.classFrameTranslatorFactory = checkNotNull(classFrameTranslatorFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
@@ -114,11 +113,12 @@ public class NamedIndividualFrameTranslator {
         Stream<PlainPropertyValue> derivedPropertyValues;
 
         if(includeDerived) {
+            var classFrameTranslator = createClassFrameTranslator();
             derivedPropertyValues = getClassAssertionAxioms(subjectindividual)
                     .map(OWLClassAssertionAxiom::getClassExpression)
                     .filter(OWLClassExpression::isNamed)
                     .map(OWLClassExpression::asOWLClass)
-                    .map(cls -> translatorProvider.get().getFrame(cls))
+                    .map(classFrameTranslator::getFrame)
                     .flatMap(translator -> translator.getPropertyValues().stream())
                     .filter(PlainPropertyValue::isLogical)
                     .map(propertyValue -> propertyValue.withState(State.DERIVED));
@@ -149,6 +149,19 @@ public class NamedIndividualFrameTranslator {
                                              types,
                                              sameIndividuals,
                                              propertyValuesMin);
+    }
+
+    private ClassFrameTranslator createClassFrameTranslator() {
+        return classFrameTranslatorFactory.create(
+                ClassFrameTranslatorOptions.get(
+                        ClassFrameTranslatorOptions.AncestorsTreatment.INCLUDE_ANCESTORS,
+                        RelationshipTranslationOptions.get(
+                                RelationshipTranslationOptions.allOutgoingRelationships(),
+                                RelationshipTranslationOptions.noIncomingRelationships(),
+                                RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
+                        )
+                )
+        );
     }
 
     private Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(OWLNamedIndividual subjectIndividual) {

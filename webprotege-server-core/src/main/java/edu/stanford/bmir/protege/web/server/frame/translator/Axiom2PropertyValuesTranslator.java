@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame.translator;
 
-import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 
@@ -8,10 +9,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -30,13 +29,26 @@ class Axiom2PropertyValuesTranslator {
     private final State initialState;
 
     @Nonnull
-    private final ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator;
+    private final SubClassOfAxiom2PropertyValuesTranslator subClassOfAxiom2PropertyValuesTranslator;
 
     @Nonnull
-    private final Annotation2PropertyValueTranslator annotation2PropertyValueTranslator;
+    private final EquivalentClassesAxiom2PropertyValuesTranslator equivalentClassesAxiom2PropertyValuesTranslator;
 
-    private final OWLAxiomVisitorExAdapter<Set<PlainPropertyValue>> axiomVisitor = new OWLAxiomVisitorExAdapter<>(Collections
-                                                                                                                     .emptySet()) {
+    @Nonnull
+    private final ClassAssertionAxiom2PropertyValuesTranslator classAssertionAxiom2PropertyValuesTranslator;
+
+    @Nonnull
+    private final ObjectPropertyAssertionAxiom2PropertyValuesTranslator objectPropertyAssertionAxiom2PropertyValuesTranslator;
+
+    @Nonnull
+    private final DataPropertyAssertionAxiom2PropertyValuesTranslator dataPropertyAssertionAxiom2PropertyValuesTranslator;
+
+    @Nonnull
+    private final AnnotationAssertionAxiom2PropertyValuesTranslator annotationAssertionAxiom2PropertyValuesTranslator;
+
+    private final OWLAxiomVisitorExAdapter<Set<PlainPropertyValue>> axiomVisitor = new OWLAxiomVisitorExAdapter<>(
+            Collections
+                    .emptySet()) {
         @Nonnull
         @Override
         public Set<PlainPropertyValue> visit(OWLSubClassOfAxiom axiom) {
@@ -78,13 +90,21 @@ class Axiom2PropertyValuesTranslator {
     public Axiom2PropertyValuesTranslator(@Nonnull OWLEntity subject,
                                           @Nonnull OWLAxiom axiom,
                                           @Nonnull State initialState,
-                                          @Nonnull ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator,
-                                          @Nonnull Annotation2PropertyValueTranslator annotation2PropertyValueTranslator) {
+                                          @Nonnull SubClassOfAxiom2PropertyValuesTranslator subClassOfAxiom2PropertyValuesTranslator,
+                                          @Nonnull EquivalentClassesAxiom2PropertyValuesTranslator equivalentClassesAxiom2PropertyValuesTranslator,
+                                          @Nonnull ClassAssertionAxiom2PropertyValuesTranslator classAssertionAxiom2PropertyValuesTranslator,
+                                          @Nonnull ObjectPropertyAssertionAxiom2PropertyValuesTranslator objectPropertyAssertionAxiom2PropertyValuesTranslator,
+                                          @Nonnull DataPropertyAssertionAxiom2PropertyValuesTranslator dataPropertyAssertionAxiom2PropertyValuesTranslator,
+                                          @Nonnull AnnotationAssertionAxiom2PropertyValuesTranslator annotationAssertionAxiom2PropertyValuesTranslator) {
         this.subject = checkNotNull(subject);
         this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
-        this.classExpression2PropertyValuesTranslator = checkNotNull(classExpression2PropertyValuesTranslator);
-        this.annotation2PropertyValueTranslator = checkNotNull(annotation2PropertyValueTranslator);
+        this.subClassOfAxiom2PropertyValuesTranslator = subClassOfAxiom2PropertyValuesTranslator;
+        this.equivalentClassesAxiom2PropertyValuesTranslator = equivalentClassesAxiom2PropertyValuesTranslator;
+        this.classAssertionAxiom2PropertyValuesTranslator = classAssertionAxiom2PropertyValuesTranslator;
+        this.objectPropertyAssertionAxiom2PropertyValuesTranslator = objectPropertyAssertionAxiom2PropertyValuesTranslator;
+        this.dataPropertyAssertionAxiom2PropertyValuesTranslator = dataPropertyAssertionAxiom2PropertyValuesTranslator;
+        this.annotationAssertionAxiom2PropertyValuesTranslator = annotationAssertionAxiom2PropertyValuesTranslator;
     }
 
     /**
@@ -95,77 +115,44 @@ class Axiom2PropertyValuesTranslator {
         return axiom.accept(axiomVisitor);
     }
 
-    private Set<PlainPropertyValue> translateSubClassOf(OWLSubClassOfAxiom axiom) {
-        if(!axiom.getSubClass().equals(subject)) {
-            return Collections.emptySet();
-        }
-        var superClass = axiom.getSuperClass();
-        return classExpression2PropertyValuesTranslator.translate(initialState, superClass);
-    }
-
-    private Set<PlainPropertyValue> translateEquivalentClasses(OWLEquivalentClassesAxiom axiom) {
-        if(!subject.isOWLClass()) {
-            return Collections.emptySet();
-        }
-        var classExpressions = axiom.getClassExpressions();
-        if(!classExpressions.contains(subject.asOWLClass())) {
-            return Collections.emptySet();
-        }
-        return classExpressions.stream()
-                .filter(ce -> !ce.equals(subject))
-                .flatMap(this::toDerivedPlainPropertyValues)
-                .collect(toImmutableSet());
-    }
-
-    private Stream<? extends PlainPropertyValue> toDerivedPlainPropertyValues(OWLClassExpression ce) {
-        return classExpression2PropertyValuesTranslator.translate(State.DERIVED, ce).stream();
-    }
-
-
     @Nonnull
     private Set<PlainPropertyValue> translateAnnotationAssertion(OWLAnnotationAssertionAxiom axiom) {
-        if(!axiom.getSubject().equals(subject.getIRI())) {
-            return Collections.emptySet();
-        }
-        return annotation2PropertyValueTranslator.translate(axiom.getAnnotation(), State.ASSERTED);
+        return annotationAssertionAxiom2PropertyValuesTranslator.translate(axiom,
+                                                                           subject,
+                                                                           initialState);
     }
 
-
-    @Nonnull
-    private Set<PlainPropertyValue> translateObjectPropertyAssertion(OWLObjectPropertyAssertionAxiom axiom) {
-        if(axiom.getProperty().isAnonymous()) {
-            return Collections.emptySet();
-        }
-        if(axiom.getObject().isAnonymous()) {
-            return Collections.emptySet();
-        }
-        if(!axiom.getSubject().equals(subject)) {
-            return Collections.emptySet();
-        }
-        var property = axiom.getProperty().asOWLObjectProperty();
-        var object = axiom.getObject().asOWLNamedIndividual();
-        return Collections.singleton(PlainPropertyIndividualValue.get(property,
-                                                                      object,
-                                                                      State.ASSERTED));
+    private Set<PlainPropertyValue> translateClassAssertion(OWLClassAssertionAxiom axiom) {
+        return classAssertionAxiom2PropertyValuesTranslator.translate(axiom,
+                                                                      subject,
+                                                                      initialState);
     }
 
     @Nonnull
     private Set<PlainPropertyValue> translateDataPropertyAssertion(OWLDataPropertyAssertionAxiom axiom) {
-        if(!axiom.getSubject().equals(subject)) {
-            return Collections.emptySet();
-        }
-        OWLDataProperty property = axiom.getProperty().asOWLDataProperty();
-        return Collections.singleton(PlainPropertyLiteralValue.get(property,
-                                                              axiom.getObject(),
-                                                              State.ASSERTED));
+        return dataPropertyAssertionAxiom2PropertyValuesTranslator.translate(axiom,
+                                                                             subject,
+                                                                             initialState);
+    }
+
+    private Set<PlainPropertyValue> translateEquivalentClasses(OWLEquivalentClassesAxiom axiom) {
+        return equivalentClassesAxiom2PropertyValuesTranslator.translate(axiom,
+                                                                         subject,
+                                                                         initialState);
     }
 
     @Nonnull
-    private Set<PlainPropertyValue> translateClassAssertion(OWLClassAssertionAxiom axiom) {
-        if(!axiom.getIndividual().equals(subject)) {
-            return Collections.emptySet();
-        }
-        var classExpression = axiom.getClassExpression();
-        return classExpression2PropertyValuesTranslator.translate(initialState, classExpression);
+    private Set<PlainPropertyValue> translateObjectPropertyAssertion(OWLObjectPropertyAssertionAxiom axiom) {
+        return objectPropertyAssertionAxiom2PropertyValuesTranslator.translate(axiom,
+                                                                               subject,
+                                                                               initialState);
     }
+
+    private Set<PlainPropertyValue> translateSubClassOf(OWLSubClassOfAxiom axiom) {
+        return subClassOfAxiom2PropertyValuesTranslator.translate(axiom,
+                                                                  subject,
+                                                                  initialState);
+    }
+
+
 }

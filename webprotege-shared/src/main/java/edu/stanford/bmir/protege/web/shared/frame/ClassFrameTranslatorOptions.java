@@ -12,6 +12,15 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class ClassFrameTranslatorOptions {
 
+    public static ClassFrameTranslatorOptions defaultOptions() {
+        return get(AncestorsTreatment.INCLUDE_ANCESTORS,
+                   RelationshipTranslationOptions.get(
+                           RelationshipTranslationOptions.allOutgoingRelationships(),
+                           RelationshipTranslationOptions.noIncomingRelationships(),
+                           RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS
+                   ));
+    }
+
     public enum AncestorsTreatment {
         INCLUDE_ANCESTORS,
         EXCLUDE_ANCESTORS;

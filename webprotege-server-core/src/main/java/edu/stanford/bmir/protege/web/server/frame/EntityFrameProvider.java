@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.frame.translator.*;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
+import edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -15,7 +17,7 @@ import javax.inject.Inject;
 public class EntityFrameProvider {
 
     @Nonnull
-    private final ClassFrameTranslator classFrameTranslator;
+    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
 
     @Nonnull
     private final ObjectPropertyFrameTranslator objectPropertyFrameTranslator;
@@ -30,12 +32,12 @@ public class EntityFrameProvider {
     private final NamedIndividualFrameTranslator namedIndividualFrameTranslator;
 
     @Inject
-    public EntityFrameProvider(@Nonnull ClassFrameTranslator classFrameTranslator,
+    public EntityFrameProvider(@Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
                                @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
                                @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator) {
-        this.classFrameTranslator = classFrameTranslator;
+        this.classFrameTranslatorFactory = classFrameTranslatorFactory;
         this.objectPropertyFrameTranslator = objectPropertyFrameTranslator;
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
@@ -49,6 +51,14 @@ public class EntityFrameProvider {
             @Nonnull
             @Override
             public PlainEntityFrame visit(@Nonnull OWLClass cls) {
+                var classFrameTranslator = classFrameTranslatorFactory.create(ClassFrameTranslatorOptions.get(
+                        ClassFrameTranslatorOptions.AncestorsTreatment.EXCLUDE_ANCESTORS,
+                        RelationshipTranslationOptions.get(
+                                RelationshipTranslationOptions.allOutgoingRelationships(),
+                                RelationshipTranslationOptions.noIncomingRelationships(),
+                                RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
+                        )
+                ));
                 return classFrameTranslator.getFrame(cls);
             }
 

@@ -23,15 +23,16 @@ import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecke
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
-import edu.stanford.bmir.protege.web.server.index.impl.*;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
+import edu.stanford.bmir.protege.web.server.match.RelationshipMatcherFactory;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCacheFactory;
@@ -679,6 +680,11 @@ public class ProjectModule {
     @Provides
     FrameComponentRenderer provideFrameComponentRenderer(FrameComponentRendererImpl impl) {
         return impl;
+    }
+
+    @Provides
+    RelationshipMatcherFactory provideRelationshipMatcherFactory(MatcherFactory matcherFactory) {
+        return matcherFactory;
     }
 
 }

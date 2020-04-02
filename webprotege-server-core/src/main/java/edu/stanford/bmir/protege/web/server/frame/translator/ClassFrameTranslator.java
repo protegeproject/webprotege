@@ -72,7 +72,6 @@ public class ClassFrameTranslator {
     private final RelationshipMatcherFactory matcherFactory;
 
     @AutoFactory
-    @Inject
     public ClassFrameTranslator(@Provided @Nonnull ProjectOntologiesIndex ontologiesIndex,
                                 @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
                                 @Provided @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
@@ -81,8 +80,8 @@ public class ClassFrameTranslator {
                                 @Provided @Nonnull HasGetAncestors<OWLClass> ancestorsProvider,
                                 @Provided @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                 @Provided @Nonnull AxiomPropertyValueTranslator axiomPropertyValueTranslator,
-                                @Nonnull ClassFrameTranslatorOptions options,
-                                @Nonnull @Provided RelationshipMatcherFactory matcherFactory) {
+                                @Nonnull @Provided RelationshipMatcherFactory matcherFactory,
+                                @Nonnull ClassFrameTranslatorOptions options) {
         this.ontologiesIndex = ontologiesIndex;
         this.subClassOfAxiomsIndex = checkNotNull(subClassOfAxiomsIndex);
         this.equivalentClassesAxiomsIndex = checkNotNull(equivalentClassesAxiomsIndex);

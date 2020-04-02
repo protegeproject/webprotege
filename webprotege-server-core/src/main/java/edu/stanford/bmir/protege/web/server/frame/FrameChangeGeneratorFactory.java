@@ -34,7 +34,7 @@ public class FrameChangeGeneratorFactory {
     private final OntologyAxiomsIndex axiomsIndex;
 
     @Nonnull
-    private final ClassFrameTranslator classFrameTranslator;
+    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
 
     @Nonnull
     private final ObjectPropertyFrameTranslator objectPropertyFrameTranslator;
@@ -56,7 +56,7 @@ public class FrameChangeGeneratorFactory {
                                        @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
                                        @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                                        @Nonnull OntologyAxiomsIndex axiomsIndex,
-                                       @Nonnull ClassFrameTranslator classFrameTranslator,
+                                       @Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
                                        @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                        @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                        @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
@@ -66,7 +66,7 @@ public class FrameChangeGeneratorFactory {
         this.factory = factory;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
         this.axiomsIndex = axiomsIndex;
-        this.classFrameTranslator = classFrameTranslator;
+        this.classFrameTranslatorFactory = classFrameTranslatorFactory;
         this.objectPropertyFrameTranslator = objectPropertyFrameTranslator;
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
@@ -81,7 +81,7 @@ public class FrameChangeGeneratorFactory {
                                         factory,
                                         this.defaultOntologyIdManager,
                                         this.axiomsIndex,
-                                        this.classFrameTranslator,
+                                        this.classFrameTranslatorFactory,
                                         this.objectPropertyFrameTranslator,
                                         this.dataPropertyFrameTranslator,
                                         this.annotationPropertyFrameTranslator,

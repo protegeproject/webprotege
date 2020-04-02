@@ -56,7 +56,7 @@ public class WebProtegeWebAppFilter implements Filter {
      * filter content or headers for input filtering <br>
      * 3. Optionally wrap the response object with a custom implementation to
      * filter content or headers for output filtering <br>
-     * 4. a) <strong>Either</strong> invoke the next entity in the chain using the FilterChain object
+     * 4. a) <strong>Either</strong> translate the next entity in the chain using the FilterChain object
      * (<code>chain.doFilter()</code>), <br>
      * * 4. b) <strong>or</strong> not pass on the request/response pair to the next entity in the filter chain to block
      * the request processing<br>

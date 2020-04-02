@@ -15,16 +15,36 @@ import javax.inject.Inject;
 public class AxiomTranslatorFactory {
 
     @Nonnull
-    private final ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator;
+    private final SubClassOfAxiom2PropertyValuesTranslator subClassOfAxiom2PropertyValuesTranslator;
 
     @Nonnull
-    private final Annotation2PropertyValueTranslator annotation2PropertyValueTranslator;
+    private final EquivalentClassesAxiom2PropertyValuesTranslator equivalentClassesAxiom2PropertyValuesTranslator;
+
+    @Nonnull
+    private final ClassAssertionAxiom2PropertyValuesTranslator classAssertionAxiom2PropertyValuesTranslator;
+
+    @Nonnull
+    private final ObjectPropertyAssertionAxiom2PropertyValuesTranslator objectPropertyAssertionAxiom2PropertyValuesTranslator;
+
+    @Nonnull
+    private final DataPropertyAssertionAxiom2PropertyValuesTranslator dataPropertyAssertionAxiom2PropertyValuesTranslator;
+
+    @Nonnull
+    private final AnnotationAssertionAxiom2PropertyValuesTranslator annotationAssertionAxiom2PropertyValuesTranslator;
 
     @Inject
-    public AxiomTranslatorFactory(@Nonnull ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator,
-                                  @Nonnull Annotation2PropertyValueTranslator annotation2PropertyValueTranslator) {
-        this.classExpression2PropertyValuesTranslator = classExpression2PropertyValuesTranslator;
-        this.annotation2PropertyValueTranslator = annotation2PropertyValueTranslator;
+    public AxiomTranslatorFactory(@Nonnull SubClassOfAxiom2PropertyValuesTranslator subClassOfAxiom2PropertyValuesTranslator,
+                                  @Nonnull EquivalentClassesAxiom2PropertyValuesTranslator equivalentClassesAxiom2PropertyValuesTranslator,
+                                  @Nonnull ClassAssertionAxiom2PropertyValuesTranslator classAssertionAxiom2PropertyValuesTranslator,
+                                  @Nonnull ObjectPropertyAssertionAxiom2PropertyValuesTranslator objectPropertyAssertionAxiom2PropertyValuesTranslator,
+                                  @Nonnull DataPropertyAssertionAxiom2PropertyValuesTranslator dataPropertyAssertionAxiom2PropertyValuesTranslator,
+                                  @Nonnull AnnotationAssertionAxiom2PropertyValuesTranslator annotationAssertionAxiom2PropertyValuesTranslator) {
+        this.subClassOfAxiom2PropertyValuesTranslator = subClassOfAxiom2PropertyValuesTranslator;
+        this.equivalentClassesAxiom2PropertyValuesTranslator = equivalentClassesAxiom2PropertyValuesTranslator;
+        this.classAssertionAxiom2PropertyValuesTranslator = classAssertionAxiom2PropertyValuesTranslator;
+        this.objectPropertyAssertionAxiom2PropertyValuesTranslator = objectPropertyAssertionAxiom2PropertyValuesTranslator;
+        this.dataPropertyAssertionAxiom2PropertyValuesTranslator = dataPropertyAssertionAxiom2PropertyValuesTranslator;
+        this.annotationAssertionAxiom2PropertyValuesTranslator = annotationAssertionAxiom2PropertyValuesTranslator;
     }
 
     @Nonnull
@@ -34,7 +54,11 @@ public class AxiomTranslatorFactory {
         return new Axiom2PropertyValuesTranslator(subject,
                                                   axiom,
                                                   initialState,
-                                                  classExpression2PropertyValuesTranslator,
-                                                  annotation2PropertyValueTranslator);
+                                                  subClassOfAxiom2PropertyValuesTranslator,
+                                                  equivalentClassesAxiom2PropertyValuesTranslator,
+                                                  classAssertionAxiom2PropertyValuesTranslator,
+                                                  objectPropertyAssertionAxiom2PropertyValuesTranslator,
+                                                  dataPropertyAssertionAxiom2PropertyValuesTranslator,
+                                                  annotationAssertionAxiom2PropertyValuesTranslator);
     }
 }

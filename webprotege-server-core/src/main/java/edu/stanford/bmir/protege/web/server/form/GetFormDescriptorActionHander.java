@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataReposit
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.frame.translator.ClassFrameTranslator;
+import edu.stanford.bmir.protege.web.server.frame.translator.ClassFrameTranslatorFactory;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
@@ -24,28 +25,9 @@ import javax.inject.Inject;
  */
 public class GetFormDescriptorActionHander extends AbstractProjectActionHandler<GetFormDescriptorAction, GetFormDescriptorResult> {
 
-    private final ProjectId projectId;
-
-    private final OWLDataFactory dataFactory;
-
-    private final CollectionItemDataRepository repository;
-
-    private final ClassFrameTranslator translator;
-
     @Inject
-    public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager,
-                                         ProjectId projectId,
-                                         ClassHierarchyProvider classHierarchyProvider,
-                                         OWLDataFactory dataFactory,
-                                         CollectionItemDataRepository repository,
-                                         ProjectOntologiesIndex projectOntologiesIndex,
-                                         AnnotationAssertionAxiomsBySubjectIndex index,
-                                         ClassFrameTranslator translator) {
+    public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager) {
         super(accessManager);
-        this.projectId = projectId;
-        this.dataFactory = dataFactory;
-        this.repository = repository;
-        this.translator = translator;
     }
 
     @Nonnull
