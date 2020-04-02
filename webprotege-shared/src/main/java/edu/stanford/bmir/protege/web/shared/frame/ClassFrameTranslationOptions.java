@@ -10,9 +10,9 @@ import javax.annotation.Nonnull;
  * 2020-04-02
  */
 @AutoValue
-public abstract class ClassFrameTranslatorOptions {
+public abstract class ClassFrameTranslationOptions {
 
-    public static ClassFrameTranslatorOptions defaultOptions() {
+    public static ClassFrameTranslationOptions defaultOptions() {
         return get(AncestorsTreatment.INCLUDE_ANCESTORS,
                    RelationshipTranslationOptions.get(
                            RelationshipTranslationOptions.allOutgoingRelationships(),
@@ -26,9 +26,9 @@ public abstract class ClassFrameTranslatorOptions {
         EXCLUDE_ANCESTORS;
     }
 
-    public static ClassFrameTranslatorOptions get(@Nonnull AncestorsTreatment ancestorsTreatment,
-                                                  @Nonnull RelationshipTranslationOptions relationshipTranslationOptions) {
-        return new AutoValue_ClassFrameTranslatorOptions(ancestorsTreatment, relationshipTranslationOptions);
+    public static ClassFrameTranslationOptions get(@Nonnull AncestorsTreatment ancestorsTreatment,
+                                                   @Nonnull RelationshipTranslationOptions relationshipTranslationOptions) {
+        return new AutoValue_ClassFrameTranslationOptions(ancestorsTreatment, relationshipTranslationOptions);
     }
 
     public abstract AncestorsTreatment getAncestorsTreatment();

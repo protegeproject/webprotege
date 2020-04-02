@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainClassFrame;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -20,5 +20,5 @@ public interface ClassFrameProvider {
      */
     @Nonnull
     PlainClassFrame getFrame(@Nonnull OWLClass subject,
-                             @Nonnull ClassFrameTranslatorOptions options);
+                             @Nonnull ClassFrameTranslationOptions options);
 }

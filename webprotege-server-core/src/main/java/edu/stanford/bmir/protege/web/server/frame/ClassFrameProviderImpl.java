@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.frame.translator.ClassFrameTranslatorFactory;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainClassFrame;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -26,7 +26,7 @@ public class ClassFrameProviderImpl implements ClassFrameProvider {
     @Nonnull
     @Override
     public PlainClassFrame getFrame(@Nonnull OWLClass subject,
-                                    @Nonnull ClassFrameTranslatorOptions options) {
+                                    @Nonnull ClassFrameTranslationOptions options) {
         var translator = translatorFactory.create(options);
         return translator.getFrame(subject);
     }

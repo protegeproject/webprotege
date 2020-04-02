@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.frame.translator.*;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
 import edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions;
 import org.semanticweb.owlapi.model.*;
@@ -51,8 +51,8 @@ public class EntityFrameProvider {
             @Nonnull
             @Override
             public PlainEntityFrame visit(@Nonnull OWLClass cls) {
-                var options = ClassFrameTranslatorOptions.get(
-                        ClassFrameTranslatorOptions.AncestorsTreatment.EXCLUDE_ANCESTORS,
+                var options = ClassFrameTranslationOptions.get(
+                        ClassFrameTranslationOptions.AncestorsTreatment.EXCLUDE_ANCESTORS,
                         RelationshipTranslationOptions.get(
                                 RelationshipTranslationOptions.allOutgoingRelationships(),
                                 RelationshipTranslationOptions.noIncomingRelationships(),

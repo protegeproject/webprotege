@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
-import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
+import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.*;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS;
 
@@ -66,7 +66,7 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     public GetClassFrameResult execute(@Nonnull GetClassFrameAction action,
                                        @Nonnull ExecutionContext executionContext) {
         var subject = action.getSubject();
-        var options = ClassFrameTranslatorOptions.get(
+        var options = ClassFrameTranslationOptions.get(
                 INCLUDE_ANCESTORS,
                 RelationshipTranslationOptions.get(allOutgoingRelationships(),
                                                    noIncomingRelationships(),

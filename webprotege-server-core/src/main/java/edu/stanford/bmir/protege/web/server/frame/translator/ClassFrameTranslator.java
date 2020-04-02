@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.server.index.EquivalentClassesAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.SubClassOfAxiomsBySubClassIndex;
 import edu.stanford.bmir.protege.web.server.match.RelationshipMatcherFactory;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
@@ -20,14 +20,13 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
+import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS;
 
 /**
@@ -66,7 +65,7 @@ public class ClassFrameTranslator {
     private final AxiomPropertyValueTranslator axiomPropertyValueTranslator;
 
     @Nonnull
-    private final ClassFrameTranslatorOptions options;
+    private final ClassFrameTranslationOptions options;
 
     @Nonnull
     private final RelationshipMatcherFactory matcherFactory;
@@ -81,7 +80,7 @@ public class ClassFrameTranslator {
                                 @Provided @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                 @Provided @Nonnull AxiomPropertyValueTranslator axiomPropertyValueTranslator,
                                 @Nonnull @Provided RelationshipMatcherFactory matcherFactory,
-                                @Nonnull ClassFrameTranslatorOptions options) {
+                                @Nonnull ClassFrameTranslationOptions options) {
         this.ontologiesIndex = ontologiesIndex;
         this.subClassOfAxiomsIndex = checkNotNull(subClassOfAxiomsIndex);
         this.equivalentClassesAxiomsIndex = checkNotNull(equivalentClassesAxiomsIndex);
