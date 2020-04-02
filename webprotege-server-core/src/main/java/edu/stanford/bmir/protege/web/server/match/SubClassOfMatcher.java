@@ -8,8 +8,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
-import java.util.Set;
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,32 +26,31 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
     @Nonnull
     private final OWLClass cls;
 
-    private final Set<OWLClass> subClasses;
-
     private final HierarchyFilterType filterType;
 
-    private boolean filledClasses = false;
-
+    @Inject
     public SubClassOfMatcher(@Provided @Nonnull ClassHierarchyProvider provider,
                              @Nonnull OWLClass cls,
                              @Nonnull HierarchyFilterType filterType) {
         this.provider = checkNotNull(provider);
         this.filterType = checkNotNull(filterType);
         this.cls = checkNotNull(cls);
-        subClasses = new HashSet<>();
     }
 
     @Override
     public boolean matches(@Nonnull OWLEntity value) {
-        if(value.isOWLClass() && !filledClasses) {
-            filledClasses = true;
-            if (filterType == HierarchyFilterType.ALL) {
-                subClasses.addAll(provider.getDescendants(cls));
-            }
-            else {
-                subClasses.addAll(provider.getChildren(cls));
-            }
+        if(!value.isOWLClass()) {
+            return false;
         }
-        return value.isOWLClass() && subClasses.contains(value.asOWLClass());
+        value.isOWLClass();
+        if(filterType == HierarchyFilterType.DIRECT) {
+            return provider.isParent(value.asOWLClass(), cls);
+        }
+        else {
+            if(cls.isOWLThing()) {
+                return true;
+            }
+            return provider.isAncestor(value.asOWLClass(), cls);
+        }
     }
 }

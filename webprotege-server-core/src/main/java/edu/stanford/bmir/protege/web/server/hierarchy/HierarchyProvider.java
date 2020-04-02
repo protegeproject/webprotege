@@ -31,4 +31,10 @@ public interface HierarchyProvider<N> extends HasGetAncestors<N> {
 
 
     Set<List<N>> getPathsToRoot(N object);
+
+    boolean isAncestor(N descendant, N ancestor);
+
+    default boolean isParent(N child, N parent) {
+        return getParents(child).contains(parent);
+    }
 }

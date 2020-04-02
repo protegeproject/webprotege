@@ -94,7 +94,22 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         if(object.equals(root)) {
             return Collections.emptySet();
         }
+        Stream<OWLClass> parentsCombined = getParentsStream(object);
+        var parents = parentsCombined.collect(toSet());
+        // Thing if the object is a root class
+        if(rootFinder.getTerminalElements()
+                     .contains(object)) {
+            parents.add(root);
+        }
+        return parents;
+    }
 
+    @Override
+    public boolean isParent(OWLClass child, OWLClass parent) {
+        return getParentsStream(child).anyMatch(c -> c.equals(parent));
+    }
+
+    private Stream<OWLClass> getParentsStream(OWLClass object) {
         var subClassOfAxiomsParents =
                 projectOntologiesIndex.getOntologyIds()
                                       .flatMap(ontId -> subClassOfAxiomsIndex.getSubClassOfAxiomsForSubClass(object,
@@ -117,14 +132,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
                                       .filter(OWLClassExpression::isNamed)
                                       .map(OWLClassExpression::asOWLClass);
 
-        var parentsCombined = Stream.concat(subClassOfAxiomsParents, equivalentClassesAxiomsParents);
-        var parents = parentsCombined.collect(toSet());
-        // Thing if the object is a root class
-        if(rootFinder.getTerminalElements()
-                     .contains(object)) {
-            parents.add(root);
-        }
-        return parents;
+        return Stream.concat(subClassOfAxiomsParents, equivalentClassesAxiomsParents);
     }
 
     private void rebuildIfNecessary() {
