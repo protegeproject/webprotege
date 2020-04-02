@@ -44,24 +44,19 @@ public class EntityRelationshipMatcher implements EntityFrameMatcher {
     @Nonnull
     private final AxiomPropertyValueTranslator translator;
 
-    @Nonnull
-    private final ContextRenderer minimalContextRenderer;
-
     @AutoFactory
     public EntityRelationshipMatcher(@Nonnull @Provided ProjectOntologiesIndex projectOntologiesIndex,
                                      @Nonnull RelationshipPresence relationshipPresence,
                                      @Nonnull PropertyValueMatcher propertyValueMatcher,
                                      @Nonnull @Provided SubClassOfAxiomsBySubClassIndex subClassOfAxiomsBySubClassIndex,
                                      @Nonnull @Provided PropertyAssertionAxiomsBySubjectIndex propertyAssertionAxiomsBySubjectIndex,
-                                     @Nonnull @Provided AxiomPropertyValueTranslator axiomTranslator,
-                                     @Nonnull ContextRenderer minimalContextRenderer) {
+                                     @Nonnull @Provided AxiomPropertyValueTranslator axiomTranslator) {
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.relationshipPresence = relationshipPresence;
         this.propertyValueMatcher = propertyValueMatcher;
         this.subClassOfAxiomsBySubClassIndex = subClassOfAxiomsBySubClassIndex;
         this.propertyAssertionAxiomsBySubjectIndex = propertyAssertionAxiomsBySubjectIndex;
         this.translator = axiomTranslator;
-        this.minimalContextRenderer = minimalContextRenderer;
     }
 
     @Override
@@ -87,7 +82,7 @@ public class EntityRelationshipMatcher implements EntityFrameMatcher {
             axiomStream = Stream.empty();
         }
 
-        Stream<PlainPropertyValue> propertyValueStream = axiomStream.flatMap(ax -> translator.getPropertyValues(entity, ax, State.ASSERTED, minimalContextRenderer).stream());
+        Stream<PlainPropertyValue> propertyValueStream = axiomStream.flatMap(ax -> translator.getPropertyValues(entity, ax, State.ASSERTED).stream());
 
 
         if (relationshipPresence == RelationshipPresence.AT_LEAST_ONE) {

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * 2019-08-13
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ClassExpressionTranslator_TestCase {
+public class ClassExpression2PropertyValueTranslator_TestCase {
 
     @Mock
     private ContextRenderer renderer;
@@ -192,14 +192,14 @@ public class ClassExpressionTranslator_TestCase {
     }
 
     private void assertThatExpressionIsTranslatedAsTheEmptySet(OWLClassExpression classExpression) {
-        var translated = new ClassExpressionTranslator().translate(State.ASSERTED, classExpression);
+        var translated = new ClassExpression2PropertyValueTranslator().translate(State.ASSERTED, classExpression);
         assertThat(translated.isEmpty(), Matchers.is(true));
     }
 
     private void assertThatClassExpressionIsTranslatedAs(OWLClassExpression classExpression,
                                                          State expectedState,
                                                          Collection<? extends PropertyValue> expectedPropertyValues) {
-        var translator = new ClassExpressionTranslator();
+        var translator = new ClassExpression2PropertyValueTranslator();
         var translated = translator.translate(expectedState, classExpression);
         assertThat(translated, containsInAnyOrder(expectedPropertyValues.toArray()));
     }

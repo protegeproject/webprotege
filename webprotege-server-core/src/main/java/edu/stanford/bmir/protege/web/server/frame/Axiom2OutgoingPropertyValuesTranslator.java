@@ -1,15 +1,10 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
@@ -23,7 +18,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-13
  */
-class AxiomTranslator {
+class Axiom2OutgoingPropertyValuesTranslator {
 
     @Nonnull
     private final OWLEntity subject;
@@ -35,13 +30,10 @@ class AxiomTranslator {
     private final State initialState;
 
     @Nonnull
-    private final ContextRenderer renderer;
+    private final ClassExpression2PropertyValueTranslator classExpression2PropertyValueTranslator;
 
     @Nonnull
-    private final ClassExpressionTranslator classExpressionTranslator;
-
-    @Nonnull
-    private final AnnotationTranslator annotationTranslator;
+    private final Annotation2PropertyValueTranslator annotation2PropertyValueTranslator;
 
     private final OWLAxiomVisitorExAdapter<Set<PlainPropertyValue>> axiomVisitor = new OWLAxiomVisitorExAdapter<>(Collections
                                                                                                                      .emptySet()) {
@@ -83,18 +75,16 @@ class AxiomTranslator {
     };
 
     @Inject
-    public AxiomTranslator(@Nonnull OWLEntity subject,
-                           @Nonnull OWLAxiom axiom,
-                           @Nonnull State initialState,
-                           @Nonnull ContextRenderer renderer,
-                           @Nonnull ClassExpressionTranslator classExpressionTranslator,
-                           @Nonnull AnnotationTranslator annotationTranslator) {
+    public Axiom2OutgoingPropertyValuesTranslator(@Nonnull OWLEntity subject,
+                                                  @Nonnull OWLAxiom axiom,
+                                                  @Nonnull State initialState,
+                                                  @Nonnull ClassExpression2PropertyValueTranslator classExpression2PropertyValueTranslator,
+                                                  @Nonnull Annotation2PropertyValueTranslator annotation2PropertyValueTranslator) {
         this.subject = checkNotNull(subject);
         this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
-        this.renderer = checkNotNull(renderer);
-        this.classExpressionTranslator = checkNotNull(classExpressionTranslator);
-        this.annotationTranslator = checkNotNull(annotationTranslator);
+        this.classExpression2PropertyValueTranslator = checkNotNull(classExpression2PropertyValueTranslator);
+        this.annotation2PropertyValueTranslator = checkNotNull(annotation2PropertyValueTranslator);
     }
 
     /**
@@ -110,7 +100,7 @@ class AxiomTranslator {
             return Collections.emptySet();
         }
         var superClass = axiom.getSuperClass();
-        return classExpressionTranslator.translate(initialState, superClass);
+        return classExpression2PropertyValueTranslator.translate(initialState, superClass);
     }
 
     private Set<PlainPropertyValue> translateEquivalentClasses(OWLEquivalentClassesAxiom axiom) {
@@ -123,12 +113,12 @@ class AxiomTranslator {
         }
         return classExpressions.stream()
                 .filter(ce -> !ce.equals(subject))
-                .flatMap(this::toPlainPropertyValues)
+                .flatMap(this::toDerivedPlainPropertyValues)
                 .collect(toImmutableSet());
     }
 
-    private Stream<? extends PlainPropertyValue> toPlainPropertyValues(OWLClassExpression ce) {
-        return classExpressionTranslator.translate(State.DERIVED, ce).stream();
+    private Stream<? extends PlainPropertyValue> toDerivedPlainPropertyValues(OWLClassExpression ce) {
+        return classExpression2PropertyValueTranslator.translate(State.DERIVED, ce).stream();
     }
 
 
@@ -137,7 +127,7 @@ class AxiomTranslator {
         if(!axiom.getSubject().equals(subject.getIRI())) {
             return Collections.emptySet();
         }
-        return annotationTranslator.translate(axiom.getAnnotation(), State.ASSERTED);
+        return annotation2PropertyValueTranslator.translate(axiom.getAnnotation(), State.ASSERTED);
     }
 
 
@@ -176,6 +166,6 @@ class AxiomTranslator {
             return Collections.emptySet();
         }
         var classExpression = axiom.getClassExpression();
-        return classExpressionTranslator.translate(initialState, classExpression);
+        return classExpression2PropertyValueTranslator.translate(initialState, classExpression);
     }
 }

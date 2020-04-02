@@ -6,7 +6,10 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
+import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslatorOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
+import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.*;
+import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,17 +34,17 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     private static final Logger logger = LoggerFactory.getLogger(GetClassFrameActionHandler.class);
 
     @Nonnull
-    private final Provider<ClassFrameTranslator> translatorProvider;
+    private final ClassFrameTranslatorFactory translatorFactory;
 
     @Nonnull
     private final FrameComponentSessionRendererFactory rendererFactory;
 
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider,
+                                      @Nonnull ClassFrameTranslatorFactory translatorFactory,
                                       @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
         super(accessManager);
-        this.translatorProvider = translatorProvider;
+        this.translatorFactory = translatorFactory;
         this.rendererFactory = rendererFactory;
     }
 
@@ -62,8 +68,12 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     @Override
     public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
         var subject = action.getSubject();
-        var translator = translatorProvider.get();
-        translator.setMinimizePropertyValues(true);
+        var translationOptions = ClassFrameTranslatorOptions.get(
+                INCLUDE_ANCESTORS,
+                RelationshipTranslationOptions.get(allOutgoingRelationships(),
+                                                   noIncomingRelationships(),
+                                                   MINIMIZED_RELATIONSHIPS));
+        var translator = translatorFactory.create(translationOptions);
         var classFrame = translator.getFrame(subject);
         var renderedFrame = classFrame.toEntityFrame(rendererFactory.create());
         logger.info(BROWSING,

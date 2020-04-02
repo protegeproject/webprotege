@@ -59,18 +59,9 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
     @Nonnull
     public Set<PlainPropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
-                                                @Nonnull OWLAxiom axiom,
-                                                @Nonnull State initialState) {
+                                                     @Nonnull OWLAxiom axiom,
+                                                     @Nonnull State initialState) {
         var axiomTranslator = axiomTranslatorFactory.create(subject, axiom, initialState);
-        return axiomTranslator.translate();
-    }
-
-    @Nonnull
-    public Set<PlainPropertyValue> getPropertyValues(@Nonnull OWLEntity subject,
-                                                @Nonnull OWLAxiom axiom,
-                                                @Nonnull State initialState,
-                                                @Nonnull ContextRenderer renderer) {
-        var axiomTranslator = axiomTranslatorFactory.create(subject, axiom, initialState, renderer);
         return axiomTranslator.translate();
     }
 

@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorExAdapter;
@@ -19,19 +17,10 @@ import static java.util.stream.Collectors.toSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-13
  */
-class ClassExpressionTranslator {
+class ClassExpression2PropertyValueTranslator {
 
     @Inject
-    public ClassExpressionTranslator() {
-    }
-
-    @Nonnull
-    private Set<PlainPropertyValue> translateObjectIntersectionOf(OWLObjectIntersectionOf ce,
-                                                             @Nonnull State state) {
-        return ce.asConjunctSet()
-                .stream()
-                .flatMap(exp -> translate(exp, State.DERIVED).stream())
-                .collect(toSet());
+    public ClassExpression2PropertyValueTranslator() {
     }
 
     /**
@@ -46,8 +35,8 @@ class ClassExpressionTranslator {
 
     private Set<PlainPropertyValue> translate(@Nonnull OWLClassExpression classExpression,
                                          @Nonnull State state) {
-        var visitor = new OWLClassExpressionVisitorExAdapter<Set<PlainPropertyValue>>(Collections
-                                                                       .emptySet()) {
+        OWLClassExpressionVisitorExAdapter<Set<PlainPropertyValue>> visitor = new OWLClassExpressionVisitorExAdapter<>(
+                Collections.emptySet()) {
             @Nonnull
             @Override
             public Set<PlainPropertyValue> visit(OWLObjectIntersectionOf ce) {
@@ -182,6 +171,16 @@ class ClassExpressionTranslator {
         }
         var filler = dataRange.asOWLDatatype();
         return Collections.singleton(PlainPropertyDatatypeValue.get(property, filler, state));
+    }
+
+
+    @Nonnull
+    private Set<PlainPropertyValue> translateObjectIntersectionOf(OWLObjectIntersectionOf ce,
+                                                                  @Nonnull State state) {
+        return ce.asConjunctSet()
+                 .stream()
+                 .flatMap(exp -> translate(exp, State.DERIVED).stream())
+                 .collect(toSet());
     }
 
     @Nonnull

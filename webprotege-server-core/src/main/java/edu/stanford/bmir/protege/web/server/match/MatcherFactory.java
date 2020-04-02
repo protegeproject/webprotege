@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.frame.MinimalContextRenderer;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owlapi.model.*;
@@ -13,15 +13,13 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType.ALL;
-import static edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType.ANY;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
  */
-public class MatcherFactory {
+public class MatcherFactory implements RelationshipMatcherFactory {
 
     @Nonnull
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
@@ -49,9 +47,6 @@ public class MatcherFactory {
 
     private EntityRelationshipMatcherFactory entityRelationshipMatcherFactory;
 
-    @Nonnull
-    private final MinimalContextRenderer minimalContextRenderer;
-
     @Inject
     public MatcherFactory(@Nonnull SubClassOfMatcherFactory subClassOfMatcherFactory,
                           @Nonnull InstanceOfMatcherFactory instanceOfMatcherFactory,
@@ -61,8 +56,7 @@ public class MatcherFactory {
                           @Nonnull NonUniqueLangTagsMatcherFactory nonUniqueLangTagsMatcherFactory,
                           @Nonnull EntityAnnotationMatcherFactory entityAnnotationMatcherFactory,
                           @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory,
-                          @Nonnull EntityRelationshipMatcherFactory entityRelationshipMatcherFactory,
-                          @Nonnull MinimalContextRenderer minimalContextRenderer) {
+                          @Nonnull EntityRelationshipMatcherFactory entityRelationshipMatcherFactory) {
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
         this.instanceOfMatcherFactory = checkNotNull(instanceOfMatcherFactory);
         this.conflictingBooleanValuesMatcherFactory = checkNotNull(conflictingBooleanValuesMatcherFactory);
@@ -72,7 +66,6 @@ public class MatcherFactory {
         this.entityAnnotationMatcherFactory = checkNotNull(entityAnnotationMatcherFactory);
         this.iriAnnotationsMatcherFactory = checkNotNull(iriAnnotationsMatcherFactory);
         this.entityRelationshipMatcherFactory = entityRelationshipMatcherFactory;
-        this.minimalContextRenderer = minimalContextRenderer;
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
@@ -170,10 +163,9 @@ public class MatcherFactory {
                 var propertyMatcher = getRelationshipPropertyMatcher(propertyCriteria);
                 var valueCriteria = criteria.getRelationshipValueCriteria();
                 var valueMatcher = getRelationshipValueMatcher(valueCriteria);
-                var propertyValueMatcher = new PropertyValueMatcher(propertyMatcher, valueMatcher);
+                var propertyValueMatcher = getPropertyValueMatcher(propertyMatcher, valueMatcher);
                 return entityRelationshipMatcherFactory.create(criteria.getRelationshipPresence(),
-                                                               propertyValueMatcher,
-                                                               minimalContextRenderer);
+                                                               propertyValueMatcher);
             }
 
             @Nonnull
@@ -182,6 +174,18 @@ public class MatcherFactory {
                 return entity -> entity.equals(entityIsCriteria.getEntity());
             }
         });
+    }
+
+    @Nonnull
+    public Matcher<PlainPropertyValue> getRelationshipMatcher(@Nonnull RelationshipCriteria relationshipCriteria) {
+        var propertyMatcher = getRelationshipPropertyMatcher(relationshipCriteria.getPropertyCriteria());
+        var valueMatcher = getRelationshipValueMatcher(relationshipCriteria.getValueCriteria());
+        return getPropertyValueMatcher(propertyMatcher, valueMatcher);
+    }
+
+    private PropertyValueMatcher getPropertyValueMatcher(Matcher<OWLProperty> propertyMatcher,
+                                                        Matcher<OWLPrimitive> valueMatcher) {
+        return new PropertyValueMatcher(propertyMatcher, valueMatcher);
     }
 
 

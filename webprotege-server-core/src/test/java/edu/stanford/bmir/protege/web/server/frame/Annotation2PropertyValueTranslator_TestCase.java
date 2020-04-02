@@ -1,11 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
-import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
-import edu.stanford.bmir.protege.web.shared.entity.IRIData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -15,16 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationImpl;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
 
 /**
  * Matthew Horridge
@@ -32,12 +23,9 @@ import static org.mockito.Mockito.when;
  * 2019-08-14
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AnnotationTranslator_TestCase {
+public class Annotation2PropertyValueTranslator_TestCase {
 
-    private AnnotationTranslator translator;
-
-    @Mock
-    private EntitiesInProjectSignatureByIriIndex entitiesIndex;
+    private Annotation2PropertyValueTranslator translator;
 
     @Mock
     private OWLAnnotationProperty property;
@@ -50,7 +38,7 @@ public class AnnotationTranslator_TestCase {
 
     @Before
     public void setUp() {
-        translator = new AnnotationTranslator(entitiesIndex);
+        translator = new Annotation2PropertyValueTranslator();
     }
 
     @Test
