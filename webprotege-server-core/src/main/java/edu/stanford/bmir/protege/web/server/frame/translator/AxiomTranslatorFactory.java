@@ -28,13 +28,13 @@ public class AxiomTranslatorFactory {
     }
 
     @Nonnull
-    public Axiom2OutgoingPropertyValuesTranslator create(@Nonnull OWLEntity subject,
-                                                         @Nonnull OWLAxiom axiom,
-                                                         @Nonnull State initialState) {
-        return new Axiom2OutgoingPropertyValuesTranslator(subject,
-                                                          axiom,
-                                                          initialState,
-                                                          classExpression2PropertyValuesTranslator,
-                                                          annotation2PropertyValueTranslator);
+    public Axiom2PropertyValuesTranslator create(@Nonnull OWLEntity subject,
+                                                 @Nonnull OWLAxiom axiom,
+                                                 @Nonnull State initialState) {
+        return new Axiom2PropertyValuesTranslator(subject,
+                                                  axiom,
+                                                  initialState,
+                                                  classExpression2PropertyValuesTranslator,
+                                                  annotation2PropertyValueTranslator);
     }
 }

@@ -18,7 +18,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-13
  */
-class Axiom2OutgoingPropertyValuesTranslator {
+class Axiom2PropertyValuesTranslator {
 
     @Nonnull
     private final OWLEntity subject;
@@ -75,11 +75,11 @@ class Axiom2OutgoingPropertyValuesTranslator {
     };
 
     @Inject
-    public Axiom2OutgoingPropertyValuesTranslator(@Nonnull OWLEntity subject,
-                                                  @Nonnull OWLAxiom axiom,
-                                                  @Nonnull State initialState,
-                                                  @Nonnull ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator,
-                                                  @Nonnull Annotation2PropertyValueTranslator annotation2PropertyValueTranslator) {
+    public Axiom2PropertyValuesTranslator(@Nonnull OWLEntity subject,
+                                          @Nonnull OWLAxiom axiom,
+                                          @Nonnull State initialState,
+                                          @Nonnull ClassExpression2PropertyValuesTranslator classExpression2PropertyValuesTranslator,
+                                          @Nonnull Annotation2PropertyValueTranslator annotation2PropertyValueTranslator) {
         this.subject = checkNotNull(subject);
         this.axiom = checkNotNull(axiom);
         this.initialState = checkNotNull(initialState);
