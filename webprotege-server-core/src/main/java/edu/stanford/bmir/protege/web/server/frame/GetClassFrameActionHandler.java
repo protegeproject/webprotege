@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import java.util.Comparator;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
+import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.EXCLUDE_ANCESTORS;
 import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.*;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS;
@@ -75,7 +76,7 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
                                        @Nonnull ExecutionContext executionContext) {
         var subject = action.getSubject();
         var options = ClassFrameTranslationOptions.get(
-                INCLUDE_ANCESTORS,
+                EXCLUDE_ANCESTORS,
                 RelationshipTranslationOptions.get(allOutgoingRelationships(),
                                                    noIncomingRelationships(),
                                                    MINIMIZED_RELATIONSHIPS));

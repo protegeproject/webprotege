@@ -158,7 +158,7 @@ public class NamedIndividualFrameTranslator {
     @Nonnull
     private PlainClassFrame getClassFrame(@Nonnull OWLClass subject) {
         ClassFrameTranslationOptions options = ClassFrameTranslationOptions.get(
-                ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS,
+                ClassFrameTranslationOptions.AncestorsTreatment.EXCLUDE_ANCESTORS,
                 RelationshipTranslationOptions.get(
                         RelationshipTranslationOptions.allOutgoingRelationships(),
                         RelationshipTranslationOptions.noIncomingRelationships(),

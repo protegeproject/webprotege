@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public abstract class ClassFrameTranslationOptions {
 
     public static ClassFrameTranslationOptions defaultOptions() {
-        return get(AncestorsTreatment.INCLUDE_ANCESTORS,
+        return get(AncestorsTreatment.EXCLUDE_ANCESTORS,
                    RelationshipTranslationOptions.get(
                            RelationshipTranslationOptions.allOutgoingRelationships(),
                            RelationshipTranslationOptions.noIncomingRelationships(),
