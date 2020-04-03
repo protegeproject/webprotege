@@ -4,7 +4,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.frame.Mode;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueMinimiser;
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
@@ -20,12 +19,17 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.RelationshipCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static edu.stanford.bmir.protege.web.server.frame.translator.Class2ClassFrameTranslator.AnnotationsTreatment.EXCLUDE_ANNOTATIONS;
+import static edu.stanford.bmir.protege.web.server.frame.translator.Class2ClassFrameTranslator.AnnotationsTreatment.INCLUDE_ANNOTATIONS;
 import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS;
 
@@ -38,7 +42,12 @@ import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslation
  * A translator that converts sets of axioms to class frames and vice-versa.
  * </p>
  */
-public class ClassFrameTranslator {
+public class Class2ClassFrameTranslator {
+
+    protected enum AnnotationsTreatment {
+        INCLUDE_ANNOTATIONS,
+        EXCLUDE_ANNOTATIONS
+    }
 
     @Nonnull
     private final ProjectOntologiesIndex ontologiesIndex;
@@ -51,9 +60,6 @@ public class ClassFrameTranslator {
 
     @Nonnull
     private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsIndex;
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
 
     @Nonnull
     private final HasGetAncestors<OWLClass> ancestorsProvider;
@@ -71,21 +77,19 @@ public class ClassFrameTranslator {
     private final RelationshipMatcherFactory matcherFactory;
 
     @AutoFactory
-    public ClassFrameTranslator(@Provided @Nonnull ProjectOntologiesIndex ontologiesIndex,
-                                @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
-                                @Provided @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
-                                @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsIndex,
-                                @Provided @Nonnull OWLDataFactory dataFactory,
-                                @Provided @Nonnull HasGetAncestors<OWLClass> ancestorsProvider,
-                                @Provided @Nonnull PropertyValueMinimiser propertyValueMinimiser,
-                                @Provided @Nonnull AxiomPropertyValueTranslator axiomPropertyValueTranslator,
-                                @Nonnull @Provided RelationshipMatcherFactory matcherFactory,
-                                @Nonnull ClassFrameTranslationOptions options) {
+    public Class2ClassFrameTranslator(@Provided @Nonnull ProjectOntologiesIndex ontologiesIndex,
+                                      @Provided @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
+                                      @Provided @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
+                                      @Provided @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsIndex,
+                                      @Provided @Nonnull HasGetAncestors<OWLClass> ancestorsProvider,
+                                      @Provided @Nonnull PropertyValueMinimiser propertyValueMinimiser,
+                                      @Provided @Nonnull AxiomPropertyValueTranslator axiomPropertyValueTranslator,
+                                      @Nonnull @Provided RelationshipMatcherFactory matcherFactory,
+                                      @Nonnull ClassFrameTranslationOptions options) {
         this.ontologiesIndex = ontologiesIndex;
         this.subClassOfAxiomsIndex = checkNotNull(subClassOfAxiomsIndex);
         this.equivalentClassesAxiomsIndex = checkNotNull(equivalentClassesAxiomsIndex);
         this.annotationAssertionAxiomsIndex = checkNotNull(annotationAssertionAxiomsIndex);
-        this.dataFactory = checkNotNull(dataFactory);
         this.ancestorsProvider = checkNotNull(ancestorsProvider);
         this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
         this.axiomPropertyValueTranslator = checkNotNull(axiomPropertyValueTranslator);
@@ -93,43 +97,28 @@ public class ClassFrameTranslator {
         this.matcherFactory = checkNotNull(matcherFactory);
     }
 
-    @Nonnull
-    public Set<OWLAxiom> getAxioms(@Nonnull PlainClassFrame frame, @Nonnull Mode mode) {
-        return translateToAxioms(frame.getSubject(), frame, mode);
-    }
-
-    private Set<OWLAxiom> translateToAxioms(OWLClass subject, PlainClassFrame classFrame, Mode mode) {
-        var result = new HashSet<OWLAxiom>();
-        for(OWLClass parent : classFrame.getParents()) {
-            result.add(dataFactory.getOWLSubClassOfAxiom(subject, parent));
-        }
-        for(PlainPropertyValue propertyValue : classFrame.getPropertyValues()) {
-            result.addAll(axiomPropertyValueTranslator.getAxioms(subject, propertyValue, mode));
-        }
-        return result;
-    }
-
+    /**
+     * Translate the specified class to a class frame, in accordance with the specified
+     * translation options in this translator.
+     */
     @Nonnull
     public PlainClassFrame getFrame(@Nonnull OWLClass subject) {
-        return translateToClassFrame(subject);
-    }
-
-    private PlainClassFrame translateToClassFrame(OWLClass cls) {
-        var relevantAxioms = getRelevantAxioms(cls, true);
-        var propertyValues = new ArrayList<>(translateAxiomsToPropertyValues(cls,
-                                                                             relevantAxioms,
+        var frameAxioms = getFrameAxioms(subject, INCLUDE_ANNOTATIONS);
+        var propertyValues = new ArrayList<>(translateAxiomsToPropertyValues(subject,
+                                                                             frameAxioms,
                                                                              State.ASSERTED));
         if(options.getAncestorsTreatment() == INCLUDE_ANCESTORS) {
-            for(OWLClass ancestor : ancestorsProvider.getAncestors(cls)) {
-                if(!ancestor.equals(cls)) {
+            for(OWLClass ancestor : ancestorsProvider.getAncestors(subject)) {
+                if(!ancestor.equals(subject)) {
+                    var ancestorFrameAxioms = getFrameAxioms(ancestor, EXCLUDE_ANNOTATIONS);
                     propertyValues.addAll(translateAxiomsToPropertyValues(ancestor,
-                                                                          getRelevantAxioms(ancestor, false),
+                                                                          ancestorFrameAxioms,
                                                                           State.DERIVED));
                 }
             }
         }
 
-        var parents = getSubClassOfAxioms(cls)
+        var parents = getFrameSubClassOfAxioms(subject)
                 .map(OWLSubClassOfAxiom::getSuperClass)
                 .filter(OWLClassExpression::isNamed)
                 .map(OWLClassExpression::asOWLClass)
@@ -138,28 +127,15 @@ public class ClassFrameTranslator {
 
         var propertyValuesMin = ImmutableSet.copyOf(propertyValues);
 
-
         if(options.getRelationshipTranslationOptions()
                   .getRelationshipMinification() == MINIMIZED_RELATIONSHIPS) {
             propertyValuesMin = propertyValueMinimiser.minimisePropertyValues(propertyValues)
                                                       .collect(toImmutableSet());
         }
 
-        return PlainClassFrame.get(cls,
+        return PlainClassFrame.get(subject,
                                    parents,
                                    propertyValuesMin);
-    }
-
-    private Set<OWLAxiom> getRelevantAxioms(OWLClass subject,
-                                            boolean includeAnnotations) {
-        var subClassOfAxioms = getSubClassOfAxioms(subject);
-        var equivalentClassesAxioms = getEquivalentClassesAxioms(subject);
-        var annotationAssertions = getAnnotationAssertions(subject, includeAnnotations);
-        return Stream.of(subClassOfAxioms,
-                         equivalentClassesAxioms,
-                         annotationAssertions)
-                     .flatMap(ax -> ax)
-                     .collect(toImmutableSet());
     }
 
     private List<PlainPropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
@@ -167,8 +143,7 @@ public class ClassFrameTranslator {
                                                                      State initialState) {
         var relationshipOptions = options.getRelationshipTranslationOptions();
         Optional<RelationshipCriteria> outgoingRelationshipCriteria = relationshipOptions.getOutgoingRelationshipCriteria();
-        if(outgoingRelationshipCriteria
-                .isEmpty()) {
+        if(outgoingRelationshipCriteria.isEmpty()) {
             return ImmutableList.of();
         }
         var relationshipMatcher = matcherFactory.getRelationshipMatcher(outgoingRelationshipCriteria.get());
@@ -181,22 +156,34 @@ public class ClassFrameTranslator {
                              .collect(Collectors.toList());
     }
 
-    private Stream<OWLSubClassOfAxiom> getSubClassOfAxioms(OWLClass subject) {
+    private Set<OWLAxiom> getFrameAxioms(OWLClass subject,
+                                         AnnotationsTreatment annotationsTreatment) {
+        var subClassOfAxioms = getFrameSubClassOfAxioms(subject);
+        var equivalentClassesAxioms = getFrameEquivalentClassesAxioms(subject);
+        var annotationAssertions = Stream.<OWLAnnotationAssertionAxiom>empty();
+        if(annotationsTreatment == INCLUDE_ANNOTATIONS) {
+            annotationAssertions = getFrameAnnotationAssertionsAxiom(subject);
+        }
+        return Stream.of(subClassOfAxioms,
+                         equivalentClassesAxioms,
+                         annotationAssertions)
+                     .flatMap(ax -> ax)
+                     .collect(toImmutableSet());
+    }
+
+    private Stream<OWLSubClassOfAxiom> getFrameSubClassOfAxioms(OWLClass subject) {
         return ontologiesIndex
                 .getOntologyIds()
                 .flatMap(ontId -> subClassOfAxiomsIndex.getSubClassOfAxiomsForSubClass(subject, ontId));
     }
 
-    private Stream<OWLEquivalentClassesAxiom> getEquivalentClassesAxioms(OWLClass subject) {
+    private Stream<OWLEquivalentClassesAxiom> getFrameEquivalentClassesAxioms(OWLClass subject) {
         return ontologiesIndex.getOntologyIds()
                               .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(subject,
                                                                                                         ontId));
     }
 
-    private Stream<OWLAnnotationAssertionAxiom> getAnnotationAssertions(OWLClass subject, boolean includeAnnotations) {
-        if(!includeAnnotations) {
-            return Stream.empty();
-        }
+    private Stream<OWLAnnotationAssertionAxiom> getFrameAnnotationAssertionsAxiom(OWLClass subject) {
         return ontologiesIndex.getOntologyIds()
                               .flatMap(ontId -> annotationAssertionAxiomsIndex.getAxiomsForSubject(subject.getIRI(),
                                                                                                    ontId));

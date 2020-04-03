@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 
 /**
  * Matthew Horridge
@@ -20,5 +21,6 @@ public abstract class PlainEntityFrame implements Frame<OWLEntity> {
     public abstract ImmutableSet<? extends PlainPropertyValue> getPropertyValues();
 
     @Nonnull
-    public abstract EntityFrame<? extends OWLEntityData> toEntityFrame(FrameComponentRenderer renderer);
+    public abstract EntityFrame<? extends OWLEntityData> toEntityFrame(FrameComponentRenderer renderer,
+                                                                       Comparator<PropertyValue> propertyValueComparator);
 }

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.frame.translator.ClassFrameTranslatorFactory;
+import edu.stanford.bmir.protege.web.server.frame.translator.Class2ClassFrameTranslatorFactory;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainClassFrame;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -16,10 +16,10 @@ import javax.inject.Inject;
 public class ClassFrameProviderImpl implements ClassFrameProvider {
 
     @Nonnull
-    private final ClassFrameTranslatorFactory translatorFactory;
+    private final Class2ClassFrameTranslatorFactory translatorFactory;
 
     @Inject
-    public ClassFrameProviderImpl(@Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory) {
+    public ClassFrameProviderImpl(@Nonnull Class2ClassFrameTranslatorFactory classFrameTranslatorFactory) {
         this.translatorFactory = classFrameTranslatorFactory;
     }
 

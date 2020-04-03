@@ -46,7 +46,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * SubClassOf(A  ObjectIntersection(B C)) is not split into SubClassOf(A B)  SubClassOf(A C) before the translation.
  * </p>
  */
-public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
+public class AxiomPropertyValueTranslator {
 
     @Nonnull
     private final AxiomTranslatorFactory axiomTranslatorFactory;
@@ -65,14 +65,5 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         return axiomTranslator.translate();
     }
 
-    @Nonnull
-    public Set<OWLAxiom> getAxioms(OWLEntity subject,
-                                   PlainPropertyValue propertyValue,
-                                   Mode mode) {
-        if (propertyValue.getState() == State.DERIVED) {
-            return Collections.emptySet();
-        }
-        PropertyValueTranslator translator = new PropertyValueTranslator(subject, mode);
-        return propertyValue.accept(translator);
-    }
+
 }

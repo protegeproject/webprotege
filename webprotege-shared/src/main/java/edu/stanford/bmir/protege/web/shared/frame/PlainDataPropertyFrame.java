@@ -3,12 +3,13 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDatatype;
 
 import javax.annotation.Nonnull;
+
+import java.util.Comparator;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -50,10 +51,11 @@ public abstract class PlainDataPropertyFrame extends PlainEntityFrame {
 
     @Nonnull
     @Override
-    public DataPropertyFrame toEntityFrame(FrameComponentRenderer renderer) {
+    public DataPropertyFrame toEntityFrame(FrameComponentRenderer renderer,
+                                           Comparator<PropertyValue> propertyValueComparator) {
         return DataPropertyFrame.get(
                 renderer.getRendering(getSubject()),
-                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).collect(toImmutableSet()),
+                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).sorted(propertyValueComparator).collect(toImmutableSet()),
                 getDomains().stream().map(renderer::getRendering).collect(toImmutableSet()),
                 getRanges().stream().map(renderer::getRendering).collect(toImmutableSet()),
                 isFunctional()

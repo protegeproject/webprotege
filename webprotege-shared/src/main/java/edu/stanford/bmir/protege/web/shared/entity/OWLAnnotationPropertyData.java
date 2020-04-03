@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 
@@ -21,6 +22,8 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 @AutoValue
 @GwtCompatible(serializable = true)
 public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
+
+    public static final int BEFORE = -1;
 
     public static OWLAnnotationPropertyData get(@Nonnull OWLAnnotationProperty property,
                                                 @Nonnull String browserText,

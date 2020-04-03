@@ -54,6 +54,9 @@ public class NamedIndividualFrameTranslator {
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
     @Nonnull
+    private final PropertyValue2AxiomTranslator propertyValue2AxiomTranslator;
+
+    @Nonnull
     private final OWLDataFactory dataFactory;
 
     private boolean minimizePropertyValues = false;
@@ -66,6 +69,7 @@ public class NamedIndividualFrameTranslator {
                                           @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                           @Nonnull ClassFrameProvider classFrameProvider,
                                           @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider,
+                                          @Nonnull PropertyValue2AxiomTranslator propertyValue2AxiomTranslator,
                                           @Nonnull OWLDataFactory dataFactory) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.classAssertionsByIndividual = checkNotNull(classAssertionsByIndividual);
@@ -74,6 +78,7 @@ public class NamedIndividualFrameTranslator {
         this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
         this.axiomPropertyValueTranslatorProvider = checkNotNull(axiomPropertyValueTranslatorProvider);
         this.classFrameProvider = checkNotNull(classFrameProvider);
+        this.propertyValue2AxiomTranslator = checkNotNull(propertyValue2AxiomTranslator);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
@@ -208,8 +213,7 @@ public class NamedIndividualFrameTranslator {
             result.add(dataFactory.getOWLClassAssertionAxiom(cls, subject));
         }
         for(PlainPropertyValue propertyValue : frame.getPropertyValues()) {
-            var translator = axiomPropertyValueTranslatorProvider.get();
-            result.addAll(translator.getAxioms(subject, propertyValue, mode));
+            result.addAll(propertyValue2AxiomTranslator.getAxioms(subject, propertyValue, mode));
         }
         for(OWLNamedIndividual individual : frame.getSameIndividuals()) {
             result.add(dataFactory.getOWLSameIndividualAxiom(subject, individual));

@@ -18,7 +18,7 @@ import java.util.Optional;
  *     {@link IRI}.
  * </p>
  */
-public abstract class OWLPrimitiveData extends ObjectData {
+public abstract class OWLPrimitiveData extends ObjectData implements Comparable<OWLPrimitiveData> {
 
     public Optional<IRI> asIRI() {
         return Optional.empty();
@@ -54,5 +54,10 @@ public abstract class OWLPrimitiveData extends ObjectData {
 
     public Optional<OWLLiteral> asLiteral() {
         return Optional.empty();
+    }
+
+    @Override
+    public int compareTo(OWLPrimitiveData o) {
+        return getBrowserText().compareToIgnoreCase(o.getBrowserText());
     }
 }

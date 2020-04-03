@@ -3,11 +3,12 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
+
+import java.util.Comparator;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -49,13 +50,16 @@ public abstract class PlainNamedIndividualFrame extends PlainEntityFrame {
 
     @Nonnull
     @Override
-    public NamedIndividualFrame toEntityFrame(FrameComponentRenderer renderer) {
+    public NamedIndividualFrame toEntityFrame(FrameComponentRenderer renderer,
+                                              Comparator<PropertyValue> propertyValueComparator) {
         return NamedIndividualFrame.get(
                 renderer.getRendering(getSubject()),
                 getParents().stream()
                             .map(renderer::getRendering)
                             .collect(toImmutableSet()),
-                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).collect(toImmutableSet()),
+                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer))
+                                   .sorted(propertyValueComparator)
+                                   .collect(toImmutableSet()),
                 getSameIndividuals().stream().map(renderer::getRendering).collect(toImmutableSet())
         );
     }

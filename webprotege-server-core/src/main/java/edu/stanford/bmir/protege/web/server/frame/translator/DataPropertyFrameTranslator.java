@@ -40,19 +40,24 @@ public class DataPropertyFrameTranslator {
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
+    @Nonnull
+    private final PropertyValue2AxiomTranslator propertyValue2AxiomTranslator;
+
     @Inject
     public DataPropertyFrameTranslator(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                        @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectId,
                                        @Nonnull DataPropertyDomainAxiomsIndex dataPropertyDomainAxiomsIndex,
                                        @Nonnull DataPropertyRangeAxiomsIndex dataPropertyRangeAxiomsIndex,
                                        @Nonnull DataPropertyCharacteristicsIndex dataPropertyCharacteristicsIndex,
-                                       @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
+                                       @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider,
+                                       @Nonnull PropertyValue2AxiomTranslator propertyValue2AxiomTranslator) {
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.annotationAssertionsIndex = annotationAssertionAxiomsBySubjectId;
         this.domainAxiomsIndex = dataPropertyDomainAxiomsIndex;
         this.rangeAxiomsIndex = dataPropertyRangeAxiomsIndex;
         this.characteristicsIndex = dataPropertyCharacteristicsIndex;
         this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
+        this.propertyValue2AxiomTranslator = propertyValue2AxiomTranslator;
     }
 
     @Nonnull
@@ -101,8 +106,7 @@ public class DataPropertyFrameTranslator {
                                    @Nonnull Mode mode) {
         Set<OWLAxiom> result = new HashSet<>();
         for(PlainPropertyAnnotationValue pv : frame.getPropertyValues()) {
-            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
-            result.addAll(translator.getAxioms(frame.getSubject(), pv, mode));
+            result.addAll(propertyValue2AxiomTranslator.getAxioms(frame.getSubject(), pv, mode));
         }
         for(OWLClass domain : frame.getDomains()) {
             OWLAxiom ax = DataFactory

@@ -34,13 +34,18 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
     @Nonnull
     private final FrameComponentSessionRendererFactory rendererFactory;
 
+    @Nonnull
+    private final PropertyValueComparator propertyValueComparator;
+
     @Inject
     public GetObjectPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull Provider<ObjectPropertyFrameTranslator> translatorProvider,
-                                               @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
+                                               @Nonnull FrameComponentSessionRendererFactory rendererFactory,
+                                               @Nonnull PropertyValueComparator propertyValueComparator) {
         super(accessManager);
         this.rendererFactory = rendererFactory;
         this.translatorProvider = translatorProvider;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     @Nullable
@@ -53,7 +58,7 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
     public GetObjectPropertyFrameResult execute(@Nonnull GetObjectPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         var translator = translatorProvider.get();
         var plainFrame = translator.getFrame(action.getSubject());
-        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create());
+        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
                      "{} {} retrieved ObjectProperty frame for {} ({})",
                      action.getProjectId(),

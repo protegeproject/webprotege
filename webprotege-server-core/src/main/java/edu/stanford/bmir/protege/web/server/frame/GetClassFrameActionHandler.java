@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import java.util.Comparator;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
@@ -36,13 +39,18 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     @Nonnull
     private final FrameComponentSessionRendererFactory rendererFactory;
 
+    @Nonnull
+    private final Comparator<PropertyValue> propertyValueComparator;
+
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull ClassFrameProvider classFrameProvider,
-                                      @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
+                                      @Nonnull FrameComponentSessionRendererFactory rendererFactory,
+                                      @Nonnull Comparator<PropertyValue> propertyValueComparator) {
         super(accessManager);
         this.classFrameProvider = classFrameProvider;
         this.rendererFactory = rendererFactory;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     /**
@@ -72,7 +80,7 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
                                                    noIncomingRelationships(),
                                                    MINIMIZED_RELATIONSHIPS));
         var classFrame = classFrameProvider.getFrame(subject, options);
-        var renderedFrame = classFrame.toEntityFrame(rendererFactory.create());
+        var renderedFrame = classFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
                     "{} {} retrieved Class frame for {} ({})",
                     action.getProjectId(),

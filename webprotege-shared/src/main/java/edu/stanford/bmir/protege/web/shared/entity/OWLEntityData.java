@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public abstract class OWLEntityData extends OWLPrimitiveData implements Comparable<OWLEntityData> {
+public abstract class OWLEntityData extends OWLPrimitiveData {
 
     public OWLEntity getEntity() {
         return (OWLEntity) getObject();
@@ -24,11 +24,6 @@ public abstract class OWLEntityData extends OWLPrimitiveData implements Comparab
 
     public boolean isIRIEmpty() {
         return getEntity().getIRI().length() == 0;
-    }
-
-    @Override
-    public int compareTo(OWLEntityData o) {
-        return this.getBrowserText().compareTo(o.getBrowserText());
     }
 
     public int compareToIgnorePrefixNames(OWLEntityData other) {

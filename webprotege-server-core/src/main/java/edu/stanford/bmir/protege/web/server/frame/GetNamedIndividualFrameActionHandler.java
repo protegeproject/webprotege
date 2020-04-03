@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.frame.translator.NamedIndividualFram
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import java.util.Comparator;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -34,13 +37,18 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
     @Nonnull
     private final FrameComponentSessionRendererFactory rendererFactory;
 
+    @Nonnull
+    private final Comparator<PropertyValue> propertyValueComparator;
+
     @Inject
     public GetNamedIndividualFrameActionHandler(@Nonnull AccessManager accessManager,
                                                 @Nonnull Provider<NamedIndividualFrameTranslator> translatorProvider,
-                                                @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
+                                                @Nonnull FrameComponentSessionRendererFactory rendererFactory,
+                                                @Nonnull Comparator<PropertyValue> propertyValueComparator) {
         super(accessManager);
         this.translatorProvider = translatorProvider;
         this.rendererFactory = rendererFactory;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     /**
@@ -67,7 +75,7 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
         translator.setMinimizePropertyValues(true);
         var plainFrame = translator.getFrame(action.getSubject());
         var renderer = rendererFactory.create();
-        var renderedFrame = plainFrame.toEntityFrame(renderer);
+        var renderedFrame = plainFrame.toEntityFrame(renderer, propertyValueComparator);
         logger.info(BROWSING,
                      "{} {} retrieved NamedIndividual frame for {} ({})",
                     action.getProjectId(),

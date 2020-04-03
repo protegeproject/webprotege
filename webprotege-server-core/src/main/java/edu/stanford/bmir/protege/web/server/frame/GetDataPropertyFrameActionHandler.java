@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.frame.translator.DataPropertyFrameTr
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import java.util.Comparator;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
@@ -34,13 +37,18 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     @Nonnull
     private final FrameComponentSessionRendererFactory rendererFactory;
 
+    @Nonnull
+    private final Comparator<PropertyValue> propertyValueComparator;
+
     @Inject
     public GetDataPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
                                              @Nonnull Provider<DataPropertyFrameTranslator> translatorProvider,
-                                             @Nonnull FrameComponentSessionRendererFactory rendererFactory) {
+                                             @Nonnull FrameComponentSessionRendererFactory rendererFactory,
+                                             @Nonnull Comparator<PropertyValue> propertyValueComparator) {
         super(accessManager);
         this.translatorProvider = translatorProvider;
         this.rendererFactory = rendererFactory;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     @Nullable
@@ -54,7 +62,7 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     public GetDataPropertyFrameResult execute(@Nonnull GetDataPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         var translator = translatorProvider.get();
         var plainFrame = translator.getFrame(action.getSubject());
-        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create());
+        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
                     "{} {} retrieved DataProperty frame for {} ({})",
                     action.getProjectId(),

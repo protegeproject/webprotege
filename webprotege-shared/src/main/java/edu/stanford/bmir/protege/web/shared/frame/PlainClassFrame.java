@@ -8,6 +8,8 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
 
+import java.util.Comparator;
+
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
@@ -55,7 +57,8 @@ public abstract class PlainClassFrame extends PlainEntityFrame {
     public abstract ImmutableSet<PlainPropertyValue> getPropertyValues();
 
     @Nonnull
-    public ClassFrame toEntityFrame(@Nonnull FrameComponentRenderer renderer) {
+    public ClassFrame toEntityFrame(@Nonnull FrameComponentRenderer renderer,
+                                    Comparator<PropertyValue> propertyValueComparator) {
         OWLClassData subject = renderer.getRendering(getSubject());
         ImmutableSet<OWLClassData> parents = getParents().stream()
                                 .map(renderer::getRendering)
@@ -63,6 +66,7 @@ public abstract class PlainClassFrame extends PlainEntityFrame {
         ImmutableSet<PropertyValue> propertyValues = getPropertyValues()
                 .stream()
                 .map(pv -> pv.toPropertyValue(renderer))
+                .sorted(propertyValueComparator)
                 .collect(toImmutableSet());
         return ClassFrame.get(
                 subject,

@@ -8,6 +8,8 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
 
+import java.util.Comparator;
+
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
@@ -46,10 +48,11 @@ public abstract class PlainAnnotationPropertyFrame extends PlainEntityFrame {
 
     @Nonnull
     @Override
-    public AnnotationPropertyFrame toEntityFrame(FrameComponentRenderer renderer) {
+    public AnnotationPropertyFrame toEntityFrame(FrameComponentRenderer renderer,
+                                                 Comparator<PropertyValue> propertyValueComparator) {
         return AnnotationPropertyFrame.get(
                 renderer.getRendering(getSubject()),
-                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).collect(toImmutableSet()),
+                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).sorted(propertyValueComparator).collect(toImmutableSet()),
                 getDomains().stream().flatMap(d -> renderer.getRendering(d).stream()).collect(toImmutableSet()),
                 getRanges().stream().flatMap(r -> renderer.getRendering(r).stream()).collect(toImmutableSet())
         );

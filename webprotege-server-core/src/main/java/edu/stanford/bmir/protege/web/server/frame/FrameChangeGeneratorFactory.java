@@ -25,16 +25,13 @@ public class FrameChangeGeneratorFactory {
     private final ProjectOntologiesIndex projectOntologiesIndex;
 
     @Nonnull
-    private final ReverseEngineeredChangeDescriptionGeneratorFactory factory;
+    private final ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory;
 
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
     @Nonnull
-    private final OntologyAxiomsIndex axiomsIndex;
-
-    @Nonnull
-    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
+    private final OntologyAxiomsIndex ontologyAxiomsIndex;
 
     @Nonnull
     private final ObjectPropertyFrameTranslator objectPropertyFrameTranslator;
@@ -51,41 +48,50 @@ public class FrameChangeGeneratorFactory {
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final ClassFrameProvider classFrameProvider;
+
+    @Nonnull
+    private final ClassFrame2FrameAxiomsTranslator classFrame2FrameAxiomsTranslator;
+
     @Inject
     public FrameChangeGeneratorFactory(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                       @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
+                                       @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory,
                                        @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
-                                       @Nonnull OntologyAxiomsIndex axiomsIndex,
-                                       @Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
+                                       @Nonnull OntologyAxiomsIndex ontologyAxiomsIndex,
                                        @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                        @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                        @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
                                        @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator,
-                                       @Nonnull RenderingManager renderingManager) {
+                                       @Nonnull RenderingManager renderingManager,
+                                       @Nonnull ClassFrameProvider classFrameProvider,
+                                       @Nonnull ClassFrame2FrameAxiomsTranslator classFrame2FrameAxiomsTranslator) {
         this.projectOntologiesIndex = projectOntologiesIndex;
-        this.factory = factory;
+        this.reverseEngineeredChangeDescriptionGeneratorFactory = reverseEngineeredChangeDescriptionGeneratorFactory;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
-        this.axiomsIndex = axiomsIndex;
-        this.classFrameTranslatorFactory = classFrameTranslatorFactory;
+        this.ontologyAxiomsIndex = ontologyAxiomsIndex;
         this.objectPropertyFrameTranslator = objectPropertyFrameTranslator;
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
         this.namedIndividualFrameTranslator = namedIndividualFrameTranslator;
         this.renderingManager = renderingManager;
+        this.classFrameProvider = classFrameProvider;
+        this.classFrame2FrameAxiomsTranslator = classFrame2FrameAxiomsTranslator;
     }
 
     @Nonnull
     public FrameChangeGenerator create(FrameUpdate frameUpdate) {
         return new FrameChangeGenerator(checkNotNull(frameUpdate),
                                         projectOntologiesIndex,
-                                        factory,
-                                        this.defaultOntologyIdManager,
-                                        this.axiomsIndex,
-                                        this.classFrameTranslatorFactory,
-                                        this.objectPropertyFrameTranslator,
-                                        this.dataPropertyFrameTranslator,
-                                        this.annotationPropertyFrameTranslator,
-                                        this.namedIndividualFrameTranslator,
-                                        renderingManager);
+                                        reverseEngineeredChangeDescriptionGeneratorFactory,
+                                        defaultOntologyIdManager,
+                                        ontologyAxiomsIndex,
+                                        objectPropertyFrameTranslator,
+                                        dataPropertyFrameTranslator,
+                                        annotationPropertyFrameTranslator,
+                                        namedIndividualFrameTranslator,
+                                        renderingManager,
+                                        classFrameProvider,
+                                        classFrame2FrameAxiomsTranslator);
     }
 }

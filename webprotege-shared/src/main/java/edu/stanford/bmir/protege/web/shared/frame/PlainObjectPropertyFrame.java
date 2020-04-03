@@ -3,11 +3,12 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nonnull;
+
+import java.util.Comparator;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -54,10 +55,11 @@ public abstract class PlainObjectPropertyFrame extends PlainEntityFrame {
 
     @Nonnull
     @Override
-    public ObjectPropertyFrame toEntityFrame(FrameComponentRenderer renderer) {
+    public ObjectPropertyFrame toEntityFrame(FrameComponentRenderer renderer,
+                                             Comparator<PropertyValue> propertyValueComparator) {
         return ObjectPropertyFrame.get(
                 renderer.getRendering(getSubject()),
-                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).collect(toImmutableSet()),
+                getPropertyValues().stream().map(pv -> pv.toPropertyValue(renderer)).sorted(propertyValueComparator).collect(toImmutableSet()),
                 getDomains().stream().map(renderer::getRendering).collect(toImmutableSet()),
                 getRanges().stream().map(renderer::getRendering).collect(toImmutableSet()),
                 getInverseProperties().stream().map(renderer::getRendering).collect(toImmutableSet()),

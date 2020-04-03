@@ -56,6 +56,7 @@ import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -441,6 +442,11 @@ public class ProjectModule {
     @Provides
     Comparator<OntologyChange> providesOWLOntologyChangeRecordComparator(OntologyChangeComparator comparator) {
         return comparator;
+    }
+
+    @Provides
+    Comparator<PropertyValue> providePropertyValueComparator(PropertyValueComparator propertyValueComparator) {
+        return propertyValueComparator;
     }
 
     @Provides

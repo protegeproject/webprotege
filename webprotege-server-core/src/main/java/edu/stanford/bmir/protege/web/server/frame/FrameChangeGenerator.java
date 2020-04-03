@@ -45,9 +45,6 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     private final OntologyAxiomsIndex axiomsIndex;
 
     @Nonnull
-    private final ClassFrameTranslatorFactory classFrameTranslatorFactory;
-
-    @Nonnull
     private final ObjectPropertyFrameTranslator objectPropertyFrameTranslator;
 
     @Nonnull
@@ -62,29 +59,37 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final ClassFrameProvider classFrameProvider;
+
+    @Nonnull
+    private ClassFrame2FrameAxiomsTranslator classFrame2FrameAxiomsTranslator;
+
     @Inject
     public FrameChangeGenerator(@Nonnull FrameUpdate frameUpdate,
                                 @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                 @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
                                 @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                                 @Nonnull OntologyAxiomsIndex axiomsIndex,
-                                @Nonnull ClassFrameTranslatorFactory classFrameTranslatorFactory,
                                 @Nonnull ObjectPropertyFrameTranslator objectPropertyFrameTranslator,
                                 @Nonnull DataPropertyFrameTranslator dataPropertyFrameTranslator,
                                 @Nonnull AnnotationPropertyFrameTranslator annotationPropertyFrameTranslator,
                                 @Nonnull NamedIndividualFrameTranslator namedIndividualFrameTranslator,
-                                @Nonnull RenderingManager renderingManager) {
+                                @Nonnull RenderingManager renderingManager,
+                                @Nonnull ClassFrameProvider classFrameProvider,
+                                @Nonnull ClassFrame2FrameAxiomsTranslator classFrame2FrameAxiomsTranslator) {
         this.frameUpdate = checkNotNull(frameUpdate);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.factory = checkNotNull(factory);
         this.defaultOntologyIdManager = checkNotNull(defaultOntologyIdManager);
         this.axiomsIndex = checkNotNull(axiomsIndex);
-        this.classFrameTranslatorFactory = checkNotNull(classFrameTranslatorFactory);
+        this.classFrameProvider = classFrameProvider;
         this.objectPropertyFrameTranslator = objectPropertyFrameTranslator;
         this.dataPropertyFrameTranslator = dataPropertyFrameTranslator;
         this.annotationPropertyFrameTranslator = annotationPropertyFrameTranslator;
         this.namedIndividualFrameTranslator = namedIndividualFrameTranslator;
         this.renderingManager = renderingManager;
+        this.classFrame2FrameAxiomsTranslator = classFrame2FrameAxiomsTranslator;
     }
 
     @Override
@@ -97,16 +102,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     private Set<OWLAxiom> getAxiomsForFrame(Frame<?> frame, Mode mode) {
         if(frame instanceof PlainClassFrame) {
             var classFrame = (PlainClassFrame) frame;
-            var options = ClassFrameTranslationOptions.get(
-                    ClassFrameTranslationOptions.AncestorsTreatment.EXCLUDE_ANCESTORS,
-                    RelationshipTranslationOptions.get(
-                            RelationshipTranslationOptions.allOutgoingRelationships(),
-                            RelationshipTranslationOptions.noIncomingRelationships(),
-                            RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
-                    )
-            );
-            var classFrameTranslator = classFrameTranslatorFactory.create(options);
-            return classFrameTranslator.getAxioms(classFrame, mode);
+            return classFrame2FrameAxiomsTranslator.getAxioms(classFrame, mode);
         }
         else if(frame instanceof PlainObjectPropertyFrame) {
             var objectPropertyFrame = (PlainObjectPropertyFrame) frame;
@@ -133,8 +129,7 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
 
     private Frame<?> getFrameForSubject(OWLEntity subject) {
         if(subject instanceof OWLClass) {
-            var classFrameTranslator = classFrameTranslatorFactory.create(ClassFrameTranslationOptions.defaultOptions());
-            return classFrameTranslator.getFrame((OWLClass) subject);
+            return classFrameProvider.getFrame((OWLClass) subject, ClassFrameTranslationOptions.defaultOptions());
         }
         else if(subject instanceof OWLObjectProperty) {
             return objectPropertyFrameTranslator.getFrame((OWLObjectProperty) subject);
