@@ -9,8 +9,10 @@ import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
+import static org.semanticweb.owlapi.util.OWLAPIPreconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -95,6 +97,16 @@ public abstract class FreshEntityIri {
 
     @Nonnull
     public abstract ImmutableSet<IRI> getParentIris();
+
+    /**
+     * Determines if the specified IRI is a fresh entity IRI.
+     * @param iri The IRI
+     * @return true if the IRI represents a fresh entity IRI, otherwise false
+     */
+    public static boolean isFreshEntityIri(@Nonnull IRI iri) {
+        checkNotNull(iri);
+        return Objects.equals(iri.getScheme(), SCHEME);
+    }
 
     @Nonnull
     public static FreshEntityIri parse(@Nonnull String iriString) {

@@ -169,6 +169,17 @@ public class FreshEntityIri_TestCase {
         assertRoundTrips(freshEntityIri);
     }
 
+    @Test
+    public void shouldReturnTrueForFreshEntityIri() {
+        IRI iri = freshEntityIri.getIri();
+        assertThat(FreshEntityIri.isFreshEntityIri(iri), is(true));
+    }
+
+    @Test
+    public void shouldReturnFalseForNonFreshEntityIri() {
+        assertThat(FreshEntityIri.isFreshEntityIri(IRI.create("http://example.org/A")), is(false));
+    }
+
     public void assertRoundTrips(@Nonnull FreshEntityIri freshEntityIri) {
         String iriString = freshEntityIri.getIri().toString();
         FreshEntityIri parsedFreshEntityIri = FreshEntityIri.parse(iriString);
