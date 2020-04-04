@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class FormDataRepository_IT {
 
-//    private ProjectId projectId = ProjectId.get(UUID.randomUUID().toString());
+//    private ProjectId projectId = ProjectId.get(DISCRIMINATOR.randomUUID().toString());
 //
 //    private OWLEntity entity = MockingUtils.mockOWLClass();
 //

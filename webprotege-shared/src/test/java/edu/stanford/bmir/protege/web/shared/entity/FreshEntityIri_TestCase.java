@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nonnull;
 
@@ -15,7 +12,6 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Matthew Horridge
@@ -25,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class FreshEntityIri_TestCase {
 
 
-    public static final String UUID = "12345678-1234-1234-1234-123456789abc";
+    public static final String DISCRIMINATOR = "12345678-1234-1234-1234-123456789abc";
 
     public static final String LANG_TAG = "lang-tag";
 
@@ -40,7 +36,7 @@ public class FreshEntityIri_TestCase {
     public void setUp() {
         freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME,
                                             LANG_TAG,
-                                            UUID,
+                                            DISCRIMINATOR,
                                             parentIris);
     }
     
@@ -56,8 +52,8 @@ public class FreshEntityIri_TestCase {
     }
 
     @Test
-    public void shouldGetFreshEntityIriWithGivenUuid() {
-        assertThat(freshEntityIri.getUuid(), is(equalTo(UUID)));
+    public void shouldGetFreshEntityIriWithGivenDiscriminator() {
+        assertThat(freshEntityIri.getDiscriminator(), is(equalTo(DISCRIMINATOR)));
     }
 
     @Test
@@ -68,48 +64,48 @@ public class FreshEntityIri_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPE_If_SuppliedName_IsNull() {
-        FreshEntityIri.get(null, LANG_TAG, UUID, parentIris);
+        FreshEntityIri.get(null, LANG_TAG, DISCRIMINATOR, parentIris);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPE_If_LangTag_IsNull() {
-        FreshEntityIri.get(SUPPLIED_NAME, null, UUID, parentIris);
+        FreshEntityIri.get(SUPPLIED_NAME, null, DISCRIMINATOR, parentIris);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
-    public void shouldThrowNPE_If_Uuid_IsNull() {
+    public void shouldThrowNPE_If_Discriminator_IsNull() {
         FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, null, parentIris);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPE_If_ParentIris_IsNull() {
-        FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, null);
+        FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, DISCRIMINATOR, null);
     }
 
     @Test
     public void shouldAcceptEmptySuppliedName() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get("", LANG_TAG, UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get("", LANG_TAG, DISCRIMINATOR, parentIris);
         assertThat(freshEntityIri.getSuppliedName(), is(""));
     }
 
     @Test
     public void shouldAcceptEmptyLangTag() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, "", UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, "", DISCRIMINATOR, parentIris);
         assertThat(freshEntityIri.getLangTag(), is(""));
     }
 
     @Test
-    public void shouldAcceptEmptyUuid() {
+    public void shouldAcceptEmptyDiscriminator() {
         FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, "", parentIris);
-        assertThat(freshEntityIri.getUuid(), is(""));
+        assertThat(freshEntityIri.getDiscriminator(), is(""));
     }
 
     @Test
     public void shouldAcceptEmptyParentIris() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of());
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, DISCRIMINATOR, ImmutableSet.of());
         assertThat(freshEntityIri.getParentIris(), is(ImmutableSet.of()));
     }
 
@@ -120,25 +116,25 @@ public class FreshEntityIri_TestCase {
 
     @Test
     public void shouldRoundTripEmptySuppliedName() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get("", LANG_TAG, UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get("", LANG_TAG, DISCRIMINATOR, parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripEmptyLangTag() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, "", UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, "", DISCRIMINATOR, parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
-    public void shouldRoundTripEmptyUuid() {
+    public void shouldRoundTripEmptyDiscriminator() {
         FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, "", parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripEmptyParentIris() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of());
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, DISCRIMINATOR, ImmutableSet.of());
         assertRoundTrips(freshEntityIri);
     }
 
@@ -151,21 +147,23 @@ public class FreshEntityIri_TestCase {
     @Test
     public void shouldRoundTripSuppliedNameWithHash() {
         String suppliedName = "The#Supplied#Name";
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(suppliedName, LANG_TAG, UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(suppliedName, LANG_TAG, DISCRIMINATOR, parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripParentIriWithAmpersand() {
         IRI parentIri = IRI.create("http://example.org/A&B");
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of(parentIri));
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG,
+                                                           DISCRIMINATOR, ImmutableSet.of(parentIri));
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripParentIriWithHash() {
         IRI parentIri = IRI.create("http://example.org#A");
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of(parentIri));
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG,
+                                                           DISCRIMINATOR, ImmutableSet.of(parentIri));
         assertRoundTrips(freshEntityIri);
     }
 
