@@ -33,6 +33,7 @@ import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
+import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -257,9 +258,13 @@ public class ChangeManager implements HasApplyChanges {
                               changesToBeRenamed.add(change);
                               var tempIri = entityInSignature.getIRI();
                               if(!tempIri2MintedIri.containsKey(tempIri)) {
-                                  var shortName = extractShortNameFromFreshEntity(entityInSignature);
-                                  var langTag = extractLangTagFromFreshEntity(entityInSignature);
-                                  var entityType = extractEntityTypeFromFreshEntity(entityInSignature);
+                                  var freshEntityIri = FreshEntityIri.parse(tempIri.toString());
+                                  var shortName = freshEntityIri.getSuppliedName();
+                                  var langTag = Optional.<String>empty();
+                                  if(!shortName.isEmpty()) {
+                                      langTag = Optional.of(freshEntityIri.getLangTag());
+                                  }
+                                  var entityType = entityInSignature.getEntityType();
                                   var creator = getEntityCreator(changeSession,
                                                                  crudContext,
                                                                  shortName,
@@ -385,7 +390,7 @@ public class ChangeManager implements HasApplyChanges {
     }
 
     private static boolean isFreshEntity(OWLEntity entity) {
-        return DataFactory.isFreshEntity(entity);
+        return FreshEntityIri.isFreshEntityIri(entity.getIRI());
     }
 
     private void throwCreatePermissionDeniedIfNecessary(OWLEntity entity,
@@ -420,18 +425,6 @@ public class ChangeManager implements HasApplyChanges {
                                                             .getUserInSession(userId));
             }
         }
-    }
-
-    private static String extractShortNameFromFreshEntity(OWLEntity freshEntity) {
-        return DataFactory.getFreshEntityShortName(freshEntity);
-    }
-
-    private static Optional<String> extractLangTagFromFreshEntity(OWLEntity freshEntity) {
-        return DataFactory.getFreshEntityLangTag(freshEntity);
-    }
-
-    private static EntityType<?> extractEntityTypeFromFreshEntity(OWLEntity freshEntity) {
-        return freshEntity.getEntityType();
     }
 
     private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session,
