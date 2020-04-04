@@ -31,8 +31,6 @@ public class FreshEntityIri_TestCase {
 
     public static final String SUPPLIED_NAME = "Supplied Name";
 
-    public static final EntityType<OWLObjectProperty> ENTITY_TYPE = EntityType.OBJECT_PROPERTY;
-
     private final ImmutableSet<IRI> parentIris = ImmutableSet.of(IRI.create("http://example.org/ParentIriA"),
                                                                  IRI.create("http://example.orf/ParentIriB"));
 
@@ -40,17 +38,12 @@ public class FreshEntityIri_TestCase {
 
     @Before
     public void setUp() {
-        freshEntityIri = FreshEntityIri.get(ENTITY_TYPE,
-                                            SUPPLIED_NAME,
+        freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME,
                                             LANG_TAG,
                                             UUID,
                                             parentIris);
     }
-
-    @Test
-    public void shouldGetFreshEntityIriWithGivenEntityType() {
-        assertThat(freshEntityIri.getEntityType(), is(equalTo(ENTITY_TYPE)));
-    }
+    
 
     @Test
     public void shouldGetFreshEntityIriWithGivenSuppliedName() {
@@ -71,58 +64,52 @@ public class FreshEntityIri_TestCase {
     public void shouldGetFreshEntityIriWithGivenParentIris() {
         assertThat(freshEntityIri.getParentIris(), is(equalTo(parentIris)));
     }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNPE_If_EntityType_IsNull() {
-        FreshEntityIri.get(null, SUPPLIED_NAME, LANG_TAG, UUID, parentIris);
-    }
-
+    
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPE_If_SuppliedName_IsNull() {
-        FreshEntityIri.get(ENTITY_TYPE, null, LANG_TAG, UUID, parentIris);
+        FreshEntityIri.get(null, LANG_TAG, UUID, parentIris);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPE_If_LangTag_IsNull() {
-        FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, null, UUID, parentIris);
+        FreshEntityIri.get(SUPPLIED_NAME, null, UUID, parentIris);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPE_If_Uuid_IsNull() {
-        FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, null, parentIris);
+        FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, null, parentIris);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNPE_If_ParentIris_IsNull() {
-        FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, UUID, null);
+        FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, null);
     }
 
     @Test
     public void shouldAcceptEmptySuppliedName() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, "", LANG_TAG, UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get("", LANG_TAG, UUID, parentIris);
         assertThat(freshEntityIri.getSuppliedName(), is(""));
     }
 
     @Test
     public void shouldAcceptEmptyLangTag() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, "", UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, "", UUID, parentIris);
         assertThat(freshEntityIri.getLangTag(), is(""));
     }
 
     @Test
     public void shouldAcceptEmptyUuid() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, "", parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, "", parentIris);
         assertThat(freshEntityIri.getUuid(), is(""));
     }
 
     @Test
     public void shouldAcceptEmptyParentIris() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of());
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of());
         assertThat(freshEntityIri.getParentIris(), is(ImmutableSet.of()));
     }
 
@@ -133,52 +120,52 @@ public class FreshEntityIri_TestCase {
 
     @Test
     public void shouldRoundTripEmptySuppliedName() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, "", LANG_TAG, UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get("", LANG_TAG, UUID, parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripEmptyLangTag() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, "", UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, "", UUID, parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripEmptyUuid() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, "", parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, "", parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripEmptyParentIris() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of());
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of());
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripEmpty() {
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, "", "", "", ImmutableSet.of());
+        FreshEntityIri freshEntityIri = FreshEntityIri.get("", "", "", ImmutableSet.of());
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripSuppliedNameWithHash() {
         String suppliedName = "The#Supplied#Name";
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, suppliedName, LANG_TAG, UUID, parentIris);
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(suppliedName, LANG_TAG, UUID, parentIris);
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripParentIriWithAmpersand() {
         IRI parentIri = IRI.create("http://example.org/A&B");
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of(parentIri));
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of(parentIri));
         assertRoundTrips(freshEntityIri);
     }
 
     @Test
     public void shouldRoundTripParentIriWithHash() {
         IRI parentIri = IRI.create("http://example.org#A");
-        FreshEntityIri freshEntityIri = FreshEntityIri.get(ENTITY_TYPE, SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of(parentIri));
+        FreshEntityIri freshEntityIri = FreshEntityIri.get(SUPPLIED_NAME, LANG_TAG, UUID, ImmutableSet.of(parentIri));
         assertRoundTrips(freshEntityIri);
     }
 
