@@ -1,12 +1,6 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.IRIData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
@@ -37,9 +31,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormFrameBuilder {
 
     @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
     private final ImmutableSet.Builder<OWLClass> classes = ImmutableSet.builder();
 
     @Nonnull
@@ -57,11 +48,8 @@ public class FormFrameBuilder {
     @Nullable
     private FormSubjectFactoryDescriptor subjectFactoryDescriptor = null;
 
-    private ImmutableSet.Builder<OWLAxiom> placementAxioms = ImmutableSet.builder();
-
     @Inject
-    public FormFrameBuilder(@Nonnull RenderingManager renderingManager) {
-        this.renderingManager = checkNotNull(renderingManager);
+    public FormFrameBuilder() {
     }
 
     public void add(@Nonnull OwlBinding binding,
@@ -72,6 +60,30 @@ public class FormFrameBuilder {
     public void add(@Nonnull OwlBinding binding,
                     @Nonnull OWLLiteral literal) {
         addObject(binding, literal);
+    }
+
+    public void add(@Nonnull OwlBinding binding,
+                    @Nonnull IRI iri) {
+        addObject(binding, iri);
+    }
+
+    public void add(@Nonnull OwlBinding binding,
+                    @Nonnull FormFrameBuilder formFrameBuilder) {
+        nestedFrames.put(formFrameBuilder, binding);
+    }
+
+    public void add(OwlBinding binding, FormSubject value) {
+        value.accept(new FormSubject.FormDataSubjectVisitor() {
+            @Override
+            public void visit(@Nonnull FormEntitySubject formDataEntitySubject) {
+                add(binding, formDataEntitySubject.getEntity());
+            }
+
+            @Override
+            public void visit(@Nonnull FormIriSubject formDataIriSubject) {
+                add(binding, formDataIriSubject.getIri());
+            }
+        });
     }
 
     private void addObject(@Nonnull OwlBinding binding,
@@ -123,7 +135,7 @@ public class FormFrameBuilder {
                        });
     }
 
-    public void addObjectPropertyValue(@Nonnull OWLObjectProperty property,
+    private void addObjectPropertyValue(@Nonnull OWLObjectProperty property,
                                        @Nonnull OWLObject value) {
         value.accept(new OWLObjectVisitorAdapter() {
             @Override
@@ -140,7 +152,7 @@ public class FormFrameBuilder {
         });
     }
 
-    public void addDataPropertyValue(@Nonnull OWLDataProperty property,
+    private void addDataPropertyValue(@Nonnull OWLDataProperty property,
                                      @Nonnull OWLObject value) {
         value.accept(new OWLObjectVisitorAdapter() {
             @Override
@@ -157,7 +169,7 @@ public class FormFrameBuilder {
         });
     }
 
-    public void addAnnotationPropertyValue(@Nonnull OWLAnnotationProperty property,
+    private void addAnnotationPropertyValue(@Nonnull OWLAnnotationProperty property,
                                            @Nonnull OWLObject value) {
         value.accept(new OWLObjectVisitorAdapter() {
             @Override
@@ -206,67 +218,35 @@ public class FormFrameBuilder {
         addAnnotationPropertyIri(ce.getIRI(), property);
     }
 
-    public void addAnnotationPropertyLiteral(OWLLiteral literal,
+    private void addAnnotationPropertyLiteral(OWLLiteral literal,
                                              @Nonnull OWLAnnotationProperty property) {
         var pv = PlainPropertyAnnotationValue.get(
                 property, literal, State.ASSERTED);
         propertyValues.add(pv);
     }
 
-    public void addAnnotationPropertyIri(IRI iri, @Nonnull OWLAnnotationProperty property) {
+    private void addAnnotationPropertyIri(IRI iri, @Nonnull OWLAnnotationProperty property) {
         var pv = PlainPropertyAnnotationValue.get(property, iri, State.ASSERTED);
         propertyValues.add(pv);
-    }
-
-    public void add(@Nonnull OwlBinding binding,
-                    @Nonnull IRI iri) {
-        addObject(binding, iri);
-    }
-
-    public void add(@Nonnull OwlBinding binding,
-                    @Nonnull FormFrameBuilder formFrameBuilder) {
-        nestedFrames.put(formFrameBuilder, binding);
-    }
-
-    public void add(OwlBinding binding, FormSubject value) {
-        value.accept(new FormSubject.FormDataSubjectVisitor() {
-            @Override
-            public void visit(@Nonnull FormEntitySubject formDataEntitySubject) {
-                add(binding, formDataEntitySubject.getEntity());
-            }
-
-            @Override
-            public void visit(@Nonnull FormIriSubject formDataIriSubject) {
-                add(binding, formDataIriSubject.getIri());
-            }
-        });
-    }
-
-    private void addPlacementAxiom(OWLAxiom axiom) {
-        placementAxioms.add(axiom);
     }
 
     public FormFrame build(@Nonnull FormSubjectResolver subjectResolver) {
         var nestedFramesBuilder = ImmutableSet.<FormFrame>builder();
         nestedFrames.forEach((nestedFrameBuilder, binding) -> {
             var resolvedNestedSubject = subjectResolver.resolveSubject(nestedFrameBuilder);
-            resolvedNestedSubject.ifPresent(subj -> {
-                // Add binding to the resolved nested subject
-                FormFrameBuilder.this.add(binding, subj);
-                // Reset the resolved subject in the nested frame builder
-                nestedFrameBuilder.setSubject(subj);
-                // Add placement to parents
-                subjectResolver.getResolvedParents(nestedFrameBuilder)
-                               .forEach(nestedFrameBuilder::addClass);
-                // Build and add the nested frame to this frame
-                var nestedFrame = nestedFrameBuilder.build(subjectResolver);
-                nestedFramesBuilder.add(nestedFrame);
-            });
+            // Add binding to the resolved nested subject
+            FormFrameBuilder.this.add(binding, resolvedNestedSubject);
+            // Reset the resolved subject in the nested frame builder
+            nestedFrameBuilder.setSubject(resolvedNestedSubject);
+            // Add placement to parents
+            subjectResolver.getResolvedParents(nestedFrameBuilder)
+                           .forEach(nestedFrameBuilder::addClass);
+            // Build and add the nested frame to this frame
+            var nestedFrame = nestedFrameBuilder.build(subjectResolver);
+            nestedFramesBuilder.add(nestedFrame);
         });
-        var resolvedSubject = subjectResolver.resolveSubject(this)
-                                             .orElseThrow();
-        // Add placement axioms
-
+        // Resolve subject for this form frame
+        var resolvedSubject = subjectResolver.resolveSubject(this);
         return FormFrame.get(resolvedSubject,
                              classes.build(),
                              instances.build(),

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -31,32 +32,35 @@ public class FormSubjectResolver {
     }
 
     @Nonnull
-    public Optional<FormSubject> resolveSubject(FormFrameBuilder formFrame) {
+    public FormSubject resolveSubject(FormFrameBuilder formFrame) {
             var existingSubject = formFrameFormSubjectMap.get(formFrame);
             if(existingSubject != null) {
-                return Optional.of(existingSubject);
+                return existingSubject;
             }
-            final Optional<FormSubject> theSubject;
-            final Set<OWLClass> parents = new HashSet<>(1);
+            final FormSubject theSubject;
+            final ImmutableSet<OWLClass> parents;
             var subject = formFrame.getSubject();
             if(subject.isEmpty()) {
-                var freshSubject = formFrame.getSubjectFactoryDescriptor()
-                                            .map(subjectFactoryDescriptor -> {
-                                                subjectFactoryDescriptor.getParent()
-                                                                        .ifPresent(parents::add);
-                                                return entityFormSubjectFactory.createSubject(subjectFactoryDescriptor);
-                                            })
-                                            .map(FormEntitySubject::get);
-                theSubject = freshSubject.map(s -> s);
+                // The subject factory descriptor MUST be present.  If it isn't the form
+                // descriptor has not been configured properly.
+                var formSubjectFactoryDescriptor = formFrame.getSubjectFactoryDescriptor()
+                                                            .orElseThrow(this::createSubjectFactoryDescriptorNotPresentException);
+                parents = formSubjectFactoryDescriptor.getParent().stream().collect(toImmutableSet());
+                var freshSubject = entityFormSubjectFactory.createSubject(formSubjectFactoryDescriptor);
+                theSubject = FormSubject.get(freshSubject);
             }
             else {
-                theSubject = subject;
+                // Form subject is already present
+                theSubject = subject.get();
+                parents = ImmutableSet.of();
             }
-            theSubject.ifPresent(s -> {
-                formFrameFormSubjectMap.put(formFrame, s);
-                resolvedParentMap.put(formFrame, parents);
-            });
+            formFrameFormSubjectMap.put(formFrame, theSubject);
+            resolvedParentMap.put(formFrame, parents);
             return theSubject;
+    }
+
+    public RuntimeException createSubjectFactoryDescriptorNotPresentException() {
+        return new RuntimeException("FormSubjectFactoryDescriptor is not present.  Cannot create new form subjects.");
     }
 
     @Nonnull
