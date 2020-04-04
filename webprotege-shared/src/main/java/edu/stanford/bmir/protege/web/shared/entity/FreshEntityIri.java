@@ -40,6 +40,27 @@ public abstract class FreshEntityIri {
 
     public static final String PARENT_IRI_PARAM_NAME = "parentIri";
 
+    public static final String SCHEME = "entity";
+
+    /**
+     * Creates a {@link FreshEntityIri}.  This isn't a well formed IRI, necessarily.  It is just used
+     * to collect together information for the later creation of an entity.
+     * @param entityType The type of entity that the fresh entity IRI represents.
+     * @param suppliedName The supplied (human readable) name.  This may be the empty string.
+     * @param langTag The language tag of a supplied name.  This may be empty.  Even if the supplied name
+     *                is empty then a non-empty language tag will be accepted.  The language tag is not
+     *                validated.
+     * @param uuid A UUID.  This should only really be provided if the supplied name is empty, when it is used
+     *             as a discriminator for fresh entities.  The UUID may be the empty string, otherwise it
+     *             should conform to a standard UUID pattern.
+     * @param parentIris A possibly empty set of parent IRIs.  The ultimate entity type of a parent IRI depends
+     *                   on the specified entity type.  For classes, parent entities are classes.  For individuals,
+     *                   parent entities are classes. For object properties, parent entities are object properties.
+     *                   For data properties, parent entities are data properties.  For annotation properties, parent
+     *                   entities are annotation properties.  For datatypes, parent entities are datatypes.
+     * @return A fresh entity IRI containing the supplied information.
+     */
+    @Nonnull
     public static FreshEntityIri get(@Nonnull EntityType<?> entityType,
                                      @Nonnull String suppliedName,
                                      @Nonnull String langTag,
@@ -52,7 +73,7 @@ public abstract class FreshEntityIri {
     }
 
     public IRI getIri() {
-        String schemeAndTypeName = "entity:" + getEntityType().getName();
+        String schemeAndTypeName = SCHEME + ":" + getEntityType().getName();
         String langTagParam = LANG_TAG_PARAM_NAME + "=" + getLangTag();
         String uuidParam = UUID_PARAM_NAME + "=" + getUuid();
         String parentIriParams = getParentIris().stream()
@@ -97,7 +118,7 @@ public abstract class FreshEntityIri {
             throw new RuntimeException("Missing fragment identifier (#)");
         }
         if(!(colonIndex < querySeparatorIndex) && !(querySeparatorIndex < fragmentIdentifierIndex)) {
-            throw new RuntimeException("Malformed fresh entity IRI");
+            throw new RuntimeException("Malformed fresh " + SCHEME + " IRI");
         }
         final String entityTypeToken = iriString.substring(colonIndex + 1,
                                                 querySeparatorIndex);
@@ -105,7 +126,7 @@ public abstract class FreshEntityIri {
                   .stream()
                   .filter(e -> e.getName().equals(entityTypeToken))
                   .findFirst()
-                  .orElseThrow(() -> new RuntimeException("Malformed entity type"));
+                  .orElseThrow(() -> new RuntimeException("Malformed " + SCHEME + " type"));
 
         final String queryToken = iriString.substring(querySeparatorIndex + 1, fragmentIdentifierIndex);
 
