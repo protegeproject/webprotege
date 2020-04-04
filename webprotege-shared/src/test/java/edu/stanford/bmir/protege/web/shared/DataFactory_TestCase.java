@@ -33,14 +33,6 @@ public class DataFactory_TestCase {
     }
 
     @Test
-    public void test_getFreshEntityReturnsFreshEntityWithEmptyLangTag() {
-        OWLClass cls = DataFactory.getFreshOWLEntity(EntityType.CLASS, "X", Optional.of(""));
-        assertTrue(DataFactory.isFreshEntity(cls));
-        assertEquals("X", DataFactory.getFreshEntityShortName(cls));
-        assertEquals(Optional.of(""), DataFactory.getFreshEntityLangTag(cls));
-    }
-
-    @Test
     public void test_getFreshEntityReturnsFreshEntityWithLangTag() {
         OWLClass cls = DataFactory.getFreshOWLEntity(EntityType.CLASS, "X", Optional.of("en"));
         assertTrue(DataFactory.isFreshEntity(cls));

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -23,8 +24,6 @@ import java.util.Optional;
  * Date: 20/11/2012
  */
 public class DataFactory {
-
-    public static final String FRESH_ENTITY_SCHEME = "wptmp";
 
     private static OWLDataFactory dataFactory = new OWLDataFactoryImpl();
 
@@ -98,12 +97,11 @@ public class DataFactory {
     }
 
     public static IRI getFreshOWLEntityIRI(String shortName) {
-        String iri = getFreshIRIString(shortName, Optional.empty());
-        return IRI.create(iri);
+        return FreshEntityIri.get(shortName, "", "", ImmutableSet.of()).getIri();
     }
 
     public static <T extends OWLEntity> T getFreshOWLEntity(EntityType<T> entityType, String shortName, @Nonnull Optional<String> langTag) {
-        String iri = getFreshIRIString(shortName, langTag);
+        IRI iri = FreshEntityIri.get(shortName, langTag.orElse(""), "", ImmutableSet.of()).getIri();
         return getOWLEntity(entityType, iri);
     }
 
@@ -111,12 +109,8 @@ public class DataFactory {
                                                             @Nonnull String shortName,
                                                             @Nonnull Optional<String> langTag,
                                                             @Nonnull OWLDataFactory dataFactory) {
-        String iri = getFreshIRIString(shortName, langTag);
-        return dataFactory.getOWLEntity(entityType, IRI.create(iri));
-    }
-
-    private static String getFreshIRIString(String shortName, @Nonnull Optional<String> langTag) {
-        return FRESH_ENTITY_SCHEME + ":entity" + langTag.map(l -> "@" + l.trim()).orElse("") + "#" + shortName;
+        IRI iri = FreshEntityIri.get(shortName, langTag.orElse(""), "", ImmutableSet.of()).getIri();
+        return dataFactory.getOWLEntity(entityType, iri);
     }
 
     public static boolean isFreshEntity(OWLEntity entity) {
@@ -125,44 +119,8 @@ public class DataFactory {
     }
 
     public static boolean isFreshIri(IRI iri) {
-        String scheme = iri.getScheme();
-        return scheme != null && FRESH_ENTITY_SCHEME.equalsIgnoreCase(scheme);
+        return FreshEntityIri.isFreshEntityIri(iri);
     }
-
-    public static String getFreshEntityShortName(OWLEntity entity) {
-        String iri = entity.getIRI().toString();
-        if(!iri.startsWith(FRESH_ENTITY_SCHEME)) {
-            throw new RuntimeException(entity.toStringID() + " is not a fresh entity");
-        }
-        int firstHashIndex = iri.indexOf('#');
-        if(firstHashIndex == -1) {
-            throw new RuntimeException("Malformed fresh entity: Could not find #");
-        }
-        return iri.substring(firstHashIndex + 1);
-    }
-
-    @Nonnull
-    public static Optional<String> getFreshEntityLangTag(@Nonnull OWLEntity entity) {
-        String iri = entity.getIRI().toString();
-        if(!iri.startsWith(FRESH_ENTITY_SCHEME)) {
-            throw new RuntimeException(entity.toStringID() + " is not a fresh entity");
-        }
-        String entityLangMarker = "entity@";
-        int langIndex = iri.indexOf(entityLangMarker);
-        if(langIndex == -1) {
-            return Optional.empty();
-        }
-        int firstHashIndex = iri.indexOf("#");
-        if(firstHashIndex == -1) {
-            throw new RuntimeException("Malformed fresh entity: Could not find #");
-        }
-        if(firstHashIndex < langIndex + entityLangMarker.length()) {
-            return Optional.empty();
-        }
-        return Optional.of(iri.substring(langIndex + entityLangMarker.length(), firstHashIndex));
-    }
-
-
 
 
     public static <T extends OWLEntity> T getOWLEntity(EntityType<T> entityType, IRI iri) {
@@ -381,5 +339,21 @@ public class DataFactory {
                 SKOSVocabulary.PREFLABEL.getPrefixedName(),
                 ImmutableMap.of()
         );
+    }
+
+    public static String getFreshEntityShortName(OWLEntity entity) {
+        FreshEntityIri freshEntityIri = FreshEntityIri.parse(entity.getIRI().toString());
+        return freshEntityIri.getSuppliedName();
+    }
+
+    public static Optional<String> getFreshEntityLangTag(OWLEntity entity) {
+        FreshEntityIri freshEntityIri = FreshEntityIri.parse(entity.getIRI().toString());
+        String langTag = freshEntityIri.getLangTag();
+        if(langTag.isEmpty()) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(langTag);
+        }
     }
 }
