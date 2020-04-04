@@ -15,9 +15,5 @@
             <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.subFormSubjectParents}"/>
             <primitive:PrimitiveDataEditor ui:field="parentEditor" classesAllowed="true"/>
         </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-            <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.subFormSubjectGeneratedNamePattern}"/>
-            <g:TextBox ui:field="generatedNamePattern"/>
-        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

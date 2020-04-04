@@ -27,11 +27,6 @@ public interface FormSubjectFactoryDescriptorView extends IsWidget {
     @Nonnull
     Optional<OWLClassData> getParentClass();
 
-    void setGeneratedNamePattern(@Nonnull String suppliedNamePattern);
-
-    @Nonnull
-    String getGeneratedNamePattern();
-
     void clear();
 
 

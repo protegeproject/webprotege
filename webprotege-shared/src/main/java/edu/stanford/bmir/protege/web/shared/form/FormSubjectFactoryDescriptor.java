@@ -25,11 +25,9 @@ public abstract class FormSubjectFactoryDescriptor {
 
     @JsonCreator
     public static FormSubjectFactoryDescriptor get(@Nonnull @JsonProperty("entityType") EntityType entityType,
-                                                   @Nullable @JsonProperty("generatedNamePattern") String generatedNamePattern,
                                                    @Nullable @JsonProperty("parent") OWLClass parent,
                                                    @Nonnull @JsonProperty("targetOntologyIri") Optional<IRI> targetOntologyIri) {
         return new AutoValue_FormSubjectFactoryDescriptor(entityType,
-                                                          generatedNamePattern == null ? "" : generatedNamePattern,
                                                           parent,
                                                           targetOntologyIri.orElse(null));
     }
@@ -40,24 +38,6 @@ public abstract class FormSubjectFactoryDescriptor {
 
     @Nonnull
     public abstract EntityType<?> getEntityType();
-
-    /**
-     * Gets the pattern for generating what would be tha
-     * user supplied name for an entity.  The generation of the entity IRI
-     * is based on this generated name and the WebProtege entity creation settings.
-     *
-     * The following pattern variables can be used:
-     *
-     *     ${type} - the short name of the type of entity being created, for example,
-     *     "Class" for an owl:Class, "NamedIndividual" for an individual etc.
-     *     ${uuid} – generates a fresh UUID.  For example, "MyClass-${uuid}" will
-     *     generate a name of the form "MyClass-12345678-1234-1234-1234-123456789abc".
-     *
-     * If the supplied name is quoted IRI then this IRI will be used for the entity
-     * and it will override any entity creation settings in WebProtege.
-     */
-    @Nonnull
-    public abstract String getGeneratedNamePattern();
 
     /**
      * Gets a list of parents that can be used to position the fresh entity in

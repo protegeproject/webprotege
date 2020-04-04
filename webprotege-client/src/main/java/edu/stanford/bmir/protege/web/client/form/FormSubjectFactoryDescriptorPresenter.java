@@ -48,12 +48,6 @@ public class FormSubjectFactoryDescriptorPresenter {
 
     public void setDescriptor(@Nonnull FormSubjectFactoryDescriptor descriptor) {
         view.setEntityType(descriptor.getEntityType());
-        if(descriptor.getGeneratedNamePattern().isEmpty()) {
-            view.setGeneratedNamePattern(FormSubjectFactoryDescriptor.getDefaultGeneratedNamePattern());
-        }
-        else {
-            view.setGeneratedNamePattern(descriptor.getGeneratedNamePattern());
-        }
         descriptor.getParent().ifPresent(p -> {
             dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, p),
                                            result -> view.setParentClass((OWLClassData) result.getEntityData()));
@@ -64,9 +58,7 @@ public class FormSubjectFactoryDescriptorPresenter {
     public Optional<FormSubjectFactoryDescriptor> getDescriptor() {
         EntityType<?> entityType = view.getEntityType();
         OWLClass parent = view.getParentClass().map(OWLClassData::getEntity).orElse(null);
-        String suppliedNameTemplate = view.getGeneratedNamePattern();
         return Optional.of(FormSubjectFactoryDescriptor.get(entityType,
-                                                            suppliedNameTemplate,
                                                             parent,
                                                             Optional.empty()));
     }

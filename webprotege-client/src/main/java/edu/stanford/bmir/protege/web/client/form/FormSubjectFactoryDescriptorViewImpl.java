@@ -6,24 +6,14 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
-import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Matthew Horridge
@@ -46,9 +36,6 @@ public class FormSubjectFactoryDescriptorViewImpl extends Composite implements F
 
     @UiField(provided = true)
     PrimitiveDataEditor parentEditor;
-
-    @UiField
-    TextBox generatedNamePattern;
 
     @Inject
     public FormSubjectFactoryDescriptorViewImpl(PrimitiveDataEditor primitiveDataEditor) {
@@ -95,17 +82,6 @@ public class FormSubjectFactoryDescriptorViewImpl extends Composite implements F
         return parentEditor.getValue()
                 .filter(parent -> parent instanceof OWLClassData)
                 .map(parent -> (OWLClassData) parent);
-    }
-
-    @Override
-    public void setGeneratedNamePattern(@Nonnull String generatedNamePattern) {
-        this.generatedNamePattern.setText(generatedNamePattern);
-    }
-
-    @Nonnull
-    @Override
-    public String getGeneratedNamePattern() {
-        return generatedNamePattern.getText().trim();
     }
 
     interface FormSubjectFactoryDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, FormSubjectFactoryDescriptorViewImpl> {

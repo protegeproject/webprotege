@@ -30,8 +30,6 @@ import static org.mockito.Mockito.mock;
  */
 public class FormDescriptor_Serialization_IT {
 
-    private static final String SUPPLIED_NAME_TEMPLATE = "id-${uuid}";
-
     private static final FormId FORM_ID = FormId.get("12345678-1234-1234-1234-123456789abc");
 
     private static final LanguageMap LABEL = LanguageMap.of("en", "The label");
@@ -50,7 +48,6 @@ public class FormDescriptor_Serialization_IT {
     public void shouldSerializeFormDescriptor() throws IOException {
         var subjectFactoryDescriptor = FormSubjectFactoryDescriptor.get(
                 EntityType.CLASS,
-                SUPPLIED_NAME_TEMPLATE,
                 parent,
                 Optional.of(IRI.create("http://example.org/target-ontology"))
         );
@@ -70,7 +67,6 @@ public class FormDescriptor_Serialization_IT {
     public void shouldSerializeFormDescriptorWithoutTargetOntologyIri() throws IOException {
         var subjectFactoryDescriptor = FormSubjectFactoryDescriptor.get(
                 EntityType.CLASS,
-                SUPPLIED_NAME_TEMPLATE,
                 parent,
                 Optional.empty()
         );
