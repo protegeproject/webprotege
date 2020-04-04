@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.match.RelationshipValueCriteriaListPresenter;
@@ -10,7 +11,9 @@ import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlClassBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlInstanceBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
+import edu.stanford.bmir.protege.web.shared.match.criteria.AnyRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -58,6 +61,7 @@ public class OwlBindingPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        relationshipValueCriteriaListPresenter.start(view.getValuesFilterViewContainer());
     }
 
     public void setBinding(@Nonnull OwlBinding binding) {
@@ -76,7 +80,6 @@ public class OwlBindingPresenter {
         else if(binding instanceof OwlInstanceBinding) {
             view.setOwlInstanceBinding(true);
         }
-        relationshipValueCriteriaListPresenter.start(view.getValuesFilterViewContainer());
     }
 
     @Nonnull
