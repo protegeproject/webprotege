@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -45,12 +44,7 @@ public class FormSubjectResolver {
                                             .map(subjectFactoryDescriptor -> {
                                                 subjectFactoryDescriptor.getParent()
                                                                         .ifPresent(parents::add);
-                                                String pattern = getGeneratedNamePattern(subjectFactoryDescriptor);
-                                                return entityFormSubjectFactory.createSubject(
-                                                        pattern,
-                                                        subjectFactoryDescriptor.getEntityType(),
-                                                        Optional.empty()
-                                                );
+                                                return entityFormSubjectFactory.createSubject(subjectFactoryDescriptor);
                                             })
                                             .map(FormEntitySubject::get);
                 theSubject = freshSubject.map(s -> s);
@@ -74,17 +68,5 @@ public class FormSubjectResolver {
         else {
             return ImmutableSet.copyOf(resolvedParent);
         }
-    }
-
-    public String getGeneratedNamePattern(FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
-        var generatedNamePattern = subjectFactoryDescriptor.getGeneratedNamePattern();
-        String pattern;
-        if(generatedNamePattern.isBlank()) {
-            pattern = FormSubjectFactoryDescriptor.getDefaultGeneratedNamePattern();
-        }
-        else {
-            pattern = generatedNamePattern;
-        }
-        return pattern;
     }
 }

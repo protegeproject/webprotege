@@ -39,7 +39,7 @@ public abstract class FormSubjectFactoryDescriptor {
     }
 
     @Nonnull
-    public abstract EntityType getEntityType();
+    public abstract EntityType<?> getEntityType();
 
     /**
      * Gets the pattern for generating what would be tha

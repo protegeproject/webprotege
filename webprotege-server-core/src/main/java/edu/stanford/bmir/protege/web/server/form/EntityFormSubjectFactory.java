@@ -1,16 +1,19 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
+import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -19,27 +22,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityFormSubjectFactory {
 
+    private static final String EMPTY_SUPPLIED_NAME = "";
+
+    public static final String EMPTY_LANG_TAG = "";
+
     @Nonnull
     private final OWLDataFactory dataFactory;
 
-    @Nonnull
-    private SuppliedNameTemplateResolver templateResolver;
-
     @Inject
-    public EntityFormSubjectFactory(@Nonnull OWLDataFactory dataFactory,
-                                    @Nonnull SuppliedNameTemplateResolver templateResolver) {
+    public EntityFormSubjectFactory(@Nonnull OWLDataFactory dataFactory) {
         this.dataFactory = checkNotNull(dataFactory);
-        this.templateResolver = checkNotNull(templateResolver);
     }
 
     @Nonnull
-    public OWLEntity createSubject(@Nonnull String suppliedNameTemplate,
-                                   @Nonnull EntityType<?> entityType,
-                                   @Nonnull Optional<String> langTag) {
-        if(suppliedNameTemplate.isBlank()) {
-            throw new RuntimeException("Supplied name template is blank");
-        }
-        var resolvedTemplate = templateResolver.resolveTemplateVariables(suppliedNameTemplate, entityType);
-        return DataFactory.getFreshOWLEntity(entityType, resolvedTemplate, langTag, dataFactory);
+    public OWLEntity createSubject(@Nonnull FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
+        var parentIris = subjectFactoryDescriptor.getParent()
+                                .stream()
+                                .map(OWLEntity::getIRI)
+                                .collect(toImmutableSet());
+        var entityType = subjectFactoryDescriptor.getEntityType();
+        var discriminator = UUID.randomUUID().toString();
+        var freshEntityIri = FreshEntityIri.get(EMPTY_SUPPLIED_NAME,
+                                                EMPTY_LANG_TAG,
+                                                discriminator,
+                                                parentIris);
+        return dataFactory.getOWLEntity(entityType, freshEntityIri.getIri());
     }
 }
