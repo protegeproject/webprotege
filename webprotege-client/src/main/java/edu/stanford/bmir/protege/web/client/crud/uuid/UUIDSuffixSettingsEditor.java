@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -28,6 +29,7 @@ public class UUIDSuffixSettingsEditor extends Composite implements EntityCrudKit
 
     private static UUIDSuffixSettingsEditorUiBinder ourUiBinder = GWT.create(UUIDSuffixSettingsEditorUiBinder.class);
 
+    @Inject
     public UUIDSuffixSettingsEditor() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

@@ -68,9 +68,20 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     private final Provider<OBOIdSuffixSettingsEditor> oboIdSuffixSettingsEditorProvider;
 
+    @Nonnull
+    private final Provider<UUIDSuffixSettingsEditor> uuidSuffixSettingsEditorProvider;
+
+    @Nonnull
+    private final Provider<SuppliedSuffixSettingsEditor> suppliedSuffixSettingsEditorProvider;
+
+
     @Inject
-    public EntityCrudKitSettingsEditorImpl(Provider<OBOIdSuffixSettingsEditor> oboIdSuffixSettingsEditorProvider) {
+    public EntityCrudKitSettingsEditorImpl(Provider<OBOIdSuffixSettingsEditor> oboIdSuffixSettingsEditorProvider,
+                                           @Nonnull Provider<UUIDSuffixSettingsEditor> uuidSuffixSettingsEditorProvider,
+                                           @Nonnull Provider<SuppliedSuffixSettingsEditor> suppliedSuffixSettingsEditorProvider) {
         this.oboIdSuffixSettingsEditorProvider = oboIdSuffixSettingsEditorProvider;
+        this.uuidSuffixSettingsEditorProvider = uuidSuffixSettingsEditorProvider;
+        this.suppliedSuffixSettingsEditorProvider = suppliedSuffixSettingsEditorProvider;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
@@ -161,10 +172,10 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
             return oboIdSuffixSettingsEditorProvider.get();
         }
         else if(crudKit.getKitId().equals(UUIDSuffixKit.getId())) {
-            return new UUIDSuffixSettingsEditor();
+            return uuidSuffixSettingsEditorProvider.get();
         }
         else if(crudKit.getKitId().equals(SuppliedNameSuffixKit.getId())) {
-            return new SuppliedSuffixSettingsEditor();
+            return suppliedSuffixSettingsEditorProvider.get();
         }
         else {
             throw new RuntimeException("Unknown Entity Crud Kit");

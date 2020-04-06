@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEdit
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -34,6 +35,7 @@ public class SuppliedSuffixSettingsEditor extends Composite implements EntityCru
     @UiField
     protected ListBox whiteSpaceTreatmentListBox;
 
+    @Inject
     public SuppliedSuffixSettingsEditor() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
