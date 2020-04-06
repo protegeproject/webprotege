@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.crud.supplied;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,12 +28,23 @@ public class SuppliedNameSuffixSettingsPresenter {
         container.setWidget(view);
     }
 
-    public void setSettings(@Nonnull SuppliedNameSuffixSettings settings) {
+    public void clear() {
+        view.clearView();
+        view.setWhiteSpaceTreatment(getDefaultWhiteSpaceTreatment());
+    }
 
+    public void setSettings(@Nonnull SuppliedNameSuffixSettings settings) {
+        WhiteSpaceTreatment whiteSpaceTreatment = settings.getWhiteSpaceTreatment();
+        view.setWhiteSpaceTreatment(whiteSpaceTreatment);
     }
 
     @Nonnull
     public SuppliedNameSuffixSettings getSettings() {
-        return new SuppliedNameSuffixSettings();
+        WhiteSpaceTreatment whiteSpaceTreatment = view.getWhiteSpaceTreatment();
+        return new SuppliedNameSuffixSettings(whiteSpaceTreatment);
+    }
+
+    public static WhiteSpaceTreatment getDefaultWhiteSpaceTreatment() {
+        return WhiteSpaceTreatment.values()[0];
     }
 }

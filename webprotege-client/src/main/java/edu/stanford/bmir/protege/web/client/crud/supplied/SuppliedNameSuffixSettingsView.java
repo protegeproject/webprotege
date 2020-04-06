@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.crud.supplied;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
+
+import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
@@ -9,4 +12,10 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface SuppliedNameSuffixSettingsView extends IsWidget {
 
+    void clearView();
+
+    void setWhiteSpaceTreatment(@Nonnull WhiteSpaceTreatment whiteSpaceTreatment);
+
+    @Nonnull
+    WhiteSpaceTreatment getWhiteSpaceTreatment();
 }

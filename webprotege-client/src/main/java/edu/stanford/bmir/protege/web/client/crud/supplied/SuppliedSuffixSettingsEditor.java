@@ -24,6 +24,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 30/07/2013
  */
+@Deprecated
 public class SuppliedSuffixSettingsEditor extends Composite implements EntityCrudKitSuffixSettingsEditor<SuppliedNameSuffixSettings> {
 
     interface SuffixGeneratorSettingsEditorUiBinder extends UiBinder<HTMLPanel, SuppliedSuffixSettingsEditor> {
