@@ -29,6 +29,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 30/07/2013
  */
+@Deprecated
 public class OBOIdSuffixSettingsEditor extends Composite implements EntityCrudKitSuffixSettingsEditor<OBOIdSuffixSettings> {
 
     interface OBOIdSchemeSpecificSettingsEditorUiBinder extends UiBinder<HTMLPanel, OBOIdSuffixSettingsEditor> {

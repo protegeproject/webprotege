@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditorImpl;
+import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsView;
@@ -728,6 +730,11 @@ public class ClientProjectModule {
 
     @Provides
     SuppliedNameSuffixSettingsView provideSuppliedNameSuffixSettingsView(SuppliedNameSuffixSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OboIdSuffixSettingsView provideOboIdSuffixSettingsView(OboIdSuffixSettingsViewImpl impl) {
         return impl;
     }
 }
