@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditorImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
+import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
@@ -51,6 +53,7 @@ import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
@@ -720,6 +723,11 @@ public class ClientProjectModule {
 
     @Provides
     UuidSuffixSettingsView provideUuidSuffixSettingsView(UuidSuffixSettingViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SuppliedNameSuffixSettingsView provideSuppliedNameSuffixSettingsView(SuppliedNameSuffixSettingsViewImpl impl) {
         return impl;
     }
 }
