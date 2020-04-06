@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public class EntityCrudKitPrefixSettings implements HasIRIPrefix, Serializable {
 
-    private static final String DEFAULT_IRI_PREFIX = "http://webprotege.stanford.edu/";
+    private static final String DEFAULT_IRI_PREFIX = "http://www.example.org/";
 
     private String iriPrefix;
 
