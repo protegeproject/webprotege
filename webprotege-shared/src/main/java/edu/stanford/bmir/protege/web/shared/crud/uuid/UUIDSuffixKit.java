@@ -34,7 +34,7 @@ public class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
 
     @Override
     public EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
-        return new EntityCrudKitPrefixSettings();
+        return EntityCrudKitPrefixSettings.get();
     }
 
     @Override

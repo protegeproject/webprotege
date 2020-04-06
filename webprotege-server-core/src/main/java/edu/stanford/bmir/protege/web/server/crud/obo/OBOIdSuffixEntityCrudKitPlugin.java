@@ -41,7 +41,7 @@ public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOId
 
     @Override
     public EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler() {
-        return factory.create(new EntityCrudKitPrefixSettings(), new OBOIdSuffixSettings());
+        return factory.create(EntityCrudKitPrefixSettings.get(), new OBOIdSuffixSettings());
     }
 
     @Override

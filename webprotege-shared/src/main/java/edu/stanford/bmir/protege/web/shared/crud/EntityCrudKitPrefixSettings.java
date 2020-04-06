@@ -1,8 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.MoreObjects;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasIRIPrefix;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -11,28 +17,25 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public class EntityCrudKitPrefixSettings implements HasIRIPrefix, Serializable {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class EntityCrudKitPrefixSettings implements HasIRIPrefix, IsSerializable {
 
     private static final String DEFAULT_IRI_PREFIX = "http://www.example.org/";
 
-    private String iriPrefix;
-
-    public EntityCrudKitPrefixSettings() {
-        this(DEFAULT_IRI_PREFIX);
+    @Nonnull
+    public static EntityCrudKitPrefixSettings get() {
+        return get(DEFAULT_IRI_PREFIX);
     }
 
-    public EntityCrudKitPrefixSettings(String iriPrefix) {
-        this.iriPrefix = iriPrefix;
+    @JsonCreator
+    @Nonnull
+    public static EntityCrudKitPrefixSettings get(String iriPrefix) {
+        return new AutoValue_EntityCrudKitPrefixSettings(iriPrefix);
     }
 
+    @JsonProperty("iriPrefix")
     @Override
-    public String getIRIPrefix() {
-        return iriPrefix;
-    }
+    public abstract String getIRIPrefix();
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper("EntityCrudKitPrefixSettings")
-                          .addValue(iriPrefix).toString();
-    }
 }

@@ -30,6 +30,6 @@ public class PrefixSettingsConverter implements DocumentConverter<EntityCrudKitP
     @Override
     public EntityCrudKitPrefixSettings fromDocument(@Nonnull Document document) {
         String iriPrefix = document.getString(IRI_PREFIX);
-        return new EntityCrudKitPrefixSettings(iriPrefix);
+        return EntityCrudKitPrefixSettings.get(iriPrefix);
     }
 }

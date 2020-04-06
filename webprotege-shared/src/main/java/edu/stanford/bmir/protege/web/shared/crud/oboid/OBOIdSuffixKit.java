@@ -34,7 +34,7 @@ public class OBOIdSuffixKit extends EntityCrudKit<OBOIdSuffixSettings> {
 
     @Override
     public EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
-        return new EntityCrudKitPrefixSettings(DEFAULT_PREFIX);
+        return EntityCrudKitPrefixSettings.get(DEFAULT_PREFIX);
     }
 
     @Override

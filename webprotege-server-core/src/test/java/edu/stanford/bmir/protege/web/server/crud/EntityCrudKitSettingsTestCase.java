@@ -18,29 +18,29 @@ public class EntityCrudKitSettingsTestCase {
 
     @Test(expected = NullPointerException.class)
     public void constructorThrowsNullPointerExceptionIfPrefixSettingsIsNull() {
-        new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(null, mock(EntityCrudKitSuffixSettings.class));
+        new EntityCrudKitSettings<>(null, mock(EntityCrudKitSuffixSettings.class));
     }
 
     @Test(expected = NullPointerException.class)
     public void constructorThrowsNullPointerExceptionIfSuffixSettingsIsNull() {
-        new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(new EntityCrudKitPrefixSettings(), null);
+        new EntityCrudKitSettings<>(EntityCrudKitPrefixSettings.get(), null);
     }
 
     @Test
     public void objectsWithSamePrefixAndSuffixSettingsHaveEqualHashCodes() {
-        EntityCrudKitPrefixSettings prefixSettings = new EntityCrudKitPrefixSettings();
+        EntityCrudKitPrefixSettings prefixSettings = EntityCrudKitPrefixSettings.get();
         EntityCrudKitSuffixSettings suffixSettings = mock(EntityCrudKitSuffixSettings.class);
-        EntityCrudKitSettings<?> settingsA = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
-        EntityCrudKitSettings<?> settingsB = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsA = new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsB = new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
         assertEquals(settingsA.hashCode(), settingsB.hashCode());
     }
 
     @Test
     public void objectsWithSamePrefixAndSuffixSettingsAreEqual() {
-        EntityCrudKitPrefixSettings prefixSettings = new EntityCrudKitPrefixSettings();
+        EntityCrudKitPrefixSettings prefixSettings = EntityCrudKitPrefixSettings.get();
         EntityCrudKitSuffixSettings suffixSettings = mock(EntityCrudKitSuffixSettings.class);
-        EntityCrudKitSettings<?> settingsA = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
-        EntityCrudKitSettings<?> settingsB = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsA = new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsB = new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
         assertEquals(settingsA, settingsB);
     }
 

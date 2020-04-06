@@ -225,7 +225,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         }
         EntityCrudKitSuffixSettingsEditor editor = selEditor.get();
         Optional<?> editedValue = editor.getValue();
-        return editedValue.map(o -> new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) o));
+        return editedValue.map(o -> new EntityCrudKitSettings<>(EntityCrudKitPrefixSettings.get(getIRIPrefix()), (EntityCrudKitSuffixSettings) o));
     }
 
     @Override

@@ -42,7 +42,7 @@ public class UUIDEntityCrudKitPlugin implements EntityCrudKitPlugin<UUIDEntityCr
 
     @Override
     public UUIDEntityCrudKitHandler getEntityCrudKitHandler() {
-        return factory.create(new EntityCrudKitPrefixSettings(), new UUIDSuffixSettings());
+        return factory.create(EntityCrudKitPrefixSettings.get(), new UUIDSuffixSettings());
     }
 
     @Override

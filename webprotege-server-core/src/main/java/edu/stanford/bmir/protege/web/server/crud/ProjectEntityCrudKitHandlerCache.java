@@ -80,7 +80,7 @@ public class ProjectEntityCrudKitHandlerCache {
     }
 
     private static EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
-        return new EntityCrudKitPrefixSettings();
+        return EntityCrudKitPrefixSettings.get();
     }
 
     private static EntityCrudKitSuffixSettings getDefaultSuffixSettings() {
