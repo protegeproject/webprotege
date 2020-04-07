@@ -17,7 +17,7 @@ import java.util.Optional;
  * Date: 13/08/2013
  */
 @ApplicationSingleton
-public class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
+public class UUIDSuffixKit extends EntityCrudKit<UuidSuffixSettings> {
 
     public static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";
 
@@ -38,8 +38,8 @@ public class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
     }
 
     @Override
-    public UUIDSuffixSettings getDefaultSuffixSettings() {
-        return new UUIDSuffixSettings();
+    public UuidSuffixSettings getDefaultSuffixSettings() {
+        return UuidSuffixSettings.get();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
     }
 
     @Override
-    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, UUIDSuffixSettings suffixSettings) {
+    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, UuidSuffixSettings suffixSettings) {
         return IRI.create(URL.encode(prefixSettings.getIRIPrefix()), EXAMPLE_SUFFIX);
     }
 }

@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.crud.obo;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ public class OboIdSuffixSettingsPresenter {
         view.setTotalDigits(Integer.toString(DEFAULT_TOTAL_DIGITS));
     }
 
-    public void setSettings(@Nonnull OBOIdSuffixSettings settings) {
+    public void setSettings(@Nonnull OboIdSuffixSettings settings) {
         checkNotNull(settings);
         int totalDigits = settings.getTotalDigits();
         view.setTotalDigits(Integer.toString(totalDigits));
@@ -45,10 +46,10 @@ public class OboIdSuffixSettingsPresenter {
     }
 
     @Nonnull
-    public OBOIdSuffixSettings getSettings() {
+    public OboIdSuffixSettings getSettings() {
         int totalDigits = getTotalDigits();
         List<UserIdRange> userIdRanges = view.getUserIdRanges();
-        return new OBOIdSuffixSettings(totalDigits, userIdRanges);
+        return OboIdSuffixSettings.get(totalDigits, ImmutableList.copyOf(userIdRanges));
     }
 
     private int getTotalDigits() {

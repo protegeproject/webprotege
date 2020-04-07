@@ -7,11 +7,9 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.util.IdUtil;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
@@ -27,20 +25,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/08/2013
  */
-public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffixSettings, ChangeSetEntityCrudSession> {
-
-    /**
-     * A start char for local names.  Some UUIDs might start with a number.  Unfortunately, NCNames (non-colonised names)
-     * in XML cannot start with numbers.  For everything apart from properties this is o.k. but for properties it means
-     * that it might not be possible to save an ontology in RDF/XML.  We therefore prefix each local name with a valid
-     * NCName start char - "R".  The character "R" was chosen so as not to encode the type into the name.  I initially
-     * considered C for classes, P properties etc. however with punning this would get ugly.
-     */
-    private static final String START_CHAR = "R";
+public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffixSettings, ChangeSetEntityCrudSession> {
 
     private final EntityCrudKitPrefixSettings prefixSettings;
 
-    private final UUIDSuffixSettings suffixSettings;
+    private final UuidSuffixSettings suffixSettings;
 
     @Nonnull
     private final OWLDataFactory dataFactory;
@@ -50,8 +39,8 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     @AutoFactory
     @Inject
-    public UUIDEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
-                                    @Nonnull UUIDSuffixSettings uuidSuffixKitSettings,
+    public UuidEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
+                                    @Nonnull UuidSuffixSettings uuidSuffixKitSettings,
                                     @Provided OWLDataFactory dataFactory,
                                     @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature) {
         this.prefixSettings = checkNotNull(prefixSettings);
@@ -76,13 +65,13 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     @Override
-    public UUIDSuffixSettings getSuffixSettings() {
+    public UuidSuffixSettings getSuffixSettings() {
         return suffixSettings;
     }
 
     @Override
-    public EntityCrudKitSettings<UUIDSuffixSettings> getSettings() {
-        return new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
+    public EntityCrudKitSettings<UuidSuffixSettings> getSettings() {
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
     }
 
     @Override
@@ -123,12 +112,21 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     private IRI createIRI(String base) {
         while (true) {
-            var base62Fragment = IdUtil.getBase62UUID();
-            var iri = IRI.create(base + START_CHAR + base62Fragment);
+            var suffix = getUuid();
+            var iri = IRI.create(base + suffixSettings.getIdPrefix() + suffix);
             var inSig = entitiesInSignature.getEntitiesInSignature(iri).limit(1).count() == 1;
             if(!inSig) {
                 return iri;
             }
+        }
+    }
+
+    private String getUuid() {
+        if(suffixSettings.getUuidFormat() == UuidFormat.BASE62) {
+            return IdUtil.getBase62UUID();
+        }
+        else {
+            return IdUtil.getUUID();
         }
     }
 

@@ -1,10 +1,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-
     <g:HTMLPanel>
-        <g:Label text="Spaces" addStyleNames="{wp.style.formLabel}"/>
-        <g:ListBox ui:field="whiteSpaceTreatmentListBox" visibleItemCount="1"/>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:TextBox ui:field="fallbackPrefix"/>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

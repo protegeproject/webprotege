@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.crud.uuid;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -25,11 +26,15 @@ public class UuidSuffixSettingsPresenter {
         widget.setWidget(view);
     }
 
-    public void setSettings(@Nonnull UUIDSuffixSettings settings) {
-
+    public void setSettings(@Nonnull UuidSuffixSettings settings) {
+        view.setFormat(settings.getUuidFormat());
     }
 
-    public UUIDSuffixSettings getSettings() {
-        return new UUIDSuffixSettings();
+    public void clear() {
+        view.setFormat(UuidFormat.BASE62);
+    }
+
+    public UuidSuffixSettings getSettings() {
+        return UuidSuffixSettings.get(view.getFormat());
     }
 }

@@ -21,7 +21,9 @@ import java.io.Serializable;
 @GwtCompatible(serializable = true)
 public abstract class EntityCrudKitPrefixSettings implements HasIRIPrefix, IsSerializable {
 
-    private static final String DEFAULT_IRI_PREFIX = "http://www.example.org/";
+    public static final String DEFAULT_IRI_PREFIX = "http://www.example.org/";
+
+    public static final String IRI_PREFIX = "iriPrefix";
 
     @Nonnull
     public static EntityCrudKitPrefixSettings get() {
@@ -30,11 +32,11 @@ public abstract class EntityCrudKitPrefixSettings implements HasIRIPrefix, IsSer
 
     @JsonCreator
     @Nonnull
-    public static EntityCrudKitPrefixSettings get(String iriPrefix) {
+    public static EntityCrudKitPrefixSettings get(@JsonProperty(IRI_PREFIX) String iriPrefix) {
         return new AutoValue_EntityCrudKitPrefixSettings(iriPrefix);
     }
 
-    @JsonProperty("iriPrefix")
+    @JsonProperty(IRI_PREFIX)
     @Override
     public abstract String getIRIPrefix();
 

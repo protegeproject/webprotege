@@ -37,7 +37,7 @@ public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSetti
 
     @Override
     public SuppliedNameSuffixSettings getDefaultSuffixSettings() {
-        return new SuppliedNameSuffixSettings();
+        return SuppliedNameSuffixSettings.get();
     }
 
     @Override

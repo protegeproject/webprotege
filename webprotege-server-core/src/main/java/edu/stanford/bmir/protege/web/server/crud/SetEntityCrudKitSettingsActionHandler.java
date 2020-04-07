@@ -69,7 +69,7 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractProjectAction
     @Override
     public SetEntityCrudKitSettingsResult execute(@Nonnull SetEntityCrudKitSettingsAction action,
                                                   @Nonnull ExecutionContext executionContext) {
-        var projectSettings = new ProjectEntityCrudKitSettings(projectId, action.getToSettings());
+        var projectSettings = ProjectEntityCrudKitSettings.get(projectId, action.getToSettings());
         repository.save(projectSettings);
         if(action.getPrefixUpdateStrategy() == IRIPrefixUpdateStrategy.FIND_AND_REPLACE) {
             var fromPrefix = action.getFromSettings().getPrefixSettings().getIRIPrefix();

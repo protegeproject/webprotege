@@ -3,9 +3,10 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
-        <g:HTMLPanel>
-            <g:Label text="Spaces" addStyleNames="{wp.style.formLabel}"/>
-            <g:ListBox ui:field="whiteSpaceTreatmentListBox" visibleItemCount="1"/>
-        </g:HTMLPanel>
+
+        <div class="{wp.style.formGroup}">
+            <g:ListBox ui:field="suffixSelectorListBox" visibleItemCount="1"/>
+        </div>
+        <g:SimplePanel ui:field="settingsContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>

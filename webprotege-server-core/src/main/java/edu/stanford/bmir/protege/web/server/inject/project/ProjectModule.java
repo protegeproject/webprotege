@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mongodb.client.MongoDatabase;
@@ -13,7 +14,6 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
@@ -626,8 +626,8 @@ public class ProjectModule {
     @Provides
     @ProjectSingleton
     public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
-            MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
-        return new ProjectEntityCrudKitSettingsRepository(database, converter);
+            MongoDatabase database, ObjectMapper objectMapper) {
+        return new ProjectEntityCrudKitSettingsRepository(database, objectMapper);
     }
 
     @Provides

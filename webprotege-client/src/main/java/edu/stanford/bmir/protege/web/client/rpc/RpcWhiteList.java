@@ -3,6 +3,10 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -10,10 +14,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
-import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
-import edu.stanford.bmir.protege.web.shared.frame.State;
+import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
@@ -176,11 +177,61 @@ public class RpcWhiteList implements Action, Result {
 
     RelationshipPresence relationshipPresence;
 
+    public EntityCrudKitSettings getEntityCrudKitSettings() {
+        return entityCrudKitSettings;
+    }
+
+    public void setEntityCrudKitSettings(EntityCrudKitSettings entityCrudKitSettings) {
+        this.entityCrudKitSettings = entityCrudKitSettings;
+    }
+
+    EntityCrudKitSettings entityCrudKitSettings;
+
+    public EntityCrudKitSuffixSettings getSuffixSettings() {
+        return suffixSettings;
+    }
+
+    public void setSuffixSettings(EntityCrudKitSuffixSettings suffixSettings) {
+        this.suffixSettings = suffixSettings;
+    }
+
+    public EntityCrudKitPrefixSettings getEntityCrudKitPrefixSettings() {
+        return entityCrudKitPrefixSettings;
+    }
+
+    public void setEntityCrudKitPrefixSettings(EntityCrudKitPrefixSettings entityCrudKitPrefixSettings) {
+        this.entityCrudKitPrefixSettings = entityCrudKitPrefixSettings;
+    }
+
+    EntityCrudKitPrefixSettings entityCrudKitPrefixSettings;
+
+    EntityCrudKitSuffixSettings suffixSettings;
+
     private Color color;
 
     private Criteria criteria;
 
     private CompositeRelationshipValueCriteria compositeRelationshipValueCriteria;
+
+    public PlainPropertyValue getPlainPropertyValue() {
+        return plainPropertyValue;
+    }
+
+    public void setPlainPropertyValue(PlainPropertyValue plainPropertyValue) {
+        this.plainPropertyValue = plainPropertyValue;
+    }
+
+    PlainPropertyValue plainPropertyValue;
+
+    public UuidFormat getUuidFormat() {
+        return uuidFormat;
+    }
+
+    public void setUuidFormat(UuidFormat uuidFormat) {
+        this.uuidFormat = uuidFormat;
+    }
+
+    private UuidFormat uuidFormat;
 
     public EntityFormSelector getEntityFormSelector() {
         return entityFormSelector;
@@ -755,4 +806,6 @@ public class RpcWhiteList implements Action, Result {
     public void setCompositeRelationshipValueCriteria(CompositeRelationshipValueCriteria compositeRelationshipValueCriteria) {
         this.compositeRelationshipValueCriteria = compositeRelationshipValueCriteria;
     }
+
+
 }

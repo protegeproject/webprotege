@@ -134,7 +134,7 @@ public class UserIdRangeEditorImpl extends Composite implements UserIdRangeEdito
         if(end < start) {
             end = getDefaultEndValue();
         }
-        return Optional.of(new UserIdRange(UserId.getUserId(userIdEditor.getText().trim()), start, end));
+        return Optional.of(UserIdRange.get(UserId.getUserId(userIdEditor.getText().trim()), start, end));
     }
 
     private static long getDefaultEndValue() {

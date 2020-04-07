@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.crud;
 
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -16,29 +17,14 @@ import static junit.framework.Assert.assertNotNull;
 public class SuppliedNameSuffixSettingsTestCase {
 
     @Test
-    public void equalsReturnsTrueForDifferentObjects() {
-        SuppliedNameSuffixSettings settingsA = new SuppliedNameSuffixSettings();
-        SuppliedNameSuffixSettings settingsB = new SuppliedNameSuffixSettings();
-        assertEquals(settingsA, settingsB);
+    public void shouldReturnDefaultValueForWhiteSpaceTreatment() {
+        SuppliedNameSuffixSettings settings = SuppliedNameSuffixSettings.get();
+        assertEquals(settings.getWhiteSpaceTreatment(), WhiteSpaceTreatment.TRANSFORM_TO_CAMEL_CASE);
     }
 
     @Test
-    public void hashCodeReturnsSameValueForDifferentObjects() {
-        SuppliedNameSuffixSettings settingsA = new SuppliedNameSuffixSettings();
-        SuppliedNameSuffixSettings settingsB = new SuppliedNameSuffixSettings();
-        assertEquals(settingsA.hashCode(), settingsB.hashCode());
-    }
-
-    @Test
-    public void getKitIdIsNotNull() {
-        SuppliedNameSuffixSettings settings = new SuppliedNameSuffixSettings();
-        EntityCrudKitId kitId = settings.getKitId();
-        assertNotNull(kitId);
-    }
-
-    @Test
-    public void getKitIdMatchesSuppliedNameDescriptorId() {
-        SuppliedNameSuffixSettings settings = new SuppliedNameSuffixSettings();
-        assertEquals(SuppliedNameSuffixKit.getId(), settings.getKitId());
+    public void shouldReturnSuppliedWhiteSpaceTreatment() {
+        SuppliedNameSuffixSettings settings = SuppliedNameSuffixSettings.get(WhiteSpaceTreatment.ESCAPE);
+        assertEquals(settings.getWhiteSpaceTreatment(), WhiteSpaceTreatment.ESCAPE);
     }
 }

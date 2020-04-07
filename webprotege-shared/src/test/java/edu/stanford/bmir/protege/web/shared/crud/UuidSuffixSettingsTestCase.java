@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.crud;
 
 
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -14,32 +14,32 @@ import static junit.framework.Assert.assertNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 16/08/2013
  */
-public class UUIDSuffixSettingsTestCase {
+public class UuidSuffixSettingsTestCase {
 
     @Test
     public void equalsReturnsTrueForDifferentObjects() {
-        UUIDSuffixSettings settingsA = new UUIDSuffixSettings();
-        UUIDSuffixSettings settingsB = new UUIDSuffixSettings();
+        UuidSuffixSettings settingsA = UuidSuffixSettings.get();
+        UuidSuffixSettings settingsB = UuidSuffixSettings.get();
         assertEquals(settingsA, settingsB);
     }
 
     @Test
     public void hashCodeReturnsSameValueForDifferentObjects() {
-        UUIDSuffixSettings settingsA = new UUIDSuffixSettings();
-        UUIDSuffixSettings settingsB = new UUIDSuffixSettings();
+        UuidSuffixSettings settingsA = UuidSuffixSettings.get();
+        UuidSuffixSettings settingsB = UuidSuffixSettings.get();
         assertEquals(settingsA.hashCode(), settingsB.hashCode());
     }
 
     @Test
     public void getKitIdIsNotNull() {
-        UUIDSuffixSettings settings = new UUIDSuffixSettings();
+        UuidSuffixSettings settings = UuidSuffixSettings.get();
         EntityCrudKitId kitId = settings.getKitId();
         assertNotNull(kitId);
     }
 
     @Test
     public void getKitIdMatchesUUIDDescriptorId() {
-        UUIDSuffixSettings settings = new UUIDSuffixSettings();
+        UuidSuffixSettings settings = UuidSuffixSettings.get();
         assertEquals(UUIDSuffixKit.getId(), settings.getKitId());
     }
 

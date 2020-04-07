@@ -42,7 +42,7 @@ public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugi
 
     @Override
     public EntityCrudKitHandler<SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> getEntityCrudKitHandler() {
-        return factory.create(EntityCrudKitPrefixSettings.get(), new SuppliedNameSuffixSettings());
+        return factory.create(EntityCrudKitPrefixSettings.get(), SuppliedNameSuffixSettings.get());
     }
 
     @Override
@@ -52,6 +52,6 @@ public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugi
 
     @Override
     public SuppliedNameSuffixSettings getDefaultSettings() {
-        return new SuppliedNameSuffixSettings();
+        return SuppliedNameSuffixSettings.get();
     }
 }

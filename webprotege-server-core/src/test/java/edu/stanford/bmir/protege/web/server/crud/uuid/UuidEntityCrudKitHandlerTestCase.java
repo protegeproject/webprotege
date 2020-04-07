@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -43,14 +43,14 @@ import static org.mockito.Mockito.*;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 16/04/2014
  */
 @RunWith(MockitoJUnitRunner.class)
-public class UUIDEntityCrudKitHandlerTestCase {
+public class UuidEntityCrudKitHandlerTestCase {
 
     public static final String PREFIX = "http://stuff/";
     @Mock
     protected EntityCrudKitPrefixSettings prefixSettings;
 
     @Mock
-    protected UUIDSuffixSettings suffixSettings;
+    protected UuidSuffixSettings suffixSettings;
 
     @Mock
     protected EntityCrudContext crudContext;
@@ -72,7 +72,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
 
     protected IRI annotationPropertyIri = OWLRDFVocabulary.RDFS_LABEL.getIRI();
 
-    private UUIDEntityCrudKitHandler handler;
+    private UuidEntityCrudKitHandler handler;
 
     private OWLDataFactory dataFactory = new OWLDataFactoryImpl();
 
@@ -90,7 +90,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
         when(dictionaryLanguage.getLang()).thenReturn("en");
         when(dictionaryLanguage.getAnnotationPropertyIri()).thenReturn(annotationPropertyIri);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
-        handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
+        handler = new UuidEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
         when(entitiesInSignature.getEntitiesInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());
     }

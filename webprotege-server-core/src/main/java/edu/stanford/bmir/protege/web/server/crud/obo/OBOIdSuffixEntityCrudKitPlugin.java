@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
-import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOIdSuffixEntityCrudKitHandler, OBOIdSuffixSettings, OBOIdSession> {
+public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOIdSuffixEntityCrudKitHandler, OboIdSuffixSettings, OBOIdSession> {
 
     @Nonnull
     private final OBOIdSuffixKit kit;
@@ -35,22 +35,22 @@ public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOId
     }
 
     @Override
-    public EntityCrudKit<OBOIdSuffixSettings> getEntityCrudKit() {
+    public EntityCrudKit<OboIdSuffixSettings> getEntityCrudKit() {
         return kit;
     }
 
     @Override
-    public EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler() {
-        return factory.create(EntityCrudKitPrefixSettings.get(), new OBOIdSuffixSettings());
+    public EntityCrudKitHandler<OboIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler() {
+        return factory.create(EntityCrudKitPrefixSettings.get(), OboIdSuffixSettings.get());
     }
 
     @Override
-    public EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler(EntityCrudKitSettings<OBOIdSuffixSettings> settings) {
+    public EntityCrudKitHandler<OboIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler(EntityCrudKitSettings<OboIdSuffixSettings> settings) {
         return factory.create(settings.getPrefixSettings(), settings.getSuffixSettings());
     }
 
     @Override
-    public OBOIdSuffixSettings getDefaultSettings() {
-        return new OBOIdSuffixSettings();
+    public OboIdSuffixSettings getDefaultSettings() {
+        return OboIdSuffixSettings.get();
     }
 }

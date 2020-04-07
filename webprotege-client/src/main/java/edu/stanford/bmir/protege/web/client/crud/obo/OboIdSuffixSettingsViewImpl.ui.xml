@@ -4,15 +4,15 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
-    <g:HTMLPanel>
-        <ui:style>
-            .userRangeList {
-                width: 100%;
-                padding-right: 10px;
-                box-sizing: border-box;
-            }
-        </ui:style>
+    <ui:style>
+        .userRangeList {
+            width: 100%;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+    </ui:style>
 
+    <g:HTMLPanel>
         <g:HTMLPanel>
             <div class="{wp.style.formGroup}">
                 <g:Label text="Digit count" addStyleNames="{wp.style.formLabel}"/>

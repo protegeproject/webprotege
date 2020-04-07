@@ -41,7 +41,7 @@ public class SuppliedNameSuffixSettingsPresenter {
     @Nonnull
     public SuppliedNameSuffixSettings getSettings() {
         WhiteSpaceTreatment whiteSpaceTreatment = view.getWhiteSpaceTreatment();
-        return new SuppliedNameSuffixSettings(whiteSpaceTreatment);
+        return SuppliedNameSuffixSettings.get(whiteSpaceTreatment);
     }
 
     public static WhiteSpaceTreatment getDefaultWhiteSpaceTreatment() {

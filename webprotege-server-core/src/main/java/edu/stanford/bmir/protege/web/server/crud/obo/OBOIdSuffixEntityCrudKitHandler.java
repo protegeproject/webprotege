@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
-import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> {
+public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OboIdSuffixSettings, OBOIdSession> {
 
 
     private static final IRI CREATED_BY = IRI.create("http://www.geneontology.org/formats/oboInOwl#created_by");
@@ -49,7 +49,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     private EntityCrudKitPrefixSettings prefixSettings;
 
-    private OBOIdSuffixSettings suffixSettings;
+    private OboIdSuffixSettings suffixSettings;
 
     @Nonnull
     private final OWLDataFactory dataFactory;
@@ -63,7 +63,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     @AutoFactory
     public OBOIdSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
-                                           @Nonnull OBOIdSuffixSettings suffixSettings,
+                                           @Nonnull OboIdSuffixSettings suffixSettings,
                                            @Provided @Nonnull OWLDataFactory dataFactory,
                                            @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex) {
         this.prefixSettings = checkNotNull(prefixSettings);
@@ -91,7 +91,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     }
 
     @Override
-    public OBOIdSuffixSettings getSuffixSettings() {
+    public OboIdSuffixSettings getSuffixSettings() {
         return suffixSettings;
     }
 
@@ -101,8 +101,8 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     }
 
     @Override
-    public EntityCrudKitSettings<OBOIdSuffixSettings> getSettings() {
-        return new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
+    public EntityCrudKitSettings<OboIdSuffixSettings> getSettings() {
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
     }
 
     @Override

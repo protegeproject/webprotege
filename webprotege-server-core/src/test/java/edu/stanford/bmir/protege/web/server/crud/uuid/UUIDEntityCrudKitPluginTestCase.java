@@ -29,14 +29,14 @@ public class UUIDEntityCrudKitPluginTestCase {
     @Mock
     private UUIDSuffixKit suffixKit;
 
-    private UUIDEntityCrudKitHandlerFactory handlerFactory;
+    private UuidEntityCrudKitHandlerFactory handlerFactory;
 
     @Mock
     private EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureIndex;
 
     @Before
     public void setUp() {
-        handlerFactory = new UUIDEntityCrudKitHandlerFactory(OWLDataFactoryImpl::new,
+        handlerFactory = new UuidEntityCrudKitHandlerFactory(OWLDataFactoryImpl::new,
                                                              () -> entitiesInProjectSignatureIndex);
         plugin = new UUIDEntityCrudKitPlugin(suffixKit, handlerFactory);
     }

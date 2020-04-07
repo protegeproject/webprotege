@@ -7,8 +7,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
-import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
-import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditorImpl;
+import edu.stanford.bmir.protege.web.client.crud.*;
 import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
@@ -143,11 +142,6 @@ public class ClientProjectModule {
     @Provides
     FormView provideFormView(FormViewImpl view) {
         return view;
-    }
-
-    @Provides
-    EntityCrudKitSettingsEditor provideEntityCrudKitSettingsEditor(EntityCrudKitSettingsEditorImpl editor) {
-        return editor;
     }
 
     @Provides
@@ -735,6 +729,21 @@ public class ClientProjectModule {
 
     @Provides
     OboIdSuffixSettingsView provideOboIdSuffixSettingsView(OboIdSuffixSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCrudKitPrefixSettingsView provideEntityCrudKitPrefixSettingsView(EntityCrudKitPrefixSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCrudKitSettingsView provideEntityCrudKitSettingsView(EntityCrudKitSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCrudKitSuffixSettingsView provideEntityCrudKitSuffixSettingsView(EntityCrudKitSuffixSettingsViewImpl impl) {
         return impl;
     }
 }
