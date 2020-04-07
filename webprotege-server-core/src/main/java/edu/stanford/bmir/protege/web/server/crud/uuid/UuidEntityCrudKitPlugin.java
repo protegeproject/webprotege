@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 
 import javax.annotation.Nonnull;
@@ -20,16 +20,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class UUIDEntityCrudKitPlugin implements EntityCrudKitPlugin<UuidEntityCrudKitHandler, UuidSuffixSettings, ChangeSetEntityCrudSession> {
+public class UuidEntityCrudKitPlugin implements EntityCrudKitPlugin<UuidEntityCrudKitHandler, UuidSuffixSettings, ChangeSetEntityCrudSession> {
 
     @Nonnull
-    private UUIDSuffixKit kit;
+    private UuidSuffixKit kit;
 
     @Nonnull
     private final UuidEntityCrudKitHandlerFactory factory;
 
     @Inject
-    public UUIDEntityCrudKitPlugin(@Nonnull UUIDSuffixKit kit,
+    public UuidEntityCrudKitPlugin(@Nonnull UuidSuffixKit kit,
                                    @Nonnull UuidEntityCrudKitHandlerFactory factory) {
         this.kit = checkNotNull(kit);
         this.factory = checkNotNull(factory);

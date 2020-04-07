@@ -16,7 +16,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.uuid.UuidEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
@@ -606,7 +606,7 @@ public class ProjectModule {
 
     @Provides
     @IntoSet
-    public EntityCrudKitPlugin<?, ?, ?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
+    public EntityCrudKitPlugin<?, ?, ?> provideUUIDPlugin(UuidEntityCrudKitPlugin plugin) {
         return plugin;
     }
 

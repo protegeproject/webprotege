@@ -17,14 +17,14 @@ import java.util.Optional;
  * Date: 13/08/2013
  */
 @ApplicationSingleton
-public class UUIDSuffixKit extends EntityCrudKit<UuidSuffixSettings> {
+public class UuidSuffixKit extends EntityCrudKit<UuidSuffixSettings> {
 
     public static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";
 
     private static EntityCrudKitId ID = EntityCrudKitId.get("UUID");
 
     @Inject
-    public UUIDSuffixKit() {
+    public UuidSuffixKit() {
         super(ID, "Auto-generated Universally Unique Id (UUID)");
     }
 

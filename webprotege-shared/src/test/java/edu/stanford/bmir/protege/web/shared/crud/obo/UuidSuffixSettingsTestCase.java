@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.obo;
 
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class UuidSuffixSettingsTestCase {
     @Test
     public void getKitIdReturnsExpectedId() {
         UuidSuffixSettings suffixSettings = UuidSuffixSettings.get();
-        assertEquals(UUIDSuffixKit.getId(), suffixSettings.getKitId());
+        assertEquals(UuidSuffixKit.getId(), suffixSettings.getKitId());
     }
 
     @Test

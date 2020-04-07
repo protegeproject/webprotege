@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Matthew Horridge
@@ -21,13 +20,13 @@ import static org.mockito.Mockito.when;
  * 2019-08-29
  */
 @RunWith(MockitoJUnitRunner.class)
-public class UUIDEntityCrudKitPluginTestCase {
+public class UuidEntityCrudKitPluginTestCase {
 
 
-    private UUIDEntityCrudKitPlugin plugin;
+    private UuidEntityCrudKitPlugin plugin;
 
     @Mock
-    private UUIDSuffixKit suffixKit;
+    private UuidSuffixKit suffixKit;
 
     private UuidEntityCrudKitHandlerFactory handlerFactory;
 
@@ -38,7 +37,7 @@ public class UUIDEntityCrudKitPluginTestCase {
     public void setUp() {
         handlerFactory = new UuidEntityCrudKitHandlerFactory(OWLDataFactoryImpl::new,
                                                              () -> entitiesInProjectSignatureIndex);
-        plugin = new UUIDEntityCrudKitPlugin(suffixKit, handlerFactory);
+        plugin = new UuidEntityCrudKitPlugin(suffixKit, handlerFactory);
     }
 
     @Test

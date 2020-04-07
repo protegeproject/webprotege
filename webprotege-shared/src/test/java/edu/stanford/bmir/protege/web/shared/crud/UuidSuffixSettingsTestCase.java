@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
 
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class UuidSuffixSettingsTestCase {
     @Test
     public void getKitIdMatchesUUIDDescriptorId() {
         UuidSuffixSettings settings = UuidSuffixSettings.get();
-        assertEquals(UUIDSuffixKit.getId(), settings.getKitId());
+        assertEquals(UuidSuffixKit.getId(), settings.getKitId());
     }
 
 }
