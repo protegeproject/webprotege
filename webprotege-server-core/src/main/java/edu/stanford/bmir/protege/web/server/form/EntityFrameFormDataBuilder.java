@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.EntityFrameProvider;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.OWLPrimitive2FormControlDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -13,7 +14,9 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,14 +43,19 @@ public class EntityFrameFormDataBuilder {
     @Nonnull
     private final OWLPrimitive2FormControlDataConverter converter;
 
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
+
     @AutoFactory
     @Inject
     public EntityFrameFormDataBuilder(@Nonnull EntityFrameProvider entityFrameProvider,
                                       @Nonnull EntityFrameMapperFactory entityFrameMapperFactory,
-                                      @Nonnull OWLPrimitive2FormControlDataConverter converter) {
+                                      @Nonnull OWLPrimitive2FormControlDataConverter converter,
+                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
         this.entityFrameProvider = checkNotNull(entityFrameProvider);
         this.entityFrameMapperFactory = checkNotNull(entityFrameMapperFactory);
         this.converter = converter;
+        this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
     }
 
     private ImmutableList<FormControlData> toFormControlValues(@Nonnull OWLEntity subject,
@@ -158,11 +166,28 @@ public class EntityFrameFormDataBuilder {
         return FormData.get(Optional.of(FormEntitySubject.get(subject)), formDescriptor, fieldData);
     }
 
+    @Nullable
+    private OWLEntity toEntityFormSubject(OWLPrimitive primitive) {
+        if(primitive instanceof OWLEntity) {
+            return (OWLEntity) primitive;
+        }
+        else if(primitive instanceof IRI) {
+            var iri = (IRI) primitive;
+            return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri)
+                                                .sorted()
+                                                .findFirst()
+                                                .orElse(null);
+        }
+        else {
+            return null;
+        }
+    }
+
     private GridControlData toGridControlData(ImmutableList<OWLPrimitive> subjects,
                                               GridControlDescriptor gridControlDescriptor) {
         var rowData = subjects.stream()
-                              .filter(p -> p instanceof OWLEntity)
-                              .map(p -> (OWLEntity) p)
+                              .map(this::toEntityFormSubject)
+                              .filter(Objects::nonNull)
                               .limit(MAX_FIELD_SIZE)
                               .map(entity -> {
                                   var columnDescriptors = gridControlDescriptor.getColumns();
