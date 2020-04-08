@@ -11,6 +11,8 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Comparator;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -23,6 +25,9 @@ public class FrameComponentRendererImpl implements FrameComponentRenderer {
 
     @Nonnull
     private final RenderingManager rm;
+
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     private OWLEntityVisitorEx<OWLEntityData> entityRenderer = new OWLEntityVisitorEx<>() {
         @Nonnull
@@ -69,8 +74,11 @@ public class FrameComponentRendererImpl implements FrameComponentRenderer {
         @Nonnull
         @Override
         public OWLPrimitiveData visit(@Nonnull IRI iri) {
-            // TODO: Look up short forms
-            return IRIData.get(iri, ImmutableMap.of());
+            return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri)
+                                                .sorted()
+                                                .findFirst()
+                                                .map(entity -> (OWLPrimitiveData) getEntityRendering(entity))
+                                                .orElse(IRIData.get(iri, ImmutableMap.of()));
         }
 
         @Nonnull
@@ -88,8 +96,10 @@ public class FrameComponentRendererImpl implements FrameComponentRenderer {
 
     @Inject
     public FrameComponentRendererImpl(@Nonnull RenderingManager rm,
+                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
                                       @Nonnull EntitiesInProjectSignatureByIriIndex entitiesByIriIndex) {
         this.rm = checkNotNull(rm);
+        this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
         this.entitiesByIriIndex = checkNotNull(entitiesByIriIndex);
     }
 
