@@ -162,6 +162,14 @@
             <artifactId>junit</artifactId>
         </dependency>
 
+        <!-- The org.codehaus.janino:commons-compiler:3.0.6 dependency -->
+        <!-- required for logback' conditional processing of paths -->
+        <dependency>
+          <groupId>org.codehaus.janino</groupId>
+          <artifactId>janino</artifactId>
+          <version>3.0.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>

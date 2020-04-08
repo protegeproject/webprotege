@@ -36,10 +36,10 @@ public class ProjectResource {
     private final ActionExecutor executor;
 
     @Nonnull
-    private final AccessManager accessManager;
+    private final AxiomsResourceFactory axiomsResourceFactory;
 
     @Nonnull
-    private final AxiomsResourceFactory axiomsResourceFactory;
+    private final DeleteAxiomsResourceFactory deleteAxiomsResourceFactory;
 
     @Nonnull
     private final RevisionsResourceFactory changesResourceFactory;
@@ -49,13 +49,13 @@ public class ProjectResource {
     @Inject
     public ProjectResource(@Nonnull ProjectId projectId,
                            @Provided @Nonnull ActionExecutor executor,
-                           @Provided @Nonnull AccessManager accessManager,
                            @Provided @Nonnull AxiomsResourceFactory axiomsResourceFactory,
+                           @Provided @Nonnull DeleteAxiomsResourceFactory deleteAxiomsResourceFactory,
                            @Provided @Nonnull RevisionsResourceFactory changesResourceFactory) {
         this.projectId = checkNotNull(projectId);
         this.executor = checkNotNull(executor);
-        this.accessManager = checkNotNull(accessManager);
         this.axiomsResourceFactory = checkNotNull(axiomsResourceFactory);
+        this.deleteAxiomsResourceFactory = checkNotNull(deleteAxiomsResourceFactory);
         this.changesResourceFactory = checkNotNull(changesResourceFactory);
     }
 
@@ -76,5 +76,10 @@ public class ProjectResource {
     @Path("axioms")
     public AxiomsResource getProjectAxiomsResource() {
         return axiomsResourceFactory.create(projectId);
+    }
+
+    @Path("delete-axioms")
+    public DeleteAxiomsResource getProjectDeleteAxiomsResource() {
+        return deleteAxiomsResourceFactory.create(projectId);
     }
 }

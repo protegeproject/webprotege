@@ -6,10 +6,10 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.api.ActionExecutor;
+import edu.stanford.bmir.protege.web.server.api.axioms.PostedAxiomsActionExecutor;
 import edu.stanford.bmir.protege.web.server.api.axioms.PostedAxiomsLoadResponse;
 import edu.stanford.bmir.protege.web.server.api.axioms.PostedAxiomsLoader;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.AddAxiomsAction;
-import edu.stanford.bmir.protege.web.server.dispatch.actions.DeleteAxiomsAction;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -44,20 +44,15 @@ public class AxiomsResource {
     private static final String ADDED_EXTERNAL_AXIOMS = "Added external axioms";
 
     @Nonnull
-    private final AccessManager accessManager;
-
-    @Nonnull
-    private final ActionExecutor executor;
+    private final PostedAxiomsActionExecutor postedAxiomsActionExecutor;
 
     @Nonnull
     private final ProjectId projectId;
 
     @AutoFactory
-    public AxiomsResource(@Provided @Nonnull AccessManager accessManager,
-                          @Provided @Nonnull ActionExecutor executor,
+    public AxiomsResource(@Provided @Nonnull PostedAxiomsActionExecutor postedAxiomsActionExecutor,
                           @Nonnull ProjectId projectId) {
-        this.accessManager = checkNotNull(accessManager);
-        this.executor = checkNotNull(executor);
+        this.postedAxiomsActionExecutor = postedAxiomsActionExecutor;
         this.projectId = checkNotNull(projectId);
     }
 
@@ -95,7 +90,8 @@ public class AxiomsResource {
     public Response handleAddAxiomsInFunctionalSyntax(@Context UserId userId,
                                                       @Context UriInfo uriInfo,
                                                       InputStream inputStream,
-                                                      @QueryParam("msg") @DefaultValue(ADDED_EXTERNAL_AXIOMS) String msg) {
+                                                      @QueryParam("msg") @DefaultValue(
+                                                              ADDED_EXTERNAL_AXIOMS) String msg) {
         return loadAndAddAxioms(userId,
                                 uriInfo,
                                 inputStream, msg,
@@ -115,55 +111,27 @@ public class AxiomsResource {
                                           commitMessage,
                                           documentFormat,
                                           mimeType,
-                                          (axioms, msg) -> new AddAxiomsAction(projectId, axioms, msg));
+                                          (axioms, msg) -> new AddAxiomsAction(projectId,
+                                                                               axioms,
+                                                                               msg));
     }
 
-    private Response loadAndDeleteAxioms(@Nonnull UserId userId,
-                                         @Nonnull InputStream inputStream,
-                                         @Nonnull String commitMessage,
-                                         @Nonnull OWLDocumentFormat documentFormat,
-                                         @Nonnull String mimeType) {
-        return loadAxiomsAndExecuteAction(userId,
-                                          null,
-                                          inputStream,
-                                          commitMessage,
-                                          documentFormat,
-                                          mimeType,
-                                          (axioms, msg) -> new DeleteAxiomsAction(projectId, axioms, msg));
-    }
-
+    @Nonnull
     private Response loadAxiomsAndExecuteAction(@Nonnull UserId userId,
                                                 @Nonnull UriInfo uriInfo,
                                                 @Nonnull InputStream inputStream,
                                                 @Nonnull String commitMessage,
                                                 @Nonnull OWLDocumentFormat documentFormat,
                                                 @Nonnull String mimeType,
-                                                ActionFactory actionFactory) {
-        if (!accessManager.hasPermission(Subject.forUser(userId),
-                                         ProjectResource.forProject(projectId),
-                                         BuiltInAction.EDIT_ONTOLOGY)) {
-            return Response.status(FORBIDDEN)
-                           .entity("You do not have permission to make changes to this project")
-                           .build();
-        }
-
-        PostedAxiomsLoader axiomsLoader = new PostedAxiomsLoader(projectId,
-                                                                 documentFormat,
-                                                                 mimeType);
-        PostedAxiomsLoadResponse loadResponse = axiomsLoader.loadAxioms(inputStream);
-        if (loadResponse.isSuccess()) {
-            Action<?> action = actionFactory.createAction(loadResponse.axioms(), commitMessage);
-            Result result = executor.execute(action, userId);
-            return Response.created(uriInfo.getAbsolutePath()).entity(result).build();
-        }
-        else {
-            return loadResponse.toResponse();
-        }
-    }
-
-
-    private interface ActionFactory {
-
-        Action<?> createAction(Stream<OWLAxiom> axioms, String commitMessage);
+                                                @Nonnull PostedAxiomsActionExecutor.ActionFactory actionFactory) {
+        return postedAxiomsActionExecutor.loadAxiomsAndExecuteAction(projectId,
+                                                                     userId,
+                                                                     uriInfo,
+                                                                     inputStream,
+                                                                     commitMessage,
+                                                                     documentFormat,
+                                                                     mimeType,
+                                                                     actionFactory,
+                                                                     BuiltInAction.EDIT_ONTOLOGY.getActionId());
     }
 }
