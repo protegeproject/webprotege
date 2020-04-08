@@ -27,7 +27,8 @@ public class DeleteAxiomsAction implements ProjectAction<DeleteAxiomsResult> {
 
 
     public DeleteAxiomsAction(@Nonnull ProjectId projectId,
-                              @Nonnull Stream<OWLAxiom> axioms, @Nonnull String commitMessage) {
+                              @Nonnull Stream<OWLAxiom> axioms,
+                              @Nonnull String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.axioms = checkNotNull(axioms);
         this.commitMessage = checkNotNull(commitMessage);
