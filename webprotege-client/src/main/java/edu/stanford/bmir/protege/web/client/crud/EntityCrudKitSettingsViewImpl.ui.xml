@@ -8,7 +8,6 @@
     </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label text="IRI Prefix Settings" addStyleNames="{wp.style.formLabel}"/>
             <g:SimplePanel ui:field="prefixSettingsViewContainer" addStyleNames="{style.container}"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
