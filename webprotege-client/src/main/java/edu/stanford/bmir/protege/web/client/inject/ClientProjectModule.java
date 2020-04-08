@@ -54,7 +54,8 @@ import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
-import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
@@ -745,6 +746,32 @@ public class ClientProjectModule {
     @Provides
     EntityCrudKitSuffixSettingsView provideEntityCrudKitSuffixSettingsView(EntityCrudKitSuffixSettingsViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    ConditionalIriPrefixView provideConditionalIriPrefixesView(ConditionalIriPrefixViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectListPresenter<ConditionalIriPrefix> getConditionalIriPrefixesListPresenter(@Nonnull ObjectListView objectListView,
+                                                                                     Provider<ObjectPresenter<ConditionalIriPrefix>> objectListPresenterProvider,
+                                                                                     Provider<ObjectListViewHolder> objectViewHolderProvider,
+                                                                                     Provider<ConditionalIriPrefix> defaultObjectProvider) {
+        return new ObjectListPresenter<>(objectListView,
+                                         objectListPresenterProvider,
+                                         objectViewHolderProvider,
+                                         defaultObjectProvider);
+    }
+
+    @Provides
+    ObjectPresenter<ConditionalIriPrefix> provideConditionalIriPrefixObjectPresenter(ConditionalIriPrefixPresenter conditionalIriPrefixPresenter) {
+        return conditionalIriPrefixPresenter;
+    }
+
+    @Provides
+    ConditionalIriPrefix provideConditionalIriPrefixProvider() {
+        return ConditionalIriPrefix.get();
     }
 }
 

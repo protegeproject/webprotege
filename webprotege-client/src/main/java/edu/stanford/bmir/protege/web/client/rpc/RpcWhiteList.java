@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.shared.bulkop.Operation;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
@@ -176,6 +177,16 @@ public class RpcWhiteList implements Action, Result {
     EdgeCriteria edgeCriteria;
 
     RelationshipPresence relationshipPresence;
+
+    public ConditionalIriPrefix getConditionalIriPrefix() {
+        return conditionalIriPrefix;
+    }
+
+    public void setConditionalIriPrefix(ConditionalIriPrefix conditionalIriPrefix) {
+        this.conditionalIriPrefix = conditionalIriPrefix;
+    }
+
+    ConditionalIriPrefix conditionalIriPrefix;
 
     public EntityCrudKitSettings getEntityCrudKitSettings() {
         return entityCrudKitSettings;

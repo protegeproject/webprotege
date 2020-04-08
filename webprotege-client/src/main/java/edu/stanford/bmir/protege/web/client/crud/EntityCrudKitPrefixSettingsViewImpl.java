@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.client.crud;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -28,6 +25,9 @@ public class EntityCrudKitPrefixSettingsViewImpl extends Composite implements En
     @UiField
     TextBox fallbackPrefix;
 
+    @UiField
+    SimplePanel conditionalPrefixesViewContainer;
+
     @Inject
     public EntityCrudKitPrefixSettingsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -42,5 +42,11 @@ public class EntityCrudKitPrefixSettingsViewImpl extends Composite implements En
     @Override
     public String getFallbackPrefix() {
         return fallbackPrefix.getText().trim();
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getCriteriaListContainer() {
+        return conditionalPrefixesViewContainer;
     }
 }
