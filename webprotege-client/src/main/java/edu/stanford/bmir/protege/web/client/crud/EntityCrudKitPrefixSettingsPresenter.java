@@ -34,6 +34,7 @@ public class EntityCrudKitPrefixSettingsPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        conditionalIriPrefixesPresenter.setAddObjectText("Add conditional IRI prefix");
         conditionalIriPrefixesPresenter.start(view.getCriteriaListContainer(), new SimpleEventBus());
     }
 

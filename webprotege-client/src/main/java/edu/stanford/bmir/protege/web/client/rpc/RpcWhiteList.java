@@ -21,10 +21,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
-import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
-import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
@@ -177,6 +174,16 @@ public class RpcWhiteList implements Action, Result {
     EdgeCriteria edgeCriteria;
 
     RelationshipPresence relationshipPresence;
+
+    public HierarchyPositionCriteria getHierarchyPositionCriteria() {
+        return hierarchyPositionCriteria;
+    }
+
+    public void setHierarchyPositionCriteria(HierarchyPositionCriteria hierarchyPositionCriteria) {
+        this.hierarchyPositionCriteria = hierarchyPositionCriteria;
+    }
+
+    HierarchyPositionCriteria hierarchyPositionCriteria;
 
     public ConditionalIriPrefix getConditionalIriPrefix() {
         return conditionalIriPrefix;

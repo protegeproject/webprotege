@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeHierarchyPositionCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,5 +43,11 @@ public class ConditionalIriPrefixViewImpl extends Composite implements Condition
     @Override
     public String getIriPrefix() {
         return iriPrefixField.getValue().trim();
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getHierarchyPositionCriteriaViewContainer() {
+        return criteriaListViewContainer;
     }
 }

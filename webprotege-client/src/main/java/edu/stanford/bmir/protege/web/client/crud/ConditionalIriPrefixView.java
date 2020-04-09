@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.client.crud;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeHierarchyPositionCriteria;
 
 import javax.annotation.Nonnull;
 
@@ -19,4 +18,6 @@ public interface ConditionalIriPrefixView extends IsWidget {
     @Nonnull
     String getIriPrefix();
 
+    @Nonnull
+    AcceptsOneWidget getHierarchyPositionCriteriaViewContainer();
 }
