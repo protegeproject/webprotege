@@ -42,7 +42,10 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
         if(!value.isOWLClass()) {
             return false;
         }
-        value.isOWLClass();
+        // Config for strict?
+        if(value.equals(cls)) {
+            return true;
+        }
         if(filterType == HierarchyFilterType.DIRECT) {
             return provider.isParent(value.asOWLClass(), cls);
         }

@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
+import edu.stanford.bmir.protege.web.server.crud.EntityIriPrefixResolver;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
@@ -82,15 +84,20 @@ public class UuidEntityCrudKitHandlerTestCase {
     @Mock
     private OWLOntologyID ontologyId;
 
+    @Mock
+    private EntityIriPrefixResolver entityIriPrefixResolver;
+
     @Before
     public void setUp() throws Exception {
-        when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
         when(crudContext.getTargetOntologyId()).thenReturn(ontologyId);
         when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
         when(dictionaryLanguage.getLang()).thenReturn("en");
         when(dictionaryLanguage.getAnnotationPropertyIri()).thenReturn(annotationPropertyIri);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
-        handler = new UuidEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature);
+        when(entityIriPrefixResolver.getIriPrefix(prefixSettings, ImmutableList.of()))
+                .thenReturn(PREFIX);
+        handler = new UuidEntityCrudKitHandler(prefixSettings, suffixSettings, dataFactory, entitiesInSignature,
+                                               entityIriPrefixResolver);
         when(entitiesInSignature.getEntitiesInSignature(any()))
                 .thenAnswer(invocation -> Stream.empty());
     }
@@ -127,7 +134,9 @@ public class UuidEntityCrudKitHandlerTestCase {
     @Test
     public void shouldAddDeclaration() {
         when(entityShortForm.getShortForm()).thenReturn("A");
-        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), ImmutableList.of(),
+                                      crudContext,
+                                      builder);
         var ontologyChangeCaptor = ArgumentCaptor.forClass(OntologyChange.class);
         verify(builder, atLeast(1)).add(ontologyChangeCaptor.capture());
         var addedAxioms = ontologyChangeCaptor.getAllValues()
@@ -143,14 +152,16 @@ public class UuidEntityCrudKitHandlerTestCase {
     public void shouldAddLabelEqualToSuppliedName() {
         String suppliedName = "MyLabel";
         when(entityShortForm.getShortForm()).thenReturn(suppliedName);
-        handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
+        handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), ImmutableList.of(), crudContext, builder);
         verifyHasLabelEqualTo(suppliedName, "en");
     }
 
     @Test
     public void shouldCreatedExpandedPrefixName() {
         when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
-        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), ImmutableList.of(),
+                                      crudContext,
+                                      builder);
         assertThat(cls, is(owlThing()));
     }
 
@@ -158,7 +169,7 @@ public class UuidEntityCrudKitHandlerTestCase {
     public void shouldAddLabelEqualToPrefixedName() {
         String suppliedName = "owl:Thing";
         when(entityShortForm.getShortForm()).thenReturn(suppliedName);
-        handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
+        handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), ImmutableList.of(), crudContext, builder);
         verifyHasLabelEqualTo(suppliedName, "en");
     }
 
@@ -167,7 +178,9 @@ public class UuidEntityCrudKitHandlerTestCase {
         String expectedIRI = "http://stuff.com/A";
         String shortForm = "<" + expectedIRI + ">";
         when(entityShortForm.getShortForm()).thenReturn(shortForm);
-        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, Optional.of("en"), ImmutableList.of(),
+                                      crudContext,
+                                      builder);
         assertThat(cls, hasIRI(expectedIRI));
         verifyHasLabelEqualTo(expectedIRI, "en");
     }

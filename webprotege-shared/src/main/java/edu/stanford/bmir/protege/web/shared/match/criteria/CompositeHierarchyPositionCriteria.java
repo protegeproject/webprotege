@@ -40,4 +40,9 @@ public abstract class CompositeHierarchyPositionCriteria implements HierarchyPos
 
     @JsonProperty(CRITERIA)
     public abstract ImmutableList<HierarchyPositionCriteria> getCriteria();
+
+    @Override
+    public <R> R accept(@Nonnull HierarchyPositionCriteriaVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
+import edu.stanford.bmir.protege.web.server.crud.EntityIriPrefixResolver;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixKit;
 import org.junit.Before;
@@ -33,10 +34,14 @@ public class UuidEntityCrudKitPluginTestCase {
     @Mock
     private EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureIndex;
 
+    @Mock
+    private EntityIriPrefixResolver entityIriPrefixResolver;
+
     @Before
     public void setUp() {
         handlerFactory = new UuidEntityCrudKitHandlerFactory(OWLDataFactoryImpl::new,
-                                                             () -> entitiesInProjectSignatureIndex);
+                                                             () -> entitiesInProjectSignatureIndex,
+                                                             () -> entityIriPrefixResolver);
         plugin = new UuidEntityCrudKitPlugin(suffixKit, handlerFactory);
     }
 

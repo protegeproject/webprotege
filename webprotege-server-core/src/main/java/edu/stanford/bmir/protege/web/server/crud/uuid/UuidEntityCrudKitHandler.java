@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud.uuid;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
@@ -37,16 +38,21 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesInSignature;
 
+    @Nonnull
+    private final EntityIriPrefixResolver entityIriPrefixResolver;
+
     @AutoFactory
     @Inject
     public UuidEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
                                     @Nonnull UuidSuffixSettings uuidSuffixKitSettings,
                                     @Provided OWLDataFactory dataFactory,
-                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature) {
+                                    @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInSignature,
+                                    @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(uuidSuffixKitSettings);
         this.dataFactory = checkNotNull(dataFactory);
         this.entitiesInSignature = checkNotNull(entitiesInSignature);
+        this.entityIriPrefixResolver = checkNotNull(entityIriPrefixResolver);
     }
 
     @Override
@@ -75,7 +81,13 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
     }
 
     @Override
-    public <E extends OWLEntity> E create(@Nonnull ChangeSetEntityCrudSession session, @Nonnull EntityType<E> entityType, @Nonnull final EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull final EntityCrudContext context, @Nonnull final OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(@Nonnull ChangeSetEntityCrudSession session,
+                                          @Nonnull EntityType<E> entityType,
+                                          @Nonnull final EntityShortForm shortForm,
+                                          @Nonnull Optional<String> langTag,
+                                          @Nonnull ImmutableList<OWLEntity> parents,
+                                          @Nonnull final EntityCrudContext context,
+                                          @Nonnull final OntologyChangeList.Builder<E> builder) {
         var targetOntology = context.getTargetOntologyId();
         var suppliedName = shortForm.getShortForm();
         var parsedIRI = new IRIParser().parseIRI(suppliedName);
@@ -88,7 +100,8 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
         }
         else {
             var prefixedNameExpander = context.getPrefixedNameExpander();
-            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, prefixedNameExpander);
+            var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, parents);
+            entityIRI = getIRI(iriPrefix, suppliedName, prefixedNameExpander);
             labellingLiteral = getLabellingLiteral(suppliedName, langTag, dictionaryLanguage);
         }
         var entity = dataFactory.getOWLEntity(entityType, entityIRI);

@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
 import org.junit.Test;
-import org.semanticweb.owlapi.model.IRI;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 
@@ -12,12 +16,14 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-04
  */
+@RunWith(MockitoJUnitRunner.class)
 public class FreshEntityIri_TestCase {
 
 
@@ -27,10 +33,23 @@ public class FreshEntityIri_TestCase {
 
     public static final String SUPPLIED_NAME = "Supplied Name";
 
-    private final ImmutableSet<IRI> parentIris = ImmutableSet.of(IRI.create("http://example.org/ParentIriA"),
-                                                                 IRI.create("http://example.orf/ParentIriB"));
+    public static final IRI parentIriB = IRI.create("http://example.orf/ParentIriB");
+
+    private final IRI parentIriA = IRI.create("http://example.org/ParentIriA");
+
+    private final ImmutableSet<IRI> parentIris = ImmutableSet.of(parentIriA,
+                                                                 parentIriB);
 
     private FreshEntityIri freshEntityIri;
+
+    @Mock
+    private OWLClass clsA;
+
+    @Mock
+    private OWLClass clsB;
+
+    @Mock
+    private OWLEntityProvider entityProvider;
 
     @Before
     public void setUp() {
@@ -38,6 +57,12 @@ public class FreshEntityIri_TestCase {
                                             LANG_TAG,
                                             DISCRIMINATOR,
                                             parentIris);
+
+        entityProvider = mock(OWLEntityProvider.class);
+        when(entityProvider.getOWLClass(parentIriA))
+                .thenReturn(clsA);
+        when(entityProvider.getOWLClass(parentIriB))
+                .thenReturn(clsB);
     }
     
 
@@ -184,4 +209,15 @@ public class FreshEntityIri_TestCase {
         assertThat(parsedFreshEntityIri, is(equalTo(freshEntityIri)));
     }
 
+    @Test
+    public void shouldGetFreshEntityForOwlClass() {
+        ImmutableList<OWLEntity> parentEntities = freshEntityIri.getParentEntities(entityProvider, EntityType.CLASS);
+        assertThat(parentEntities, containsInAnyOrder(clsA, clsB));
+    }
+
+    @Test
+    public void shouldGetFreshEntityForOwlNamedIndividual() {
+        ImmutableList<OWLEntity> parentEntities = freshEntityIri.getParentEntities(entityProvider, EntityType.NAMED_INDIVIDUAL);
+        assertThat(parentEntities, containsInAnyOrder(clsA, clsB));
+    }
 }

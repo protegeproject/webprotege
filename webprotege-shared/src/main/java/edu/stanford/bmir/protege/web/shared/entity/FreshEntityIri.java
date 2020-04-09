@@ -3,15 +3,17 @@ package edu.stanford.bmir.protege.web.shared.entity;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.joining;
-import static org.semanticweb.owlapi.util.OWLAPIPreconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -93,6 +95,34 @@ public abstract class FreshEntityIri {
 
     @Nonnull
     public abstract ImmutableSet<IRI> getParentIris();
+
+    @Nonnull
+    public ImmutableList<OWLEntity> getParentEntities(@Nonnull OWLEntityProvider dataFactory,
+                                                      @Nonnull EntityType<?> forEntityType) {
+        return getParentIris()
+                      .stream()
+                      .map(iri -> {
+                          if(forEntityType.equals(EntityType.CLASS) || forEntityType.equals(
+                                  EntityType.NAMED_INDIVIDUAL)) {
+                              return dataFactory.getOWLClass(iri);
+                          }
+                          else if(forEntityType.equals(EntityType.OBJECT_PROPERTY)) {
+                              return dataFactory.getOWLObjectProperty(iri);
+                          }
+                          else if(forEntityType.equals(EntityType.DATA_PROPERTY)) {
+                              return dataFactory.getOWLDataProperty(iri);
+                          }
+                          else if(forEntityType.equals(EntityType.ANNOTATION_PROPERTY)) {
+                              return dataFactory.getOWLAnnotationProperty(iri);
+                          }
+                          else {
+                              return null;
+                          }
+                      })
+                      .filter(Objects::nonNull)
+                      .map(e -> (OWLEntity) e)
+                      .collect(toImmutableList());
+    }
 
     /**
      * Determines if the specified IRI is a fresh entity IRI.

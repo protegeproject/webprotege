@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.server.crud.obo;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.EntityIriPrefixResolver;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
@@ -61,15 +63,20 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex projectSignatureIndex;
 
+    @Nonnull
+    private final EntityIriPrefixResolver entityIriPrefixResolver;
+
     @AutoFactory
     public OBOIdSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
                                            @Nonnull OboIdSuffixSettings suffixSettings,
                                            @Provided @Nonnull OWLDataFactory dataFactory,
-                                           @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex) {
+                                           @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex,
+                                           @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(suffixSettings);
         this.dataFactory = dataFactory;
         this.projectSignatureIndex = projectSignatureIndex;
+        this.entityIriPrefixResolver = entityIriPrefixResolver;
 
         ImmutableMap.Builder<UserId, UserIdRange> builder = ImmutableMap.builder();
         for(UserIdRange range : suffixSettings.getUserIdRanges()) {
@@ -106,9 +113,15 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
     }
 
     @Override
-    public <E extends OWLEntity> E create(@Nonnull OBOIdSession session, @Nonnull EntityType<E> entityType, @Nonnull EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull EntityCrudContext context, @Nonnull OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(@Nonnull OBOIdSession session,
+                                          @Nonnull EntityType<E> entityType,
+                                          @Nonnull EntityShortForm shortForm,
+                                          @Nonnull Optional<String> langTag,
+                                          @Nonnull ImmutableList<OWLEntity> parents,
+                                          @Nonnull EntityCrudContext context,
+                                          @Nonnull OntologyChangeList.Builder<E> builder) {
         var targetOntology = context.getTargetOntologyId();
-        var iri = getNextIRI(session, context.getUserId());
+        var iri = getNextIRI(session, context.getUserId(), parents);
         var entity = dataFactory.getOWLEntity(entityType, iri);
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
         builder.add(AddAxiomChange.of(targetOntology, declarationAxiom));
@@ -140,7 +153,8 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
 
 
 
-    private synchronized IRI getNextIRI(OBOIdSession session, UserId userId) {
+    private synchronized IRI getNextIRI(OBOIdSession session, UserId userId, ImmutableList<OWLEntity> parents
+    ) {
         StringBuilder formatStringBuilder = new StringBuilder();
         for (int i = 0; i < suffixSettings.getTotalDigits(); i++) {
             formatStringBuilder.append("0");
@@ -151,7 +165,8 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
             currentId++;
             if(!session.isSessionId(currentId)) {
                 String shortName = numberFormat.format(currentId);
-                IRI iri = IRI.create(prefixSettings.getIRIPrefix() + shortName);
+                var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, parents);
+                IRI iri = IRI.create(iriPrefix + shortName);
                 if (projectSignatureIndex.getEntitiesInSignature(iri).limit(1).count() == 0) {
                     session.addSessionId(currentId);
                     setCurrentId(userId, currentId);

@@ -19,7 +19,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
  */
-public class MatcherFactory implements RelationshipMatcherFactory {
+public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPositionMatcherFactory {
 
     @Nonnull
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
@@ -68,6 +68,43 @@ public class MatcherFactory implements RelationshipMatcherFactory {
         this.entityRelationshipMatcherFactory = entityRelationshipMatcherFactory;
     }
 
+    @Nonnull
+    public Matcher<OWLEntity> getHierarchyPositionMatcher(@Nonnull CompositeHierarchyPositionCriteria criteria) {
+        return criteria.accept(new HierarchyPositionCriteriaVisitor<Matcher<OWLEntity>>() {
+            @Override
+            public Matcher<OWLEntity> visit(CompositeHierarchyPositionCriteria criteria) {
+                ImmutableList<Matcher<OWLEntity>> matchers = criteria.getCriteria().stream()
+                                                                     .map(c -> c.accept(this))
+                                                                     .collect(toImmutableList());
+                return getMultiMatchMatcher(matchers, criteria.getMatchType());
+            }
+
+            @Override
+            public Matcher<OWLEntity> visit(SubClassOfCriteria subClassOfCriteria) {
+                return subClassOfMatcherFactory.create(subClassOfCriteria.getTarget(),
+                                                       subClassOfCriteria.getFilterType());
+            }
+
+            @Override
+            public Matcher<OWLEntity> visit(InstanceOfCriteria instanceOfCriteria) {
+                return instanceOfMatcherFactory.create(instanceOfCriteria.getTarget(),
+                                                       instanceOfCriteria.getFilterType());
+            }
+        });
+    }
+
+    public Matcher<OWLEntity> getMultiMatchMatcher(ImmutableList<Matcher<OWLEntity>> matchers,
+                                                   MultiMatchType matchType) {
+        switch (matchType) {
+            case ANY:
+                return new OrMatcher<>(matchers);
+            case ALL:
+                return new AndMatcher<>(matchers);
+            default:
+                throw new RuntimeException();
+        }
+    }
+
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
         return criteria.accept(new RootCriteriaVisitor<Matcher<OWLEntity>>() {
 
@@ -77,14 +114,7 @@ public class MatcherFactory implements RelationshipMatcherFactory {
                 ImmutableList<Matcher<OWLEntity>> matchers = criteria.getRootCriteria().stream()
                                                                      .map(c -> c.accept(this))
                                                                      .collect(toImmutableList());
-                switch (criteria.getMatchType()) {
-                    case ANY:
-                        return new OrMatcher<>(matchers);
-                    case ALL:
-                        return new AndMatcher<>(matchers);
-                    default:
-                        throw new RuntimeException();
-                }
+                return getMultiMatchMatcher(matchers, criteria.getMatchType());
             }
 
             @Nonnull

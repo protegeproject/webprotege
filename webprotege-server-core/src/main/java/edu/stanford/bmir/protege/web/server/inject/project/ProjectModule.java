@@ -27,10 +27,7 @@ import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
-import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
-import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
-import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
-import edu.stanford.bmir.protege.web.server.match.RelationshipMatcherFactory;
+import edu.stanford.bmir.protege.web.server.match.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCacheFactory;
@@ -688,6 +685,11 @@ public class ProjectModule {
 
     @Provides
     RelationshipMatcherFactory provideRelationshipMatcherFactory(MatcherFactory matcherFactory) {
+        return matcherFactory;
+    }
+
+    @Provides
+    HierarchyPositionMatcherFactory provideHierarchyPositionMatcherFactory(MatcherFactory matcherFactory) {
         return matcherFactory;
     }
 
