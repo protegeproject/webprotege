@@ -6,9 +6,12 @@
             <g:Label text="Default IRI Prefix" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="fallbackPrefix"/>
         </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label text="Conditional IRI Prefixes" addStyleNames="{wp.style.formLabel}"/>
-            <g:SimplePanel ui:field="conditionalPrefixesViewContainer"/>
+       <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Conditional IRI Prefix Rules" addStyleNames="{wp.style.formLabel}"/>
+           <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+               <g:Label text="Rules are matched in the order specified.  Rules specifying more specific match-conditions should be specified first."/>
+           </g:HTMLPanel>
+           <g:SimplePanel ui:field="conditionalPrefixesViewContainer"/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

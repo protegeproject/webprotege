@@ -36,7 +36,7 @@ public class ConditionalIriPrefixPresenter implements ObjectPresenter<Conditiona
     @Nonnull
     @Override
     public String getHeaderLabel() {
-        return "Conditions";
+        return "Rule";
     }
 
     @Nonnull
