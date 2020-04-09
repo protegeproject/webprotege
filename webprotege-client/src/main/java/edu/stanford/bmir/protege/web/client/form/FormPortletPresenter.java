@@ -90,12 +90,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void handleClassFrameChanged(ClassFrameChangedEvent event) {
-        GWT.log("[FormPortletPresenter] handleClassFrameChanged");
-        if(currentSubject.equals(Optional.of(event.getEntity()))) {
-            if(!formStackPresenter.isDirty()) {
-                setSubject(event.getEntity());
-            }
-        }
+
     }
 
     private void setSubject(@Nonnull final OWLEntity entity) {
