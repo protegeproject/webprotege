@@ -10,7 +10,7 @@
     </ui:style>
     <g:HTMLPanel>
         <g:Label text="Rows" addStyleNames="{wp.style.formLabel}"/>
-        <g:Label text="Specify the kinds of entities that underpin rows in the grid – row subjects" addStyleNames="{wp.style.formHelpText}"/>
+        <g:Label text="Specify the kinds of entities that underpin rows in the grid (row subjects) and their parent entity.  This information is used when creating new rows." addStyleNames="{wp.style.formHelpText}"/>
         <g:SimplePanel ui:field="formSubjectFactoryDescriptorContainer" addStyleNames="{style.rowsContainer}"/>
         <g:Label text="Columns" addStyleNames="{wp.style.formLabel}"/>
         <g:SimplePanel ui:field="viewContainer"/>
