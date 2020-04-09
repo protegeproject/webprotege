@@ -239,7 +239,6 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     }
 
     public synchronized boolean containsReference(OWLClass object) {
-        rebuildImplicitRoots();
         return entitiesInProjectSignatureByIriIndex
                 .getEntitiesInSignature(object.getIRI())
                 .anyMatch(entity -> entity.equals(object));
