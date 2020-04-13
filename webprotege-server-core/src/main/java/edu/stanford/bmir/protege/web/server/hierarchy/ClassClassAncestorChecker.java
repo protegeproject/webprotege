@@ -18,6 +18,6 @@ public class ClassClassAncestorChecker implements HasHasAncestor<OWLClass, OWLCl
 
     @Override
     public boolean hasAncestor(OWLClass node, OWLClass node2) {
-        return node.equals(node2) || hierarchyProvider.getAncestors(node).contains(node2);
+        return node.equals(node2) || hierarchyProvider.isAncestor(node, node2);
     }
 }
