@@ -17,7 +17,7 @@ public abstract class ClassFrameTranslationOptions {
                    RelationshipTranslationOptions.get(
                            RelationshipTranslationOptions.allOutgoingRelationships(),
                            RelationshipTranslationOptions.noIncomingRelationships(),
-                           RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS
+                           RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS
                    ));
     }
 

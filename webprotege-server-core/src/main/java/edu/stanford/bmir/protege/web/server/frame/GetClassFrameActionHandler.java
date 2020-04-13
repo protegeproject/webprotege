@@ -23,6 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOp
 import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.*;
 import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS;
+import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS;
 
 /**
  * Author: Matthew Horridge<br>
@@ -79,7 +80,7 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
                 EXCLUDE_ANCESTORS,
                 RelationshipTranslationOptions.get(allOutgoingRelationships(),
                                                    noIncomingRelationships(),
-                                                   MINIMIZED_RELATIONSHIPS));
+                                                   NON_MINIMIZED_RELATIONSHIPS));
         var classFrame = classFrameProvider.getFrame(subject, options);
         var renderedFrame = classFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
