@@ -50,23 +50,23 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
             signatureBuffer);
 
     private final Multimap<ClassKey, OWLAxiom> byClass = MultimapBuilder.hashKeys(1000)
-                                                                        .arrayListValues(2)
+                                                                        .hashSetValues(2)
                                                                         .build();
 
     private final Multimap<ObjectPropertyKey, OWLAxiom> byObjectProperty = MultimapBuilder.hashKeys(20)
-                                                                                          .arrayListValues()
+                                                                                          .hashSetValues()
                                                                                           .build();
 
     private final Multimap<DataPropertyKey, OWLAxiom> byDataProperty = MultimapBuilder.hashKeys(20)
-                                                                                      .arrayListValues()
+                                                                                      .hashSetValues()
                                                                                       .build();
 
     private final Multimap<AnnotationPropertyKey, OWLAxiom> byAnnotationProperty = MultimapBuilder.hashKeys(20)
-                                                                                                  .arrayListValues()
+                                                                                                  .hashSetValues()
                                                                                                   .build();
 
     private final Multimap<NamedIndividualKey, OWLAxiom> byIndividual = MultimapBuilder.hashKeys(10)
-                                                                                       .arrayListValues()
+                                                                                       .hashSetValues()
                                                                                        .build();
 
     private final Multimap<DatatypeKey, OWLAxiom> byDatatype = MultimapBuilder.hashKeys()
