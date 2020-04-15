@@ -24,11 +24,13 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     @Nonnull
     public static GridColumnDescriptor get(@Nonnull @JsonProperty("id") GridColumnId id,
                                            @Nullable @JsonProperty("optionality") Optionality optionality,
+                                           @Nullable @JsonProperty("repeatability") Repeatability repeatability,
                                            @Nullable @JsonProperty("owlBinding") OwlBinding owlBinding,
                                            @Nonnull @JsonProperty("label") LanguageMap columnLabel,
                                            @Nonnull @JsonProperty("formControlDescriptor") FormControlDescriptor formControlDescriptor) {
         return new AutoValue_GridColumnDescriptor(id,
                                                   optionality == null ? Optionality.REQUIRED : optionality,
+                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
                                                   owlBinding, columnLabel, formControlDescriptor);
     }
 
@@ -36,6 +38,7 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
         return GridColumnDescriptor.get(
                 GridColumnId.get(""),
                 Optionality.REQUIRED,
+                Repeatability.NON_REPEATABLE,
                 null,
                 LanguageMap.empty(),
                 TextControlDescriptor.getDefault()
@@ -47,6 +50,9 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @Nonnull
     public abstract Optionality getOptionality();
+
+    @Nonnull
+    public abstract Repeatability getRepeatability();
 
     @JsonIgnore
     @Nullable

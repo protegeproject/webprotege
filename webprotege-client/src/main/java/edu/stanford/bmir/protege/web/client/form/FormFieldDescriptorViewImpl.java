@@ -54,13 +54,7 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
 
 
     @UiField
-    RadioButton nonRepeatableRadio;
-
-    @UiField
-    RadioButton repeatableVerticallyRadio;
-
-    @UiField
-    RadioButton repeatableHorizontallyRadio;
+    RepeatabilityView repeatabilityView;
 
     @UiField
     RadioButton elementRunStartRadio;
@@ -169,29 +163,13 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
 
     @Override
     public void setRepeatability(@Nonnull Repeatability repeatability) {
-        if(repeatability == Repeatability.REPEATABLE_VERTICALLY) {
-            repeatableVerticallyRadio.setValue(true);
-        }
-        else if(repeatability == Repeatability.REPEATABLE_HORIZONTALLY) {
-            repeatableHorizontallyRadio.setValue(true);
-        }
-        else {
-            nonRepeatableRadio.setValue(true);
-        }
+        repeatabilityView.setRepeatability(repeatability);
     }
 
     @Nonnull
     @Override
     public Repeatability getRepeatability() {
-        if(repeatableVerticallyRadio.getValue()) {
-            return Repeatability.REPEATABLE_VERTICALLY;
-        }
-        else if(repeatableHorizontallyRadio.getValue()) {
-            return Repeatability.REPEATABLE_HORIZONTALLY;
-        }
-        else {
-            return Repeatability.NON_REPEATABLE;
-        }
+        return repeatabilityView.getRepeatability();
     }
 
     @Override

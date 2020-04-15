@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
+import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,11 @@ public interface GridColumnDescriptorView extends IsWidget {
     void setOptionality(Optionality optionality);
 
     Optionality getOptionality();
+
+    @Nonnull
+    Repeatability getRepeatability();
+
+    void setRepeatability(@Nonnull Repeatability repeatability);
 
     void setLabel(@Nonnull LanguageMap label);
 

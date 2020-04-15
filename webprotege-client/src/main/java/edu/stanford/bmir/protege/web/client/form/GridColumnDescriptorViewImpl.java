@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
+import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -46,6 +47,9 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
     @UiField
     RadioButton optionalRadio;
 
+    @UiField
+    RepeatabilityView repeatabilityView;
+
     @Inject
     public GridColumnDescriptorViewImpl(LanguageMapEditor labelField) {
         this.labelField = labelField;
@@ -82,6 +86,17 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
         else {
             return Optionality.OPTIONAL;
         }
+    }
+
+    @Nonnull
+    @Override
+    public Repeatability getRepeatability() {
+        return repeatabilityView.getRepeatability();
+    }
+
+    @Override
+    public void setRepeatability(@Nonnull Repeatability repeatability) {
+        repeatabilityView.setRepeatability(repeatability);
     }
 
     @Override

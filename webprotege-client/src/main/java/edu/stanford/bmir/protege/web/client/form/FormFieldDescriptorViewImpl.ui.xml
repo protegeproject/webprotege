@@ -49,12 +49,7 @@
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
-                            <g:RadioButton name="repeatability-{counter.getValue}" text="Non-repeatable"
-                                           ui:field="nonRepeatableRadio"/>
-                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable vertically"
-                                           ui:field="repeatableVerticallyRadio"/>
-                            <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable horizontally"
-                                           ui:field="repeatableHorizontallyRadio"/>
+                            <form:RepeatabilityViewImpl ui:field="repeatabilityView"/>
                         </g:HTMLPanel>
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Flow" addStyleNames="{wp.style.formLabel}"/>

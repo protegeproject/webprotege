@@ -194,6 +194,7 @@ public class EntityFrameFormDataBuilder {
                                   // To Cells
                                   var cellData = columnDescriptors.stream()
                                                                   .map(columnDescriptor -> {
+
                                                                       var formControlData = toFormControlValues(entity,
                                                                                                                 columnDescriptor);
                                                                       // What should happen here?  There are multiple values binding

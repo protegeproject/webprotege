@@ -48,6 +48,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
         return fieldDescriptorChooserPresenter.getFormFieldDescriptor()
                                               .map(fieldDescriptor -> GridColumnDescriptor.get(view.getId(),
                                                                                                view.getOptionality(),
+                                                                                               view.getRepeatability(),
                                                                                                bindingPresenter.getBinding()
                                                                                                                .orElse(null),
                                                                                                view.getLabel(),
@@ -58,6 +59,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
         this.descriptor = Optional.of(descriptor);
         view.setId(descriptor.getId());
         view.setOptionality(descriptor.getOptionality());
+        view.setRepeatability(descriptor.getRepeatability());
         view.setLabel(descriptor.getLabel());
         bindingPresenter.clear();
         descriptor.getOwlBinding()

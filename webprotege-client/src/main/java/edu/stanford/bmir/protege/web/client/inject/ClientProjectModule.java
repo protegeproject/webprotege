@@ -782,6 +782,11 @@ public class ClientProjectModule {
     ProjectDetailsView provideProjectDetailsView(ProjectDetailsViewImpl view) {
         return view;
     }
+
+    @Provides
+    RepeatabilityView provideRepeatabilityView(RepeatabilityViewImpl impl) {
+        return impl;
+    }
 }
 
 
