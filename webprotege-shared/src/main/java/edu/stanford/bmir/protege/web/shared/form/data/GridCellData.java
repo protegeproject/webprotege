@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
 import javax.annotation.Nonnull;
@@ -18,18 +19,13 @@ import java.util.Optional;
 public abstract class GridCellData {
 
     public static GridCellData get(@Nonnull GridColumnId columnId,
-                                   @Nullable FormControlData value) {
-        return new AutoValue_GridCellData(columnId, value);
+                                   @Nullable ImmutableList<FormControlData> values) {
+        return new AutoValue_GridCellData(columnId, values);
     }
 
     @Nonnull
     public abstract GridColumnId getColumnId();
 
-    @Nullable
-    protected abstract FormControlData getValueInternal();
-
     @Nonnull
-    public Optional<FormControlData> getValue() {
-        return Optional.ofNullable(getValueInternal());
-    }
+    public abstract ImmutableList<FormControlData> getValues();
 }

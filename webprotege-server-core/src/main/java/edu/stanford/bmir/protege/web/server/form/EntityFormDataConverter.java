@@ -54,11 +54,13 @@ public class EntityFormDataConverter {
                 var columnDescriptor = columnDescriptors.get(i);
                 var gridCellData = rowCells.get(i);
                 var cellBinding = columnDescriptor.getOwlBinding();
-                cellBinding.ifPresent(cb -> gridCellData.getValue()
-                                                        .ifPresent(cellControlData -> processFormControlData(
-                                                                cb,
-                                                                cellControlData,
-                                                                rowFrameBuilder)));
+                cellBinding.ifPresent(cb -> gridCellData.getValues()
+                                      .forEach(cellControlData -> {
+                                          processFormControlData(
+                                                  cb,
+                                                  cellControlData,
+                                                  rowFrameBuilder);
+                                      }));
             }
             formFrameBuilder.add(binding, rowFrameBuilder);
         }

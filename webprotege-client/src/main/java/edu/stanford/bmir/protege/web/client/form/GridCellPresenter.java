@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
@@ -35,7 +36,7 @@ public class GridCellPresenter implements HasRequestFocus {
     @Nonnull
     private final FormControlFactory formControlFactory;
 
-    private ValueEditor<FormControlData> editor;
+    private FormFieldControl editor;
 
     @Inject
     public GridCellPresenter(@Nonnull GridCellView view,
@@ -60,7 +61,7 @@ public class GridCellPresenter implements HasRequestFocus {
     public void setDescriptor(GridColumnDescriptor column) {
         FormControlDescriptor formControlDescriptor = column.getFormControlDescriptor();
         ValueEditorFactory<FormControlData> valueEditorFactory = formControlFactory.getValueEditorFactory(formControlDescriptor);
-        editor = valueEditorFactory.createEditor();
+        editor = new FormFieldControlImpl(valueEditorFactory, column.getRepeatability());
         view.getEditorContainer().setWidget(editor);
         this.descriptor = Optional.of(column);
     }
@@ -71,17 +72,18 @@ public class GridCellPresenter implements HasRequestFocus {
 
     public void setValue(GridCellData data) {
         editor.clearValue();
-        data.getValue().ifPresent(value -> editor.setValue(value));
+        editor.setValue(data.getValues());
         updateValueRequired();
     }
 
     public GridCellData getValue() {
         if(!descriptor.isPresent()) {
-            return GridCellData.get(GridColumnId.get("null"), null);
+            return GridCellData.get(GridColumnId.get("null"), ImmutableList.of());
         }
         GridColumnDescriptor columnDescriptor = descriptor.get();
-        return editor.getValue().map(v -> GridCellData.get(columnDescriptor.getId(), v))
-              .orElse(GridCellData.get(columnDescriptor.getId(), null));
+        return editor.getValue().map(v -> GridCellData.get(columnDescriptor.getId(),
+                                                           ImmutableList.copyOf(v)))
+              .orElse(GridCellData.get(columnDescriptor.getId(), ImmutableList.of()));
     }
 
     public boolean isPresent() {

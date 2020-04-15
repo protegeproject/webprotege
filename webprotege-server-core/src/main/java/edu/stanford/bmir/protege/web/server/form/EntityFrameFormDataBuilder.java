@@ -201,12 +201,19 @@ public class EntityFrameFormDataBuilder {
                                                                       // for a given subject - i.e. multiple values per cell
                                                                       if(formControlData.isEmpty()) {
                                                                           return GridCellData.get(columnDescriptor.getId(),
-                                                                                                  null);
+                                                                                                  ImmutableList.of());
                                                                       }
                                                                       else {
-                                                                          var firstValue = formControlData.get(0);
-                                                                          return GridCellData.get(columnDescriptor.getId(),
-                                                                                                  firstValue);
+                                                                        if(columnDescriptor.getRepeatability() == Repeatability.NON_REPEATABLE) {
+                                                                            var firstValue = formControlData.get(0);
+                                                                            return GridCellData.get(columnDescriptor.getId(),
+                                                                                                    ImmutableList.of(firstValue));
+
+                                                                        }
+                                                                        else {
+                                                                            return GridCellData.get(columnDescriptor.getId(),
+                                                                                                    formControlData);
+                                                                        }
                                                                       }
                                                                   })
                                                                   .collect(toImmutableList());
