@@ -656,4 +656,9 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler provideCopyFormDescriptorsFromProjectActionHandler(CopyFormDescriptorsFromProjectActionHandler handler) {
         return handler;
     }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideDeleteFormActionHandler(DeleteFormActionHandler handler) {
+        return handler;
+    }
 }

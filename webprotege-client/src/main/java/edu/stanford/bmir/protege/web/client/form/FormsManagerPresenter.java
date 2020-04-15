@@ -89,7 +89,13 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     }
 
     private void deleteForm(@Nonnull FormId formId) {
+        dispatch.execute(new DeleteFormAction(projectId, formId),
+                         this,
+                         this::handleDeleteFormResult);
+    }
 
+    private void handleDeleteFormResult(DeleteFormResult result) {
+        retrieveAndDisplayFormsList();
     }
 
     private void displayFormsList(GetProjectFormDescriptorsResult result) {

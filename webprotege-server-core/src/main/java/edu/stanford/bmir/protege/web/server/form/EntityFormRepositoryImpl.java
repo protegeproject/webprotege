@@ -39,6 +39,8 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
 
     private static final String FORM_ID = "formId";
 
+    public static final String FORM_DESCRIPTOR__FORM_ID = FORM_DESCRIPTOR + "." + FORM_ID;
+
     private final ObjectMapper objectMapper;
 
     private final MongoDatabase database;
@@ -47,6 +49,12 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
     public EntityFormRepositoryImpl(ObjectMapper objectMapper, MongoDatabase database) {
         this.objectMapper = checkNotNull(objectMapper);
         this.database = checkNotNull(database);
+    }
+
+    @Override
+    public void deleteFormDescriptor(@Nonnull ProjectId projectId, @Nonnull FormId formId) {
+        var query = new Document(PROJECT_ID, projectId.getId()).append(FORM_DESCRIPTOR__FORM_ID, formId.getId());
+        getCollection().findOneAndDelete(query);
     }
 
     @Override
@@ -61,7 +69,7 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
     @Override
     public Stream<FormDescriptor> findFormDescriptors(@Nonnull ProjectId projectId) {
         return StreamSupport.stream(getCollection()
-                                            .find(new Document("projectId", projectId.getId())).spliterator(),
+                                            .find(new Document(PROJECT_ID, projectId.getId())).spliterator(),
                                     false
                                     )
                 .map(doc -> objectMapper.convertValue(doc, FormDescriptorRecord.class))
@@ -73,7 +81,7 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
     @Override
     public void setProjectFormDescriptors(@Nonnull ProjectId projectId, @Nonnull List<FormDescriptor> formDescriptors) {
         var collection = getCollection();
-        collection.deleteMany(new Document("projectId", projectId.getId()));
+        collection.deleteMany(new Document(PROJECT_ID, projectId.getId()));
         var docs = formDescriptors.stream()
                                   .map(formDescriptor -> FormDescriptorRecord.get(projectId, formDescriptor))
                        .map(record -> objectMapper.convertValue(record, Document.class))
@@ -103,15 +111,15 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
     public static Bson getProjectIdFormIdFilter(@Nonnull ProjectId projectId,
                                          @Nonnull FormId formId) {
         var projectIdFilter = Filters.eq(PROJECT_ID, projectId.getId());
-        var formIdFilter = Filters.eq(FORM_DESCRIPTOR + "." + FORM_ID, formId.getId());
+        var formIdFilter = Filters.eq(FORM_DESCRIPTOR__FORM_ID, formId.getId());
         return Filters.and(projectIdFilter, formIdFilter);
     }
 
     @Override
     public void ensureIndexes() {
         var collection = getCollection();
-        var projectIdAsc = Indexes.ascending("projectId");
-        var formDescriptor_formId_Asc = Indexes.ascending("formDescriptor.formId");
+        var projectIdAsc = Indexes.ascending(PROJECT_ID);
+        var formDescriptor_formId_Asc = Indexes.ascending(FORM_DESCRIPTOR__FORM_ID);
         var compoundIndex = Indexes.compoundIndex(projectIdAsc, formDescriptor_formId_Asc);
         var indexOptions = new IndexOptions().unique(true);
         collection.createIndex(compoundIndex, indexOptions);

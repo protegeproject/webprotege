@@ -17,6 +17,9 @@ import java.util.stream.Stream;
  */
 public interface EntityFormRepository extends Repository {
 
+    void deleteFormDescriptor(@Nonnull ProjectId projectId,
+                              @Nonnull FormId formId);
+
     void saveFormDescriptor(@Nonnull ProjectId projectId,
                             @Nonnull FormDescriptor formDescriptor);
 
