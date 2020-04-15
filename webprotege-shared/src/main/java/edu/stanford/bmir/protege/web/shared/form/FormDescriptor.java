@@ -126,6 +126,16 @@ public class FormDescriptor implements IsSerializable {
                 .toString();
     }
 
+    @Nonnull
+    public FormDescriptor withFormId(@Nonnull FormId formId) {
+        return new FormDescriptor(
+                formId,
+                label,
+                getFields(),
+                getSubjectFactoryDescriptor()
+        );
+    }
+
     public static class Builder {
 
         private final FormId formId;

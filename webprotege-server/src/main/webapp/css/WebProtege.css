@@ -34,6 +34,9 @@
     --selected-item--background-color:      var(--accent--color);
     --selected-item--color:                 white;
 
+    --list-item--padding:                   0.3em;
+    --list--background-color:               var(--primary--background-color);
+
     --selected-menu-item--background-color: var(--accent--color);
     --selected-menu-item--color:            white;
 

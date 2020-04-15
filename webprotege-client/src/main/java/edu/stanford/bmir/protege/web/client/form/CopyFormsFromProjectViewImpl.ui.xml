@@ -1,0 +1,25 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:list="urn:import:edu.stanford.bmir.protege.web.client.list">
+    <ui:with field="formMsg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .scrollPanel {
+            height: 7em;
+            border: literal("var(--inlay-panel--border)");
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
+        <g:Label addStyleNames="{wp.style.formTextBlock}" text="{formMsg.copyFormsFromProject_explanation}"/>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="{msg.project}" addStyleNames="{wp.style.formLabel}"/>
+            <list:ListBox ui:field="projectsList" addStyleNames="{style.scrollPanel}"/>
+            <g:Label text="{formMsg.copyFormsFromProject_help}" addStyleNames="{wp.style.formHelpText}"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="{formMsg.forms_Title}" addStyleNames="{wp.style.formLabel}"/>
+            <list:ListBox ui:field="projectFormsList" addStyleNames="{style.scrollPanel}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

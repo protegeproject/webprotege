@@ -19,7 +19,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +62,11 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final CopyFormsFromProjectModalPresenter copyFormsFromProjectModalPresenter;
+
+    @Nonnull
+
     @Inject
     public FormsManagerPresenter(@Nonnull ProjectId projectId,
                                  @Nonnull FormsManagerView formManagerView,
@@ -71,7 +75,8 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
                                  @Nonnull FormsMessages formsMessages,
                                  @Nonnull PlaceController placeController,
                                  @Nonnull Provider<FormIdPresenter> formIdPresenterProvider,
-                                 @Nonnull Messages messages) {
+                                 @Nonnull Messages messages,
+                                 @Nonnull CopyFormsFromProjectModalPresenter copyFormsFromProjectModalPresenter) {
         this.projectId = checkNotNull(projectId);
         this.formManagerView = checkNotNull(formManagerView);
         this.settingsPresenter = settingsPresenter;
@@ -80,6 +85,96 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         this.placeController = placeController;
         this.formIdPresenterProvider = formIdPresenterProvider;
         this.messages = messages;
+        this.copyFormsFromProjectModalPresenter = copyFormsFromProjectModalPresenter;
+    }
+
+    private void deleteForm(@Nonnull FormId formId) {
+
+    }
+
+    private void displayFormsList(GetProjectFormDescriptorsResult result) {
+        formIdPresentersByFormId.clear();
+        ImmutableList<FormDescriptor> formDescriptors = result.getFormDescriptors();
+        List<FormIdPresenter> formIdPresenters =
+                formDescriptors.stream()
+                               .map(fd -> {
+                                   FormIdPresenter formIdPresenter = formIdPresenterProvider.get();
+                                   formIdPresenter.start(new SimplePanel());
+                                   formIdPresenter.setFormDescriptor(fd);
+                                   this.formIdPresentersByFormId.put(fd.getFormId(), formIdPresenter);
+                                   return formIdPresenter;
+                               })
+                               .collect(Collectors.toList());
+        formManagerView.setForms(formIdPresenters);
+
+    }
+
+    private FormsPlace getBackHere() {
+        Place currentPlace = placeController.getWhere();
+        Optional<Place> nextPlace;
+        if(currentPlace instanceof FormsPlace) {
+            nextPlace = ((FormsPlace) currentPlace).getNextPlace();
+        }
+        else {
+            nextPlace = Optional.empty();
+        }
+        return FormsPlace.get(projectId, nextPlace);
+    }
+
+    private EditFormPlace getFormsPlaceWithBackHere(@Nonnull FormId formId) {
+        FormsPlace backHere = getBackHere();
+        return EditFormPlace.get(projectId, formId, backHere);
+    }
+
+    private void goToFreshFormPlace(@Nonnull FormId formId) {
+        placeController.goTo(EditFormPlace.get(projectId, formId, getFormsPlaceWithBackHere(formId)));
+    }
+
+    private void handleAddForm() {
+        dispatch.execute(new GetFreshFormIdAction(projectId),
+                         this,
+                         result -> goToFreshFormPlace(result.getFormId()));
+    }
+
+    private void handleApply() {
+        Place currentPlace = placeController.getWhere();
+        if(currentPlace instanceof FormsPlace) {
+            ((FormsPlace) currentPlace).getNextPlace()
+                                       .ifPresent(placeController::goTo);
+
+        }
+
+    }
+
+    private void handleCopyFormsFromProject() {
+        copyFormsFromProjectModalPresenter.show();
+    }
+
+    private void handleDeleteForm(@Nonnull FormId formId) {
+        FormIdPresenter formIdPresenter = formIdPresentersByFormId.get(formId);
+        if(formIdPresenter == null) {
+            return;
+        }
+        String displayName = formIdPresenter.getDisplayName();
+        formManagerView.displayDeleteFormConfirmationMessage(displayName,
+                                                             formId,
+                                                             this::deleteForm);
+    }
+
+    private void handleEditForm(@Nonnull FormId formId) {
+        EditFormPlace newPlace = getFormsPlaceWithBackHere(formId);
+        placeController.goTo(newPlace);
+    }
+
+    private void retrieveAndDisplayFormsList() {
+        dispatch.execute(new GetProjectFormDescriptorsAction(projectId),
+                         this,
+                         this::displayFormsList);
+
+    }
+
+    @Override
+    public void setBusy(boolean busy) {
     }
 
     @Override
@@ -95,92 +190,8 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         formManagerView.setAddFormHandler(this::handleAddForm);
         formManagerView.setDeleteFormHandler(this::handleDeleteForm);
         formManagerView.setEditFormHandler(this::handleEditForm);
+        formManagerView.setCopyFormsFromProjectHandler(this::handleCopyFormsFromProject);
+        copyFormsFromProjectModalPresenter.setFormsCopiedHandler(this::retrieveAndDisplayFormsList);
         retrieveAndDisplayFormsList();
-    }
-
-    private void handleEditForm(@Nonnull FormId formId) {
-        EditFormPlace newPlace = getFormsPlaceWithBackHere(formId);
-        placeController.goTo(newPlace);
-    }
-
-    private EditFormPlace getFormsPlaceWithBackHere(@Nonnull FormId formId) {
-        FormsPlace backHere = getBackHere();
-        return EditFormPlace.get(projectId, formId, backHere);
-    }
-
-    private FormsPlace getBackHere() {
-        Place currentPlace = placeController.getWhere();
-        Optional<Place> nextPlace;
-        if(currentPlace instanceof FormsPlace) {
-            nextPlace = ((FormsPlace) currentPlace).getNextPlace();
-        }
-        else {
-            nextPlace = Optional.empty();
-        }
-        return FormsPlace.get(projectId, nextPlace);
-    }
-
-    private void handleDeleteForm(@Nonnull FormId formId) {
-        FormIdPresenter formIdPresenter = formIdPresentersByFormId.get(formId);
-        if(formIdPresenter == null) {
-            return;
-        }
-        String displayName = formIdPresenter.getDisplayName();
-        formManagerView.displayDeleteFormConfirmationMessage(displayName,
-                                                             formId,
-                                                             this::deleteForm);
-    }
-
-    private void deleteForm(@Nonnull FormId formId) {
-
-    }
-
-    private void handleApply() {
-        Place currentPlace = placeController.getWhere();
-        if(currentPlace instanceof FormsPlace) {
-            ((FormsPlace) currentPlace).getNextPlace()
-                                       .ifPresent(placeController::goTo);
-
-        }
-
-    }
-
-
-    private void handleAddForm() {
-        dispatch.execute(new GetFreshFormIdAction(projectId),
-                         this,
-                         result -> goToFreshFormPlace(result.getFormId()));
-    }
-
-    private void goToFreshFormPlace(@Nonnull FormId formId) {
-        placeController.goTo(EditFormPlace.get(projectId, formId, getFormsPlaceWithBackHere(formId)));
-    }
-
-    private void displayFormsList(GetProjectFormDescriptorsResult result) {
-        formIdPresentersByFormId.clear();
-        ImmutableList<FormDescriptor> formDescriptors = result.getFormDescriptors();
-        List<FormIdPresenter> formIdPresenters =
-                formDescriptors.stream()
-                                                                .map(fd -> {
-                           FormIdPresenter formIdPresenter = formIdPresenterProvider.get();
-                           formIdPresenter.start(new SimplePanel());
-                           formIdPresenter.setFormDescriptor(fd);
-                           this.formIdPresentersByFormId.put(fd.getFormId(), formIdPresenter);
-                           return formIdPresenter;
-                       }).collect(Collectors.toList());
-        formManagerView.setForms(formIdPresenters);
-
-    }
-
-    private void retrieveAndDisplayFormsList() {
-        dispatch.execute(new GetProjectFormDescriptorsAction(projectId),
-                         this,
-                         this::displayFormsList);
-
-    }
-
-    @Override
-    public void setBusy(boolean busy) {
-
     }
 }

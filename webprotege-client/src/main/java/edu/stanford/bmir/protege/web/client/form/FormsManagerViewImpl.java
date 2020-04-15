@@ -34,6 +34,8 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
 
     private FormSelectedHandler formSelectedHandler = (formId) -> {};
 
+    private CopyFormsFromProjectHandler copyFormsFromProjectHandler = () -> {};
+
     interface FormsManagerViewImplUiBinder extends UiBinder<HTMLPanel, FormsManagerViewImpl> {
 
     }
@@ -52,6 +54,9 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @UiField
     Button deleteFormButton;
 
+    @UiField
+    Button copyFormsFromProjectButton;
+
     @Nonnull
     private final MessageBox messageBox;
 
@@ -67,6 +72,7 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
         addFormButton.addClickHandler(this::handleAddForm);
         deleteFormButton.addClickHandler(this::handleDeleteForm);
         editFormButton.addClickHandler(this::handleEditForm);
+        copyFormsFromProjectButton.addClickHandler(this::handleCopyFormsFromProject);
         formListField.setRenderer(FormIdPresenter::getView);
         formListField.addSelectionHandler(this::handleSelection);
         deleteFormButton.setEnabled(false);
@@ -141,4 +147,12 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
         });
     }
 
+    private void handleCopyFormsFromProject(ClickEvent event) {
+        copyFormsFromProjectHandler.handleCopyFromsFromProject();
+    }
+
+    @Override
+    public void setCopyFormsFromProjectHandler(@Nonnull CopyFormsFromProjectHandler handler) {
+        this.copyFormsFromProjectHandler = checkNotNull(handler);
+    }
 }

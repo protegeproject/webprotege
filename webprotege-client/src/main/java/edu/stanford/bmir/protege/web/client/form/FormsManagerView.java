@@ -34,11 +34,17 @@ public interface FormsManagerView extends IsWidget {
         void deleteForm(@Nonnull FormId formId);
     }
 
+    interface CopyFormsFromProjectHandler {
+        void handleCopyFromsFromProject();
+    }
+
     void setAddFormHandler(@Nonnull AddFormHandler handler);
 
     void setDeleteFormHandler(@Nonnull DeleteFormHandler handler);
 
     void setEditFormHandler(@Nonnull EditFormHandler handler);
+
+    void setCopyFormsFromProjectHandler(@Nonnull CopyFormsFromProjectHandler handler);
 
     void setFormSelectedHandler(@Nonnull FormSelectedHandler handler);
 

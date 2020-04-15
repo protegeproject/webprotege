@@ -651,4 +651,9 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler provideGetEntityHtmlRenderingActionHandler(GetEntityHtmlRenderingActionHandler handler) {
         return handler;
     }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideCopyFormDescriptorsFromProjectActionHandler(CopyFormDescriptorsFromProjectActionHandler handler) {
+        return handler;
+    }
 }

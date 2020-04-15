@@ -55,7 +55,6 @@ import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
@@ -772,6 +771,16 @@ public class ClientProjectModule {
     @Provides
     ConditionalIriPrefix provideConditionalIriPrefixProvider() {
         return ConditionalIriPrefix.get();
+    }
+
+    @Provides
+    CopyFormsFromProjectView provideExportFormToProjectView(CopyFormsFromProjectViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectDetailsView provideProjectDetailsView(ProjectDetailsViewImpl view) {
+        return view;
     }
 }
 
