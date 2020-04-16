@@ -14,5 +14,7 @@ import javax.annotation.Nonnull;
  */
 public interface FormControl extends HasRequestFocus, ValueEditor<FormControlData> {
 
+    default void setNested(boolean nested) {
 
+    }
 }

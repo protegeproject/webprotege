@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -28,6 +26,9 @@ public class GridHeaderColumnViewImpl extends Composite implements GridHeaderCol
     @UiField
     Label labelField;
 
+    @UiField
+    SimplePanel subHeaderContainer;
+
     @Inject
     public GridHeaderColumnViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -36,5 +37,13 @@ public class GridHeaderColumnViewImpl extends Composite implements GridHeaderCol
     @Override
     public void setLabel(@Nonnull String label) {
         labelField.setText(checkNotNull(label));
+        labelField.setVisible(true);
+        subHeaderContainer.setVisible(false);
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getSubHeaderContainer() {
+        return subHeaderContainer;
     }
 }

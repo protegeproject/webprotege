@@ -42,10 +42,15 @@ public class FormFieldControlImpl extends Composite implements FormFieldControl 
 
     private final ValueEditor<List<FormControlData>> delegateEditor;
 
-    public FormFieldControlImpl(ValueEditorFactory<FormControlData> editorFactory, Repeatability repeatability) {
+    public FormFieldControlImpl(ValueEditorFactory<FormControlData> editorFactory, Repeatability repeatability, boolean nested) {
         initWidget(ourUiBinder.createAndBindUi(this));
+        ValueEditorFactory<FormControlData> valueEditorFactory = () -> {
+            ValueEditor<FormControlData> editor = editorFactory.createEditor();
+            ((FormControl) editor).setNested(nested);
+            return editor;
+        };
         if(repeatability == Repeatability.REPEATABLE_HORIZONTALLY || repeatability == Repeatability.REPEATABLE_VERTICALLY) {
-            ValueListFlexEditorImpl<FormControlData> delegate = new ValueListFlexEditorImpl<>(editorFactory);
+            ValueListFlexEditorImpl<FormControlData> delegate = new ValueListFlexEditorImpl<>(valueEditorFactory);
             delegateEditor = new RepeatingEditor(delegate);
             if (repeatability == Repeatability.REPEATABLE_HORIZONTALLY) {
                 delegate.setDirection(ValueListFlexEditorDirection.ROW);
@@ -55,7 +60,7 @@ public class FormFieldControlImpl extends Composite implements FormFieldControl 
             }
         }
         else {
-            delegateEditor = new NonRepeatingEditor(editorFactory.createEditor());
+            delegateEditor = new NonRepeatingEditor(valueEditorFactory.createEditor());
         }
         editorHolder.setWidget(delegateEditor);
     }

@@ -72,7 +72,7 @@ public class FormFieldPresenter {
         ValueEditorFactory<FormControlData> valueEditorFactory = formControlFactory.getValueEditorFactory(
                 formControlDescriptor);
 
-        formControl = new FormFieldControlImpl(valueEditorFactory, formFieldDescriptor.getRepeatability());
+        formControl = new FormFieldControlImpl(valueEditorFactory, formFieldDescriptor.getRepeatability(), false);
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
         String langTag = localeInfo.getLocaleName();
         view.setId(formFieldDescriptor.getId());

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -61,7 +62,7 @@ public class GridCellPresenter implements HasRequestFocus {
     public void setDescriptor(GridColumnDescriptor column) {
         FormControlDescriptor formControlDescriptor = column.getFormControlDescriptor();
         ValueEditorFactory<FormControlData> valueEditorFactory = formControlFactory.getValueEditorFactory(formControlDescriptor);
-        editor = new FormFieldControlImpl(valueEditorFactory, column.getRepeatability());
+        editor = new FormFieldControlImpl(valueEditorFactory, column.getRepeatability(), true);
         view.getEditorContainer().setWidget(editor);
         this.descriptor = Optional.of(column);
     }

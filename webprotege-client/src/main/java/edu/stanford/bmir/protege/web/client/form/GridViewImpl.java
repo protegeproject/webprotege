@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -88,6 +89,7 @@ public class GridViewImpl extends Composite implements GridView {
     @Override
     public void clear() {
         rowEditor.clearValue();
+        limitedRowsDisplayedMessage.setVisible(false);
     }
 
     @Override
@@ -95,5 +97,10 @@ public class GridViewImpl extends Composite implements GridView {
         limitedRowsDisplayedMessage.setVisible(true);
         limitedRowsDisplayedMessage.setText("Displaying " + visibleRows + " of " + totalRows + " rows");
 
+    }
+
+    @Override
+    public void hideHeader() {
+        headerContainer.getElement().getStyle().setDisplay(Style.Display.NONE);
     }
 }

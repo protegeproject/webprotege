@@ -40,6 +40,13 @@ public class GridControl implements FormControl {
         this.gridPresenter.start(view);
     }
 
+    @Override
+    public void setNested(boolean nested) {
+        if(nested) {
+            this.gridPresenter.hideHeaderRow();
+        }
+    }
+
     public void setDescriptor(@Nullable GridControlDescriptor descriptor) {
         gridPresenter.setDescriptor(descriptor);
     }

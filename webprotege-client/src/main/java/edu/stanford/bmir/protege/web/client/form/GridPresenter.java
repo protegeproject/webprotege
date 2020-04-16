@@ -38,6 +38,8 @@ public class GridPresenter {
     private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of(),
                                                                          null);
 
+    private boolean showHeaderRow = true;
+
     @Inject
     public GridPresenter(@Nonnull GridView view,
                          @Nonnull GridHeaderPresenter headerPresenter,
@@ -57,6 +59,10 @@ public class GridPresenter {
 
     public void requestFocus() {
         view.requestFocus();
+    }
+
+    public void hideHeaderRow() {
+        view.hideHeader();
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

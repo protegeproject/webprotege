@@ -35,4 +35,6 @@ public interface GridView extends IsWidget, HasRequestFocus {
     void clear();
 
     void setLimitedRowsDisplayed(int visibleRows, int totalRows);
+
+    void hideHeader();
 }
