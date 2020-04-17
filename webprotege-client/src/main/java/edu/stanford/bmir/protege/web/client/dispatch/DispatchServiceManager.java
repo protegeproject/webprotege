@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
@@ -28,6 +29,7 @@ import elemental.client.Browser;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -203,9 +205,12 @@ public class DispatchServiceManager {
 
         private DispatchServiceCallback<Result> delegate;
 
+        private Stopwatch stopwatch = Stopwatch.createUnstarted();
+
         public AsyncCallbackProxy(Action<?> action, DispatchServiceCallback<Result> delegate) {
             this.delegate = delegate;
             this.action = action;
+            stopwatch.start();
         }
 
         @Override
@@ -216,6 +221,11 @@ public class DispatchServiceManager {
         @Override
         @SuppressWarnings("unchecked")
         public void onSuccess(DispatchServiceResultContainer result) {
+            stopwatch.stop();
+            long ellapsedTime = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+            if(ellapsedTime > 200) {
+                GWT.log("[Dispatch] Elapsed time for " + action.getClass().getSimpleName() + " is " + ellapsedTime + "ms");
+            }
             if(action instanceof HasProjectId) {
                 ResultCache resultCache = getResultCache(((HasProjectId) action).getProjectId(), eventBus);
                 resultCache.cacheResult((Action<R>) action, (R) result.getResult());
