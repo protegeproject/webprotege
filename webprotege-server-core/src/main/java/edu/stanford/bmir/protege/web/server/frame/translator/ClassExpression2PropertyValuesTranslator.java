@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame.translator;
 
+import edu.stanford.bmir.protege.web.server.owlapi.ConjunctSet;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorExAdapter;
@@ -177,8 +178,7 @@ public class ClassExpression2PropertyValuesTranslator {
     @Nonnull
     private Set<PlainPropertyValue> translateObjectIntersectionOf(OWLObjectIntersectionOf ce,
                                                                   @Nonnull State state) {
-        return ce.asConjunctSet()
-                 .stream()
+        return ConjunctSet.asConjuncts(ce)
                  .flatMap(exp -> translate(exp, State.DERIVED).stream())
                  .collect(toSet());
     }

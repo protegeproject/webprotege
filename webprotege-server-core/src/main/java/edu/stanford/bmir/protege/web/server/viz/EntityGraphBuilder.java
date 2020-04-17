@@ -5,6 +5,7 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.owlapi.ConjunctSet;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.util.ClassExpression;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -166,10 +167,8 @@ public class EntityGraphBuilder {
                                               OWLSubClassOfAxiom subClassOfAxiom,
                                               Set<Edge> edges) {
         OWLEntityData subClsData = renderer.getClassData(subCls);
-        subClassOfAxiom
-                .getSuperClass()
-                .asConjunctSet()
-                .stream()
+        OWLClassExpression superCls = subClassOfAxiom.getSuperClass();
+        ConjunctSet.asConjuncts(superCls)
                 .filter(ClassExpression::isNotOwlThing)
                 .forEach(superClass -> addEdgeForSuperClass(edges, subClsData, superClass));
     }
