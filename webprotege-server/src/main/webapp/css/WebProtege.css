@@ -94,6 +94,9 @@
     --create--background-color:                 mintcream;
     --delete--color:                           #d10c00;
     --delete--background-color:                #fff5fa;
+
+    --grid-header--background-color:           #9a9a9a;
+    --grid-header--color:                      white;
 }
 
 
@@ -177,6 +180,10 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --create--background-color:                     #2d2d2d;
         --delete--color:                                #d10c00;
         --delete--background-color:                     #2d2d2d;
+
+
+        --grid-header--background-color:           #454545;
+        --grid-header--color:                      var(--primary--color);
 
     }
 
