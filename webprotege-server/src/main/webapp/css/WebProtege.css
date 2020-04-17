@@ -291,7 +291,7 @@ pre {
 
 .gwt-TextBox, textarea, .gwt-PasswordTextBox {
     line-height:      var(--input--line-height);
-    background-color: var(--primary--background-color);
+    background-color: transparent;
     padding:          2px;
 }
 
