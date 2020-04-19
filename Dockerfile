@@ -22,4 +22,9 @@ WORKDIR /usr/local/tomcat/webapps/ROOT
 COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-4.0.0-beta-3-SNAPSHOT.jar /webprotege-cli.jar
 COPY --from=build /webprotege/webprotege-server/target/webprotege-server-4.0.0-beta-3-SNAPSHOT.war ./webprotege.war
 RUN unzip webprotege.war \
-    && rm webprotege.war
+    && rm webprotege.war \
+    && chmod -R a+rwx /srv/webprotege \
+    && chmod -R a+rwx /usr/local/tomcat/temp \
+    && mkdir -p /var/log/webprotege \
+    && chmod -R a+rwx /var/log/webprotege
+    
