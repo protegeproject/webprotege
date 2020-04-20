@@ -27,7 +27,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
         FileSystemConfigurationModule.class,
         ConfigurationTasksModule.class,
         ActionHandlersModule.class,
-        AuthenticationModule.class,
         DbModule.class,
         ServerModule.class,
         ApiModule.class
@@ -44,6 +43,8 @@ public interface ServerComponent {
     AccessManager getAccessManager();
 
     FileUploadServlet getFileUploadServlet();
+
+    LogoutServlet getLogoutServlet();
 
     ServletContainer getJerseyServletContainer();
 

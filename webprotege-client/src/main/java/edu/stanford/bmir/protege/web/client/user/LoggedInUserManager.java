@@ -85,10 +85,7 @@ public class LoggedInUserManager {
         if(loggedInUser.getCurrentUserId().isGuest()) {
             return;
         }
-        Window.Location.assign("http://localhost:8080/auth/realms/webprotege/protocol/openid-connect/logout");
-        dispatchServiceManager.execute(new LogOutUserAction(), result -> {
-            loggedInUser.setLoggedInUser(result.getUserInSession());
-        });
+        Window.Location.replace("/logout");
     }
 
     public Set<ActionId> getLoggedInUserApplicationActions() {

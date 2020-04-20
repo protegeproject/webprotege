@@ -38,6 +38,9 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             servletContext.addServlet("FileUploadServlet", serverComponent.getFileUploadServlet())
                           .addMapping("/webprotege/submitfile");
 
+            servletContext.addServlet("LogoutServlet", serverComponent.getLogoutServlet())
+                          .addMapping("/logout");
+
             servletContext.addServlet("JerseyContainerServlet", serverComponent.getJerseyServletContainer())
                           .addMapping("/data/*");
 
