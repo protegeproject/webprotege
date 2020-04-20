@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.chgpwd;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
+@Deprecated
 public enum ResetPasswordResultCode {
 
     SUCCESS,

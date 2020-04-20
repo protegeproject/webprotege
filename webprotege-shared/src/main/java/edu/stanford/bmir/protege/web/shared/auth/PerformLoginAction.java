@@ -10,6 +10,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
+@Deprecated
 public class PerformLoginAction extends AbstractAuthenticationAction<PerformLoginResult> {
 
     /**

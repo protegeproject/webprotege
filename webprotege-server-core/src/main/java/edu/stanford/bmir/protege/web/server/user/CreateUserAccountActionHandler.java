@@ -21,6 +21,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_A
  * Stanford Center for Biomedical Informatics Research
  * 19/02/15
  */
+@Deprecated
 public class CreateUserAccountActionHandler implements ApplicationActionHandler<CreateUserAccountAction, CreateUserAccountResult> {
 
     @Nonnull

@@ -11,6 +11,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/15
  */
+@Deprecated
 public class ChangePasswordAction extends AbstractAuthenticationAction<ChangePasswordResult> {
 
     private SaltedPasswordDigest newPassword;

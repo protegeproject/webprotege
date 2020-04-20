@@ -22,6 +22,7 @@ import java.util.Optional;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
+@Deprecated
 public class ResetPasswordViewImpl extends Composite implements ResetPasswordView {
 
     interface ResetPasswordViewImplUiBinder extends UiBinder<HTMLPanel, ResetPasswordViewImpl> {

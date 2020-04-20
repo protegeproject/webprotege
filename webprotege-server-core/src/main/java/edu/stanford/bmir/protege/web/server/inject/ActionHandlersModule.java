@@ -5,10 +5,6 @@ import dagger.Provides;
 import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.app.GetApplicationSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.app.SetApplicationSettingsActionHandler;
-import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
-import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
-import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
-import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
@@ -22,7 +18,6 @@ import edu.stanford.bmir.protege.web.server.permissions.GetProjectPermissionsAct
 import edu.stanford.bmir.protege.web.server.permissions.RebuildPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetProjectDetailsActionHandler;
-import edu.stanford.bmir.protege.web.server.user.CreateUserAccountActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 
 /**
@@ -91,32 +86,7 @@ public class ActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ApplicationActionHandler provideResetPasswordActionHandler(ResetPasswordActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
     public ApplicationActionHandler provideLogOutUserActionHandler(LogOutUserActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
-    public ApplicationActionHandler provideGetChapSessionActionHandler(GetChapSessionActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
-    public ApplicationActionHandler providePerformLoginActionHandler(PerformLoginActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
-    public ApplicationActionHandler provideChangePasswordActionHandler(ChangePasswordActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
-    public ApplicationActionHandler provideCreateUserAccountActionHandler(CreateUserAccountActionHandler handler) {
         return handler;
     }
 

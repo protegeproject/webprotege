@@ -4,8 +4,6 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRequest;
-import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
-import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

@@ -253,11 +253,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    LoginView provideLoginView(LoginViewImpl loginView) {
-        return loginView;
-    }
-
-    @Provides
     LogoutView provideLogoutView(LogoutViewImpl logoutView) {
         return logoutView;
     }

@@ -20,6 +20,7 @@ import static java.util.Collections.singletonList;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
+@Deprecated
 public class ResetPasswordMailer {
 
     public static final String SUBJECT = "Your password has been reset";

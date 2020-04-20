@@ -3,9 +3,9 @@ package edu.stanford.bmir.protege.web.client.place;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ApplicationSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
@@ -15,12 +15,9 @@ import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
 import edu.stanford.bmir.protege.web.client.inject.ProjectIdProvider;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsActivity;
-import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
-import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
-import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.place.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -43,10 +40,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final ProjectManagerPresenter projectManagerPresenter;
 
-    private final LoginPresenter loginPresenter;
-
-    private final SignUpPresenter signUpPresenter;
-
     private final ApplicationSettingsPresenter applicationSettingsPresenter;
 
     private final LoggedInUserProvider loggedInUserProvider;
@@ -65,16 +58,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ClientApplicationComponent applicationComponent,
                                     ProjectManagerPresenter projectListPresenter,
-                                    LoginPresenter loginPresenter,
-                                    SignUpPresenter signUpPresenter,
                                     ApplicationSettingsPresenter applicationSettingsPresenter,
                                     PlaceController placeController,
                                     EventBus eventBus) {
         this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectManagerPresenter = projectListPresenter;
-        this.signUpPresenter = signUpPresenter;
-        this.loginPresenter = loginPresenter;
         this.applicationSettingsPresenter = applicationSettingsPresenter;
         this.placeController = placeController;
         this.eventBus = eventBus;
@@ -83,27 +72,13 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     public void start() {
         GWT.log("[WebProtegeActivityMapper] Started activity mapper.");
         eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> {
-            GWT.log("[WebProtegeActivityMapper] User logged out.  Going to the Login Place.");
-            LoginPlace loginPlace;
-            Place currentPlace = placeController.getWhere();
-            if(!(currentPlace instanceof LoginPlace)) {
-                loginPlace = new LoginPlace(placeController.getWhere());
-            }
-            else {
-                loginPlace = new LoginPlace();
-            }
-            placeController.goTo(loginPlace);
+            // Reload window.  This will take us back to the keycloak login screen
+            Window.Location.reload();
         });
     }
 
     public Activity getActivity(final Place place) {
         GWT.log("[WebProtegeActivityMapper] Map place: " + place);
-        if(shouldRedirectToLogin(place)) {
-            GWT.log("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
-            loginPresenter.setNextPlace(place);
-            Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
-            return new LoginActivity(loginPresenter);
-        }
         if(place instanceof ApplicationSettingsPlace) {
             return new AdminActivity(applicationSettingsPresenter);
         }
@@ -138,29 +113,6 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                                            projectComponent.getProjectTagsPresenter(),
                                            projectTagsPlace.getNextPlace());
         }
-        if(place instanceof LoginPlace) {
-            if(!loggedInUserProvider.getCurrentUserId().isGuest()) {
-                Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
-            }
-            else {
-                LoginPlace loginPlace = (LoginPlace) place;
-                Optional<Place> continueTo = loginPlace.getContinueTo();
-                if (continueTo.isPresent()) {
-                    loginPresenter.setNextPlace(continueTo.get());
-                }
-                else {
-                    loginPresenter.setNextPlace(new ProjectListPlace());
-                }
-                return new LoginActivity(loginPresenter);
-            }
-        }
-
-        if(place instanceof SignUpPlace) {
-            SignUpPlace signUpPlace = (SignUpPlace) place;
-            Optional<Place> continueTo = signUpPlace.getContinueTo();
-            continueTo.ifPresent(signUpPresenter::setContinueTo);
-            return new SignUpActivity(signUpPresenter);
-        }
 
         if(place instanceof ProjectListPlace) {
             return new ProjectListActivity(projectManagerPresenter);
@@ -185,18 +137,10 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         if(place instanceof CollectionViewPlace) {
             CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
             CollectionPresenter collectionPresenter = getCollectionPresenter(collectionViewPlace);
-//            lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
             return new CollectionViewActivity(collectionPresenter, collectionViewPlace);
         }
 
         return null;
-    }
-
-    private boolean shouldRedirectToLogin(Place requestedPlace) {
-        return false;
-//        return !(requestedPlace instanceof LoginPlace)
-//                && !(requestedPlace instanceof SignUpPlace)
-//                && loggedInUserProvider.getCurrentUserId().isGuest();
     }
 
     private ProjectPresenter getProjectPresenter(ProjectViewPlace projectViewPlace) {

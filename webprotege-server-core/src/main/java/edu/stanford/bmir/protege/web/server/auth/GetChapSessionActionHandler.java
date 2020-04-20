@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
+@Deprecated
 public class GetChapSessionActionHandler implements ApplicationActionHandler<GetChapSessionAction, GetChapSessionResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetChapSessionActionHandler.class);

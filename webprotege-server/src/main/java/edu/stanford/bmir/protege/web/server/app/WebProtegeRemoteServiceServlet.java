@@ -4,17 +4,12 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.app.StatusCodes;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.IDToken;
 
 import javax.annotation.Nonnull;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 

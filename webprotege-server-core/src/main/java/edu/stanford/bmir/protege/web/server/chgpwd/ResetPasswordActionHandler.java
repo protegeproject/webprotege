@@ -28,6 +28,7 @@ import static edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCod
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
+@Deprecated
 public class ResetPasswordActionHandler implements ApplicationActionHandler<ResetPasswordAction, ResetPasswordResult> {
 
 

@@ -25,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
+@Deprecated
 public class PerformLoginActionHandler extends AuthenticatedActionHandler<PerformLoginAction, PerformLoginResult> implements ApplicationActionHandler<PerformLoginAction, PerformLoginResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(PerformLoginActionHandler.class);

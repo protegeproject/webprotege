@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/15
  */
+@Deprecated
 public class PerformLoginActionFactory implements AuthenticationActionFactory<PerformLoginAction, PerformLoginResult> {
 
     @Override

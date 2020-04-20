@@ -16,6 +16,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/15
  */
+@Deprecated
 public class ChangePasswordActionHandler extends AuthenticatedActionHandler<ChangePasswordAction, ChangePasswordResult> implements ApplicationActionHandler<ChangePasswordAction, ChangePasswordResult> {
 
     private final AuthenticationManager authenticationManager;

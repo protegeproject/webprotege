@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
+@Deprecated
 public interface ResetPasswordView extends IsWidget, HasInitialFocusable, ValueEditor<ResetPasswordData> {
 
 }

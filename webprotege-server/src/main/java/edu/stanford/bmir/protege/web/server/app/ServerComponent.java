@@ -51,8 +51,6 @@ public interface ServerComponent {
 
     DispatchServlet getDispatchServlet();
 
-    WebProtegeSessionListener getSessionListener();
-
     WebProtegeConfigurationChecker getWebProtegeConfigurationChecker();
 
     ProjectComponent getProjectComponent(ProjectModule module);

@@ -10,11 +10,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
-
 import static edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger.WebProtegeMarker;
 
 public class WebProtegeServletContextListener implements ServletContextListener {
@@ -46,7 +41,6 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             servletContext.addServlet("JerseyContainerServlet", serverComponent.getJerseyServletContainer())
                           .addMapping("/data/*");
 
-            servletContext.addListener(serverComponent.getSessionListener());
             serverComponent.getWebProtegeConfigurationChecker().performConfiguration();
             serverComponent.getProjectCacheManager().start();
 

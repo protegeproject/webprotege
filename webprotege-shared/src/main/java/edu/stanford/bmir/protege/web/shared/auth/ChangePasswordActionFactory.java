@@ -9,6 +9,7 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/15
  */
+@Deprecated
 public class ChangePasswordActionFactory implements AuthenticationActionFactory<ChangePasswordAction, ChangePasswordResult> {
 
     private final String newPassword;
