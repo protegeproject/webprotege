@@ -13,12 +13,12 @@ import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,6 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @ApplicationSingleton
 public class LoggedInUserManager {
+
+    public static final String LOGOUT_URL = "/logout";
 
     @Nonnull
     private final LoggedInUser loggedInUser;
@@ -85,7 +87,9 @@ public class LoggedInUserManager {
         if(loggedInUser.getCurrentUserId().isGuest()) {
             return;
         }
-        Window.Location.replace("/logout");
+        loggedInUser.setLoggedInUser(new UserInSession(UserDetails.getGuestUserDetails(),
+                                                       Collections.emptySet()));
+        Window.Location.replace(LOGOUT_URL);
     }
 
     public Set<ActionId> getLoggedInUserApplicationActions() {

@@ -18,7 +18,6 @@ import edu.stanford.bmir.protege.web.server.permissions.GetProjectPermissionsAct
 import edu.stanford.bmir.protege.web.server.permissions.RebuildPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetProjectDetailsActionHandler;
-import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 
 /**
  * Matthew Horridge
@@ -82,11 +81,6 @@ public class ActionHandlersModule {
 
     @Provides @IntoSet
     public ApplicationActionHandler provideGetCSVGridActionHandler(GetCSVGridActionHandler handler) {
-        return handler;
-    }
-
-    @Provides @IntoSet
-    public ApplicationActionHandler provideLogOutUserActionHandler(LogOutUserActionHandler handler) {
         return handler;
     }
 
