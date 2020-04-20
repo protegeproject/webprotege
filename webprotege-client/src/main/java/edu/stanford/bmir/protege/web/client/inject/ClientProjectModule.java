@@ -46,6 +46,8 @@ import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
+import edu.stanford.bmir.protege.web.client.user.SignOutRequestHandler;
+import edu.stanford.bmir.protege.web.client.user.SignOutRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
@@ -474,7 +476,6 @@ public class ClientProjectModule {
     EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
         return impl;
     }
-
 }
 
 

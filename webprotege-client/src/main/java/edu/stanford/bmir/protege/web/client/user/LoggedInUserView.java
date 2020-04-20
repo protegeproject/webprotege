@@ -16,6 +16,4 @@ public interface LoggedInUserView extends IsWidget {
     void setSignOutRequestHandler(SignOutRequestHandler handler);
 
     void setChangeEmailAddressHandler(ChangeEmailAddressHandler handler);
-
-    void setChangePasswordHandler(ChangePasswordHandler handler);
 }

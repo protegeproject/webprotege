@@ -27,13 +27,11 @@ public class LoggedInUserPresenter implements HasDispose, Presenter {
     public LoggedInUserPresenter(LoggedInUserView view,
                                  LoggedInUserProvider loggedInUserManager,
                                  SignOutRequestHandler signOutRequestHandler,
-                                 ChangeEmailAddressHandler changeEmailAddressHandler,
-                                 ChangePasswordHandler changePasswordHandler) {
+                                 ChangeEmailAddressHandler changeEmailAddressHandler) {
         this.view = view;
         this.loggedInUserProvider = loggedInUserManager;
         view.setSignOutRequestHandler(signOutRequestHandler);
         view.setChangeEmailAddressHandler(changeEmailAddressHandler);
-        view.setChangePasswordHandler(changePasswordHandler);
 
     }
 

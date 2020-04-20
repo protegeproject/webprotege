@@ -51,9 +51,6 @@ public class DispatchServiceManager {
     private final EventBus eventBus;
 
     @Nonnull
-    private final SignInRequiredHandler signInRequiredHandler;
-
-    @Nonnull
     private final LoggedInUser loggedInUser;
 
     @Nonnull
@@ -70,7 +67,6 @@ public class DispatchServiceManager {
 
     @Inject
     public DispatchServiceManager(@Nonnull EventBus eventBus,
-                                  @Nonnull SignInRequiredHandler signInRequiredHandler,
                                   @Nonnull LoggedInUser loggedInUser,
                                   @Nonnull PlaceController placeController,
                                   @Nonnull MessageBox messageBox, DispatchErrorMessageDisplay errorDisplay) {
@@ -80,7 +76,6 @@ public class DispatchServiceManager {
         this.errorDisplay = errorDisplay;
         async = GWT.create(DispatchService.class);
         this.eventBus = checkNotNull(eventBus);
-        this.signInRequiredHandler = checkNotNull(signInRequiredHandler);
     }
 
     private int requestCount;
@@ -257,10 +252,7 @@ public class DispatchServiceManager {
             UserInSession userInSession = ((PermissionDeniedException) throwable).getUserInSession();
             if(userInSession.isGuest()) {
                 // Set up next place
-                Place continueTo = placeController.getWhere();
                 loggedInUser.setLoggedInUser(userInSession);
-                GWT.log("[Dispatch] Permission denied.  User is the guest user so redirecting to login.");
-                signInRequiredHandler.handleSignInRequired(continueTo);
             }
         }
         if(throwable instanceof StatusCodeException) {

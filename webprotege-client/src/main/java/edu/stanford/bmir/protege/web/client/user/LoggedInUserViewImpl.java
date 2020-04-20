@@ -33,11 +33,6 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
 
     private ChangeEmailAddressHandler changeEmailAddressHandler = () -> {};
 
-    private ChangePasswordHandler changePasswordHandler = () -> {};
-
-
-
-
     @UiField
     protected Button loggedInUserButton;
 
@@ -50,7 +45,6 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
         initWidget(ourUiBinder.createAndBindUi(this));
         popupMenu.addItem(MESSAGES.signOut(), () -> signOutRequestHandler.handleSignOutRequest());
         popupMenu.addItem(MESSAGES.changeEmailAddress(), () -> changeEmailAddressHandler.handleChangeEmailAddress());
-        popupMenu.addItem(MESSAGES.changePassword(), () -> changePasswordHandler.handleChangePassword());
     }
 
     @UiHandler("loggedInUserButton")
@@ -78,10 +72,5 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
     @Override
     public void setChangeEmailAddressHandler(ChangeEmailAddressHandler handler) {
         changeEmailAddressHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setChangePasswordHandler(ChangePasswordHandler handler) {
-        changePasswordHandler = checkNotNull(handler);
     }
 }

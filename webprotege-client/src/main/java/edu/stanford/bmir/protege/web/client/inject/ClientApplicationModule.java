@@ -13,10 +13,6 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.*;
-import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordView;
-import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordViewImpl;
-import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
-import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.collection.*;
 import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletView;
@@ -36,18 +32,12 @@ import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
 import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
-import edu.stanford.bmir.protege.web.client.login.LoginView;
-import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
-import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
-import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
 import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditor;
 import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditorImpl;
-import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.perspective.*;
@@ -58,22 +48,18 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageViewImpl;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
 import edu.stanford.bmir.protege.web.client.projectmanager.*;
-import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.client.search.SearchView;
 import edu.stanford.bmir.protege.web.client.search.SearchViewImpl;
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainer;
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainerImpl;
 import edu.stanford.bmir.protege.web.client.settings.SettingsView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsViewImpl;
-import edu.stanford.bmir.protege.web.client.signup.SignUpView;
-import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
@@ -172,24 +158,7 @@ public class ClientApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    SignInRequestHandler provideSignInRequestHandler(SignInRequestHandlerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
     SignOutRequestHandler provideSignOutRequestHandler(SignOutRequestHandlerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    SignUpView provideSignUpView(SignUpViewImpl signUpView) {
-        return signUpView;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    SignInRequiredHandler provideSignInRequiredHandler(SignInRequiredHandlerImpl impl) {
         return impl;
     }
 
@@ -202,12 +171,6 @@ public class ClientApplicationModule {
     @Provides
     @ApplicationSingleton
     ShowUserGuideHandler provideShowUserGuideHandler(ShowUserGuideHandlerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    ChangePasswordHandler provideChangePasswordHandler(ChangePasswordHandlerImpl impl) {
         return impl;
     }
 
@@ -255,11 +218,6 @@ public class ClientApplicationModule {
     @Provides
     LogoutView provideLogoutView(LogoutViewImpl logoutView) {
         return logoutView;
-    }
-
-    @Provides
-    ResetPasswordView provideResetPasswordView(ResetPasswordViewImpl resetPasswordView) {
-        return resetPasswordView;
     }
 
     @Provides
@@ -496,11 +454,6 @@ public class ClientApplicationModule {
     @Provides
     ModalView provideModalView(@Nonnull ModalViewImpl view) {
         return view;
-    }
-
-    @Provides
-    ChangePasswordView provideChangePasswordView(@Nonnull ChangePasswordViewImpl impl) {
-        return impl;
     }
 
     @Provides

@@ -4,7 +4,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.chgpwd.PasswordResetEmailTemplate;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.issues.CommentNotificationEmailTemplate;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
@@ -79,12 +78,6 @@ public class FileSystemConfigurationModule {
     }
 
     @Provides
-    @PasswordResetEmailTemplate
-    public OverridableFile providePasswordResetEmailTemplate(OverridableFileFactory factory) {
-        return factory.getOverridableFile("templates/password-reset-email-template.html" );
-    }
-
-    @Provides
     @CommentNotificationSlackTemplate
     public OverridableFile provideCommentNotificationSlackTemplate(OverridableFileFactory factory) {
         return factory.getOverridableFile("templates/comment-notification-slack-template.json");
@@ -93,12 +86,6 @@ public class FileSystemConfigurationModule {
     @Provides
     @CommentNotificationSlackTemplate
     public FileContents providesCommentNotificationSlackTemplate(@CommentNotificationSlackTemplate OverridableFile file) {
-        return new FileContents(file);
-    }
-
-    @Provides
-    @PasswordResetEmailTemplate
-    public FileContents providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile file) {
         return new FileContents(file);
     }
 

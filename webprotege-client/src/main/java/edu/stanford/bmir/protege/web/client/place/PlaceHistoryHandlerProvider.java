@@ -5,7 +5,6 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 import edu.stanford.bmir.protege.web.shared.place.ProjectListPlace;
 
 import javax.inject.Inject;

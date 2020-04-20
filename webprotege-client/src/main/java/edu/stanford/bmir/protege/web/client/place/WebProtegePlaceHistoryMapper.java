@@ -20,8 +20,6 @@ import java.util.List;
         {
                 ProjectListPlaceTokenizer.class,
                 ProjectViewPlaceTokenizer.class,
-                LoginPlaceTokenizer.class,
-                SignUpPlaceTokenizer.class,
                 SharingSettingsPlaceTokenizer.class,
                 AdminPlaceTokenizer.class,
                 CollectionViewPlaceTokenizer.class,
@@ -34,8 +32,6 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
     public WebProtegePlaceHistoryMapper() {
         tokenizers.add(new ProjectListPlaceTokenizer());
         tokenizers.add(new ProjectViewPlaceTokenizer());
-        tokenizers.add(new LoginPlaceTokenizer());
-        tokenizers.add(new SignUpPlaceTokenizer());
         tokenizers.add(new SharingSettingsPlaceTokenizer());
         tokenizers.add(new ProjectSettingsPlaceTokenizer());
         tokenizers.add(new AdminPlaceTokenizer());
