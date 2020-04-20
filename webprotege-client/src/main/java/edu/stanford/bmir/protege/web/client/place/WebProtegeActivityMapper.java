@@ -193,9 +193,10 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     }
 
     private boolean shouldRedirectToLogin(Place requestedPlace) {
-        return !(requestedPlace instanceof LoginPlace)
-                && !(requestedPlace instanceof SignUpPlace)
-                && loggedInUserProvider.getCurrentUserId().isGuest();
+        return false;
+//        return !(requestedPlace instanceof LoginPlace)
+//                && !(requestedPlace instanceof SignUpPlace)
+//                && loggedInUserProvider.getCurrentUserId().isGuest();
     }
 
     private ProjectPresenter getProjectPresenter(ProjectViewPlace projectViewPlace) {

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.download;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.server.app.ServerSingleton;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeRequest;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -54,12 +54,12 @@ public class ProjectDownloadServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
-        UserId userId = webProtegeSession.getUserInSession();
+        var webProtegeRequest = new WebProtegeRequest(req);
+        UserId userId = webProtegeRequest.getUserId();
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if(!downloadParameters.isProjectDownload()) {
             logger.info("Bad project download request from {} at {}.  Request URI: {}  Query String: {}",
-                        webProtegeSession.getUserInSession(),
+                        userId,
                         formatAddr(req),
                         req.getRequestURI(),
                         req.getQueryString());

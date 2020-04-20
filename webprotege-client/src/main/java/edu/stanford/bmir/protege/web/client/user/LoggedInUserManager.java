@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.user;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
@@ -84,6 +85,7 @@ public class LoggedInUserManager {
         if(loggedInUser.getCurrentUserId().isGuest()) {
             return;
         }
+        Window.Location.assign("http://localhost:8080/auth/realms/webprotege/protocol/openid-connect/logout");
         dispatchServiceManager.execute(new LogOutUserAction(), result -> {
             loggedInUser.setLoggedInUser(result.getUserInSession());
         });

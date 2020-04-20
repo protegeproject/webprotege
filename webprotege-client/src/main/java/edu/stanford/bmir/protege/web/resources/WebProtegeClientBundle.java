@@ -433,6 +433,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     }
 
+    @Deprecated
     interface LoginCss extends CssResource {
 
         @ClassName("wp-login")

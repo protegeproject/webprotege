@@ -34,6 +34,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_A
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@Deprecated
 @ApplicationSingleton
 public class SignUpPresenter implements Presenter {
 

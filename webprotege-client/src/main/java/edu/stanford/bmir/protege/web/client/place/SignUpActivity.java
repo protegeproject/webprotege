@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@Deprecated
 public class SignUpActivity extends AbstractActivity {
 
     private SignUpPresenter signUpPresenter;

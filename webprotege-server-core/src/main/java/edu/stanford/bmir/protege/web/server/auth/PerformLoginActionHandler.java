@@ -62,7 +62,7 @@ public class PerformLoginActionHandler extends AuthenticatedActionHandler<Perfor
     protected PerformLoginResult executeAuthenticatedAction(PerformLoginAction action, ExecutionContext executionContext) {
         WebProtegeSession session = executionContext.getSession();
         UserId userId = action.getUserId();
-        session.setUserInSession(userId);
+//        session.setUserInSession(userId);
         activityManager.setLastLogin(userId, System.currentTimeMillis());
         logger.info("{} logged in", userId);
         return new PerformLoginResult(AuthenticationResponse.SUCCESS, userInSessionFactory.getUserInSession(userId));

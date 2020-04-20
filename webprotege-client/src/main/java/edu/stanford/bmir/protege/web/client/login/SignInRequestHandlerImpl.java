@@ -13,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/08/2013
  */
+@Deprecated
 public class SignInRequestHandlerImpl implements SignInRequestHandler {
 
     private final PlaceController placeController;

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
@@ -15,6 +17,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,7 +49,18 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
         HttpServletRequest request = getThreadLocalRequest();
         HttpSession session = request.getSession();
         final RequestContext requestContext = new RequestContext(userId);
-        final ExecutionContext executionContext = new ExecutionContext(new WebProtegeSessionImpl(session));
+        final ExecutionContext executionContext = new ExecutionContext(new WebProtegeSession() {
+
+            @Override
+            public UserId getUserInSession() {
+                return userId;
+            }
+
+            @Override
+            public void clearUserInSession() {
+
+            }
+        });
         return executor.execute(action, requestContext, executionContext);
     }
 }

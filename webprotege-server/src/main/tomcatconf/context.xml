@@ -3,4 +3,6 @@
 
   <Resources className="org.apache.naming.resources.VirtualDirContext"
     extraResourcePaths="/=${basedir}/../target/gwt/launcherDir/" />
+
+  <Valve className="org.keycloak.adapters.tomcat.KeycloakAuthenticatorValve"/>
 </Context>

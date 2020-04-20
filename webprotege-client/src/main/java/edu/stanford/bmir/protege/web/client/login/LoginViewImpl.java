@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
+@Deprecated
 public class LoginViewImpl extends Composite implements LoginView {
 
     @Nonnull

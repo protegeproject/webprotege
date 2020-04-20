@@ -9,6 +9,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
+@Deprecated
 public class LoginPlace extends Place {
 
 

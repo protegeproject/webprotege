@@ -10,6 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 23/02/15
  */
+@Deprecated
 public class SignInDetails {
 
     private final String userName;

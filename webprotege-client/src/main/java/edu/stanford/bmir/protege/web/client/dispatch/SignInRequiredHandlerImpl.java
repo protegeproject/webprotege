@@ -13,6 +13,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 01/03/16
  */
+@Deprecated
 public class SignInRequiredHandlerImpl implements SignInRequiredHandler {
 
     private final PlaceController placeController;

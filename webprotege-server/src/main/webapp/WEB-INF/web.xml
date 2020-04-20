@@ -48,7 +48,6 @@
 		<location>/forbidden.jsp</location>
 	</error-page>
 
-
 	<!-- Security constraints -->
 	
 	<security-constraint>
@@ -66,5 +65,27 @@
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>webprotege-app</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>this is ignored currently</realm-name>
+	</login-config>
+
+	<security-role>
+		<role-name>admin</role-name>
+	</security-role>
+	<security-role>
+		<role-name>user</role-name>
+	</security-role>
 
 </web-app>

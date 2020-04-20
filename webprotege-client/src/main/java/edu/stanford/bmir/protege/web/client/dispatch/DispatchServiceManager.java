@@ -5,8 +5,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -210,6 +212,7 @@ public class DispatchServiceManager {
 
         @Override
         public void onFailure(Throwable caught) {
+            GWT.log("[Dispatch] Error: " + caught.getMessage());
             handleError(caught, action, delegate);
         }
 
@@ -258,6 +261,16 @@ public class DispatchServiceManager {
                 loggedInUser.setLoggedInUser(userInSession);
                 GWT.log("[Dispatch] Permission denied.  User is the guest user so redirecting to login.");
                 signInRequiredHandler.handleSignInRequired(continueTo);
+            }
+        }
+        if(throwable instanceof StatusCodeException) {
+            StatusCodeException statusCodeException = (StatusCodeException) throwable;
+            if(statusCodeException.getStatusCode() == 0) {
+                // Couldn't connect to the server.  This could be an expired login and subsequent redirect
+                // CORS problem.  As far as I can tell, there's no way to tell through JS.  In this situation
+                // we just reload.  If the login has expired then the user will be redirected to the login
+                // page.  If there is a network problem the the browser will show a can't connect page.
+                Window.Location.reload();
             }
         }
         // Skip handling for actions that do not care about errors

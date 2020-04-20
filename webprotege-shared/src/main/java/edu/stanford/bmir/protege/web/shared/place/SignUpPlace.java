@@ -9,6 +9,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@Deprecated
 public class SignUpPlace extends Place {
 
     private Optional<Place> continueTo;

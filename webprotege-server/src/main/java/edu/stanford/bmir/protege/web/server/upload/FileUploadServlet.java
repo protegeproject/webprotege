@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
+import edu.stanford.bmir.protege.web.server.app.WebProtegeRequest;
 import edu.stanford.bmir.protege.web.server.util.FileContentsSizeCalculator;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -91,8 +92,8 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
-        UserId userId = webProtegeSession.getUserInSession();
+        var webProtegeRequest = new WebProtegeRequest(req);
+        var userId = webProtegeRequest.getUserId();
         if(!accessManager.hasPermission(Subject.forUser(userId),
                                     ApplicationResource.get(),
                                     BuiltInAction.UPLOAD_PROJECT)) {
@@ -100,7 +101,7 @@ public class FileUploadServlet extends HttpServlet {
         }
 
         logger.info("Received upload request from {} at {}",
-                    webProtegeSession.getUserInSession(),
+                    userId,
                     formatAddr(req));
         resp.setHeader("Content-Type", RESPONSE_MIME_TYPE);
         try {

@@ -170,6 +170,15 @@
           <version>3.0.6</version>
         </dependency>
 
+
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-tomcat7-adapter</artifactId>
+            <version>9.0.3</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -207,7 +216,16 @@
                         <addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
                         <path>/</path>
                         <uriEncoding>UTF-8</uriEncoding>
+                        <contextFile>src/main/tomcatconf/context.xml</contextFile>
+                        <port>8081</port>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.keycloak</groupId>
+                            <artifactId>keycloak-tomcat7-adapter</artifactId>
+                            <version>9.0.3</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>

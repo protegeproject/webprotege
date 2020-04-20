@@ -6,6 +6,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
+import edu.stanford.bmir.protege.web.shared.place.ProjectListPlace;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,7 +33,7 @@ public class PlaceHistoryHandlerProvider implements Provider<PlaceHistoryHandler
         this.placeHistoryMapper = placeHistoryMapper;
         this.placeController = placeController;
         this.eventBus = eventBus;
-        this.defaultPlace = new LoginPlace();
+        this.defaultPlace = new ProjectListPlace();
     }
 
     @Override

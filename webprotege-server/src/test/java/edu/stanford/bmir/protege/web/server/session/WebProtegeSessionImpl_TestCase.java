@@ -47,7 +47,7 @@ public class WebProtegeSessionImpl_TestCase<T> {
 
     @Before
     public void setUp() throws Exception {
-        session = new WebProtegeSessionImpl(httpSession);
+        session = new WebProtegeSessionImpl(userId);
         when(attribute.getAttributeName()).thenReturn(ATTRIBUTE_NAME);
     }
 
@@ -67,58 +67,13 @@ public class WebProtegeSessionImpl_TestCase<T> {
         assertThat(session.toString(), startsWith("WebProtegeSession"));
     }
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionOnSetNullAttribute() {
-        session.setAttribute(null, value);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionOnSetNullValue() {
-        session.setAttribute(attribute, null);
-    }
-
-    @Test
-    public void shouldReturnAbsentForAbsentValue() {
-        Optional<T> value = session.getAttribute(attribute);
-        assertThat(value.isPresent(), is(false));
-    }
-
-    @Test
-    public void shouldReturnValueIfValueExists() {
-        when(httpSession.getAttribute(ATTRIBUTE_NAME)).thenReturn(value);
-        Optional<T> v = session.getAttribute(attribute);
-        assertThat(v, is(Optional.of(value)));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerOnRemoveNullAttribute() {
-        session.removeAttribute(null);
-    }
-
-    @Test
-    public void shouldRemoveAttribute() {
-        session.removeAttribute(attribute);
-        verify(httpSession, times(1)).removeAttribute(ATTRIBUTE_NAME);
-    }
 
     @Test
     public void shouldReturnGuestUser() {
         UserId userId = session.getUserInSession();
         assertThat(userId, is(UserId.getGuest()));
     }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIfUserIdIsNull() {
-        session.setUserInSession(null);
-    }
-
-    @Test
-    public void shouldSetLoggedInUser() {
-        session.setUserInSession(userId);
-        verify(httpSession, Mockito.times(1))
-                .setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER.getAttributeName(), userId);
-    }
-
+    
     @Test
     public void shouldClearLoggedInUser() {
         session.clearUserInSession();

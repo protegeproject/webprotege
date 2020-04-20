@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.server.api;
 
+import edu.stanford.bmir.protege.web.server.app.WebProtegeRequest;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.api.ApiKey;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.apache.commons.collections4.Get;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -83,14 +85,15 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     private UserId getUserIdFromSession() {
-        HttpSession session = servletRequest.getSession(false);
-        if (session != null) {
-            // Get the user from session
-            WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-            return webProtegeSession.getUserInSession();
-        }
-        else {
-            return UserId.getGuest();
-        }
+//        HttpSession session = servletRequest.getSession(false);
+//        if (session != null) {
+//             Get the user from session
+//            WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+//            return webProtegeSession.getUserInSession();
+//        }
+//        else {
+//            return UserId.getGuest();
+//        }
+        return new WebProtegeRequest(servletRequest).getUserId();
     }
 }

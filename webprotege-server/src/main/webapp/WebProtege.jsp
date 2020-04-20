@@ -1,8 +1,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.access.AccessManager" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.access.ApplicationResource" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.access.Subject" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.filemanager.StyleCustomizationFileManager" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
@@ -15,8 +13,7 @@
 <%@ page import="java.util.HashSet" %>
 <%@ page import="java.util.Optional" %>
 <%@ page import="java.util.Set" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.ServerComponent" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.app.*" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -48,7 +45,7 @@
 
     <script>
         <%
-            writeUserInSession(session, out);
+            writeUserInSession(request, out);
         %>
     </script>
 
@@ -133,9 +130,8 @@
         return styleCustomizationFileManager.getStyleCustomization();
     }
 
-    private void writeUserInSession(HttpSession session, JspWriter out) {
-        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-        UserId userId = webProtegeSession.getUserInSession();
+    private void writeUserInSession(HttpServletRequest request, JspWriter out) {
+        UserId userId = new WebProtegeRequest(request).getUserId();
         final UserInSession userInSession;
         final UserDetails userDetails;
         if (userId.isGuest()) {

@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
  * A view that displays a login page.  The page has an area to enter a user name and
  * password.
  */
+@Deprecated
 public interface LoginView extends IsWidget, RequiresResize, ProvidesResize {
 
     @Nonnull

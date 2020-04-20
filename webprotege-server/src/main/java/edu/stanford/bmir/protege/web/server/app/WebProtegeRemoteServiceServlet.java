@@ -7,8 +7,11 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.app.StatusCodes;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.representations.IDToken;
 
 import javax.annotation.Nonnull;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -42,9 +45,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      *         will be returned.
      */
     public UserId getUserInSession() {
-        HttpServletRequest request = getThreadLocalRequest();
-        final HttpSession session = request.getSession();
-        return new WebProtegeSessionImpl(session).getUserInSession();
+        return new WebProtegeRequest(getThreadLocalRequest()).getUserId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

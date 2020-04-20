@@ -1,0 +1,11 @@
+{
+  "realm": "webprotege",
+  "auth-server-url": "http://localhost:8080/auth/",
+  "ssl-required": "external",
+  "resource": "webprotege-app",
+  "public-client": true,
+  "confidential-port": 0,
+  "enable-cors": true,
+  "cors-allowed-methods": "GET, PUT, POST, DELETE",
+  "always-refresh-token" : true
+}

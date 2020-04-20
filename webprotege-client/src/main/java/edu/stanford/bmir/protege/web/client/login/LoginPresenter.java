@@ -30,6 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_A
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
+@Deprecated
 @ApplicationSingleton
 public class LoginPresenter implements Presenter {
 

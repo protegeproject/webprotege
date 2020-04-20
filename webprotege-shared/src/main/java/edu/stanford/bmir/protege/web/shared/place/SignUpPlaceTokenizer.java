@@ -7,6 +7,7 @@ import com.google.gwt.place.shared.Place;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@Deprecated
 public class SignUpPlaceTokenizer implements WebProtegePlaceTokenizer<SignUpPlace> {
 
     private static final String ACCOUNTS_NEW = "accounts/new";

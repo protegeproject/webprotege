@@ -97,7 +97,7 @@ public class DefaultLogger implements WebProtegeLogger {
 
     @Override
     public void info(String message) {
-        logger.info(WebProtegeMarker, message);
+        logger.info(message);
     }
 
 

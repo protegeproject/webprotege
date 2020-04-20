@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
+@Deprecated
 public class LoginPlaceTokenizer implements WebProtegePlaceTokenizer<LoginPlace> {
 
     private static final String LOGIN = "login";

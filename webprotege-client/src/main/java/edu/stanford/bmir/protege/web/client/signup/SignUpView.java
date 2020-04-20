@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@Deprecated
 public interface SignUpView extends IsWidget {
 
     void clear();

@@ -6,6 +6,7 @@ package edu.stanford.bmir.protege.web.client.login;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/08/2013
  */
+@Deprecated
 public interface SignUpForAccountHandler {
 
     void handleSignUpForAccount();

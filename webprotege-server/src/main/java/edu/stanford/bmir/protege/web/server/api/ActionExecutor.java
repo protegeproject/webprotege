@@ -64,28 +64,8 @@ public class ActionExecutor {
         }
 
         @Override
-        public <T> Optional<T> getAttribute(WebProtegeSessionAttribute<T> attribute) {
-            return Optional.empty();
-        }
-
-        @Override
-        public <T> void setAttribute(WebProtegeSessionAttribute<T> attribute, T value) {
-
-        }
-
-        @Override
-        public void removeAttribute(WebProtegeSessionAttribute<?> attribute) {
-
-        }
-
-        @Override
         public UserId getUserInSession() {
             return userId;
-        }
-
-        @Override
-        public void setUserInSession(UserId userId) {
-
         }
 
         @Override

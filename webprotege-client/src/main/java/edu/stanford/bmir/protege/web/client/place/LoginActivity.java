@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
+@Deprecated
 public class LoginActivity extends AbstractActivity {
 
     private LoginPresenter presenter;

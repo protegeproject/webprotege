@@ -15,6 +15,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@Deprecated
 public class SignUpViewImpl extends Composite implements SignUpView {
 
     interface SignUpViewImplUiBinder extends UiBinder<HTMLPanel, SignUpViewImpl> {

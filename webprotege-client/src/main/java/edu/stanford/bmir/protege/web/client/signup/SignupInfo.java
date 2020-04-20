@@ -13,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 04/06/2012
  */
+@Deprecated
 public class SignupInfo implements Serializable {
 
     private EmailAddress emailAddress;

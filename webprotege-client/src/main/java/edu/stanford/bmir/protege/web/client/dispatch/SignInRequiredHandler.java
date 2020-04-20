@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 01/03/16
  */
+@Deprecated
 public interface SignInRequiredHandler {
 
     void handleSignInRequired(@Nonnull Place continueTo);
