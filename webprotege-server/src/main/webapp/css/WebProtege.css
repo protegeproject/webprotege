@@ -145,7 +145,7 @@ There's going to be something in Media Queries Level 5, but that is some way off
         --inlay-panel--background-color:                var(--alternate--background-color);
         --inlay-panel--border:                          1px solid var(--alternate--separator--color);
         --inlay-panel--border-radius:                   3px;
-        --inlay-panel--alternate-background-color:      #fafaff;
+        --inlay-panel--alternate-background-color:      #707070;
         --view-toolbar--background-color:               var(--alternate--background-color);
         --view-toolbar--hover--background-color:        #707070;
         --error--color:                                 #af0002;
