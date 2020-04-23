@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,10 +21,14 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
 
     private OWLEntity entity;
 
+    private ImmutableList<FormPageRequest> formPageRequests;
+
     public GetEntityFormsAction(@Nonnull ProjectId projectId,
-                                @Nonnull OWLEntity entity) {
+                                @Nonnull OWLEntity entity,
+                                ImmutableList<FormPageRequest> formPageRequests) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
+        this.formPageRequests = checkNotNull(formPageRequests);
     }
 
     @GwtSerializationConstructor
@@ -39,5 +44,10 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
     @Nonnull
     public OWLEntity getEntity() {
         return entity;
+    }
+
+    @Nonnull
+    public ImmutableList<FormPageRequest> getFormPageRequests() {
+        return formPageRequests;
     }
 }

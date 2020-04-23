@@ -4,10 +4,13 @@ import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.EntityFrameProvider;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
+import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.OWLPrimitive2FormControlDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -28,11 +31,6 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableList;
  * 2019-10-31
  */
 public class EntityFrameFormDataBuilder {
-
-    /**
-     * This is too arbitrary but safer for now in the case of very large ontologies
-     */
-    private static final int MAX_FIELD_SIZE = 50;
 
     @Nonnull
     private final EntityFrameProvider entityFrameProvider;
@@ -58,8 +56,51 @@ public class EntityFrameFormDataBuilder {
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
     }
 
+    @Nullable
+    private OWLEntity toEntityFormSubject(OWLPrimitive primitive) {
+        if(primitive instanceof OWLEntity) {
+            return (OWLEntity) primitive;
+        }
+        else if(primitive instanceof IRI) {
+            var iri = (IRI) primitive;
+            return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri)
+                                                       .sorted()
+                                                       .findFirst()
+                                                       .orElse(null);
+        }
+        else {
+            return null;
+        }
+    }
+
+    public FormData toFormData(@Nonnull OWLEntity subject,
+                               @Nonnull FormDescriptor formDescriptor,
+                               @Nonnull FormPageRequestIndex formPageRequestIndex) {
+        var formSubject = FormSubject.get(subject);
+        var fieldData = formDescriptor.getFields()
+                                      .stream()
+                                      .map(field -> {
+                                          ImmutableList<FormControlData> formControlValues = toFormControlValues(subject,
+                                                                                                                 field.getId(),
+                                                                                                                 field,
+                                                                                                                 formPageRequestIndex);
+                                          var controlValuesStream = formControlValues.stream();
+                                          var pageRequest = formPageRequestIndex.getPageRequest(formSubject, field.getId(), FormPageRequest.SourceType.CONTROL_STACK);
+                                          var controlValuesPage = controlValuesStream.collect(PageCollector.toPage(
+                                                  pageRequest.getPageNumber(),
+                                                  pageRequest.getPageSize()
+                                          )).orElse(Page.emptyPage());
+                                          return FormFieldData.get(field,
+                                                                   controlValuesPage);
+                                      })
+                                      .collect(toImmutableList());
+        return FormData.get(Optional.of(formSubject), formDescriptor, fieldData);
+    }
+
     private ImmutableList<FormControlData> toFormControlValues(@Nonnull OWLEntity subject,
-                                                               @Nonnull BoundControlDescriptor descriptor) {
+                                                               @Nonnull FormRegionId formFieldId,
+                                                               @Nonnull BoundControlDescriptor descriptor,
+                                                               @Nonnull FormPageRequestIndex formPageRequestIndex) {
         var owlBinding = descriptor.getOwlBinding();
         if(owlBinding.isEmpty()) {
             return ImmutableList.of();
@@ -68,7 +109,6 @@ public class EntityFrameFormDataBuilder {
         var entityFrame = entityFrameProvider.getEntityFrame(subject, false);
         var entityFrameMapper = entityFrameMapperFactory.create(entityFrame);
         var values = entityFrameMapper.getValues(theBinding);
-
 
         var formControlDescriptor = descriptor.getFormControlDescriptor();
         return formControlDescriptor.accept(new FormControlDescriptorVisitor<>() {
@@ -128,7 +168,7 @@ public class EntityFrameFormDataBuilder {
 
             @Override
             public ImmutableList<FormControlData> visit(GridControlDescriptor gridControlDescriptor) {
-                return ImmutableList.of(toGridControlData(values, gridControlDescriptor));
+                return ImmutableList.of(toGridControlData(subject, formFieldId, values, gridControlDescriptor, formPageRequestIndex));
             }
 
             @Override
@@ -138,57 +178,22 @@ public class EntityFrameFormDataBuilder {
                 return values.stream()
                              .filter(p -> p instanceof OWLEntity)
                              .map(p -> (OWLEntity) p)
-                             .map(entity -> toFormData(entity, subFormDescriptor))
+                             .map(entity -> toFormData(entity, subFormDescriptor, formPageRequestIndex))
                              .collect(toImmutableList());
             }
         });
     }
 
-    public FormData toFormData(@Nonnull OWLEntity subject, FormDescriptor formDescriptor) {
-        var fieldData = formDescriptor.getFields()
-                                      .stream()
-                                      .map(field -> {
-                                          ImmutableList<FormControlData> formControlValues = toFormControlValues(subject,
-                                                                                                               field);
-                                          var controlValuesStream = formControlValues.stream();
-                                          if(field.getRepeatability() == Repeatability.NON_REPEATABLE) {
-                                              controlValuesStream = controlValuesStream.limit(1);
-                                          }
-                                          else {
-                                              controlValuesStream = controlValuesStream.limit(MAX_FIELD_SIZE);
-                                          }
-                                          var limitedFormControlValues = controlValuesStream.collect(toImmutableList());
-                                          return FormFieldData.get(field,
-                                                                   limitedFormControlValues,
-                                                                   formControlValues.size());
-                                      })
-                                      .collect(toImmutableList());
-        return FormData.get(Optional.of(FormEntitySubject.get(subject)), formDescriptor, fieldData);
-    }
-
-    @Nullable
-    private OWLEntity toEntityFormSubject(OWLPrimitive primitive) {
-        if(primitive instanceof OWLEntity) {
-            return (OWLEntity) primitive;
-        }
-        else if(primitive instanceof IRI) {
-            var iri = (IRI) primitive;
-            return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri)
-                                                .sorted()
-                                                .findFirst()
-                                                .orElse(null);
-        }
-        else {
-            return null;
-        }
-    }
-
-    private GridControlData toGridControlData(ImmutableList<OWLPrimitive> subjects,
-                                              GridControlDescriptor gridControlDescriptor) {
+    private GridControlData toGridControlData(OWLPrimitive root,
+                                              FormRegionId formFieldId,
+                                              ImmutableList<OWLPrimitive> subjects,
+                                              GridControlDescriptor gridControlDescriptor,
+                                              @Nonnull FormPageRequestIndex formPageRequestIndex) {
+        var rootSubject = getFormSubject(root);
+        var pageRequest = formPageRequestIndex.getPageRequest(rootSubject, formFieldId, FormPageRequest.SourceType.GRID_CONTROL);
         var rowData = subjects.stream()
                               .map(this::toEntityFormSubject)
                               .filter(Objects::nonNull)
-                              .limit(MAX_FIELD_SIZE)
                               .map(entity -> {
                                   var columnDescriptors = gridControlDescriptor.getColumns();
                                   // To Cells
@@ -196,7 +201,9 @@ public class EntityFrameFormDataBuilder {
                                                                   .map(columnDescriptor -> {
 
                                                                       var formControlData = toFormControlValues(entity,
-                                                                                                                columnDescriptor);
+                                                                                                                columnDescriptor.getId(),
+                                                                                                                columnDescriptor,
+                                                                                                                formPageRequestIndex);
                                                                       // What should happen here?  There are multiple values binding
                                                                       // for a given subject - i.e. multiple values per cell
                                                                       if(formControlData.isEmpty()) {
@@ -204,23 +211,37 @@ public class EntityFrameFormDataBuilder {
                                                                                                   ImmutableList.of());
                                                                       }
                                                                       else {
-                                                                        if(columnDescriptor.getRepeatability() == Repeatability.NON_REPEATABLE) {
-                                                                            var firstValue = formControlData.get(0);
-                                                                            return GridCellData.get(columnDescriptor.getId(),
-                                                                                                    ImmutableList.of(firstValue));
+                                                                          if(columnDescriptor.getRepeatability() == Repeatability.NON_REPEATABLE) {
+                                                                              var firstValue = formControlData.get(0);
+                                                                              return GridCellData.get(columnDescriptor.getId(),
+                                                                                                      ImmutableList.of(
+                                                                                                              firstValue));
 
-                                                                        }
-                                                                        else {
-                                                                            return GridCellData.get(columnDescriptor.getId(),
-                                                                                                    formControlData);
-                                                                        }
+                                                                          }
+                                                                          else {
+                                                                              return GridCellData.get(columnDescriptor.getId(),
+                                                                                                      formControlData);
+                                                                          }
                                                                       }
                                                                   })
                                                                   .collect(toImmutableList());
                                   var formSubject = FormEntitySubject.get(entity);
                                   return GridRowData.get(formSubject, cellData);
                               })
-                              .collect(toImmutableList());
-        return GridControlData.get(gridControlDescriptor, rowData, subjects.size());
+                              .collect(PageCollector.toPage(pageRequest.getPageNumber(),
+                                                            pageRequest.getPageSize()));
+        return GridControlData.get(gridControlDescriptor, rowData.orElse(Page.emptyPage()));
+    }
+
+    private FormSubject getFormSubject(OWLPrimitive root) {
+        if(root instanceof IRI) {
+            return FormSubject.get((IRI) root);
+        }
+        else if(root instanceof OWLEntity) {
+            return FormSubject.get((OWLEntity) root);
+        }
+        else {
+            throw new RuntimeException("Cannot process form subjects that are not IRIs or Entities");
+        }
     }
 }

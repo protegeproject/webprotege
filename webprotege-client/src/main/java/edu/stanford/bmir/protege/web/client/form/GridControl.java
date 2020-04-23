@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -9,8 +10,12 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -41,8 +46,8 @@ public class GridControl implements FormControl {
     }
 
     @Override
-    public void setNested(boolean nested) {
-        if(nested) {
+    public void setRegionPosition(@Nonnull FormRegionPosition position) {
+        if(position.equals(FormRegionPosition.NESTED)) {
             this.gridPresenter.hideHeaderRow();
         }
     }
@@ -69,12 +74,7 @@ public class GridControl implements FormControl {
     @Override
     public Optional<FormControlData> getValue() {
         GridControlData value = gridPresenter.getValue();
-        if(value.getRows().isEmpty()) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(value);
-        }
+        return Optional.of(value);
     }
 
     @Override
@@ -110,5 +110,17 @@ public class GridControl implements FormControl {
     @Override
     public void requestFocus() {
         gridPresenter.requestFocus();
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject,
+                                                                @Nonnull FormRegionId formRegionId) {
+        return gridPresenter.getPageRequests(formSubject, formRegionId);
+    }
+
+    @Override
+    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
+        gridPresenter.setFormRegionPageChangedHandler(handler);
     }
 }

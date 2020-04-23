@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multiset;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
-import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -84,8 +86,10 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         portletUi.addAction(new PortletAction("Expand all", "wp-btn-g--expand-all", formStackPresenter::expandAllFields));
         portletUi.addAction(new PortletAction("Collapse all", "wp-btn-g--collapse-all", formStackPresenter::collapseAllFields));
         formStackPresenter.start(portletUi);
+        formStackPresenter.setFormRegionPageChangedHandler(() -> {
+            handleAfterSetEntity(getSelectedEntity());
+        });
         setDisplaySelectedEntityNameAsSubtitle(true);
-
         eventBus.addProjectEventHandler(projectId, CLASS_FRAME_CHANGED, this::handleClassFrameChanged);
     }
 
@@ -99,7 +103,25 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
             saveCurrentFormData();
 //        }
         currentSubject = Optional.of(entity);
-        dispatchServiceManager.execute(new GetEntityFormsAction(projectId, entity),
+        ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
+        pageRequests.forEach(pr -> GWT.log("[PR] " + pr));
+
+        Multiset<ImmutableList> ms = HashMultiset.create();
+        pageRequests.stream()
+                    .map(pr -> ImmutableList.of(pr.getFormId(),
+                                                pr.getSubject(),
+                                                pr.getFieldId(),
+                                                pr.getSourceType()))
+                    .forEach(ms::add);
+        ms.elementSet()
+          .forEach(e -> {
+              int count = ms.count(e);
+              if(count > 1) {
+//                  Window.alert(count + " of " + e.toString());
+              }
+          });
+
+        dispatchServiceManager.execute(new GetEntityFormsAction(projectId, entity, pageRequests),
                                        this::displayFormResult);
     }
 

@@ -3,12 +3,9 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.base.CaseFormat;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -53,9 +50,6 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     HTMLPanel helpIcon;
 
     @UiField
-    Label limitedValuesDisplayedMessage;
-
-    @UiField
     Image expansionHandle;
 
     @UiField
@@ -64,7 +58,7 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     HTMLPanel content;
 
-    FormFieldControl editor;
+    FormControlStack editor;
 
     @Inject
     public FormFieldViewImpl() {
@@ -114,26 +108,14 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     }
 
     @Override
-    public void setEditor(FormFieldControl editor) {
+    public void setEditor(FormControlStack editor) {
         this.editor = checkNotNull(editor);
         editorHolder.setWidget(editor);
     }
 
     @Override
-    public FormFieldControl getEditor() {
+    public FormControlStack getEditor() {
         return checkNotNull(editor);
-    }
-
-    @Override
-    public void clearLimitedValuesDisplayed() {
-        limitedValuesDisplayedMessage.setText("");
-        limitedValuesDisplayedMessage.setVisible(false);
-    }
-
-    @Override
-    public void setLimitedValuesDisplayed(int size, int formControlDataCount) {
-        limitedValuesDisplayedMessage.setText("Displaying " + size + " of " + formControlDataCount + " values");
-        limitedValuesDisplayedMessage.setVisible(true);
     }
 
     @Override

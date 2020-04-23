@@ -6,38 +6,47 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class RepeatingEditor implements ValueEditor<List<FormControlData>> {
+public class NonRepeatingFormControlStackBackingEditor implements FormControlStackBackingEditor {
 
-    private ValueListEditor<FormControlData> delegate;
+    @Nonnull
+    private final FormControl delegate;
 
-    private HandlerManager handlerManager;
+    @Nonnull
+    private final HandlerManager handlerManager = new HandlerManager(this);
 
-    public RepeatingEditor(ValueListEditor<FormControlData> delegate) {
+    public NonRepeatingFormControlStackBackingEditor(FormControl delegate) {
         this.delegate = delegate;
-        this.handlerManager = new HandlerManager(this);
-        this.delegate.setEnabled(true);
-        this.delegate.addValueChangeHandler(event -> {
-           ValueChangeEvent.fire(this, getValue());
-        });
-        delegate.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
+        delegate.asWidget().setWidth("100%");
+        delegate.addValueChangeHandler(event -> ValueChangeEvent.fire(this, getValue()));
     }
 
     @Override
     public void setValue(List<FormControlData> object) {
-        delegate.setValue(object);
+        if(object.isEmpty()) {
+            delegate.clearValue();
+        }
+        else {
+            delegate.setValue(object.get(0));
+        }
+    }
+
+    @Override
+    public void requestFocus() {
+        delegate.requestFocus();
     }
 
     @Override
@@ -47,7 +56,8 @@ public class RepeatingEditor implements ValueEditor<List<FormControlData>> {
 
     @Override
     public Optional<List<FormControlData>> getValue() {
-        return delegate.getValue();
+        return delegate.getValue()
+                .map(Collections::singletonList);
     }
 
     @Override
@@ -61,7 +71,7 @@ public class RepeatingEditor implements ValueEditor<List<FormControlData>> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<FormControlData>>> handler) {
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<List<FormControlData>>> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
 
@@ -78,5 +88,10 @@ public class RepeatingEditor implements ValueEditor<List<FormControlData>> {
     @Override
     public Widget asWidget() {
         return delegate.asWidget();
+    }
+
+    @Override
+    public void forEachFormControl(Consumer<FormControl> consumer) {
+        consumer.accept(delegate);
     }
 }

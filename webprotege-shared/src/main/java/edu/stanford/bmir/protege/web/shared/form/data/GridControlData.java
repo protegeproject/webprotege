@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,9 +21,8 @@ public abstract class GridControlData implements ComplexFormControlValue {
 
     @Nonnull
     public static GridControlData get(@Nonnull GridControlDescriptor descriptor,
-                                      @Nonnull ImmutableList<GridRowData> rows,
-                                      int rowCount) {
-        return new AutoValue_GridControlData(descriptor, rows, rowCount);
+                                      @Nonnull Page<GridRowData> rows) {
+        return new AutoValue_GridControlData(descriptor, rows);
     }
 
     @Override
@@ -39,7 +39,5 @@ public abstract class GridControlData implements ComplexFormControlValue {
     public abstract GridControlDescriptor getDescriptor();
 
     @Nonnull
-    public abstract ImmutableList<GridRowData> getRows();
-
-    public abstract int getRowCount();
+    public abstract Page<GridRowData> getRows();
 }

@@ -49,11 +49,12 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
     @Override
     public GetEntityFormsResult execute(@Nonnull GetEntityFormsAction action,
                                         @Nonnull ExecutionContext executionContext) {
-
-        OWLEntity entity = action.getEntity();
+        var pageRequests = action.getFormPageRequests();
+        var pageRequestIndex = FormPageRequestIndex.create(pageRequests);
+        var entity = action.getEntity();
         var forms = formManager.getFormDescriptors(entity, projectId)
                           .stream()
-                          .map(formDescriptor -> formDataBuilder.toFormData(entity, formDescriptor))
+                          .map(formDescriptor -> formDataBuilder.toFormData(entity, formDescriptor, pageRequestIndex))
                           .collect(toImmutableList());
         return new GetEntityFormsResult(forms);
     }

@@ -4,17 +4,17 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormFieldData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -51,11 +51,11 @@ public class FormPresenter {
     @Nonnull
     private Optional<FormSubject> currentSubject = Optional.empty();
 
-    private EntityFormSubjectFactory freshSubjectStrategy = Optional::empty;
-
     private FormFieldPresenterFactory formFieldPresenterFactory;
 
     private Set<FormFieldId> collapsedFields = new HashSet<>();
+
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
     @AutoFactory
     @Inject
@@ -72,6 +72,10 @@ public class FormPresenter {
     public void clearData() {
         currentSubject = Optional.empty();
         fieldPresenters.forEach(FormFieldPresenter::clearValue);
+    }
+
+    public void collapseAll() {
+        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED));
     }
 
     /**
@@ -100,7 +104,25 @@ public class FormPresenter {
         currentFormDescriptor = Optional.of(formData.getFormDescriptor());
     }
 
+    public void saveExpansionState() {
+        collapsedFields.clear();
+        fieldPresenters.forEach(p -> {
+            if(p.getExpansionState() == FormFieldPresenter.ExpansionState.COLLAPSED) {
+                FormFieldId id = p.getValue()
+                                  .getFormFieldDescriptor()
+                                  .getId();
+                collapsedFields.add(id);
+            }
+        });
+    }
+
+    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler handler) {
+        this.formRegionPageChangedHandler = checkNotNull(handler);
+        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(handler));
+    }
+
     private void updateFormData(@Nonnull FormData formData) {
+        GWT.log("[FormPresenter] Updating form data");
         this.currentSubject = formData.getSubject();
         dispatchServiceManager.beginBatch();
         ImmutableList<FormFieldData> nextFormFieldData = formData.getFormFieldData();
@@ -119,7 +141,8 @@ public class FormPresenter {
      */
     private void createFormAndSetFormData(@Nonnull FormData formData) {
         clear();
-        currentFormDescriptor = Optional.of(formData.getFormDescriptor());
+        FormDescriptor formDescriptor = formData.getFormDescriptor();
+        currentFormDescriptor = Optional.of(formDescriptor);
         dispatchServiceManager.beginBatch();
         for(FormFieldData fieldData : formData.getFormFieldData()) {
             addFormField(fieldData);
@@ -135,29 +158,13 @@ public class FormPresenter {
         container.ifPresent(c -> c.setWidget(noFormView));
     }
 
-    public void saveExpansionState() {
-        collapsedFields.clear();
-        fieldPresenters.forEach(p -> {
-            if(p.getExpansionState() == FormFieldPresenter.ExpansionState.COLLAPSED) {
-                FormFieldId id = p.getValue().getFormFieldDescriptor().getId();
-                collapsedFields.add(id);
-            }
-        });
-    }
-
-    public void expandAll() {
-        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.EXPANDED));
-    }
-
-    public void collapseAll() {
-        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED));
-    }
-
     private void addFormField(@Nonnull FormFieldData formFieldData) {
         FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
+        presenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
         fieldPresenters.add(presenter);
-        if(collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
+        if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()
+                                                 .getId())) {
             GWT.log("[FormPresenter] Setting collapsed");
             presenter.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED);
         }
@@ -165,6 +172,10 @@ public class FormPresenter {
         presenter.setValue(formFieldData);
         FormFieldView formFieldView = presenter.getFormFieldView();
         formView.addFormElementView(formFieldView, formFieldDescriptor.getFieldRun());
+    }
+
+    public void expandAll() {
+        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.EXPANDED));
     }
 
     /**
@@ -183,6 +194,22 @@ public class FormPresenter {
         });
     }
 
+    @Nonnull
+    public ImmutableList<FormPageRequest> getPageRequest() {
+        return currentFormDescriptor.map(formDescriptor
+                                          -> currentSubject.map(subject
+                                                                        -> fieldPresenters.stream()
+                                                                                                 .map(formFieldPresenter -> formFieldPresenter.getPageRequests(subject))
+                                                                                                 .flatMap(ImmutableList::stream)
+                                                                                                 .map(pr -> FormPageRequest.get(
+                                                                                                         formDescriptor.getFormId(),
+                                                                                                         subject,
+                                                                                                         pr.getFieldId(),
+                                                                                                         pr.getSourceType(),
+                                                                                                         pr.getPageRequest()))
+                                                                                                 .collect(toImmutableList())).orElse(ImmutableList.of())).orElse(ImmutableList.of());
+    }
+
     public IsWidget getView() {
         return formView;
     }
@@ -199,7 +226,7 @@ public class FormPresenter {
     }
 
     public void setFormDataChangedHandler(FormDataChangedHandler formDataChangedHandler) {
-//        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        //        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     /**

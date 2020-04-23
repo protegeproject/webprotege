@@ -118,4 +118,8 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     public boolean isNonComposite() {
         return !(getFormControlDescriptor() instanceof SubFormControlDescriptor);
     }
+
+    public boolean isRepeatable() {
+        return !getRepeatability().equals(Repeatability.NON_REPEATABLE);
+    }
 }

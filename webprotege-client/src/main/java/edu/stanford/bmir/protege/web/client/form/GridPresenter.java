@@ -1,18 +1,26 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,7 +46,8 @@ public class GridPresenter {
     private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of(),
                                                                          null);
 
-    private boolean showHeaderRow = true;
+    @Nonnull
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
     @Inject
     public GridPresenter(@Nonnull GridView view,
@@ -47,27 +56,80 @@ public class GridPresenter {
         this.view = checkNotNull(view);
         this.headerPresenter = headerPresenter;
         this.rowPresenterProvider = rowPresenterProvider;
+        view.setPageNumberChangedHandler(pageNumber -> formRegionPageChangedHandler.handleFormRegionPageChanged());
     }
 
     public void clearValue() {
         view.clear();
     }
 
-    public IsWidget getView() {
-        return view;
+    @Nonnull
+    public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject,
+                                                                @Nonnull FormRegionId formRegionId) {
+        int pageNumber = view.getPageNumber();
+        int pageSize = view.getPageSize();
+        PageRequest pageRequest = PageRequest.requestPageWithSize(pageNumber, pageSize);
+        FormRegionPageRequest gridPageRequest = FormRegionPageRequest.get(formSubject, formRegionId, FormPageRequest.SourceType.GRID_CONTROL, pageRequest);
+
+        ImmutableList<FormRegionPageRequest> rowRequests = view.getRows()
+                                                               .stream()
+                                                               .map(GridRowPresenter::getPageRequests)
+                                                               .flatMap(ImmutableList::stream)
+                                                               .collect(toImmutableList());
+        return ImmutableList.<FormRegionPageRequest>builder()
+                .add(gridPageRequest)
+                .addAll(rowRequests)
+                .build();
+
     }
 
-    public void requestFocus() {
-        view.requestFocus();
+    public GridControlData getValue() {
+        ImmutableList<GridRowData> rows = view.getRows()
+                                              .stream()
+                                              .map(GridRowPresenter::getFormDataValue)
+                                              .collect(toImmutableList());
+        Page<GridRowData> page = new Page<>(1, 1, rows, rows.size());
+        return GridControlData.get(descriptor, page);
+    }
+
+    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler formRegionPageChangedHandler) {
+        this.formRegionPageChangedHandler = checkNotNull(formRegionPageChangedHandler);
+        view.getRows().forEach(row -> row.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
+    }
+
+
+    public void setValue(GridControlData value) {
+        GWT.log("[GridPresenter] (setValue) ");
+        clear();
+        // List of objects
+        Page<GridRowData> rowsPage = value.getRows();
+        List<GridRowPresenter> rows = rowsPage
+                                           .getPageElements()
+                                           .stream()
+                                           .map(rowDataValue -> {
+                                               GridRowPresenter rowPresenter = rowPresenterProvider.get();
+                                               rowPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+                                               rowPresenter.setColumnDescriptors(descriptor.getColumns());
+                                               rowPresenter.setValue(rowDataValue);
+                                               return rowPresenter;
+                                           })
+                                           .collect(Collectors.toList());
+        view.setRows(rows);
+        view.setPageCount(rowsPage.getPageCount());
+        view.setPageNumber(rowsPage.getPageNumber());
+        view.setPaginatorVisible(rowsPage.getPageCount() > 1);
+    }
+
+    public IsWidget getView() {
+        return view;
     }
 
     public void hideHeaderRow() {
         view.hideHeader();
     }
 
-    public void start(@Nonnull AcceptsOneWidget container) {
-        container.setWidget(view);
-        headerPresenter.start(view.getHeaderContainer());
+    public void requestFocus() {
+        view.requestFocus();
     }
 
     public void setDescriptor(GridControlDescriptor descriptor) {
@@ -88,29 +150,9 @@ public class GridPresenter {
         view.clear();
     }
 
-    public void setValue(GridControlData value) {
-        clear();
-        // List of objects
-        List<GridRowPresenter> rows = value.getRows()
-             .stream()
-             .map(rowDataValue -> {
-                     GridRowPresenter rowPresenter = rowPresenterProvider.get();
-                     rowPresenter.setColumnDescriptors(descriptor.getColumns());
-                     rowPresenter.setValue(rowDataValue);
-                     return rowPresenter;
-             })
-             .collect(Collectors.toList());
-        view.setRows(rows);
-        if(value.getRowCount() != rows.size()) {
-            view.setLimitedRowsDisplayed(rows.size(), value.getRowCount());
-        }
-    }
-
-    public GridControlData getValue() {
-        ImmutableList<GridRowData> rows = view.getRows().stream()
-                                                    .map(GridRowPresenter::getFormDataValue)
-                                                    .collect(toImmutableList());
-        return GridControlData.get(descriptor, rows, -1);
+    public void start(@Nonnull AcceptsOneWidget container) {
+        container.setWidget(view);
+        headerPresenter.start(view.getHeaderContainer());
     }
 
 

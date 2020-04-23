@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 
 import javax.annotation.Nonnull;
@@ -27,9 +28,6 @@ public class GridHeaderPresenter {
     @Nonnull
     private final Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider;
 
-    @Nonnull
-    private final List<GridHeaderColumnPresenter> columnPresenters = new ArrayList<>();
-
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
                                @Nonnull Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider) {
@@ -43,7 +41,10 @@ public class GridHeaderPresenter {
 
     public void clear() {
         view.clear();
-        columnPresenters.clear();;
+    }
+
+    public void setSubject(FormSubject formSubject) {
+
     }
 
     public void setColumns(@Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors) {
@@ -53,7 +54,6 @@ public class GridHeaderPresenter {
             columnPresenter.setColumnDescriptor(columnDescriptor);
             IsWidget headerColumnView = columnPresenter.getView();
             view.addColumnHeader(headerColumnView);
-            columnPresenters.add(columnPresenter);
         });
     }
 }

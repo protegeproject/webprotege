@@ -19,17 +19,25 @@ public class FormFieldPresenterFactory {
     private final Provider<FormFieldView> viewProvider;
 
     @Nonnull
-    private final FormControlFactory formControlFactory;
+    private final FormFieldControlStackFactory formFieldControlStackFactory;
+
+    @Nonnull
+    private final LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper;
+
 
     @Inject
     public FormFieldPresenterFactory(@Nonnull Provider<FormFieldView> viewProvider,
-                                     @Nonnull FormControlFactory formControlFactory) {
+                                     @Nonnull FormFieldControlStackFactory formControlFactory,
+                                     @Nonnull LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper) {
         this.viewProvider = checkNotNull(viewProvider);
-        this.formControlFactory = checkNotNull(formControlFactory);
+        this.formFieldControlStackFactory = checkNotNull(formControlFactory);
+        this.languageMapCurrentLocaleMapper = checkNotNull(languageMapCurrentLocaleMapper);
     }
 
     public FormFieldPresenter create(@Nonnull FormFieldDescriptor fieldDescriptor) {
-        FormFieldPresenter presenter = new FormFieldPresenter(viewProvider.get(), fieldDescriptor, formControlFactory);
+        FormFieldPresenter presenter = new FormFieldPresenter(viewProvider.get(), fieldDescriptor,
+                                                              formFieldControlStackFactory,
+                                                              languageMapCurrentLocaleMapper);
         presenter.start();
         return presenter;
     }

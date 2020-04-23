@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
@@ -44,9 +42,6 @@ public class FormControlFactory {
     private final Provider<GridControl> gridControlProvider;
 
     @Nonnull
-    private final Provider<FormPresenter> formPresenterProvider;
-
-    @Nonnull
     private final Provider<SubFormControl> subFormControlProvider;
 
     @Inject
@@ -59,7 +54,6 @@ public class FormControlFactory {
                               @Nonnull Provider<ImageControl> imageFieldEditorProvider,
                               @Nonnull Provider<NumberEditorControl> numberFieldEditorProvider,
                               @Nonnull Provider<GridControl> gridControlProvider,
-                              @Nonnull Provider<FormPresenter> formPresenterProvider,
                               @Nonnull Provider<SubFormControl> subFormControlProvider) {
         this.textFieldEditorProvider = textFieldEditorProvider;
         this.choiceFieldRadioButtonEditorProvider = choiceFieldRadioButtonEditorProvider;
@@ -70,7 +64,6 @@ public class FormControlFactory {
         this.imageFieldEditorProvider = imageFieldEditorProvider;
         this.numberFieldEditorProvider = numberFieldEditorProvider;
         this.gridControlProvider = gridControlProvider;
-        this.formPresenterProvider = formPresenterProvider;
         this.subFormControlProvider = subFormControlProvider;
     }
 
@@ -82,52 +75,52 @@ public class FormControlFactory {
      * @return The {@link ValueEditorFactory} for the specified descriptor.
      */
     @Nonnull
-    public ValueEditorFactory<FormControlData> getValueEditorFactory(@Nonnull FormControlDescriptor formControlDescriptor) {
-        return formControlDescriptor.accept(new FormControlDescriptorVisitor<ValueEditorFactory<FormControlData>>() {
+    public FormControlDataEditorFactory getDataEditorFactory(@Nonnull FormControlDescriptor formControlDescriptor) {
+        return formControlDescriptor.accept(new FormControlDescriptorVisitor<FormControlDataEditorFactory>() {
             @Override
-            public ValueEditorFactory<FormControlData> visit(TextControlDescriptor textControlDescriptor) {
+            public FormControlDataEditorFactory visit(TextControlDescriptor textControlDescriptor) {
                 return getTextFieldEditorFactory(textControlDescriptor);
             }
 
             @Override
-            public ValueEditorFactory<FormControlData> visit(NumberControlDescriptor numberControlDescriptor) {
+            public FormControlDataEditorFactory visit(NumberControlDescriptor numberControlDescriptor) {
                 return getNumberFieldEditorFactory(numberControlDescriptor);
             }
 
             @Override
-            public ValueEditorFactory<FormControlData> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
+            public FormControlDataEditorFactory visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
                 return getSingleChoiceFieldEditorFactory(singleChoiceControlDescriptor);
             }
 
             @Override
-            public ValueEditorFactory<FormControlData> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
+            public FormControlDataEditorFactory visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
                 return getMultiChoiceFieldEditorFactory(multiChoiceControlDescriptor);
             }
 
             @Override
-            public ValueEditorFactory<FormControlData> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
+            public FormControlDataEditorFactory visit(EntityNameControlDescriptor entityNameControlDescriptor) {
                 return getEntityNameEditorFactory(entityNameControlDescriptor);
             }
 
             @Override
-            public ValueEditorFactory<FormControlData> visit(ImageControlDescriptor imageControlDescriptor) {
+            public FormControlDataEditorFactory visit(ImageControlDescriptor imageControlDescriptor) {
                 return getImageFieldEditorFactory(imageControlDescriptor);
             }
 
             @Override
-            public ValueEditorFactory<FormControlData> visit(GridControlDescriptor gridControlDescriptor) {
+            public FormControlDataEditorFactory visit(GridControlDescriptor gridControlDescriptor) {
                 return getGridFieldEditorFactory(gridControlDescriptor);
             }
 
             @Override
-            public ValueEditorFactory<FormControlData> visit(SubFormControlDescriptor subFormControlDescriptor) {
+            public FormControlDataEditorFactory visit(SubFormControlDescriptor subFormControlDescriptor) {
                 return getSubFormControlFactory(subFormControlDescriptor);
             }
         });
     }
 
     @Nonnull
-    private ValueEditorFactory<FormControlData> getTextFieldEditorFactory(TextControlDescriptor formFieldDescriptor) {
+    private FormControlDataEditorFactory getTextFieldEditorFactory(TextControlDescriptor formFieldDescriptor) {
         return () -> {
                     TextControl textControl = textFieldEditorProvider.get();
                     textControl.setDescriptor(formFieldDescriptor);
@@ -136,7 +129,7 @@ public class FormControlFactory {
     }
 
     @Nonnull
-    private ValueEditorFactory<FormControlData> getNumberFieldEditorFactory(NumberControlDescriptor formFieldDescriptor) {
+    private FormControlDataEditorFactory getNumberFieldEditorFactory(NumberControlDescriptor formFieldDescriptor) {
         return () -> {
                     NumberEditorControl editor = numberFieldEditorProvider.get();
                     editor.setDescriptor(formFieldDescriptor);
@@ -145,7 +138,7 @@ public class FormControlFactory {
     }
 
     @Nonnull
-    private ValueEditorFactory<FormControlData> getSingleChoiceFieldEditorFactory(SingleChoiceControlDescriptor formFieldDescriptor) {
+    private FormControlDataEditorFactory getSingleChoiceFieldEditorFactory(SingleChoiceControlDescriptor formFieldDescriptor) {
         return () -> {
                     SingleChoiceControl editor;
                     if(formFieldDescriptor.getWidgetType() == SingleChoiceControlType.RADIO_BUTTON) {
@@ -162,7 +155,7 @@ public class FormControlFactory {
                 };
     }
 
-    private ValueEditorFactory<FormControlData> getMultiChoiceFieldEditorFactory(MultiChoiceControlDescriptor descriptor) {
+    private FormControlDataEditorFactory getMultiChoiceFieldEditorFactory(MultiChoiceControlDescriptor descriptor) {
         return () -> {
             MultiValueChoiceControl editor = choiceFieldCheckBoxEditorProvider.get();
             editor.setDescriptor(descriptor);
@@ -171,7 +164,7 @@ public class FormControlFactory {
     }
 
     @Nonnull
-    private ValueEditorFactory<FormControlData> getEntityNameEditorFactory(EntityNameControlDescriptor formFieldDescriptor) {
+    private FormControlDataEditorFactory getEntityNameEditorFactory(EntityNameControlDescriptor formFieldDescriptor) {
         return () -> {
             EntityNameControl editor = classNameFieldEditorProvider.get();
             editor.setDescriptor(formFieldDescriptor);
@@ -180,7 +173,7 @@ public class FormControlFactory {
     }
 
     @Nonnull
-    private ValueEditorFactory<FormControlData> getImageFieldEditorFactory(ImageControlDescriptor imageControlDescriptor) {
+    private FormControlDataEditorFactory getImageFieldEditorFactory(ImageControlDescriptor imageControlDescriptor) {
         return () -> {
             ImageControl imageControl = imageFieldEditorProvider.get();
             imageControl.setDescriptor(imageControlDescriptor);
@@ -189,7 +182,7 @@ public class FormControlFactory {
     }
 
     @Nonnull
-    private ValueEditorFactory<FormControlData> getGridFieldEditorFactory(GridControlDescriptor descriptor) {
+    private FormControlDataEditorFactory getGridFieldEditorFactory(GridControlDescriptor descriptor) {
         return () -> {
                     GridControl gridControl = gridControlProvider.get();
                     gridControl.setDescriptor(descriptor);
@@ -197,7 +190,7 @@ public class FormControlFactory {
                 };
     }
 
-    private ValueEditorFactory<FormControlData> getSubFormControlFactory(SubFormControlDescriptor subFormControlDescriptor) {
+    private FormControlDataEditorFactory getSubFormControlFactory(SubFormControlDescriptor subFormControlDescriptor) {
         return () -> {
             SubFormControl subFormControl = subFormControlProvider.get();
             subFormControl.start();

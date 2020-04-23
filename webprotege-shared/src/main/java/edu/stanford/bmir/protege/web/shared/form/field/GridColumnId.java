@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  */
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class GridColumnId {
+public abstract class GridColumnId implements FormRegionId {
 
     @JsonCreator
     @Nonnull

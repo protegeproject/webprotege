@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
@@ -22,7 +26,7 @@ import static java.util.stream.Collectors.toMap;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public class GridRowPresenter {
+public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
 
     @Nonnull
     private final GridRowView view;
@@ -38,6 +42,8 @@ public class GridRowPresenter {
     private ImmutableList<GridColumnDescriptor> columnDescriptors = ImmutableList.of();
 
     private Optional<FormSubject> subject = Optional.empty();
+
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
     @Inject
     public GridRowPresenter(@Nonnull GridRowView view,
@@ -60,6 +66,14 @@ public class GridRowPresenter {
         return GridRowData.get(subject.orElse(null), cellData);
     }
 
+    public ImmutableList<FormRegionPageRequest> getPageRequests() {
+        return subject.map(s -> cellPresenters.stream()
+                                          .map(GridCellPresenter::getPageRequest)
+                                          .flatMap(ImmutableList::stream)
+                                          .collect(toImmutableList()))
+                      .orElse(ImmutableList.of());
+    }
+
     public boolean isDirty() {
         return false;
     }
@@ -68,6 +82,12 @@ public class GridRowPresenter {
         cellPresenters.stream()
                       .findFirst()
                       .ifPresent(GridCellPresenter::requestFocus);
+    }
+
+    @Override
+    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
+        this.formRegionPageChangedHandler = checkNotNull(handler);
+        cellPresenters.forEach(cp -> cp.setFormRegionPageChangedHandler(handler));
     }
 
     public void setColumnDescriptors(ImmutableList<GridColumnDescriptor> columnDescriptors) {
@@ -83,6 +103,7 @@ public class GridRowPresenter {
             AcceptsOneWidget cellContainer = view.addCell();
             cellPresenter.start(cellContainer);
             cellPresenter.setDescriptor(column);
+            cellPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
             cellPresenters.add(cellPresenter);
             cellPresentersById.put(column.getId(), cellPresenter);
         });
@@ -91,6 +112,7 @@ public class GridRowPresenter {
 
     public void setValue(GridRowData formDataObject) {
         this.subject = formDataObject.getSubject();
+        GWT.log("[GridRowPresenter] (setValue) " + subject);
         cellPresenters.forEach(GridCellPresenter::clear);
         formDataObject.getCells()
                       .forEach(cellData -> {
@@ -103,6 +125,5 @@ public class GridRowPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-
     }
 }

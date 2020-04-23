@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 
 import javax.annotation.Nonnull;
@@ -29,6 +31,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GridViewImpl extends Composite implements GridView {
 
+    private final PaginatorPresenter paginatorPresenter;
+
     private Optional<NewRowHandler> newRowHandler = Optional.empty();
 
     interface GridViewImplUiBinder extends UiBinder<HTMLPanel, GridViewImpl> {
@@ -43,11 +47,13 @@ public class GridViewImpl extends Composite implements GridView {
     @UiField(provided = true)
     ValueListEditor<GridRowPresenter> rowEditor;
 
-    @UiField
-    Label limitedRowsDisplayedMessage;
+    @UiField(provided = true)
+    PaginatorView paginatorView;
 
     @Inject
-    public GridViewImpl(Provider<GridRowPresenter> rowPresenterProvider) {
+    public GridViewImpl(PaginatorPresenter paginatorPresenter) {
+        this.paginatorView = paginatorPresenter.getView();
+        this.paginatorPresenter = paginatorPresenter;
         rowEditor = new ValueListFlexEditorImpl<>(() -> {
             GridRowPresenterAdapter gridRowPresenterAdapter = new GridRowPresenterAdapter();
             newRowHandler.ifPresent(handler -> {
@@ -89,18 +95,38 @@ public class GridViewImpl extends Composite implements GridView {
     @Override
     public void clear() {
         rowEditor.clearValue();
-        limitedRowsDisplayedMessage.setVisible(false);
-    }
-
-    @Override
-    public void setLimitedRowsDisplayed(int visibleRows, int totalRows) {
-        limitedRowsDisplayedMessage.setVisible(true);
-        limitedRowsDisplayedMessage.setText("Displaying " + visibleRows + " of " + totalRows + " rows");
-
+        paginatorPresenter.setPageNumber(1);
+        paginatorPresenter.setPageCount(1);
+        paginatorView.setVisible(false);
     }
 
     @Override
     public void hideHeader() {
         headerContainer.getElement().getStyle().setDisplay(Style.Display.NONE);
+    }
+
+    @Override
+    public void setPageCount(int pageCount) {
+        paginatorPresenter.setPageCount(pageCount);
+    }
+
+    @Override
+    public void setPageNumber(int pageNumber) {
+        paginatorPresenter.setPageNumber(pageNumber);
+    }
+
+    @Override
+    public int getPageNumber() {
+        return paginatorPresenter.getPageNumber();
+    }
+
+    @Override
+    public void setPageNumberChangedHandler(PageNumberChangedHandler handler) {
+        paginatorPresenter.setPageNumberChangedHandler(handler);
+    }
+
+    @Override
+    public void setPaginatorVisible(boolean visible) {
+        paginatorView.setVisible(visible);
     }
 }

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
@@ -37,13 +37,9 @@ public interface FormFieldView extends IsWidget {
 
     void setFormLabel(String formLabel);
 
-    void setEditor(FormFieldControl editor);
+    void setEditor(FormControlStack editor);
 
-    FormFieldControl getEditor();
-
-    void clearLimitedValuesDisplayed();
-
-    void setLimitedValuesDisplayed(int size, int formControlDataCount);
+    FormControlStack getEditor();
 
     void setRequiredValueNotPresentVisible(boolean visible);
 

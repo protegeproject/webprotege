@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.pagination;
 
+import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nonnull;
@@ -9,7 +10,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 1 Mar 2017
  */
-public interface PaginatorView extends IsWidget {
+public interface PaginatorView extends IsWidget, HasVisibility {
 
     interface PageNumberHandler {
         void handlePageEdited(String pageNumber);

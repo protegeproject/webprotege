@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.client.pagination;
 
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
@@ -65,6 +68,10 @@ public class PaginatorPresenter implements HasPages {
         this.pageCount = pageCount;
         view.setPageCount(pageCount);
         updateState();
+    }
+
+    public int getPageSize() {
+        return PageRequest.DEFAULT_PAGE_SIZE;
     }
 
 

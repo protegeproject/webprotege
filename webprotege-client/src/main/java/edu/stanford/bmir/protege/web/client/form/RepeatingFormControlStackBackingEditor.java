@@ -6,47 +6,39 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class NonRepeatingEditor implements ValueEditor<List<FormControlData>>, HasRequestFocus {
+public class RepeatingFormControlStackBackingEditor implements FormControlStackBackingEditor {
 
-    private final ValueEditor<FormControlData> delegate;
+    private ValueListEditor<FormControlData> delegate;
 
-    private final HandlerManager handlerManager = new HandlerManager(this);
+    private HandlerManager handlerManager;
 
-    public NonRepeatingEditor(ValueEditor<FormControlData> delegate) {
+    public RepeatingFormControlStackBackingEditor(ValueListEditor<FormControlData> delegate) {
         this.delegate = delegate;
-        delegate.asWidget().setWidth("100%");
-        delegate.addValueChangeHandler(event -> ValueChangeEvent.fire(this, getValue()));
+        this.handlerManager = new HandlerManager(this);
+        this.delegate.setEnabled(true);
+        this.delegate.addValueChangeHandler(event -> {
+           ValueChangeEvent.fire(this, getValue());
+        });
+        delegate.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
     }
 
     @Override
     public void setValue(List<FormControlData> object) {
-        if(object.isEmpty()) {
-            delegate.clearValue();
-        }
-        else {
-            delegate.setValue(object.get(0));
-        }
-    }
-
-    @Override
-    public void requestFocus() {
-        if(delegate instanceof HasRequestFocus) {
-            ((HasRequestFocus) delegate).requestFocus();
-        }
+        delegate.setValue(object);
     }
 
     @Override
@@ -56,8 +48,7 @@ public class NonRepeatingEditor implements ValueEditor<List<FormControlData>>, H
 
     @Override
     public Optional<List<FormControlData>> getValue() {
-        return delegate.getValue()
-                .map(Collections::singletonList);
+        return delegate.getValue();
     }
 
     @Override
@@ -71,7 +62,7 @@ public class NonRepeatingEditor implements ValueEditor<List<FormControlData>>, H
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<List<FormControlData>>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<FormControlData>>> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
 
@@ -88,5 +79,19 @@ public class NonRepeatingEditor implements ValueEditor<List<FormControlData>>, H
     @Override
     public Widget asWidget() {
         return delegate.asWidget();
+    }
+
+    @Override
+    public void requestFocus() {
+        delegate.forEachEditor(ed -> {
+            if(ed instanceof HasRequestFocus) {
+                ((HasRequestFocus) ed).requestFocus();
+            }
+        });
+    }
+
+    @Override
+    public void forEachFormControl(Consumer<FormControl> consumer) {
+        delegate.forEachEditor(ed -> consumer.accept((FormControl) ed));
     }
 }

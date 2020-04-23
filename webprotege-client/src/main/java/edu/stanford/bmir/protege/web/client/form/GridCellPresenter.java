@@ -2,20 +2,18 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
-import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,7 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public class GridCellPresenter implements HasRequestFocus {
+public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedChangedHandler {
 
     @Nonnull
     private final GridCellView view;
@@ -35,20 +33,33 @@ public class GridCellPresenter implements HasRequestFocus {
     private Optional<GridColumnDescriptor> descriptor = Optional.empty();
 
     @Nonnull
-    private final FormControlFactory formControlFactory;
+    private final FormFieldControlStackFactory formFieldControlStackFactory;
 
-    private FormFieldControl editor;
+    /**
+     * Multiple values are allowed per cell, so we use a control stack
+     */
+    private FormControlStack controlStack;
 
     @Inject
     public GridCellPresenter(@Nonnull GridCellView view,
-                             @Nonnull FormControlFactory formControlFactory) {
+                             @Nonnull FormFieldControlStackFactory formFieldControlStackFactory) {
         this.view = checkNotNull(view);
-        this.formControlFactory = formControlFactory;
+        this.formFieldControlStackFactory = formFieldControlStackFactory;
     }
 
     public void clear() {
-        editor.clearValue();
+        controlStack.clearValue();
         updateValueRequired();
+    }
+
+    @Nonnull
+    public ImmutableList<FormRegionPageRequest> getPageRequest() {
+        return ImmutableList.of();
+    }
+
+    @Override
+    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
+        controlStack.setFormRegionPageChangedHandler(handler);
     }
 
     public Optional<GridColumnId> getId() {
@@ -61,9 +72,10 @@ public class GridCellPresenter implements HasRequestFocus {
 
     public void setDescriptor(GridColumnDescriptor column) {
         FormControlDescriptor formControlDescriptor = column.getFormControlDescriptor();
-        ValueEditorFactory<FormControlData> valueEditorFactory = formControlFactory.getValueEditorFactory(formControlDescriptor);
-        editor = new FormFieldControlImpl(valueEditorFactory, column.getRepeatability(), true);
-        view.getEditorContainer().setWidget(editor);
+        controlStack = formFieldControlStackFactory.create(formControlDescriptor,
+                                                           column.getRepeatability(),
+                                                           FormRegionPosition.NESTED);
+        view.getEditorContainer().setWidget(controlStack);
         this.descriptor = Optional.of(column);
     }
 
@@ -72,8 +84,8 @@ public class GridCellPresenter implements HasRequestFocus {
     }
 
     public void setValue(GridCellData data) {
-        editor.clearValue();
-        editor.setValue(data.getValues());
+        controlStack.clearValue();
+        controlStack.setValue(data.getValues());
         updateValueRequired();
     }
 
@@ -82,9 +94,9 @@ public class GridCellPresenter implements HasRequestFocus {
             return GridCellData.get(GridColumnId.get("null"), ImmutableList.of());
         }
         GridColumnDescriptor columnDescriptor = descriptor.get();
-        return editor.getValue().map(v -> GridCellData.get(columnDescriptor.getId(),
-                                                           ImmutableList.copyOf(v)))
-              .orElse(GridCellData.get(columnDescriptor.getId(), ImmutableList.of()));
+        return controlStack.getValue().map(v -> GridCellData.get(columnDescriptor.getId(),
+                                                                 ImmutableList.copyOf(v)))
+                           .orElse(GridCellData.get(columnDescriptor.getId(), ImmutableList.of()));
     }
 
     public boolean isPresent() {
@@ -94,7 +106,7 @@ public class GridCellPresenter implements HasRequestFocus {
     private void updateValueRequired() {
         descriptor.ifPresent(descriptor -> {
             if (descriptor.getOptionality() == REQUIRED) {
-                boolean requiredValueNotPresent = !editor.getValue().isPresent();
+                boolean requiredValueNotPresent = !controlStack.getValue().isPresent();
                 view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
             }
             else {

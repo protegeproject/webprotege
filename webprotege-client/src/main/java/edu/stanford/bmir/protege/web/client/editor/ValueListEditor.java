@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,4 +25,8 @@ public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled, Ha
     void setNewRowMode(@Nonnull NewRowMode newRowMode);
 
     void setReorderEnabled(boolean enabled);
+
+    void forEachEditor(@Nonnull Consumer<ValueEditor<O>> consumer);
+
+    void firstEditor(@Nonnull Consumer<ValueEditor<O>> consumer);
 }

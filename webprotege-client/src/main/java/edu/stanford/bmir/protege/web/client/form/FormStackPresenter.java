@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
 import javax.annotation.Nonnull;
@@ -36,6 +38,9 @@ public class FormStackPresenter {
 
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
+    @Nonnull
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+
     @Inject
     public FormStackPresenter(@Nonnull FormStackView view,
                               @Nonnull NoFormView noFormView,
@@ -49,6 +54,19 @@ public class FormStackPresenter {
         GWT.log("[FormStackPresenter] CLEAR");
         formPresenters.clear();
         updateView();
+    }
+
+    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
+        this.formRegionPageChangedHandler = checkNotNull(handler);
+        formPresenters.forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));
+    }
+
+    @Nonnull
+    public ImmutableList<FormPageRequest> getPageRequests() {
+        return formPresenters.stream()
+                      .map(FormPresenter::getPageRequest)
+                      .flatMap(ImmutableList::stream)
+                      .collect(toImmutableList());
     }
 
     @Nonnull
@@ -89,6 +107,7 @@ public class FormStackPresenter {
             forms.forEach(formData -> {
                 FormPresenter formPresenter = formPresenterProvider.get();
                 formPresenter.start(view.addContainer());
+                formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
                 formPresenter.displayForm(formData);
                 // TODO : Changes?
                 formPresenters.add(formPresenter);

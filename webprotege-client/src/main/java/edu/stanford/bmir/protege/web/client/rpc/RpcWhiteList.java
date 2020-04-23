@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -175,8 +176,26 @@ public class RpcWhiteList implements Action, Result {
 
     RelationshipPresence relationshipPresence;
 
+    public FormPageRequest.SourceType getSource() {
+        return source;
+    }
+
+    public void setSource(FormPageRequest.SourceType source) {
+        this.source = source;
+    }
+
+    FormPageRequest.SourceType source;
+
+    public FormPageRequest getFormPageRequest() {
+        return formPageRequest;
+    }
+
     public HierarchyPositionCriteria getHierarchyPositionCriteria() {
         return hierarchyPositionCriteria;
+    }
+
+    public void setFormPageRequest(FormPageRequest formPageRequest) {
+        this.formPageRequest = formPageRequest;
     }
 
     public void setHierarchyPositionCriteria(HierarchyPositionCriteria hierarchyPositionCriteria) {
@@ -230,6 +249,8 @@ public class RpcWhiteList implements Action, Result {
     private Criteria criteria;
 
     private CompositeRelationshipValueCriteria compositeRelationshipValueCriteria;
+
+    private FormPageRequest formPageRequest;
 
     public PlainPropertyValue getPlainPropertyValue() {
         return plainPropertyValue;

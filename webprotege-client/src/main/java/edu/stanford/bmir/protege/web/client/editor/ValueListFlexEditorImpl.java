@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -410,5 +411,17 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         focusInEventRemover.remove();
         focusOutEventRemover.remove();
         super.onDetach();
+    }
+
+    @Override
+    public void forEachEditor(@Nonnull Consumer<ValueEditor<O>> consumer) {
+        currentEditors.forEach(consumer);
+    }
+
+    @Override
+    public void firstEditor(@Nonnull Consumer<ValueEditor<O>> consumer) {
+        currentEditors.stream()
+                      .findFirst()
+                      .ifPresent(consumer);
     }
 }

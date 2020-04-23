@@ -3,12 +3,16 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.LocaleInfo;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormFieldData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionPresenter;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +28,7 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-08
  */
-public class FormFieldPresenter {
+public class FormFieldPresenter implements FormRegionPresenter {
 
     private void handleFormControlValueChanged(ValueChangeEvent<Optional<List<FormControlData>>> event) {
         updateRequiredValuePresent();
@@ -41,19 +45,31 @@ public class FormFieldPresenter {
     @Nonnull
     private final FormFieldDescriptor formFieldDescriptor;
 
-    @Nonnull
-    private final FormControlFactory formControlFactory;
-
-    private FormFieldControl formControl;
+    private FormControlStack controlStack;
 
     private ExpansionState expansionState = ExpansionState.EXPANDED;
 
+    private Optional<FormFieldData> currentValue = Optional.empty();
+
+    private final FormFieldControlStackFactory formFieldControlStackFactory;
+
+    @Nonnull
+    private final LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper;
+
     public FormFieldPresenter(@Nonnull FormFieldView view,
                               @Nonnull FormFieldDescriptor formFieldDescriptor,
-                              @Nonnull FormControlFactory formControlFactory) {
+                              @Nonnull FormFieldControlStackFactory formFieldControlStackFactory,
+                              @Nonnull LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper) {
         this.view = checkNotNull(view);
         this.formFieldDescriptor = checkNotNull(formFieldDescriptor);
-        this.formControlFactory = checkNotNull(formControlFactory);
+        this.formFieldControlStackFactory = checkNotNull(formFieldControlStackFactory);
+        this.languageMapCurrentLocaleMapper = checkNotNull(languageMapCurrentLocaleMapper);
+    }
+
+    @Nonnull
+    @Override
+    public FormRegionId getFormRegionId() {
+        return formFieldDescriptor.getId();
     }
 
     @Nonnull
@@ -62,29 +78,27 @@ public class FormFieldPresenter {
     }
 
     public boolean isDirty() {
-        return formControl.isDirty();
+        return controlStack.isDirty();
     }
 
     protected FormFieldView start() {
         FormControlDescriptor formControlDescriptor = formFieldDescriptor.getFormControlDescriptor();
-        formControlFactory.getValueEditorFactory(formControlDescriptor);
-
-        ValueEditorFactory<FormControlData> valueEditorFactory = formControlFactory.getValueEditorFactory(
-                formControlDescriptor);
-
-        formControl = new FormFieldControlImpl(valueEditorFactory, formFieldDescriptor.getRepeatability(), false);
-        LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
-        String langTag = localeInfo.getLocaleName();
+        controlStack = formFieldControlStackFactory.create(formControlDescriptor,
+                                                           formFieldDescriptor.getRepeatability(),
+                                                           FormRegionPosition.TOP_LEVEL);
         view.setId(formFieldDescriptor.getId());
-        view.setFormLabel(formFieldDescriptor.getLabel().get(langTag));
-        view.setEditor(formControl);
+        view.setFormLabel(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getLabel()));
+        view.setEditor(controlStack);
         view.setRequired(formFieldDescriptor.getOptionality());
-        view.setHelpText(formFieldDescriptor.getHelp().get(langTag));
+        view.setHelpText(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getHelp()));
         Map<String, String> style = formFieldDescriptor.getStyle();
         style.forEach(view::addStylePropertyValue);
-        // Update the required value missing display when the value changes
-        formControl.addValueChangeHandler(this::handleFormControlValueChanged);
         view.setHeaderClickedHandler(this::toggleExpansionState);
+
+        // Update the required value missing display when the value changes
+        controlStack.addValueChangeHandler(this::handleFormControlValueChanged);
+
+
         updateRequiredValuePresent();
         return view;
     }
@@ -114,39 +128,52 @@ public class FormFieldPresenter {
 
     }
 
-    public FormFieldData getValue() {
-        if(formControl == null) {
-            return FormFieldData.get(formFieldDescriptor, ImmutableList.of(), 0);
-        }
-        ImmutableList<FormControlData> formControlData = formControl.getEditorValue()
-                                                                    .map(ImmutableList::copyOf)
-                                                                    .orElse(ImmutableList.of());
+    @Nonnull
+    public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject) {
+        return controlStack.getPageRequests(formSubject, formFieldDescriptor.getId());
+    }
 
-        return FormFieldData.get(formFieldDescriptor, formControlData, formControlData.size());
+    public FormFieldData getValue() {
+        if(controlStack == null) {
+            return FormFieldData.get(formFieldDescriptor, Page.emptyPage());
+        }
+        ImmutableList<FormControlData> formControlData = controlStack.getEditorValue()
+                                                                     .map(ImmutableList::copyOf)
+                                                                     .orElse(ImmutableList.of());
+
+        Page<FormControlData> controlDataPage = new Page<>(1, 1, formControlData, formControlData.size());
+        return FormFieldData.get(formFieldDescriptor, controlDataPage);
     }
 
     public void setValue(@Nonnull FormFieldData formFieldData) {
-        if(formControl == null) {
+        checkNotNull(formFieldData);
+        if(currentValue.equals(Optional.of(formFieldData))) {
+            GWT.log("[FormFieldPresenter] (setValue) "+formFieldData.getFormFieldDescriptor().getId()+" Skipping setValue because current data is the same");
+            return;
+        }
+        else {
+            GWT.log("[FormFieldPresenter] (setValue) "+formFieldData.getFormFieldDescriptor().getId()+" Value is new");
+        }
+        currentValue = Optional.of(formFieldData);
+        if(controlStack == null) {
             return;
         }
         if(!formFieldData.getFormFieldDescriptor().equals(formFieldDescriptor)) {
             throw new RuntimeException("FormFieldDescriptor mismatch for field: " + formFieldDescriptor.getId());
         }
-        checkNotNull(formFieldData);
-        ImmutableList<FormControlData> formControlData = formFieldData.getFormControlData();
-        formControl.setValue(formControlData);
-        int formControlDataCount = formFieldData.getFormControlDataCount();
-        if(formControlDataCount > formControlData.size()) {
-            view.setLimitedValuesDisplayed(formControlData.size(), formControlDataCount);
-        }
+        Page<FormControlData> page = formFieldData.getFormControlData();
+        controlStack.setValue(page.getPageElements());
+        controlStack.setPageCount(page.getPageCount());
+        controlStack.setPageNumber(page.getPageNumber());
         updateRequiredValuePresent();
     }
 
     public void clearValue() {
-        if(formControl == null) {
+        currentValue = Optional.empty();
+        if(controlStack == null) {
             return;
         }
-        formControl.clearValue();
+        controlStack.clearValue();
         updateRequiredValuePresent();
     }
 
@@ -154,19 +181,21 @@ public class FormFieldPresenter {
      * Updates the specified view so that there is a visual indication if the value is required but not present.
      */
     private void updateRequiredValuePresent() {
-        if(formControl == null) {
+        if(controlStack == null) {
             view.setRequiredValueNotPresentVisible(false);
             return;
         }
-        GWT.log("[FormFieldPresenter] updating required " + formFieldDescriptor.getId());
         if (formFieldDescriptor.getOptionality() == REQUIRED) {
-            boolean requiredValueNotPresent = !formControl.getValue().isPresent();
-            GWT.log("[FormFieldPresenter] Required value not present: " + requiredValueNotPresent);
+            boolean requiredValueNotPresent = !controlStack.getValue().isPresent();
             view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
         }
         else {
-            GWT.log("[FormFieldPresenter] NOT REQUIRED");
             view.setRequiredValueNotPresentVisible(false);
         }
     }
+
+    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
+        controlStack.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+    }
+
 }
