@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public interface GridRowView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget addCell();
+    AcceptsOneWidget addCell(double weight);
 
     void clear();
 }

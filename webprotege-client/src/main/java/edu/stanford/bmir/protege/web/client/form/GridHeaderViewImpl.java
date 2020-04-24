@@ -38,8 +38,10 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
     }
 
     @Override
-    public void addColumnHeader(@Nonnull IsWidget headerWidget) {
+    public void addColumnHeader(@Nonnull IsWidget headerWidget, double weight) {
         checkNotNull(headerWidget);
+        Style style = headerWidget.asWidget().getElement().getStyle();
+        style.setProperty("flexBasis", weight * 100, Style.Unit.PCT);
         headerContainer.add(headerWidget);
     }
 

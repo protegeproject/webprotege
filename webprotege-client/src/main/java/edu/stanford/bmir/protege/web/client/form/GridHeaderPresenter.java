@@ -49,11 +49,17 @@ public class GridHeaderPresenter {
 
     public void setColumns(@Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors) {
         clear();
+        double totalSpan = columnDescriptors.stream()
+                         .map(GridColumnDescriptor::getNestedColumnCount)
+                         .reduce((left, right) -> left + right)
+                         .orElse(0);
         columnDescriptors.forEach(columnDescriptor -> {
+            double span = columnDescriptor.getNestedColumnCount();
+            double weight = span / totalSpan;
             GridHeaderColumnPresenter columnPresenter = headerColumnPresenterProvider.get();
             columnPresenter.setColumnDescriptor(columnDescriptor);
             IsWidget headerColumnView = columnPresenter.getView();
-            view.addColumnHeader(headerColumnView);
+            view.addColumnHeader(headerColumnView, weight);
         });
     }
 }

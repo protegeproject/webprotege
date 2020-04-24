@@ -19,7 +19,6 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -43,7 +42,8 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
 
     private Optional<FormSubject> subject = Optional.empty();
 
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {
+    };
 
     private boolean enabled = true;
 
@@ -70,9 +70,9 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
 
     public ImmutableList<FormRegionPageRequest> getPageRequests() {
         return subject.map(s -> cellPresenters.stream()
-                                          .map(GridCellPresenter::getPageRequest)
-                                          .flatMap(ImmutableList::stream)
-                                          .collect(toImmutableList()))
+                                              .map(GridCellPresenter::getPageRequest)
+                                              .flatMap(ImmutableList::stream)
+                                              .collect(toImmutableList()))
                       .orElse(ImmutableList.of());
     }
 
@@ -86,6 +86,32 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
                       .ifPresent(GridCellPresenter::requestFocus);
     }
 
+    public void setColumnDescriptors(ImmutableList<GridColumnDescriptor> columnDescriptors) {
+        if(this.columnDescriptors.equals(columnDescriptors)) {
+            return;
+        }
+        cellPresenters.clear();
+        cellPresentersById.clear();
+        view.clear();
+        this.columnDescriptors = checkNotNull(columnDescriptors);
+        double totalSpan = columnDescriptors.stream()
+                                         .map(GridColumnDescriptor::getNestedColumnCount)
+                                         .reduce((left, right) -> left + right)
+                                         .orElse(0);
+        this.columnDescriptors.forEach(column -> {
+            double span = column.getNestedColumnCount();
+            double weight = span / totalSpan;
+            GridCellPresenter cellPresenter = cellPresenterProvider.get();
+            AcceptsOneWidget cellContainer = view.addCell(weight);
+            cellPresenter.start(cellContainer);
+            cellPresenter.setDescriptor(column);
+            cellPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+            cellPresenters.add(cellPresenter);
+            cellPresentersById.put(column.getId(), cellPresenter);
+        });
+
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         cellPresenters.forEach(cellPresenter -> cellPresenter.setEnabled(enabled));
@@ -95,26 +121,6 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
         this.formRegionPageChangedHandler = checkNotNull(handler);
         cellPresenters.forEach(cp -> cp.setFormRegionPageChangedHandler(handler));
-    }
-
-    public void setColumnDescriptors(ImmutableList<GridColumnDescriptor> columnDescriptors) {
-        if(this.columnDescriptors.equals(columnDescriptors)) {
-            return;
-        }
-        cellPresenters.clear();
-        cellPresentersById.clear();
-        view.clear();
-        this.columnDescriptors = checkNotNull(columnDescriptors);
-        this.columnDescriptors.forEach(column -> {
-            GridCellPresenter cellPresenter = cellPresenterProvider.get();
-            AcceptsOneWidget cellContainer = view.addCell();
-            cellPresenter.start(cellContainer);
-            cellPresenter.setDescriptor(column);
-            cellPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
-            cellPresenters.add(cellPresenter);
-            cellPresentersById.put(column.getId(), cellPresenter);
-        });
-
     }
 
     public void setValue(GridRowData formDataObject) {

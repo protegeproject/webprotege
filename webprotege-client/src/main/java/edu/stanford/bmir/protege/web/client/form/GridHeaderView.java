@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  */
 public interface GridHeaderView extends IsWidget {
 
-    void addColumnHeader(@Nonnull IsWidget headerWidget);
+    void addColumnHeader(@Nonnull IsWidget headerWidget, double weight);
 
     void clear();
 }

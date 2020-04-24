@@ -71,6 +71,15 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     @Nonnull
     public abstract FormControlDescriptor getFormControlDescriptor();
 
+    public int getNestedColumnCount() {
+        FormControlDescriptor formControlDescriptor = getFormControlDescriptor();
+        if(formControlDescriptor instanceof GridControlDescriptor) {
+            return ((GridControlDescriptor) getFormControlDescriptor()).getNestedColumnCount();
+        }
+        else {
+            return 1;
+        }
+    }
 
     // TODO: Column width, grow, shrink
 

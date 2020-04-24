@@ -52,6 +52,15 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
         return visitor.visit(this);
     }
 
+    public int getNestedColumnCount() {
+        int count = 0;
+        for(GridColumnDescriptor columnDescriptor : getColumns()) {
+            count += columnDescriptor.getNestedColumnCount();
+        }
+        return count;
+    }
+
+
     @JsonIgnore
     @Nullable
     protected abstract FormSubjectFactoryDescriptor getSubjectFactoryDescriptorInternal();
