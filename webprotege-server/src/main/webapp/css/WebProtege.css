@@ -354,11 +354,7 @@ pre {
 }
 
 select {
-    border:      1px solid silver;
-    box-shadow:  0 0 3px 1px var(--separator--color) inset;
-    font-size:   12px;
-    line-height: 16px;
-    padding:     1px;
+    
 }
 
 select:disabled {
