@@ -787,6 +787,11 @@ public class ClientProjectModule {
     RepeatabilityView provideRepeatabilityView(RepeatabilityViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntityFormStackView provideFormStackManagerView(EntityFormStackViewImpl impl) {
+        return impl;
+    }
 }
 
 

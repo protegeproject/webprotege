@@ -18,6 +18,8 @@ import java.util.List;
  */
 public interface GridView extends IsWidget, HasRequestFocus, HasPagination {
 
+    void setEnabled(boolean enabled);
+
     interface NewRowHandler {
         GridRowPresenter createRow();
     }

@@ -65,6 +65,13 @@ public class GridViewImpl extends Composite implements GridView {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        rowEditor.setEnabled(enabled);
+        getRows()
+            .forEach(rowPresenter -> rowPresenter.setEnabled(enabled));
+    }
+
     @Nonnull
     @Override
     public AcceptsOneWidget getHeaderContainer() {

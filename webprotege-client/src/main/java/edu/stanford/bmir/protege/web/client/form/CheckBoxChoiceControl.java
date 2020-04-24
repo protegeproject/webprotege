@@ -184,4 +184,10 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
                   .findFirst()
                   .ifPresent(checkBox -> checkBox.setFocus(true));
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        checkBoxes.keySet()
+                  .forEach(checkBox -> checkBox.setEnabled(enabled));
+    }
 }

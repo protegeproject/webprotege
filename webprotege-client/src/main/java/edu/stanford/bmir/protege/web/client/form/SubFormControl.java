@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -105,5 +104,10 @@ public class SubFormControl implements FormControl {
     @Override
     public boolean isWellFormed() {
         return true;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        formPresenter.setEnabled(enabled);
     }
 }

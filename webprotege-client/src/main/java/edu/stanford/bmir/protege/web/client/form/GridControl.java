@@ -123,4 +123,9 @@ public class GridControl implements FormControl {
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
         gridPresenter.setFormRegionPageChangedHandler(handler);
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        gridPresenter.setEnabled(enabled);
+    }
 }

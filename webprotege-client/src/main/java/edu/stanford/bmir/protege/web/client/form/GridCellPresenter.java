@@ -40,6 +40,8 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
      */
     private FormControlStack controlStack;
 
+    private boolean enabled = true;
+
     @Inject
     public GridCellPresenter(@Nonnull GridCellView view,
                              @Nonnull FormFieldControlStackFactory formFieldControlStackFactory) {
@@ -55,6 +57,11 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
     @Nonnull
     public ImmutableList<FormRegionPageRequest> getPageRequest() {
         return ImmutableList.of();
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        controlStack.setEnabled(enabled);
     }
 
     @Override
@@ -75,6 +82,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
         controlStack = formFieldControlStackFactory.create(formControlDescriptor,
                                                            column.getRepeatability(),
                                                            FormRegionPosition.NESTED);
+        controlStack.setEnabled(enabled);
         view.getEditorContainer().setWidget(controlStack);
         this.descriptor = Optional.of(column);
     }
@@ -86,6 +94,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
     public void setValue(GridCellData data) {
         controlStack.clearValue();
         controlStack.setValue(data.getValues());
+        controlStack.setEnabled(enabled);
         updateValueRequired();
     }
 

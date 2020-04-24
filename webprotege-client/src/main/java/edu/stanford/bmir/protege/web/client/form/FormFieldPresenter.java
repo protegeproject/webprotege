@@ -30,6 +30,8 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  */
 public class FormFieldPresenter implements FormRegionPresenter {
 
+    private boolean enabled = true;
+
     private void handleFormControlValueChanged(ValueChangeEvent<Optional<List<FormControlData>>> event) {
         updateRequiredValuePresent();
     }
@@ -81,11 +83,18 @@ public class FormFieldPresenter implements FormRegionPresenter {
         return controlStack.isDirty();
     }
 
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        controlStack.setEnabled(enabled);
+    }
+
     protected FormFieldView start() {
         FormControlDescriptor formControlDescriptor = formFieldDescriptor.getFormControlDescriptor();
         controlStack = formFieldControlStackFactory.create(formControlDescriptor,
                                                            formFieldDescriptor.getRepeatability(),
                                                            FormRegionPosition.TOP_LEVEL);
+        controlStack.setEnabled(enabled);
         view.setId(formFieldDescriptor.getId());
         view.setFormLabel(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getLabel()));
         view.setEditor(controlStack);

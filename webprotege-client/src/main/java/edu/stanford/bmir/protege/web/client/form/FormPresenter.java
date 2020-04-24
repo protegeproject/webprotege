@@ -57,6 +57,8 @@ public class FormPresenter {
 
     private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
+    private boolean enabled = true;
+
     @AutoFactory
     @Inject
     public FormPresenter(@Nonnull @Provided FormView formView,
@@ -116,6 +118,11 @@ public class FormPresenter {
         });
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setEnabled(enabled));
+    }
+
     public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler handler) {
         this.formRegionPageChangedHandler = checkNotNull(handler);
         fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(handler));
@@ -161,6 +168,7 @@ public class FormPresenter {
     private void addFormField(@Nonnull FormFieldData formFieldData) {
         FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
+        presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
         fieldPresenters.add(presenter);
         if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()

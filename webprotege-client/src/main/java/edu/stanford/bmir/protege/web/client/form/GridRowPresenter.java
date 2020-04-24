@@ -45,6 +45,8 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
 
     private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
+    private boolean enabled = true;
+
     @Inject
     public GridRowPresenter(@Nonnull GridRowView view,
                             Provider<GridCellPresenter> cellPresenterProvider) {
@@ -82,6 +84,11 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
         cellPresenters.stream()
                       .findFirst()
                       .ifPresent(GridCellPresenter::requestFocus);
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        cellPresenters.forEach(cellPresenter -> cellPresenter.setEnabled(enabled));
     }
 
     @Override

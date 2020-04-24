@@ -154,4 +154,9 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     public void requestFocus() {
         comboBox.setFocus(true);
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        comboBox.setEnabled(enabled);
+    }
 }

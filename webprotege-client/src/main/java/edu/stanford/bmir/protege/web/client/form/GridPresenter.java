@@ -49,6 +49,8 @@ public class GridPresenter {
     @Nonnull
     private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
+    private boolean enabled = true;
+
     @Inject
     public GridPresenter(@Nonnull GridView view,
                          @Nonnull GridHeaderPresenter headerPresenter,
@@ -92,6 +94,11 @@ public class GridPresenter {
         return GridControlData.get(descriptor, page);
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        view.setEnabled(enabled);
+    }
+
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler formRegionPageChangedHandler) {
         this.formRegionPageChangedHandler = checkNotNull(formRegionPageChangedHandler);
         view.getRows().forEach(row -> row.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
@@ -111,6 +118,7 @@ public class GridPresenter {
                                                rowPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
                                                rowPresenter.setColumnDescriptors(descriptor.getColumns());
                                                rowPresenter.setValue(rowDataValue);
+                                               rowPresenter.setEnabled(enabled);
                                                return rowPresenter;
                                            })
                                            .collect(Collectors.toList());
@@ -118,6 +126,7 @@ public class GridPresenter {
         view.setPageCount(rowsPage.getPageCount());
         view.setPageNumber(rowsPage.getPageNumber());
         view.setPaginatorVisible(rowsPage.getPageCount() > 1);
+        view.setEnabled(enabled);
     }
 
     public IsWidget getView() {

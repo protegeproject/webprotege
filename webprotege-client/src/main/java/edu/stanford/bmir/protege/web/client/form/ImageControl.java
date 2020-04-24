@@ -38,6 +38,8 @@ public class ImageControl extends Composite implements FormControl {
 
     private ImageControlDescriptor descriptor;
 
+    private boolean editable = true;
+
     interface ImageControlUiBinder extends UiBinder<HTMLPanel, ImageControl> {
 
     }
@@ -91,6 +93,11 @@ public class ImageControl extends Composite implements FormControl {
         }
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.editable = enabled;
+    }
+
     private void updateUi() {
         if (theIRI.isPresent()) {
             imageField.setUrl(theIRI.get().toString());
@@ -107,7 +114,9 @@ public class ImageControl extends Composite implements FormControl {
 
     @UiHandler("imageField")
     protected void handleImageClicked(ClickEvent event) {
-        showEditingDialog();
+        if(editable) {
+            showEditingDialog();
+        }
     }
 
 

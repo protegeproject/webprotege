@@ -174,4 +174,10 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
                      .findFirst()
                      .ifPresent(radioButton -> radioButton.setFocus(true));
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        choiceButtons.keySet()
+                     .forEach(radioButton -> radioButton.setEnabled(enabled));
+    }
 }

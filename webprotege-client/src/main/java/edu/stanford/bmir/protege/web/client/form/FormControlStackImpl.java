@@ -16,7 +16,6 @@ import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest.SourceType;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
@@ -118,6 +117,11 @@ public class FormControlStackImpl extends Composite implements FormControlStack 
             resultBuilder.addAll(formControl.getPageRequests(formSubject, formRegionId));
         });
         return resultBuilder.build();
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        delegateEditor.setEnabled(enabled);
     }
 
     @Override

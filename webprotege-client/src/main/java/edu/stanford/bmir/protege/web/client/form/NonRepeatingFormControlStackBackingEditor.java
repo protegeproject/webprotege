@@ -94,4 +94,9 @@ public class NonRepeatingFormControlStackBackingEditor implements FormControlSta
     public void forEachFormControl(Consumer<FormControl> consumer) {
         consumer.accept(delegate);
     }
+
+    @Override
+    public void setEnabled(boolean editable) {
+        delegate.setEnabled(editable);
+    }
 }

@@ -15,4 +15,6 @@ import java.util.function.Consumer;
 public interface FormControlStackBackingEditor extends ValueEditor<List<FormControlData>>, HasRequestFocus {
 
     void forEachFormControl(Consumer<FormControl> consumer);
+
+    void setEnabled(boolean editable);
 }

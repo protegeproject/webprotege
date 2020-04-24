@@ -21,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public interface FormControl extends HasRequestFocus, ValueEditor<FormControlData>, HasFormRegionPagedChangedHandler {
 
+    void setEnabled(boolean enabled);
+
     default void setRegionPosition(@Nonnull FormRegionPosition position) {
 
     }

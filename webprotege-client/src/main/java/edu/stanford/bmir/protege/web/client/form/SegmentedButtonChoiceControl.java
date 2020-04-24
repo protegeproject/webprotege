@@ -44,6 +44,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     private Optional<PrimitiveFormControlData> mostRecentSetValue = Optional.empty();
 
+    private boolean enabled = true;
+
     interface SegmentedButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
 
     }
@@ -107,7 +109,9 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
             this.choices.add(choice.getValue());
             this.choiceWidgets.add(label);
             label.addClickHandler(event -> {
-                setSelection(choice.getValue(), true);
+                if(enabled) {
+                    setSelection(choice.getValue(), true);
+                }
             });
         }
         mostRecentSetValue.ifPresent(setValue -> setSelection(setValue, true));
@@ -205,16 +209,23 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     @UiHandler("focusPanel")
     public void focusPanelKeyUp(KeyUpEvent event) {
-        if(event.getNativeKeyCode() == KeyCodes.KEY_LEFT) {
-            decrementSelection();
-        }
-        else if(event.getNativeKeyCode() == KeyCodes.KEY_RIGHT) {
-            incrementSelection();
+        if(enabled) {
+            if(event.getNativeKeyCode() == KeyCodes.KEY_LEFT) {
+                decrementSelection();
+            }
+            else if(event.getNativeKeyCode() == KeyCodes.KEY_RIGHT) {
+                incrementSelection();
+            }
         }
     }
 
     @Override
     public void requestFocus() {
         focusPanel.setFocus(true);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

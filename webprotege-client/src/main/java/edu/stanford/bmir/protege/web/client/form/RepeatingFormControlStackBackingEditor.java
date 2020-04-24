@@ -94,4 +94,9 @@ public class RepeatingFormControlStackBackingEditor implements FormControlStackB
     public void forEachFormControl(Consumer<FormControl> consumer) {
         delegate.forEachEditor(ed -> consumer.accept((FormControl) ed));
     }
+
+    @Override
+    public void setEnabled(boolean editable) {
+        delegate.setEnabled(editable);
+    }
 }

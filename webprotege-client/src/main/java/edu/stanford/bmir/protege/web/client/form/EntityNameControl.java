@@ -152,4 +152,9 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     public boolean isWellFormed() {
         return getValue().isPresent();
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        editor.setEnabled(enabled);
+    }
 }

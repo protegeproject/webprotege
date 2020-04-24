@@ -1,17 +1,15 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multiset;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.*;
@@ -22,8 +20,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -42,127 +38,36 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final FormStackPresenter formStackPresenter;
-
-    @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
-
-    @Nonnull
-    private Optional<OWLEntity> currentSubject = Optional.empty();
-
-    @Nonnull
-    private Optional<PortletUi> portletUi = Optional.empty();
-
-    @Nonnull
-    private final List<FormData> pristineFormsData = new ArrayList<>();
+    private final EntityFormStackPresenter entityFormStackPresenter;
 
     @Inject
     public FormPortletPresenter(SelectionModel selectionModel,
                                 @Nonnull ProjectId projectId,
-                                @Nonnull FormStackPresenter formStackPresenter,
-                                @Nonnull DispatchServiceManager dispatchServiceManager,
-                                DisplayNameRenderer displayNameRenderer) {
+                                DisplayNameRenderer displayNameRenderer,
+                                @Nonnull EntityFormStackPresenter entityFormStackPresenter) {
         super(selectionModel, projectId, displayNameRenderer);
         this.projectId = projectId;
-        this.formStackPresenter = formStackPresenter;
-        this.dispatchServiceManager = dispatchServiceManager;
+        this.entityFormStackPresenter = entityFormStackPresenter;
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         GWT.log("[FormPortletPresenter] handleAfterSetEntity " + entityData);
         if(entityData.isPresent()) {
-            setSubject(entityData.get());
             setNothingSelectedVisible(false);
+            entityFormStackPresenter.setEntity(entityData.get());
         }
         else {
             setNothingSelectedVisible(true);
+            entityFormStackPresenter.clear();
         }
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        this.portletUi = Optional.of(portletUi);
-        portletUi.addAction(new PortletAction("Expand all", "wp-btn-g--expand-all", formStackPresenter::expandAllFields));
-        portletUi.addAction(new PortletAction("Collapse all", "wp-btn-g--collapse-all", formStackPresenter::collapseAllFields));
-        formStackPresenter.start(portletUi);
-        formStackPresenter.setFormRegionPageChangedHandler(() -> {
-            handleAfterSetEntity(getSelectedEntity());
-        });
+        portletUi.addAction(new PortletAction("Expand all", "wp-btn-g--expand-all", entityFormStackPresenter::expandAllFields));
+        portletUi.addAction(new PortletAction("Collapse all", "wp-btn-g--collapse-all", entityFormStackPresenter::collapseAllFields));
         setDisplaySelectedEntityNameAsSubtitle(true);
-        eventBus.addProjectEventHandler(projectId, CLASS_FRAME_CHANGED, this::handleClassFrameChanged);
+        entityFormStackPresenter.start(portletUi);
     }
-
-    private void handleClassFrameChanged(ClassFrameChangedEvent event) {
-
-    }
-
-    private void setSubject(@Nonnull final OWLEntity entity) {
-        checkNotNull(entity);
-//        if(formStackPresenter.isDirty()) {
-            saveCurrentFormData();
-//        }
-        currentSubject = Optional.of(entity);
-        ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
-        pageRequests.forEach(pr -> GWT.log("[PR] " + pr));
-
-        Multiset<ImmutableList> ms = HashMultiset.create();
-        pageRequests.stream()
-                    .map(pr -> ImmutableList.of(pr.getFormId(),
-                                                pr.getSubject(),
-                                                pr.getFieldId(),
-                                                pr.getSourceType()))
-                    .forEach(ms::add);
-        ms.elementSet()
-          .forEach(e -> {
-              int count = ms.count(e);
-              if(count > 1) {
-//                  Window.alert(count + " of " + e.toString());
-              }
-          });
-
-        dispatchServiceManager.execute(new GetEntityFormsAction(projectId, entity, pageRequests),
-                                       this::displayFormResult);
-    }
-
-    private void saveCurrentFormData() {
-        GWT.log("[FormPortletPresenter] Saving form data");
-        currentSubject.ifPresent(subject -> {
-            ImmutableList<FormData> editedFormsData = formStackPresenter.getForms();
-            if(editedFormsData.equals(pristineFormsData)) {
-                GWT.log("[FormPortletPresenter] Form data has not changed.  Nothing to save.");
-                return;
-            }
-            dispatchServiceManager.execute(new SetEntityFormsDataAction(projectId,
-                                                                        subject,
-                                                                        ImmutableList.copyOf(pristineFormsData),
-                                                                        editedFormsData),
-                                           this,
-                                           result -> {});
-        });
-    }
-
-    private void displayFormResult(GetEntityFormsResult result) {
-        GWT.log("[FormPortletPresenter] Display form result: " + result);
-        pristineFormsData.clear();
-        pristineFormsData.addAll(result.getFormData());
-        formStackPresenter.setForms(result.getFormData());
-        String formLabel = "Forms";
-        portletUi.ifPresent(ui -> ui.setTitle(formLabel));
-
-    }
-
-    private String getFormLabel(Optional<FormDescriptor> formDescriptor) {
-        LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
-        String formLabel = formDescriptor.map(desc -> desc.getLabel().get(localeInfo.getLocaleName()))
-                                         .orElse("Form");
-        if(formLabel.isEmpty()) {
-            return "Form";
-        }
-        else {
-            return formLabel;
-        }
-
-    }
-
 }

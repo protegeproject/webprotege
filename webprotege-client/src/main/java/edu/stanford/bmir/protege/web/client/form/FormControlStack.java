@@ -28,4 +28,6 @@ public interface FormControlStack extends ValueEditor<List<FormControlData>>, Ha
     @Nonnull
     ImmutableList<FormRegionPageRequest> getPageRequests(FormSubject formSubject,
                                                          FormRegionId formRegionId);
+
+    void setEnabled(boolean enabled);
 }

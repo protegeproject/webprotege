@@ -12,9 +12,15 @@
     border-bottom: 1px solid literal("var(--separator--color)");
 }
 
+
+.wp-value-list__row:last-child {
+    border-bottom-color: transparent;
+}
+
 .wp-panel-filled .wp-value-list__row {
     border-bottom: 1px solid transparent;
 }
+
 
 .wp-value-list__editor {
 

@@ -141,6 +141,7 @@
 }
 
 .wp-btn--escape:hover {
+    color: #fff;
     background-color: #737c85;
 }
 
@@ -150,6 +151,7 @@
 }
 
 .wp-btn--accept:hover {
+    color: #fff;
     background-color: #501c70;
 }
 

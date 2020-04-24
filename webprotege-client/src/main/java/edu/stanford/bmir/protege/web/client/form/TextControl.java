@@ -81,6 +81,12 @@ public class TextControl extends Composite implements FormControl {
         editor.setShowLinksForEntities(false);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        editor.setEnabled(enabled);
+        languageEditor.setEnabled(enabled);
+    }
+
     public void setDescriptor(@Nonnull TextControlDescriptor descriptor) {
         this.descriptor = descriptor;
         String localeName = LocaleInfo.getCurrentLocale()

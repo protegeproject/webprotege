@@ -3,9 +3,12 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUser;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
 import javax.annotation.Nonnull;
@@ -41,6 +44,8 @@ public class FormStackPresenter {
     @Nonnull
     private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
+    private boolean enabled = true;
+
     @Inject
     public FormStackPresenter(@Nonnull FormStackView view,
                               @Nonnull NoFormView noFormView,
@@ -51,9 +56,13 @@ public class FormStackPresenter {
     }
 
     public void clearForms() {
-        GWT.log("[FormStackPresenter] CLEAR");
         formPresenters.clear();
         updateView();
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        formPresenters.forEach(formPresenter -> formPresenter.setEnabled(enabled));
     }
 
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
@@ -109,7 +118,7 @@ public class FormStackPresenter {
                 formPresenter.start(view.addContainer());
                 formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
                 formPresenter.displayForm(formData);
-                // TODO : Changes?
+                formPresenter.setEnabled(enabled);
                 formPresenters.add(formPresenter);
             });
         }
