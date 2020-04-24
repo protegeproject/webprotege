@@ -193,10 +193,13 @@ body, input, textarea, keygen, select, button {
     font-family:      "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight:      400;
     color:            var(--primary--color);
-    background-color: var(--primary--background-color);
     font-size:        12px;
     margin:           0;
     padding:          0;
+}
+
+body, input, textarea, keygen, button {
+    background-color: var(--primary--background-color);
 }
 
 input:matches([type="radio"], [type="checkbox"]) {
@@ -784,6 +787,7 @@ td {
     align-items: center;
     align-self:  baseline;
     flex-wrap:   nowrap;
+    min-height: 20px;
 }
 
 .gwt-RadioButton {
