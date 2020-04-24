@@ -19,7 +19,6 @@
             height:           1.6rem;
             line-height:      1.6rem;
             text-align:       center;
-            cursor:           pointer;
         }
 
         .elementHeader {
@@ -28,6 +27,7 @@
             flex-grow: 1;
             flex-shrink: 1;
             align-items: center;
+            cursor:      pointer;
         }
 
         .elementSplitterLeft {
@@ -75,8 +75,8 @@
         </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.elementColumn}">
-            <g:HTMLPanel addStyleNames="{style.elementHeader}">
-                <g:Label ui:field="numberField" addStyleNames="{style.number}" title="{msg.expandCollapse}"/>
+            <g:HTMLPanel ui:field="elementHeader" title="{msg.expandCollapse}" addStyleNames="{style.elementHeader}">
+                <g:Label ui:field="numberField" addStyleNames="{style.number}"/>
                 <g:HTMLPanel addStyleNames="{style.elementSplitterLeft}"/>
                 <g:Label addStyleNames="{style.headerLabel}" ui:field="elementHeaderLabel"/>
                 <g:HTMLPanel addStyleNames="{style.elementSplitterRight}"/>

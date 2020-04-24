@@ -102,12 +102,10 @@ public class ObjectListPresenter<T> implements Presenter {
         viewHolder.setMoveUpHandler(() -> {
             moveUp(descriptorPresenter);
             view.moveUp(viewHolder);
-            renumberHolders();
         });
         viewHolder.setMoveDownHandler(() -> {
             moveDown(descriptorPresenter);
             view.moveDown(viewHolder);
-            renumberHolders();
         });
 
     }
@@ -119,6 +117,7 @@ public class ObjectListPresenter<T> implements Presenter {
             Collections.swap(objectPresenters, fromIndex, toIndex);
             Collections.swap(viewHolders, fromIndex, toIndex);
         }
+        renumberHolders();
 
     }
 
@@ -129,6 +128,7 @@ public class ObjectListPresenter<T> implements Presenter {
             Collections.swap(objectPresenters, fromIndex, toIndex);
             Collections.swap(viewHolders, fromIndex, toIndex);
         }
+        renumberHolders();
     }
 
     private void renumberHolders() {
