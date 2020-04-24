@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.pagination;
 
-import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 
 /**
  * Matthew Horridge
@@ -16,7 +16,7 @@ public interface HasPagination {
     int getPageNumber();
 
     default int getPageSize() {
-        return PageRequest.DEFAULT_PAGE_SIZE;
+        return FormPageRequest.DEFAULT_PAGE_SIZE;
     }
 
     void setPageNumberChangedHandler(PageNumberChangedHandler handler);

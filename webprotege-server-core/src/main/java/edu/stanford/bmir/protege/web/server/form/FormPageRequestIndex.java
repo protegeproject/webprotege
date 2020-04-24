@@ -51,7 +51,7 @@ public class FormPageRequestIndex {
             return formPageRequest.getPageRequest();
         }
         else {
-            return PageRequest.requestFirstPage();
+            return PageRequest.requestPageWithSize(1, FormPageRequest.DEFAULT_PAGE_SIZE);
         }
     }
 

@@ -17,6 +17,8 @@ import javax.annotation.Nonnull;
 @GwtCompatible(serializable = true)
 public abstract class FormPageRequest {
 
+    public static final int DEFAULT_PAGE_SIZE = 10;
+
     public enum SourceType {
         CONTROL_STACK,
         GRID_CONTROL

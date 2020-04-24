@@ -69,12 +69,17 @@ public class EntityFormStackPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         formStackPresenter.start(view.getFormStackContainer());
+        formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
         view.setApplyEditsHandler(this::handleApplyEdits);
         view.setCancelEditsHandler(this::handleCancelEdits);
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
                                         view::setEditButtonVisible);
         setMode(Mode.READ_ONLY_MODE);
+    }
+
+    private void handlePageChange() {
+        updateFormsForCurrentEntity();
     }
 
     public void setEntity(@Nonnull OWLEntity entity) {
