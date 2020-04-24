@@ -124,7 +124,7 @@ public class CopyFormsFromProjectPresenter {
 
     public void reload() {
         this.container.ifPresent(c -> {
-            dispatch.execute(new GetAvailableProjectsWithPermissionAction(BuiltInAction.EDIT_FORMS.getActionId()),
+            dispatch.execute(new GetAvailableProjectsWithPermissionAction(BuiltInAction.VIEW_PROJECT.getActionId()),
                              busy -> {
                                  if(busy) {
                                      c.setWidget(busyView);
