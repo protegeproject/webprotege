@@ -485,6 +485,10 @@
     border: none;
 }
 
+.wp-form__grid .wp-value-list__row:last-child {
+    border-bottom-color: transparent;
+}
+
 
 .wp-help-icon {
     mask-size: contain;
