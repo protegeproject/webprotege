@@ -192,4 +192,9 @@ public class ImageControl extends Composite implements FormControl {
     public void requestFocus() {
         focusPanel.setFocus(true);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return this.editable;
+    }
 }

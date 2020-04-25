@@ -6,6 +6,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
@@ -21,7 +22,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-11
  */
-public class GridRowPresenterAdapter implements ValueEditor<GridRowPresenter> {
+public class GridRowPresenterAdapter implements ValueEditor<GridRowPresenter>, HasEnabled {
 
     @Nonnull
     private final SimplePanel holder = new SimplePanel();
@@ -35,6 +36,16 @@ public class GridRowPresenterAdapter implements ValueEditor<GridRowPresenter> {
     public void setValue(GridRowPresenter presenter) {
         this.presenter = Optional.of(presenter);
         presenter.start(holder);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return presenter.map(GridRowPresenter::isEnabled).orElse(false);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        presenter.ifPresent(p -> p.setEnabled(enabled));
     }
 
     @Override

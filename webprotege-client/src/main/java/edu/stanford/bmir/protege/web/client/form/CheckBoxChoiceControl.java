@@ -46,6 +46,8 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
 
     private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
+    private boolean enabled = true;
+
     interface CheckBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, CheckBoxChoiceControl> {
 
     }
@@ -187,7 +189,13 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
 
     @Override
     public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
         checkBoxes.keySet()
                   .forEach(checkBox -> checkBox.setEnabled(enabled));
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

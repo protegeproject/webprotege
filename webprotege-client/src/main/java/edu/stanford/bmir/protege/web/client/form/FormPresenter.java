@@ -106,6 +106,10 @@ public class FormPresenter {
         currentFormDescriptor = Optional.of(formData.getFormDescriptor());
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void saveExpansionState() {
         collapsedFields.clear();
         fieldPresenters.forEach(p -> {

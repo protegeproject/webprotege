@@ -157,4 +157,9 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     public void setEnabled(boolean enabled) {
         editor.setEnabled(enabled);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return editor.isEnabled();
+    }
 }

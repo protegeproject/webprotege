@@ -110,4 +110,9 @@ public class SubFormControl implements FormControl {
     public void setEnabled(boolean enabled) {
         formPresenter.setEnabled(enabled);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return formPresenter.isEnabled();
+    }
 }

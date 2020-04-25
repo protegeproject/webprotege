@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
@@ -19,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public interface FormControl extends HasRequestFocus, ValueEditor<FormControlData>, HasFormRegionPagedChangedHandler {
+public interface FormControl extends HasRequestFocus, ValueEditor<FormControlData>, HasFormRegionPagedChangedHandler, HasEnabled {
 
     void setEnabled(boolean enabled);
 

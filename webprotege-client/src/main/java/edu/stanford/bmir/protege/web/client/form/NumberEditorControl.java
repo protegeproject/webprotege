@@ -266,4 +266,9 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     public void setEnabled(boolean enabled) {
         numberField.setEnabled(enabled);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return numberField.isEnabled();
+    }
 }

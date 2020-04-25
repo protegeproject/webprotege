@@ -80,6 +80,10 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
         return false;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void requestFocus() {
         cellPresenters.stream()
                       .findFirst()
@@ -106,6 +110,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
             cellPresenter.start(cellContainer);
             cellPresenter.setDescriptor(column);
             cellPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+            cellPresenter.setEnabled(enabled);
             cellPresenters.add(cellPresenter);
             cellPresentersById.put(column.getId(), cellPresenter);
         });

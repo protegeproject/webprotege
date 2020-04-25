@@ -42,6 +42,8 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
 
     private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
+    private boolean enabled = true;
+
     interface RadioButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, RadioButtonChoiceControl> {
 
     }
@@ -177,7 +179,13 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
 
     @Override
     public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
         choiceButtons.keySet()
                      .forEach(radioButton -> radioButton.setEnabled(enabled));
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
     }
 }

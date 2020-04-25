@@ -35,6 +35,8 @@ public class GridViewImpl extends Composite implements GridView {
 
     private Optional<NewRowHandler> newRowHandler = Optional.empty();
 
+    private boolean enabled = true;
+
     interface GridViewImplUiBinder extends UiBinder<HTMLPanel, GridViewImpl> {
 
     }
@@ -58,6 +60,7 @@ public class GridViewImpl extends Composite implements GridView {
             GridRowPresenterAdapter gridRowPresenterAdapter = new GridRowPresenterAdapter();
             newRowHandler.ifPresent(handler -> {
                 GridRowPresenter presenter = handler.createRow();
+                presenter.setEnabled(enabled);
                 gridRowPresenterAdapter.setValue(presenter);
             });
             return gridRowPresenterAdapter;
@@ -67,6 +70,7 @@ public class GridViewImpl extends Composite implements GridView {
 
     @Override
     public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
         rowEditor.setEnabled(enabled);
         getRows()
             .forEach(rowPresenter -> rowPresenter.setEnabled(enabled));

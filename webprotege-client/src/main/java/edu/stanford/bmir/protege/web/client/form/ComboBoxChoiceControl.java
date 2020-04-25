@@ -159,4 +159,9 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     public void setEnabled(boolean enabled) {
         comboBox.setEnabled(enabled);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return comboBox.isEnabled();
+    }
 }

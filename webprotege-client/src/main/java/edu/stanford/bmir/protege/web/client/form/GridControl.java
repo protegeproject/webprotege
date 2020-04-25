@@ -128,4 +128,9 @@ public class GridControl implements FormControl {
     public void setEnabled(boolean enabled) {
         gridPresenter.setEnabled(enabled);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return gridPresenter.isEnabled();
+    }
 }

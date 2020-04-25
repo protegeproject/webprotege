@@ -228,4 +228,9 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 }

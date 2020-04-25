@@ -61,6 +61,8 @@ public class FormControlStackImpl extends Composite implements FormControlStack 
     @Nonnull
     private final FormControlStackBackingEditor delegateEditor;
 
+    private boolean enabled = true;
+
     public FormControlStackImpl(@Nonnull ValueEditorFactory<FormControlData> editorFactory,
                                 @Nonnull Repeatability repeatability,
                                 @Nonnull FormRegionPosition formRegionPosition,
@@ -121,6 +123,7 @@ public class FormControlStackImpl extends Composite implements FormControlStack 
 
     @Override
     public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
         delegateEditor.setEnabled(enabled);
     }
 

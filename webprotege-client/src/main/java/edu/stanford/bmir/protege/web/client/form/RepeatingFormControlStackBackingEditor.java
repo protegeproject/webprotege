@@ -29,7 +29,6 @@ public class RepeatingFormControlStackBackingEditor implements FormControlStackB
     public RepeatingFormControlStackBackingEditor(ValueListEditor<FormControlData> delegate) {
         this.delegate = delegate;
         this.handlerManager = new HandlerManager(this);
-        this.delegate.setEnabled(true);
         this.delegate.addValueChangeHandler(event -> {
            ValueChangeEvent.fire(this, getValue());
         });
