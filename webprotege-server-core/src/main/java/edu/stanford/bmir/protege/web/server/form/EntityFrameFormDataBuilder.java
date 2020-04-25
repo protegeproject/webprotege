@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.frame.EntityFrameProvider;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
@@ -32,11 +31,6 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableList;
  */
 public class EntityFrameFormDataBuilder {
 
-    @Nonnull
-    private final EntityFrameProvider entityFrameProvider;
-
-    @Nonnull
-    private final EntityFrameMapperFactory entityFrameMapperFactory;
 
     @Nonnull
     private final OWLPrimitive2FormControlDataConverter converter;
@@ -44,16 +38,17 @@ public class EntityFrameFormDataBuilder {
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
+    @Nonnull
+    private final BindingValuesExtractor bindingValuesExtractor;
+
     @AutoFactory
     @Inject
-    public EntityFrameFormDataBuilder(@Nonnull EntityFrameProvider entityFrameProvider,
-                                      @Nonnull EntityFrameMapperFactory entityFrameMapperFactory,
-                                      @Nonnull OWLPrimitive2FormControlDataConverter converter,
-                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
-        this.entityFrameProvider = checkNotNull(entityFrameProvider);
-        this.entityFrameMapperFactory = checkNotNull(entityFrameMapperFactory);
+    public EntityFrameFormDataBuilder(@Nonnull OWLPrimitive2FormControlDataConverter converter,
+                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
+                                      @Nonnull BindingValuesExtractor bindingValuesExtractor) {
         this.converter = converter;
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
+        this.bindingValuesExtractor = bindingValuesExtractor;
     }
 
     @Nullable
@@ -106,9 +101,7 @@ public class EntityFrameFormDataBuilder {
             return ImmutableList.of();
         }
         var theBinding = owlBinding.get();
-        var entityFrame = entityFrameProvider.getEntityFrame(subject, false);
-        var entityFrameMapper = entityFrameMapperFactory.create(entityFrame);
-        var values = entityFrameMapper.getValues(theBinding);
+        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
 
         var formControlDescriptor = descriptor.getFormControlDescriptor();
         return formControlDescriptor.accept(new FormControlDescriptorVisitor<>() {
