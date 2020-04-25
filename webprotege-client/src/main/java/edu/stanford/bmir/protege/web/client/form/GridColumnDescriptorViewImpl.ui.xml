@@ -19,6 +19,10 @@
             <g:Label text="Column header" addStyleNames="{wp.style.formLabel}"/>
             <form:LanguageMapEditor ui:field="labelField"/>
         </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <g:Label text="Binding" addStyleNames="{wp.style.formLabel}"/>
+            <g:SimplePanel ui:field="bindingViewContainer"/>
+        </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroupRow} {style.options}">
             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                 <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
@@ -29,10 +33,6 @@
                 <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
                 <form:RepeatabilityViewImpl ui:field="repeatabilityView"/>
             </g:HTMLPanel>
-        </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-            <g:Label text="Binding" addStyleNames="{wp.style.formLabel}"/>
-            <g:SimplePanel ui:field="bindingViewContainer"/>
         </g:HTMLPanel>
         <g:SimplePanel ui:field="fieldDescriptorChooserContainer"/>
     </g:HTMLPanel>
