@@ -15,6 +15,8 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.stream.Collectors;
+
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
 /**
@@ -121,6 +123,7 @@ public class BindingValuesExtractor {
                                                      subject.getIRI(),
                                                      ontId))
                                              .map(OWLAnnotationAssertionAxiom::getValue)
+                                             .sorted()
                                              .collect(toImmutableList());
             }
             // Fallback to frame for non-annotation assertions, for now
@@ -129,10 +132,11 @@ public class BindingValuesExtractor {
                               .stream()
                               .filter(pv -> pv.getProperty().equals(property))
                               .map(PlainPropertyValue::getValue)
+                                     .sorted()
                               .collect(toImmutableList());
         }
         else if(binding instanceof OwlClassBinding) {
-            return ImmutableList.copyOf(classHierarchyProvider.getParents(subject));
+            return classHierarchyProvider.getParents(subject).stream().sorted().collect(toImmutableList());
 
         }
         else if(binding instanceof OwlInstanceBinding) {
@@ -143,6 +147,7 @@ public class BindingValuesExtractor {
                                          .map(OWLClassAssertionAxiom::getIndividual)
                                          .filter(OWLIndividual::isNamed)
                                          .map(OWLIndividual::asOWLNamedIndividual)
+                                         .sorted()
                                          .collect(toImmutableList());
 
         }
@@ -163,6 +168,7 @@ public class BindingValuesExtractor {
                                                      ontId))
                                              .filter(ax -> ax.getProperty().equals(property))
                                              .map(OWLAnnotationAssertionAxiom::getValue)
+                                             .sorted()
                                              .collect(toImmutableList());
             }
             else if(property.isOWLDataProperty()) {
@@ -172,6 +178,7 @@ public class BindingValuesExtractor {
                                                      ontId))
                                              .filter(ax -> ax.getProperty().equals(property))
                                              .map(OWLDataPropertyAssertionAxiom::getObject)
+                                             .sorted()
                                              .collect(toImmutableList());
             }
             else if(property.isOWLObjectProperty()) {
@@ -183,6 +190,7 @@ public class BindingValuesExtractor {
                                              .map(OWLObjectPropertyAssertionAxiom::getObject)
                                              .filter(OWLIndividual::isNamed)
                                              .map(OWLIndividual::asOWLNamedIndividual)
+                                             .sorted()
                                              .collect(toImmutableList());
             }
             else {
@@ -200,6 +208,7 @@ public class BindingValuesExtractor {
                                          .filter(OWLClassExpression::isNamed)
                                          .distinct()
                                          .map(OWLClassExpression::asOWLClass)
+                                         .sorted()
                                          .collect(toImmutableList());
 
         }

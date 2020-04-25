@@ -484,7 +484,7 @@
 }
 
 .wp-form__grid .wp-value-list__row:last-child {
-    border-bottom-color: transparent;
+    border: none;
 }
 
 

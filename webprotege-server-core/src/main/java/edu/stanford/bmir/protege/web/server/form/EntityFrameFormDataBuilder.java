@@ -221,6 +221,7 @@ public class EntityFrameFormDataBuilder {
                                   var formSubject = FormEntitySubject.get(entity);
                                   return GridRowData.get(formSubject, cellData);
                               })
+                              .sorted()
                               .collect(PageCollector.toPage(pageRequest.getPageNumber(),
                                                             pageRequest.getPageSize()));
         return GridControlData.get(gridControlDescriptor, rowData.orElse(Page.emptyPage()));
