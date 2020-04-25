@@ -42,6 +42,8 @@ public class ObjectListPresenter<T> implements Presenter {
     @Nonnull
     private final List<ObjectListViewHolder> viewHolders = new ArrayList<>();
 
+    private boolean setDefaultStateCollapsed = false;
+
     @Inject
     public ObjectListPresenter(@Nonnull ObjectListView view,
                                @Nonnull Provider<ObjectPresenter<T>> objectListPresenter,
@@ -56,6 +58,18 @@ public class ObjectListPresenter<T> implements Presenter {
     public void addElement() {
         T value = defaultObjectProvider.get();
         addValue(value);
+    }
+
+    public void setDefaultStateCollapsed() {
+        this.setDefaultStateCollapsed = true;
+    }
+
+    public void setAllCollapsed() {
+        viewHolders.forEach(ObjectListViewHolder::setCollapsed);
+    }
+
+    public void setAllExpanded() {
+        viewHolders.forEach(ObjectListViewHolder::setExpanded);
     }
 
     public void setAddObjectText(@Nonnull String addObjectText) {
@@ -77,6 +91,9 @@ public class ObjectListPresenter<T> implements Presenter {
         checkNotNull(values);
         clear();
         values.forEach(this::addValue);
+        if(setDefaultStateCollapsed) {
+            setAllCollapsed();
+        }
     }
 
     public void addValue(T value) {
@@ -107,7 +124,6 @@ public class ObjectListPresenter<T> implements Presenter {
             moveDown(descriptorPresenter);
             view.moveDown(viewHolder);
         });
-
     }
 
     public void moveUp(ObjectPresenter<T> objectPresenter) {

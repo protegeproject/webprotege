@@ -74,8 +74,19 @@ public class ObjectListViewHolderImpl extends Composite implements ObjectListVie
         container.add(w);
     }
 
-    private void toggleExpansion() {
+    @Override
+    public void toggleExpansion() {
         container.setVisible(!container.isVisible());
+    }
+
+    @Override
+    public void setCollapsed() {
+        container.setVisible(false);
+    }
+
+    @Override
+    public void setExpanded() {
+        container.setVisible(true);
     }
 
     @Override

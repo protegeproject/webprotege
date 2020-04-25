@@ -65,5 +65,6 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
         columnListPresenter.start(view.getViewContainer(), new SimpleEventBus());
         columnListPresenter.setAddObjectText("Add column");
         formSubjectFactoryDescriptorPresenter.start(view.getFormSubjectFactoryDescriptorContainer());
+        columnListPresenter.setDefaultStateCollapsed();
     }
 }

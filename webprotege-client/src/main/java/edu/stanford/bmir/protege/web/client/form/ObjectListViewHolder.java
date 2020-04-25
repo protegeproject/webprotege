@@ -18,6 +18,12 @@ public interface ObjectListViewHolder extends IsWidget, AcceptsOneWidget {
 
     void setRemoveHandler(@Nonnull Runnable handler);
 
+    void toggleExpansion();
+
+    void setCollapsed();
+
+    void setExpanded();
+
     void setNumber(int number);
 
     void setHeaderLabel(@Nonnull String headerLabel);

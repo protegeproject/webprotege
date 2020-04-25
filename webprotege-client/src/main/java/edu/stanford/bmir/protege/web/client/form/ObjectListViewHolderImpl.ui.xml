@@ -71,7 +71,9 @@
             margin-top: 0.5rem;
             margin-left: 3rem;
         }
-
+        .container {
+            
+        }
         </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.elementColumn}">
@@ -91,7 +93,7 @@
                               addStyleNames="{wp.buttons.button} {wp.buttons.deleteButton}"/>
 
                 </g:HTMLPanel>
-                <g:HTMLPanel ui:field="container"/>
+                <g:HTMLPanel ui:field="container" addStyleNames="{style.container}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>

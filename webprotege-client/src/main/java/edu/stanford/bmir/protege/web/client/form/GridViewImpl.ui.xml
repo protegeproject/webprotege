@@ -7,7 +7,6 @@
         .limitedValuesMessage {
             color: literal("var(--tertiary--color)");
             background-color: rgb(255, 250, 230);
-            padding: 4px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.formGrid}">
