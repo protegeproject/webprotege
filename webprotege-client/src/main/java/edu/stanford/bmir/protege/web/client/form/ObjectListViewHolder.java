@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 
@@ -10,7 +11,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-18
  */
-public interface ObjectListViewHolder extends IsWidget, AcceptsOneWidget {
+public interface ObjectListViewHolder extends IsWidget, AcceptsOneWidget, HasRequestFocus {
 
     void setMoveDownHandler(@Nonnull Runnable handler);
 

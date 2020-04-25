@@ -57,7 +57,7 @@ public class ObjectListPresenter<T> implements Presenter {
 
     public void addElement() {
         T value = defaultObjectProvider.get();
-        addValue(value);
+        addValue(value, true);
     }
 
     public void setDefaultStateCollapsed() {
@@ -97,6 +97,10 @@ public class ObjectListPresenter<T> implements Presenter {
     }
 
     public void addValue(T value) {
+        addValue(value, false);
+    }
+
+    public void addValue(T value, boolean focus) {
         ObjectPresenter<T> descriptorPresenter = objectListPresenter.get();
         objectPresenters.add(descriptorPresenter);
         ObjectListViewHolder viewHolder = objectViewHolderProvider.get();
@@ -124,6 +128,9 @@ public class ObjectListPresenter<T> implements Presenter {
             moveDown(descriptorPresenter);
             view.moveDown(viewHolder);
         });
+        if(focus) {
+            viewHolder.requestFocus();
+        }
     }
 
     public void moveUp(ObjectPresenter<T> objectPresenter) {

@@ -182,4 +182,9 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     public AcceptsOneWidget getFieldDescriptorViewContainer() {
         return fieldViewContainer;
     }
+
+    @Override
+    public void requestFocus() {
+        elementIdField.setFocus(true);
+    }
 }

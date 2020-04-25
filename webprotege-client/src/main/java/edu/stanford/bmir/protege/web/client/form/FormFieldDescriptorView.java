@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public interface FormFieldDescriptorView extends IsWidget {
+public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
 
     void setFormFieldId(@Nonnull String id);
 

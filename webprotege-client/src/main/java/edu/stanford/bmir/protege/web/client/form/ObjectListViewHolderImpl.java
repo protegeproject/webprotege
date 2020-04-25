@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -138,5 +139,15 @@ public class ObjectListViewHolderImpl extends Composite implements ObjectListVie
     @Override
     public void setRemoveHandler(@Nonnull Runnable handler) {
         this.removeHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void requestFocus() {
+        if(container.getWidgetCount() > 0) {
+            Widget widget = container.getWidget(0);
+            if(widget instanceof HasRequestFocus) {
+                ((HasRequestFocus) widget).requestFocus();
+            }
+        }
     }
 }
