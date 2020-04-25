@@ -10,14 +10,15 @@
         .editor {
             display: flex;
             flex-direction: row;
+            min-width: 0;
         }
         .value-field {
             flex-grow: 1;
-            width: 10em;
+            min-width: 0;
         }
         .language-field {
             flex-grow: 0;
-            max-width: 40px;
+            max-width: 20px;
         }
         .main textarea {
             border-left: 1px solid transparent;
