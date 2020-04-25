@@ -69,5 +69,6 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         portletUi.addAction(new PortletAction("Collapse all", "wp-btn-g--collapse-all", entityFormStackPresenter::collapseAllFields));
         setDisplaySelectedEntityNameAsSubtitle(true);
         entityFormStackPresenter.start(portletUi);
+        handleAfterSetEntity(getSelectedEntity());
     }
 }
