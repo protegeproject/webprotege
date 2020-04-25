@@ -25,6 +25,8 @@ public interface ObjectListViewHolder extends IsWidget, AcceptsOneWidget, HasReq
 
     void setExpanded();
 
+    boolean isExpanded();
+
     void setNumber(int number);
 
     void setHeaderLabel(@Nonnull String headerLabel);

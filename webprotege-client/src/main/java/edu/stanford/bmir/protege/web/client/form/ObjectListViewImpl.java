@@ -122,7 +122,9 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     private void refill(ObjectListViewHolder viewHolder) {
         elementDescriptorViewContainer.clear();
         views.forEach(view -> elementDescriptorViewContainer.add(view));
-        viewHolder.scrollIntoView();
+        if(viewHolder.isExpanded()) {
+            viewHolder.scrollIntoView();
+        }
         updateButtons();
     }
 

@@ -147,7 +147,7 @@ public class ObjectListPresenter<T> implements Presenter {
     public void moveDown(ObjectPresenter<T> objectPresenter) {
         int fromIndex = objectPresenters.indexOf(objectPresenter);
         int toIndex = fromIndex + 1;
-        if(toIndex < objectPresenters.size() - 1) {
+        if(toIndex < objectPresenters.size()) {
             Collections.swap(objectPresenters, fromIndex, toIndex);
             Collections.swap(viewHolders, fromIndex, toIndex);
         }

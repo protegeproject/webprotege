@@ -91,6 +91,11 @@ public class ObjectListViewHolderImpl extends Composite implements ObjectListVie
     }
 
     @Override
+    public boolean isExpanded() {
+        return container.isVisible();
+    }
+
+    @Override
     public void setNumber(int number) {
         numberField.setText(Integer.toString(number));
     }
