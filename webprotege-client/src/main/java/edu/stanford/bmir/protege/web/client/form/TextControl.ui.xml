@@ -43,6 +43,6 @@
             <primitive:DefaultLanguageEditor placeholder="lang" ui:field="languageEditor"
                                              addStyleNames="{style.language-field}"/>
         </g:HTMLPanel>
-        <g:Label ui:field="patternViolationErrorMessageLabel" addStyleNames="{wp.style.errorLabel} {style.patternViolationMessage}"/>
+        <g:Label ui:field="patternViolationErrorMessageLabel" visible="false" addStyleNames="{wp.style.errorLabel} {style.patternViolationMessage}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

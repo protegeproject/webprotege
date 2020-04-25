@@ -131,12 +131,14 @@ public class TextControl extends Composite implements FormControl {
             if(mr == null) {
                 GWT.log("[TextControl] Input is not valid");
                 patternViolationErrorMessage.ifPresent(s -> {
+                    patternViolationErrorMessageLabel.setVisible(true);
                     patternViolationErrorMessageLabel.setText(s);
                 });
                 displayErrorBorder();
             }
             else {
                 GWT.log("[TextControl] Input is valid");
+                patternViolationErrorMessageLabel.setVisible(false);
                 clearErrorBorder();
             }
 
