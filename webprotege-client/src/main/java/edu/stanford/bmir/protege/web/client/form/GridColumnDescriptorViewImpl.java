@@ -121,4 +121,9 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
     public AcceptsOneWidget getFieldDescriptorChooserContainer() {
         return fieldDescriptorChooserContainer;
     }
+
+    @Override
+    public void requestFocus() {
+        idField.setFocus(true);
+    }
 }
