@@ -23,6 +23,10 @@ public abstract class LangTagFilter {
     @Nonnull
     public abstract ImmutableSet<LangTag> getFilteringTags();
 
+    public boolean isAnyLangTagIncluded() {
+        return getFilteringTags().isEmpty();
+    }
+
     /**
      * Determines if the specified langtag is included by this filter.
      * @param langTag The lang tag.

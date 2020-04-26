@@ -52,9 +52,10 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         var pageRequests = action.getFormPageRequests();
         var pageRequestIndex = FormPageRequestIndex.create(pageRequests);
         var entity = action.getEntity();
+        var langTagFilter = action.getLangTagFilter();
         var forms = formManager.getFormDescriptors(entity, projectId)
                           .stream()
-                          .map(formDescriptor -> formDataBuilder.toFormData(entity, formDescriptor, pageRequestIndex))
+                          .map(formDescriptor -> formDataBuilder.toFormData(entity, formDescriptor, pageRequestIndex, langTagFilter))
                           .collect(toImmutableList());
         return new GetEntityFormsResult(forms);
     }

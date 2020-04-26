@@ -36,6 +36,9 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     AcceptsOneWidget formsStackContainer;
 
     @UiField
+    AcceptsOneWidget langTagFilterContainer;
+
+    @UiField
     Button applyEditsButton;
 
     @UiField
@@ -56,6 +59,10 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     @Override
     public AcceptsOneWidget getFormStackContainer() {
         return formsStackContainer;
+    }    @Nonnull
+    @Override
+    public AcceptsOneWidget getLangTagFilterContainer() {
+        return langTagFilterContainer;
     }
 
 
@@ -88,5 +95,4 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     public void setCancelEditsButtonVisible(boolean visible) {
         cancelEditsButton.setVisible(visible);
     }
-
 }

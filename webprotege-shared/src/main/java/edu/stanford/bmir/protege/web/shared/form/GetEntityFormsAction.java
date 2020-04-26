@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -23,12 +24,16 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
 
     private ImmutableList<FormPageRequest> formPageRequests;
 
+    private LangTagFilter langTagFilter;
+
     public GetEntityFormsAction(@Nonnull ProjectId projectId,
                                 @Nonnull OWLEntity entity,
-                                ImmutableList<FormPageRequest> formPageRequests) {
+                                @Nonnull ImmutableList<FormPageRequest> formPageRequests,
+                                @Nonnull LangTagFilter langTagFilter) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
         this.formPageRequests = checkNotNull(formPageRequests);
+        this.langTagFilter = checkNotNull(langTagFilter);
     }
 
     @GwtSerializationConstructor
@@ -49,5 +54,10 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
     @Nonnull
     public ImmutableList<FormPageRequest> getFormPageRequests() {
         return formPageRequests;
+    }
+
+    @Nonnull
+    public LangTagFilter getLangTagFilter() {
+        return langTagFilter;
     }
 }

@@ -27,6 +27,9 @@ public interface EntityFormStackView extends IsWidget {
     @Nonnull
     AcceptsOneWidget getFormStackContainer();
 
+    @Nonnull
+    AcceptsOneWidget getLangTagFilterContainer();
+
     void setEnterEditModeHandler(@Nonnull EnterEditModeHandler enterEditModeHandler);
 
     void setApplyEditsHandler(@Nonnull ApplyEditsHandler handler);

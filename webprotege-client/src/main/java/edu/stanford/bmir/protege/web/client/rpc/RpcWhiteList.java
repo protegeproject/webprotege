@@ -18,9 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
-import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
@@ -51,6 +49,25 @@ import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
  */
 public class RpcWhiteList implements Action, Result {
 
+    public LangTag getLangTag() {
+        return langTag;
+    }
+
+    public void setLangTag(LangTag langTag) {
+        this.langTag = langTag;
+    }
+
+    LangTag langTag;
+
+    public LangTagFilter getLangTagFilter() {
+        return langTagFilter;
+    }
+
+    public void setLangTagFilter(LangTagFilter langTagFilter) {
+        this.langTagFilter = langTagFilter;
+    }
+
+    LangTagFilter langTagFilter;
 
     MultiMatchType multiMatchType;
 

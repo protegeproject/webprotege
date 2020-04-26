@@ -27,6 +27,7 @@ import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsAc
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsPageContainingIndividualActionHandler;
 import edu.stanford.bmir.protege.web.server.issues.*;
+import edu.stanford.bmir.protege.web.server.lang.GetProjectLangTagsActionHandler;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityHtmlRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.match.GetMatchingEntitiesActionHandler;
@@ -659,6 +660,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideDeleteFormActionHandler(DeleteFormActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetProjectLangTagsActionHandler(GetProjectLangTagsActionHandler handler) {
         return handler;
     }
 }

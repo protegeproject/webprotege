@@ -792,6 +792,11 @@ public class ClientProjectModule {
     EntityFormStackView provideFormStackManagerView(EntityFormStackViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    LangTagFilterView provideLangTagFilterView(LangTagFilterViewImpl impl) {
+        return impl;
+    }
 }
 
 

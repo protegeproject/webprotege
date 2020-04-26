@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
@@ -10,6 +12,8 @@ import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.lang.LangTag;
+import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -53,29 +57,41 @@ public class EntityFormStackPresenter {
     @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+    @Nonnull
+    private final LangTagFilterPresenter langTagFilterPresenter;
+
     @Inject
     public EntityFormStackPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull EntityFormStackView view,
                                     @Nonnull DispatchServiceManager dispatch,
                                     @Nonnull FormStackPresenter formStackPresenter,
-                                    @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
+                                    @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                    @Nonnull LangTagFilterPresenter langTagFilterPresenter) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.dispatch = checkNotNull(dispatch);
         this.formStackPresenter = checkNotNull(formStackPresenter);
         this.permissionChecker = checkNotNull(permissionChecker);
+        this.langTagFilterPresenter = checkNotNull(langTagFilterPresenter);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         formStackPresenter.start(view.getFormStackContainer());
         formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
+        langTagFilterPresenter.start(view.getLangTagFilterContainer());
+        langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
         view.setApplyEditsHandler(this::handleApplyEdits);
         view.setCancelEditsHandler(this::handleCancelEdits);
+
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
                                         view::setEditButtonVisible);
         setMode(Mode.READ_ONLY_MODE);
+    }
+
+    private void handleLangTagFilterChanged() {
+        updateFormsForCurrentEntity();
     }
 
     private void handlePageChange() {
@@ -103,7 +119,8 @@ public class EntityFormStackPresenter {
     private void updateFormsForCurrentEntity() {
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
-            dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests),
+            LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
+            dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests, langTagFilter),
                              this::handleGetEntityFormsResult);
         });
         if(!currentEntity.isPresent()) {
