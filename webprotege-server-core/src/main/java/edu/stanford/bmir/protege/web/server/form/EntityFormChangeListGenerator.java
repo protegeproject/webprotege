@@ -58,9 +58,6 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     private final EmptyEntityFrameFactory emptyEntityFrameFactory;
 
     @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
     private final OWLEntity subject;
 
     @Nonnull
@@ -75,7 +72,6 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                          @Nonnull ImmutableList<FormData> pristineFormsData,
                                          @Nonnull ImmutableList<FormData> editedFormData,
                                          @Nonnull EntityFormDataConverter entityFormDataConverter,
-                                         @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory reverseEngineeredChangeDescriptionGeneratorFactory,
                                          @Nonnull MessageFormatter messageFormatter,
                                          @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
                                          @Nonnull FormFrameConverter formFrameConverter,
@@ -91,7 +87,6 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
         this.frameChangeGeneratorFactory = checkNotNull(frameChangeGeneratorFactory);
         this.formFrameConverter = checkNotNull(formFrameConverter);
         this.emptyEntityFrameFactory = emptyEntityFrameFactory;
-        this.renderingManager = renderingManager;
         this.dataFactory = dataFactory;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
     }
