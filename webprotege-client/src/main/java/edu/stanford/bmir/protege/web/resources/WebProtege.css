@@ -298,15 +298,15 @@
 }
 
 .errorBorder {
-    border: 2px dashed #ff0000 !important;
+    outline: 2px dashed #ff0000 !important;
 }
 
 .errorBorderColor {
-    border-color: #ff0000 !important;
+    outline-color: #ff0000 !important;
 }
 
 .noErrorBorder {
-    border: 2px dashed transparent;
+    outline: 2px dashed transparent;
 }
 
 .selection {
