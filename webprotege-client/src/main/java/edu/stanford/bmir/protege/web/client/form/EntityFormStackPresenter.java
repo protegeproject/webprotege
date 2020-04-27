@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
@@ -36,6 +38,8 @@ public class EntityFormStackPresenter {
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
     private final List<FormData> pristineFormData = new ArrayList<>();
+
+    private HasBusy hasBusy = (busy) -> {};
 
     enum Mode {
         EDIT_MODE,
@@ -90,6 +94,10 @@ public class EntityFormStackPresenter {
         setMode(Mode.READ_ONLY_MODE);
     }
 
+    public void setHasBusy(HasBusy hasBusy) {
+        this.hasBusy = checkNotNull(hasBusy);
+    }
+
     private void handleLangTagFilterChanged() {
         updateFormsForCurrentEntity();
     }
@@ -121,6 +129,7 @@ public class EntityFormStackPresenter {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
             dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests, langTagFilter),
+                             hasBusy,
                              this::handleGetEntityFormsResult);
         });
         if(!currentEntity.isPresent()) {
@@ -188,5 +197,7 @@ public class EntityFormStackPresenter {
         updateFormsForCurrentEntity();
     }
 
-
+    public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
+        formStackPresenter.setSelectedFormIdStash(formIdStash);
+    }
 }

@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
@@ -20,6 +23,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormSelectorItemPresenter {
 
     @Nonnull
+    private final FormId formId;
+
+    @Nonnull
     private final FormSelectorItemView view;
 
     private boolean selected = false;
@@ -27,9 +33,17 @@ public class FormSelectorItemPresenter {
     @Nonnull
     private Optional<FormContainer> formContainer = Optional.empty();
 
+    @AutoFactory
     @Inject
-    public FormSelectorItemPresenter(@Nonnull FormSelectorItemView view) {
+    public FormSelectorItemPresenter(@Nonnull FormId formId,
+                                     @Provided @Nonnull FormSelectorItemView view) {
+        this.formId = checkNotNull(formId);
         this.view = checkNotNull(view);
+    }
+
+    @Nonnull
+    public FormId getFormId() {
+        return formId;
     }
 
     public void setFormContainer(@Nonnull FormContainer formContainer) {

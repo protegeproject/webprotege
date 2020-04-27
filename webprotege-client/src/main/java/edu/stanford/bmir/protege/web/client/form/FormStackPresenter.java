@@ -124,12 +124,12 @@ public class FormStackPresenter {
                 formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
                 formPresenter.displayForm(formData);
                 formPresenter.setEnabled(enabled);
+                formPresenters.add(formPresenter);
                 formSelectorPresenter.addForm(formDescriptor.getFormId(),
                                               formDescriptor.getLabel(),
                                               formContainer);
-                formPresenters.add(formPresenter);
             });
-            formSelectorPresenter.setFirstFormSelected();
+            formSelectorPresenter.restoreSelection();
         }
         updateView();
     }
@@ -153,5 +153,9 @@ public class FormStackPresenter {
         container.setWidget(view);
         formSelectorPresenter.start(view.getSelectorContainer());
         updateView();
+    }
+
+    public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
+        formSelectorPresenter.setSelectedFormIdStash(formIdStash);
     }
 }

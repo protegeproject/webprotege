@@ -528,10 +528,11 @@
     font-weight: bold;
     cursor: pointer;
     border-radius: 2px;
+    background-color: literal("var(--tab--background-color)");
 }
 
-.wp-form__form-selector__item + .wp-form__form-selector__item {
-    margin-left: 0.5em;
+.wp-form__form-selector > div {
+    margin-right: 2px;
 }
 
 .wp-form__form-selector__item--selected {
