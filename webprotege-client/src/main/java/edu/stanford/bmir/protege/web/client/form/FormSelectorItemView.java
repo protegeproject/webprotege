@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
@@ -9,15 +9,13 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2020-01-20
+ * 2020-04-27
  */
-public interface FormStackView extends IsWidget {
+public interface FormSelectorItemView extends IsWidget {
 
-    @Nonnull
-    AcceptsOneWidget getSelectorContainer();
+    void setClickHandler(@Nonnull ClickHandler clickHandler);
 
-    @Nonnull
-    FormContainer addContainer(@Nonnull LanguageMap labels);
+    void setLabel(@Nonnull LanguageMap label);
 
-    void clear();
+    void setSelected(boolean selected);
 }

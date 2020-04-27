@@ -797,6 +797,16 @@ public class ClientProjectModule {
     LangTagFilterView provideLangTagFilterView(LangTagFilterViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    FormSelectorView provideFormSelectorView(FormSelectorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormSelectorItemView provideFormSelectorItemView(FormSelectorItemViewImpl impl) {
+        return impl;
+    }
 }
 
 

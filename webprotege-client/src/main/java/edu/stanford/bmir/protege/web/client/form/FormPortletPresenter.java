@@ -52,14 +52,12 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        GWT.log("[FormPortletPresenter] handleAfterSetEntity " + entityData);
         if(entityData.isPresent()) {
             setNothingSelectedVisible(false);
             entityFormStackPresenter.setEntity(entityData.get());
         }
         else {
             setNothingSelectedVisible(true);
-            entityFormStackPresenter.clear();
         }
     }
 

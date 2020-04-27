@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUser;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 
 import javax.annotation.Nonnull;
@@ -30,6 +26,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class FormStackPresenter {
 
     @Nonnull
+    private final FormSelectorPresenter formSelectorPresenter;
+
+    @Nonnull
     private final FormStackView view;
 
     private final NoFormView noFormView;
@@ -47,9 +46,11 @@ public class FormStackPresenter {
     private boolean enabled = true;
 
     @Inject
-    public FormStackPresenter(@Nonnull FormStackView view,
+    public FormStackPresenter(@Nonnull FormSelectorPresenter formSelectorPresenter,
+                              @Nonnull FormStackView view,
                               @Nonnull NoFormView noFormView,
                               @Nonnull Provider<FormPresenter> formPresenterProvider) {
+        this.formSelectorPresenter = checkNotNull(formSelectorPresenter);
         this.view = checkNotNull(view);
         this.noFormView = checkNotNull(noFormView);
         this.formPresenterProvider = checkNotNull(formPresenterProvider);
@@ -57,6 +58,7 @@ public class FormStackPresenter {
 
     public void clearForms() {
         formPresenters.clear();
+        formSelectorPresenter.clear();
         updateView();
     }
 
@@ -112,15 +114,22 @@ public class FormStackPresenter {
         }
         else {
             formPresenters.clear();
+            formSelectorPresenter.clear();
             view.clear();
             forms.forEach(formData -> {
                 FormPresenter formPresenter = formPresenterProvider.get();
-                formPresenter.start(view.addContainer());
+                FormDescriptor formDescriptor = formData.getFormDescriptor();
+                FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
+                formPresenter.start(formContainer);
                 formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
                 formPresenter.displayForm(formData);
                 formPresenter.setEnabled(enabled);
+                formSelectorPresenter.addForm(formDescriptor.getFormId(),
+                                              formDescriptor.getLabel(),
+                                              formContainer);
                 formPresenters.add(formPresenter);
             });
+            formSelectorPresenter.setFirstFormSelected();
         }
         updateView();
     }
@@ -142,6 +151,7 @@ public class FormStackPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         this.container = Optional.of(container);
         container.setWidget(view);
+        formSelectorPresenter.start(view.getSelectorContainer());
         updateView();
     }
 }

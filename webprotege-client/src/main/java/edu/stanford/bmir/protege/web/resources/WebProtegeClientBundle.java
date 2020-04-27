@@ -419,6 +419,15 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("home-icon")
         String homeIcon();
 
+        @ClassName("wp-form__form-selector")
+        String formSelector();
+
+        @ClassName("wp-form__form-selector__item")
+        String formSelectorItem();
+
+        @ClassName("wp-form__form-selector__item--selected")
+        String formSelectorItemSelected();
+
         @ClassName("wp-form__text-block")
         String formTextBlock();
 
