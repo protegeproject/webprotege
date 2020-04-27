@@ -21,7 +21,8 @@ public abstract class GridColumnId implements FormRegionId {
     public static GridColumnId get(@Nonnull String id) {
         return new AutoValue_GridColumnId(id);
     }
-    
+
+    @Override
     @JsonValue
     public abstract String getId();
 }

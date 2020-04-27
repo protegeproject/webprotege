@@ -7,4 +7,5 @@ package edu.stanford.bmir.protege.web.shared.form.field;
  */
 public interface FormRegionId {
 
+    String getId();
 }

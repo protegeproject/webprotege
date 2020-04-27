@@ -22,6 +22,7 @@ public abstract class FormFieldId implements FormRegionId {
         return new AutoValue_FormFieldId(id);
     }
 
+    @Override
     @JsonValue
     public abstract String getId();
 }

@@ -3,15 +3,13 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.form.processor.FormDataConverter;
 import edu.stanford.bmir.protege.web.server.frame.EmptyEntityFrameFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.frame.FrameUpdate;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
@@ -23,11 +21,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -37,7 +33,7 @@ import static java.util.stream.Collectors.toSet;
 public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEntity> {
 
     @Nonnull
-    private final EntityFormDataConverter entityFormDataConverter;
+    private final FormDataConverter formDataProcessor;
 
     @Nonnull
     private final MessageFormatter messageFormatter;
@@ -71,18 +67,17 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     public EntityFormChangeListGenerator(@Nonnull OWLEntity subject,
                                          @Nonnull ImmutableList<FormData> pristineFormsData,
                                          @Nonnull ImmutableList<FormData> editedFormData,
-                                         @Nonnull EntityFormDataConverter entityFormDataConverter,
+                                         @Nonnull FormDataConverter formDataProcessor,
                                          @Nonnull MessageFormatter messageFormatter,
                                          @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
                                          @Nonnull FormFrameConverter formFrameConverter,
                                          @Nonnull EmptyEntityFrameFactory emptyEntityFrameFactory,
-                                         @Nonnull RenderingManager renderingManager,
                                          @Nonnull OWLDataFactory dataFactory,
                                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
         this.subject = checkNotNull(subject);
         this.pristineFormsData = checkNotNull(pristineFormsData);
         this.editedFormsData = checkNotNull(editedFormData);
-        this.entityFormDataConverter = checkNotNull(entityFormDataConverter);
+        this.formDataProcessor = checkNotNull(formDataProcessor);
         this.messageFormatter = checkNotNull(messageFormatter);
         this.frameChangeGeneratorFactory = checkNotNull(frameChangeGeneratorFactory);
         this.formFrameConverter = checkNotNull(formFrameConverter);
@@ -97,8 +92,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
         for(int i = 0; i < pristineFormsData.size(); i++) {
             var pristineFormData = pristineFormsData.get(i);
             var editedFormData = editedFormsData.get(i);
-            var pristineFormFrame = entityFormDataConverter.convert(pristineFormData);
-            var editedFormFrame = entityFormDataConverter.convert(editedFormData);
+            var pristineFormFrame = formDataProcessor.convert(pristineFormData);
+            var editedFormFrame = formDataProcessor.convert(editedFormData);
 
             if(!pristineFormFrame.equals(editedFormFrame)) {
                 var pristineFramesBySubject = getFormFrameClosureBySubject(pristineFormFrame);
