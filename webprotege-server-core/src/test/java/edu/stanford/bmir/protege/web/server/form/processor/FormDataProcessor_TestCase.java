@@ -68,27 +68,27 @@ public class FormDataProcessor_TestCase {
 
     @Test
     public void shouldUseFormFrameBuilder() {
-        var ffb = processor.processFormData(formData);
+        var ffb = processor.processFormData(formData, false);
         assertThat(ffb, is(formFrameBuilder));
     }
 
     @Test
     public void shouldProcessSubject() {
-        processor.processFormData(formData);
+        processor.processFormData(formData, false);
         verify(formFrameBuilder, times(1))
                 .setSubject(subject);
     }
 
     @Test
     public void shouldProcessFormFieldData() {
-        processor.processFormData(formData);
+        processor.processFormData(formData, false);
         verify(formFieldProcessor, times(1))
                 .processFormFieldData(formFieldData, formFrameBuilder);
     }
 
     @Test
     public void shouldSetSubjectFactory() {
-        processor.processFormData(formData);
+        processor.processFormData(formData, false);
         verify(formFrameBuilder, times(1))
                 .setSubjectFactoryDescriptor(subjectFactoryDescriptor);
     }
@@ -97,6 +97,6 @@ public class FormDataProcessor_TestCase {
     public void shouldThrowExceptionIfSubjectFactoryDescriptorIsMissing() {
         when(formDescriptor.getSubjectFactoryDescriptor())
                 .thenReturn(Optional.empty());
-        processor.processFormData(formData);
+        processor.processFormData(formData, true);
     }
 }

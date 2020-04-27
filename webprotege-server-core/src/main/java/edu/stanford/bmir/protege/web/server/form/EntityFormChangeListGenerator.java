@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
@@ -24,6 +23,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 
 /**
  * Matthew Horridge
@@ -129,33 +129,18 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
                                      .flatMap(List::stream)
                                      .collect(toImmutableList());
 
-        return OntologyChangeList.<OWLEntity>builder()
+        return OntologyChangeList.<OWLEntity>builder()/**/
                 .addAll(combinedChanges)
                 .build(firstChangeList.getResult());
     }
 
     private static ImmutableMap<OWLEntity, FormFrame> getFormFrameClosureBySubject(FormFrame formFrame) {
-        // Important: ImmutableMap preserves iteration order
-        var result = ImmutableMap.<OWLEntity, FormFrame>builder();
-        List<FormFrame> framesToProcess = new ArrayList<>();
-        framesToProcess.add(formFrame);
-        while(!framesToProcess.isEmpty()) {
-            var frame = framesToProcess.remove(0);
-            frame.getSubject()
-                 .accept(new FormSubject.FormDataSubjectVisitor() {
-                     @Override
-                     public void visit(@Nonnull FormEntitySubject formDataEntitySubject) {
-                         result.put(formDataEntitySubject.getEntity(), frame);
-                     }
 
-                     @Override
-                     public void visit(@Nonnull FormIriSubject formDataIriSubject) {
-
-                     }
-                 });
-            framesToProcess.addAll(frame.getNestedFrames());
-        }
-        return result.build();
+        var flattener = new FormFrameFlattener();
+        var flattenedFormFrames = flattener.flattenAndMerge(formFrame);
+        return flattenedFormFrames.stream()
+                                  .filter(f -> f.getSubject() instanceof FormEntitySubject)
+                           .collect(toImmutableMap(f -> ((FormEntitySubject) f.getSubject()).getEntity(), f -> f));
     }
 
     private List<OntologyChangeList<OWLEntity>> generateChangesForFormFrames(ImmutableMap<OWLEntity, FormFrame> pristineFramesBySubject,

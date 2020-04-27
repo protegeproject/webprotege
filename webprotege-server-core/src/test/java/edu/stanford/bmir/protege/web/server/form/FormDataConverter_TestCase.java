@@ -46,7 +46,7 @@ public class FormDataConverter_TestCase {
                 formSubjectResolver,
                 formDataProcessor
         );
-        when(formDataProcessor.processFormData(formData))
+        when(formDataProcessor.processFormData(formData, false))
                 .thenReturn(formFrameBuilder);
         when(formFrameBuilder.build(formSubjectResolver))
                 .thenReturn(formFrame);

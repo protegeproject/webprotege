@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -43,11 +44,23 @@ public class FormSubjectFactoryDescriptorViewImpl extends Composite implements F
         parentEditor = primitiveDataEditor;
         parentEditor.setEnabled(true);
         initWidget(ourUiBinder.createAndBindUi(this));
+        parentEditor.addValueChangeHandler(event -> {
+            updateErrorBorder();
+        });
     }
 
     @Override
     public void clear() {
         parentEditor.clearValue();
+    }
+
+    private void updateErrorBorder() {
+        if(getParentClass().isPresent()) {
+            parentEditor.asWidget().removeStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorder());
+        }
+        else {
+            parentEditor.asWidget().addStyleName(WebProtegeClientBundle.BUNDLE.style().errorBorder());
+        }
     }
 
     @Nonnull

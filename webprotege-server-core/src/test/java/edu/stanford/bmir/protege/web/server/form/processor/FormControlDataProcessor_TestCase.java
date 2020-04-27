@@ -134,6 +134,6 @@ public class FormControlDataProcessor_TestCase {
                                     ImmutableList.of());
         processor.processFormControlData(binding, formData, formFrameBuilder);
         verify(formDataProcessor, times(1))
-                .processFormData(formData);
+                .processFormData(formData, false);
     }
 }

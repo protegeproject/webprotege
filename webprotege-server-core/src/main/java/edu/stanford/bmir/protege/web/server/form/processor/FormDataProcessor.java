@@ -30,14 +30,22 @@ public class FormDataProcessor {
         this.formFieldProcessor = checkNotNull(formFieldProcessor);
     }
 
-    public FormFrameBuilder processFormData(@Nonnull FormData formData) {
+    public FormFrameBuilder processFormData(@Nonnull FormData formData,
+                                            boolean subjectFactoryDescriptorRequired) {
         var formFrameBuilder = formFrameBuilderProvider.get();
         formData.getSubject()
                 .ifPresent(formFrameBuilder::setSubject);
-        var formSubjectFactoryDescriptor = formData.getFormDescriptor()
-                .getSubjectFactoryDescriptor()
-                .orElseThrow(FormSubjectFactoryDescriptorMissingException::new);
-        formFrameBuilder.setSubjectFactoryDescriptor(formSubjectFactoryDescriptor);
+        if(subjectFactoryDescriptorRequired) {
+            var formSubjectFactoryDescriptor = formData.getFormDescriptor()
+                    .getSubjectFactoryDescriptor()
+                    .orElseThrow(FormSubjectFactoryDescriptorMissingException::new);
+            formFrameBuilder.setSubjectFactoryDescriptor(formSubjectFactoryDescriptor);
+        }
+        else {
+            formData.getFormDescriptor()
+                    .getSubjectFactoryDescriptor()
+                    .ifPresent(formFrameBuilder::setSubjectFactoryDescriptor);
+        }
         formData.getFormFieldData()
                 .forEach(formFieldData -> formFieldProcessor.processFormFieldData(formFieldData, formFrameBuilder));
         return formFrameBuilder;

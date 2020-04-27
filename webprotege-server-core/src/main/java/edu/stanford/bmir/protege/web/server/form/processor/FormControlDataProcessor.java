@@ -41,7 +41,7 @@ public class FormControlDataProcessor {
             @Override
             public void visit(@Nonnull FormData formData) {
                 var formDataProcessor = formDataProcessorProvider.get();
-                var nestedFormFrameBuilder = formDataProcessor.processFormData(formData);
+                var nestedFormFrameBuilder = formDataProcessor.processFormData(formData, true);
                 formFrameBuilder.add(binding, nestedFormFrameBuilder);
             }
 

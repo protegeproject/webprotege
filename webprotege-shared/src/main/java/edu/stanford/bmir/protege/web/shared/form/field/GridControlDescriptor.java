@@ -8,6 +8,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
+import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +41,8 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
     public static GridControlDescriptor get(@Nonnull @JsonProperty("columns") ImmutableList<GridColumnDescriptor> columnDescriptors,
                                             @Nullable @JsonProperty("subjectFactoryDescriptor") FormSubjectFactoryDescriptor subjectFactoryDescriptor) {
         return new AutoValue_GridControlDescriptor(columnDescriptors == null ? ImmutableList.of() : columnDescriptors,
-                                                   subjectFactoryDescriptor);
+                                                   subjectFactoryDescriptor == null ? FormSubjectFactoryDescriptor.get(
+                                                           EntityType.CLASS, null, Optional.empty()) : subjectFactoryDescriptor);
     }
 
     @JsonProperty("columns")

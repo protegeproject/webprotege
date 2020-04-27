@@ -37,7 +37,7 @@ public class FormDataConverter {
      * Converts the specified {@link FormData} into its equivalent {@link FormFrame}.
      */
     public FormFrame convert(@Nonnull FormData formData) {
-        var formFrameBuilder = formDataProcessor.processFormData(formData);
+        var formFrameBuilder = formDataProcessor.processFormData(formData, false);
         return formFrameBuilder.build(formSubjectResolver);
     }
 }
