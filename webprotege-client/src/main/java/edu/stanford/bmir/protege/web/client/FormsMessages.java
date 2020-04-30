@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 
 /**
@@ -9,6 +10,8 @@ import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
  */
 @DefaultLocale
 public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
+
+    public static final FormsMessages MSG = GWT.create(FormsMessages.class);
 
     @DefaultMessage("Expand/collapse element")
     @Key("expandCollapse")
@@ -136,4 +139,8 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Cancel edits")
     @Key("edits.cancel")
     String edits_Cancel();
+
+    @DefaultMessage("Visible columns")
+    @Key("grid.visibleColumns")
+    String grid_visibleColumns();
 }

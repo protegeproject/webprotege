@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

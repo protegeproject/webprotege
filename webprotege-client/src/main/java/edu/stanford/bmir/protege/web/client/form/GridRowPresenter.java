@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
@@ -40,6 +42,8 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
 
     private ImmutableList<GridColumnDescriptor> columnDescriptors = ImmutableList.of();
 
+    private List<GridColumnId> visibleColumns = new ArrayList<>();
+
     private Optional<FormSubject> subject = Optional.empty();
 
     private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {
@@ -55,7 +59,6 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
     }
 
     public void clear() {
-
     }
 
     @Nonnull
@@ -97,23 +100,27 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
         cellPresenters.clear();
         cellPresentersById.clear();
         view.clear();
+        visibleColumns.clear();
         this.columnDescriptors = checkNotNull(columnDescriptors);
         double totalSpan = columnDescriptors.stream()
                                          .map(GridColumnDescriptor::getNestedColumnCount)
                                          .reduce((left, right) -> left + right)
                                          .orElse(0);
-        this.columnDescriptors.forEach(column -> {
+        for(int colIndex = 0; colIndex < this.columnDescriptors.size(); colIndex++) {
+            GridColumnDescriptor column = columnDescriptors.get(colIndex);
             double span = column.getNestedColumnCount();
             double weight = span / totalSpan;
             GridCellPresenter cellPresenter = cellPresenterProvider.get();
-            AcceptsOneWidget cellContainer = view.addCell(weight);
+            int columnIndex = cellPresenters.size();
+            AcceptsOneWidget cellContainer = view.addCell(columnIndex,
+                                                          weight);
             cellPresenter.start(cellContainer);
             cellPresenter.setDescriptor(column);
             cellPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
             cellPresenter.setEnabled(enabled);
             cellPresenters.add(cellPresenter);
             cellPresentersById.put(column.getId(), cellPresenter);
-        });
+        }
 
     }
 
@@ -139,6 +146,16 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
                               cellPresenter.setValue(cellData);
                           }
                       });
+    }
+
+    public void setVisibleColumns(ImmutableList<GridColumnId> visibleColumns) {
+        this.visibleColumns.clear();
+        this.visibleColumns.addAll(visibleColumns);
+        for(int colIndex = 0 ; colIndex < columnDescriptors.size(); colIndex++) {
+            GridColumnDescriptor columnDescriptor = columnDescriptors.get(colIndex);
+            boolean columnVisible = visibleColumns.contains(columnDescriptor.getId());
+            view.setColumnVisible(colIndex, columnVisible);
+        }
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

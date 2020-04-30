@@ -13,7 +13,9 @@ import javax.annotation.Nonnull;
 public interface GridRowView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget addCell(double weight);
+    AcceptsOneWidget addCell(int ordinal, double weight);
 
     void clear();
+
+    void setColumnVisible(int colIndex, boolean visible);
 }

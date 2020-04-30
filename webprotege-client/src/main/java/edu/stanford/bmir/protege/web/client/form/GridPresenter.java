@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -110,10 +112,10 @@ public class GridPresenter {
 
 
     public void setValue(GridControlData value) {
-        GWT.log("[GridPresenter] (setValue) ");
         clear();
         // List of objects
         Page<GridRowData> rowsPage = value.getRows();
+        ImmutableList<GridColumnId> visibleColumns = headerPresenter.getVisibleColumns();
         List<GridRowPresenter> rows = rowsPage
                                            .getPageElements()
                                            .stream()
@@ -123,6 +125,7 @@ public class GridPresenter {
                                                rowPresenter.setColumnDescriptors(descriptor.getColumns());
                                                rowPresenter.setValue(rowDataValue);
                                                rowPresenter.setEnabled(enabled);
+                                               rowPresenter.setVisibleColumns(visibleColumns);
                                                return rowPresenter;
                                            })
                                            .collect(Collectors.toList());
@@ -157,6 +160,7 @@ public class GridPresenter {
             rowPresenter.setColumnDescriptors(descriptor.getColumns());
             return rowPresenter;
         });
+
     }
 
     public void clear() {
@@ -166,7 +170,13 @@ public class GridPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         headerPresenter.start(view.getHeaderContainer());
+        headerPresenter.setColumnVisibilityChangedHandler(this::handleColumnVisibilityChanged);
     }
 
-
+    private void handleColumnVisibilityChanged() {
+        ImmutableList<GridColumnId> visibleColumns = headerPresenter.getVisibleColumns();
+        for(GridRowPresenter rowPresenter : view.getRows()) {
+            rowPresenter.setVisibleColumns(visibleColumns);
+        }
+    }
 }

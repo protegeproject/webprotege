@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -27,6 +29,8 @@ public class GridRowViewImpl extends Composite implements GridRowView {
     @UiField
     HTMLPanel rowContainer;
 
+    private List<Widget> cellContainers = new ArrayList<>();
+
     @Inject
     public GridRowViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -34,9 +38,14 @@ public class GridRowViewImpl extends Composite implements GridRowView {
 
     @Nonnull
     @Override
-    public AcceptsOneWidget addCell(double weight) {
+    public AcceptsOneWidget addCell(int ordinal, double weight) {
         SimplePanel cellContainer = new SimplePanel();
-        cellContainer.addStyleName(WebProtegeClientBundle.BUNDLE.style().formGridColumn());
+        cellContainers.add(cellContainer);
+        String generalColumnStyle = WebProtegeClientBundle.BUNDLE.style()
+                                                     .formGridColumn();
+        cellContainer.addStyleName(generalColumnStyle);
+        String columnOrdinalStyle = generalColumnStyle + "--col-" + ordinal;
+        cellContainer.addStyleName(columnOrdinalStyle);
         rowContainer.add(cellContainer);
         Style style = cellContainer.getElement().getStyle();
         style.setProperty("flexBasis", weight * 100, Style.Unit.PCT);
@@ -46,5 +55,11 @@ public class GridRowViewImpl extends Composite implements GridRowView {
     @Override
     public void clear() {
         rowContainer.clear();
+        cellContainers.clear();
+    }
+
+    @Override
+    public void setColumnVisible(int colIndex, boolean visible) {
+        cellContainers.get(colIndex).setVisible(visible);
     }
 }

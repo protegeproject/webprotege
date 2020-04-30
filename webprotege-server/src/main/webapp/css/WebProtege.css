@@ -377,6 +377,7 @@ select:disabled {
     background: var(--primary--background-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border:     1px solid #acacac;
+    border-radius: var(--inlay-panel--border-radius);
     /** This z-index is needed because our dialogs appear below the text in the codemirror text area without it **/
     z-index:    10;
 
