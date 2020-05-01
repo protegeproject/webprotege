@@ -37,6 +37,7 @@
     --list-item--padding:                   0.3em;
     --list--background-color:               var(--primary--background-color);
 
+    --popup--border-radius:             5px;
     --selected-menu-item--background-color: var(--accent--color);
     --selected-menu-item--color:            white;
 
@@ -364,7 +365,7 @@ select:disabled {
 .gwt-MenuBar-vertical {
     background: var(--primary--background-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
-    border:     1px solid #acacac;
+    border:     var(--alternate--separator--color) 1px solid;
     padding:    20px;
 }
 
@@ -376,8 +377,8 @@ select:disabled {
 .gwt-PopupPanel {
     background: var(--primary--background-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
-    border:     1px solid #acacac;
-    border-radius: var(--inlay-panel--border-radius);
+    border:     var(--alternate--separator--color) 1px solid;
+    border-radius: var(--popup--border-radius);
     /** This z-index is needed because our dialogs appear below the text in the codemirror text area without it **/
     z-index:    10;
 
