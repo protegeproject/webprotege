@@ -1010,6 +1010,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("uploadAndMerge")
     String uploadAndMerge();
 
+    @DefaultMessage("Merge Ontologies")
+    @Key("uploadAndMergeAdditions")
+    String uploadAndMergeAdditions();
+
     
     @DefaultMessage("Upload Project")
     @Key("uploadProject")

@@ -113,6 +113,11 @@ public class ClientProjectModule {
     }
 
     @Provides
+    UploadAndMergeAdditionsHandler provideUploadAndMergeAdditionsHandler(UploadAndMergeAdditionsHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
     LoggedInUserProjectPermissionChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectPermissionCheckerImpl checker) {
         return checker;
     }
