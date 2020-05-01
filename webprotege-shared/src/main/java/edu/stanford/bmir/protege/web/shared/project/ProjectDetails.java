@@ -265,6 +265,11 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
     @JsonProperty(IN_TRASH)
     public abstract boolean isInTrash();
 
+    @JsonIgnore
+    public boolean isNotInTrash() {
+        return !isInTrash();
+    }
+
     /**
      * Gets the default dictionary language for this project
      */

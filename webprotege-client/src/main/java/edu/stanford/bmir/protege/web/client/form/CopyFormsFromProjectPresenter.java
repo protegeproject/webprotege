@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsWithPermissionResult;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -140,6 +141,7 @@ public class CopyFormsFromProjectPresenter {
     private void handleAvailableProjects(GetAvailableProjectsWithPermissionResult result) {
         view.setProjects(result.getProjects()
                                .stream()
+                               .filter(ProjectDetails::isNotInTrash)
                                .sorted()
                                .collect(Collectors.toList()));
     }
