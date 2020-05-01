@@ -490,6 +490,7 @@
     color: literal("var(--grid-header--color)");
     padding-right: 23px; /** Magic number to cover Value List padding of delete button **/
     position: relative;
+    min-height: 1rem;
 }
 
 .wp-form__grid__header-row .wp-form__grid__header-row {
