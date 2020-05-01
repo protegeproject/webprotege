@@ -154,7 +154,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler {
         for(int colIndex = 0 ; colIndex < columnDescriptors.size(); colIndex++) {
             GridColumnDescriptor columnDescriptor = columnDescriptors.get(colIndex);
             boolean columnVisible = visibleColumns.contains(columnDescriptor.getId());
-            view.setColumnVisible(colIndex, columnVisible);
+//            view.setColumnVisible(colIndex, columnVisible);
         }
     }
 
