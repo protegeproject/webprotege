@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
@@ -133,8 +134,17 @@ public class EntityFrameFormDataBuilder {
             @Override
             public ImmutableList<FormControlData> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
                 return values.stream()
-                             .filter(p -> p instanceof OWLEntity)
-                             .map(p -> (OWLEntity) p)
+                             // Allow IRIs which correspond to entities
+                             .filter(p -> p instanceof OWLEntity || p instanceof IRI)
+                             .flatMap(p -> {
+                                 if(p instanceof OWLEntity) {
+                                     return Stream.of((OWLEntity) p);
+                                 }
+                                 else {
+                                     var iri = (IRI) p;
+                                     return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri);
+                                 }
+                             })
                              .map(entity -> EntityNameControlData.get(entityNameControlDescriptor, entity))
                              .collect(toImmutableList());
             }
