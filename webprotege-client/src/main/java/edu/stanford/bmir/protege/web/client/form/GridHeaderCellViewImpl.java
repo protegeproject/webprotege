@@ -15,19 +15,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-27
  */
-public class GridHeaderColumnViewImpl extends Composite implements GridHeaderColumnView {
+public class GridHeaderCellViewImpl extends Composite implements GridHeaderCellView {
 
-    interface GridColumnHeaderViewImplUiBinder extends UiBinder<HTMLPanel, GridHeaderColumnViewImpl> {
+    interface GridHeaderCellViewImplUiBinder extends UiBinder<HTMLPanel, GridHeaderCellViewImpl> {
 
     }
 
-    private static GridColumnHeaderViewImplUiBinder ourUiBinder = GWT.create(GridColumnHeaderViewImplUiBinder.class);
+    private static GridHeaderCellViewImplUiBinder ourUiBinder = GWT.create(GridHeaderCellViewImplUiBinder.class);
 
     @UiField
     Label labelField;
 
     @Inject
-    public GridHeaderColumnViewImpl() {
+    public GridHeaderCellViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

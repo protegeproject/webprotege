@@ -11,13 +11,13 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
  * Stanford Center for Biomedical Informatics Research
  * 2020-05-04
  */
-public class GridColumnHeaderContainerImpl implements GridColumnHeaderContainer {
+public class GridHeaderCellContainerImpl implements GridHeaderCellContainer {
 
     public static final String FLEX_BASIS = "flexBasis";
 
     private final SimplePanel delegate = new SimplePanel();
 
-    public GridColumnHeaderContainerImpl() {
+    public GridHeaderCellContainerImpl() {
         delegate.addStyleName(WebProtegeClientBundle.BUNDLE.style().formGridColumn());
     }
 

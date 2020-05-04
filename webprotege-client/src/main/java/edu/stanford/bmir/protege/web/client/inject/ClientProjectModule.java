@@ -658,7 +658,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    GridHeaderColumnView provideGridColumnHeaderView(GridHeaderColumnViewImpl view) {
+    GridHeaderCellView provideGridColumnHeaderView(GridHeaderCellViewImpl view) {
         return view;
     }
     

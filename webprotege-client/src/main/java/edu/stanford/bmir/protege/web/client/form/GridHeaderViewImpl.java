@@ -1,17 +1,13 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewPopup;
@@ -28,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
@@ -71,8 +66,8 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
 
     @Nonnull
     @Override
-    public GridColumnHeaderContainer addColumnHeader() {
-        GridColumnHeaderContainerImpl container = new GridColumnHeaderContainerImpl();
+    public GridHeaderCellContainer addColumnHeader() {
+        GridHeaderCellContainerImpl container = new GridHeaderCellContainerImpl();
         headerContainer.add(container);
         return container;
     }

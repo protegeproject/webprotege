@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 public interface GridHeaderView extends IsWidget, HasGridColumnFilter {
 
     @Nonnull
-    GridColumnHeaderContainer addColumnHeader();
+    GridHeaderCellContainer addColumnHeader();
 
     void clear();
 }

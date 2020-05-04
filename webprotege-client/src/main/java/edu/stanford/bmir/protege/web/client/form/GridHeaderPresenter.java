@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,7 +36,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
 
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
 
-    private Map<GridColumnDescriptor, GridColumnHeaderContainer> containersByDescriptor = new HashMap<>();
+    private Map<GridColumnDescriptor, GridHeaderCellContainer> containersByDescriptor = new HashMap<>();
 
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
@@ -73,7 +71,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
             GridHeaderColumnPresenter columnPresenter = headerColumnPresenterProvider.get();
             columnPresenters.put(leafColumnDescriptor.getId(), columnPresenter);
             columnPresenter.setColumnDescriptor(leafColumnDescriptor);
-            GridColumnHeaderContainer columnHeaderContainer = view.addColumnHeader();
+            GridHeaderCellContainer columnHeaderContainer = view.addColumnHeader();
             columnHeaderContainer.setWeight(weight);
             columnPresenter.start(columnHeaderContainer);
             containersByDescriptor.put(leafColumnDescriptor, columnHeaderContainer);

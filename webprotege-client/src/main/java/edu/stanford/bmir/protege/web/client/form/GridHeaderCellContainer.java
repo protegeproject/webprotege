@@ -4,14 +4,12 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.IsWidget;
 
-import javax.annotation.Nonnull;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-11-27
+ * 2020-05-04
  */
-public interface GridHeaderColumnView extends IsWidget, HasVisibility {
+public interface GridHeaderCellContainer extends IsWidget, AcceptsOneWidget, HasVisibility {
 
-    void setLabel(@Nonnull String label);
+    void setWeight(double weight);
 }
