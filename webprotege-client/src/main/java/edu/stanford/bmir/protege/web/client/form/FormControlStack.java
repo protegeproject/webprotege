@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
@@ -30,4 +31,6 @@ public interface FormControlStack extends ValueEditor<List<FormControlData>>, Ha
                                                          FormRegionId formRegionId);
 
     void setEnabled(boolean enabled);
+
+    void forEachFormControl(@Nonnull Consumer<FormControl> controlConsumer);
 }

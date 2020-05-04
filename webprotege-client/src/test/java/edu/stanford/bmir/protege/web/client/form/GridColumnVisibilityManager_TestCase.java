@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import org.junit.Before;
@@ -11,7 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -45,14 +44,14 @@ public class GridColumnVisibilityManager_TestCase {
 
     @Test
     public void shouldMakeColumnsVisible() {
-        visibilityManager.setVisibleColumns(ImmutableList.of(columnA, columnB));
+        visibilityManager.setVisibleColumns(ImmutableSet.of(columnA, columnB));
         assertThat(visibilityManager.isVisible(columnA), is(true));
         assertThat(visibilityManager.isVisible(columnB), is(true));
     }
 
     @Test
     public void shouldAddHandler() {
-        visibilityManager.setVisibleColumns(ImmutableList.of(columnA));
+        visibilityManager.setVisibleColumns(ImmutableSet.of(columnA));
         verify(visibilityChangedHandler, times(1))
                 .handleVisibleColumnsChanged();
     }
@@ -61,7 +60,7 @@ public class GridColumnVisibilityManager_TestCase {
     public void shouldNotAddHandlerTwice() {
         // Handler a second time
         visibilityManager.addVisibleColumnsChangedHandler(visibilityChangedHandler);
-        visibilityManager.setVisibleColumns(ImmutableList.of(columnA));
+        visibilityManager.setVisibleColumns(ImmutableSet.of(columnA));
         // Handler should only be called once
         verify(visibilityChangedHandler, times(1))
                 .handleVisibleColumnsChanged();
@@ -69,8 +68,8 @@ public class GridColumnVisibilityManager_TestCase {
 
     @Test
     public void shouldNotFireChangeWhenVisibilityDoesNotChange() {
-        visibilityManager.setVisibleColumns(ImmutableList.of(columnA));
-        visibilityManager.setVisibleColumns(ImmutableList.of(columnA));
+        visibilityManager.setVisibleColumns(ImmutableSet.of(columnA));
+        visibilityManager.setVisibleColumns(ImmutableSet.of(columnA));
         verify(visibilityChangedHandler, times(1))
                 .handleVisibleColumnsChanged();
     }
@@ -78,7 +77,7 @@ public class GridColumnVisibilityManager_TestCase {
     @Test
     public void shouldRemoveHandler() {
         handlerRegistration.removeHandler();
-        visibilityManager.setVisibleColumns(ImmutableList.of(columnA));
+        visibilityManager.setVisibleColumns(ImmutableSet.of(columnA));
         verify(visibilityChangedHandler, never())
                 .handleVisibleColumnsChanged();
     }

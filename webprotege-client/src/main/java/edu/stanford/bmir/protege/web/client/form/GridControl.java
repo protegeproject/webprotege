@@ -30,7 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-26
  */
-public class GridControl implements FormControl {
+public class GridControl implements FormControl, HasGridColumnVisibilityManager {
 
     private final HandlerManager handlerManager = new HandlerManager(this);
 
@@ -49,6 +49,10 @@ public class GridControl implements FormControl {
     public void setRegionPosition(@Nonnull FormRegionPosition position) {
         if(position.equals(FormRegionPosition.NESTED)) {
             this.gridPresenter.hideHeaderRow();
+        }
+        else {
+            gridPresenter.setColumnVisibilityManager(new GridColumnVisibilityManager());
+            this.gridPresenter.setTopLevel();
         }
     }
 
@@ -132,5 +136,14 @@ public class GridControl implements FormControl {
     @Override
     public boolean isEnabled() {
         return gridPresenter.isEnabled();
+    }
+
+    @Override
+    public void setColumnVisibilityManager(@Nonnull GridColumnVisibilityManager columnVisibilityManager) {
+        gridPresenter.setColumnVisibilityManager(columnVisibilityManager);
+    }
+
+    public void updateColumnVisibility() {
+        gridPresenter.updateVisibleColumns();
     }
 }

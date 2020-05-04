@@ -26,9 +26,6 @@ public class GridHeaderColumnViewImpl extends Composite implements GridHeaderCol
     @UiField
     Label labelField;
 
-    @UiField
-    SimplePanel subHeaderContainer;
-
     @Inject
     public GridHeaderColumnViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -38,12 +35,5 @@ public class GridHeaderColumnViewImpl extends Composite implements GridHeaderCol
     public void setLabel(@Nonnull String label) {
         labelField.setText(checkNotNull(label));
         labelField.setVisible(true);
-        subHeaderContainer.setVisible(false);
-    }
-
-    @Nonnull
-    @Override
-    public AcceptsOneWidget getSubHeaderContainer() {
-        return subHeaderContainer;
     }
 }

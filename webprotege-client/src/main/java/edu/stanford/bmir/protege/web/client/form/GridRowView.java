@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nonnull;
@@ -13,9 +12,7 @@ import javax.annotation.Nonnull;
 public interface GridRowView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget addCell(int ordinal, double weight);
+    GridCellContainer addCell();
 
     void clear();
-
-    void setColumnVisible(int colIndex, boolean visible);
 }

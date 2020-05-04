@@ -6,8 +6,7 @@
 
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{wp.style.formGridColumn}">
+    <g:HTMLPanel>
         <g:Label ui:field="labelField" addStyleNames="{style.headerLabel}" visible="false"/>
-        <g:SimplePanel ui:field="subHeaderContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -28,6 +28,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -188,5 +189,10 @@ public class FormControlStackImpl extends Composite implements FormControlStack 
     @Override
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
         this.formRegionPageChangedHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void forEachFormControl(@Nonnull Consumer<FormControl> controlConsumer) {
+        delegateEditor.forEachFormControl(controlConsumer);
     }
 }

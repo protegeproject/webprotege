@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
@@ -47,6 +48,22 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
 
     @Nonnull
     public abstract GridColumnId getId();
+
+    public Stream<GridColumnDescriptor> getLeafColumnDescriptors() {
+        FormControlDescriptor formControlDescriptor = getFormControlDescriptor();
+        if(formControlDescriptor instanceof GridControlDescriptor) {
+            // This is not a leaf column
+            return ((GridControlDescriptor) formControlDescriptor).getLeafColumns();
+        }
+        else {
+            // This is a leaf column
+            return Stream.of(this);
+        }
+    }
+
+    public boolean isLeafColumnDescriptor() {
+        return !(getFormControlDescriptor() instanceof GridControlDescriptor);
+    }
 
     @Nonnull
     public abstract Optionality getOptionality();

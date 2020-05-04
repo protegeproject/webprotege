@@ -7,12 +7,16 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.stream.Stream;
+
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -69,6 +73,13 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
 
     public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
         return Optional.ofNullable(getSubjectFactoryDescriptorInternal());
+    }
+
+    @Nonnull
+    public Stream<GridColumnDescriptor> getLeafColumns() {
+        return getColumns()
+                .stream()
+                .flatMap(GridColumnDescriptor::getLeafColumnDescriptors);
     }
 
 }

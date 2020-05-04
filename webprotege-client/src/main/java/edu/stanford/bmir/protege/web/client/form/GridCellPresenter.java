@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
@@ -24,7 +22,7 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedChangedHandler {
+public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedChangedHandler, HasGridColumnVisibilityManager {
 
     @Nonnull
     private final GridCellView view;
@@ -42,11 +40,13 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
 
     private boolean enabled = true;
 
+    private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
+
     @Inject
     public GridCellPresenter(@Nonnull GridCellView view,
                              @Nonnull FormFieldControlStackFactory formFieldControlStackFactory) {
         this.view = checkNotNull(view);
-        this.formFieldControlStackFactory = formFieldControlStackFactory;
+        this.formFieldControlStackFactory = checkNotNull(formFieldControlStackFactory);
     }
 
     public void clear() {
@@ -96,6 +96,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
         controlStack.setValue(data.getValues());
         controlStack.setEnabled(enabled);
         updateValueRequired();
+        updateColumnVisibilityManagerInChildControls();
     }
 
     public GridCellData getValue() {
@@ -121,6 +122,30 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
             else {
                 view.setRequiredValueNotPresentVisible(false);
             }
+        });
+    }
+
+    public void updateColumnVisibility() {
+        controlStack.forEachFormControl(formControl -> {
+            if(formControl instanceof GridControl) {
+                ((GridControl) formControl).updateColumnVisibility();
+            }
+        });
+    }
+
+    @Override
+    public void setColumnVisibilityManager(@Nonnull GridColumnVisibilityManager columnVisibilityManager) {
+        this.columnVisibilityManager = Optional.of(checkNotNull(columnVisibilityManager));
+        updateColumnVisibilityManagerInChildControls();
+    }
+
+    private void updateColumnVisibilityManagerInChildControls() {
+        columnVisibilityManager.ifPresent(visibilityManager -> {
+            controlStack.forEachFormControl(formControl -> {
+                if(formControl instanceof GridControl) {
+                    ((GridControl) formControl).setColumnVisibilityManager(visibilityManager);
+                }
+            });
         });
     }
 
