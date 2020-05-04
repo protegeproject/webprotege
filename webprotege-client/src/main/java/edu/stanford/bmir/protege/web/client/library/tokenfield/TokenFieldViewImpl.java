@@ -38,6 +38,7 @@ public class TokenFieldViewImpl extends Composite implements TokenFieldView {
     public TokenFieldViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         addTokenButton.addClickHandler(event -> addTokenHandler.handleAddToken(event));
+        placeholder.addClickHandler(event -> addTokenHandler.handleAddToken(event));
     }
 
     @Override

@@ -9,6 +9,7 @@
         }
         .placeholderLabel {
             color: literal("var(--placeholder--color)");
+            cursor: pointer;
         }
         .container {
             display: flex;
