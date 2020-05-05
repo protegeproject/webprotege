@@ -41,6 +41,8 @@ public class EntityFormStackPresenter {
 
     private HasBusy hasBusy = (busy) -> {};
 
+    private Optional<FormLanguageFilterStash> formLanguageFilterStash = Optional.empty();
+
     enum Mode {
         EDIT_MODE,
         READ_ONLY_MODE
@@ -99,6 +101,7 @@ public class EntityFormStackPresenter {
     }
 
     private void handleLangTagFilterChanged() {
+        stashLanguagesFilter();
         updateFormsForCurrentEntity();
     }
 
@@ -199,5 +202,20 @@ public class EntityFormStackPresenter {
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
         formStackPresenter.setSelectedFormIdStash(formIdStash);
+    }
+
+    private void stashLanguagesFilter() {
+        formLanguageFilterStash.ifPresent(stash -> {
+            ImmutableSet<LangTag> filteringTags = langTagFilterPresenter.getFilter()
+                                                                        .getFilteringTags();
+            stash.stashLanguage(filteringTags);
+        });
+    }
+
+    public void setLanguageFilterStash(FormLanguageFilterStash formLanguageFilterStash) {
+        this.formLanguageFilterStash = Optional.of(checkNotNull(formLanguageFilterStash));
+        ImmutableSet<LangTag> stashedLangTags = ImmutableSet.copyOf(formLanguageFilterStash.getStashedLangTags());
+        LangTagFilter langTagFilter = LangTagFilter.get(stashedLangTags);
+        langTagFilterPresenter.setFilter(langTagFilter);
     }
 }

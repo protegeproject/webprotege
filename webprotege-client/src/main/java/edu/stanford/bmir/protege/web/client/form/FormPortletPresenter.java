@@ -69,6 +69,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         entityFormStackPresenter.start(portletUi);
         entityFormStackPresenter.setHasBusy(portletUi);
         entityFormStackPresenter.setSelectedFormIdStash(new SelectedFormIdStash(portletUi));
+        entityFormStackPresenter.setLanguageFilterStash(new FormLanguageFilterStash(portletUi));
         handleAfterSetEntity(getSelectedEntity());
     }
 }

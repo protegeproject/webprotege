@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 
 import javax.annotation.Nonnull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class FormLanguageFilterStash {
         this.hasNodeProperties = checkNotNull(hasNodeProperties);
     }
 
-    public void stashLanguage(@Nonnull List<LangTag> langTags) {
+    public void stashLanguage(@Nonnull Collection<LangTag> langTags) {
         checkNotNull(langTags);
         String serialized = langTags.stream()
                 .map(LangTag::getLanguageCode)
