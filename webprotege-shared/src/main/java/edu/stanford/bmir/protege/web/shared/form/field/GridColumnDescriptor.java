@@ -49,6 +49,7 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     @Nonnull
     public abstract GridColumnId getId();
 
+    @JsonIgnore
     public Stream<GridColumnDescriptor> getLeafColumnDescriptors() {
         FormControlDescriptor formControlDescriptor = getFormControlDescriptor();
         if(formControlDescriptor instanceof GridControlDescriptor) {
@@ -61,6 +62,7 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
         }
     }
 
+    @JsonIgnore
     public boolean isLeafColumnDescriptor() {
         return !(getFormControlDescriptor() instanceof GridControlDescriptor);
     }
@@ -88,6 +90,7 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     @Nonnull
     public abstract FormControlDescriptor getFormControlDescriptor();
 
+    @JsonIgnore
     public int getNestedColumnCount() {
         FormControlDescriptor formControlDescriptor = getFormControlDescriptor();
         if(formControlDescriptor instanceof GridControlDescriptor) {

@@ -58,6 +58,7 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
         return visitor.visit(this);
     }
 
+    @JsonIgnore
     public int getNestedColumnCount() {
         int count = 0;
         for(GridColumnDescriptor columnDescriptor : getColumns()) {
@@ -75,6 +76,7 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
         return Optional.ofNullable(getSubjectFactoryDescriptorInternal());
     }
 
+    @JsonIgnore
     @Nonnull
     public Stream<GridColumnDescriptor> getLeafColumns() {
         return getColumns()
