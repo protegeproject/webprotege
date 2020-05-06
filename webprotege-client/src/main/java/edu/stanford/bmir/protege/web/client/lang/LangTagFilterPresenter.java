@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.AddTokenCallback;
@@ -15,6 +17,9 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -74,14 +79,27 @@ public class LangTagFilterPresenter {
     }
 
     private void handleAddLangTag(ClickEvent event, AddTokenCallback<LangTag> callback) {
+        Set<LangTag> existingLangTags = ImmutableSet.copyOf(langTagTokenPresenter.getTokenObjects());
         PopupMenu popupMenu = new PopupMenu();
         dispatchServiceManager.execute(new GetProjectLangTagsAction(projectId),
                                        result -> {
                                            result.getLangTags()
+                                                 .stream()
+                                                 .filter(langTag -> !existingLangTags.contains(langTag))
                                                  .forEach(langTag ->
                                                                   popupMenu.addItem(langTag.format(), () -> {
                                                                         callback.addToken(langTag, langTag.format());
                                                  }));
+                                           if(popupMenu.isEmpty()) {
+                                               UIAction action = new AbstractUiAction("No remaining languages") {
+                                                   @Override
+                                                   public void execute() {
+
+                                                   }
+                                               };
+                                               action.setEnabled(false);
+                                               popupMenu.addItem(action);
+                                           }
                                            popupMenu.showRelativeTo(view.asWidget());
                                        });
     }
