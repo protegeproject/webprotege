@@ -122,6 +122,7 @@ public class BindingValuesExtractor {
                                              .flatMap(ontId -> annotationAssertionAxiomsBySubjectIndex.getAxiomsForSubject(
                                                      subject.getIRI(),
                                                      ontId))
+                                             .filter(ax -> ax.getProperty().equals(property))
                                              .map(OWLAnnotationAssertionAxiom::getValue)
                                              .sorted()
                                              .collect(toImmutableList());
