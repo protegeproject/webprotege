@@ -101,7 +101,8 @@ public class EntityFrameFormDataBuilder {
                              .filter(p -> p instanceof OWLLiteral)
                              .map(p -> (OWLLiteral) p)
                              .map(literal -> TextControlData.get(textControlDescriptor, literal))
-                             .collect(toImmutableList());
+                        .filter(data -> isIncluded(data, langTagFilter))
+                        .collect(toImmutableList());
             }
 
             @Override
@@ -118,7 +119,8 @@ public class EntityFrameFormDataBuilder {
                 return values.stream()
                              .map(converter::toFormControlData)
                              .map(value -> SingleChoiceControlData.get(singleChoiceControlDescriptor, value))
-                             .limit(1)
+                        .filter(data -> isIncluded(data, langTagFilter))
+                        .limit(1)
                              .collect(toImmutableList());
             }
 
