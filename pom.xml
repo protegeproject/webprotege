@@ -15,7 +15,7 @@
         <owlapi.version>4.5.13</owlapi.version>
         <widgetmap.version>3.0.0</widgetmap.version>
         <graphtree.version>1.1.1</graphtree.version>
-        <autovalue.version>1.6.3rc1</autovalue.version>
+        <autovalue.version>1.7.1</autovalue.version>
         <jackson.version>2.9.7</jackson.version>
         <!-- WebProtege Specific Properties -->
         <mail.smtp.host/>
@@ -24,7 +24,7 @@
         <application.analytics/>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
-        <auto-factory.version>1.0-beta6</auto-factory.version>
+        <auto-factory.version>1.0-beta7</auto-factory.version>
         <junit.version>4.12</junit.version>
         <commonmark.version>0.11.0</commonmark.version>
     </properties>
