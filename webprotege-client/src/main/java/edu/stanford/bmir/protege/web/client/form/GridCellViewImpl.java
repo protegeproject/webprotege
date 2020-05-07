@@ -4,10 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
@@ -42,6 +40,10 @@ public class GridCellViewImpl extends Composite implements GridCellView {
 
     @Override
     public void requestFocus() {
+        Widget editorWidget = editorContainer.getWidget();
+        if(editorWidget instanceof HasRequestFocus) {
+            ((HasRequestFocus) editorWidget).requestFocus();
+        }
     }
 
     @Override

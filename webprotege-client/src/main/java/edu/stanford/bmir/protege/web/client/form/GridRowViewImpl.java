@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
@@ -29,7 +30,7 @@ public class GridRowViewImpl extends Composite implements GridRowView {
     @UiField
     HTMLPanel rowContainer;
 
-    private List<Widget> cellContainers = new ArrayList<>();
+    private List<SimplePanel> cellContainers = new ArrayList<>();
 
     @Inject
     public GridRowViewImpl() {
@@ -54,4 +55,14 @@ public class GridRowViewImpl extends Composite implements GridRowView {
         cellContainers.clear();
     }
 
+    @Override
+    public void requestFocus() {
+        if(!cellContainers.isEmpty()) {
+            SimplePanel container = cellContainers.get(0);
+            Widget w = container.getWidget();
+            if(w instanceof HasRequestFocus) {
+                ((HasRequestFocus) w).requestFocus();
+            }
+        }
+    }
 }

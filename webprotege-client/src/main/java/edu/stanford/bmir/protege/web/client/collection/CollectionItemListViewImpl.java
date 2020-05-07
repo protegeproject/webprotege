@@ -80,6 +80,11 @@ public class CollectionItemListViewImpl extends Composite implements CollectionI
     }
 
     @Override
+    public void setElementCount(long elementCount) {
+        paginatorPresenter.setElementCount(elementCount);
+    }
+
+    @Override
     public void setSelectionChangedHandler(@Nonnull SelectionChangedHandler handler) {
         this.selectionChangedHandler = checkNotNull(handler);
     }

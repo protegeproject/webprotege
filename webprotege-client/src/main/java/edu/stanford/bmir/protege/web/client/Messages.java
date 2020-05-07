@@ -1279,4 +1279,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("The password that you specified as your current password is incorrect. Please re-enter your current password and try again.")
     @Key("password.change.currentPasswordIncorrect.body")
     String password_change_currentPasswordIncorrect_Body();
+
+    @DefaultMessage("({0,number} rows in total)")
+    @AlternateMessage({"one", "(1 row in total)"})
+    @Key("pagination.rows")
+    String pagination_rows(long elementCount);
 }

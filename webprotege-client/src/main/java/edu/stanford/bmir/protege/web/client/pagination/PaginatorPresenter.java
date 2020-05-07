@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.pagination;
 
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
 import javax.annotation.Nonnull;
@@ -70,10 +69,16 @@ public class PaginatorPresenter implements HasPages {
         updateState();
     }
 
+
+
     public int getPageSize() {
         return PageRequest.DEFAULT_PAGE_SIZE;
     }
 
+    @Override
+    public void setElementCount(long elementCount) {
+        view.setElementCount(elementCount);
+    }
 
     private void handlePageNumberEdited(String value) {
         try {

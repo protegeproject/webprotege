@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
@@ -53,5 +54,13 @@ public class GridCellContainerImpl implements GridCellContainer {
         Style style = delegate.getElement()
                               .getStyle();
         style.setProperty(FLEX_BASIS, weight * 100, Style.Unit.PCT);
+    }
+
+    @Override
+    public void requestFocus() {
+        Widget w = delegate.getWidget();
+        if(w instanceof HasRequestFocus) {
+            ((HasRequestFocus) w).requestFocus();
+        }
     }
 }

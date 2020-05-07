@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 
@@ -22,7 +23,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-11
  */
-public class GridRowPresenterAdapter implements ValueEditor<GridRowPresenter>, HasEnabled {
+public class GridRowPresenterAdapter implements ValueEditor<GridRowPresenter>, HasEnabled, HasRequestFocus {
 
     @Nonnull
     private final SimplePanel holder = new SimplePanel();
@@ -86,5 +87,10 @@ public class GridRowPresenterAdapter implements ValueEditor<GridRowPresenter>, H
     @Override
     public boolean isWellFormed() {
         return presenter.isPresent();
+    }
+
+    @Override
+    public void requestFocus() {
+        presenter.ifPresent(GridRowPresenter::requestFocus);
     }
 }

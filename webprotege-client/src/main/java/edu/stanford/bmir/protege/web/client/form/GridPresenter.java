@@ -35,6 +35,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 public class GridPresenter implements HasGridColumnVisibilityManager {
 
+    public static final int DEFAULT_PAGE_SIZE = 10;
     @Nonnull
     private final GridView view;
 
@@ -78,8 +79,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject,
                                                                 @Nonnull FormRegionId formRegionId) {
         int pageNumber = view.getPageNumber();
-        int pageSize = view.getPageSize();
-        PageRequest pageRequest = PageRequest.requestPageWithSize(pageNumber, pageSize);
+        PageRequest pageRequest = PageRequest.requestPageWithSize(pageNumber, DEFAULT_PAGE_SIZE);
         FormRegionPageRequest gridPageRequest = FormRegionPageRequest.get(formSubject, formRegionId, FormPageRequest.SourceType.GRID_CONTROL, pageRequest);
 
         ImmutableList<FormRegionPageRequest> rowRequests = view.getRows()
@@ -146,6 +146,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         view.setRows(rows);
         view.setPageCount(rowsPage.getPageCount());
         view.setPageNumber(rowsPage.getPageNumber());
+        view.setElementCount(rowsPage.getTotalElements());
         view.setPaginatorVisible(rowsPage.getPageCount() > 1);
         view.setEnabled(enabled);
     }

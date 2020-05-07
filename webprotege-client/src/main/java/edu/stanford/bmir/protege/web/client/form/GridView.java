@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.client.pagination.HasPages;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public interface GridView extends IsWidget, HasRequestFocus, HasPagination {
+public interface GridView extends IsWidget, HasRequestFocus, HasPagination, HasPages {
 
     void setEnabled(boolean enabled);
 

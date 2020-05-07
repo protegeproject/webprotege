@@ -105,6 +105,16 @@ public class GridViewImpl extends Composite implements GridView {
     }
 
     @Override
+    public void setElementCount(long elementCount) {
+        paginatorPresenter.setElementCount(elementCount);
+    }
+
+    @Override
+    public int getPageSize() {
+        return paginatorPresenter.getPageSize();
+    }
+
+    @Override
     public void clear() {
         rowEditor.clearValue();
         paginatorPresenter.setPageNumber(1);

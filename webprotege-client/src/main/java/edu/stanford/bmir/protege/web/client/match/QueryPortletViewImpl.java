@@ -73,12 +73,15 @@ public class QueryPortletViewImpl extends Composite implements QueryPortletView 
 
     @Inject
     public QueryPortletViewImpl(@Nonnull PrimitiveDataIconProvider primitiveDataIconProvider,
-                                @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper, @Nonnull PlaceController placeController, @Nonnull Provider<MatchResult> matchResultProvider) {
+                                @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper,
+                                @Nonnull PlaceController placeController,
+                                @Nonnull Provider<MatchResult> matchResultProvider,
+                                @Nonnull PaginatorPresenter paginatorPresenter) {
         this.primitiveDataIconProvider = primitiveDataIconProvider;
         this.typePerspectiveMapper = typePerspectiveMapper;
         this.placeController = placeController;
         this.matchResultProvider = matchResultProvider;
-        paginatorPresenter = new PaginatorPresenter(new PaginatorViewImpl());
+        this.paginatorPresenter = paginatorPresenter;
         paginator = (PaginatorViewImpl) paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
         scrollTracker = new ScrollTracker(resultsContainer);

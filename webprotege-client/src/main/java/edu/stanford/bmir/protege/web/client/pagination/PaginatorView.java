@@ -38,6 +38,8 @@ public interface PaginatorView extends IsWidget, HasVisibility {
 
     void setPageNumber(@Nonnull String currentPageNumber);
 
+    void setElementCount(long elementCount);
+
     @Nonnull
     String getPageNumber();
 }
