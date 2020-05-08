@@ -119,6 +119,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
         return !(getFormControlDescriptor() instanceof SubFormControlDescriptor);
     }
 
+    @JsonIgnore
     public boolean isRepeatable() {
         return !getRepeatability().equals(Repeatability.NON_REPEATABLE);
     }
