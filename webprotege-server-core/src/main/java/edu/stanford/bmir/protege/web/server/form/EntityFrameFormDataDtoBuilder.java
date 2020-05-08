@@ -30,7 +30,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 2019-10-31
  */
-public class EntityFrameFormDataBuilder {
+public class EntityFrameFormDataDtoBuilder {
 
 
     @Nonnull
@@ -44,9 +44,9 @@ public class EntityFrameFormDataBuilder {
 
     @AutoFactory
     @Inject
-    public EntityFrameFormDataBuilder(@Nonnull OWLPrimitive2FormControlDataConverter converter,
-                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
-                                      @Nonnull BindingValuesExtractor bindingValuesExtractor) {
+    public EntityFrameFormDataDtoBuilder(@Nonnull OWLPrimitive2FormControlDataConverter converter,
+                                         @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
+                                         @Nonnull BindingValuesExtractor bindingValuesExtractor) {
         this.converter = converter;
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
         this.bindingValuesExtractor = bindingValuesExtractor;

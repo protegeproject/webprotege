@@ -1,16 +1,12 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,13 +28,13 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
     private final EntityFormManager formManager;
 
     @Nonnull
-    private final EntityFrameFormDataBuilder formDataBuilder;
+    private final EntityFrameFormDataDtoBuilder formDataBuilder;
 
     @Inject
     public GetEntityFormActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull ProjectId projectId,
                                       @Nonnull EntityFormManager formManager,
-                                      @Nonnull EntityFrameFormDataBuilder formDataBuilder) {
+                                      @Nonnull EntityFrameFormDataDtoBuilder formDataBuilder) {
         super(accessManager);
         this.projectId = projectId;
         this.formManager = formManager;
