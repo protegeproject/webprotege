@@ -19,26 +19,32 @@ public class FormFieldPresenterFactory {
     private final Provider<FormFieldView> viewProvider;
 
     @Nonnull
-    private final FormFieldControlStackFactory formFieldControlStackFactory;
-
-    @Nonnull
     private final LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper;
 
+    @Nonnull
+    private final FormControlStackPresenterFactory controlStackPresenterFactory;
 
+
+    // Can't @AutoFactory this because it's injected into another @AutoFactory :(
     @Inject
     public FormFieldPresenterFactory(@Nonnull Provider<FormFieldView> viewProvider,
-                                     @Nonnull FormFieldControlStackFactory formControlFactory,
-                                     @Nonnull LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper) {
+                                     @Nonnull LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper,
+                                     @Nonnull FormControlStackPresenterFactory controlStackPresenterFactory) {
         this.viewProvider = checkNotNull(viewProvider);
-        this.formFieldControlStackFactory = checkNotNull(formControlFactory);
+        this.controlStackPresenterFactory = checkNotNull(controlStackPresenterFactory);
         this.languageMapCurrentLocaleMapper = checkNotNull(languageMapCurrentLocaleMapper);
     }
 
+    @Nonnull
     public FormFieldPresenter create(@Nonnull FormFieldDescriptor fieldDescriptor) {
-        FormFieldPresenter presenter = new FormFieldPresenter(viewProvider.get(), fieldDescriptor,
-                                                              formFieldControlStackFactory,
-                                                              languageMapCurrentLocaleMapper);
-        presenter.start();
-        return presenter;
+
+        FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(fieldDescriptor.getFormControlDescriptor(),
+                                                                                              fieldDescriptor.getRepeatability());
+        return new FormFieldPresenter(
+                viewProvider.get(),
+                fieldDescriptor,
+                controlStackPresenter,
+                languageMapCurrentLocaleMapper
+        );
     }
 }

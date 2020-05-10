@@ -8,7 +8,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -21,8 +20,9 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.NumberControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlRange;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -93,22 +93,12 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     }
 
     @Override
-    public boolean isWellFormed() {
-        return getValue().isPresent();
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return addHandler(handler, DirtyChangedEvent.TYPE);
-    }
-
-    @Override
-    public void setValue(FormControlData object) {
-        if (!(object instanceof NumberControlData)) {
+    public void setValue(@Nonnull FormControlDataDto object) {
+        if (!(object instanceof NumberControlDataDto)) {
             clearValue();
             return;
         }
-        NumberControlData data = (NumberControlData) object;
+        NumberControlDataDto data = (NumberControlDataDto) object;
         try {
             currentValue = data.getValue();
             if(currentValue.isPresent()) {
@@ -154,11 +144,6 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         GWT.log("[NumberEditorControl] addValueChangeHandler");
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    @Override
-    public boolean isDirty() {
-        return dirty;
     }
 
     public void setLength(int length) {

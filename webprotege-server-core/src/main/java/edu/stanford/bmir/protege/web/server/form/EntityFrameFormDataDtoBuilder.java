@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRenderer;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
+import edu.stanford.bmir.protege.web.shared.entity.IRIData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.OWLPrimitive2FormControlDataConverter;
@@ -20,10 +25,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import static dagger.internal.codegen.DaggerStreams.toImmutableList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -34,30 +38,41 @@ public class EntityFrameFormDataDtoBuilder {
 
 
     @Nonnull
-    private final OWLPrimitive2FormControlDataConverter converter;
-
-    @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     @Nonnull
     private final BindingValuesExtractor bindingValuesExtractor;
 
+    @Nonnull
+    private final FrameComponentSessionRenderer sessionRenderer;
+
+    @Nonnull
+    private final ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier;
+
+    @Nonnull
+    private final PrimitiveFormControlDataDtoRenderer primitiveDataRenderer;
+
     @AutoFactory
     @Inject
-    public EntityFrameFormDataDtoBuilder(@Nonnull OWLPrimitive2FormControlDataConverter converter,
-                                         @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
-                                         @Nonnull BindingValuesExtractor bindingValuesExtractor) {
-        this.converter = converter;
+    public EntityFrameFormDataDtoBuilder(@Provided @Nonnull OWLPrimitive2FormControlDataConverter converter,
+                                         @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
+                                         @Provided @Nonnull BindingValuesExtractor bindingValuesExtractor,
+                                         @Nonnull FrameComponentSessionRenderer sessionRenderer,
+                                         @Provided @Nonnull ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier,
+                                         @Provided @Nonnull PrimitiveFormControlDataDtoRenderer primitiveDataRenderer) {
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
         this.bindingValuesExtractor = bindingValuesExtractor;
+        this.sessionRenderer = sessionRenderer;
+        this.choiceDescriptorDtoSupplier = choiceDescriptorDtoSupplier;
+        this.primitiveDataRenderer = primitiveDataRenderer;
     }
 
-    private FormSubject getFormSubject(OWLPrimitive root) {
-        if(root instanceof IRI) {
-            return FormSubject.get((IRI) root);
+    private FormSubjectDto getFormSubject(OWLPrimitiveData root) {
+        if(root instanceof IRIData) {
+            return FormSubjectDto.get((IRIData) root);
         }
-        else if(root instanceof OWLEntity) {
-            return FormSubject.get((OWLEntity) root);
+        else if(root instanceof OWLEntityData) {
+            return FormSubjectDto.get((OWLEntityData) root);
         }
         else {
             throw new RuntimeException("Cannot process form subjects that are not IRIs or Entities");
@@ -65,14 +80,13 @@ public class EntityFrameFormDataDtoBuilder {
     }
 
     @Nullable
-    private OWLEntity toEntityFormSubject(OWLPrimitive primitive) {
+    private OWLEntityData toEntityFormSubject(OWLPrimitive primitive) {
         if(primitive instanceof OWLEntity) {
-            return (OWLEntity) primitive;
+            return getRendering((OWLEntity) primitive);
         }
         else if(primitive instanceof IRI) {
             var iri = (IRI) primitive;
-            return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri)
-                                                       .sorted()
+            return sessionRenderer.getRendering(iri).stream().sorted()
                                                        .findFirst()
                                                        .orElse(null);
         }
@@ -81,7 +95,12 @@ public class EntityFrameFormDataDtoBuilder {
         }
     }
 
-    private ImmutableList<FormControlData> toFormControlValues(@Nonnull OWLEntity subject,
+    @Nonnull
+    private OWLEntityData getRendering(@Nonnull OWLEntity entity) {
+        return sessionRenderer.getEntityRendering(entity);
+    }
+
+    private ImmutableList<FormControlDataDto> toFormControlValues(@Nonnull OWLEntityData subject,
                                                                @Nonnull FormRegionId formFieldId,
                                                                @Nonnull BoundControlDescriptor descriptor,
                                                                @Nonnull FormPageRequestIndex formPageRequestIndex,
@@ -91,77 +110,80 @@ public class EntityFrameFormDataDtoBuilder {
             return ImmutableList.of();
         }
         var theBinding = owlBinding.get();
-        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
 
         var formControlDescriptor = descriptor.getFormControlDescriptor();
         return formControlDescriptor.accept(new FormControlDescriptorVisitor<>() {
             @Override
-            public ImmutableList<FormControlData> visit(TextControlDescriptor textControlDescriptor) {
+            public ImmutableList<FormControlDataDto> visit(TextControlDescriptor textControlDescriptor) {
                 return values.stream()
                              .filter(p -> p instanceof OWLLiteral)
                              .map(p -> (OWLLiteral) p)
-                             .map(literal -> TextControlData.get(textControlDescriptor, literal))
-                        .filter(data -> isIncluded(data, langTagFilter))
-                        .collect(toImmutableList());
-            }
-
-            @Override
-            public ImmutableList<FormControlData> visit(NumberControlDescriptor numberControlDescriptor) {
-                return values.stream()
-                             .filter(p -> p instanceof OWLLiteral)
-                             .map(p -> (OWLLiteral) p)
-                             .map(value -> NumberControlData.get(numberControlDescriptor, value))
+                             .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
                              .collect(toImmutableList());
             }
 
             @Override
-            public ImmutableList<FormControlData> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
+            public ImmutableList<FormControlDataDto> visit(NumberControlDescriptor numberControlDescriptor) {
                 return values.stream()
-                             .map(converter::toFormControlData)
-                             .map(value -> SingleChoiceControlData.get(singleChoiceControlDescriptor, value))
-                        .filter(data -> isIncluded(data, langTagFilter))
-                        .limit(1)
+                             .filter(p -> p instanceof OWLLiteral)
+                             .map(p -> (OWLLiteral) p)
+                             .map(value -> NumberControlDataDto.get(numberControlDescriptor, value))
                              .collect(toImmutableList());
             }
 
             @Override
-            public ImmutableList<FormControlData> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
+            public ImmutableList<FormControlDataDto> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
+                var choiceSource = singleChoiceControlDescriptor.getSource();
+                return values.stream()
+                             .map(p -> primitiveDataRenderer.toFormControlDataDto(p, sessionRenderer))
+                             .map(value -> SingleChoiceControlDataDto.get(singleChoiceControlDescriptor,
+                                                                          toChoices(choiceSource),
+                                                                          value))
+                             .filter(data -> isIncluded(data, langTagFilter))
+                             .limit(1)
+                             .collect(toImmutableList());
+            }
+
+            @Override
+            public ImmutableList<FormControlDataDto> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
                 var vals = values.stream()
-                                 .map(converter::toFormControlData)
+                                 .map(p -> primitiveDataRenderer.toFormControlDataDto(p, sessionRenderer))
                                  .collect(toImmutableList());
-                return ImmutableList.of(MultiChoiceControlData.get(multiChoiceControlDescriptor,
-                                                                   vals));
+                return ImmutableList.of(MultiChoiceControlDataDto.get(multiChoiceControlDescriptor,
+                                                                      toChoices(multiChoiceControlDescriptor.getSource()),
+                                                                      vals));
             }
 
             @Override
-            public ImmutableList<FormControlData> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
+            public ImmutableList<FormControlDataDto> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
                 return values.stream()
                              // Allow IRIs which correspond to entities
                              .filter(p -> p instanceof OWLEntity || p instanceof IRI)
                              .flatMap(p -> {
-                                 if(p instanceof OWLEntity) {
+                                 if (p instanceof OWLEntity) {
                                      return Stream.of((OWLEntity) p);
-                                 }
-                                 else {
+                                 } else {
                                      var iri = (IRI) p;
                                      return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri);
                                  }
                              })
-                             .map(entity -> EntityNameControlData.get(entityNameControlDescriptor, entity))
+                             .map(entity -> getRendering(entity))
+                             .map(entity -> EntityNameControlDataDto.get(entityNameControlDescriptor, entity))
                              .collect(toImmutableList());
             }
 
             @Override
-            public ImmutableList<FormControlData> visit(ImageControlDescriptor imageControlDescriptor) {
+            public ImmutableList<FormControlDataDto> visit(ImageControlDescriptor imageControlDescriptor) {
                 return values.stream()
                              .filter(p -> p instanceof IRI)
                              .map(p -> (IRI) p)
-                             .map(iri -> ImageControlData.get(imageControlDescriptor, iri))
+                             .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri))
                              .collect(toImmutableList());
             }
 
             @Override
-            public ImmutableList<FormControlData> visit(GridControlDescriptor gridControlDescriptor) {
+            public ImmutableList<FormControlDataDto> visit(GridControlDescriptor gridControlDescriptor) {
                 return ImmutableList.of(toGridControlData(subject,
                                                           formFieldId,
                                                           values,
@@ -171,7 +193,7 @@ public class EntityFrameFormDataDtoBuilder {
             }
 
             @Override
-            public ImmutableList<FormControlData> visit(SubFormControlDescriptor subFormControlDescriptor) {
+            public ImmutableList<FormControlDataDto> visit(SubFormControlDescriptor subFormControlDescriptor) {
                 // TODO: CHECK FOR CYCLES
                 FormDescriptor subFormDescriptor = subFormControlDescriptor.getFormDescriptor();
                 return values.stream()
@@ -183,21 +205,28 @@ public class EntityFrameFormDataDtoBuilder {
         });
     }
 
-    public FormData toFormData(@Nonnull OWLEntity subject,
+    private ImmutableList<ChoiceDescriptorDto> toChoices(@Nonnull ChoiceListSourceDescriptor sourceDescriptor) {
+        return choiceDescriptorDtoSupplier.getChoices(sourceDescriptor, sessionRenderer);
+    }
+
+    public FormDataDto toFormData(@Nonnull OWLEntity subject,
                                @Nonnull FormDescriptor formDescriptor,
                                @Nonnull FormPageRequestIndex formPageRequestIndex,
                                @Nonnull LangTagFilter langTagFilter) {
-        var formSubject = FormSubject.get(subject);
+        var subjectData = getRendering(subject);
+        var formSubject = getFormSubject(subjectData);
         var fieldData = formDescriptor.getFields()
                                       .stream()
                                       .map(field -> {
-                                          ImmutableList<FormControlData> formControlValues = toFormControlValues(subject,
+                                          ImmutableList<FormControlDataDto> formControlValues = toFormControlValues(subjectData,
                                                                                                                  field.getId(),
                                                                                                                  field,
                                                                                                                  formPageRequestIndex,
                                                                                                                  langTagFilter);
-                                          var controlValuesStream = formControlValues.stream();
-                                          var pageRequest = formPageRequestIndex.getPageRequest(formSubject,
+                                          var controlValuesStream = formControlValues
+                                                  .stream()
+                                                  .filter(fcv -> isIncluded(fcv, langTagFilter));
+                                          var pageRequest = formPageRequestIndex.getPageRequest(formSubject.toFormSubject(),
                                                                                                 field.getId(),
                                                                                                 FormPageRequest.SourceType.CONTROL_STACK);
                                           var controlValuesPage = controlValuesStream.collect(PageCollector.toPage(
@@ -205,21 +234,20 @@ public class EntityFrameFormDataDtoBuilder {
                                                   pageRequest.getPageSize()
                                           ))
                                                                                      .orElse(Page.emptyPage());
-                                          return FormFieldData.get(field,
-                                                                   controlValuesPage);
+                                          return FormFieldDataDto.get(field, controlValuesPage);
                                       })
                                       .collect(toImmutableList());
-        return FormData.get(Optional.of(formSubject), formDescriptor, fieldData);
+        return FormDataDto.get(formSubject, formDescriptor, fieldData);
     }
 
-    private GridControlData toGridControlData(OWLPrimitive root,
-                                              FormRegionId formFieldId,
-                                              ImmutableList<OWLPrimitive> subjects,
-                                              GridControlDescriptor gridControlDescriptor,
-                                              @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                              @Nonnull LangTagFilter langTagFilter) {
+    private GridControlDataDto toGridControlData(OWLPrimitiveData root,
+                                                 FormRegionId formFieldId,
+                                                 ImmutableList<OWLPrimitive> subjects,
+                                                 GridControlDescriptor gridControlDescriptor,
+                                                 @Nonnull FormPageRequestIndex formPageRequestIndex,
+                                                 @Nonnull LangTagFilter langTagFilter) {
         var rootSubject = getFormSubject(root);
-        var pageRequest = formPageRequestIndex.getPageRequest(rootSubject,
+        var pageRequest = formPageRequestIndex.getPageRequest(rootSubject.toFormSubject(),
                                                               formFieldId,
                                                               FormPageRequest.SourceType.GRID_CONTROL);
         var rowData = subjects.stream()
@@ -230,7 +258,7 @@ public class EntityFrameFormDataDtoBuilder {
                               .sorted()
                               .collect(PageCollector.toPage(pageRequest.getPageNumber(),
                                                             pageRequest.getPageSize()));
-        return GridControlData.get(gridControlDescriptor, rowData.orElse(Page.emptyPage()));
+        return GridControlDataDto.get(gridControlDescriptor, rowData.orElse(Page.emptyPage()));
     }
 
     /**
@@ -240,10 +268,10 @@ public class EntityFrameFormDataDtoBuilder {
      * @return null if there is no row for the specified subject (because it is filtered out)
      */
     @Nullable
-    private GridRowData toGridRow(OWLEntity rowSubject,
-                                  GridControlDescriptor gridControlDescriptor,
-                                  @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                  @Nonnull LangTagFilter langTagFilter) {
+    private GridRowDataDto toGridRow(OWLEntityData rowSubject,
+                                     GridControlDescriptor gridControlDescriptor,
+                                     @Nonnull FormPageRequestIndex formPageRequestIndex,
+                                     @Nonnull LangTagFilter langTagFilter) {
         var columnDescriptors = gridControlDescriptor.getColumns();
         // To Cells
         var cellData = toGridRowCells(rowSubject,
@@ -253,15 +281,15 @@ public class EntityFrameFormDataDtoBuilder {
         if(cellData.isEmpty()) {
             return null;
         }
-        var formSubject = FormEntitySubject.get(rowSubject);
-        return GridRowData.get(formSubject, cellData);
+        var formSubject = FormEntitySubjectDto.get(rowSubject);
+        return GridRowDataDto.get(formSubject, cellData);
     }
 
-    private ImmutableList<GridCellData> toGridRowCells(OWLEntity rowSubject,
-                                                       ImmutableList<GridColumnDescriptor> columnDescriptors,
+    private ImmutableList<GridCellDataDto> toGridRowCells(OWLEntityData rowSubject,
+                                                       @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors,
                                                        @Nonnull FormPageRequestIndex formPageRequestIndex,
                                                        @Nonnull LangTagFilter langTagFilter) {
-        var resultBuilder = ImmutableList.<GridCellData>builder();
+        var resultBuilder = ImmutableList.<GridCellDataDto>builder();
         for(var columnDescriptor : columnDescriptors) {
             var formControlData = toFormControlValues(
                     rowSubject,
@@ -270,14 +298,14 @@ public class EntityFrameFormDataDtoBuilder {
                     formPageRequestIndex,
                     langTagFilter);
             if(formControlData.isEmpty()) {
-                var cellData = GridCellData.get(columnDescriptor.getId(), ImmutableList.of());
+                var cellData = GridCellDataDto.get(columnDescriptor.getId(), ImmutableList.of());
                 resultBuilder.add(cellData);
             }
             else {
                 if(columnDescriptor.getRepeatability() == Repeatability.NON_REPEATABLE) {
                     var firstValue = formControlData.get(0);
                     if(isIncluded(firstValue, langTagFilter)) {
-                        var cellData = GridCellData.get(columnDescriptor.getId(),
+                        var cellData = GridCellDataDto.get(columnDescriptor.getId(),
                                                         ImmutableList.of(firstValue));
                         resultBuilder.add(cellData);
                     }
@@ -287,7 +315,7 @@ public class EntityFrameFormDataDtoBuilder {
 
                 }
                 else {
-                    var cellData = GridCellData.get(columnDescriptor.getId(),
+                    var cellData = GridCellDataDto.get(columnDescriptor.getId(),
                                             formControlData);
                     resultBuilder.add(cellData);
                 }
@@ -296,7 +324,7 @@ public class EntityFrameFormDataDtoBuilder {
         return resultBuilder.build();
     }
 
-    private boolean isIncluded(@Nonnull FormControlData formControlData,
+    private boolean isIncluded(@Nonnull FormControlDataDto formControlData,
                                @Nonnull LangTagFilter langTagFilter) {
         FormControlDataLangTagBasedInclusion formControlDataLangTagBasedInclusion = new FormControlDataLangTagBasedInclusion(langTagFilter);
         return formControlDataLangTagBasedInclusion.isIncluded(formControlData);

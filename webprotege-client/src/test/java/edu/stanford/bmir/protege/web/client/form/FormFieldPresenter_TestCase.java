@@ -44,13 +44,10 @@ public class FormFieldPresenter_TestCase {
     private LanguageMap helpMap;
 
     @Mock
-    private FormFieldControlStackFactory formFieldControlStackFactory;
-
-    @Mock
     private LanguageMapCurrentLocaleMapper languageMapCurrentLocalMapper;
 
     @Mock
-    private FormControlStack formControlStack;
+    private FormControlStackPresenter formControlStackPresenter;
 
     @Before
     public void setUp() {
@@ -64,18 +61,15 @@ public class FormFieldPresenter_TestCase {
                                                                       helpMap,
                                                                       Collections.emptyMap());
 
-        when(formFieldControlStackFactory.create(any(),
-                                                 any(),
-                                                 any()))
-                .thenReturn(formControlStack);
-
 
         when(languageMapCurrentLocalMapper.getValueForCurrentLocale(labelMap))
                 .thenReturn("TheLabel");
         when(languageMapCurrentLocalMapper.getValueForCurrentLocale(helpMap))
                 .thenReturn("TheHelpText");
         presenter = new FormFieldPresenter(view,
-                                           fieldDescriptor, formFieldControlStackFactory, languageMapCurrentLocalMapper);
+                                           fieldDescriptor,
+                                           formControlStackPresenter,
+                                           languageMapCurrentLocalMapper);
     }
 
 

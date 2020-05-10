@@ -420,6 +420,15 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("home-icon")
         String homeIcon();
 
+        @ClassName("wp-form__control-stack--horizontal")
+        String formStackHorizontal();
+
+        @ClassName("wp-form__control-stack--vertical")
+        String formStackVertical();
+
+        @ClassName("wp-form__control-stack__item--delete-hover")
+        String formStackItemDeleteHover();
+
         @ClassName("wp-form__form-selector")
         String formSelector();
 

@@ -18,7 +18,7 @@
         }
         .language-field {
             flex-grow: 0;
-            max-width: 20px;
+            max-width: 40px;
         }
         .main textarea {
             border-left: 1px solid transparent;

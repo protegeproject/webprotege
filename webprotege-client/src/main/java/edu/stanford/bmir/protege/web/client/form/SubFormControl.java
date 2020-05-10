@@ -7,10 +7,9 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -57,12 +56,12 @@ public class SubFormControl implements FormControl {
     }
 
     @Override
-    public void setValue(FormControlData object) {
+    public void setValue(@Nonnull FormControlDataDto object) {
         clearValue();
-        if(!(object instanceof FormData)) {
+        if(!(object instanceof FormDataDto)) {
             return;
         }
-        FormData formData = (FormData) object;
+        FormDataDto formData = (FormDataDto) object;
         formPresenter.displayForm(formData);
     }
 
@@ -82,28 +81,8 @@ public class SubFormControl implements FormControl {
     }
 
     @Override
-    public Widget asWidget() {
-        return container;
-    }
-
-    @Override
-    public boolean isDirty() {
-        return formPresenter.isDirty();
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return handlerManager.addHandler(DirtyChangedEvent.TYPE, handler);
-    }
-
-    @Override
     public void fireEvent(GwtEvent<?> event) {
         handlerManager.fireEvent(event);
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return true;
     }
 
     @Override
@@ -114,5 +93,10 @@ public class SubFormControl implements FormControl {
     @Override
     public boolean isEnabled() {
         return formPresenter.isEnabled();
+    }
+
+    @Override
+    public Widget asWidget() {
+        return container;
     }
 }

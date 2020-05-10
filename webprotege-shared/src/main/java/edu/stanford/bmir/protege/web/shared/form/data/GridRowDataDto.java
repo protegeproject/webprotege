@@ -8,9 +8,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+
 @AutoValue
 @GwtCompatible(serializable = true)
-public  abstract class GridRowDataDto implements FormControlDataDto, Comparable<GridRowDataDto> {
+public  abstract class GridRowDataDto implements Comparable<GridRowDataDto> {
 
     @Nonnull
     public static GridRowDataDto get(@Nullable FormSubjectDto subject,
@@ -43,5 +45,10 @@ public  abstract class GridRowDataDto implements FormControlDataDto, Comparable<
             }
         }
         return 0;
+    }
+
+    public GridRowData toGridRowData() {
+        return GridRowData.get(getSubject().map(FormSubjectDto::toFormSubject).orElse(null),
+                getCells().stream().map(GridCellDataDto::toGridCellData).collect(toImmutableList()));
     }
 }

@@ -4,10 +4,13 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -16,17 +19,17 @@ import java.util.Optional;
  */
 public class GetEntityFormsResult implements Result {
 
-    private ImmutableList<FormData> formData;
+    private ImmutableList<FormDataDto> formData;
 
-    public GetEntityFormsResult(@Nonnull ImmutableList<FormData> formData) {
-        this.formData = formData;
+    public GetEntityFormsResult(@Nonnull ImmutableList<FormDataDto> formData) {
+        this.formData = checkNotNull(formData);
     }
 
     private GetEntityFormsResult() {
     }
 
     @Nonnull
-    public ImmutableList<FormData> getFormData() {
+    public ImmutableList<FormDataDto> getFormData() {
         return formData;
     }
 

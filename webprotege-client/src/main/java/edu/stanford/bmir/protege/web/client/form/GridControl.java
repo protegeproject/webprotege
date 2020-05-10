@@ -12,9 +12,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
-import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
@@ -61,9 +59,9 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     }
 
     @Override
-    public void setValue(FormControlData object) {
-        if(object instanceof GridControlData) {
-            gridPresenter.setValue((GridControlData) object);
+    public void setValue(@Nonnull FormControlDataDto object) {
+        if(object instanceof GridControlDataDto) {
+            gridPresenter.setValue((GridControlDataDto) object);
         }
         else {
             gridPresenter.clearValue();
@@ -73,6 +71,11 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     @Override
     public void clearValue() {
         gridPresenter.clearValue();
+    }
+
+    @Override
+    public Widget asWidget() {
+        return view;
     }
 
     @Override
@@ -87,28 +90,8 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     }
 
     @Override
-    public Widget asWidget() {
-        return view;
-    }
-
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return handlerManager.addHandler(DirtyChangedEvent.TYPE, handler);
-    }
-
-    @Override
     public void fireEvent(GwtEvent<?> event) {
         handlerManager.fireEvent(event);
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return true;
     }
 
     @Override

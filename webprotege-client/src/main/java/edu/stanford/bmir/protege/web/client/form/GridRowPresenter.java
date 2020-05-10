@@ -5,16 +5,13 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
-import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
-import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,7 +29,10 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
     private final GridRowView view;
 
     @Nonnull
-    private final Provider<GridCellPresenter> cellPresenterProvider;
+    private final GridCellPresenterFactory cellPresenterFactory;
+
+    @Nonnull
+    private final FormControlStackPresenterFactory controlStackPresenterFactory;
 
     @Nonnull
     private final List<GridCellPresenter> cellPresenters = new ArrayList<>();
@@ -43,7 +43,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     private Map<GridColumnId, GridCellContainer> cellContainersById = new HashMap<>();
 
-    private Optional<FormSubject> subject = Optional.empty();
+    private Optional<FormSubjectDto> subject = Optional.empty();
 
     private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
@@ -53,9 +53,10 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     @Inject
     public GridRowPresenter(@Nonnull GridRowView view,
-                            Provider<GridCellPresenter> cellPresenterProvider) {
+                            GridCellPresenterFactory cellPresenterFactory, @Nonnull FormControlStackPresenterFactory controlStackPresenterFactory) {
         this.view = checkNotNull(view);
-        this.cellPresenterProvider = checkNotNull(cellPresenterProvider);
+        this.cellPresenterFactory = checkNotNull(cellPresenterFactory);
+        this.controlStackPresenterFactory = controlStackPresenterFactory;
     }
 
     public void clear() {
@@ -65,10 +66,10 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
     public GridRowData getFormDataValue() {
         ImmutableList<GridCellData> cellData =
                 cellPresenters.stream()
-                              .filter(GridCellPresenter::isPresent)
                               .map(GridCellPresenter::getValue)
                               .collect(toImmutableList());
-        return GridRowData.get(subject.orElse(null), cellData);
+        return GridRowData.get(subject.map(FormSubjectDto::toFormSubject).orElse(null),
+                               cellData);
     }
 
     public ImmutableList<FormRegionPageRequest> getPageRequests() {
@@ -114,7 +115,10 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                 .forEach(columnDescriptor -> {
                     double span = columnDescriptor.getNestedColumnCount();
                     double weight = span / totalSpan;
-                    GridCellPresenter cellPresenter = cellPresenterProvider.get();
+                    FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(gridDescriptor, columnDescriptor.getRepeatability());
+
+                    GridCellPresenter cellPresenter = cellPresenterFactory.create(columnDescriptor,
+                                                                                  controlStackPresenter);
                     columnVisibilityManager.ifPresent(cellPresenter::setColumnVisibilityManager);
                     GridCellContainer cellContainer = view.addCell();
                     cellContainer.setWeight(weight);
@@ -123,7 +127,6 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                     cellContainer.setVisible(visible);
                     cellContainersById.put(columnId, cellContainer);
                     cellPresenter.start(cellContainer);
-                    cellPresenter.setDescriptor(columnDescriptor);
                     cellPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
                     cellPresenter.setEnabled(enabled);
                     cellPresenters.add(cellPresenter);
@@ -144,7 +147,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
         cellPresenters.forEach(cp -> cp.setFormRegionPageChangedHandler(handler));
     }
 
-    public void setValue(GridRowData formDataObject) {
+    public void setValue(GridRowDataDto formDataObject) {
         this.subject = formDataObject.getSubject();
         cellPresenters.forEach(GridCellPresenter::clear);
         formDataObject.getCells()

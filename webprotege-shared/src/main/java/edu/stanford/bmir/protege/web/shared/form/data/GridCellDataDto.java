@@ -10,14 +10,17 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 @AutoValue
 @GwtCompatible(serializable = true)
 public abstract class GridCellDataDto {
 
-    public static GridCellData get(@Nonnull GridColumnId columnId,
-                                   @Nullable ImmutableList<FormControlData> values) {
-        return new AutoValue_GridCellData(columnId, values);
+    public static GridCellDataDto get(@Nonnull GridColumnId columnId,
+                                   @Nullable ImmutableList<FormControlDataDto> values) {
+        return new AutoValue_GridCellDataDto(columnId, values);
     }
 
     public int compareTo(GridCellDataDto otherCellData) {
@@ -56,4 +59,9 @@ public abstract class GridCellDataDto {
 
     @Nonnull
     public abstract ImmutableList<FormControlDataDto> getValues();
+
+    public GridCellData toGridCellData() {
+        return GridCellData.get(getColumnId(),
+                getValues().stream().map(FormControlDataDto::toFormControlData).collect(toImmutableList()));
+    }
 }

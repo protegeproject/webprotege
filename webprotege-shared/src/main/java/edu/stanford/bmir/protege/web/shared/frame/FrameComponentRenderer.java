@@ -39,4 +39,7 @@ public interface FrameComponentRenderer {
 
     @Nonnull
     ImmutableSet<OWLEntityData> getRendering(@Nonnull IRI iri);
+
+    @Nonnull
+    OWLEntityData getEntityRendering(@Nonnull OWLEntity entity);
 }

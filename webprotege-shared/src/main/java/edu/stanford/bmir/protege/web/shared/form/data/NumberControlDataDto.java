@@ -34,4 +34,15 @@ public abstract class NumberControlDataDto implements FormControlDataDto {
         return Optional.ofNullable(getValueInternal());
     }
 
+    @Override
+    public <R> R accept(FormControlDataDtoVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public NumberControlData toFormControlData() {
+        return NumberControlData.get(getDescriptor(),
+                getValueInternal());
+    }
 }

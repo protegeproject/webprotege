@@ -151,7 +151,8 @@ public class FrameComponentRendererImpl implements FrameComponentRenderer {
         return annotationValue.accept(annotationRenderer);
     }
 
-    private OWLEntityData getEntityRendering(@Nonnull OWLEntity entity) {
+    @Nonnull
+    public OWLEntityData getEntityRendering(@Nonnull OWLEntity entity) {
         return entity.accept(entityRenderer);
     }
 

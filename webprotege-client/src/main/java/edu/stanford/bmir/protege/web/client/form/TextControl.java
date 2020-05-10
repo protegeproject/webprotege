@@ -18,7 +18,9 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.TextControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.TextControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
 import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
@@ -182,9 +184,9 @@ public class TextControl extends Composite implements FormControl {
     }
 
     @Override
-    public void setValue(FormControlData object) {
-        if(object instanceof TextControlData) {
-            Optional<OWLLiteral> value = ((TextControlData) object).getValue();
+    public void setValue(@Nonnull FormControlDataDto data) {
+        if(data instanceof TextControlDataDto) {
+            Optional<OWLLiteral> value = ((TextControlDataDto) data).getValue();
             if(!value.isPresent()) {
                 clearValue();
             }
@@ -196,6 +198,7 @@ public class TextControl extends Composite implements FormControl {
         else {
             clearValue();
         }
+
     }
 
     @Override
@@ -230,22 +233,7 @@ public class TextControl extends Composite implements FormControl {
     }
 
     @Override
-    public boolean isDirty() {
-        return true;
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return editor.addDirtyChangedHandler(handler);
-    }
-
-    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return true;
     }
 }

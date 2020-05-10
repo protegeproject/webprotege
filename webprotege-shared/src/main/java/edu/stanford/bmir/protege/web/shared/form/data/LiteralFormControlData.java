@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -19,10 +16,10 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class LiteralFormControlValue implements PrimitiveFormControlData {
+public abstract class LiteralFormControlData implements PrimitiveFormControlData {
 
-    public static LiteralFormControlValue get(@Nonnull OWLLiteral literal) {
-        return new AutoValue_LiteralFormControlValue(literal);
+    public static LiteralFormControlData get(@Nonnull OWLLiteral literal) {
+        return new AutoValue_LiteralFormControlData(literal);
     }
 
     @JsonValue
@@ -60,5 +57,11 @@ public abstract class LiteralFormControlValue implements PrimitiveFormControlDat
     @Override
     public Optional<OWLLiteral> asLiteral() {
         return Optional.of(getLiteral());
+    }
+
+    @Nonnull
+    @Override
+    public OWLPrimitive getPrimitive() {
+        return getLiteral();
     }
 }

@@ -6,6 +6,7 @@ import com.google.common.annotations.GwtCompatible;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -43,5 +44,11 @@ public abstract class EntityFormControlData implements PrimitiveFormControlData 
     @Override
     public Optional<OWLLiteral> asLiteral() {
         return Optional.empty();
+    }
+
+    @Nonnull
+    @Override
+    public OWLPrimitive getPrimitive() {
+        return getEntity();
     }
 }

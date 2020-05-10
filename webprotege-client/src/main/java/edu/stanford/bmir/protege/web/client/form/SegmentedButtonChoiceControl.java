@@ -14,11 +14,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -28,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -37,8 +36,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SegmentedButtonChoiceControl extends Composite implements SingleChoiceControl {
 
     private static final int SEGMENT_SIZE = 120;
-
-    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
 
     private SingleChoiceControlDescriptor descriptor;
 
@@ -60,8 +57,6 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     private int selectedIndex = -1;
 
-    private boolean dirty = false;
-
     private final List<PrimitiveFormControlData> choices = new ArrayList<>();
 
     private final List<InlineLabel> choiceWidgets = new ArrayList<>();
@@ -69,48 +64,34 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
-    public SegmentedButtonChoiceControl(ChoiceDescriptorSupplier choiceDescriptorSupplier) {
-        this.choiceDescriptorSupplier = checkNotNull(choiceDescriptorSupplier);
+    public SegmentedButtonChoiceControl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return selectedIndex != -1;
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return addHandler(handler, DirtyChangedEvent.TYPE);
-    }
-
-    @Override
-    public boolean isDirty() {
-        return dirty;
     }
 
     @Override
     public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
         this.descriptor = checkNotNull(descriptor);
-        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
         descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
     }
 
-    private void setChoices(List<ChoiceDescriptor> choices) {
-        dirty = false;
+    private void setChoices(List<ChoiceDescriptorDto> choiceDtos) {
+        List<PrimitiveFormControlData> nextChoices = choiceDtos.stream().map(d -> d.getValue().toPrimitiveFormControlData()).collect(toImmutableList());
+        if(this.choices.equals(nextChoices)) {
+            return;
+        }
         segmentContainer.clear();
         choiceWidgets.clear();
         this.choices.clear();
         this.selectedIndex = -1;
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
-        for(ChoiceDescriptor choice : choices) {
-            InlineLabel label = new InlineLabel(choice.getLabel().get(langTag));
+        for(ChoiceDescriptorDto choiceDescriptorDto : choiceDtos) {
+            InlineLabel label = new InlineLabel(choiceDescriptorDto.getLabel().get(langTag));
             segmentContainer.add(label);
-            this.choices.add(choice.getValue());
+            this.choices.add(choiceDescriptorDto.getValue().toPrimitiveFormControlData());
             this.choiceWidgets.add(label);
             label.addClickHandler(event -> {
                 if(enabled) {
-                    setSelection(choice.getValue(), true);
+                    setSelection(choiceDescriptorDto.getValue().toPrimitiveFormControlData(), true);
                 }
             });
         }
@@ -129,7 +110,6 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
             selectedIndex = nextIndex;
             updateStylesBasedOnSelection();
             if (fireEvents) {
-                dirty = true;
                 fireEvent(new DirtyChangedEvent());
                 ValueChangeEvent.fire(this, getValue());
             }
@@ -150,13 +130,13 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     }
 
     @Override
-    public void setValue(FormControlData object) {
+    public void setValue(@Nonnull FormControlDataDto object) {
         mostRecentSetValue = Optional.empty();
-        if(object instanceof SingleChoiceControlData) {
-            Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) object).getChoice();
-            mostRecentSetValue = choice;
+        if(object instanceof SingleChoiceControlDataDto) {
+            setChoices(((SingleChoiceControlDataDto) object).getAvailableChoices());
+            Optional<PrimitiveFormControlDataDto> choice = ((SingleChoiceControlDataDto) object).getChoice();
             if(choice.isPresent()) {
-                setSelection(choice.get(), false);
+                setSelection(choice.get().toPrimitiveFormControlData(), false);
             }
             else {
                 clearValue();
@@ -173,7 +153,6 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     @Override
     public void clearValue() {
-        dirty = false;
         selectedIndex = -1;
         updateStylesBasedOnSelection();
         setDefaultChoiceSelected();

@@ -541,3 +541,20 @@
     color: literal("var(--selected-item--color)");
     background-color: literal("var(--selected-item--background-color)");
 }
+
+.wp-form__control-stack--horizontal {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.wp-form__control-stack--vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.wp-form__control-stack__item--delete-hover {
+    outline: 2px solid literal("var(--delete--color)");
+}

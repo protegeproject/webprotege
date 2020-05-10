@@ -5,6 +5,7 @@ import com.google.common.annotations.GwtCompatible;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -16,10 +17,10 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class IriFormControlValue implements PrimitiveFormControlData {
+public abstract class IriFormControlData implements PrimitiveFormControlData {
 
-    public static IriFormControlValue get(@Nonnull IRI iri) {
-        return new AutoValue_IriFormControlValue(iri);
+    public static IriFormControlData get(@Nonnull IRI iri) {
+        return new AutoValue_IriFormControlData(iri);
     }
 
     @Nonnull
@@ -41,5 +42,11 @@ public abstract class IriFormControlValue implements PrimitiveFormControlData {
     @Override
     public Optional<OWLLiteral> asLiteral() {
         return Optional.empty();
+    }
+
+    @Nonnull
+    @Override
+    public OWLPrimitive getPrimitive() {
+        return getIri();
     }
 }

@@ -16,6 +16,12 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class EntityNameControlDataDto implements FormControlDataDto {
 
+    public static EntityNameControlDataDto get(@Nonnull EntityNameControlDescriptor descriptor,
+                                               @Nonnull OWLEntityData entityData) {
+        return new AutoValue_EntityNameControlDataDto(descriptor, entityData);
+    }
+
+    @JsonProperty("descriptor")
     @Nonnull
     public abstract EntityNameControlDescriptor getDescriptor();
 
@@ -29,4 +35,14 @@ public abstract class EntityNameControlDataDto implements FormControlDataDto {
         return Optional.ofNullable(getEntityInternal());
     }
 
+    @Override
+    public <R> R accept(FormControlDataDtoVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public FormControlData toFormControlData() {
+        return EntityNameControlData.get(getDescriptor(), getEntity().map(OWLEntityData::getEntity).orElse(null));
+    }
 }

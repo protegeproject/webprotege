@@ -69,6 +69,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.*;
 
 /**
  * Matthew Horridge
@@ -805,6 +806,21 @@ public class ClientProjectModule {
 
     @Provides
     FormSelectorItemView provideFormSelectorItemView(FormSelectorItemViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormControlContainer provideFormControlContainer(FormControlContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormControlStackView provideFormControlStackView(FormControlStackViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormControlStackRepeatingView provideFormControlStackRepeatingView(FormControlStackRepeatingViewImpl impl) {
         return impl;
     }
 }

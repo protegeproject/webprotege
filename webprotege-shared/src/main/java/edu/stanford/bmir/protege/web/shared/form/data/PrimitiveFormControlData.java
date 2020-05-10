@@ -21,23 +21,23 @@ public interface PrimitiveFormControlData {
     }
 
     static PrimitiveFormControlData get(IRI iri) {
-        return IriFormControlValue.get(iri);
+        return IriFormControlData.get(iri);
     }
 
     static PrimitiveFormControlData get(OWLLiteral literal) {
-        return LiteralFormControlValue.get(literal);
+        return LiteralFormControlData.get(literal);
     }
 
     static PrimitiveFormControlData get(String text) {
-        return LiteralFormControlValue.get(DataFactory.getOWLLiteral(text));
+        return LiteralFormControlData.get(DataFactory.getOWLLiteral(text));
     }
 
     static PrimitiveFormControlData get(double value) {
-        return LiteralFormControlValue.get(DataFactory.getOWLLiteral(value));
+        return LiteralFormControlData.get(DataFactory.getOWLLiteral(value));
     }
 
     static PrimitiveFormControlData get(boolean value) {
-        return LiteralFormControlValue.get(DataFactory.getOWLLiteral(value));
+        return LiteralFormControlData.get(DataFactory.getOWLLiteral(value));
     }
 
     @Nonnull
@@ -48,4 +48,7 @@ public interface PrimitiveFormControlData {
 
     @Nonnull
     Optional<OWLLiteral> asLiteral();
+
+    @Nonnull
+    OWLPrimitive getPrimitive();
 }

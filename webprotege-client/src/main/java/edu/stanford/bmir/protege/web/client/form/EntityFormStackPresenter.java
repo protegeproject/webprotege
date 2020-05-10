@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -25,8 +26,10 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -141,9 +144,9 @@ public class EntityFormStackPresenter {
     }
 
     private void handleGetEntityFormsResult(GetEntityFormsResult result) {
-        ImmutableList<FormData> formData = result.getFormData();
+        ImmutableList<FormDataDto> formData = result.getFormData();
         pristineFormData.clear();
-        pristineFormData.addAll(formData);
+        pristineFormData.addAll(formData.stream().map(FormDataDto::toFormData).collect(toImmutableList()));
         formStackPresenter.setForms(formData);
     }
 

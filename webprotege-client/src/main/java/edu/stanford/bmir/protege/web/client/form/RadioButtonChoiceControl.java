@@ -14,15 +14,16 @@ import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -33,14 +34,9 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
 
     private static int nameCounter = 0;
 
-    @Nonnull
-    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
-
     private ValueChangeHandler<Boolean> radioButtonValueChangedHandler;
 
     private SingleChoiceControlDescriptor descriptor;
-
-    private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
     private boolean enabled = true;
 
@@ -53,13 +49,14 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @UiField
     HTMLPanel container;
 
-    private Map<RadioButton, ChoiceDescriptor> choiceButtons = new LinkedHashMap<>();
+    private Map<RadioButton, PrimitiveFormControlData> choiceButtons = new LinkedHashMap<>();
+
+    private List<PrimitiveFormControlData> choices = new ArrayList<>();
 
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
-    public RadioButtonChoiceControl(@Nonnull ChoiceDescriptorSupplier choiceDescriptorSupplier) {
-        this.choiceDescriptorSupplier = choiceDescriptorSupplier;
+    public RadioButtonChoiceControl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         radioButtonValueChangedHandler = event -> ValueChangeEvent.fire(RadioButtonChoiceControl.this, getValue());
     }
@@ -67,17 +64,24 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Override
     public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
         this.descriptor = descriptor;
-        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
         descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
     }
 
-    private void setChoices(List<ChoiceDescriptor> choices) {
+    private void setChoices(List<ChoiceDescriptorDto> choiceDescriptorDtos) {
+        List<PrimitiveFormControlData> nextChoices = choiceDescriptorDtos.stream()
+                .map(ChoiceDescriptorDto::getValue)
+                .map(PrimitiveFormControlDataDto::toPrimitiveFormControlData)
+                .collect(toImmutableList());
+        if(this.choices.equals(nextChoices)) {
+            return;
+        }
         container.clear();
         choiceButtons.clear();
+        choices.clear();
         nameCounter++;
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
-        for(ChoiceDescriptor descriptor : choices) {
-            RadioButton radioButton = new RadioButton("Choice" + nameCounter, new SafeHtmlBuilder().appendHtmlConstant(descriptor.getLabel().get(langTag)).toSafeHtml());
+        for(ChoiceDescriptorDto descriptorDto : choiceDescriptorDtos) {
+            RadioButton radioButton = new RadioButton("Choice" + nameCounter, new SafeHtmlBuilder().appendHtmlConstant(descriptorDto.getLabel().get(langTag)).toSafeHtml());
             radioButton.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
             radioButton.addValueChangeHandler(radioButtonValueChangedHandler);
             radioButton.addFocusHandler(event -> {
@@ -88,11 +92,11 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
                 radioButton.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
                 radioButton.removeStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
             });
+            choices.add(descriptorDto.getValue().toPrimitiveFormControlData());
             container.add(radioButton);
-            choiceButtons.put(radioButton, descriptor);
+            choiceButtons.put(radioButton, descriptorDto.getValue().toPrimitiveFormControlData());
         }
         selectDefaultChoice();
-        mostRecentSetValue.ifPresent(this::setValue);
     }
 
     private void setDefaultChoice(@Nonnull ChoiceDescriptor choice) {
@@ -104,10 +108,11 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     }
 
     @Override
-    public void setValue(FormControlData value) {
-        if(value instanceof SingleChoiceControlData) {
-            this.mostRecentSetValue = Optional.of(value);
-            Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) value).getChoice();
+    public void setValue(@Nonnull FormControlDataDto value) {
+        if(value instanceof SingleChoiceControlDataDto) {
+            SingleChoiceControlDataDto choiceControlDataDto = (SingleChoiceControlDataDto) value;
+            setChoices(choiceControlDataDto.getAvailableChoices());
+            Optional<PrimitiveFormControlData> choice = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::toPrimitiveFormControlData);
             setChoice(choice);
         }
         else {
@@ -118,8 +123,8 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     public void setChoice(Optional<PrimitiveFormControlData> choice) {
         if(choice.isPresent()) {
             for(RadioButton radioButton : choiceButtons.keySet()) {
-                ChoiceDescriptor choiceDescriptor = choiceButtons.get(radioButton);
-                if(choiceDescriptor.getValue().equals(choice.get())) {
+                PrimitiveFormControlData value = choiceButtons.get(radioButton);
+                if(value.equals(choice.get())) {
                     radioButton.setValue(true);
                 }
             }
@@ -135,38 +140,22 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
             radioButton.setValue(false);
         }
         selectDefaultChoice();
-        mostRecentSetValue = Optional.empty();
     }
 
     @Override
     public Optional<FormControlData> getValue() {
         for(RadioButton radioButton : choiceButtons.keySet()) {
             if(radioButton.getValue()) {
-                ChoiceDescriptor choiceDescriptor = choiceButtons.get(radioButton);
-                return Optional.of(SingleChoiceControlData.get(descriptor, choiceDescriptor.getValue()));
+                PrimitiveFormControlData value = choiceButtons.get(radioButton);
+                return Optional.of(SingleChoiceControlData.get(descriptor, value));
             }
         }
         return Optional.empty();
     }
 
     @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return addHandler(handler, DirtyChangedEvent.TYPE);
-    }
-
-    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return true;
     }
 
     @Override

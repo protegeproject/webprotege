@@ -25,8 +25,6 @@ public class GridCellContainerImpl implements GridCellContainer {
 
     public GridCellContainerImpl(@Nonnull SimplePanel delegate) {
         this.delegate = checkNotNull(delegate);
-        delegate.addStyleName(WebProtegeClientBundle.BUNDLE.style()
-                                                           .formGridColumn());
     }
 
     @Override

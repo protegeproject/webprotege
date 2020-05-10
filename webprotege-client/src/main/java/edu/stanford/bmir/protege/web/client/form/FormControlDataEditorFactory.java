@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+
+import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
@@ -10,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
  *
  * An interface to {@link ValueEditorFactory} objects that provide editors for {@link FormControlData}
  */
-public interface FormControlDataEditorFactory extends ValueEditorFactory<FormControlData> {
+public interface FormControlDataEditorFactory {
 
+    @Nonnull
+    FormControl createFormControl();
 }

@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
+import java.util.stream.DoubleStream;
 
 @AutoValue
 @GwtCompatible(serializable = true)
@@ -25,4 +26,17 @@ public abstract class FormFieldDataDto {
      */
     @Nonnull
     public abstract Page<FormControlDataDto> getFormControlData();
+
+    @Nonnull
+    public FormFieldData toFormFieldData() {
+        return FormFieldData.get(
+                getFormFieldDescriptor(),
+                getFormControlData().transform(FormControlDataDto::toFormControlData));
+    }
+
+    @Nonnull
+    public FormFieldData getFormFieldData() {
+        return FormFieldData.get(getFormFieldDescriptor(),
+                getFormControlData().transform(FormControlDataDto::toFormControlData));
+    }
 }

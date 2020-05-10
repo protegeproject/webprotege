@@ -96,4 +96,10 @@ public class FrameComponentSessionRenderer implements FrameComponentRenderer {
     public ImmutableSet<OWLEntityData> getRendering(@Nonnull IRI iri) {
         return get(iri, () -> delegate.getRendering(iri));
     }
+
+    @Nonnull
+    @Override
+    public OWLEntityData getEntityRendering(@Nonnull OWLEntity entity) {
+        return get(entity, () -> delegate.getEntityRendering(entity));
+    }
 }

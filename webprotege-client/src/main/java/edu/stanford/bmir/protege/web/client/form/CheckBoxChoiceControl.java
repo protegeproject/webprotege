@@ -14,13 +14,9 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.MultiChoiceControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -37,14 +33,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class CheckBoxChoiceControl extends Composite implements MultiValueChoiceControl {
 
-    @Nonnull
-    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
-
     private ValueChangeHandler<Boolean> checkBoxValueChangedHandler;
 
     private MultiChoiceControlDescriptor descriptor;
-
-    private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
     private boolean enabled = true;
 
@@ -57,36 +48,41 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     @UiField
     HTMLPanel container;
 
-    private final Map<CheckBox, ChoiceDescriptor> checkBoxes = new LinkedHashMap<>();
+    private final Map<CheckBox, PrimitiveFormControlData> checkBoxes = new LinkedHashMap<>();
+
+    private final List<PrimitiveFormControlData> choices = new ArrayList<>();
 
     private final List<PrimitiveFormControlData> defaultChoices = new ArrayList<>();
 
     @Inject
-    public CheckBoxChoiceControl(@Nonnull ChoiceDescriptorSupplier choiceDescriptorSupplier) {
-        this.choiceDescriptorSupplier = checkNotNull(choiceDescriptorSupplier);
+    public CheckBoxChoiceControl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         checkBoxValueChangedHandler = event -> handleCheckBoxValueChanged();
     }
 
     public void handleCheckBoxValueChanged() {
-        mostRecentSetValue = getValue();
         ValueChangeEvent.fire(CheckBoxChoiceControl.this, getValue());
     }
 
     public void setDescriptor(@Nonnull MultiChoiceControlDescriptor descriptor) {
         this.descriptor = checkNotNull(descriptor);
-        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
         setDefaultChoices(descriptor.getDefaultChoices());
     }
 
-    private void setChoices(List<ChoiceDescriptor> choices) {
+    private void setChoices(List<ChoiceDescriptorDto> choiceDtos) {
+        List<PrimitiveFormControlData> nextChoices = choiceDtos.stream().map(d -> d.getValue().toPrimitiveFormControlData()).collect(toImmutableList());
+        if(this.choices.equals(nextChoices)) {
+            return;
+        }
         container.clear();
         checkBoxes.clear();
+        choices.clear();
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
-        for(ChoiceDescriptor choiceDescriptor : choices) {
-            CheckBox checkBox = new CheckBox(new SafeHtmlBuilder().appendHtmlConstant(choiceDescriptor.getLabel().get(langTag)).toSafeHtml());
-            checkBoxes.put(checkBox, choiceDescriptor);
+        for(ChoiceDescriptorDto choiceDescriptorDto : choiceDtos) {
+            CheckBox checkBox = new CheckBox(new SafeHtmlBuilder().appendHtmlConstant(choiceDescriptorDto.getLabel().get(langTag)).toSafeHtml());
+            checkBoxes.put(checkBox, choiceDescriptorDto.getValue().toPrimitiveFormControlData());
             container.add(checkBox);
+            choices.add(choiceDescriptorDto.getValue().toPrimitiveFormControlData());
             checkBox.getElement().getStyle().setDisplay(Style.Display.BLOCK);
             checkBox.addValueChangeHandler(checkBoxValueChangedHandler);
             checkBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
@@ -99,7 +95,6 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
                 checkBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
             });
         }
-        mostRecentSetValue.ifPresent(this::setValue);
         ValueChangeEvent.fire(this, getValue());
     }
 
@@ -112,14 +107,14 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     }
 
     @Override
-    public void setValue(FormControlData value) {
-        if(value instanceof MultiChoiceControlData) {
-            this.mostRecentSetValue = Optional.of(value);
-            MultiChoiceControlData multiChoiceControlData = (MultiChoiceControlData) value;
-            ImmutableList<PrimitiveFormControlData> values = multiChoiceControlData.getValues();
-
+    public void setValue(@Nonnull FormControlDataDto value) {
+        if(value instanceof MultiChoiceControlDataDto) {
+            MultiChoiceControlDataDto multiChoiceControlData = (MultiChoiceControlDataDto) value;
+            ImmutableList<PrimitiveFormControlData> values = multiChoiceControlData.getValues().stream().map(
+                    PrimitiveFormControlDataDto::toPrimitiveFormControlData).collect(toImmutableList());
+            setChoices(multiChoiceControlData.getAvailableChoices());
             for(CheckBox checkBox : checkBoxes.keySet()) {
-                boolean sel = values.contains(checkBoxes.get(checkBox).getValue());
+                boolean sel = values.contains(checkBoxes.get(checkBox));
                 checkBox.setValue(sel);
             }
         }
@@ -143,13 +138,12 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     @Override
     public Optional<FormControlData> getValue() {
         if(checkBoxes.isEmpty()) {
-            return mostRecentSetValue;
+            return Optional.empty();
         }
         ImmutableList<PrimitiveFormControlData> selectedValues = checkBoxes.keySet()
                                                                   .stream()
                                                                   .filter(CheckBox::getValue)
                                                                   .map(checkBoxes::get)
-                                                                  .map(ChoiceDescriptor::getValue)
                                                                   .collect(toImmutableList());
         if(selectedValues.isEmpty()) {
             return Optional.empty();
@@ -160,23 +154,8 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     }
 
     @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return addHandler(handler, DirtyChangedEvent.TYPE);
-    }
-
-    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return true;
     }
 
     @Override

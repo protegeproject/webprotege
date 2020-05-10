@@ -13,7 +13,7 @@ public abstract class GridControlDataDto implements FormControlDataDto {
 
     @Nonnull
     public static GridControlDataDto get(@Nonnull GridControlDescriptor descriptor,
-                                         @Nonnull Page<GridRowData> rows) {
+                                         @Nonnull Page<GridRowDataDto> rows) {
         return new AutoValue_GridControlDataDto(descriptor, rows);
     }
 
@@ -21,6 +21,17 @@ public abstract class GridControlDataDto implements FormControlDataDto {
     public abstract GridControlDescriptor getDescriptor();
 
     @Nonnull
-    public abstract Page<GridRowData> getRows();
+    public abstract Page<GridRowDataDto> getRows();
 
+    @Override
+    public <R> R accept(FormControlDataDtoVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public GridControlData toFormControlData() {
+        return GridControlData.get(getDescriptor(),
+                getRows().transform(GridRowDataDto::toGridRowData));
+    }
 }

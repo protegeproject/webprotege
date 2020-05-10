@@ -18,7 +18,6 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -96,8 +95,8 @@ public class FormControlDataProcessor_TestCase {
     @Test
     public void shouldProcessMultiChoiceControlData() {
         var multiChoiceControlDescriptor = mock(MultiChoiceControlDescriptor.class);
-        var iriFormControlValue = IriFormControlValue.get(iri);
-        var literalFormControlValue = LiteralFormControlValue.get(literal);
+        var iriFormControlValue = IriFormControlData.get(iri);
+        var literalFormControlValue = LiteralFormControlData.get(literal);
         var values = ImmutableList.of(iriFormControlValue, literalFormControlValue);
         var multiChoiceControlData = MultiChoiceControlData.get(multiChoiceControlDescriptor, values);
         processor.processFormControlData(binding, multiChoiceControlData, formFrameBuilder);
@@ -110,7 +109,7 @@ public class FormControlDataProcessor_TestCase {
     @Test
     public void shouldProcessSingleChoiceControlData() {
         var singleChoiceControlDescriptor = mock(SingleChoiceControlDescriptor.class);
-        var iriFormControlValue = IriFormControlValue.get(iri);
+        var iriFormControlValue = IriFormControlData.get(iri);
         var singleChoiceControlData = SingleChoiceControlData.get(singleChoiceControlDescriptor, iriFormControlValue);
         processor.processFormControlData(binding, singleChoiceControlData, formFrameBuilder);
         verify(formFrameBuilder, times(1))

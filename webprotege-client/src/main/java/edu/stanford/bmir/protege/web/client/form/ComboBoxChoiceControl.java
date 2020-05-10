@@ -14,10 +14,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -35,11 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ComboBoxChoiceControl extends Composite implements SingleChoiceControl {
 
-    private final ChoiceDescriptorSupplier choiceDescriptorSupplier;
-
     private SingleChoiceControlDescriptor descriptor;
-
-    private Optional<FormControlData> mostRecentSetValue = Optional.empty();
 
     interface ComboBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
 
@@ -50,13 +46,12 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @UiField
     ListBox comboBox;
 
-    private final List<ChoiceDescriptor> choiceDescriptors = new ArrayList<>();
+    private final List<PrimitiveFormControlData> choices = new ArrayList<>();
 
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
     @Inject
-    public ComboBoxChoiceControl(ChoiceDescriptorSupplier choiceDescriptorSupplier) {
-        this.choiceDescriptorSupplier = checkNotNull(choiceDescriptorSupplier);
+    public ComboBoxChoiceControl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -65,24 +60,28 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
         ValueChangeEvent.fire(this, getValue());
     }
 
-    public void setChoices(List<ChoiceDescriptor> choices) {
+    public void setChoices(List<ChoiceDescriptorDto> choices) {
+        List<PrimitiveFormControlData> nextChoices = choices.stream()
+                .map(d -> d.getValue().toPrimitiveFormControlData())
+                .collect(toImmutableList());
+        if(this.choices.equals(nextChoices)) {
+            return;
+        }
         comboBox.clear();
-        choiceDescriptors.clear();
+        this.choices.clear();
         comboBox.addItem("");
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
-        for(ChoiceDescriptor descriptor : choices) {
-            choiceDescriptors.add(descriptor);
+        for(ChoiceDescriptorDto descriptor : choices) {
+            this.choices.add(descriptor.getValue().toPrimitiveFormControlData());
             comboBox.addItem(descriptor.getLabel().get(langTag));
         }
         selectDefaultChoice();
-        mostRecentSetValue.ifPresent(this::setValue);
     }
 
     @Override
     public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
         this.descriptor = descriptor;
         descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
-        choiceDescriptorSupplier.getChoices(this.descriptor.getSource(), this::setChoices);
     }
 
     private void setDefaultChoice(@Nonnull ChoiceDescriptor defaultChoice) {
@@ -94,19 +93,23 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     }
 
     @Override
-    public void setValue(FormControlData value) {
-        if(value instanceof SingleChoiceControlData) {
-            this.mostRecentSetValue = Optional.of(value);
-            Optional<PrimitiveFormControlData> choice = ((SingleChoiceControlData) value).getChoice();
+    public void setValue(@Nonnull FormControlDataDto value) {
+        if(value instanceof SingleChoiceControlDataDto) {
+            SingleChoiceControlDataDto choiceControlDataDto = (SingleChoiceControlDataDto) value;
+            setChoices(choiceControlDataDto.getAvailableChoices());
+            Optional<PrimitiveFormControlData> choice = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::toPrimitiveFormControlData);
             if(choice.isPresent()) {
                 int index = 1;
-                for(ChoiceDescriptor descriptor : choiceDescriptors) {
-                    if(descriptor.getValue().equals(choice.get())) {
+                for(PrimitiveFormControlData c : choices) {
+                    if(c.equals(choice.get())) {
                         comboBox.setSelectedIndex(index);
                         break;
                     }
                     index++;
                 }
+            }
+            else {
+                clearValue();
             }
         }
         else {
@@ -117,7 +120,6 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @Override
     public void clearValue() {
         selectDefaultChoice();
-        mostRecentSetValue = Optional.empty();
     }
 
     @Override
@@ -126,28 +128,13 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
         if(selIndex < 1) {
             return Optional.empty();
         }
-        PrimitiveFormControlData choice = choiceDescriptors.get(selIndex - 1).getValue();
+        PrimitiveFormControlData choice = choices.get(selIndex - 1);
         return Optional.of(SingleChoiceControlData.get(descriptor, choice));
-    }
-
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return addHandler(handler, DirtyChangedEvent.TYPE);
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return false;
     }
 
     @Override

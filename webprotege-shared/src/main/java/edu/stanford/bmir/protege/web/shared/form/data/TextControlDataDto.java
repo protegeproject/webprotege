@@ -34,4 +34,16 @@ public abstract class TextControlDataDto implements FormControlDataDto {
     public Optional<OWLLiteral> getValue() {
         return Optional.ofNullable(getValueInternal());
     }
+
+    @Override
+    public <R> R accept(FormControlDataDtoVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public TextControlData toFormControlData() {
+        return TextControlData.get(getDescriptor(),
+                getValueInternal());
+    }
 }

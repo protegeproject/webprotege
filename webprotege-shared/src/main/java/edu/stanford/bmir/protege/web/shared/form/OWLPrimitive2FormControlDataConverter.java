@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.form;
 
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataDto;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;

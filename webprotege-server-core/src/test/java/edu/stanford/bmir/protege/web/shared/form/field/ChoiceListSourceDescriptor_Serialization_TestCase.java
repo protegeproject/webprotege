@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlValue;
+import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlData;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
@@ -26,9 +26,9 @@ public class ChoiceListSourceDescriptor_Serialization_TestCase {
     public void setUp() {
         choices = ImmutableList.of(
                 ChoiceDescriptor.choice(LanguageMap.empty(),
-                                        LiteralFormControlValue.get(DataFactory.getOWLLiteral("A"))),
+                                        LiteralFormControlData.get(DataFactory.getOWLLiteral("A"))),
                 ChoiceDescriptor.choice(LanguageMap.empty(),
-                                        LiteralFormControlValue.get(DataFactory.getOWLLiteral("B")))
+                                        LiteralFormControlData.get(DataFactory.getOWLLiteral("B")))
         );
     }
 

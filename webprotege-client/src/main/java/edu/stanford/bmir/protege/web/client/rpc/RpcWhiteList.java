@@ -193,6 +193,24 @@ public class RpcWhiteList implements Action, Result {
 
     RelationshipPresence relationshipPresence;
 
+    public PrimitiveFormControlDataDto primitiveFormControlDataDto;
+
+    public FormControlDataDto formControlDataDto;
+
+    public FormDataDto formDataDto;
+
+    public FormFieldDataDto formFieldDataDto;
+
+    public FormSubjectDto formSubjectDto;
+
+    public FormEntitySubjectDto formEntitySubjectDto;
+
+    public GridControlDataDto gridControlDataDto;
+
+    public GridRowDataDto gridRowDataDto;
+
+    public GridCellDataDto gridCellDataDto;
+
     public FormPageRequest.SourceType getSource() {
         return source;
     }

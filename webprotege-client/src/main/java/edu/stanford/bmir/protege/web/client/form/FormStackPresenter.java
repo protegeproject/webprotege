@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -97,7 +98,7 @@ public class FormStackPresenter {
         formPresenters.forEach(FormPresenter::collapseAll);
     }
 
-    public void setForms(@Nonnull ImmutableList<FormData> forms) {
+    public void setForms(@Nonnull ImmutableList<FormDataDto> forms) {
         List<FormDescriptor> currentFormDescriptors = formPresenters.stream()
                                                      .map(p -> p.getFormData()
                                                                 .map(FormData::getFormDescriptor))
@@ -105,7 +106,7 @@ public class FormStackPresenter {
                                                      .map(Optional::get)
                                                      .collect(Collectors.toList());
         List<FormDescriptor> nextFormDescriptors = forms.stream()
-                .map(FormData::getFormDescriptor)
+                .map(FormDataDto::getFormDescriptor)
                 .collect(Collectors.toList());
         if(currentFormDescriptors.equals(nextFormDescriptors)) {
             for(int i = 0; i < forms.size(); i++) {
@@ -144,8 +145,7 @@ public class FormStackPresenter {
     }
 
     public boolean isDirty() {
-        return formPresenters.stream()
-                             .anyMatch(FormPresenter::isDirty);
+        return false;
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

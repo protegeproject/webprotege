@@ -14,6 +14,12 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class ImageControlDataDto implements FormControlDataDto {
 
+    @Nonnull
+    public static ImageControlDataDto get(@Nonnull ImageControlDescriptor descriptor,
+                                          @Nonnull IRI iri) {
+        return new AutoValue_ImageControlDataDto(descriptor, iri);
+    }
+
     @JsonProperty("descriptor")
     @Nonnull
     public abstract ImageControlDescriptor getDescriptor();
@@ -27,4 +33,15 @@ public abstract class ImageControlDataDto implements FormControlDataDto {
         return Optional.ofNullable(getIriInternal());
     }
 
+    @Override
+    public <R> R accept(FormControlDataDtoVisitorEx<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public FormControlData toFormControlData() {
+        return ImageControlData.get(getDescriptor(),
+                getIriInternal());
+    }
 }

@@ -1,16 +1,12 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,36 +25,36 @@ public class FormControlDataLangTagBasedInclusion {
         this.langTagFilter = checkNotNull(langTagFilter);
     }
 
-    public boolean isIncluded(@Nonnull FormControlData formControlData) {
+    public boolean isIncluded(@Nonnull FormControlDataDto formControlData) {
         if(langTagFilter.isAnyLangTagIncluded()) {
             return true;
         }
-        return formControlData.accept(new FormControlDataVisitorEx<Boolean>() {
+        return formControlData.accept(new FormControlDataDtoVisitorEx<Boolean>() {
             @Override
-            public Boolean visit(@Nonnull EntityNameControlData entityNameControlData) {
+            public Boolean visit(@Nonnull EntityNameControlDataDto entityNameControlData) {
                 return true;
             }
 
             @Override
-            public Boolean visit(@Nonnull FormData formData) {
+            public Boolean visit(@Nonnull FormDataDto formData) {
                 return true;
             }
 
             @Override
-            public Boolean visit(@Nonnull GridControlData gridControlData) {
+            public Boolean visit(@Nonnull GridControlDataDto gridControlData) {
                 return true;
             }
 
             @Override
-            public Boolean visit(@Nonnull ImageControlData imageControlData) {
+            public Boolean visit(@Nonnull ImageControlDataDto imageControlData) {
                 return true;
             }
 
             @Override
-            public Boolean visit(@Nonnull MultiChoiceControlData multiChoiceControlData) {
+            public Boolean visit(@Nonnull MultiChoiceControlDataDto multiChoiceControlData) {
                 return multiChoiceControlData.getValues()
                                              .stream()
-                                             .map(PrimitiveFormControlData::asLiteral)
+                                             .map(PrimitiveFormControlDataDto::asLiteral)
                                              .filter(Optional::isPresent)
                                              .map(Optional::get)
                                              .map(this::isIncluded)
@@ -67,20 +63,20 @@ public class FormControlDataLangTagBasedInclusion {
             }
 
             @Override
-            public Boolean visit(@Nonnull SingleChoiceControlData singleChoiceControlData) {
+            public Boolean visit(@Nonnull SingleChoiceControlDataDto singleChoiceControlData) {
                 return singleChoiceControlData.getChoice()
-                                              .flatMap(PrimitiveFormControlData::asLiteral)
+                                              .flatMap(PrimitiveFormControlDataDto::asLiteral)
                                               .map(this::isIncluded)
                                               .orElse(false);
             }
 
             @Override
-            public Boolean visit(@Nonnull NumberControlData numberControlData) {
+            public Boolean visit(@Nonnull NumberControlDataDto numberControlData) {
                 return true;
             }
 
             @Override
-            public Boolean visit(@Nonnull TextControlData textControlData) {
+            public Boolean visit(@Nonnull TextControlDataDto textControlData) {
                 return textControlData.getValue().map(this::isIncluded).orElse(false);
             }
 

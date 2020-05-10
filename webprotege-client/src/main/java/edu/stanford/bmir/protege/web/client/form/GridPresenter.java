@@ -8,9 +8,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
-import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
@@ -126,10 +124,10 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     }
 
 
-    public void setValue(GridControlData value) {
+    public void setValue(GridControlDataDto value) {
         clear();
         // List of objects
-        Page<GridRowData> rowsPage = value.getRows();
+        Page<GridRowDataDto> rowsPage = value.getRows();
         List<GridRowPresenter> rows = rowsPage
                                            .getPageElements()
                                            .stream()

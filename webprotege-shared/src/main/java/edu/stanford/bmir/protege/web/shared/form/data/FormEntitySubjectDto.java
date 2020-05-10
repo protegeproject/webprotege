@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.auto.value.AutoValue;
+import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -31,5 +32,12 @@ public abstract class FormEntitySubjectDto extends FormSubjectDto {
     @Override
     public IRI getIri() {
         return getEntityData().getEntity().getIRI();
+    }
+
+    @Memoized
+    @Nonnull
+    @Override
+    public FormSubject toFormSubject() {
+        return FormEntitySubject.get(getEntityData().getEntity());
     }
 }

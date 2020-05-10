@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRendererFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
@@ -28,17 +29,21 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
     private final EntityFormManager formManager;
 
     @Nonnull
-    private final EntityFrameFormDataDtoBuilder formDataBuilder;
+    private final FrameComponentSessionRendererFactory sessionRendererFactory;
+
+    @Nonnull
+    private final EntityFrameFormDataDtoBuilderFactory formDataDtoBuilderFactory;
 
     @Inject
     public GetEntityFormActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull ProjectId projectId,
                                       @Nonnull EntityFormManager formManager,
-                                      @Nonnull EntityFrameFormDataDtoBuilder formDataBuilder) {
+                                      @Nonnull FrameComponentSessionRendererFactory sessionRendererFactory, @Nonnull EntityFrameFormDataDtoBuilderFactory formDataDtoBuilderFactory) {
         super(accessManager);
         this.projectId = projectId;
         this.formManager = formManager;
-        this.formDataBuilder = formDataBuilder;
+        this.sessionRendererFactory = sessionRendererFactory;
+        this.formDataDtoBuilderFactory = formDataDtoBuilderFactory;
     }
 
     @Nonnull
@@ -49,9 +54,10 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         var pageRequestIndex = FormPageRequestIndex.create(pageRequests);
         var entity = action.getEntity();
         var langTagFilter = action.getLangTagFilter();
+        var formDataDtoBuilder = formDataDtoBuilderFactory.create(sessionRendererFactory.create());
         var forms = formManager.getFormDescriptors(entity, projectId)
                           .stream()
-                          .map(formDescriptor -> formDataBuilder.toFormData(entity, formDescriptor, pageRequestIndex, langTagFilter))
+                          .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor, pageRequestIndex, langTagFilter))
                           .collect(toImmutableList());
         return new GetEntityFormsResult(forms);
     }

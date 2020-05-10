@@ -58,7 +58,7 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     HTMLPanel content;
 
-    FormControlStack editor;
+    FormControlStackPresenter editor;
 
     @Inject
     public FormFieldViewImpl() {
@@ -107,14 +107,14 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
         label.setVisible(!formLabel.isEmpty());
     }
 
+    @Nonnull
     @Override
-    public void setEditor(FormControlStack editor) {
-        this.editor = checkNotNull(editor);
-        editorHolder.setWidget(editor);
+    public AcceptsOneWidget getFormStackContainer() {
+        return editorHolder;
     }
 
     @Override
-    public FormControlStack getEditor() {
+    public FormControlStackPresenter getEditor() {
         return checkNotNull(editor);
     }
 

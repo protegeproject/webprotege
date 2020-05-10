@@ -10,9 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormFieldData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 
@@ -49,7 +47,7 @@ public class FormPresenter {
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
     @Nonnull
-    private Optional<FormSubject> currentSubject = Optional.empty();
+    private Optional<FormSubjectDto> currentSubject = Optional.empty();
 
     private FormFieldPresenterFactory formFieldPresenterFactory;
 
@@ -64,7 +62,7 @@ public class FormPresenter {
     public FormPresenter(@Nonnull @Provided FormView formView,
                          @Nonnull @Provided NoFormView noFormView,
                          @Nonnull @Provided DispatchServiceManager dispatchServiceManager,
-                         FormFieldPresenterFactory formFieldPresenterFactory) {
+                         @Nonnull FormFieldPresenterFactory formFieldPresenterFactory) {
         this.formView = checkNotNull(formView);
         this.noFormView = checkNotNull(noFormView);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -85,7 +83,7 @@ public class FormPresenter {
      *
      * @param formData The form data to be shown in the form.
      */
-    public void displayForm(@Nonnull FormData formData) {
+    public void displayForm(@Nonnull FormDataDto formData) {
         checkNotNull(formData);
         saveExpansionState();
         currentSubject = formData.getSubject();
@@ -132,13 +130,13 @@ public class FormPresenter {
         fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(handler));
     }
 
-    private void updateFormData(@Nonnull FormData formData) {
+    private void updateFormData(@Nonnull FormDataDto formData) {
         GWT.log("[FormPresenter] Updating form data");
         this.currentSubject = formData.getSubject();
         dispatchServiceManager.beginBatch();
-        ImmutableList<FormFieldData> nextFormFieldData = formData.getFormFieldData();
+        ImmutableList<FormFieldDataDto> nextFormFieldData = formData.getFormFieldData();
         for(int i = 0; i < nextFormFieldData.size(); i++) {
-            FormFieldData fieldData = nextFormFieldData.get(i);
+            FormFieldDataDto fieldData = nextFormFieldData.get(i);
             FormFieldPresenter formFieldPresenter = fieldPresenters.get(i);
             formFieldPresenter.setValue(fieldData);
         }
@@ -150,12 +148,12 @@ public class FormPresenter {
      *
      * @param formData The form data to be filled into the form.
      */
-    private void createFormAndSetFormData(@Nonnull FormData formData) {
+    private void createFormAndSetFormData(@Nonnull FormDataDto formData) {
         clear();
         FormDescriptor formDescriptor = formData.getFormDescriptor();
         currentFormDescriptor = Optional.of(formDescriptor);
         dispatchServiceManager.beginBatch();
-        for(FormFieldData fieldData : formData.getFormFieldData()) {
+        for(FormFieldDataDto fieldData : formData.getFormFieldData()) {
             addFormField(fieldData);
         }
         dispatchServiceManager.executeCurrentBatch();
@@ -169,11 +167,12 @@ public class FormPresenter {
         container.ifPresent(c -> c.setWidget(noFormView));
     }
 
-    private void addFormField(@Nonnull FormFieldData formFieldData) {
+    private void addFormField(@Nonnull FormFieldDataDto formFieldData) {
         FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+        presenter.start();
         fieldPresenters.add(presenter);
         if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()
                                                  .getId())) {
@@ -202,7 +201,9 @@ public class FormPresenter {
             ImmutableList<FormFieldData> formFieldData = fieldPresenters.stream()
                                                                         .map(FormFieldPresenter::getValue)
                                                                         .collect(toImmutableList());
-            return FormData.get(currentSubject, formDescriptor, formFieldData);
+            return FormData.get(currentSubject.map(FormSubjectDto::toFormSubject),
+                                formDescriptor,
+                                formFieldData);
         });
     }
 
@@ -211,11 +212,11 @@ public class FormPresenter {
         return currentFormDescriptor.map(formDescriptor
                                           -> currentSubject.map(subject
                                                                         -> fieldPresenters.stream()
-                                                                                                 .map(formFieldPresenter -> formFieldPresenter.getPageRequests(subject))
+                                                                                                 .map(formFieldPresenter -> formFieldPresenter.getPageRequests(subject.toFormSubject()))
                                                                                                  .flatMap(ImmutableList::stream)
                                                                                                  .map(pr -> FormPageRequest.get(
                                                                                                          formDescriptor.getFormId(),
-                                                                                                         subject,
+                                                                                                         subject.toFormSubject(),
                                                                                                          pr.getFieldId(),
                                                                                                          pr.getSourceType(),
                                                                                                          pr.getPageRequest()))
@@ -224,13 +225,6 @@ public class FormPresenter {
 
     public IsWidget getView() {
         return formView;
-    }
-
-    public boolean isDirty() {
-        return fieldPresenters.stream()
-                              .map(FormFieldPresenter::isDirty)
-                              .findFirst()
-                              .orElse(false);
     }
 
     public void requestFocus() {

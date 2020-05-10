@@ -16,7 +16,9 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.ImageControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -83,9 +85,9 @@ public class ImageControl extends Composite implements FormControl {
     }
 
     @Override
-    public void setValue(FormControlData object) {
-        if(object instanceof ImageControlData) {
-            theIRI = ((ImageControlData) object).getIri();
+    public void setValue(@Nonnull FormControlDataDto object) {
+        if(object instanceof ImageControlDataDto) {
+            theIRI = ((ImageControlDataDto) object).getIri();
             updateUi();
         }
         else {
@@ -169,23 +171,8 @@ public class ImageControl extends Composite implements FormControl {
     }
 
     @Override
-    public boolean isDirty() {
-        return dirty;
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return addHandler(handler, DirtyChangedEvent.TYPE);
-    }
-
-    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> valueChangeHandler) {
         return addHandler(valueChangeHandler, ValueChangeEvent.getType());
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return getValue().isPresent();
     }
 
     @Override

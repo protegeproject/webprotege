@@ -9,20 +9,15 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -49,19 +44,9 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     @UiField(provided = true)
     PrimitiveDataEditorImpl editor;
 
-    @Nonnull
-    private final ProjectId projectId;
-
-    @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
-
-
-    private Optional<OWLEntity> currentValue = Optional.empty();
 
     @Inject
-    public EntityNameControl(@Nonnull ProjectId projectId,
-                             @Nonnull DispatchServiceManager dispatchServiceManager,
-                             Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+    public EntityNameControl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         editor = (PrimitiveDataEditorImpl) primitiveDataEditorProvider.get();
         initWidget(ourUiBinder.createAndBindUi(this));
         editor.addValueChangeHandler(this::handleEditorValueChanged);
@@ -72,8 +57,6 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
         editor.setDataPropertiesAllowed(true);
         editor.setAnnotationPropertiesAllowed(true);
         editor.setDatatypesAllowed(true);
-        this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void setDescriptor(@Nonnull EntityNameControlDescriptor descriptor) {
@@ -85,23 +68,17 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     }
 
     private void handleEditorValueChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-        currentValue = event.getValue()
-                            .filter(val -> val instanceof OWLClassData)
-                            .map(val -> (OWLClassData) val)
-                            .map(OWLClassData::getEntity);
         ValueChangeEvent.fire(EntityNameControl.this, getValue());
     }
 
     @Override
-    public void setValue(FormControlData object) {
-        clearValue();
-        if(object instanceof EntityNameControlData) {
-            EntityNameControlData data = (EntityNameControlData) object;
-            this.currentValue = data.getEntity();
-            currentValue.ifPresent(e -> {
-                dispatchServiceManager.execute(new GetEntityRenderingAction(projectId, e),
-                                               result -> editor.setValue(result.getEntityData()));
-            });
+    public void setValue(@Nonnull FormControlDataDto object) {
+        if(object instanceof EntityNameControlDataDto) {
+            EntityNameControlDataDto data = (EntityNameControlDataDto) object;
+            data.getEntity().ifPresent(editor::setValue);
+        }
+        else {
+            editor.clearValue();
         }
 
     }
@@ -123,34 +100,19 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
 
     @Override
     public void clearValue() {
-        currentValue = Optional.empty();
         editor.clearValue();
     }
 
     @Override
     public Optional<FormControlData> getValue() {
-        return currentValue
+        return editor.getValue()
+                .flatMap(OWLPrimitiveData::asEntity)
                 .map(entity -> EntityNameControlData.get(descriptor, entity));
-    }
-
-    @Override
-    public boolean isDirty() {
-        return editor.isDirty();
-    }
-
-    @Override
-    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return editor.addDirtyChangedHandler(handler);
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    @Override
-    public boolean isWellFormed() {
-        return getValue().isPresent();
     }
 
     @Override

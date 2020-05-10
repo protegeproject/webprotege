@@ -9,6 +9,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import com.mongodb.util.JSON;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -87,5 +88,14 @@ public abstract class LanguageMap {
             map.put(formattedLang, value);
             return this;
         }
+    }
+
+    @Nonnull
+    public static LanguageMap fromDictionaryMap(@Nonnull Map<DictionaryLanguage, String> dictionaryMap) {
+        ImmutableMap.Builder<String, String> langMap = ImmutableMap.builder();
+        dictionaryMap.forEach((dict, value) -> {
+            langMap.put(dict.getLang(), value);
+        });
+        return LanguageMap.get(langMap.build());
     }
 }
