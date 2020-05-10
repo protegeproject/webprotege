@@ -31,6 +31,9 @@ public class FormControlContainerImpl extends Composite implements FormControlCo
     @UiField
     Button deleteButton;
 
+    @UiField
+    FormControlContainerStyle style;
+
     private RemoveHandler removeHandler = () -> {};
 
     @Inject
@@ -54,6 +57,12 @@ public class FormControlContainerImpl extends Composite implements FormControlCo
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        if(enabled) {
+            removeStyleName(style.disabled());
+        }
+        else {
+            addStyleName(style.disabled());
+        }
     }
 
     @Override

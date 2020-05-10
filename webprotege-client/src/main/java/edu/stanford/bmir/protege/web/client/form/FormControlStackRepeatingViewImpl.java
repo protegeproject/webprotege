@@ -15,6 +15,8 @@ public class FormControlStackRepeatingViewImpl extends Composite implements Form
 
     private AddFormControlHandler addFormControlHandler = () -> {};
 
+    private boolean enabled = true;
+
     interface FormControlStackRepeatingViewImplUiBinder extends UiBinder<HTMLPanel, FormControlStackRepeatingViewImpl> {
     }
 
@@ -75,11 +77,18 @@ public class FormControlStackRepeatingViewImpl extends Composite implements Form
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enabled;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-
+        this.enabled = enabled;
+        for(int i = 0; i < stackContainer.getWidgetCount(); i++) {
+            Widget w = stackContainer.getWidget(i);
+            if(w instanceof FormControlContainer) {
+                ((FormControlContainer) w).setEnabled(enabled);
+            }
+        }
+        addButton.setVisible(enabled);
     }
 }
