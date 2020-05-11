@@ -39,7 +39,8 @@ public class FormFieldPresenterFactory {
     public FormFieldPresenter create(@Nonnull FormFieldDescriptor fieldDescriptor) {
 
         FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(fieldDescriptor.getFormControlDescriptor(),
-                                                                                              fieldDescriptor.getRepeatability());
+                                                                                              fieldDescriptor.getRepeatability(),
+                                                                                              FormRegionPosition.TOP_LEVEL);
         return new FormFieldPresenter(
                 viewProvider.get(),
                 fieldDescriptor,

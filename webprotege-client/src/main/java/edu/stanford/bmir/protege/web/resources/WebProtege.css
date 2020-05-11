@@ -488,7 +488,6 @@
     padding-bottom: 0.3em;
     border-radius: 3px;
     color: literal("var(--grid-header--color)");
-    padding-right: 23px; /** Magic number to cover Value List padding of delete button **/
     position: relative;
     min-height: 1rem;
 }
@@ -501,8 +500,8 @@
 .wp-form__grid__row {
 }
 
-.wp-form__grid .wp-value-list__row:last-child {
-    border: none;
+.wp-form__grid__row + .wp-form__grid__row {
+    border-top: 1px solid literal("var(--separator--color)");
 }
 
 
@@ -557,4 +556,5 @@
 
 .wp-form__control-stack__item--delete-hover {
     outline: 2px solid literal("var(--delete--color)");
+    outline-offset: 1px;
 }

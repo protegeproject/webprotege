@@ -8,8 +8,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -44,7 +42,7 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     }
 
     @Override
-    public void setRegionPosition(@Nonnull FormRegionPosition position) {
+    public void setPosition(@Nonnull FormRegionPosition position) {
         if(position.equals(FormRegionPosition.NESTED)) {
             this.gridPresenter.hideHeaderRow();
         }

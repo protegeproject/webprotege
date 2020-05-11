@@ -28,14 +28,15 @@ public class FormControlStackPresenterFactory {
 
     @Nonnull
     public FormControlStackPresenter create(@Nonnull FormControlDescriptor descriptor,
-                                            @Nonnull Repeatability repeatability) {
+                                            @Nonnull Repeatability repeatability,
+                                            @Nonnull FormRegionPosition position) {
         FormControlDataEditorFactory factory = formControlFactory.getDataEditorFactory(descriptor);
         if(checkNotNull(repeatability).equals(Repeatability.NON_REPEATABLE)) {
             FormControl formControl = factory.createFormControl();
-            return nonRepeatingPresenterFactory.create(formControl);
+            return nonRepeatingPresenterFactory.create(formControl, position);
         }
         else {
-            return repeatingPresenterFactory.create(factory);
+            return repeatingPresenterFactory.create(position, factory);
         }
     }
 }

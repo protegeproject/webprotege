@@ -27,17 +27,22 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
 
     @Nonnull
     private final FormControl formControl;
+    @Nonnull
+    private final FormRegionPosition position;
 
     @Nonnull
     private final HandlerManager handlerManager = new HandlerManager(this);
 
     @Inject
     @AutoFactory
-    public FormControlStackNonRepeatingPresenter(@Nonnull FormControl formControl) {
+    public FormControlStackNonRepeatingPresenter(@Nonnull FormControl formControl,
+                                                 @Nonnull FormRegionPosition position) {
         this.formControl = checkNotNull(formControl);
+        this.position = checkNotNull(position);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
+        formControl.setPosition(position);
         container.setWidget(formControl);
     }
 
@@ -116,12 +121,12 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
     @Nonnull
     @Override
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject, @Nonnull FormRegionId formRegionId) {
-        return ImmutableList.of();
+        return formControl.getPageRequests(formSubject, formRegionId);
     }
 
     @Override
     public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
-
+        formControl.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
     }
 
     @Override

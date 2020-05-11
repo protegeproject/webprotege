@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -8,6 +9,8 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
+
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,12 +37,17 @@ public class GridCellContainerImpl implements GridCellContainer {
 
     @Override
     public boolean isVisible() {
-        return delegate.isVisible();
+        return !Style.Display.NONE.getCssName().equals(delegate.getElement().getStyle().getDisplay());
     }
 
     @Override
     public void setVisible(boolean visible) {
-        delegate.setVisible(visible);
+        if(visible) {
+            delegate.getElement().getStyle().clearDisplay();
+        }
+        else {
+            delegate.getElement().getStyle().setDisplay(Style.Display.NONE);
+        }
     }
 
     @Override

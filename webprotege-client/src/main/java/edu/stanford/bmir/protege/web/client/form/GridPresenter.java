@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -19,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,18 +46,26 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     private final Provider<GridRowPresenter> rowPresenterProvider;
 
     @Nonnull
+    private final List<GridRowPresenter> rowPresenters = new ArrayList<>();
+
+    @Nonnull
+    private final List<GridRowViewContainer> rowContainers = new ArrayList<>();
+
+    @Nonnull
     private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of(),
                                                                          null);
 
     @Nonnull
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {
+    };
 
     private boolean enabled = true;
 
     @Nonnull
     private GridColumnVisibilityManager columnVisibilityManager = new GridColumnVisibilityManager();
 
-    private HandlerRegistration visibleColumnsChangedHandlerRegistration = () -> {};
+    private HandlerRegistration visibleColumnsChangedHandlerRegistration = () -> {
+    };
 
     private boolean topLevel = false;
 
@@ -66,7 +76,6 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         this.view = checkNotNull(view);
         this.headerPresenter = headerPresenter;
         this.rowPresenterProvider = rowPresenterProvider;
-        view.setPageNumberChangedHandler(pageNumber -> formRegionPageChangedHandler.handleFormRegionPageChanged());
     }
 
     public void clearValue() {
@@ -78,13 +87,16 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
                                                                 @Nonnull FormRegionId formRegionId) {
         int pageNumber = view.getPageNumber();
         PageRequest pageRequest = PageRequest.requestPageWithSize(pageNumber, DEFAULT_PAGE_SIZE);
-        FormRegionPageRequest gridPageRequest = FormRegionPageRequest.get(formSubject, formRegionId, FormPageRequest.SourceType.GRID_CONTROL, pageRequest);
+        FormRegionPageRequest gridPageRequest = FormRegionPageRequest.get(formSubject,
+                                                                          formRegionId,
+                                                                          FormPageRequest.SourceType.GRID_CONTROL,
+                                                                          pageRequest);
 
-        ImmutableList<FormRegionPageRequest> rowRequests = view.getRows()
-                                                               .stream()
-                                                               .map(GridRowPresenter::getPageRequests)
-                                                               .flatMap(ImmutableList::stream)
-                                                               .collect(toImmutableList());
+        ImmutableList<FormRegionPageRequest> rowRequests = rowPresenters
+                .stream()
+                .map(GridRowPresenter::getPageRequests)
+                .flatMap(ImmutableList::stream)
+                .collect(toImmutableList());
         return ImmutableList.<FormRegionPageRequest>builder()
                 .add(gridPageRequest)
                 .addAll(rowRequests)
@@ -93,10 +105,10 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     }
 
     public GridControlData getValue() {
-        ImmutableList<GridRowData> rows = view.getRows()
-                                              .stream()
-                                              .map(GridRowPresenter::getFormDataValue)
-                                              .collect(toImmutableList());
+        ImmutableList<GridRowData> rows = rowPresenters
+                .stream()
+                .map(GridRowPresenter::getFormDataValue)
+                .collect(toImmutableList());
         Page<GridRowData> page = new Page<>(1, 1, rows, rows.size());
         return GridControlData.get(descriptor, page);
     }
@@ -108,11 +120,13 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         view.setEnabled(enabled);
+        rowPresenters.forEach(rowPresenter -> rowPresenter.setEnabled(enabled));
+        rowContainers.forEach(rowContainer -> rowContainer.setEnabled(enabled));
     }
 
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler formRegionPageChangedHandler) {
         this.formRegionPageChangedHandler = checkNotNull(formRegionPageChangedHandler);
-        view.getRows().forEach(row -> row.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
+        rowPresenters.forEach(row -> row.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
     }
 
     public void setTopLevel() {
@@ -125,28 +139,46 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
 
 
     public void setValue(GridControlDataDto value) {
-        clear();
+        rowPresenters.clear();
+        view.clear();
         // List of objects
         Page<GridRowDataDto> rowsPage = value.getRows();
-        List<GridRowPresenter> rows = rowsPage
-                                           .getPageElements()
-                                           .stream()
-                                           .map(rowDataValue -> {
-                                               GridRowPresenter rowPresenter = rowPresenterProvider.get();
-                                               rowPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
-                                               rowPresenter.setColumnDescriptors(descriptor);
-                                               rowPresenter.setValue(rowDataValue);
-                                               rowPresenter.setEnabled(enabled);
-                                               rowPresenter.setColumnVisibilityManager(columnVisibilityManager);
-                                               return rowPresenter;
-                                           })
-                                           .collect(Collectors.toList());
-        view.setRows(rows);
+        rowsPage.getPageElements()
+                .stream()
+                .map(this::toGridRowPresenter)
+                .forEach(this::addRow);
         view.setPageCount(rowsPage.getPageCount());
         view.setPageNumber(rowsPage.getPageNumber());
         view.setElementCount(rowsPage.getTotalElements());
         view.setPaginatorVisible(rowsPage.getPageCount() > 1);
         view.setEnabled(enabled);
+    }
+
+    private GridRowPresenter toGridRowPresenter(GridRowDataDto rowDataValue) {
+        GridRowPresenter rowPresenter = createAndSetupGridRowPresenter();
+        rowPresenter.setValue(rowDataValue);
+        return rowPresenter;
+    }
+
+    private GridRowPresenter createAndSetupGridRowPresenter() {
+        GridRowPresenter rowPresenter = rowPresenterProvider.get();
+        rowPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+        rowPresenter.setColumnDescriptors(descriptor);
+        rowPresenter.setEnabled(enabled);
+        rowPresenter.setColumnVisibilityManager(columnVisibilityManager);
+        return rowPresenter;
+    }
+
+    private void addRow(GridRowPresenter presenter) {
+        GridRowViewContainer rowContainer = view.addRow();
+        rowContainer.setEnabled(enabled);
+        rowContainer.setDeleteHandler(() -> {
+            view.removeRow(rowContainer);
+            rowPresenters.remove(presenter);
+        });
+        presenter.start(rowContainer);
+        rowPresenters.add(presenter);
+        rowContainers.add(rowContainer);
     }
 
     public IsWidget getView() {
@@ -162,18 +194,12 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     }
 
     public void setDescriptor(GridControlDescriptor descriptor) {
-        if(this.descriptor.equals(descriptor)) {
+        if (this.descriptor.equals(descriptor)) {
             return;
         }
         clear();
         this.descriptor = checkNotNull(descriptor);
         headerPresenter.setGridDescriptor(descriptor);
-        view.setNewRowHandler(() -> {
-            GridRowPresenter rowPresenter = rowPresenterProvider.get();
-            rowPresenter.setColumnDescriptors(descriptor);
-            return rowPresenter;
-        });
-
     }
 
     public void clear() {
@@ -186,9 +212,18 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         headerPresenter.addFilteredColumnsChangedHandler(source -> {
             // We only take direction from the filter menu if its for the top level grid
             // in the situatation where there are nested grids
-            if(topLevel) {
+            if (topLevel) {
                 columnVisibilityManager.setVisibleColumns(source.getFilteredColumns());
             }
+        });
+        view.setPageNumberChangedHandler(pageNumber -> formRegionPageChangedHandler.handleFormRegionPageChanged());
+        view.setNewRowHandler(() -> {
+            if(!enabled) {
+                return;
+            }
+            GridRowPresenter presenter = createAndSetupGridRowPresenter();
+            addRow(presenter);
+            presenter.requestFocus();
         });
     }
 
@@ -200,7 +235,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         this.visibleColumnsChangedHandlerRegistration
                 = this.columnVisibilityManager.addVisibleColumnsChangedHandler(this::updateVisibleColumns);
         this.headerPresenter.setColumnVisibilityManager(columnVisibilityManager);
-        view.getRows().forEach(row -> row.setColumnVisibilityManager(columnVisibilityManager));
+        rowPresenters.forEach(row -> row.setColumnVisibilityManager(columnVisibilityManager));
         updateVisibleColumns();
     }
 
@@ -208,6 +243,6 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         // Columns in header
         headerPresenter.updateVisibleColumns();
         // Show/hide columns in rows
-        view.getRows().forEach(GridRowPresenter::updateColumnVisibility);
+        rowPresenters.forEach(GridRowPresenter::updateColumnVisibility);
     }
 }

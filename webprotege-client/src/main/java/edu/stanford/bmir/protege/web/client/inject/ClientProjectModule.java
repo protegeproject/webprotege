@@ -823,6 +823,11 @@ public class ClientProjectModule {
     FormControlStackRepeatingView provideFormControlStackRepeatingView(FormControlStackRepeatingViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    GridRowViewContainer provideGridRowViewContainer(@Nonnull GridRowViewContainerImpl impl) {
+        return impl;
+    }
 }
 
 

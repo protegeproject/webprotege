@@ -16,7 +16,7 @@
             width: 100%;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{wp.style.formGridRow} {style.main}">
+    <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel ui:field="rowContainer" addStyleNames="{style.row}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

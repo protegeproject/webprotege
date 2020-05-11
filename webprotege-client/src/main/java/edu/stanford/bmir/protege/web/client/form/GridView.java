@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.pagination.HasPages;
@@ -14,12 +15,12 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public interface GridView extends IsWidget, HasRequestFocus, HasPagination, HasPages {
+public interface GridView extends IsWidget, HasPagination, HasPages, HasEnabled {
 
     void setEnabled(boolean enabled);
 
     interface NewRowHandler {
-        GridRowPresenter createRow();
+        void handleAddNewRow();
     }
 
     @Nonnull
@@ -27,10 +28,10 @@ public interface GridView extends IsWidget, HasRequestFocus, HasPagination, HasP
 
     void requestFocus();
 
-    void setRows(@Nonnull List<GridRowPresenter> rowPresenters);
-
     @Nonnull
-    List<GridRowPresenter> getRows();
+    GridRowViewContainer addRow();
+
+    void removeRow(@Nonnull GridRowViewContainer rowContainer);
 
     void setNewRowHandler(@Nonnull NewRowHandler newRowHandler);
 

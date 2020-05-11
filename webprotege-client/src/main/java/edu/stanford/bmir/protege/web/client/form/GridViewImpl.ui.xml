@@ -4,9 +4,10 @@
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
-        .limitedValuesMessage {
-            color: literal("var(--tertiary--color)");
-            background-color: rgb(255, 250, 230);
+        .bodyContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.formGrid}">
@@ -14,6 +15,7 @@
             <pagination:PaginatorView ui:field="paginatorView" visible="false"/>
         </g:HTMLPanel>
         <g:SimplePanel ui:field="headerContainer"/>
-        <editor:ValueListEditor ui:field="rowEditor" enabled="true" newRowMode="MANUAL"/>
+        <g:HTMLPanel ui:field="bodyContainer" addStyleNames="{style.bodyContainer}"/>
+        <g:Button ui:field="addRowButton" addStyleNames="{wp.buttons.addButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

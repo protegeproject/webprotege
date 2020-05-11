@@ -29,7 +29,7 @@ public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedH
 
     void setEnabled(boolean enabled);
 
-    default void setRegionPosition(@Nonnull FormRegionPosition position) {
+    default void setPosition(@Nonnull FormRegionPosition position) {
 
     }
 

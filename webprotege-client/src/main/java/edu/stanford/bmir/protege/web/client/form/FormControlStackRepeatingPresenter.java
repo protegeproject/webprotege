@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -47,12 +48,19 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Nonnull
     private final List<FormControl> formControls = new ArrayList<>();
 
+    private FormRegionPosition position;
+
+    @Nonnull
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+
     @AutoFactory
     @Inject
     public FormControlStackRepeatingPresenter(@Provided @Nonnull FormControlStackRepeatingView view,
                                               @Provided @Nonnull PaginatorPresenter paginatorPresenter,
+                                              @Nonnull FormRegionPosition position,
                                               @Nonnull FormControlDataEditorFactory formControlFactory) {
         this.view = checkNotNull(view);
+        this.position = checkNotNull(position);
         this.paginatorPresenter = checkNotNull(paginatorPresenter);
         this.formControlFactory = checkNotNull(formControlFactory);
     }
@@ -108,6 +116,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
 
     private FormControl createFormControl(FormControlDataDto dto) {
         FormControl formControl = formControlFactory.createFormControl();
+        formControl.setPosition(position);
         formControl.setValue(dto);
         formControl.setEnabled(enabled);
         formControl.addValueChangeHandler(this);
@@ -188,12 +197,16 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Nonnull
     @Override
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject, @Nonnull FormRegionId formRegionId) {
-        return ImmutableList.of();
+        return formControls.stream()
+                .map(formControl -> formControl.getPageRequests(formSubject, formRegionId))
+                .flatMap(ImmutableList::stream)
+                .collect(toImmutableList());
     }
 
     @Override
     public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
-
+        this.formRegionPageChangedHandler = checkNotNull(formRegionPageChangedHandler);
+        formControls.forEach(formControl -> formControl.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
     }
 
     @Override

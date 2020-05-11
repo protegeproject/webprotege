@@ -115,7 +115,9 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                 .forEach(columnDescriptor -> {
                     double span = columnDescriptor.getNestedColumnCount();
                     double weight = span / totalSpan;
-                    FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(gridDescriptor, columnDescriptor.getRepeatability());
+                    FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(columnDescriptor.getFormControlDescriptor(),
+                                                                                                          columnDescriptor.getRepeatability(),
+                                                                                                          FormRegionPosition.NESTED);
 
                     GridCellPresenter cellPresenter = cellPresenterFactory.create(columnDescriptor,
                                                                                   controlStackPresenter);
@@ -165,9 +167,18 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
             double totalSpan = gridControlDescriptor.getNestedColumnCount();
             for(GridColumnDescriptor descriptor : gridControlDescriptor.getColumns()) {
                 GridColumnId columnId = descriptor.getId();
-                boolean visible = !descriptor.isLeafColumnDescriptor() || cvm.isVisible(columnId);
                 GridCellContainer cellContainer = cellContainersById.get(columnId);
                 if(cellContainer != null) {
+                    boolean visible;
+                    if(descriptor.isLeafColumnDescriptor()) {
+                        visible = cvm.isVisible(descriptor.getId());
+                    }
+                    else {
+                        visible = descriptor.getLeafColumnDescriptors()
+                                            .map(GridColumnDescriptor::getId)
+                                            .anyMatch(cvm::isVisible);
+                    }
+
                     cellContainer.setVisible(visible);
                     long nestedLeafCount = descriptor.getLeafColumnDescriptors()
                                                      .filter(nestedLeafColumn -> cvm.isVisible(nestedLeafColumn.getId()))

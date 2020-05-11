@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -34,7 +35,7 @@ public class GridViewImpl extends Composite implements GridView {
 
     private final PaginatorPresenter paginatorPresenter;
 
-    private Optional<NewRowHandler> newRowHandler = Optional.empty();
+    private NewRowHandler newRowHandler = () -> {};
 
     private boolean enabled = true;
 
@@ -48,33 +49,38 @@ public class GridViewImpl extends Composite implements GridView {
     SimplePanel headerContainer;
 
     @UiField(provided = true)
-    ValueListEditor<GridRowPresenter> rowEditor;
-
-    @UiField(provided = true)
     PaginatorView paginatorView;
+
+    @UiField
+    HTMLPanel bodyContainer;
+
+    @UiField
+    Button addRowButton;
 
     @Inject
     public GridViewImpl(PaginatorPresenter paginatorPresenter) {
         this.paginatorView = paginatorPresenter.getView();
         this.paginatorPresenter = paginatorPresenter;
-        rowEditor = new ValueListFlexEditorImpl<>(() -> {
-            GridRowPresenterAdapter gridRowPresenterAdapter = new GridRowPresenterAdapter();
-            newRowHandler.ifPresent(handler -> {
-                GridRowPresenter presenter = handler.createRow();
-                presenter.setEnabled(enabled);
-                gridRowPresenterAdapter.setValue(presenter);
-            });
-            return gridRowPresenterAdapter;
-        });
         initWidget(ourUiBinder.createAndBindUi(this));
+        addRowButton.addClickHandler(this::handleAddNewRowButtonClicked);
+    }
+
+    private void handleAddNewRowButtonClicked(ClickEvent event) {
+        if(!enabled) {
+            return;
+        }
+        newRowHandler.handleAddNewRow();
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        rowEditor.setEnabled(enabled);
-        getRows()
-            .forEach(rowPresenter -> rowPresenter.setEnabled(enabled));
+        addRowButton.setVisible(enabled);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Nonnull
@@ -84,24 +90,26 @@ public class GridViewImpl extends Composite implements GridView {
     }
 
     @Override
-    public void requestFocus() {
-        rowEditor.requestFocus();
+    public void setNewRowHandler(@Nonnull NewRowHandler newRowHandler) {
+        this.newRowHandler = checkNotNull(newRowHandler);
     }
 
     @Override
-    public void setRows(@Nonnull List<GridRowPresenter> rowPresenters) {
-        rowEditor.setValue(rowPresenters);
+    public void requestFocus() {
+
     }
 
     @Nonnull
     @Override
-    public List<GridRowPresenter> getRows() {
-        return rowEditor.getValue().orElse(ImmutableList.of());
+    public GridRowViewContainer addRow() {
+        GridRowViewContainer container = new GridRowViewContainerImpl();
+        bodyContainer.add(container);
+        return container;
     }
 
     @Override
-    public void setNewRowHandler(@Nonnull NewRowHandler newRowHandler) {
-        this.newRowHandler = Optional.of(checkNotNull(newRowHandler));
+    public void removeRow(@Nonnull GridRowViewContainer rowContainer) {
+        bodyContainer.remove(rowContainer);
     }
 
     @Override
@@ -116,7 +124,7 @@ public class GridViewImpl extends Composite implements GridView {
 
     @Override
     public void clear() {
-        rowEditor.clearValue();
+        bodyContainer.clear();
         paginatorPresenter.setPageNumber(1);
         paginatorPresenter.setPageCount(1);
         paginatorView.setVisible(false);
