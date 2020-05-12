@@ -85,7 +85,7 @@ public class FormTabBarPresenter {
             Optional<FormId> selectedForm = stash.getSelectedForm();
             selectedForm.ifPresent(this::restoreFormSelection);
             if(!selectedForm.isPresent()) {
-                restoreSelection();
+                setFirstFormSelected();
             }
         });
         if(!selectedFormIdStash.isPresent()) {
