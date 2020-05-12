@@ -211,6 +211,8 @@ public class RpcWhiteList implements Action, Result {
 
     public GridCellDataDto gridCellDataDto;
 
+    public ChoiceDescriptorDto choiceDescriptorDto;
+
     public FormPageRequest.SourceType getSource() {
         return source;
     }
