@@ -19,16 +19,16 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public class FormSelectorItemViewImpl extends Composite implements FormSelectorItemView {
+public class FormTabViewImpl extends Composite implements FormTabView {
 
     public static final String SELECTED_ITEM_STYLE = WebProtegeClientBundle.BUNDLE.style()
                                                                                   .formSelectorItemSelected();
 
-    interface FormSelectorItemViewImplUiBinder extends UiBinder<HTMLPanel, FormSelectorItemViewImpl> {
+    interface FormTabViewImplUiBinder extends UiBinder<HTMLPanel, FormTabViewImpl> {
 
     }
 
-    private static FormSelectorItemViewImplUiBinder ourUiBinder = GWT.create(FormSelectorItemViewImplUiBinder.class);
+    private static FormTabViewImplUiBinder ourUiBinder = GWT.create(FormTabViewImplUiBinder.class);
 
     @UiField
     Label label;
@@ -38,7 +38,7 @@ public class FormSelectorItemViewImpl extends Composite implements FormSelectorI
     private final LanguageMapCurrentLocaleMapper localeMapper = new LanguageMapCurrentLocaleMapper();
 
     @Inject
-    public FormSelectorItemViewImpl() {
+    public FormTabViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

@@ -27,7 +27,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class FormStackPresenter {
 
     @Nonnull
-    private final FormSelectorPresenter formSelectorPresenter;
+    private final FormTabBarPresenter formTabBarPresenter;
 
     @Nonnull
     private final FormStackView view;
@@ -47,11 +47,11 @@ public class FormStackPresenter {
     private boolean enabled = true;
 
     @Inject
-    public FormStackPresenter(@Nonnull FormSelectorPresenter formSelectorPresenter,
+    public FormStackPresenter(@Nonnull FormTabBarPresenter formTabBarPresenter,
                               @Nonnull FormStackView view,
                               @Nonnull NoFormView noFormView,
                               @Nonnull Provider<FormPresenter> formPresenterProvider) {
-        this.formSelectorPresenter = checkNotNull(formSelectorPresenter);
+        this.formTabBarPresenter = checkNotNull(formTabBarPresenter);
         this.view = checkNotNull(view);
         this.noFormView = checkNotNull(noFormView);
         this.formPresenterProvider = checkNotNull(formPresenterProvider);
@@ -59,7 +59,7 @@ public class FormStackPresenter {
 
     public void clearForms() {
         formPresenters.clear();
-        formSelectorPresenter.clear();
+        formTabBarPresenter.clear();
         updateView();
     }
 
@@ -115,7 +115,7 @@ public class FormStackPresenter {
         }
         else {
             formPresenters.clear();
-            formSelectorPresenter.clear();
+            formTabBarPresenter.clear();
             view.clear();
             forms.forEach(formData -> {
                 FormPresenter formPresenter = formPresenterProvider.get();
@@ -126,11 +126,11 @@ public class FormStackPresenter {
                 formPresenter.displayForm(formData);
                 formPresenter.setEnabled(enabled);
                 formPresenters.add(formPresenter);
-                formSelectorPresenter.addForm(formDescriptor.getFormId(),
-                                              formDescriptor.getLabel(),
-                                              formContainer);
+                formTabBarPresenter.addForm(formDescriptor.getFormId(),
+                                            formDescriptor.getLabel(),
+                                            formContainer);
             });
-            formSelectorPresenter.restoreSelection();
+            formTabBarPresenter.restoreSelection();
         }
         updateView();
     }
@@ -151,11 +151,11 @@ public class FormStackPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         this.container = Optional.of(container);
         container.setWidget(view);
-        formSelectorPresenter.start(view.getSelectorContainer());
+        formTabBarPresenter.start(view.getSelectorContainer());
         updateView();
     }
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
-        formSelectorPresenter.setSelectedFormIdStash(formIdStash);
+        formTabBarPresenter.setSelectedFormIdStash(formIdStash);
     }
 }

@@ -19,14 +19,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
+ *
+ * Presents a form
  */
-public class FormSelectorItemPresenter {
+public class FormTabPresenter {
 
     @Nonnull
     private final FormId formId;
 
     @Nonnull
-    private final FormSelectorItemView view;
+    private final FormTabView view;
 
     private boolean selected = false;
 
@@ -35,8 +37,8 @@ public class FormSelectorItemPresenter {
 
     @AutoFactory
     @Inject
-    public FormSelectorItemPresenter(@Nonnull FormId formId,
-                                     @Provided @Nonnull FormSelectorItemView view) {
+    public FormTabPresenter(@Nonnull FormId formId,
+                            @Provided @Nonnull FormTabView view) {
         this.formId = checkNotNull(formId);
         this.view = checkNotNull(view);
     }

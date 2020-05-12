@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public interface FormSelectorView extends IsWidget {
+public interface FormTabBarView extends IsWidget {
 
     @Nonnull
     AcceptsOneWidget addFormSelectorItem();

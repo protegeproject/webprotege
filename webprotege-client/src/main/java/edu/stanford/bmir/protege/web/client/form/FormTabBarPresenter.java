@@ -6,10 +6,8 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,24 +17,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public class FormSelectorPresenter {
+public class FormTabBarPresenter {
 
     @Nonnull
-    private final List<FormSelectorItemPresenter> itemPresenters = new ArrayList<>();
+    private final List<FormTabPresenter> itemPresenters = new ArrayList<>();
 
     @Nonnull
-    private final FormSelectorView view;
+    private final FormTabBarView view;
 
-    private final FormSelectorItemPresenterFactory formSelectorItemPresenterFactory;
+    private final FormTabPresenterFactory tabPresenterFactory;
 
     @Nonnull
     private Optional<SelectedFormIdStash> selectedFormIdStash = Optional.empty();
 
     @Inject
-    public FormSelectorPresenter(@Nonnull FormSelectorView view,
-                                 FormSelectorItemPresenterFactory formSelectorItemPresenterFactory) {
+    public FormTabBarPresenter(@Nonnull FormTabBarView view,
+                               FormTabPresenterFactory tabPresenterFactory) {
         this.view = checkNotNull(view);
-        this.formSelectorItemPresenterFactory = checkNotNull(formSelectorItemPresenterFactory);
+        this.tabPresenterFactory = checkNotNull(tabPresenterFactory);
     }
 
     public void clear() {
@@ -61,7 +59,7 @@ public class FormSelectorPresenter {
     public void addForm(@Nonnull FormId formId,
                         @Nonnull LanguageMap label,
                         @Nonnull FormContainer formContainer) {
-        FormSelectorItemPresenter itemPresenter = formSelectorItemPresenterFactory.create(formId);
+        FormTabPresenter itemPresenter = tabPresenterFactory.create(formId);
         itemPresenters.add(itemPresenter);
         AcceptsOneWidget itemContainer = view.addFormSelectorItem();
         itemPresenter.start(itemContainer);
@@ -76,7 +74,7 @@ public class FormSelectorPresenter {
     }
 
     private void setSelected(FormId formId) {
-        for(FormSelectorItemPresenter ip : itemPresenters) {
+        for(FormTabPresenter ip : itemPresenters) {
             boolean selected = ip.getFormId().equals(formId);
             ip.setSelected(selected);
         }
@@ -98,7 +96,7 @@ public class FormSelectorPresenter {
     public void setFirstFormSelected() {
         itemPresenters.stream()
                       .findFirst()
-                      .map(FormSelectorItemPresenter::getFormId)
+                      .map(FormTabPresenter::getFormId)
                       .ifPresent(this::setSelected);
     }
 }

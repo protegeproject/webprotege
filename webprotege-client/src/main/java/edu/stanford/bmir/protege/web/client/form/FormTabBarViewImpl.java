@@ -7,8 +7,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import edu.stanford.bmir.protege.web.client.WebProtege;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -18,7 +16,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public class FormSelectorViewImpl extends Composite implements FormSelectorView {
+public class FormTabBarViewImpl extends Composite implements FormTabBarView {
 
     @Nonnull
     @Override
@@ -28,17 +26,17 @@ public class FormSelectorViewImpl extends Composite implements FormSelectorView 
         return simplePanel;
     }
 
-    interface FormSelectorViewImplUiBinder extends UiBinder<HTMLPanel, FormSelectorViewImpl> {
+    interface FormTabBarViewImplUiBinder extends UiBinder<HTMLPanel, FormTabBarViewImpl> {
 
     }
 
-    private static FormSelectorViewImplUiBinder ourUiBinder = GWT.create(FormSelectorViewImplUiBinder.class);
+    private static FormTabBarViewImplUiBinder ourUiBinder = GWT.create(FormTabBarViewImplUiBinder.class);
 
     @UiField
     HTMLPanel itemContainer;
 
     @Inject
-    public FormSelectorViewImpl() {
+    public FormTabBarViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

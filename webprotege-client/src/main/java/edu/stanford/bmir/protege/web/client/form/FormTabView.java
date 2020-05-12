@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-27
  */
-public interface FormSelectorItemView extends IsWidget {
+public interface FormTabView extends IsWidget {
 
     void setClickHandler(@Nonnull ClickHandler clickHandler);
 

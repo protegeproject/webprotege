@@ -800,12 +800,12 @@ public class ClientProjectModule {
     }
 
     @Provides
-    FormSelectorView provideFormSelectorView(FormSelectorViewImpl impl) {
+    FormTabBarView provideFormSelectorView(FormTabBarViewImpl impl) {
         return impl;
     }
 
     @Provides
-    FormSelectorItemView provideFormSelectorItemView(FormSelectorItemViewImpl impl) {
+    FormTabView provideFormSelectorItemView(FormTabViewImpl impl) {
         return impl;
     }
 
