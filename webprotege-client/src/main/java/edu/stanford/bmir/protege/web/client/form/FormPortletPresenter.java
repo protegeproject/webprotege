@@ -30,7 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent.
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
+@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays forms for the selected entity")
 public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
 
