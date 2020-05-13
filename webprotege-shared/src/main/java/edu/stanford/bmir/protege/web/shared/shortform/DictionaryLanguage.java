@@ -66,7 +66,7 @@ public abstract class DictionaryLanguage {
      */
     @JsonCreator
     @Nonnull
-    private static DictionaryLanguage createFromJson(@Nullable @JsonProperty(PROPERTY_IRI) IRI annotationPropertyIri,
+    private static DictionaryLanguage createFromJson(@Nullable @JsonProperty(PROPERTY_IRI) String annotationPropertyIri,
                                                      @Nullable @JsonProperty(LANG) String lang) {
         String normalisedLang;
         if(lang == null) {
@@ -75,7 +75,17 @@ public abstract class DictionaryLanguage {
         else {
             normalisedLang = lowerCaseLangTag(lang);
         }
-        return new AutoValue_DictionaryLanguage(annotationPropertyIri, normalisedLang);
+        IRI iri;
+        if(RDFS_LABEL.getPrefixedName().equals(annotationPropertyIri)) {
+            iri = RDFS_LABEL.getIRI();
+        }
+        else if(annotationPropertyIri != null) {
+            iri = IRI.create(annotationPropertyIri);
+        }
+        else {
+            iri = null;
+        }
+        return new AutoValue_DictionaryLanguage(iri, normalisedLang);
     }
 
     @Nonnull
@@ -88,9 +98,24 @@ public abstract class DictionaryLanguage {
         return DictionaryLanguage.create(SKOSVocabulary.PREFLABEL.getIRI(), lang);
     }
 
-    @JsonProperty(PROPERTY_IRI)
+    @JsonIgnore
     @Nullable
     public abstract IRI getAnnotationPropertyIri();
+
+    @Nullable
+    @JsonProperty(PROPERTY_IRI)
+    public String getJsonAnnotationPropertyIri() {
+        IRI annotationPropertyIri = getAnnotationPropertyIri();
+        if(annotationPropertyIri == null) {
+            return null;
+        }
+        if(RDFS_LABEL.getIRI().equals(annotationPropertyIri)) {
+            return RDFS_LABEL.getPrefixedName();
+        }
+        else {
+            return annotationPropertyIri.toString();
+        }
+    }
 
     @JsonProperty(LANG)
     @Nonnull
