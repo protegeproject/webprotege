@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
@@ -19,12 +22,19 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName(PlainNamedIndividualFrame.INDIVIDUAL_FRAME)
 public abstract class PlainNamedIndividualFrame extends PlainEntityFrame {
 
-    public static PlainNamedIndividualFrame get(@Nonnull OWLNamedIndividual subject,
-                                                @Nonnull ImmutableSet<OWLClass> parents,
-                                                @Nonnull ImmutableSet<OWLNamedIndividual> sameIndividuals,
-                                                @Nonnull ImmutableSet<PlainPropertyValue> propertyValues) {
+    public static final String INDIVIDUAL_FRAME = "IndividualFrame";
+
+    private static final String SAME_INDIVIDUAL = "sameIndividual";
+
+    @JsonCreator
+    @Nonnull
+    public static PlainNamedIndividualFrame get(@Nonnull @JsonProperty(SUBJECT) OWLNamedIndividual subject,
+                                                @Nonnull @JsonProperty(PARENTS) ImmutableSet<OWLClass> parents,
+                                                @Nonnull @JsonProperty(SAME_INDIVIDUAL) ImmutableSet<OWLNamedIndividual> sameIndividuals,
+                                                @Nonnull @JsonProperty(PROPERTY_VALUES) ImmutableSet<PlainPropertyValue> propertyValues) {
         return new AutoValue_PlainNamedIndividualFrame(subject,
                                                        parents,
                                                        sameIndividuals,
@@ -42,6 +52,7 @@ public abstract class PlainNamedIndividualFrame extends PlainEntityFrame {
     @Nonnull
     public abstract ImmutableSet<OWLClass> getParents();
 
+    @JsonProperty(SAME_INDIVIDUAL)
     @Nonnull
     public abstract ImmutableSet<OWLNamedIndividual> getSameIndividuals();
 

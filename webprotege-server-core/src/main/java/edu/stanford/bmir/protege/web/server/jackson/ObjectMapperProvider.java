@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.jackson;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +9,6 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.stanford.bmir.protege.web.server.form.FormControlValueDeserializer;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -49,11 +47,17 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         module.addSerializer(OWLProperty.class, new OWLEntitySerializer());
         module.addSerializer(new EntityTypeSerializer());
         module.addDeserializer(EntityType.class, new EntityTypeDeserializer());
-        module.addDeserializer(OWLEntity.class, new OWLEntityDeserializer(dataFactory));
-        module.addDeserializer(OWLProperty.class, new OWLPropertyDeserializer(dataFactory));
+        module.addDeserializer(OWLEntity.class, new OWLEntityDeserializer<>(dataFactory, OWLEntity.class));
+        module.addDeserializer(OWLNamedIndividual.class, new OWLEntityDeserializer<>(dataFactory, OWLNamedIndividual.class));
+        module.addDeserializer(OWLProperty.class, new OWLPropertyDeserializer<>(dataFactory, OWLProperty.class));
+        module.addDeserializer(OWLObjectProperty.class, new OWLPropertyDeserializer<>(dataFactory, OWLObjectProperty.class));
+        module.addDeserializer(OWLDataProperty.class, new OWLPropertyDeserializer<>(dataFactory, OWLDataProperty.class));
+        module.addDeserializer(OWLAnnotationProperty.class, new OWLPropertyDeserializer<>(dataFactory, OWLAnnotationProperty.class));
+        module.addDeserializer(OWLDatatype.class, new OWLEntityDeserializer<>(dataFactory, OWLDatatype.class));
         module.addDeserializer(OWLClass.class, new OWLClassDeserializer(dataFactory));
-        module.addDeserializer(OWLProperty.class, new OWLPropertyDeserializer(dataFactory));
         module.addDeserializer(IRI.class, new IriDeserializer());
+        module.addDeserializer(OWLAnnotationValue.class, new IriDeserializer());
+        module.addDeserializer(OWLAnnotationValue.class, new OWLLiteralDeserializer(dataFactory));
         module.addSerializer(OWLLiteral.class, new OWLLiteralSerializer());
         module.addDeserializer(OWLLiteral.class, new OWLLiteralDeserializer(dataFactory));
         module.addDeserializer(PrimitiveFormControlData.class, new FormControlValueDeserializer(dataFactory));

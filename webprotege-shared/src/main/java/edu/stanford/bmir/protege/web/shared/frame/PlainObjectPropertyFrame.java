@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
@@ -19,14 +22,27 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName(PlainObjectPropertyFrame.OBJECT_PROPERTY_FRAME)
 public abstract class PlainObjectPropertyFrame extends PlainEntityFrame {
 
-    public static PlainObjectPropertyFrame get(@Nonnull OWLObjectProperty subject,
-                                               @Nonnull ImmutableSet<PlainPropertyAnnotationValue> annotationValues,
-                                               @Nonnull ImmutableSet<ObjectPropertyCharacteristic> characteristics,
-                                               @Nonnull ImmutableSet<OWLClass> domains,
-                                               @Nonnull ImmutableSet<OWLClass> ranges,
-                                               @Nonnull ImmutableSet<OWLObjectProperty> inverses) {
+    public static final String OBJECT_PROPERTY_FRAME = "ObjectPropertyFrame";
+
+    private static final String CHARACTERISTICS = "characteristics";
+
+    public static final String DOMAINS = "domains";
+
+    public static final String RANGES = "ranges";
+
+    public static final String INVERSES = "inverses";
+
+    @Nonnull
+    @JsonCreator
+    public static PlainObjectPropertyFrame get(@Nonnull @JsonProperty(SUBJECT) OWLObjectProperty subject,
+                                               @Nonnull @JsonProperty(PROPERTY_VALUES) ImmutableSet<PlainPropertyAnnotationValue> annotationValues,
+                                               @Nonnull @JsonProperty(CHARACTERISTICS) ImmutableSet<ObjectPropertyCharacteristic> characteristics,
+                                               @Nonnull @JsonProperty(DOMAINS) ImmutableSet<OWLClass> domains,
+                                               @Nonnull @JsonProperty(RANGES) ImmutableSet<OWLClass> ranges,
+                                               @Nonnull @JsonProperty(INVERSES) ImmutableSet<OWLObjectProperty> inverses) {
         return new AutoValue_PlainObjectPropertyFrame(subject, annotationValues, characteristics, domains, ranges, inverses);
     }
 
@@ -41,15 +57,19 @@ public abstract class PlainObjectPropertyFrame extends PlainEntityFrame {
     @Nonnull
     public abstract ImmutableSet<PlainPropertyAnnotationValue> getPropertyValues();
 
+    @JsonProperty(CHARACTERISTICS)
     @Nonnull
     public abstract ImmutableSet<ObjectPropertyCharacteristic> getCharacteristics();
 
+    @JsonProperty(DOMAINS)
     @Nonnull
     public abstract ImmutableSet<OWLClass> getDomains();
 
+    @JsonProperty(RANGES)
     @Nonnull
     public abstract ImmutableSet<OWLClass> getRanges();
 
+    @JsonProperty(INVERSES)
     @Nonnull
     public abstract ImmutableSet<OWLObjectProperty> getInverseProperties();
 

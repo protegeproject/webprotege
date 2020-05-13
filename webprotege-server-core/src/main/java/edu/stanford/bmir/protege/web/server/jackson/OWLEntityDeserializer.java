@@ -19,22 +19,26 @@ import java.io.IOException;
  * Stanford Center for Biomedical Informatics Research
  * 18 Jun 2018
  */
-public class OWLEntityDeserializer extends StdDeserializer<OWLEntity> {
+public class OWLEntityDeserializer<E extends OWLEntity> extends StdDeserializer<E> {
 
     @Nonnull
     private final OWLDataFactory dataFactory;
 
-    public OWLEntityDeserializer(@Nonnull OWLDataFactory dataFactory) {
+    @Nonnull
+    private final Class<E> cls;
+
+    public OWLEntityDeserializer(@Nonnull OWLDataFactory dataFactory, @Nonnull Class<E> cls) {
         super(OWLEntity.class);
         this.dataFactory = dataFactory;
+        this.cls = cls;
     }
 
     @Override
-    public OWLEntity deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public E deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         return deserialize(jsonParser);
     }
 
-    protected OWLEntity deserialize(JsonParser jsonParser) throws IOException {
+    protected E deserialize(JsonParser jsonParser) throws IOException {
         EntityType<?> type = null;
         IRI iri = null;
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
@@ -49,7 +53,13 @@ public class OWLEntityDeserializer extends StdDeserializer<OWLEntity> {
             }
         }
         if (type != null && iri != null) {
-            return dataFactory.getOWLEntity(type, iri);
+            OWLEntity owlEntity = dataFactory.getOWLEntity(type, iri);
+            if (cls.isInstance(owlEntity)) {
+                return cls.cast(owlEntity);
+            }
+            else {
+                throw new JsonParseException(jsonParser, "Expected " + cls.getSimpleName() + " found " + owlEntity.getEntityType());
+            }
         }
         else {
             if(type == null) {

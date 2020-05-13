@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -14,12 +18,23 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName(PlainPropertyDatatypeValue.PROPERTY_DATATYPE_VALUE)
 public abstract class PlainPropertyDatatypeValue extends PlainPropertyValue {
 
+    public static final String PROPERTY_DATATYPE_VALUE = "PropertyDatatypeValue";
+
+    @Nonnull
     public static PlainPropertyDatatypeValue get(@Nonnull OWLDataProperty property,
                                                  @Nonnull OWLDatatype datatype,
                                                  @Nonnull State state) {
         return new AutoValue_PlainPropertyDatatypeValue(property, datatype, state);
+    }
+
+    @JsonCreator
+    @Nonnull
+    public static PlainPropertyDatatypeValue get(@Nonnull @JsonProperty(PROPERTY) OWLDataProperty property,
+                                                 @Nonnull @JsonProperty(VALUE) OWLDatatype datatype) {
+        return get(property, datatype, State.ASSERTED);
     }
 
     @Nonnull

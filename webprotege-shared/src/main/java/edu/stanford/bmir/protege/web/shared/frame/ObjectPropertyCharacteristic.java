@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -15,18 +17,25 @@ import java.util.Set;
  */
 public enum ObjectPropertyCharacteristic {
 
+    @JsonProperty("Functional")
     FUNCTIONAL("Functional"),
 
-    INVERSE_FUNCTIONAL("Inverse functional"),
+    @JsonProperty("InverseFunctional")
+    INVERSE_FUNCTIONAL("Inverse Functional"),
 
+    @JsonProperty("Transitive")
     TRANSITIVE("Transitive"),
 
+    @JsonProperty("Symmetric")
     SYMMETRIC("Symmetric"),
 
+    @JsonProperty("Asymmetric")
     ASYMMETRIC("Asymmetric"),
 
+    @JsonProperty("Reflexive")
     REFLEXIVE("Reflexive"),
 
+    @JsonProperty("Irreflexive")
     IRREFLEXIVE("Irreflexive");
 
     ObjectPropertyCharacteristic(String displayName) {

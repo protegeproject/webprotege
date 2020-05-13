@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
@@ -19,13 +22,17 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName(PlainClassFrame.CLASS_FRAME)
 public abstract class PlainClassFrame extends PlainEntityFrame {
 
 
+    public static final String CLASS_FRAME = "ClassFrame";
+
+    @JsonCreator
     @Nonnull
-    public static PlainClassFrame get(@Nonnull OWLClass subject,
-                                      @Nonnull ImmutableSet<OWLClass> classEntries,
-                                      @Nonnull ImmutableSet<PlainPropertyValue> propertyValues) {
+    public static PlainClassFrame get(@Nonnull @JsonProperty(SUBJECT) OWLClass subject,
+                                      @Nonnull @JsonProperty(PARENTS) ImmutableSet<OWLClass> classEntries,
+                                      @Nonnull @JsonProperty(PROPERTY_VALUES) ImmutableSet<PlainPropertyValue> propertyValues) {
 
         return new AutoValue_PlainClassFrame(subject,
                                              classEntries,
@@ -43,8 +50,10 @@ public abstract class PlainClassFrame extends PlainEntityFrame {
      */
     @Nonnull
     @Override
+    @JsonProperty(SUBJECT)
     public abstract OWLClass getSubject();
 
+    @JsonProperty(PARENTS)
     @Nonnull
     public abstract ImmutableSet<OWLClass> getParents();
 

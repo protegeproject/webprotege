@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableSet;
@@ -20,13 +23,23 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName(PlainDataPropertyFrame.DATA_PROPERTY_FRAME)
 public abstract class PlainDataPropertyFrame extends PlainEntityFrame {
 
-    public static PlainDataPropertyFrame get(@Nonnull OWLDataProperty subject,
-                                             @Nonnull ImmutableSet<PlainPropertyAnnotationValue> annotations,
-                                             @Nonnull ImmutableSet<OWLClass> domains,
-                                             @Nonnull ImmutableSet<OWLDatatype> ranges,
-                                             boolean functional) {
+    public static final String DATA_PROPERTY_FRAME = "DataPropertyFrame";
+
+    public static final String DOMAINS = "domains";
+
+    public static final String RANGES = "ranges";
+
+    public static final String FUNCTIONAL = "functional";
+
+    @JsonCreator
+    public static PlainDataPropertyFrame get(@Nonnull @JsonProperty(SUBJECT) OWLDataProperty subject,
+                                             @Nonnull @JsonProperty(PROPERTY_VALUES) ImmutableSet<PlainPropertyAnnotationValue> annotations,
+                                             @Nonnull @JsonProperty(DOMAINS) ImmutableSet<OWLClass> domains,
+                                             @Nonnull @JsonProperty(RANGES) ImmutableSet<OWLDatatype> ranges,
+                                             @JsonProperty(FUNCTIONAL) boolean functional) {
         return new AutoValue_PlainDataPropertyFrame(subject, annotations, domains, ranges, functional);
     }
 
@@ -41,12 +54,15 @@ public abstract class PlainDataPropertyFrame extends PlainEntityFrame {
     @Nonnull
     public abstract ImmutableSet<PlainPropertyAnnotationValue> getPropertyValues();
 
+    @JsonProperty(DOMAINS)
     @Nonnull
     public abstract ImmutableSet<OWLClass> getDomains();
 
+    @JsonProperty(RANGES)
     @Nonnull
     public abstract ImmutableSet<OWLDatatype> getRanges();
 
+    @JsonProperty(FUNCTIONAL)
     public abstract boolean isFunctional();
 
     @Nonnull
