@@ -2,12 +2,10 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
@@ -52,7 +50,6 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             Optional<OWLEntity> freshEntity = freshEntitiesHandler.getRegisteredFreshEntity(displayName);
             if (freshEntity.isPresent()) {
                 OWLEntityData entityData = DataFactory.getOWLEntityData(freshEntity.get(),
-                                                                        displayName,
                                                                         ImmutableMap.of());
                 callback.onSuccess(Optional.of(entityData));
                 return;

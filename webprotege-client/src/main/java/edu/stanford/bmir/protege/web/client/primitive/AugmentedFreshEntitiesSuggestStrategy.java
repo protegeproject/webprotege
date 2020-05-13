@@ -47,7 +47,7 @@ public class AugmentedFreshEntitiesSuggestStrategy implements FreshEntitySuggest
                 }
             }
             OWLEntity entity = DataFactory.getFreshOWLEntity(type, query, Optional.empty());
-            OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query, ImmutableMap.of());
+            OWLEntityData entityData = DataFactory.getOWLEntityData(entity, ImmutableMap.of());
             result.add(new EntitySuggestion(entityData, formatSuggestText(query, type)));
         }
         return result;
@@ -60,7 +60,7 @@ public class AugmentedFreshEntitiesSuggestStrategy implements FreshEntitySuggest
     private Optional<FreshEntitySuggestion> getSuggestion(String query, EntityType<?> type, Optional<OWLEntityData> auxiliaryType) {
         // TODO: If query starts with a lowercase letter, suggest individual first?
         OWLEntity entity = DataFactory.getFreshOWLEntity(type, query, Optional.empty());
-        OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query, ImmutableMap.of());
+        OWLEntityData entityData = DataFactory.getOWLEntityData(entity, ImmutableMap.of());
         if(auxiliaryType.isPresent()) {
             AuxiliaryTypeHandler auxiliaryTypeHandler = AuxiliaryTypeHandler.get(auxiliaryType.get());
             if(auxiliaryTypeHandler.isApplicableTo(type)) {

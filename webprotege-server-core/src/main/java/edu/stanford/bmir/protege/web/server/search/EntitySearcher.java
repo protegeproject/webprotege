@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
-import edu.stanford.bmir.protege.web.server.shortform.Dictionary;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
@@ -310,7 +309,6 @@ public class EntitySearcher {
         }
         highlighted.append("</div>");
         return new EntitySearchResult(DataFactory.getOWLEntityData(entity,
-                                                                   displayShortForm,
                                                                    dictionaryManager.getShortForms(entity)),
                                       displayName(),
                                       highlighted.toString());

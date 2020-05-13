@@ -7,8 +7,6 @@ import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -66,7 +64,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         @Override
         public void handleCreateHasEntity(String name, EntityType<?> entityType) {
             OWLEntity entity = DataFactory.getFreshOWLEntity(entityType, name, Optional.empty());
-            freshEntities.add(DataFactory.getOWLEntityData(entity, name, ImmutableMap.of()));
+            freshEntities.add(DataFactory.getOWLEntityData(entity, ImmutableMap.of()));
             checkSyntax();
         }
     };

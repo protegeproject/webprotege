@@ -30,27 +30,20 @@ public class OWLDatatypeData_TestCase {
 
     @Before
     public void setUp()
-        throws Exception
-    {
-        shortForms = ImmutableMap.of();
-        data = OWLDatatypeData.get(entity, browserText, shortForms);
+        throws Exception {
+        shortForms = ImmutableMap.of(DictionaryLanguage.localName(), browserText);
+        data = OWLDatatypeData.get(entity, shortForms);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        OWLDatatypeData.get(null, browserText, shortForms);
+        OWLDatatypeData.get(null, shortForms);
     }
 
     @Test
     public void shouldReturnSupplied_entity() {
         assertThat(data.getEntity(), is(this.entity));
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        OWLDatatypeData.get(entity, null, shortForms);
     }
 
     @Test
@@ -71,22 +64,17 @@ public class OWLDatatypeData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(data, is(OWLDatatypeData.get(entity, browserText, shortForms)));
+        assertThat(data, is(OWLDatatypeData.get(entity, shortForms)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(data, is(Matchers.not(OWLDatatypeData.get(Mockito.mock(OWLDatatype.class), browserText, shortForms))));
-    }
-
-    @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(data, is(Matchers.not(OWLDatatypeData.get(entity, "String-21fa6bff-caee-40c3-85b1-411d0df51d1a", shortForms))));
+        assertThat(data, is(Matchers.not(OWLDatatypeData.get(Mockito.mock(OWLDatatype.class), shortForms))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(data.hashCode(), is(OWLDatatypeData.get(entity, browserText, shortForms).hashCode()));
+        assertThat(data.hashCode(), is(OWLDatatypeData.get(entity, shortForms).hashCode()));
     }
 
     @Test

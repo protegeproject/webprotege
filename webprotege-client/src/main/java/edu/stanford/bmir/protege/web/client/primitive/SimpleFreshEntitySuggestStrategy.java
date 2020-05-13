@@ -29,7 +29,7 @@ public class SimpleFreshEntitySuggestStrategy implements FreshEntitySuggestStrat
         List<EntitySuggestion> suggestions = Lists.newArrayList();
         for(EntityType<?> allowedType : suggestedTypes) {
                 OWLEntity entity = DataFactory.getFreshOWLEntity(allowedType, query, Optional.empty());
-                OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query, ImmutableMap.of());
+                OWLEntityData entityData = DataFactory.getOWLEntityData(entity, ImmutableMap.of());
                 suggestions.add(new EntitySuggestion(entityData, formatSuggestText(query, allowedType)));
         }
         return suggestions;

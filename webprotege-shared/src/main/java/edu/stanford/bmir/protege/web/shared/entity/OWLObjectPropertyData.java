@@ -22,9 +22,8 @@ public abstract class OWLObjectPropertyData extends OWLPropertyData {
 
 
     public static OWLObjectPropertyData get(@Nonnull OWLObjectProperty property,
-                                            @Nonnull String browserText,
                                             @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
-        return new AutoValue_OWLObjectPropertyData(browserText, shortForms, property);
+        return new AutoValue_OWLObjectPropertyData(shortForms, property);
     }
 
     @Nonnull

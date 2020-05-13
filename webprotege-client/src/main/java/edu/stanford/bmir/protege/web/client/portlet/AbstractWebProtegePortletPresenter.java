@@ -99,7 +99,6 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         getSelectedEntity().ifPresent(selEntity -> {
             if (selEntity.equals(event.getEntity())) {
                 setDisplayedEntity(Optional.of(DataFactory.getOWLEntityData(event.getEntity(),
-                                                                            event.getNewBrowserText(),
                                                                             event.getShortForms())));
             }
         });

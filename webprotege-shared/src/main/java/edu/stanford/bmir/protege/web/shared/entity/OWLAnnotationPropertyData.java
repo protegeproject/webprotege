@@ -26,9 +26,8 @@ public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
     public static final int BEFORE = -1;
 
     public static OWLAnnotationPropertyData get(@Nonnull OWLAnnotationProperty property,
-                                                @Nonnull String browserText,
                                                 @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
-        return new AutoValue_OWLAnnotationPropertyData(browserText, shortForms, property);
+        return new AutoValue_OWLAnnotationPropertyData(shortForms, property);
     }
 
     @Nonnull

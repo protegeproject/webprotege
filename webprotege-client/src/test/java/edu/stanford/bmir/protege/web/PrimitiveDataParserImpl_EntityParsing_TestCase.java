@@ -67,31 +67,31 @@ public class PrimitiveDataParserImpl_EntityParsing_TestCase {
     @Test
     public void shouldParseNameAsClass() {
         primitiveTypes.add(PrimitiveType.CLASS);
-        parseEntityData(OWLClassData.get(new OWLClassImpl(IRI.create("http://ont.com/cls")), "A", ImmutableMap.of()));
+        parseEntityData(OWLClassData.get(new OWLClassImpl(IRI.create("http://ont.com/cls")), ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsObjectProperty() {
         primitiveTypes.add(PrimitiveType.OBJECT_PROPERTY);
-        parseEntityData(OWLObjectPropertyData.get(new OWLObjectPropertyImpl(IRI.create("http://ont.com/prop")), "prop", ImmutableMap.of()));
+        parseEntityData(OWLObjectPropertyData.get(new OWLObjectPropertyImpl(IRI.create("http://ont.com/prop")), ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsDataProperty() {
         primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-        parseEntityData(OWLDataPropertyData.get(new OWLDataPropertyImpl(IRI.create("http://ont.com/prop")), "prop", ImmutableMap.of()));
+        parseEntityData(OWLDataPropertyData.get(new OWLDataPropertyImpl(IRI.create("http://ont.com/prop")), ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsAnnotationProperty() {
         primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-        parseEntityData(OWLAnnotationPropertyData.get(new OWLAnnotationPropertyImpl(IRI.create("http://ont.com/prop")), "prop", ImmutableMap.of()));
+        parseEntityData(OWLAnnotationPropertyData.get(new OWLAnnotationPropertyImpl(IRI.create("http://ont.com/prop")), ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsIndividual() {
         primitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
-        parseEntityData(OWLNamedIndividualData.get(new OWLNamedIndividualImpl(IRI.create("http://ont.com/ind")), "prop", ImmutableMap.of()));
+        parseEntityData(OWLNamedIndividualData.get(new OWLNamedIndividualImpl(IRI.create("http://ont.com/ind")), ImmutableMap.of()));
     }
 
     private void parseEntityData(OWLEntityData entityData) {

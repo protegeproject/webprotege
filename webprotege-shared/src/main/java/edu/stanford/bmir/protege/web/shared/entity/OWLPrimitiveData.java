@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -29,6 +30,11 @@ public abstract class OWLPrimitiveData extends ObjectData implements Comparable<
     public abstract OWLPrimitive getObject();
 
     public abstract ImmutableMap<DictionaryLanguage, String> getShortForms();
+
+    @Override
+    public String getBrowserText() {
+        return getShortForms().values().stream().findFirst().orElse("");
+    }
 
     public abstract <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
 

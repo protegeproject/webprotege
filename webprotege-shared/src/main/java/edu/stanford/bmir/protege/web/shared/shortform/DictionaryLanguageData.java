@@ -110,7 +110,6 @@ public abstract class DictionaryLanguageData {
         return Optional.of(
                 OWLAnnotationPropertyData.get(
                         DataFactory.getOWLAnnotationProperty(getAnnotationPropertyIri()),
-                        getAnnotationPropertyBrowserText(),
                         ImmutableMap.of()
                 )
         );
