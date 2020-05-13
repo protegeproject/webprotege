@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.OWLPrimitive2FormControlDataConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
@@ -24,9 +23,12 @@ import org.semanticweb.owlapi.model.OWLPrimitive;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
@@ -35,10 +37,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * 2019-10-31
  */
 public class EntityFrameFormDataDtoBuilder {
-
-
-    @Nonnull
-    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     @Nonnull
     private final BindingValuesExtractor bindingValuesExtractor;
@@ -52,19 +50,24 @@ public class EntityFrameFormDataDtoBuilder {
     @Nonnull
     private final PrimitiveFormControlDataDtoRenderer primitiveDataRenderer;
 
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
+
+    @Nonnull
+    private final Map<ChoiceListSourceDescriptor, ImmutableList<ChoiceDescriptorDto>> descriptorCache = new HashMap<>();
+
     @AutoFactory
     @Inject
-    public EntityFrameFormDataDtoBuilder(@Provided @Nonnull OWLPrimitive2FormControlDataConverter converter,
-                                         @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
-                                         @Provided @Nonnull BindingValuesExtractor bindingValuesExtractor,
+    public EntityFrameFormDataDtoBuilder(@Provided @Nonnull BindingValuesExtractor bindingValuesExtractor,
                                          @Nonnull FrameComponentSessionRenderer sessionRenderer,
                                          @Provided @Nonnull ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier,
-                                         @Provided @Nonnull PrimitiveFormControlDataDtoRenderer primitiveDataRenderer) {
-        this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
+                                         @Provided @Nonnull PrimitiveFormControlDataDtoRenderer primitiveDataRenderer,
+                                         @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
         this.bindingValuesExtractor = bindingValuesExtractor;
         this.sessionRenderer = sessionRenderer;
         this.choiceDescriptorDtoSupplier = choiceDescriptorDtoSupplier;
         this.primitiveDataRenderer = primitiveDataRenderer;
+        this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
     }
 
     private FormSubjectDto getFormSubject(OWLPrimitiveData root) {
@@ -135,20 +138,30 @@ public class EntityFrameFormDataDtoBuilder {
             @Override
             public ImmutableList<FormControlDataDto> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
                 var choiceSource = singleChoiceControlDescriptor.getSource();
-                return values.stream()
-                             .map(p -> primitiveDataRenderer.toFormControlDataDto(p, sessionRenderer))
+                ImmutableList<FormControlDataDto> vals = values.stream()
+                             .flatMap(v -> primitiveDataRenderer.toFormControlDataDto(v, sessionRenderer))
                              .map(value -> SingleChoiceControlDataDto.get(singleChoiceControlDescriptor,
                                                                           toChoices(choiceSource),
                                                                           value))
                              .filter(data -> isIncluded(data, langTagFilter))
                              .limit(1)
                              .collect(toImmutableList());
+                if(vals.isEmpty()) {
+                    return ImmutableList.of(
+                            SingleChoiceControlDataDto.get(singleChoiceControlDescriptor,
+                                                           toChoices(choiceSource),
+                                                           null)
+                    );
+                }
+                else {
+                    return vals;
+                }
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
                 var vals = values.stream()
-                                 .map(p -> primitiveDataRenderer.toFormControlDataDto(p, sessionRenderer))
+                                 .flatMap(v -> primitiveDataRenderer.toFormControlDataDto(v, sessionRenderer))
                                  .collect(toImmutableList());
                 return ImmutableList.of(MultiChoiceControlDataDto.get(multiChoiceControlDescriptor,
                                                                       toChoices(multiChoiceControlDescriptor.getSource()),
@@ -206,7 +219,12 @@ public class EntityFrameFormDataDtoBuilder {
     }
 
     private ImmutableList<ChoiceDescriptorDto> toChoices(@Nonnull ChoiceListSourceDescriptor sourceDescriptor) {
-        return choiceDescriptorDtoSupplier.getChoices(sourceDescriptor, sessionRenderer);
+        var cachedChoices = descriptorCache.get(sourceDescriptor);
+        if(cachedChoices == null) {
+            cachedChoices = choiceDescriptorDtoSupplier.getChoices(sourceDescriptor, sessionRenderer);
+            descriptorCache.put(sourceDescriptor, cachedChoices);
+        }
+        return cachedChoices;
     }
 
     public FormDataDto toFormData(@Nonnull OWLEntity subject,

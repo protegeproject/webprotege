@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRenderer;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.form.data.IriFormControlDataDto;
@@ -15,24 +16,40 @@ import org.semanticweb.owlapi.model.OWLPrimitive;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class PrimitiveFormControlDataDtoRenderer {
 
+    @Nonnull
+    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
+
     @Inject
-    public PrimitiveFormControlDataDtoRenderer() {
+    public PrimitiveFormControlDataDtoRenderer(@Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
+        this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
     }
 
     @Nonnull
-    public PrimitiveFormControlDataDto toFormControlDataDto(@Nonnull OWLPrimitive primitive,
-                                                             @Nonnull FrameComponentSessionRenderer sessionRenderer) {
+    public Stream<PrimitiveFormControlDataDto> toFormControlDataDto(@Nonnull OWLPrimitive primitive,
+                                                                    @Nonnull FrameComponentSessionRenderer sessionRenderer) {
         if(primitive instanceof IRI) {
-            return IriFormControlDataDto.get(IRIData.get((IRI) primitive, ImmutableMap.of()));
+            var matchingEntities = entitiesInProjectSignatureByIriIndex.getEntitiesInSignature((IRI) primitive).collect(Collectors.toList());
+            if(matchingEntities.isEmpty()) {
+                return Stream.of(IriFormControlDataDto.get(IRIData.get((IRI) primitive, ImmutableMap.of())));
+            }
+            else {
+                return matchingEntities.stream().map(sessionRenderer::getEntityRendering)
+                        .map(PrimitiveFormControlDataDto::get);
+            }
         }
         else if(primitive instanceof OWLLiteral) {
-            return LiteralFormControlDataDto.get(OWLLiteralData.get((OWLLiteral) primitive));
+            return Stream.of(LiteralFormControlDataDto.get(OWLLiteralData.get((OWLLiteral) primitive)));
         }
         else if(primitive instanceof OWLEntity) {
             var entityRendering = sessionRenderer.getEntityRendering((OWLEntity) primitive);
-            return PrimitiveFormControlDataDto.get(entityRendering);
+            return Stream.of(PrimitiveFormControlDataDto.get(entityRendering));
         }
         else {
             throw new RuntimeException("Cannot handle primitive " + primitive);

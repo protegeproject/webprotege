@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.form.field.FixedChoiceListSourceDesc
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.stream.Stream;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
@@ -29,19 +31,19 @@ public class FixedListChoiceDescriptorDtoSupplier {
         return descriptor.getChoices()
                   .stream()
                   .flatMap(choiceDescriptor -> descriptor.getChoices().stream())
-                  .map(choiceDescriptor -> toChoiceDescriptorDto(choiceDescriptor, sessionRenderer))
+                  .flatMap(choiceDescriptor -> toChoiceDescriptorDto(choiceDescriptor, sessionRenderer))
                   .collect(toImmutableList());
     }
 
     @Nonnull
-    private ChoiceDescriptorDto toChoiceDescriptorDto(ChoiceDescriptor choiceDescriptor,
-                                                      @Nonnull FrameComponentSessionRenderer sessionRenderer) {
-        var dataDto = toPrimitiveFormControlDataDto(choiceDescriptor.getValue(), sessionRenderer);
-        return ChoiceDescriptorDto.get(dataDto, choiceDescriptor.getLabel());
+    private Stream<ChoiceDescriptorDto> toChoiceDescriptorDto(ChoiceDescriptor choiceDescriptor,
+                                                              @Nonnull FrameComponentSessionRenderer sessionRenderer) {
+        return toPrimitiveFormControlDataDto(choiceDescriptor.getValue(), sessionRenderer)
+                .map(dto -> ChoiceDescriptorDto.get(dto, choiceDescriptor.getLabel()));
     }
 
     @Nonnull
-    private PrimitiveFormControlDataDto toPrimitiveFormControlDataDto(@Nonnull PrimitiveFormControlData data,
+    private Stream<PrimitiveFormControlDataDto> toPrimitiveFormControlDataDto(@Nonnull PrimitiveFormControlData data,
                                                                       @Nonnull FrameComponentSessionRenderer sessionRenderer) {
         var primitive = data.getPrimitive();
         return renderer.toFormControlDataDto(primitive, sessionRenderer);
