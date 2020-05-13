@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -8,11 +10,13 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -38,6 +42,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private Optional<OWLEntityData> displayedEntityData = Optional.empty();
 
+    @Nullable
+    private Place lastPlace = null;
 
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
@@ -79,6 +85,14 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         eventBus.addProjectEventHandler(projectId,
                                         DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         this::handlePrefLangChanged);
+        eventBus.addApplicationEventHandler(PlaceChangeEvent.TYPE, this::handlePlaceChanged);
+    }
+
+    private void handlePlaceChanged(PlaceChangeEvent placeChangeEvent) {
+        if(!(lastPlace instanceof ProjectViewPlace)) {
+            handlePlaceChangeFromNonProjectViewPlace();
+        }
+        lastPlace = placeChangeEvent.getNewPlace();
     }
 
     private void handleBrowserTextChanged(@Nonnull BrowserTextChangedEvent event) {
@@ -89,6 +103,10 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
                                                                             event.getShortForms())));
             }
         });
+    }
+
+    protected void handlePlaceChangeFromNonProjectViewPlace() {
+
     }
 
     private void handlePrefLangChanged(DisplayNameSettingsChangedEvent event) {
