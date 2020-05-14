@@ -30,10 +30,6 @@
             <g:HTMLPanel addStyleNames="{style.elementContent}">
                 <g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-                        <g:Label text="Field Id" addStyleNames="{wp.style.formLabel}"/>
-                        <g:TextBox ui:field="elementIdField"/>
-                    </g:HTMLPanel>
-                    <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
                         <g:Label text="Label" addStyleNames="{wp.style.formLabel}"/>
                         <form:LanguageMapEditor ui:field="labelEditor" placeholder="{msg.enterLabel}"/>
                     </g:HTMLPanel>

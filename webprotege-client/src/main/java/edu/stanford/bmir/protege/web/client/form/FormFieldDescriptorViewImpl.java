@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
@@ -27,8 +28,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormFieldDescriptorViewImpl extends Composite implements FormFieldDescriptorView {
 
-    @Nonnull
-    private Consumer<FormFieldId> elementIdChangedHandler = (elementId) -> {};
+
+    private Consumer<LanguageMap> labelChangedHander = label -> {};
 
     interface FormFieldDescriptorEditorViewImplUiBinder extends UiBinder<HTMLPanel, FormFieldDescriptorViewImpl> {
 
@@ -36,9 +37,6 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
 
     private static FormFieldDescriptorEditorViewImplUiBinder ourUiBinder = GWT.create(
             FormFieldDescriptorEditorViewImplUiBinder.class);
-
-    @UiField
-    TextBox elementIdField;
 
     @UiField
     RadioButton optionalRadio;
@@ -78,21 +76,14 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
         this.labelEditor = labelEditor;
         this.helpEditor = helpEditor;
         initWidget(ourUiBinder.createAndBindUi(this));
-        elementIdField.addValueChangeHandler(event -> {
-            FormFieldId formFieldId = FormFieldId.get(elementIdField.getValue());
-            elementIdChangedHandler.accept(formFieldId);
+        labelEditor.addValueChangeHandler(event -> {
+            labelChangedHander.accept(getLabel());
         });
     }
 
     @Override
-    public void setFormFieldId(@Nonnull String id) {
-        elementIdField.setText(id);
-    }
+    public void requestFocus() {
 
-    @Nonnull
-    @Override
-    public String getFormFieldId() {
-        return elementIdField.getText();
     }
 
     @Override
@@ -173,18 +164,13 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     }
 
     @Override
-    public void setElementIdChangedHandler(@Nonnull Consumer<FormFieldId> handler) {
-        this.elementIdChangedHandler = checkNotNull(handler);
+    public void setLabelChangedHandler(@Nonnull Consumer<LanguageMap> runnable) {
+        this.labelChangedHander = checkNotNull(runnable);
     }
 
     @Nonnull
     @Override
     public AcceptsOneWidget getFieldDescriptorViewContainer() {
         return fieldViewContainer;
-    }
-
-    @Override
-    public void requestFocus() {
-        elementIdField.setFocus(true);
     }
 }

@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
@@ -22,4 +23,8 @@ public interface LanguageMapEntryView extends IsWidget, HasRequestFocus, HasPlac
 
     @Nonnull
     String getValue();
+
+    void setValueChangedHandler(Consumer<String> valueConsumer);
+
+    void setLangTagChangedHandler(Consumer<String> langTagConsumer);
 }

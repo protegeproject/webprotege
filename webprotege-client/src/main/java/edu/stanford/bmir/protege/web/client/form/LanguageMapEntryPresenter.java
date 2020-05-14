@@ -34,6 +34,8 @@ public class LanguageMapEntryPresenter implements ValueEditor<LanguageMapEntry>,
     @Inject
     public LanguageMapEntryPresenter(@Nonnull LanguageMapEntryView view) {
         this.view = checkNotNull(view);
+        this.view.setValueChangedHandler(value -> ValueChangeEvent.fire(this, getValue()));
+        this.view.setLangTagChangedHandler(value -> ValueChangeEvent.fire(this, getValue()));
     }
 
     @Override

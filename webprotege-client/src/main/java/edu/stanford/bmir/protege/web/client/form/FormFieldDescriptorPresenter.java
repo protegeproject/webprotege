@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,30 +34,48 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
     private final FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter;
 
     @Nonnull
-    private DispatchServiceManager dispatchServiceManager;
+    private Optional<FormFieldId> formFieldId = Optional.empty();
+
+    @Nonnull
+    private LanguageMapCurrentLocaleMapper localeMapper = new LanguageMapCurrentLocaleMapper();
+
+    @Nonnull
+    private final FormsMessages formsMessages;
+
+    private UuidV4Provider uuidV4Provider;
 
     @Inject
     public FormFieldDescriptorPresenter(@Nonnull ProjectId projectId,
                                         @Nonnull FormFieldDescriptorView view,
                                         @Nonnull OwlBindingPresenter bindingPresenter,
                                         @Nonnull FormControlDescriptorChooserPresenter fieldChooserPresenter,
-                                        @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                        @Nonnull FormsMessages formsMessages,
+                                        @Nonnull UuidV4Provider uuidV4Provider) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.bindingPresenter = checkNotNull(bindingPresenter);
         this.fieldDescriptorChooserPresenter = checkNotNull(fieldChooserPresenter);
-        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.formsMessages = checkNotNull(formsMessages);
+        this.uuidV4Provider = uuidV4Provider;
     }
 
     @Nonnull
     @Override
     public String getHeaderLabel() {
-        return view.getFormFieldId();
+        String valueForCurrentLocale = localeMapper.getValueForCurrentLocale(view.getLabel());
+        if(valueForCurrentLocale.isEmpty()) {
+            return formsMessages.missingFieldLabel();
+        }
+        else {
+            return valueForCurrentLocale;
+        }
     }
 
     @Override
     public void setHeaderLabelChangedHandler(Consumer<String> headerLabelHandler) {
-        view.setElementIdChangedHandler(elementId -> headerLabelHandler.accept(elementId.getId()));
+        view.setLabelChangedHandler(elementId -> {
+            headerLabelHandler.accept(localeMapper.getValueForCurrentLocale(view.getLabel()));
+        });
     }
 
     @Nonnull
@@ -69,7 +84,13 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         if(!formFieldDescriptor.isPresent()) {
             return Optional.empty();
         }
-        FormFieldDescriptor descriptor = FormFieldDescriptor.get(FormFieldId.get(view.getFormFieldId()),
+        FormFieldId formFieldIdToSave = formFieldId.orElseGet(() -> {
+            String id = uuidV4Provider.get();
+            FormFieldId formFieldId = FormFieldId.get(id);
+            this.formFieldId = Optional.of(formFieldId);
+            return formFieldId;
+        });
+        FormFieldDescriptor descriptor = FormFieldDescriptor.get(formFieldIdToSave,
                                                                  bindingPresenter.getBinding().orElse(null),
                                                                  view.getLabel(),
                                                                  view.getFieldRun(),
@@ -85,9 +106,12 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         bindingPresenter.clear();
         descriptor.getOwlBinding().ifPresent(bindingPresenter::setBinding);
 
-        String elementId = descriptor.getId()
-                                     .getId();
-        view.setFormFieldId(elementId);
+        if(descriptor.getId().getId().equals("")) {
+            this.formFieldId = Optional.of(FormFieldId.get(uuidV4Provider.get()));
+        }
+        else {
+            this.formFieldId = Optional.of(descriptor.getId());
+        }
 
         view.setFieldRun(descriptor.getFieldRun());
 

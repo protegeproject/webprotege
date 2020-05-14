@@ -14,6 +14,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.swing.event.ChangeEvent;
 
+import java.util.function.Consumer;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -35,12 +37,23 @@ public class LanguageMapEntryViewImpl extends Composite implements LanguageMapEn
     @UiField(provided = true)
     DefaultLanguageEditor langTagEditor;
 
+    private Consumer<String> valueChangedHandler = value -> {};
+
+    private Consumer<String> langTagChangedHandler = value -> {};
+
     @Inject
     public LanguageMapEntryViewImpl(DefaultLanguageEditor langTagEditor) {
         this.langTagEditor = checkNotNull(langTagEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
-        valueField.addValueChangeHandler(event -> updateLangTagErrorBorder());
-        langTagEditor.addValueChangeHandler(event -> updateLangTagErrorBorder());
+        valueField.addValueChangeHandler(event -> {
+            updateLangTagErrorBorder();
+            valueChangedHandler.accept(getValue());
+        });
+        langTagEditor.addValueChangeHandler(event -> {
+            updateLangTagErrorBorder();
+            langTagChangedHandler.accept(getLangTag());
+
+        });
     }
 
     public void updateLangTagErrorBorder() {
@@ -78,6 +91,16 @@ public class LanguageMapEntryViewImpl extends Composite implements LanguageMapEn
     @Override
     public String getValue() {
         return valueField.getText();
+    }
+
+    @Override
+    public void setValueChangedHandler(Consumer<String> valueConsumer) {
+        this.valueChangedHandler = checkNotNull(valueConsumer);
+    }
+
+    @Override
+    public void setLangTagChangedHandler(Consumer<String> langTagConsumer) {
+        this.langTagChangedHandler = checkNotNull(langTagConsumer);
     }
 
     @Override

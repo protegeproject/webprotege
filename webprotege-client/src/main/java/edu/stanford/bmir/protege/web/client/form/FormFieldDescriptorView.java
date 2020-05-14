@@ -21,11 +21,6 @@ import java.util.function.Consumer;
  */
 public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
 
-    void setFormFieldId(@Nonnull String id);
-
-    @Nonnull
-    String getFormFieldId();
-
     void setHelp(@Nonnull LanguageMap help);
 
     @Nonnull
@@ -54,7 +49,7 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
     @Nonnull
     Repeatability getRepeatability();
 
-    void setElementIdChangedHandler(@Nonnull Consumer<FormFieldId> runnable);
+    void setLabelChangedHandler(@Nonnull Consumer<LanguageMap> runnable);
 
     @Nonnull
     AcceptsOneWidget getFieldDescriptorViewContainer();

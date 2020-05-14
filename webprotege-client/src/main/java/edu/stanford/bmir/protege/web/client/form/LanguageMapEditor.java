@@ -51,6 +51,9 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
         delegate.setEnabled(true);
         delegate.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
         initWidget(ourUiBinder.createAndBindUi(this));
+        delegate.addValueChangeHandler(event -> {
+            ValueChangeEvent.fire(LanguageMapEditor.this, getValue());
+        });
     }
 
     @Override

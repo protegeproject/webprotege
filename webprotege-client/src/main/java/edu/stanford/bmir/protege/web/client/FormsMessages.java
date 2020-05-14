@@ -143,4 +143,8 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Visible columns")
     @Key("grid.visibleColumns")
     String grid_visibleColumns();
+
+    @DefaultMessage("Missing Field Label")
+    @Key("missingFieldLabel")
+    String missingFieldLabel();
 }
