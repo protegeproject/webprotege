@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -38,7 +39,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-16
  */
-public class LanguageMapEditor extends Composite implements ValueEditor<LanguageMap>, HasPlaceholder {
+public class LanguageMapEditor extends Composite implements ValueEditor<LanguageMap>, HasPlaceholder, HasRequestFocus {
 
     private static LanguageMapEditorUiBinder ourUiBinder = GWT.create(LanguageMapEditorUiBinder.class);
 
@@ -49,7 +50,7 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
     public LanguageMapEditor(Provider<LanguageMapEntryPresenter> presenterProvider) {
         delegate = new ValueListFlexEditorImpl<>(presenterProvider::get);
         delegate.setEnabled(true);
-        delegate.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
+        delegate.setNewRowMode(ValueListEditor.NewRowMode.AUTOMATIC);
         initWidget(ourUiBinder.createAndBindUi(this));
         delegate.addValueChangeHandler(event -> {
             ValueChangeEvent.fire(LanguageMapEditor.this, getValue());
@@ -109,6 +110,10 @@ public class LanguageMapEditor extends Composite implements ValueEditor<Language
     @Override
     public boolean isWellFormed() {
         return delegate.isWellFormed();
+    }
+
+    public void requestFocus() {
+        delegate.requestFocus();
     }
 
     interface LanguageMapEditorUiBinder extends UiBinder<HTMLPanel, LanguageMapEditor> {

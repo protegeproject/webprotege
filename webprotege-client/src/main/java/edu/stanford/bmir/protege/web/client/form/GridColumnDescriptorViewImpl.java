@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -20,14 +22,14 @@ import javax.inject.Inject;
  */
 public class GridColumnDescriptorViewImpl extends Composite implements GridColumnDescriptorView {
 
+    private LabelChangedHandler labelChangedHandler = () -> {};
+
     interface GridColumnDescriptorViewImplUiBinder extends UiBinder<HTMLPanel, GridColumnDescriptorViewImpl> {
 
     }
 
     private static GridColumnDescriptorViewImplUiBinder ourUiBinder = GWT.create(GridColumnDescriptorViewImplUiBinder.class);
 
-    @UiField
-    TextBox idField;
 
     @UiField(provided = true)
     LanguageMapEditor labelField;
@@ -55,17 +57,7 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
         this.labelField = labelField;
         initWidget(ourUiBinder.createAndBindUi(this));
         counter.increment();
-    }
-
-    @Override
-    public void setId(@Nonnull GridColumnId id) {
-        idField.setText(id.getId());
-    }
-
-    @Nonnull
-    @Override
-    public GridColumnId getId() {
-        return GridColumnId.get(idField.getText().trim());
+        labelField.addValueChangeHandler(event -> labelChangedHandler.handleLabelChanged());
     }
 
     @Override
@@ -104,6 +96,11 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
         labelField.setValue(label);
     }
 
+    @Override
+    public void setLabelChangedHandler(@Nonnull LabelChangedHandler labelChangedHandler) {
+        this.labelChangedHandler = checkNotNull(labelChangedHandler);
+    }
+
     @Nonnull
     @Override
     public LanguageMap getLabel() {
@@ -124,6 +121,6 @@ public class GridColumnDescriptorViewImpl extends Composite implements GridColum
 
     @Override
     public void requestFocus() {
-        idField.setFocus(true);
+        labelField.requestFocus();
     }
 }

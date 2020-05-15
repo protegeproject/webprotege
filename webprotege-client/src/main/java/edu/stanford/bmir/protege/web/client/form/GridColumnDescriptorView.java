@@ -17,10 +17,9 @@ import javax.annotation.Nonnull;
  */
 public interface GridColumnDescriptorView extends IsWidget, HasRequestFocus {
 
-    void setId(@Nonnull GridColumnId id);
-
-    @Nonnull
-    GridColumnId getId();
+    interface LabelChangedHandler {
+        void handleLabelChanged();
+    }
 
     void setOptionality(Optionality optionality);
 
@@ -32,6 +31,8 @@ public interface GridColumnDescriptorView extends IsWidget, HasRequestFocus {
     void setRepeatability(@Nonnull Repeatability repeatability);
 
     void setLabel(@Nonnull LanguageMap label);
+
+    void setLabelChangedHandler(@Nonnull LabelChangedHandler labelChangedHandler);
 
     @Nonnull
     LanguageMap getLabel();

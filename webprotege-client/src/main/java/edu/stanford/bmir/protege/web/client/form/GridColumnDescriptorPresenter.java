@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -24,29 +26,41 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
 
     private final OwlBindingPresenter bindingPresenter;
 
-    private Optional<GridColumnDescriptor> descriptor = Optional.empty();
+    @Nonnull
+    private final LanguageMapCurrentLocaleMapper localeMapper;
+
+    @Nonnull
+    private Optional<GridColumnId> currentColumnId = Optional.empty();
+
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
+    private Consumer<String> headerLabelChangedHandler = label -> {};
 
     @Inject
     public GridColumnDescriptorPresenter(@Nonnull GridColumnDescriptorView view,
                                          @Nonnull FormControlDescriptorChooserPresenter fieldDescriptorChooserPresenter,
-                                         @Nonnull OwlBindingPresenter bindingPresenter) {
+                                         @Nonnull OwlBindingPresenter bindingPresenter,
+                                         @Nonnull LanguageMapCurrentLocaleMapper localeMapper, @Nonnull UuidV4Provider uuidV4Provider) {
         this.view = checkNotNull(view);
         this.fieldDescriptorChooserPresenter = checkNotNull(fieldDescriptorChooserPresenter);
-        this.bindingPresenter = bindingPresenter;
+        this.bindingPresenter = checkNotNull(bindingPresenter);
+        this.localeMapper = checkNotNull(localeMapper);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
     }
 
     @Nonnull
     @Override
     public String getHeaderLabel() {
-        return view.getId()
-                   .getId() + " Column";
+        return localeMapper.getValueForCurrentLocale(view.getLabel());
     }
 
     @Nonnull
     @Override
     public Optional<GridColumnDescriptor> getValue() {
+        GridColumnId columnId = currentColumnId.orElseGet(() -> GridColumnId.get(uuidV4Provider.get()));
         return fieldDescriptorChooserPresenter.getFormFieldDescriptor()
-                                              .map(fieldDescriptor -> GridColumnDescriptor.get(view.getId(),
+                                              .map(fieldDescriptor -> GridColumnDescriptor.get(columnId,
                                                                                                view.getOptionality(),
                                                                                                view.getRepeatability(),
                                                                                                bindingPresenter.getBinding()
@@ -56,8 +70,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     }
 
     public void setValue(@Nonnull GridColumnDescriptor descriptor) {
-        this.descriptor = Optional.of(descriptor);
-        view.setId(descriptor.getId());
+        this.currentColumnId = Optional.of(descriptor.getId());
         view.setOptionality(descriptor.getOptionality());
         view.setRepeatability(descriptor.getRepeatability());
         view.setLabel(descriptor.getLabel());
@@ -69,12 +82,13 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
 
     @Override
     public void setHeaderLabelChangedHandler(Consumer<String> headerLabelHandler) {
-
+        this.headerLabelChangedHandler = checkNotNull(headerLabelHandler);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         fieldDescriptorChooserPresenter.start(view.getFieldDescriptorChooserContainer());
         bindingPresenter.start(view.getBindingViewContainer());
+        view.setLabelChangedHandler(() -> headerLabelChangedHandler.accept(getHeaderLabel()));
     }
 }
