@@ -36,6 +36,11 @@ public abstract class OWLEntityData extends OWLPrimitiveData {
 
     public abstract <R> R accept(OWLEntityDataVisitorEx<R> visitor);
 
+    @Override
+    public String getBrowserText() {
+        return getFirstShortForm(() -> getEntity().getIRI().toQuotedString());
+    }
+
     public int compareToIgnoreCase(OWLEntityData other) {
         return getBrowserText().compareToIgnoreCase(other.getBrowserText());
     }

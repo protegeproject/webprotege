@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -8,6 +9,7 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Author: Matthew Horridge<br>
@@ -31,13 +33,18 @@ public abstract class OWLPrimitiveData extends ObjectData implements Comparable<
 
     public abstract ImmutableMap<DictionaryLanguage, String> getShortForms();
 
+    /**
+     * A convenience method that gets the first short form for this object
+     */
     @Override
-    public String getBrowserText() {
+    public abstract String getBrowserText();
+
+    protected String getFirstShortForm(Supplier<String> defaultValue) {
         return getShortForms()
                 .values()
                 .stream()
                 .findFirst()
-                .orElse("");
+                .orElseGet(defaultValue);
     }
 
     public abstract <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
