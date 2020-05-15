@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -252,7 +253,8 @@ public final class FrameChangeGenerator implements ChangeListGenerator<OWLEntity
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<OWLEntity> result) {
-        return factory.get("Edited " + renderingManager.getRendering(frameUpdate.getFromFrame().getSubject()))
-                .generateChangeDescription(result);
+        var rendering = renderingManager.getRendering(frameUpdate.getFromFrame().getSubject());
+        return factory.get("Edited " + rendering.getBrowserText())
+                      .generateChangeDescription(result);
     }
 }
