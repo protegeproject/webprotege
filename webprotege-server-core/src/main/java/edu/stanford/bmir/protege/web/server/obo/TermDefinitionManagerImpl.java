@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.change.RemoveAxiomChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
+import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -78,6 +79,9 @@ public class TermDefinitionManagerImpl implements TermDefinitionManager {
     @Nonnull
     private final DefaultOntologyIdManager defaultOntologyIdManager;
 
+    @Nonnull
+    private final MessageFormatter messageFormatter;
+
     @Inject
     public TermDefinitionManagerImpl(@Nonnull OWLDataFactory df,
                                      @Nonnull AnnotationToXRefConverter xRefConverter,
@@ -86,7 +90,7 @@ public class TermDefinitionManagerImpl implements TermDefinitionManager {
                                      @Nonnull RenderingManager renderingManager,
                                      @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                      @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
-                                     @Nonnull DefaultOntologyIdManager defaultOntologyIdManager) {
+                                     @Nonnull DefaultOntologyIdManager defaultOntologyIdManager, @Nonnull MessageFormatter messageFormatter) {
         this.df = df;
         this.xRefConverter = xRefConverter;
         this.changeManager = changeManager;
@@ -95,6 +99,7 @@ public class TermDefinitionManagerImpl implements TermDefinitionManager {
         this.projectOntologiesIndex = projectOntologiesIndex;
         this.annotationAssertionsIndex = annotationAssertionsIndex;
         this.defaultOntologyIdManager = defaultOntologyIdManager;
+        this.messageFormatter = messageFormatter;
     }
 
     @Override
@@ -176,12 +181,11 @@ public class TermDefinitionManagerImpl implements TermDefinitionManager {
             var ontId = defaultOntologyIdManager.getDefaultOntologyId();
             changes.add(AddAxiomChange.of(ontId, definitionAssertion));
         }
+        var message = messageFormatter.format("Edited the term definition for {0}", term);
         changeManager.applyChanges(userId,
                                    new FixedChangeListGenerator<>(changes,
                                                                   term,
-                                                                  "Edited the term definition for " + renderingManager
-                                                                          .getRendering(term)
-                                                                          .getBrowserText())
+                                                                  message)
         );
     }
 
