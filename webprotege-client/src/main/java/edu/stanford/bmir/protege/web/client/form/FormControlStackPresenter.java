@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, 
 
     void clearValue();
 
-    void setValue(@Nonnull List<FormControlDataDto> value);
+    void setValue(@Nonnull Page<FormControlDataDto> value);
 
     @Nonnull
     ImmutableList<FormControlData> getValue();

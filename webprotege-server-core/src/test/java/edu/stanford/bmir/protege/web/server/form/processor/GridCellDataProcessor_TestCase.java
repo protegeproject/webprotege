@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.form.FormFrameBuilder;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +49,7 @@ public class GridCellDataProcessor_TestCase {
         values = ImmutableList.of(formControlData);
         processor = new GridCellDataProcessor(() -> formControlDataProcessor);
         when(gridCellData.getValues())
-                .thenReturn(values);
+                .thenReturn(new Page<>(1, 1, values, values.size()));
     }
 
     @Test

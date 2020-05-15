@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -50,7 +51,8 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
         formControl.clearValue();
     }
 
-    public void setValue(@Nonnull List<FormControlDataDto> value) {
+    public void setValue(@Nonnull Page<FormControlDataDto> page) {
+        List<FormControlDataDto> value = page.getPageElements();
         if(value.size() == 1) {
             formControl.setValue(value.get(0));
         }

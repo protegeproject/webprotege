@@ -6,12 +6,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,13 +26,15 @@ import java.util.Optional;
 public abstract class GridCellData {
 
     public static GridCellData get(@Nonnull GridColumnId columnId,
-                                   @Nullable ImmutableList<FormControlData> values) {
+                                   @Nullable Page<FormControlData> values) {
         return new AutoValue_GridCellData(columnId, values);
     }
 
     public int compareTo(GridCellData otherCellData) {
-        ImmutableList<FormControlData> values = getValues();
-        ImmutableList<FormControlData> otherValues = otherCellData.getValues();
+        Page<FormControlData> valuesPage = getValues();
+        Page<FormControlData> otherValuesPage = otherCellData.getValues();
+        List<FormControlData> values = valuesPage.getPageElements();
+        List<FormControlData> otherValues = otherValuesPage.getPageElements();
         for(int i = 0; i < values.size() && i < otherValues.size(); i++) {
             FormControlData formControlData = values.get(i);
             FormControlData otherControlData = otherValues.get(i);
@@ -63,5 +67,5 @@ public abstract class GridCellData {
     public abstract GridColumnId getColumnId();
 
     @Nonnull
-    public abstract ImmutableList<FormControlData> getValues();
+    public abstract Page<FormControlData> getValues();
 }

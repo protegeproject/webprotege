@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -80,12 +81,14 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     }
 
     @Override
-    public void setValue(@Nonnull List<FormControlDataDto> value) {
+    public void setValue(@Nonnull Page<FormControlDataDto> value) {
         // TODO: Pristine?
         // TODO: Reuse form controls?
         formControls.clear();
         view.clear();
-        value.stream()
+        view.setPaginatorVisible(value.getPageCount() > 1);
+        value.getPageElements()
+             .stream()
              .map(this::createFormControl)
              .forEach(this::addFormControl);
     }

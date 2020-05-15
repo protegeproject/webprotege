@@ -316,7 +316,7 @@ public class EntityFrameFormDataDtoBuilder {
                     formPageRequestIndex,
                     langTagFilter);
             if(formControlData.isEmpty()) {
-                var cellData = GridCellDataDto.get(columnDescriptor.getId(), ImmutableList.of());
+                var cellData = GridCellDataDto.get(columnDescriptor.getId(), Page.emptyPage());
                 resultBuilder.add(cellData);
             }
             else {
@@ -324,7 +324,7 @@ public class EntityFrameFormDataDtoBuilder {
                     var firstValue = formControlData.get(0);
                     if(isIncluded(firstValue, langTagFilter)) {
                         var cellData = GridCellDataDto.get(columnDescriptor.getId(),
-                                                        ImmutableList.of(firstValue));
+                                                        Page.of(firstValue));
                         resultBuilder.add(cellData);
                     }
                     else {
@@ -334,7 +334,7 @@ public class EntityFrameFormDataDtoBuilder {
                 }
                 else {
                     var cellData = GridCellDataDto.get(columnDescriptor.getId(),
-                                            formControlData);
+                                            new Page<>(1, 1, formControlData, formControlData.size()));
                     resultBuilder.add(cellData);
                 }
             }

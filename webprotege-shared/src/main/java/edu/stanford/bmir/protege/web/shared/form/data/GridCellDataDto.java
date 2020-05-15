@@ -5,10 +5,12 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,13 +21,15 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public abstract class GridCellDataDto {
 
     public static GridCellDataDto get(@Nonnull GridColumnId columnId,
-                                   @Nullable ImmutableList<FormControlDataDto> values) {
+                                   @Nullable Page<FormControlDataDto> values) {
         return new AutoValue_GridCellDataDto(columnId, values);
     }
 
     public int compareTo(GridCellDataDto otherCellData) {
-        ImmutableList<FormControlDataDto> values = getValues();
-        ImmutableList<FormControlDataDto> otherValues = otherCellData.getValues();
+        Page<FormControlDataDto> valuesPage = getValues();
+        Page<FormControlDataDto> otherValuesPage = otherCellData.getValues();
+        List<FormControlDataDto> values = valuesPage.getPageElements();
+        List<FormControlDataDto> otherValues = otherValuesPage.getPageElements();
         for(int i = 0; i < values.size() && i < otherValues.size(); i++) {
             FormControlDataDto formControlData = values.get(i);
             FormControlDataDto otherControlData = otherValues.get(i);
@@ -58,10 +62,10 @@ public abstract class GridCellDataDto {
     public abstract GridColumnId getColumnId();
 
     @Nonnull
-    public abstract ImmutableList<FormControlDataDto> getValues();
+    public abstract Page<FormControlDataDto> getValues();
 
     public GridCellData toGridCellData() {
         return GridCellData.get(getColumnId(),
-                getValues().stream().map(FormControlDataDto::toFormControlData).collect(toImmutableList()));
+                getValues().transform(FormControlDataDto::toFormControlData));
     }
 }

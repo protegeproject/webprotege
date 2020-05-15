@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -91,7 +92,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
     public GridCellData getValue() {
         ImmutableList<FormControlData> values = stackPresenter.getValue();
         return GridCellData.get(descriptor.getId(),
-                                values);
+                                Page.of(values));
     }
 
     private void updateValueRequired() {

@@ -150,7 +150,7 @@ public class FormFieldPresenter implements FormRegionPresenter {
             throw new RuntimeException("FormFieldDescriptor mismatch for field: " + formFieldDescriptor.getId());
         }
         Page<FormControlDataDto> page = formFieldData.getFormControlData();
-        stackPresenter.setValue(page.getPageElements());
+        stackPresenter.setValue(page);
         stackPresenter.setPageCount(page.getPageCount());
         stackPresenter.setPageNumber(page.getPageNumber());
         updateRequiredValuePresent();
