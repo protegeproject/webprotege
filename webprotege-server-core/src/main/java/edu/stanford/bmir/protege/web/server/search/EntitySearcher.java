@@ -217,7 +217,7 @@ public class EntitySearcher {
             int skipRemainder = Math.max(skip - filledCounter.getCounter(), 0);
             dictionaryManager.getShortFormsContaining(searchWords,
                                                       entityTypes,
-                                                      languageManager.getActiveLanguages())
+                                                      languageManager.getLanguages())
                              .map(this::performMatch)
                              .filter(Objects::nonNull)
                              .peek(this::incrementMatchCounter)
