@@ -114,7 +114,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
         String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
         String emailSubject = String.format("[%s] Changes made to %s in %s by %s",
                                             displayName,
-                                            modifiedEntityData.getBrowserText(),
+                                            renderingManager.getShortForm(modifiedEntity),
                                             displayName,
                                             userDetailsManager.getUserDetails(byUser).map(d -> "by " + d.getDisplayName()).orElse(""));
         String emailBody = templateEngine.populateTemplate(watchTemplate.getContents(), templateObjects);
