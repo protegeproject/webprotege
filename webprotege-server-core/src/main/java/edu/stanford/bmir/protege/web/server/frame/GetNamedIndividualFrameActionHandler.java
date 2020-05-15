@@ -77,11 +77,10 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
         var renderer = rendererFactory.create();
         var renderedFrame = plainFrame.toEntityFrame(renderer, propertyValueComparator);
         logger.info(BROWSING,
-                     "{} {} retrieved NamedIndividual frame for {} ({})",
+                     "{} {} retrieved NamedIndividual frame for {}",
                     action.getProjectId(),
                     executionContext.getUserId(),
-                    action.getSubject(),
-                    renderedFrame.getSubject().getBrowserText());
+                    action.getSubject());
         return new GetNamedIndividualFrameResult(renderedFrame);
 
     }

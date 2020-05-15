@@ -66,11 +66,10 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
         var plainFrame = translator.getFrame(action.getSubject());
         var renderedFrame = plainFrame.toEntityFrame(renderer, propertyValueComparator);
         logger.info(BROWSING,
-                     "{} {} retrieved AnnotationProperty frame for {} ({})",
+                     "{} {} retrieved AnnotationProperty frame for {}",
                     action.getProjectId(),
                     executionContext.getUserId(),
-                    action.getSubject(),
-                    renderedFrame.getSubject().getBrowserText());
+                    action.getSubject());
         return new GetAnnotationPropertyFrameResult(renderedFrame);
     }
 

@@ -60,11 +60,10 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
         var plainFrame = translator.getFrame(action.getSubject());
         var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
-                     "{} {} retrieved ObjectProperty frame for {} ({})",
+                     "{} {} retrieved ObjectProperty frame for {}",
                      action.getProjectId(),
                      executionContext.getUserId(),
-                     action.getSubject(),
-                     renderedFrame.getSubject().getBrowserText());
+                     action.getSubject());
         return new GetObjectPropertyFrameResult(renderedFrame);
     }
 

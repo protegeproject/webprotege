@@ -33,7 +33,11 @@ public abstract class OWLPrimitiveData extends ObjectData implements Comparable<
 
     @Override
     public String getBrowserText() {
-        return getShortForms().values().stream().findFirst().orElse("");
+        return getShortForms()
+                .values()
+                .stream()
+                .findFirst()
+                .orElse("");
     }
 
     public abstract <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;

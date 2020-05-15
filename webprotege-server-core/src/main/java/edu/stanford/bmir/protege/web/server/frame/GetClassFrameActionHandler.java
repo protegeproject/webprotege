@@ -84,11 +84,10 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
         var classFrame = classFrameProvider.getFrame(subject, options);
         var renderedFrame = classFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
-                    "{} {} retrieved Class frame for {} ({})",
+                    "{} {} retrieved Class frame for {}",
                     action.getProjectId(),
                     executionContext.getUserId(),
-                    subject,
-                    renderedFrame.getSubject().getBrowserText());
+                    subject);
         return new GetClassFrameResult(renderedFrame);
     }
 }

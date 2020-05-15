@@ -64,11 +64,10 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
         var plainFrame = translator.getFrame(action.getSubject());
         var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
-                    "{} {} retrieved DataProperty frame for {} ({})",
+                    "{} {} retrieved DataProperty frame for {}",
                     action.getProjectId(),
                     executionContext.getUserId(),
-                    action.getSubject(),
-                    renderedFrame.getSubject().getBrowserText());
+                    action.getSubject());
         return new GetDataPropertyFrameResult(renderedFrame);
     }
 
