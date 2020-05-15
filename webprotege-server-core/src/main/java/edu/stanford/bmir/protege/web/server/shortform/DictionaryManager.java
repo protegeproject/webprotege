@@ -120,6 +120,6 @@ public class DictionaryManager {
         if(shortForm != null) {
             return ImmutableMap.of(DictionaryLanguage.localName(), shortForm);
         }
-        return dictionary.getShortForms(entity, languageManager.getActiveLanguages());
+        return dictionary.getShortForms(entity, languageManager.getLanguages());
     }
 }
