@@ -23,6 +23,8 @@ import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.form.*;
+import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
+import edu.stanford.bmir.protege.web.client.form.input.CheckBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
@@ -826,6 +828,11 @@ public class ClientProjectModule {
 
     @Provides
     GridRowViewContainer provideGridRowViewContainer(@Nonnull GridRowViewContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CheckBoxView provideCheckBoxView(CheckBoxViewImpl impl) {
         return impl;
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+    <rect class="wp-checkbox__input__box" x="0" y="0" width="14" height="14" rx="2" ry="2"/>
+    <path class="wp-checkbox__input__check-mark" d="M2 8 L6 12 L12 3" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="square"/>
+</svg>
