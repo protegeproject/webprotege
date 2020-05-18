@@ -45,13 +45,21 @@ public class CheckBoxViewImpl extends Composite implements CheckBoxView {
     @Inject
     public CheckBoxViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        input.getElement().setTabIndex(0);
         getElement().setPropertyString("role", "checkbox");
         sinkEvents(Event.ONKEYUP);
         sinkEvents(Event.ONMOUSEDOWN);
         sinkEvents(Event.ONMOUSEUP);
         cb.style().ensureInjected();
         updateState();
+    }
+
+    public void setFocusable(boolean focusable) {
+        if (focusable) {
+            getElement().setTabIndex(0);
+        }
+        else {
+            getElement().removeAttribute("tabindex");
+        }
     }
 
     @Override
@@ -86,6 +94,12 @@ public class CheckBoxViewImpl extends Composite implements CheckBoxView {
     }
 
     @Override
+    protected void onAttach() {
+        super.onAttach();
+        updateState();
+    }
+
+    @Override
     public Boolean getValue() {
         return selected;
     }
@@ -97,13 +111,13 @@ public class CheckBoxViewImpl extends Composite implements CheckBoxView {
 
     @Override
     public void setValue(Boolean value, boolean fireEvents) {
-//        if(this.selected != value) {
+        if(this.selected != value) {
             this.selected = value;
             updateState();
             if (fireEvents) {
                 ValueChangeEvent.fire(this, this.selected);
             }
-//        }
+        }
     }
 
     private void updateState() {
@@ -116,6 +130,7 @@ public class CheckBoxViewImpl extends Composite implements CheckBoxView {
             role.setAriaCheckedState(element, CheckedValue.FALSE);
         }
         role.setAriaDisabledState(element, !enabled);
+        setFocusable(enabled);
 
     }
 
@@ -138,5 +153,15 @@ public class CheckBoxViewImpl extends Composite implements CheckBoxView {
     @Override
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    @Override
+    public void setFocus(boolean focus) {
+        if (focus) {
+            getElement().focus();
+        }
+        else {
+            getElement().blur();
+        }
     }
 }

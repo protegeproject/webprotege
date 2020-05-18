@@ -4,7 +4,6 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.HasReadOnly;
 
@@ -37,6 +36,8 @@ public class CheckBoxPresenter implements HasValue<Boolean>, HasText, HasEnabled
 
     private void handleKeyUp(KeyUpEvent keyUpEvent) {
         if(keyUpEvent.getNativeKeyCode() == KeyCodes.KEY_SPACE) {
+            keyUpEvent.stopPropagation();
+            keyUpEvent.preventDefault();
             toggleSelected();
         }
     }
@@ -56,7 +57,7 @@ public class CheckBoxPresenter implements HasValue<Boolean>, HasText, HasEnabled
     }
 
 
-    public void start(SimplePanel container) {
+    public void start(AcceptsOneWidget container) {
         container.setWidget(view);
     }
 
@@ -67,7 +68,7 @@ public class CheckBoxPresenter implements HasValue<Boolean>, HasText, HasEnabled
 
     @Override
     public void setValue(Boolean value, boolean fireEvents) {
-        view.setValue(value, false);
+        view.setValue(value, fireEvents);
     }
 
     @Override
@@ -108,5 +109,9 @@ public class CheckBoxPresenter implements HasValue<Boolean>, HasText, HasEnabled
     @Override
     public boolean isReadOnly() {
         return view.isReadOnly();
+    }
+
+    public void setFocus(boolean focus) {
+        view.setFocus(focus);
     }
 }

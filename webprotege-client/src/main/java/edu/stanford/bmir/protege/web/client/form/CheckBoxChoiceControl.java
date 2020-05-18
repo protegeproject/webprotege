@@ -10,9 +10,9 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.form.input.CheckBox;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
@@ -79,21 +79,12 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
         choices.clear();
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
         for(ChoiceDescriptorDto choiceDescriptorDto : choiceDtos) {
-            CheckBox checkBox = new CheckBox(new SafeHtmlBuilder().appendHtmlConstant(choiceDescriptorDto.getLabel().get(langTag)).toSafeHtml());
+            CheckBox checkBox = new CheckBox();
+            checkBox.setText(choiceDescriptorDto.getLabel().get(langTag));
             checkBoxes.put(checkBox, choiceDescriptorDto.getValue().toPrimitiveFormControlData());
             container.add(checkBox);
             choices.add(choiceDescriptorDto.getValue().toPrimitiveFormControlData());
-            checkBox.getElement().getStyle().setDisplay(Style.Display.BLOCK);
             checkBox.addValueChangeHandler(checkBoxValueChangedHandler);
-            checkBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
-            checkBox.addFocusHandler(event -> {
-                checkBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
-                checkBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
-            });
-            checkBox.addBlurHandler(event -> {
-                checkBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
-                checkBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
-            });
         }
         ValueChangeEvent.fire(this, getValue());
     }
@@ -116,6 +107,7 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
             for(CheckBox checkBox : checkBoxes.keySet()) {
                 boolean sel = values.contains(checkBoxes.get(checkBox));
                 checkBox.setValue(sel);
+                checkBox.setEnabled(enabled);
             }
         }
         else {

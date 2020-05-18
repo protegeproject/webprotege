@@ -6,15 +6,6 @@ import com.google.gwt.resources.client.DataResource;
 
 public interface CheckBoxResourceBundle extends ClientBundle {
 
-    @Source("checkbox-unchecked.svg")
-    @DataResource.MimeType("image/svg+xml")
-    DataResource svg_checkBox__inputMask();
-
-    @Source("checkbox-checked.svg")
-    @DataResource.MimeType("image/svg+xml")
-    DataResource svg_checkBox__checkMask();
-
-
     @Source("checkbox.css")
     CheckBoxCss style();
 

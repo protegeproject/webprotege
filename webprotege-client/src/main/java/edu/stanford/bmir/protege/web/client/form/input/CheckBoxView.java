@@ -11,4 +11,5 @@ import edu.stanford.bmir.protege.web.client.HasReadOnly;
 
 public interface CheckBoxView extends IsWidget, HasEnabled, HasReadOnly, HasValue<Boolean>, HasText, HasKeyUpHandlers, HasMouseDownHandlers, HasMouseUpHandlers {
 
+    void setFocus(boolean focus);
 }
