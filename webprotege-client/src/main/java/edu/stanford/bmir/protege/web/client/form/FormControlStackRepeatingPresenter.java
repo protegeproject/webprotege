@@ -77,13 +77,14 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public void clearValue() {
         formControls.clear();
+        view.setPaginatorVisible(false);
         // TODO: Fire Value changed
     }
 
     @Override
     public void setValue(@Nonnull Page<FormControlDataDto> value) {
         // TODO: Pristine?
-        // TODO: Reuse form controls?
+        // TODO: Reuse form controls
         formControls.clear();
         view.clear();
         view.setPaginatorVisible(value.getPageCount() > 1);
