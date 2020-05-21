@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
@@ -41,6 +43,7 @@ public class GridHeaderCellViewImpl extends Composite implements GridHeaderCellV
     @Inject
     public GridHeaderCellViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        sinkEvents(Event.ONCLICK);
     }
 
     @Override
@@ -70,6 +73,6 @@ public class GridHeaderCellViewImpl extends Composite implements GridHeaderCellV
     @Override
     public void setClickHandler(ClickHandler clickHandler) {
         clickHandlerRegistration.removeHandler();
-        clickHandlerRegistration = labelField.addClickHandler(clickHandler);
+        clickHandlerRegistration = addHandler(clickHandler, ClickEvent.getType());
     }
 }
