@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRendererF
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -55,9 +56,10 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         var entity = action.getEntity();
         var langTagFilter = action.getLangTagFilter();
         var formDataDtoBuilder = formDataDtoBuilderFactory.create(sessionRendererFactory.create());
+        var ordering = action.getGridControlOrdering();
         var forms = formManager.getFormDescriptors(entity, projectId)
                           .stream()
-                          .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor, pageRequestIndex, langTagFilter))
+                          .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor, pageRequestIndex, langTagFilter, ordering))
                           .collect(toImmutableList());
         return new GetEntityFormsResult(forms);
     }

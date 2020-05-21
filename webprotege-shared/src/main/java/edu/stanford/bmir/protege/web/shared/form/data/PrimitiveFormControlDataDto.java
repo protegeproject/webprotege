@@ -9,7 +9,10 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public abstract class PrimitiveFormControlDataDto {
+public abstract class PrimitiveFormControlDataDto implements Comparable<PrimitiveFormControlDataDto> {
+
+    public static final int BEFORE = -1;
+    public static final int AFTER = 1;
 
     public static EntityFormControlDataDto get(OWLEntityData entity) {
         return new AutoValue_EntityFormControlDataDto(entity);
@@ -40,4 +43,39 @@ public abstract class PrimitiveFormControlDataDto {
 
     @Nonnull
     public abstract Optional<OWLLiteral> asLiteral();
+
+    @Override
+    public int compareTo(@Nonnull PrimitiveFormControlDataDto other) {
+        // Literals then Entities then IRIs
+        if(this instanceof LiteralFormControlDataDto) {
+            if(other instanceof LiteralFormControlDataDto) {
+                return ((LiteralFormControlDataDto) this).getLiteral().compareTo(((LiteralFormControlDataDto) other).getLiteral());
+            }
+            else {
+                // Always before any other types
+                return BEFORE;
+            }
+        }
+        else if(this instanceof EntityFormControlDataDto) {
+            if(other instanceof EntityFormControlDataDto) {
+                return ((EntityFormControlDataDto) this).getEntity().compareTo(((EntityFormControlDataDto) other).getEntity());
+            }
+            else if(other instanceof LiteralFormControlDataDto) {
+                return AFTER;
+            }
+            else {
+                // IRI
+                return BEFORE;
+            }
+        }
+        else {
+            // We are and IRI
+            if(other instanceof IriFormControlDataDto) {
+                return ((IriFormControlDataDto) this).getIri().compareTo(((IriFormControlDataDto) other).getIri());
+            }
+            else {
+                return AFTER;
+            }
+        }
+    }
 }

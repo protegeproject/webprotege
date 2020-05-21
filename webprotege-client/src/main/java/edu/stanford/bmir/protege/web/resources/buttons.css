@@ -27,6 +27,8 @@
 @url crossIconUrl svgCrossIcon;
 @url expandAllIconUrl svgExpandAllIcon;
 @url collapseAllIconUrl svgCollapseAllIcon;
+@url sortAscendingIconUrl svgAscendingIcon;
+@url sortDescendingIconUrl svgDescendingIcon;
 
 .wp-btn {
     border: none;
@@ -454,4 +456,14 @@
 .wp-btn-g--collapse-all {
     mask-image: collapseAllIconUrl;
     -webkit-mask-image: collapseAllIconUrl;
+}
+
+.wp-btn-g--sort-ascending {
+    mask-image: sortAscendingIconUrl;
+    -webkit-mask-image: sortAscendingIconUrl;
+}
+
+.wp-btn-g--sort-descending {
+    mask-image: sortDescendingIconUrl;
+    -webkit-mask-image: sortDescendingIconUrl;
 }

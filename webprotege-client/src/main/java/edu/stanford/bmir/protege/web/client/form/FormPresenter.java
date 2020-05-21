@@ -13,10 +13,12 @@ import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -56,6 +58,9 @@ public class FormPresenter {
     private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
 
     private boolean enabled = true;
+
+    @Nonnull
+    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
 
     @AutoFactory
     @Inject
@@ -125,6 +130,10 @@ public class FormPresenter {
         fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setEnabled(enabled));
     }
 
+    public void setGridOrderByChangedHandler(GridOrderByChangedHandler handler) {
+        this.orderByChangedHandler = checkNotNull(handler);
+    }
+
     public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler handler) {
         this.formRegionPageChangedHandler = checkNotNull(handler);
         fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(handler));
@@ -173,6 +182,7 @@ public class FormPresenter {
         presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
         presenter.start();
+        presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         fieldPresenters.add(presenter);
         if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()
                                                  .getId())) {
@@ -245,8 +255,14 @@ public class FormPresenter {
         container.setWidget(noFormView);
     }
 
+    public Stream<GridControlOrdering> getGridControlOrderings() {
+        return fieldPresenters.stream()
+                .flatMap(FormFieldPresenter::getGridControlOrderings);
+    }
+
     interface FormDataChangedHandler {
 
         void handleFormDataChanged();
     }
+
 }

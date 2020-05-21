@@ -28,6 +28,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgHelpIcon();
 
+    @Source("ascending.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgAscendingIcon();
+
+    @Source("descending.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDescendingIcon();
+
     @Source("class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgClassIcon();
@@ -750,6 +758,13 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--collapse-all")
         String collapseAll();
+
+        @ClassName("wp-btn-g--sort-ascending")
+        String sortAscending();
+
+
+        @ClassName("wp-btn-g--sort-descending")
+        String sortDescending();
 
 
     }

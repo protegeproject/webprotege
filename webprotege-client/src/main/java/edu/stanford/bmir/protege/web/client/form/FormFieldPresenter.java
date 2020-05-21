@@ -8,15 +8,15 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionPresenter;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIRED;
@@ -126,6 +126,17 @@ public class FormFieldPresenter implements FormRegionPresenter {
         return stackPresenter.getPageRequests(formSubject, formFieldDescriptor.getId());
     }
 
+    public Stream<GridControlOrdering> getGridControlOrderings() {
+        List<GridControlOrdering> orderings = new ArrayList<>();
+        stackPresenter.forEachFormControl(formControl -> {
+            if(formControl instanceof GridControl) {
+                ImmutableList<GridControlOrderBy> ordering = ((GridControl) formControl).getOrdering();
+                orderings.add(GridControlOrdering.get(formFieldDescriptor.getId(), ordering));
+            }
+        });
+        return orderings.stream();
+    }
+
     public FormFieldData getValue() {
         if(stackPresenter == null) {
             return FormFieldData.get(formFieldDescriptor, Page.emptyPage());
@@ -177,6 +188,15 @@ public class FormFieldPresenter implements FormRegionPresenter {
 
     public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
         stackPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+    }
+
+
+    public void setGridOrderByChangedHandler(GridOrderByChangedHandler orderByChangedHandler) {
+        stackPresenter.forEachFormControl(formControl -> {
+            if(formControl instanceof GridControl) {
+                ((GridControl) formControl).setGridOrderByChangedHandler(orderByChangedHandler);
+            }
+        });
     }
 
 }

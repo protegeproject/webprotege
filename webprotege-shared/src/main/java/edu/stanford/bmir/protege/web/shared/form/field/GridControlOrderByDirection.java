@@ -5,8 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum GridControlOrderByDirection {
 
     @JsonProperty("asc")
-    ASC,
+    ASC(1),
 
     @JsonProperty("desc")
-    DESC
+    DESC(-1);
+
+    int dir;
+
+    GridControlOrderByDirection(int dir) {
+        this.dir = dir;
+    }
+
+    public int getDir() {
+        return dir;
+    }
 }

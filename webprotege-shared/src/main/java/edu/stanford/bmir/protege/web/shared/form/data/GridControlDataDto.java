@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -13,8 +15,9 @@ public abstract class GridControlDataDto implements FormControlDataDto {
 
     @Nonnull
     public static GridControlDataDto get(@Nonnull GridControlDescriptor descriptor,
-                                         @Nonnull Page<GridRowDataDto> rows) {
-        return new AutoValue_GridControlDataDto(descriptor, rows);
+                                         @Nonnull Page<GridRowDataDto> rows,
+                                         @Nonnull ImmutableList<GridControlOrderBy> ordering) {
+        return new AutoValue_GridControlDataDto(descriptor, rows, ordering);
     }
 
     @Nonnull
@@ -22,6 +25,9 @@ public abstract class GridControlDataDto implements FormControlDataDto {
 
     @Nonnull
     public abstract Page<GridRowDataDto> getRows();
+
+    @Nonnull
+    public abstract ImmutableList<GridControlOrderBy> getOrdering();
 
     @Override
     public <R> R accept(FormControlDataDtoVisitorEx<R> visitor) {
@@ -32,6 +38,7 @@ public abstract class GridControlDataDto implements FormControlDataDto {
     @Override
     public GridControlData toFormControlData() {
         return GridControlData.get(getDescriptor(),
-                getRows().transform(GridRowDataDto::toGridRowData));
+                                   getRows().transform(GridRowDataDto::toGridRowData),
+                                   getOrdering());
     }
 }

@@ -2,11 +2,30 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            cursor: pointer;
+        }
+        .ascending {
+            width: 20px;
+            height: 16px;
+            background-color: literal("var(--primary--background-color)");
+        }
+        .descending {
+            width: 20px;
+            height: 16px;
+            background-color: literal("var(--primary--background-color)");
+        }
         .headerLabel {
-
+            padding-right: 3px;
         }
     </ui:style>
-    <g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.main}">
         <g:Label ui:field="labelField" addStyleNames="{style.headerLabel}" visible="false"/>
+        <g:HTMLPanel ui:field="sortDirectionAscending" visible="false" addStyleNames="{style.ascending} {wp.buttons.sortAscending}"/>
+        <g:HTMLPanel ui:field="sortDirectionDescending" visible="false" addStyleNames="{style.descending} {wp.buttons.sortDescending}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

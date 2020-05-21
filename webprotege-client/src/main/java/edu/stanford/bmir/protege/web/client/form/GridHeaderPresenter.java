@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-27
  */
-public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager {
+public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrderBy {
 
     @Nonnull
     private final GridHeaderView view;
@@ -37,6 +36,11 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
 
     private Map<GridColumnDescriptor, GridHeaderCellContainer> containersByDescriptor = new HashMap<>();
+
+    @Nonnull
+    private ChangeHandler orderByChangedHandler = () -> {};
+
+    private Optional<GridControlOrderBy> orderBy = Optional.empty();
 
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
@@ -69,6 +73,9 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
             double span = leafColumnDescriptor.getNestedColumnCount();
             double weight = span / totalSpan;
             GridHeaderColumnPresenter columnPresenter = headerColumnPresenterProvider.get();
+            columnPresenter.setColumnHeaderClickedHandler(() -> {
+                this.handleColumnClicked(leafColumnDescriptor.getId());
+            });
             columnPresenters.put(leafColumnDescriptor.getId(), columnPresenter);
             columnPresenter.setColumnDescriptor(leafColumnDescriptor);
             GridHeaderCellContainer columnHeaderContainer = view.addColumnHeader();
@@ -78,6 +85,20 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
             String label = localeMapper.getValueForCurrentLocale(leafColumnDescriptor.getLabel());
             view.addColumnToFilterList(label, leafColumnDescriptor.getId());
         });
+    }
+
+    private void handleColumnClicked(GridColumnId id) {
+        this.orderBy = Optional.empty();
+        columnPresenters.values().forEach(cp -> {
+            if(cp.isPresenterFor(id)) {
+                GridControlOrderByDirection dir = cp.toggleSortOrder();
+                this.orderBy = Optional.of(GridControlOrderBy.get(id, dir));
+            }
+            else {
+                cp.clearSortOrder();
+            }
+        });
+        orderByChangedHandler.handleGridColumnOrderByChanged();
     }
 
     @Override
@@ -103,5 +124,36 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
                         || visibleColumns.contains(columnDescriptor.getId());
             container.setVisible(visible);
         });
+    }
+
+    @Override
+    public void setGridColumnOrderByChangeHandler(@Nonnull ChangeHandler handler) {
+        this.orderByChangedHandler = checkNotNull(handler);
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableList<GridControlOrderBy> getOrderBy() {
+        return orderBy.map(ImmutableList::of).orElse(ImmutableList.of());
+    }
+
+    public void setOrderBy(@Nonnull ImmutableList<GridControlOrderBy> ordering) {
+        if(ordering.isEmpty()) {
+            this.orderBy = Optional.empty();
+            columnPresenters.values()
+                            .forEach(GridHeaderColumnPresenter::clearSortOrder);
+        }
+        else {
+            GridControlOrderBy orderBy = ordering.get(0);
+            this.orderBy = Optional.of(orderBy);
+            columnPresenters.values().forEach(cp -> {
+                if(cp.isPresenterFor(orderBy.getColumnId())) {
+                    cp.setSortOrder(orderBy.getDirection());
+                }
+                else {
+                    cp.clearSortOrder();
+                }
+            });
+        }
     }
 }
