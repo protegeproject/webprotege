@@ -52,6 +52,8 @@ public class FormControlDataProcessor_TestCase {
     @Mock
     private IRI iri;
 
+    private ImmutableList<GridControlOrderBy> ordering = ImmutableList.of();
+
     @Before
     public void setUp() {
         processor = new FormControlDataProcessor(gridControlDataProcessor,
@@ -120,7 +122,7 @@ public class FormControlDataProcessor_TestCase {
     public void shouldProcessGridControlData() {
         var gridControlDescriptor = mock(GridControlDescriptor.class);
         var page = new Page<>(1, 1, ImmutableList.of(mock(GridRowData.class)), 1);
-        var gridControlData = GridControlData.get(gridControlDescriptor, page);
+        var gridControlData = GridControlData.get(gridControlDescriptor, page, ordering);
         processor.processFormControlData(binding, gridControlData, formFrameBuilder);
         verify(gridControlDataProcessor, times(1))
                 .processGridControlData(binding, gridControlData, formFrameBuilder);

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.junit.Before;
@@ -19,7 +20,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -57,13 +57,15 @@ public class GridControlDataProcessor_TestCase {
 
     private GridControlData gridControlData;
 
+    private ImmutableList<GridControlOrderBy> ordering = ImmutableList.of();
+
     @Before
     public void setUp() {
         processor = new GridControlDataProcessor(gridRowDataProcessor);
         when(gridControlDescriptor.getColumns())
                 .thenReturn(columns);
         page = new Page<>(1, 1, ImmutableList.of(gridRowData), 1);
-        gridControlData = GridControlData.get(gridControlDescriptor, page);
+        gridControlData = GridControlData.get(gridControlDescriptor, page, ordering);
     }
 
     @Test

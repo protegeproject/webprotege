@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -46,6 +47,9 @@ public class FormStackPresenter {
 
     private boolean enabled = true;
 
+    @Nonnull
+    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
+
     @Inject
     public FormStackPresenter(@Nonnull FormTabBarPresenter formTabBarPresenter,
                               @Nonnull FormStackView view,
@@ -71,6 +75,11 @@ public class FormStackPresenter {
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
         this.formRegionPageChangedHandler = checkNotNull(handler);
         formPresenters.forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));
+    }
+
+    public void setGridOrderByChangedHandler(@Nonnull GridOrderByChangedHandler handler) {
+        this.orderByChangedHandler = checkNotNull(handler);
+        formPresenters.forEach(p -> p.setGridOrderByChangedHandler(handler));
     }
 
     @Nonnull
@@ -123,6 +132,7 @@ public class FormStackPresenter {
                 FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
                 formPresenter.start(formContainer);
                 formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+                formPresenter.setGridOrderByChangedHandler(orderByChangedHandler);
                 formPresenter.displayForm(formData);
                 formPresenter.setEnabled(enabled);
                 formPresenters.add(formPresenter);
@@ -157,5 +167,12 @@ public class FormStackPresenter {
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {
         formTabBarPresenter.setSelectedFormIdStash(formIdStash);
+    }
+
+    @Nonnull
+    public ImmutableList<GridControlOrdering> getGridControlOrderings() {
+        return formPresenters.stream()
+                      .flatMap(FormPresenter::getGridControlOrderings)
+                      .collect(toImmutableList());
     }
 }

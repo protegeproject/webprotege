@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -17,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GridHeaderCellViewImpl extends Composite implements GridHeaderCellView {
 
+
     interface GridHeaderCellViewImplUiBinder extends UiBinder<HTMLPanel, GridHeaderCellViewImpl> {
 
     }
@@ -25,6 +28,15 @@ public class GridHeaderCellViewImpl extends Composite implements GridHeaderCellV
 
     @UiField
     Label labelField;
+
+    @UiField
+    Widget sortDirectionAscending;
+
+    @UiField
+    Widget sortDirectionDescending;
+
+    @Nonnull
+    private HandlerRegistration clickHandlerRegistration = () -> {};
 
     @Inject
     public GridHeaderCellViewImpl() {
@@ -35,5 +47,29 @@ public class GridHeaderCellViewImpl extends Composite implements GridHeaderCellV
     public void setLabel(@Nonnull String label) {
         labelField.setText(checkNotNull(label));
         labelField.setVisible(true);
+    }
+
+    @Override
+    public void clearSortOrder() {
+        sortDirectionAscending.setVisible(false);
+        sortDirectionDescending.setVisible(false);
+    }
+
+    @Override
+    public void setSortAscending() {
+        sortDirectionAscending.setVisible(true);
+        sortDirectionDescending.setVisible(false);
+    }
+
+    @Override
+    public void setSortDescending() {
+        sortDirectionAscending.setVisible(false);
+        sortDirectionDescending.setVisible(true);
+    }
+
+    @Override
+    public void setClickHandler(ClickHandler clickHandler) {
+        clickHandlerRegistration.removeHandler();
+        clickHandlerRegistration = labelField.addClickHandler(clickHandler);
     }
 }

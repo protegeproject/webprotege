@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -26,7 +27,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -88,6 +88,7 @@ public class EntityFormStackPresenter {
         container.setWidget(view);
         formStackPresenter.start(view.getFormStackContainer());
         formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
+        formStackPresenter.setGridOrderByChangedHandler(this::handleGridOrderByChanged);
         langTagFilterPresenter.start(view.getLangTagFilterContainer());
         langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
@@ -97,6 +98,10 @@ public class EntityFormStackPresenter {
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
                                         view::setEditButtonVisible);
         setMode(Mode.READ_ONLY_MODE);
+    }
+
+    private void handleGridOrderByChanged() {
+        updateFormsForCurrentEntity();
     }
 
     public void setHasBusy(HasBusy hasBusy) {
@@ -133,8 +138,10 @@ public class EntityFormStackPresenter {
     private void updateFormsForCurrentEntity() {
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
+            ImmutableList<GridControlOrdering> orderings = formStackPresenter.getGridControlOrderings();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
-            dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests, langTagFilter),
+            dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests, langTagFilter,
+                                                      orderings),
                              hasBusy,
                              this::handleGetEntityFormsResult);
         });

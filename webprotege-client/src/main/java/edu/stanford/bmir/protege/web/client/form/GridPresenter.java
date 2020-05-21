@@ -10,10 +10,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
@@ -69,6 +66,9 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
 
     private boolean topLevel = false;
 
+    @Nonnull
+    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
+
     @Inject
     public GridPresenter(@Nonnull GridView view,
                          @Nonnull GridHeaderPresenter headerPresenter,
@@ -110,7 +110,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
                 .map(GridRowPresenter::getFormDataValue)
                 .collect(toImmutableList());
         Page<GridRowData> page = new Page<>(1, 1, rows, rows.size());
-        return GridControlData.get(descriptor, page);
+        return GridControlData.get(descriptor, page, ImmutableList.of());
     }
 
     public boolean isEnabled() {
@@ -225,6 +225,11 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
             addRow(presenter);
             presenter.requestFocus();
         });
+        headerPresenter.setGridColumnOrderByChangeHandler(this::handleOrderByChanged);
+    }
+
+    private void handleOrderByChanged() {
+        this.orderByChangedHandler.handleOrderByChanged();
     }
 
     @Override
@@ -244,5 +249,13 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         headerPresenter.updateVisibleColumns();
         // Show/hide columns in rows
         rowPresenters.forEach(GridRowPresenter::updateColumnVisibility);
+    }
+
+    public ImmutableList<GridControlOrderBy> getOrdering() {
+        return headerPresenter.getOrderBy();
+    }
+
+    public void setOrderByChangedHandler(GridOrderByChangedHandler orderByChangedHandler) {
+        this.orderByChangedHandler = checkNotNull(orderByChangedHandler);
     }
 }
