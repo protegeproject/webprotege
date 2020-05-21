@@ -152,6 +152,8 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         view.setElementCount(rowsPage.getTotalElements());
         view.setPaginatorVisible(rowsPage.getPageCount() > 1);
         view.setEnabled(enabled);
+        ImmutableList<GridControlOrderBy> ordering = value.getOrdering();
+        headerPresenter.setOrderBy(ordering);
     }
 
     private GridRowPresenter toGridRowPresenter(GridRowDataDto rowDataValue) {

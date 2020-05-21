@@ -136,4 +136,24 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     public ImmutableList<GridControlOrderBy> getOrderBy() {
         return orderBy.map(ImmutableList::of).orElse(ImmutableList.of());
     }
+
+    public void setOrderBy(@Nonnull ImmutableList<GridControlOrderBy> ordering) {
+        if(ordering.isEmpty()) {
+            this.orderBy = Optional.empty();
+            columnPresenters.values()
+                            .forEach(GridHeaderColumnPresenter::clearSortOrder);
+        }
+        else {
+            GridControlOrderBy orderBy = ordering.get(0);
+            this.orderBy = Optional.of(orderBy);
+            columnPresenters.values().forEach(cp -> {
+                if(cp.isPresenterFor(orderBy.getColumnId())) {
+                    cp.setSortOrder(orderBy.getDirection());
+                }
+                else {
+                    cp.clearSortOrder();
+                }
+            });
+        }
+    }
 }

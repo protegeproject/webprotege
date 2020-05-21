@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderByDirection.ASC;
 
 /**
  * Matthew Horridge
@@ -280,7 +281,8 @@ public class EntityFrameFormDataDtoBuilder {
         var pageRequest = formPageRequestIndex.getPageRequest(rootSubject.toFormSubject(),
                                                               formFieldId,
                                                               FormPageRequest.SourceType.GRID_CONTROL);
-        var comparator = regionOrdering.map(ordering -> ordering.getComparator(gridControlDescriptor)).orElse(Comparator.naturalOrder());
+        var comparator = regionOrdering.map(ordering -> ordering.getComparator(gridControlDescriptor))
+                                       .orElse(Comparator.naturalOrder());
         var rowData = subjects.stream()
                               .map(this::toEntityFormSubject)
                               .filter(Objects::nonNull)
@@ -293,7 +295,14 @@ public class EntityFrameFormDataDtoBuilder {
                               .sorted(comparator)
                               .collect(PageCollector.toPage(pageRequest.getPageNumber(),
                                                             pageRequest.getPageSize()));
-        var gridOrdering = regionOrdering.map(GridControlOrdering::getOrdering).orElse(ImmutableList.of());
+        var gridOrdering = regionOrdering.map(GridControlOrdering::getOrdering)
+                                         .orElseGet(() -> {
+                                             return gridControlDescriptor.getLeafColumns()
+                                                                  .map(GridColumnDescriptor::getId)
+                                                                  .map(id -> GridControlOrderBy.get(id, ASC))
+                                                                  .limit(1)
+                                                                  .collect(toImmutableList());
+                                         });
         return GridControlDataDto.get(gridControlDescriptor, rowData.orElse(Page.emptyPage()), gridOrdering);
     }
 
