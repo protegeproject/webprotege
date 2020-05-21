@@ -4,7 +4,7 @@
     <ui:style>
     </ui:style>
     <g:HTMLPanel>
-        <g:SimplePanel ui:field="paginatorContainer" addStyleNames="{wp.style.panelFilled}"/>
+        <g:SimplePanel ui:field="paginatorContainer" addStyleNames="{wp.style.panelFilled}" visible="false"/>
         <g:HTMLPanel ui:field="stackContainer"/>
         <g:Button ui:field="addButton" addStyleNames="{wp.buttons.addButton}"/>
     </g:HTMLPanel>
