@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -58,7 +59,7 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
     @Nonnull
     @Override
     public Optional<GridColumnDescriptor> getValue() {
-        GridColumnId columnId = currentColumnId.orElseGet(() -> GridColumnId.get(uuidV4Provider.get()));
+        GridColumnId columnId = getColumnId();
         return fieldDescriptorChooserPresenter.getFormFieldDescriptor()
                                               .map(fieldDescriptor -> GridColumnDescriptor.get(columnId,
                                                                                                view.getOptionality(),
@@ -67,6 +68,22 @@ public class GridColumnDescriptorPresenter implements ObjectPresenter<GridColumn
                                                                                                                .orElse(null),
                                                                                                view.getLabel(),
                                                                                                fieldDescriptor));
+    }
+
+    private GridColumnId getColumnId() {
+        // Replace old column ids with UUIDs
+        return currentColumnId.map(id -> {
+            if(!UUIDUtil.isWellFormed(id.getId())) {
+                return generateColumnId();
+            }
+            else {
+                return id;
+            }
+        }).orElseGet(this::generateColumnId);
+    }
+
+    private GridColumnId generateColumnId() {
+        return GridColumnId.get(uuidV4Provider.get());
     }
 
     public void setValue(@Nonnull GridColumnDescriptor descriptor) {
