@@ -58,8 +58,8 @@ public class FormFieldPresenter_TestCase {
                                                                       formControlDescriptor,
                                                                       Repeatability.NON_REPEATABLE,
                                                                       Optionality.OPTIONAL,
-                                                                      helpMap,
-                                                                      Collections.emptyMap());
+                                                                      true,
+                                                                      helpMap);
 
 
         when(languageMapCurrentLocalMapper.getValueForCurrentLocale(labelMap))

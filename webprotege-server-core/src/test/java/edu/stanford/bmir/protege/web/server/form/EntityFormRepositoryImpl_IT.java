@@ -77,8 +77,8 @@ public class EntityFormRepositoryImpl_IT {
                               ),
                               Repeatability.NON_REPEATABLE,
                               Optionality.OPTIONAL,
-                              LanguageMap.of("en", "Help text"),
-                              Map.of()
+                              true,
+                              LanguageMap.of("en", "Help text")
                       ))
                       .build();
 

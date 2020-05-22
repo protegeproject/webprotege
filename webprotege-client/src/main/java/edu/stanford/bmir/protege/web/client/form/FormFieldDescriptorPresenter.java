@@ -97,8 +97,8 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                                                                  formFieldDescriptor.get(),
                                                                  view.getRepeatability(),
                                                                  view.getOptionality(),
-                                                                 view.getHelp(),
-                                                                 Collections.emptyMap());
+                                                                 true,
+                                                                 view.getHelp());
         return Optional.of(descriptor);
     }
 

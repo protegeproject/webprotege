@@ -16,28 +16,40 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor.*;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-@JsonPropertyOrder({"id", "owlProperty", "label", "elementRun", "fieldDescriptor", "repeatability", "optionality", "help"})
+@JsonPropertyOrder({ID, OWL_BINDING, LABEL, FIELD_RUN, FORM_CONTROL_DESCRIPTOR, REPEATABILITY, OPTIONALITY, READ_ONLY, HELP})
 @GwtCompatible(serializable = true)
 @AutoValue
 public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatability, IsSerializable, BoundControlDescriptor {
 
 
+    public static final String ID = "id";
+    public static final String OWL_BINDING = "owlBinding";
+    public static final String LABEL = "label";
+    public static final String FIELD_RUN = "fieldRun";
+    public static final String FORM_CONTROL_DESCRIPTOR = "formControlDescriptor";
+    public static final String REPEATABILITY = "repeatability";
+    public static final String OPTIONALITY = "optionality";
+    public static final String READ_ONLY = "readOnly";
+    public static final String HELP = "help";
+
     @JsonCreator
     @Nonnull
-    public static FormFieldDescriptor get(@JsonProperty("id") @Nonnull FormFieldId id,
-                                          @JsonProperty("owlBinding") @Nullable OwlBinding owlBinding,
-                                          @JsonProperty("label") @Nullable LanguageMap formLabel,
-                                          @JsonProperty("fieldRun") @Nullable FieldRun fieldRun,
-                                          @JsonProperty("formControlDescriptor") @Nonnull FormControlDescriptor fieldDescriptor,
-                                          @JsonProperty("repeatability") @Nullable Repeatability repeatability,
-                                          @JsonProperty("optionality") @Nullable Optionality optionality,
-                                          @JsonProperty("help") @Nullable LanguageMap help,
-                                          @JsonProperty("style") @Nullable Map<String, String> style) {
+    public static FormFieldDescriptor get(@JsonProperty(ID) @Nonnull FormFieldId id,
+                                          @JsonProperty(OWL_BINDING) @Nullable OwlBinding owlBinding,
+                                          @JsonProperty(LABEL) @Nullable LanguageMap formLabel,
+                                          @JsonProperty(FIELD_RUN) @Nullable FieldRun fieldRun,
+                                          @JsonProperty(FORM_CONTROL_DESCRIPTOR) @Nonnull FormControlDescriptor fieldDescriptor,
+                                          @JsonProperty(REPEATABILITY) @Nullable Repeatability repeatability,
+                                          @JsonProperty(OPTIONALITY) @Nullable Optionality optionality,
+                                          @JsonProperty(READ_ONLY) boolean readOnly,
+                                          @JsonProperty(HELP) @Nullable LanguageMap help) {
         return new AutoValue_FormFieldDescriptor(id,
                                                  owlBinding,
                                                  formLabel == null ? LanguageMap.empty() : formLabel,
@@ -45,8 +57,8 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                                  fieldDescriptor,
                                                  optionality == null ? Optionality.REQUIRED : optionality,
                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
-                                                 help == null ? LanguageMap.empty() : help,
-                                                 style == null ? ImmutableMap.of() : style);
+                                                 readOnly,
+                                                 help == null ? LanguageMap.empty() : help);
     }
 
     public static FormFieldDescriptor getDefault() {
@@ -62,8 +74,8 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                           LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
-                LanguageMap.empty(),
-                Collections.emptyMap()
+                false,
+                LanguageMap.empty()
         );
     }
 
@@ -103,11 +115,10 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     @Nonnull
     public abstract Repeatability getRepeatability();
 
-    @Nonnull
-    public abstract LanguageMap getHelp();
+    public abstract boolean isReadOnly();
 
     @Nonnull
-    public abstract Map<String, String> getStyle();
+    public abstract LanguageMap getHelp();
     
     @JsonIgnore
     public boolean isComposite() {

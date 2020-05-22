@@ -12,9 +12,11 @@ import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
@@ -36,12 +38,13 @@ public class SubFormControlDescriptor_IT {
 
     @Test
     public void shouldSerializeAndDeserialize() throws IOException {
-        var formDescriptor = new FormDescriptor(FormId.get("SubFormId"),
+        var formDescriptor = new FormDescriptor(FormId.get("12345678-1234-1234-1234-123456789abc"),
                                                 LanguageMap.of("en", "The sub form"),
-                                                Arrays.asList(
+                                                singletonList(
                                                         FormFieldDescriptor.get(
                                                                 FormFieldId.get("Label"),
-                                                                OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_LABEL.getIRI()),
+                                                                OwlPropertyBinding.get(new OWLObjectPropertyImpl(
+                                                                                               OWLRDFVocabulary.RDFS_LABEL.getIRI()),
                                                                                        null),
                                                                 LanguageMap.of("en", "The Label"),
                                                                 FieldRun.START,
@@ -54,8 +57,8 @@ public class SubFormControlDescriptor_IT {
                                                                 ),
                                                                 Repeatability.NON_REPEATABLE,
                                                                 Optionality.REQUIRED,
-                                                                LanguageMap.empty(),
-                                                                Map.of()
+                                                                true,
+                                                                LanguageMap.empty()
                                                         )
                                                 ), Optional.empty());
         SubFormControlDescriptor descriptor = new SubFormControlDescriptor(formDescriptor);

@@ -39,8 +39,8 @@ public class FormFieldDescriptor_Serialization_IT {
                 new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
-                LanguageMap.empty(),
-                Collections.emptyMap()
+                true,
+                LanguageMap.empty()
         );
         var serialized = objectMapper.writeValueAsString(formElementDescriptor);
         var deserialized = objectMapper.readerFor(FormFieldDescriptor.class).readValue(serialized);
@@ -57,8 +57,8 @@ public class FormFieldDescriptor_Serialization_IT {
                 new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
-                LanguageMap.empty(),
-                Collections.emptyMap()
+                true,
+                LanguageMap.empty()
         );
         var serialized = objectMapper.writeValueAsString(formElementDescriptor);
         System.out.println(serialized);
@@ -76,8 +76,8 @@ public class FormFieldDescriptor_Serialization_IT {
                 new TextControlDescriptor(LanguageMap.empty(), StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "", LanguageMap.empty()),
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
-                LanguageMap.empty(),
-                Collections.emptyMap()
+                true,
+                LanguageMap.empty()
         );
         var serialized = objectMapper.writeValueAsString(formElementDescriptor);
         System.out.println(serialized);
