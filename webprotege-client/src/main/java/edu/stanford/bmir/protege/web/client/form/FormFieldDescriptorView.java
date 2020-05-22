@@ -49,6 +49,10 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
     @Nonnull
     Repeatability getRepeatability();
 
+    void setReadOnly(boolean readOnly);
+
+    boolean isReadOnly();
+
     void setLabelChangedHandler(@Nonnull Consumer<LanguageMap> runnable);
 
     @Nonnull

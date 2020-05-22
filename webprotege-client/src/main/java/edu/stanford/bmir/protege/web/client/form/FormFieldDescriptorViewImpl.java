@@ -68,6 +68,8 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
 
     @UiField
     SimplePanel bindingViewContainer;
+    @UiField
+    CheckBox readOnlyCheckBox;
 
     @Inject
     public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
@@ -166,6 +168,16 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     @Override
     public void setLabelChangedHandler(@Nonnull Consumer<LanguageMap> runnable) {
         this.labelChangedHander = checkNotNull(runnable);
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.readOnlyCheckBox.setValue(readOnly);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return readOnlyCheckBox.getValue();
     }
 
     @Nonnull

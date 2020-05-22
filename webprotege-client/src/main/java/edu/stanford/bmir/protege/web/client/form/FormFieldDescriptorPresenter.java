@@ -97,7 +97,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                                                                  formFieldDescriptor.get(),
                                                                  view.getRepeatability(),
                                                                  view.getOptionality(),
-                                                                 true,
+                                                                 view.isReadOnly(),
                                                                  view.getHelp());
         return Optional.of(descriptor);
     }
@@ -122,6 +122,8 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
         view.setRepeatability(descriptor.getRepeatability());
 
         view.setOptionality(descriptor.getOptionality());
+
+        view.setReadOnly(descriptor.isReadOnly());
 
 
 

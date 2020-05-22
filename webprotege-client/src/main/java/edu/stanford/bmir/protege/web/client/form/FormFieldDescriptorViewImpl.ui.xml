@@ -41,6 +41,10 @@
                         <g:Label text="Binding" addStyleNames="{wp.style.formLabel}"/>
                         <g:SimplePanel ui:field="bindingViewContainer"/>
                     </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                        <g:Label text="Read-only" addStyleNames="{wp.style.formLabel}"/>
+                        <g:CheckBox ui:field="readOnlyCheckBox" text="Read-only"/>
+                    </g:HTMLPanel>
                     <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
