@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -18,12 +19,9 @@ import javax.inject.Inject;
  */
 public class FormTabBarViewImpl extends Composite implements FormTabBarView {
 
-    @Nonnull
     @Override
-    public AcceptsOneWidget addFormSelectorItem() {
-        SimplePanel simplePanel = new SimplePanel();
-        itemContainer.add(simplePanel);
-        return simplePanel;
+    public void addView(FormTabView tabView) {
+        itemContainer.add(tabView);
     }
 
     interface FormTabBarViewImplUiBinder extends UiBinder<HTMLPanel, FormTabBarViewImpl> {

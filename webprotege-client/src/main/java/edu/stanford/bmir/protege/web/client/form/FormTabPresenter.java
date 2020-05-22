@@ -70,7 +70,8 @@ public class FormTabPresenter {
         view.setClickHandler(clickHandler);
     }
 
-    public void start(AcceptsOneWidget itemContainer) {
-        itemContainer.setWidget(view);
+    @Nonnull
+    public FormTabView getView() {
+        return view;
     }
 }

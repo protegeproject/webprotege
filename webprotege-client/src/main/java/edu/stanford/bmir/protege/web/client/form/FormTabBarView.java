@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public interface FormTabBarView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget addFormSelectorItem();
+    void addView(FormTabView tabView);
 
     void clear();
 }

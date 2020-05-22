@@ -522,6 +522,8 @@
     flex-direction: row;
     padding-top: 2px;
     padding-bottom: 2px;
+    align-items: stretch;
+    flex-wrap: wrap;
 }
 
 .wp-form__form-tab-bar__tab {
@@ -534,6 +536,7 @@
 
 .wp-form__form-tab-bar > div {
     margin-right: 2px;
+    margin-bottom: 2px;
 }
 
 .wp-form__form-tab-bar__tab--selected {

@@ -59,13 +59,12 @@ public class FormTabBarPresenter {
     public void addForm(@Nonnull FormId formId,
                         @Nonnull LanguageMap label,
                         @Nonnull FormContainer formContainer) {
-        FormTabPresenter itemPresenter = tabPresenterFactory.create(formId);
-        itemPresenters.add(itemPresenter);
-        AcceptsOneWidget itemContainer = view.addFormSelectorItem();
-        itemPresenter.start(itemContainer);
-        itemPresenter.setLabel(label);
-        itemPresenter.setFormContainer(formContainer);
-        itemPresenter.setClickHandler(event -> selectFormAndStashId(formId));
+        FormTabPresenter tabPresenter = tabPresenterFactory.create(formId);
+        itemPresenters.add(tabPresenter);
+        view.addView(tabPresenter.getView());
+        tabPresenter.setLabel(label);
+        tabPresenter.setFormContainer(formContainer);
+        tabPresenter.setClickHandler(event -> selectFormAndStashId(formId));
     }
 
     public void selectFormAndStashId(@Nonnull FormId formId) {
