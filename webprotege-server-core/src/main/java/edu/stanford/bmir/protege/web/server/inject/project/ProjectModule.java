@@ -104,6 +104,12 @@ public class ProjectModule {
 
     @Provides
     @ProjectSingleton
+    public OWLEntityByTypeProvider provideOwlEntityByTypeProvider(OWLDataFactory dataFactory) {
+        return dataFactory;
+    }
+
+    @Provides
+    @ProjectSingleton
     public ProjectId provideProjectId() {
         return projectId;
     }

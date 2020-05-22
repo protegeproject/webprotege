@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import org.semanticweb.owlapi.model.*;
@@ -9,7 +7,6 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,10 +24,10 @@ public class EntityFormSubjectFactory {
     public static final String EMPTY_LANG_TAG = "";
 
     @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final OWLEntityByTypeProvider dataFactory;
 
     @Inject
-    public EntityFormSubjectFactory(@Nonnull OWLDataFactory dataFactory) {
+    public EntityFormSubjectFactory(@Nonnull OWLEntityByTypeProvider dataFactory) {
         this.dataFactory = checkNotNull(dataFactory);
     }
 
