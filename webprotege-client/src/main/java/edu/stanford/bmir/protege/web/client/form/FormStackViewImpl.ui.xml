@@ -40,7 +40,7 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:SimplePanel ui:field="selectorContainer" addStyleNames="{style.headerLabels} {wp.style.formSelector}"/>
+        <g:SimplePanel ui:field="selectorContainer" addStyleNames="{style.headerLabels} {wp.style.formTabBar}"/>
         <g:HTMLPanel addStyleNames="{style.viewport}">
             <g:FlowPanel ui:field="container" addStyleNames="{style.container}"/>
         </g:HTMLPanel>

@@ -517,14 +517,14 @@
     background-color: literal("var(--primary--color)");
 }
 
-.wp-form__form-selector {
+.wp-form__form-tab-bar {
     display: flex;
     flex-direction: row;
     padding-top: 2px;
     padding-bottom: 2px;
 }
 
-.wp-form__form-selector__item {
+.wp-form__form-tab-bar__tab {
     padding: 0.4em;
     font-weight: bold;
     cursor: pointer;
@@ -532,11 +532,11 @@
     background-color: literal("var(--tab--background-color)");
 }
 
-.wp-form__form-selector > div {
+.wp-form__form-tab-bar > div {
     margin-right: 2px;
 }
 
-.wp-form__form-selector__item--selected {
+.wp-form__form-tab-bar__tab--selected {
     color: literal("var(--selected-item--color)");
     background-color: literal("var(--selected-item--background-color)");
 }

@@ -22,7 +22,7 @@ import javax.inject.Inject;
 public class FormTabViewImpl extends Composite implements FormTabView {
 
     public static final String SELECTED_ITEM_STYLE = WebProtegeClientBundle.BUNDLE.style()
-                                                                                  .formSelectorItemSelected();
+                                                                                  .formTabBar__tab__selected();
 
     interface FormTabViewImplUiBinder extends UiBinder<HTMLPanel, FormTabViewImpl> {
 

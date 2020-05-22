@@ -437,14 +437,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form__control-stack__item--delete-hover")
         String formStackItemDeleteHover();
 
-        @ClassName("wp-form__form-selector")
-        String formSelector();
+        @ClassName("wp-form__form-tab-bar")
+        String formTabBar();
 
-        @ClassName("wp-form__form-selector__item")
-        String formSelectorItem();
+        @ClassName("wp-form__form-tab-bar__tab")
+        String formTabBar__tab();
 
-        @ClassName("wp-form__form-selector__item--selected")
-        String formSelectorItemSelected();
+        @ClassName("wp-form__form-tab-bar__tab--selected")
+        String formTabBar__tab__selected();
 
         @ClassName("wp-form__text-block")
         String formTextBlock();
