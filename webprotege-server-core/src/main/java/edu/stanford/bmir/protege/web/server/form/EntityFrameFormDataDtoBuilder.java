@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderByDirection.ASC;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -238,7 +239,10 @@ public class EntityFrameFormDataDtoBuilder {
                                   @Nonnull FormPageRequestIndex formPageRequestIndex,
                                   @Nonnull LangTagFilter langTagFilter,
                                   @Nonnull ImmutableList<GridControlOrdering> orderings) {
-        var orderingMap = orderings.stream().collect(Collectors.toMap(GridControlOrdering::getFieldId, o -> o));
+        var orderingMap = orderings.stream()
+                                   .collect(toMap(GridControlOrdering::getFieldId,
+                                                  ordering -> ordering,
+                                                  (left, right) -> left));
         var subjectData = getRendering(subject);
         var formSubject = getFormSubject(subjectData);
         var fieldData = formDescriptor.getFields()
