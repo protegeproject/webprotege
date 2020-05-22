@@ -77,11 +77,11 @@ public class FormFieldPresenter implements FormRegionPresenter {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        stackPresenter.setEnabled(enabled);
+        stackPresenter.setEnabled(enabled && !formFieldDescriptor.isReadOnly());
     }
 
     protected FormFieldView start() {
-        stackPresenter.setEnabled(enabled);
+        stackPresenter.setEnabled(enabled && !formFieldDescriptor.isReadOnly());
         view.setId(formFieldDescriptor.getId());
         view.setFormLabel(languageMapCurrentLocaleMapper.getValueForCurrentLocale(formFieldDescriptor.getLabel()));
         view.setRequired(formFieldDescriptor.getOptionality());
