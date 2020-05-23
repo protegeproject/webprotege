@@ -19,6 +19,8 @@ public enum DownloadFormat {
     RDF_TURLE(TurtleDocumentFormat::new, "text/turtle", DownloadFormatExtension.ttl),
 
     OWL_XML(OWLXMLDocumentFormat::new, "application/owl+xml", DownloadFormatExtension.owx),
+    
+    OBO(OBODocumentFormat::new, "application/octet-stream", DownloadFormatExtebonsion.obo),
 
     MANCHESTER(ManchesterSyntaxDocumentFormat::new, "text/owl-manchester", DownloadFormatExtension.omn),
 
