@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -26,7 +27,7 @@ public class GridColumnDescriptor_Serialization_Test {
     @Before
     public void setUp() {
         descriptor = GridColumnDescriptor.get(
-                GridColumnId.get("TheColumnId"),
+                GridColumnId.get(UUID.randomUUID().toString()),
                 Optionality.OPTIONAL,
                 Repeatability.NON_REPEATABLE,
                 null,

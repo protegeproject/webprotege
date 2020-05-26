@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -23,7 +24,7 @@ public class GridControlDescriptor_Serialization_TestCase {
         descriptor = GridControlDescriptor.get(
                 ImmutableList.of(
                         GridColumnDescriptor.get(
-                                GridColumnId.get("TheColumnId"),
+                                GridColumnId.get(UUID.randomUUID().toString()),
                                 Optionality.OPTIONAL,
                                 Repeatability.NON_REPEATABLE,
                                 null,
