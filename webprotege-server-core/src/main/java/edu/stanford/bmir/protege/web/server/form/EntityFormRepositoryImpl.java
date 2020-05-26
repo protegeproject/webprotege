@@ -9,12 +9,17 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -28,7 +33,10 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
+@ApplicationSingleton
 public class EntityFormRepositoryImpl implements EntityFormRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(EntityFormRepositoryImpl.class);
 
 
     private static final String COLLECTION_NAME = "Forms";
@@ -123,5 +131,21 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
         var compoundIndex = Indexes.compoundIndex(projectIdAsc, formDescriptor_formId_Asc);
         var indexOptions = new IndexOptions().unique(true);
         collection.createIndex(compoundIndex, indexOptions);
+        normalizeRepo();
+    }
+
+    private void normalizeRepo() {
+        logger.info("Normalizing forms");
+        var collection = getCollection();
+        var docs = collection.find();
+        List<FormDescriptorRecord> records = new ArrayList<>();
+        for (Document formRecord : docs) {
+            var record = objectMapper.convertValue(formRecord, FormDescriptorRecord.class);
+            records.add(record);
+        }
+        records.forEach(r -> {
+            saveFormDescriptor(r.getProjectId(), r.getFormDescriptor());
+        });
+        logger.info("Normalized {} forms", records.size());
     }
 }

@@ -362,6 +362,7 @@ public class ApplicationModule {
     }
 
     @Provides
+    @ApplicationSingleton
     EntityFormRepository provideEntityFormRepository(EntityFormRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
@@ -375,6 +376,7 @@ public class ApplicationModule {
     }
 
     @Provides
+    @ApplicationSingleton
     EntityFormSelectorRepository provideFormSelectorRepository(EntityFormSelectorRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;

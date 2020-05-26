@@ -26,7 +26,7 @@ public class GridColumnDescriptor_Serialization_Test {
     @Before
     public void setUp() {
         descriptor = GridColumnDescriptor.get(
-                GridColumnId.get("TheColumnId"),
+                GridColumnId.get("12345678-1234-1234-1234-123456789abc"),
                 Optionality.OPTIONAL,
                 Repeatability.NON_REPEATABLE,
                 null,

@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 /**
  * Matthew Horridge
@@ -16,10 +19,31 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class GridColumnId implements FormRegionId {
 
-    @JsonCreator
     @Nonnull
     public static GridColumnId get(@Nonnull String id) {
+        checkFormat(id);
         return new AutoValue_GridColumnId(id);
+    }
+
+
+    // Temporary normalization
+    @JsonCreator
+    @GwtIncompatible
+    public static GridColumnId normalized(@Nonnull String id) {
+        if(!UUIDUtil.isWellFormed(id)) {
+            return get(UUID.randomUUID().toString());
+        }
+        else {
+            return get(id);
+        }
+    }
+
+
+
+    private static void checkFormat(String id) {
+        if(!UUIDUtil.isWellFormed(id)) {
+            throw new RuntimeException("GridColumnId is malformed: " + id);
+        }
     }
 
     @Override

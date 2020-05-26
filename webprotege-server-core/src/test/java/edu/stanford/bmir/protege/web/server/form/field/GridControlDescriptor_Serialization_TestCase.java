@@ -23,7 +23,7 @@ public class GridControlDescriptor_Serialization_TestCase {
         descriptor = GridControlDescriptor.get(
                 ImmutableList.of(
                         GridColumnDescriptor.get(
-                                GridColumnId.get("TheColumnId"),
+                                GridColumnId.get("12345678-1233-1234-1234-123456789abc"),
                                 Optionality.OPTIONAL,
                                 Repeatability.NON_REPEATABLE,
                                 null,

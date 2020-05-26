@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.form;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -15,6 +17,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
+@ApplicationSingleton
 public interface EntityFormRepository extends Repository {
 
     void deleteFormDescriptor(@Nonnull ProjectId projectId,
