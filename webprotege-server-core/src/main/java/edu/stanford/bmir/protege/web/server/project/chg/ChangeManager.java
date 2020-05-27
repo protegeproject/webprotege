@@ -269,10 +269,12 @@ public class ChangeManager implements HasApplyChanges {
                                       langTag = Optional.of(freshEntityIri.getLangTag());
                                   }
                                   var entityType = entityInSignature.getEntityType();
+                                  var discriminator = freshEntityIri.getDiscriminator();
                                   var parents = freshEntityIri.getParentEntities(dataFactory, entityType);
                                   var creator = getEntityCreator(changeSession,
                                                                  crudContext,
                                                                  shortName,
+                                                                 discriminator,
                                                                  langTag,
                                                                  parents,
                                                                  entityType);
@@ -414,12 +416,15 @@ public class ChangeManager implements HasApplyChanges {
     private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session,
                                                                        EntityCrudContext context,
                                                                        String shortName,
+                                                                       String discriminator,
                                                                        Optional<String> langTag,
                                                                        ImmutableList<OWLEntity> parents,
                                                                        EntityType<E> entityType) {
-        Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
-        if(entity.isPresent()) {
-            return new OWLEntityCreator<>(entity.get(), Collections.emptyList());
+        if (discriminator.isEmpty() && !shortName.isEmpty()) {
+            Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
+            if(entity.isPresent()) {
+                return new OWLEntityCreator<>(entity.get(), Collections.emptyList());
+            }
         }
         OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
         EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler = getEntityCrudKitHandler();
