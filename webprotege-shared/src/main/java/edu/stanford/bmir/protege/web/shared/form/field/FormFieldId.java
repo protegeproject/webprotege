@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
 
@@ -19,7 +20,14 @@ public abstract class FormFieldId implements FormRegionId {
     @JsonCreator
     @Nonnull
     public static FormFieldId get(@Nonnull String id) {
+        checkFormat(id);
         return new AutoValue_FormFieldId(id);
+    }
+
+    private static void checkFormat(@Nonnull String id) {
+        if(!UUIDUtil.isWellFormed(id)) {
+            throw new IllegalArgumentException("Malformed FormFieldId: " + id);
+        }
     }
 
     @Override
