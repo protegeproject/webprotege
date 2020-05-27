@@ -92,10 +92,10 @@ public abstract class LanguageMap {
 
     @Nonnull
     public static LanguageMap fromDictionaryMap(@Nonnull Map<DictionaryLanguage, String> dictionaryMap) {
-        ImmutableMap.Builder<String, String> langMap = ImmutableMap.builder();
+        Map<String, String> langMap = new HashMap<>();
         dictionaryMap.forEach((dict, value) -> {
             langMap.put(dict.getLang(), value);
         });
-        return LanguageMap.get(langMap.build());
+        return LanguageMap.get(ImmutableMap.copyOf(langMap));
     }
 }
