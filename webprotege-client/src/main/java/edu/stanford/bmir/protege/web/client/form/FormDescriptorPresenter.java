@@ -28,14 +28,14 @@ public class FormDescriptorPresenter implements Presenter {
     private final FormDescriptorView view;
 
     @Nonnull
-    private final ObjectListPresenter<FormFieldDescriptor> elementDescriptorListPresenter;
+    private final FormFieldDescriptorObjectListPresenter elementDescriptorListPresenter;
 
     @Nullable
     private FormId formId;
 
     @Inject
     public FormDescriptorPresenter(@Nonnull FormDescriptorView view,
-                                   @Nonnull ObjectListPresenter<FormFieldDescriptor> elementDescriptorListPresenter) {
+                                   @Nonnull FormFieldDescriptorObjectListPresenter elementDescriptorListPresenter) {
         this.view = checkNotNull(view);
         this.elementDescriptorListPresenter = checkNotNull(elementDescriptorListPresenter);
     }

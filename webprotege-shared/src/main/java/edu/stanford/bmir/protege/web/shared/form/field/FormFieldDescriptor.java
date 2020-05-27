@@ -61,24 +61,6 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                                  help == null ? LanguageMap.empty() : help);
     }
 
-    public static FormFieldDescriptor getDefault() {
-        return FormFieldDescriptor.get(
-                FormFieldId.get(""),
-                null,
-                LanguageMap.empty(),
-                FieldRun.START,
-                new TextControlDescriptor(LanguageMap.empty(),
-                                          StringType.SIMPLE_STRING,
-                                          LineMode.SINGLE_LINE,
-                                          "",
-                                          LanguageMap.empty()),
-                Repeatability.NON_REPEATABLE,
-                Optionality.REQUIRED,
-                false,
-                LanguageMap.empty()
-        );
-    }
-
     @Nonnull
     @Override
     @JsonProperty("id")

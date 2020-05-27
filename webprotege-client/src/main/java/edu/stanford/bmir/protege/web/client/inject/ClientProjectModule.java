@@ -58,9 +58,9 @@ import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
 import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
@@ -72,6 +72,7 @@ import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.*;
+import static edu.stanford.bmir.protege.web.client.uuid.UuidV4.uuidv4;
 
 /**
  * Matthew Horridge
@@ -593,12 +594,6 @@ public class ClientProjectModule {
         return impl;
     }
 
-    @Provides
-    ObjectListPresenter<FormFieldDescriptor> provideFormElementDescriptorListPresenter(@Nonnull ObjectListView view,
-                                                                                       @Nonnull Provider<ObjectPresenter<FormFieldDescriptor>> objectPresenterProvider,
-                                                                                       @Nonnull Provider<ObjectListViewHolder> objectViewHolderProvider) {
-        return new ObjectListPresenter<>(view, objectPresenterProvider, objectViewHolderProvider, FormFieldDescriptor::getDefault);
-    }
 
     @Provides
     ObjectPresenter<FormFieldDescriptor> providesFormElementDescriptorPresenter(FormFieldDescriptorPresenter presenter) {
