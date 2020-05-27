@@ -25,13 +25,13 @@ public class GridControlDescriptorPresenter implements FormControlDescriptorPres
     private final FormSubjectFactoryDescriptorPresenter formSubjectFactoryDescriptorPresenter;
 
     @Nonnull
-    private final ObjectListPresenter<GridColumnDescriptor> columnListPresenter;
+    private final GridColumnDescriptorObjectListPresenter columnListPresenter;
 
 
     @Inject
     public GridControlDescriptorPresenter(@Nonnull GridControlDescriptorView view,
                                           @Nonnull FormSubjectFactoryDescriptorPresenter formSubjectFactoryDescriptorPresenter,
-                                          @Nonnull ObjectListPresenter<GridColumnDescriptor> columnListPresenter) {
+                                          @Nonnull GridColumnDescriptorObjectListPresenter columnListPresenter) {
         this.view = view;
         this.formSubjectFactoryDescriptorPresenter = formSubjectFactoryDescriptorPresenter;
         this.columnListPresenter = columnListPresenter;

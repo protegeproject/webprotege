@@ -35,17 +35,6 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
                                                   owlBinding, columnLabel, formControlDescriptor);
     }
 
-    public static GridColumnDescriptor getDefaultColumnDescriptor() {
-        return GridColumnDescriptor.get(
-                GridColumnId.get(""),
-                Optionality.REQUIRED,
-                Repeatability.NON_REPEATABLE,
-                null,
-                LanguageMap.empty(),
-                TextControlDescriptor.getDefault()
-        );
-    }
-
     @Nonnull
     public abstract GridColumnId getId();
 

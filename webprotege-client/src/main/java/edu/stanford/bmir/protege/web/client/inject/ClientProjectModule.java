@@ -626,16 +626,6 @@ public class ClientProjectModule {
     }
 
     @Provides
-    ObjectListPresenter<GridColumnDescriptor> provideGridColumnDescriptorListPresenter(ObjectListView view,
-                                                                                       Provider<ObjectPresenter<GridColumnDescriptor>> gridColumnDescriptorPresenterProvider,
-                                                                                       Provider<ObjectListViewHolder> objectViewHolderProvider) {
-        return new ObjectListPresenter<>(view,
-                                         gridColumnDescriptorPresenterProvider,
-                                         objectViewHolderProvider,
-                                         GridColumnDescriptor::getDefaultColumnDescriptor);
-    }
-
-    @Provides
     ObjectPresenter<GridColumnDescriptor> provideGridColumnDescriptor(GridColumnDescriptorPresenter presenter) {
         return presenter;
     }
