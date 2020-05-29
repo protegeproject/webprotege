@@ -71,6 +71,9 @@ public abstract class GridCellDataDto {
             if(formControlData instanceof TextControlDataDto && otherControlData instanceof TextControlDataDto) {
                 return ((TextControlDataDto) formControlData).compareTo((TextControlDataDto) otherControlData);
             }
+            if(formControlData instanceof NumberControlDataDto && otherControlData instanceof NumberControlDataDto) {
+                return ((NumberControlDataDto) formControlData).compareTo((NumberControlDataDto) otherControlData);
+            }
             if(formControlData instanceof EntityNameControlDataDto && otherControlData instanceof EntityNameControlDataDto) {
                 Optional<OWLEntityData> value = ((EntityNameControlDataDto) formControlData).getEntity();
                 Optional<OWLEntityData> otherValue = ((EntityNameControlDataDto) otherControlData).getEntity();
@@ -85,6 +88,9 @@ public abstract class GridCellDataDto {
                 ImmutableList<PrimitiveFormControlDataDto> value = ((MultiChoiceControlDataDto) formControlData).getValues();
                 ImmutableList<PrimitiveFormControlDataDto> otherValue = ((MultiChoiceControlDataDto) otherControlData).getValues();
                 return LEXICOGRAPHICAL_PRIMITIVE_FORM_CONTROL_DATA_COMPARATOR.compare(value, otherValue);
+            }
+            if(formControlData instanceof GridControlDataDto && otherControlData instanceof GridControlDataDto) {
+                return ((GridControlDataDto) formControlData).compareTo((GridControlDataDto) otherControlData);
             }
         }
 
