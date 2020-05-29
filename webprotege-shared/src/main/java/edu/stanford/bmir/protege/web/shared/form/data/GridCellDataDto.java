@@ -69,9 +69,7 @@ public abstract class GridCellDataDto {
             FormControlDataDto formControlData = values.get(i);
             FormControlDataDto otherControlData = otherValues.get(i);
             if(formControlData instanceof TextControlDataDto && otherControlData instanceof TextControlDataDto) {
-                Optional<OWLLiteral> value = ((TextControlDataDto) formControlData).getValue();
-                Optional<OWLLiteral> otherValue = ((TextControlDataDto) otherControlData).getValue();
-                return OPTIONAL_LITERAL_COMPARATOR.compare(value, otherValue);
+                return ((TextControlDataDto) formControlData).compareTo((TextControlDataDto) otherControlData);
             }
             if(formControlData instanceof EntityNameControlDataDto && otherControlData instanceof EntityNameControlDataDto) {
                 Optional<OWLEntityData> value = ((EntityNameControlDataDto) formControlData).getEntity();
