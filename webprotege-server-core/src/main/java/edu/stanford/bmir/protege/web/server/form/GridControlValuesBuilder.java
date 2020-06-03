@@ -173,9 +173,10 @@ public class GridControlValuesBuilder {
     }
 
     private boolean isIncluded(FormControlDataDto firstValue, LangTagFilter langTagFilter) {
-        if(firstValue instanceof LiteralFormControlDataDto) {
-            var lang = ((LiteralFormControlDataDto) firstValue).getLiteral().getLang();
-            return langTagFilter.isIncluded(lang);
+        if(firstValue instanceof TextControlDataDto) {
+            return  ((TextControlDataDto) firstValue).getValue()
+                                                     .map(v -> langTagFilter.isIncluded(v.getLang()))
+                                                     .orElse(false);
         }
         else {
             return true;

@@ -41,14 +41,8 @@ public class TextControlValuesBuilder {
         return values.stream()
                      .filter(p -> p instanceof OWLLiteral)
                      .map(p -> (OWLLiteral) p)
-                     .filter(literal ->  isIncluded(literal, langTagFilter))
                      .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
                      .sorted(textControlDataDtoComparator)
                      .collect(ImmutableList.toImmutableList());
-    }
-
-    private boolean isIncluded(@Nonnull OWLLiteral literal,
-                               @Nonnull LangTagFilter langTagFilter) {
-        return langTagFilter.isIncluded(literal.getLang());
     }
 }
