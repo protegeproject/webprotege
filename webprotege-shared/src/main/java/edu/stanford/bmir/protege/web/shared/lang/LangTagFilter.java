@@ -36,4 +36,11 @@ public abstract class LangTagFilter {
         return filteringTags.isEmpty() || filteringTags.contains(langTag);
     }
 
+    public boolean isIncluded(@Nonnull String langTag) {
+        if(getFilteringTags().isEmpty()) {
+            return true;
+        }
+        LangTag tag = LangTag.get(langTag);
+        return isIncluded(tag);
+    }
 }

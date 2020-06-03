@@ -60,9 +60,6 @@ public class EntityFrameFormDataDtoBuilder {
     private final EntityNameControlDataDtoComparator entityNameControlDataDtoComparator;
 
     @Nonnull
-    private final TextControlDataDtoComparator textControlDataDtoComparator;
-
-    @Nonnull
     private final NumberControlDataDtoComparator numberControlDataDtoComparator;
 
     @Nonnull
@@ -70,6 +67,9 @@ public class EntityFrameFormDataDtoBuilder {
 
     @Nonnull
     private final GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory;
+
+    @Nonnull
+    private final TextControlValuesBuilder textControlValuesBuilder;
 
     @AutoFactory
     @Inject
@@ -79,20 +79,19 @@ public class EntityFrameFormDataDtoBuilder {
                                          @Provided @Nonnull PrimitiveFormControlDataDtoRenderer primitiveDataRenderer,
                                          @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
                                          @Provided @Nonnull EntityNameControlDataDtoComparator entityNameControlDataDtoComparator,
-                                         @Provided @Nonnull TextControlDataDtoComparator textControlDataDtoComparator,
                                          @Provided @Nonnull NumberControlDataDtoComparator numberControlDataDtoComparator,
                                          @Provided @Nonnull ImageControlDataDtoComparator imageControlDataDtoComparator,
-                                         @Provided @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory) {
+                                         @Provided @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory, @Nonnull TextControlValuesBuilder textControlValuesBuilder) {
         this.bindingValuesExtractor = bindingValuesExtractor;
         this.sessionRenderer = sessionRenderer;
         this.choiceDescriptorDtoSupplier = choiceDescriptorDtoSupplier;
         this.primitiveDataRenderer = primitiveDataRenderer;
         this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
         this.entityNameControlDataDtoComparator = entityNameControlDataDtoComparator;
-        this.textControlDataDtoComparator = textControlDataDtoComparator;
         this.numberControlDataDtoComparator = numberControlDataDtoComparator;
         this.imageControlDataDtoComparator = imageControlDataDtoComparator;
         this.gridRowDataDtoComparatorFactory = gridRowDataDtoComparatorFactory;
+        this.textControlValuesBuilder = textControlValuesBuilder;
     }
 
     private FormSubjectDto getFormSubject(OWLPrimitiveData root) {
@@ -140,7 +139,10 @@ public class EntityFrameFormDataDtoBuilder {
         return formControlDescriptor.accept(new FormControlDescriptorVisitor<>() {
             @Override
             public ImmutableList<FormControlDataDto> visit(TextControlDescriptor textControlDescriptor) {
-                return getTextControlDataDtoValues(textControlDescriptor, subject, theBinding, langTagFilter);
+                return textControlValuesBuilder.getTextControlDataDtoValues(textControlDescriptor,
+                                                                            subject,
+                                                                            theBinding,
+                                                                            langTagFilter);
             }
 
             @Override
@@ -304,14 +306,10 @@ public class EntityFrameFormDataDtoBuilder {
                                                                           @Nonnull OWLEntityData subject,
                                                                           @Nonnull OwlBinding theBinding,
                                                                           @Nonnull LangTagFilter langTagFilter) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
-        return values.stream()
-                     .filter(p -> p instanceof OWLLiteral)
-                     .map(p -> (OWLLiteral) p)
-                     .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
-                     .filter(dto -> isIncluded(dto, langTagFilter))
-                     .sorted(textControlDataDtoComparator)
-                     .collect(toImmutableList());
+        return textControlValuesBuilder.getTextControlDataDtoValues(textControlDescriptor,
+                                                                    subject,
+                                                                    theBinding,
+                                                                    langTagFilter);
     }
 
     private ImmutableList<ChoiceDescriptorDto> toChoices(@Nonnull ChoiceListSourceDescriptor sourceDescriptor) {
