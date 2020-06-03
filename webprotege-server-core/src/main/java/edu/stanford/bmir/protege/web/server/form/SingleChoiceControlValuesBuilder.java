@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlDataDto;
@@ -17,6 +15,7 @@ import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@FormDataBuilderSession
 public class SingleChoiceControlValuesBuilder {
 
     @Nonnull
@@ -26,16 +25,14 @@ public class SingleChoiceControlValuesBuilder {
     private final PrimitiveFormControlDataDtoRenderer renderer;
 
     @Nonnull
-    private final FrameComponentSessionRenderer sessionRenderer;
-
-    @Nonnull
     private final ChoiceDescriptorCache choiceDescriptorCache;
 
     @Inject
-    public SingleChoiceControlValuesBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor, @Nonnull PrimitiveFormControlDataDtoRenderer renderer, @Nonnull FrameComponentSessionRenderer sessionRenderer, @Nonnull ChoiceDescriptorCache choiceDescriptorCache) {
+    public SingleChoiceControlValuesBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
+                                            @Nonnull PrimitiveFormControlDataDtoRenderer renderer,
+                                            @Nonnull ChoiceDescriptorCache choiceDescriptorCache) {
         this.bindingValuesExtractor = checkNotNull(bindingValuesExtractor);
         this.renderer = checkNotNull(renderer);
-        this.sessionRenderer = checkNotNull(sessionRenderer);
         this.choiceDescriptorCache = checkNotNull(choiceDescriptorCache);
     }
 
@@ -47,7 +44,7 @@ public class SingleChoiceControlValuesBuilder {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         var choiceSource = singleChoiceControlDescriptor.getSource();
         var vals = values.stream()
-                         .flatMap(v -> renderer.toFormControlDataDto(v, sessionRenderer))
+                         .flatMap(renderer::toFormControlDataDto)
                          .filter(data -> isIncluded(data, langTagFilter))
                          .map(value -> SingleChoiceControlDataDto.get(
                                  singleChoiceControlDescriptor,

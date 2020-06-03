@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UuidEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
+import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataComponent;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
@@ -703,6 +704,5 @@ public class ProjectModule {
     ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
         return impl;
     }
-
 }
 

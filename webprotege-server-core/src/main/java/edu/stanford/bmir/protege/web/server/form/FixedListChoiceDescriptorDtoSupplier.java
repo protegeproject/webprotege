@@ -26,26 +26,23 @@ public class FixedListChoiceDescriptorDtoSupplier {
     }
 
     @Nonnull
-    public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull FixedChoiceListSourceDescriptor descriptor,
-                                                         @Nonnull FrameComponentSessionRenderer sessionRenderer) {
+    public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull FixedChoiceListSourceDescriptor descriptor) {
         return descriptor.getChoices()
                   .stream()
                   .flatMap(choiceDescriptor -> descriptor.getChoices().stream())
-                  .flatMap(choiceDescriptor -> toChoiceDescriptorDto(choiceDescriptor, sessionRenderer))
+                  .flatMap(this::toChoiceDescriptorDto)
                   .collect(toImmutableList());
     }
 
     @Nonnull
-    private Stream<ChoiceDescriptorDto> toChoiceDescriptorDto(ChoiceDescriptor choiceDescriptor,
-                                                              @Nonnull FrameComponentSessionRenderer sessionRenderer) {
-        return toPrimitiveFormControlDataDto(choiceDescriptor.getValue(), sessionRenderer)
+    private Stream<ChoiceDescriptorDto> toChoiceDescriptorDto(ChoiceDescriptor choiceDescriptor) {
+        return toPrimitiveFormControlDataDto(choiceDescriptor.getValue())
                 .map(dto -> ChoiceDescriptorDto.get(dto, choiceDescriptor.getLabel()));
     }
 
     @Nonnull
-    private Stream<PrimitiveFormControlDataDto> toPrimitiveFormControlDataDto(@Nonnull PrimitiveFormControlData data,
-                                                                      @Nonnull FrameComponentSessionRenderer sessionRenderer) {
+    private Stream<PrimitiveFormControlDataDto> toPrimitiveFormControlDataDto(@Nonnull PrimitiveFormControlData data) {
         var primitive = data.getPrimitive();
-        return renderer.toFormControlDataDto(primitive, sessionRenderer);
+        return renderer.toFormControlDataDto(primitive);
     }
 }

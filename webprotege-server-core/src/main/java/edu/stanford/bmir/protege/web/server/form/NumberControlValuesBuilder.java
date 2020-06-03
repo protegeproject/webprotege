@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@FormDataBuilderSession
 public class NumberControlValuesBuilder {
 
     @Nonnull

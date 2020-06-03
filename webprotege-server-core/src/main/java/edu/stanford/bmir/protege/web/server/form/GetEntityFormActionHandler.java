@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRendererFactory;
+import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
@@ -30,21 +31,18 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
     private final EntityFormManager formManager;
 
     @Nonnull
-    private final FrameComponentSessionRendererFactory sessionRendererFactory;
-
-    @Nonnull
-    private final EntityFrameFormDataDtoBuilderFactory formDataDtoBuilderFactory;
+    private final ProjectComponent projectComponent;
 
     @Inject
     public GetEntityFormActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull ProjectId projectId,
                                       @Nonnull EntityFormManager formManager,
-                                      @Nonnull FrameComponentSessionRendererFactory sessionRendererFactory, @Nonnull EntityFrameFormDataDtoBuilderFactory formDataDtoBuilderFactory) {
+                                      @Nonnull FrameComponentSessionRendererFactory sessionRendererFactory,
+                                      @Nonnull ProjectComponent projectComponent) {
         super(accessManager);
         this.projectId = projectId;
         this.formManager = formManager;
-        this.sessionRendererFactory = sessionRendererFactory;
-        this.formDataDtoBuilderFactory = formDataDtoBuilderFactory;
+        this.projectComponent = projectComponent;
     }
 
     @Nonnull
@@ -55,7 +53,7 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         var pageRequestIndex = FormPageRequestIndex.create(pageRequests);
         var entity = action.getEntity();
         var langTagFilter = action.getLangTagFilter();
-        var formDataDtoBuilder = formDataDtoBuilderFactory.create(sessionRendererFactory.create());
+        var formDataDtoBuilder = projectComponent.getFormDataComponent().createFormDataBuilder();
         var ordering = action.getGridControlOrdering();
         var forms = formManager.getFormDescriptors(entity, projectId)
                           .stream()

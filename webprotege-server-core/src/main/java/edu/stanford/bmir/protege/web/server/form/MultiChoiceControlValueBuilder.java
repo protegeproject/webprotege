@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@FormDataBuilderSession
 public class MultiChoiceControlValueBuilder {
 
     @Nonnull
@@ -22,26 +23,24 @@ public class MultiChoiceControlValueBuilder {
     private final PrimitiveFormControlDataDtoRenderer renderer;
 
     @Nonnull
-    private final FrameComponentSessionRenderer sessionRenderer;
-
-    @Nonnull
     private final ChoiceDescriptorCache choiceDescriptorCache;
 
     @Inject
-    public MultiChoiceControlValueBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor, @Nonnull PrimitiveFormControlDataDtoRenderer renderer, @Nonnull FrameComponentSessionRenderer sessionRenderer, @Nonnull ChoiceDescriptorCache choiceDescriptorCache) {
+    public MultiChoiceControlValueBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
+                                          @Nonnull PrimitiveFormControlDataDtoRenderer renderer,
+                                          @Nonnull ChoiceDescriptorCache choiceDescriptorCache) {
         this.bindingValuesExtractor = checkNotNull(bindingValuesExtractor);
         this.renderer = checkNotNull(renderer);
-        this.sessionRenderer = checkNotNull(sessionRenderer);
         this.choiceDescriptorCache = checkNotNull(choiceDescriptorCache);
     }
 
-    @Inject
+    @Nonnull
     public ImmutableList<FormControlDataDto> getMultiChoiceControlDataDtoValues(@Nonnull MultiChoiceControlDescriptor multiChoiceControlDescriptor,
                                                                          @Nonnull OWLEntityData subject,
                                                                          @Nonnull OwlBinding theBinding) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         var vals = values.stream()
-                         .flatMap(v -> renderer.toFormControlDataDto(v, sessionRenderer))
+                         .flatMap(renderer::toFormControlDataDto)
                          .collect(ImmutableList.toImmutableList());
         return ImmutableList.of(MultiChoiceControlDataDto.get(multiChoiceControlDescriptor,
                                                               choiceDescriptorCache.getChoices(

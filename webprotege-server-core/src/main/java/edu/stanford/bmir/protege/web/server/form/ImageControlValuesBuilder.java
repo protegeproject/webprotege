@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
+@FormDataBuilderSession
 public class ImageControlValuesBuilder {
 
     @Nonnull

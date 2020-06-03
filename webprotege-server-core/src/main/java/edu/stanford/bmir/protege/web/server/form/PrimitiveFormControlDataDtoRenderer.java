@@ -21,19 +21,23 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@FormDataBuilderSession
 public class PrimitiveFormControlDataDtoRenderer {
 
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
+    @Nonnull
+    private final FormDataBuilderSessionRenderer sessionRenderer;
+
     @Inject
-    public PrimitiveFormControlDataDtoRenderer(@Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
+    public PrimitiveFormControlDataDtoRenderer(@Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex, @Nonnull FormDataBuilderSessionRenderer sessionRenderer) {
         this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
+        this.sessionRenderer = checkNotNull(sessionRenderer);
     }
 
     @Nonnull
-    public Stream<PrimitiveFormControlDataDto> toFormControlDataDto(@Nonnull OWLPrimitive primitive,
-                                                                    @Nonnull FrameComponentSessionRenderer sessionRenderer) {
+    public Stream<PrimitiveFormControlDataDto> toFormControlDataDto(@Nonnull OWLPrimitive primitive) {
         if(primitive instanceof IRI) {
             var matchingEntities = entitiesInProjectSignatureByIriIndex.getEntitiesInSignature((IRI) primitive).collect(Collectors.toList());
             if(matchingEntities.isEmpty()) {

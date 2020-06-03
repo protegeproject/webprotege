@@ -6,11 +6,13 @@ import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceListSourceDescriptor;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@FormDataBuilderSession
 public class ChoiceDescriptorCache {
 
 
@@ -20,20 +22,16 @@ public class ChoiceDescriptorCache {
     @Nonnull
     private final ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier;
 
-    @Nonnull
-    private final FrameComponentSessionRenderer sessionRenderer;
-
-    public ChoiceDescriptorCache(@Nonnull ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier,
-                                 @Nonnull FrameComponentSessionRenderer sessionRenderer) {
+    @Inject
+    public ChoiceDescriptorCache(@Nonnull ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier) {
         this.choiceDescriptorDtoSupplier = checkNotNull(choiceDescriptorDtoSupplier);
-        this.sessionRenderer = checkNotNull(sessionRenderer);
     }
 
     @Nonnull
     public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull ChoiceListSourceDescriptor sourceDescriptor) {
         var cachedChoices = descriptorCache.get(sourceDescriptor);
         if (cachedChoices == null) {
-            cachedChoices = choiceDescriptorDtoSupplier.getChoices(sourceDescriptor, sessionRenderer);
+            cachedChoices = choiceDescriptorDtoSupplier.getChoices(sourceDescriptor);
             descriptorCache.put(sourceDescriptor, cachedChoices);
         }
         return cachedChoices;

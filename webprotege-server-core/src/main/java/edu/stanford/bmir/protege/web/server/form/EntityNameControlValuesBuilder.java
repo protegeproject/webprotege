@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.stream.Stream;
 
+@FormDataBuilderSession
 public class EntityNameControlValuesBuilder {
 
     @Nonnull
@@ -26,7 +27,7 @@ public class EntityNameControlValuesBuilder {
     private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
 
     @Nonnull
-    private final FrameComponentSessionRenderer renderer;
+    private final FormDataBuilderSessionRenderer renderer;
 
     @Nonnull
     private final EntityNameControlDataDtoComparator comparator;
@@ -34,7 +35,7 @@ public class EntityNameControlValuesBuilder {
     @Inject
     public EntityNameControlValuesBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
                                           @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
-                                          @Nonnull FrameComponentSessionRenderer renderer,
+                                          @Nonnull FormDataBuilderSessionRenderer renderer,
                                           @Nonnull EntityNameControlDataDtoComparator comparator) {
         this.bindingValuesExtractor = bindingValuesExtractor;
         this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
