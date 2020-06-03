@@ -7,12 +7,14 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -82,6 +84,24 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
         return getColumns()
                 .stream()
                 .flatMap(GridColumnDescriptor::getLeafColumnDescriptors);
+    }
+
+    /**
+     * Returns a map of leaf column Ids to top level columns in this grid.  If a column does not
+     * have nested columns then the column will map to itself.
+     */
+    @JsonIgnore
+    public ImmutableMap<GridColumnId, GridColumnId> getLeafColumnToTopLevelColumnMap() {
+        ImmutableMap.Builder<GridColumnId, GridColumnId> builder = ImmutableMap.builder();
+        getColumns()
+                .forEach(topLevelColumn -> {
+                    topLevelColumn.getLeafColumnDescriptors()
+                                  .map(GridColumnDescriptor::getId)
+                                  .forEach(leafColumnId -> {
+                                      builder.put(leafColumnId, topLevelColumn.getId());
+                                  });
+                });
+        return builder.build();
     }
 
 }

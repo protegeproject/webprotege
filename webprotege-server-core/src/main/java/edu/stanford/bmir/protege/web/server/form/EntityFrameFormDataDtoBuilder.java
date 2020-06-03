@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -57,18 +56,43 @@ public class EntityFrameFormDataDtoBuilder {
     @Nonnull
     private final Map<ChoiceListSourceDescriptor, ImmutableList<ChoiceDescriptorDto>> descriptorCache = new HashMap<>();
 
+    @Nonnull
+    private final EntityNameControlDataDtoComparator entityNameControlDataDtoComparator;
+
+    @Nonnull
+    private final TextControlDataDtoComparator textControlDataDtoComparator;
+
+    @Nonnull
+    private final NumberControlDataDtoComparator numberControlDataDtoComparator;
+
+    @Nonnull
+    private final ImageControlDataDtoComparator imageControlDataDtoComparator;
+
+    @Nonnull
+    private final GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory;
+
     @AutoFactory
     @Inject
     public EntityFrameFormDataDtoBuilder(@Provided @Nonnull BindingValuesExtractor bindingValuesExtractor,
                                          @Nonnull FrameComponentSessionRenderer sessionRenderer,
                                          @Provided @Nonnull ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier,
                                          @Provided @Nonnull PrimitiveFormControlDataDtoRenderer primitiveDataRenderer,
-                                         @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
+                                         @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
+                                         @Provided @Nonnull EntityNameControlDataDtoComparator entityNameControlDataDtoComparator,
+                                         @Provided @Nonnull TextControlDataDtoComparator textControlDataDtoComparator,
+                                         @Provided @Nonnull NumberControlDataDtoComparator numberControlDataDtoComparator,
+                                         @Provided @Nonnull ImageControlDataDtoComparator imageControlDataDtoComparator,
+                                         @Provided @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory) {
         this.bindingValuesExtractor = bindingValuesExtractor;
         this.sessionRenderer = sessionRenderer;
         this.choiceDescriptorDtoSupplier = choiceDescriptorDtoSupplier;
         this.primitiveDataRenderer = primitiveDataRenderer;
         this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
+        this.entityNameControlDataDtoComparator = entityNameControlDataDtoComparator;
+        this.textControlDataDtoComparator = textControlDataDtoComparator;
+        this.numberControlDataDtoComparator = numberControlDataDtoComparator;
+        this.imageControlDataDtoComparator = imageControlDataDtoComparator;
+        this.gridRowDataDtoComparatorFactory = gridRowDataDtoComparatorFactory;
     }
 
     private FormSubjectDto getFormSubject(OWLPrimitiveData root) {
@@ -122,6 +146,7 @@ public class EntityFrameFormDataDtoBuilder {
                              .filter(p -> p instanceof OWLLiteral)
                              .map(p -> (OWLLiteral) p)
                              .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
+                             .sorted(textControlDataDtoComparator)
                              .collect(toImmutableList());
             }
 
@@ -131,6 +156,7 @@ public class EntityFrameFormDataDtoBuilder {
                              .filter(p -> p instanceof OWLLiteral)
                              .map(p -> (OWLLiteral) p)
                              .map(value -> NumberControlDataDto.get(numberControlDescriptor, value))
+                             .sorted(numberControlDataDtoComparator)
                              .collect(toImmutableList());
             }
 
@@ -184,6 +210,7 @@ public class EntityFrameFormDataDtoBuilder {
                              })
                              .map(entity -> getRendering(entity))
                              .map(entity -> EntityNameControlDataDto.get(entityNameControlDescriptor, entity))
+                             .sorted(entityNameControlDataDtoComparator)
                              .collect(toImmutableList());
             }
 
@@ -193,6 +220,7 @@ public class EntityFrameFormDataDtoBuilder {
                              .filter(p -> p instanceof IRI)
                              .map(p -> (IRI) p)
                              .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri))
+                             .sorted(imageControlDataDtoComparator)
                              .collect(toImmutableList());
             }
 
@@ -285,8 +313,9 @@ public class EntityFrameFormDataDtoBuilder {
         var pageRequest = formPageRequestIndex.getPageRequest(rootSubject.toFormSubject(),
                                                               formFieldId,
                                                               FormPageRequest.SourceType.GRID_CONTROL);
-        var comparator = regionOrdering.map(ordering -> ordering.getComparator(gridControlDescriptor))
-                                       .orElse(Comparator.naturalOrder());
+        var comparator = regionOrdering.filter(ordering -> ordering.getFieldId().equals(formFieldId))
+                                       .map(ordering ->  gridRowDataDtoComparatorFactory.get(ordering.getOrdering(), gridControlDescriptor))
+                                       .orElseGet(() -> gridRowDataDtoComparatorFactory.get(ImmutableList.of(), gridControlDescriptor));
         var rowData = subjects.stream()
                               .map(this::toEntityFormSubject)
                               .filter(Objects::nonNull)
