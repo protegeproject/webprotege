@@ -140,7 +140,7 @@ public class EntityFrameFormDataDtoBuilder {
         return formControlDescriptor.accept(new FormControlDescriptorVisitor<>() {
             @Override
             public ImmutableList<FormControlDataDto> visit(TextControlDescriptor textControlDescriptor) {
-                return getTextControlDataDtoValues(textControlDescriptor, subject, theBinding);
+                return getTextControlDataDtoValues(textControlDescriptor, subject, theBinding, langTagFilter);
             }
 
             @Override
@@ -300,12 +300,16 @@ public class EntityFrameFormDataDtoBuilder {
                      .collect(toImmutableList());
     }
 
-    private ImmutableList<FormControlDataDto> getTextControlDataDtoValues(TextControlDescriptor textControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+    private ImmutableList<FormControlDataDto> getTextControlDataDtoValues(@Nonnull TextControlDescriptor textControlDescriptor,
+                                                                          @Nonnull OWLEntityData subject,
+                                                                          @Nonnull OwlBinding theBinding,
+                                                                          @Nonnull LangTagFilter langTagFilter) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return values.stream()
                      .filter(p -> p instanceof OWLLiteral)
                      .map(p -> (OWLLiteral) p)
                      .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
+                     .filter(dto -> isIncluded(dto, langTagFilter))
                      .sorted(textControlDataDtoComparator)
                      .collect(toImmutableList());
     }
