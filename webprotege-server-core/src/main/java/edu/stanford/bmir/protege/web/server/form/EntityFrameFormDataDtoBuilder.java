@@ -136,121 +136,178 @@ public class EntityFrameFormDataDtoBuilder {
             return ImmutableList.of();
         }
         var theBinding = owlBinding.get();
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
-
         var formControlDescriptor = descriptor.getFormControlDescriptor();
         return formControlDescriptor.accept(new FormControlDescriptorVisitor<>() {
             @Override
             public ImmutableList<FormControlDataDto> visit(TextControlDescriptor textControlDescriptor) {
-                return values.stream()
-                             .filter(p -> p instanceof OWLLiteral)
-                             .map(p -> (OWLLiteral) p)
-                             .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
-                             .sorted(textControlDataDtoComparator)
-                             .collect(toImmutableList());
+                return getTextControlDataDtoValues(textControlDescriptor, subject, theBinding);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(NumberControlDescriptor numberControlDescriptor) {
-                return values.stream()
-                             .filter(p -> p instanceof OWLLiteral)
-                             .map(p -> (OWLLiteral) p)
-                             .map(value -> NumberControlDataDto.get(numberControlDescriptor, value))
-                             .sorted(numberControlDataDtoComparator)
-                             .collect(toImmutableList());
+                return getNumberControlDataDtoValues(numberControlDescriptor, subject, theBinding);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
-                var choiceSource = singleChoiceControlDescriptor.getSource();
-                ImmutableList<FormControlDataDto> vals = values.stream()
-                                                               .flatMap(v -> primitiveDataRenderer.toFormControlDataDto(
-                                                                       v,
-                                                                       sessionRenderer))
-                                                               .map(value -> SingleChoiceControlDataDto.get(
-                                                                       singleChoiceControlDescriptor,
-                                                                       toChoices(choiceSource),
-                                                                       value))
-                                                               .filter(data -> isIncluded(data, langTagFilter))
-                                                               .limit(1)
-                                                               .collect(toImmutableList());
-                if (vals.isEmpty()) {
-                    return ImmutableList.of(
-                            SingleChoiceControlDataDto.get(singleChoiceControlDescriptor,
-                                                           toChoices(choiceSource),
-                                                           null)
-                    );
-                } else {
-                    return vals;
-                }
+                return getSingleChoiceControlDataDtoValues(singleChoiceControlDescriptor,
+                                                           subject,
+                                                           theBinding,
+                                                           langTagFilter);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
-                var vals = values.stream()
-                                 .flatMap(v -> primitiveDataRenderer.toFormControlDataDto(v, sessionRenderer))
-                                 .collect(toImmutableList());
-                return ImmutableList.of(MultiChoiceControlDataDto.get(multiChoiceControlDescriptor,
-                                                                      toChoices(multiChoiceControlDescriptor.getSource()),
-                                                                      vals));
+                return getMultiChoiceControlDataDtoValues(multiChoiceControlDescriptor, subject, theBinding);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
-                return values.stream()
-                             // Allow IRIs which correspond to entities
-                             .filter(p -> p instanceof OWLEntity || p instanceof IRI)
-                             .flatMap(p -> {
-                                 if (p instanceof OWLEntity) {
-                                     return Stream.of((OWLEntity) p);
-                                 } else {
-                                     var iri = (IRI) p;
-                                     return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri);
-                                 }
-                             })
-                             .map(entity -> getRendering(entity))
-                             .map(entity -> EntityNameControlDataDto.get(entityNameControlDescriptor, entity))
-                             .sorted(entityNameControlDataDtoComparator)
-                             .collect(toImmutableList());
+                return getEntityNameControlDataDtoValues(entityNameControlDescriptor, subject, theBinding);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(ImageControlDescriptor imageControlDescriptor) {
-                return values.stream()
-                             .filter(p -> p instanceof IRI)
-                             .map(p -> (IRI) p)
-                             .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri))
-                             .sorted(imageControlDataDtoComparator)
-                             .collect(toImmutableList());
+                return getImageControlDataDtoValues(imageControlDescriptor, subject, theBinding);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(GridControlDescriptor gridControlDescriptor) {
-                return ImmutableList.of(toGridControlData(subject,
-                                                          formFieldId,
-                                                          values,
-                                                          gridControlDescriptor,
-                                                          formPageRequestIndex,
-                                                          langTagFilter,
-                                                          regionOrdering,
-                                                          orderings));
+                return getGridControlDataDtoValues(gridControlDescriptor,
+                                                   subject,
+                                                   theBinding,
+                                                   formFieldId,
+                                                   formPageRequestIndex,
+                                                   langTagFilter,
+                                                   regionOrdering,
+                                                   orderings);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(SubFormControlDescriptor subFormControlDescriptor) {
-                // TODO: CHECK FOR CYCLES
-                FormDescriptor subFormDescriptor = subFormControlDescriptor.getFormDescriptor();
-                return values.stream()
-                             .filter(p -> p instanceof OWLEntity)
-                             .map(p -> (OWLEntity) p)
-                             .map(entity -> toFormData(entity,
-                                                       subFormDescriptor,
-                                                       formPageRequestIndex,
-                                                       langTagFilter,
-                                                       orderings))
-                             .collect(toImmutableList());
+                return getSubFormControlDataDtoValues(subFormControlDescriptor,
+                                                      subject,
+                                                      theBinding,
+                                                      formPageRequestIndex,
+                                                      langTagFilter,
+                                                      orderings);
             }
         });
+    }
+
+    private ImmutableList<FormControlDataDto> getSubFormControlDataDtoValues(SubFormControlDescriptor subFormControlDescriptor,
+                                                                             @Nonnull OWLEntityData subject,
+                                                                             @Nonnull OwlBinding theBinding,
+                                                                             @Nonnull FormPageRequestIndex formPageRequestIndex,
+                                                                             @Nonnull LangTagFilter langTagFilter,
+                                                                             @Nonnull ImmutableList<GridControlOrdering> orderings) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        FormDescriptor subFormDescriptor = subFormControlDescriptor.getFormDescriptor();
+        return values.stream()
+                     .filter(p -> p instanceof OWLEntity)
+                     .map(p -> (OWLEntity) p)
+                     .map(entity -> toFormData(entity,
+                                               subFormDescriptor,
+                                               formPageRequestIndex,
+                                               langTagFilter,
+                                               orderings))
+                     .collect(toImmutableList());
+    }
+
+    private ImmutableList<FormControlDataDto> getGridControlDataDtoValues(GridControlDescriptor gridControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding, @Nonnull FormRegionId formFieldId, @Nonnull FormPageRequestIndex formPageRequestIndex, @Nonnull LangTagFilter langTagFilter, @Nonnull Optional<GridControlOrdering> regionOrdering, @Nonnull ImmutableList<GridControlOrdering> orderings) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        return ImmutableList.of(toGridControlData(subject,
+                                                  formFieldId,
+                                                  values,
+                                                  gridControlDescriptor,
+                                                  formPageRequestIndex,
+                                                  langTagFilter,
+                                                  regionOrdering,
+                                                  orderings));
+    }
+
+    private ImmutableList<FormControlDataDto> getImageControlDataDtoValues(ImageControlDescriptor imageControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        return values.stream()
+                     .filter(p -> p instanceof IRI)
+                     .map(p -> (IRI) p)
+                     .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri))
+                     .sorted(imageControlDataDtoComparator)
+                     .collect(toImmutableList());
+    }
+
+    private ImmutableList<FormControlDataDto> getEntityNameControlDataDtoValues(EntityNameControlDescriptor entityNameControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        return values.stream()
+                     // Allow IRIs which correspond to entities
+                     .filter(p -> p instanceof OWLEntity || p instanceof IRI)
+                     .flatMap(p -> {
+                         if (p instanceof OWLEntity) {
+                             return Stream.of((OWLEntity) p);
+                         } else {
+                             var iri = (IRI) p;
+                             return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri);
+                         }
+                     })
+                     .map(this::getRendering)
+                     .map(entity -> EntityNameControlDataDto.get(entityNameControlDescriptor, entity))
+                     .sorted(entityNameControlDataDtoComparator)
+                     .collect(toImmutableList());
+    }
+
+    private ImmutableList<FormControlDataDto> getMultiChoiceControlDataDtoValues(MultiChoiceControlDescriptor multiChoiceControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        var vals = values.stream()
+                         .flatMap(v -> primitiveDataRenderer.toFormControlDataDto(v, sessionRenderer))
+                         .collect(toImmutableList());
+        return ImmutableList.of(MultiChoiceControlDataDto.get(multiChoiceControlDescriptor,
+                                                              toChoices(multiChoiceControlDescriptor.getSource()),
+                                                              vals));
+    }
+
+    private ImmutableList<FormControlDataDto> getSingleChoiceControlDataDtoValues(SingleChoiceControlDescriptor singleChoiceControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding, @Nonnull LangTagFilter langTagFilter) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        var choiceSource = singleChoiceControlDescriptor.getSource();
+        ImmutableList<FormControlDataDto> vals = values.stream()
+                                                       .flatMap(v -> primitiveDataRenderer.toFormControlDataDto(
+                                                               v,
+                                                               sessionRenderer))
+                                                       .map(value -> SingleChoiceControlDataDto.get(
+                                                               singleChoiceControlDescriptor,
+                                                               toChoices(choiceSource),
+                                                               value))
+                                                       .filter(data -> isIncluded(data, langTagFilter))
+                                                       .limit(1)
+                                                       .collect(toImmutableList());
+        if (vals.isEmpty()) {
+            return ImmutableList.of(
+                    SingleChoiceControlDataDto.get(singleChoiceControlDescriptor,
+                                                   toChoices(choiceSource),
+                                                   null)
+            );
+        } else {
+            return vals;
+        }
+    }
+
+    private ImmutableList<FormControlDataDto> getNumberControlDataDtoValues(NumberControlDescriptor numberControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        return values.stream()
+                     .filter(p -> p instanceof OWLLiteral)
+                     .map(p -> (OWLLiteral) p)
+                     .map(value -> NumberControlDataDto.get(numberControlDescriptor, value))
+                     .sorted(numberControlDataDtoComparator)
+                     .collect(toImmutableList());
+    }
+
+    private ImmutableList<FormControlDataDto> getTextControlDataDtoValues(TextControlDescriptor textControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        return values.stream()
+                     .filter(p -> p instanceof OWLLiteral)
+                     .map(p -> (OWLLiteral) p)
+                     .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
+                     .sorted(textControlDataDtoComparator)
+                     .collect(toImmutableList());
     }
 
     private ImmutableList<ChoiceDescriptorDto> toChoices(@Nonnull ChoiceListSourceDescriptor sourceDescriptor) {
