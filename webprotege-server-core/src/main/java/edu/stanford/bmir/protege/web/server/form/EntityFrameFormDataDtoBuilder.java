@@ -41,9 +41,6 @@ public class EntityFrameFormDataDtoBuilder {
     private final FrameComponentSessionRenderer sessionRenderer;
 
     @Nonnull
-    private final ImageControlDataDtoComparator imageControlDataDtoComparator;
-
-    @Nonnull
     private final GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory;
 
     @Nonnull
@@ -61,26 +58,29 @@ public class EntityFrameFormDataDtoBuilder {
     @Nonnull
     private final EntityNameControlValuesBuilder entityNameControlValuesBuilder;
 
+    @Nonnull
+    private final ImageControlValuesBuilder imageControlValuesBuilder;
 
     @AutoFactory
     @Inject
     public EntityFrameFormDataDtoBuilder(@Provided @Nonnull BindingValuesExtractor bindingValuesExtractor,
                                          @Nonnull FrameComponentSessionRenderer sessionRenderer,
-                                         @Provided @Nonnull ImageControlDataDtoComparator imageControlDataDtoComparator,
                                          @Provided @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory,
                                          @Provided @Nonnull TextControlValuesBuilder textControlValuesBuilder,
                                          @Provided @Nonnull NumberControlValuesBuilder numberControlValuesBuilder,
                                          @Provided @Nonnull MultiChoiceControlValueBuilder multiChoiceControlValueBuilder,
-                                         @Provided @Nonnull SingleChoiceControlValuesBuilder singleChoiceControlValuesBuilder, @Nonnull EntityNameControlValuesBuilder entityNameControlValuesBuilder) {
+                                         @Provided @Nonnull SingleChoiceControlValuesBuilder singleChoiceControlValuesBuilder,
+                                         @Provided @Nonnull EntityNameControlValuesBuilder entityNameControlValuesBuilder,
+                                         @Provided @Nonnull ImageControlValuesBuilder imageControlValuesBuilder) {
         this.bindingValuesExtractor = bindingValuesExtractor;
         this.sessionRenderer = sessionRenderer;
-        this.imageControlDataDtoComparator = imageControlDataDtoComparator;
         this.gridRowDataDtoComparatorFactory = gridRowDataDtoComparatorFactory;
         this.textControlValuesBuilder = textControlValuesBuilder;
         this.numberControlValuesBuilder = numberControlValuesBuilder;
         this.multiChoiceControlValueBuilder = multiChoiceControlValueBuilder;
         SingleChoiceControlValuesBuilder = singleChoiceControlValuesBuilder;
         this.entityNameControlValuesBuilder = entityNameControlValuesBuilder;
+        this.imageControlValuesBuilder = imageControlValuesBuilder;
     }
 
     private FormSubjectDto getFormSubject(OWLPrimitiveData root) {
@@ -165,7 +165,9 @@ public class EntityFrameFormDataDtoBuilder {
 
             @Override
             public ImmutableList<FormControlDataDto> visit(ImageControlDescriptor imageControlDescriptor) {
-                return getImageControlDataDtoValues(imageControlDescriptor, subject, theBinding);
+                return imageControlValuesBuilder.getImageControlDataDtoValues(imageControlDescriptor,
+                                                                              subject,
+                                                                              theBinding);
             }
 
             @Override
@@ -223,15 +225,6 @@ public class EntityFrameFormDataDtoBuilder {
                                                   orderings));
     }
 
-    private ImmutableList<FormControlDataDto> getImageControlDataDtoValues(ImageControlDescriptor imageControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
-        return values.stream()
-                     .filter(p -> p instanceof IRI)
-                     .map(p -> (IRI) p)
-                     .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri))
-                     .sorted(imageControlDataDtoComparator)
-                     .collect(toImmutableList());
-    }
 
     public FormDataDto toFormData(@Nonnull OWLEntity subject,
                                   @Nonnull FormDescriptor formDescriptor,
