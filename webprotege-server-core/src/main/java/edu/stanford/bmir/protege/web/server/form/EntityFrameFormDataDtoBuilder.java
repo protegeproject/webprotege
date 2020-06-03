@@ -17,7 +17,6 @@ import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLPrimitive;
 
 import javax.annotation.Nonnull;
@@ -60,9 +59,6 @@ public class EntityFrameFormDataDtoBuilder {
     private final EntityNameControlDataDtoComparator entityNameControlDataDtoComparator;
 
     @Nonnull
-    private final NumberControlDataDtoComparator numberControlDataDtoComparator;
-
-    @Nonnull
     private final ImageControlDataDtoComparator imageControlDataDtoComparator;
 
     @Nonnull
@@ -70,6 +66,9 @@ public class EntityFrameFormDataDtoBuilder {
 
     @Nonnull
     private final TextControlValuesBuilder textControlValuesBuilder;
+
+    @Nonnull
+    private final NumberControlValuesBuilder numberControlValuesBuilder;
 
     @AutoFactory
     @Inject
@@ -79,19 +78,20 @@ public class EntityFrameFormDataDtoBuilder {
                                          @Provided @Nonnull PrimitiveFormControlDataDtoRenderer primitiveDataRenderer,
                                          @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
                                          @Provided @Nonnull EntityNameControlDataDtoComparator entityNameControlDataDtoComparator,
-                                         @Provided @Nonnull NumberControlDataDtoComparator numberControlDataDtoComparator,
                                          @Provided @Nonnull ImageControlDataDtoComparator imageControlDataDtoComparator,
-                                         @Provided @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory, @Nonnull TextControlValuesBuilder textControlValuesBuilder) {
+                                         @Provided @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory,
+                                         @Nonnull TextControlValuesBuilder textControlValuesBuilder,
+                                         @Nonnull NumberControlValuesBuilder numberControlValuesBuilder) {
         this.bindingValuesExtractor = bindingValuesExtractor;
         this.sessionRenderer = sessionRenderer;
         this.choiceDescriptorDtoSupplier = choiceDescriptorDtoSupplier;
         this.primitiveDataRenderer = primitiveDataRenderer;
         this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
         this.entityNameControlDataDtoComparator = entityNameControlDataDtoComparator;
-        this.numberControlDataDtoComparator = numberControlDataDtoComparator;
         this.imageControlDataDtoComparator = imageControlDataDtoComparator;
         this.gridRowDataDtoComparatorFactory = gridRowDataDtoComparatorFactory;
         this.textControlValuesBuilder = textControlValuesBuilder;
+        this.numberControlValuesBuilder = numberControlValuesBuilder;
     }
 
     private FormSubjectDto getFormSubject(OWLPrimitiveData root) {
@@ -147,7 +147,9 @@ public class EntityFrameFormDataDtoBuilder {
 
             @Override
             public ImmutableList<FormControlDataDto> visit(NumberControlDescriptor numberControlDescriptor) {
-                return getNumberControlDataDtoValues(numberControlDescriptor, subject, theBinding);
+                return numberControlValuesBuilder.getNumberControlDataDtoValues(numberControlDescriptor,
+                                                                                subject,
+                                                                                theBinding);
             }
 
             @Override
@@ -290,26 +292,6 @@ public class EntityFrameFormDataDtoBuilder {
         } else {
             return vals;
         }
-    }
-
-    private ImmutableList<FormControlDataDto> getNumberControlDataDtoValues(NumberControlDescriptor numberControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
-        return values.stream()
-                     .filter(p -> p instanceof OWLLiteral)
-                     .map(p -> (OWLLiteral) p)
-                     .map(value -> NumberControlDataDto.get(numberControlDescriptor, value))
-                     .sorted(numberControlDataDtoComparator)
-                     .collect(toImmutableList());
-    }
-
-    private ImmutableList<FormControlDataDto> getTextControlDataDtoValues(@Nonnull TextControlDescriptor textControlDescriptor,
-                                                                          @Nonnull OWLEntityData subject,
-                                                                          @Nonnull OwlBinding theBinding,
-                                                                          @Nonnull LangTagFilter langTagFilter) {
-        return textControlValuesBuilder.getTextControlDataDtoValues(textControlDescriptor,
-                                                                    subject,
-                                                                    theBinding,
-                                                                    langTagFilter);
     }
 
     private ImmutableList<ChoiceDescriptorDto> toChoices(@Nonnull ChoiceListSourceDescriptor sourceDescriptor) {
