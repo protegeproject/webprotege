@@ -4,7 +4,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRenderer;
-import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -23,9 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Stream;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderByDirection.ASC;
 import static java.util.stream.Collectors.toMap;
@@ -42,12 +39,6 @@ public class EntityFrameFormDataDtoBuilder {
 
     @Nonnull
     private final FrameComponentSessionRenderer sessionRenderer;
-
-    @Nonnull
-    private final EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
-
-    @Nonnull
-    private final EntityNameControlDataDtoComparator entityNameControlDataDtoComparator;
 
     @Nonnull
     private final ImageControlDataDtoComparator imageControlDataDtoComparator;
@@ -67,30 +58,29 @@ public class EntityFrameFormDataDtoBuilder {
     @Nonnull
     private final SingleChoiceControlValuesBuilder SingleChoiceControlValuesBuilder;
 
+    @Nonnull
+    private final EntityNameControlValuesBuilder entityNameControlValuesBuilder;
+
 
     @AutoFactory
     @Inject
     public EntityFrameFormDataDtoBuilder(@Provided @Nonnull BindingValuesExtractor bindingValuesExtractor,
                                          @Nonnull FrameComponentSessionRenderer sessionRenderer,
-                                         @Provided @Nonnull PrimitiveFormControlDataDtoRenderer primitiveDataRenderer,
-                                         @Provided @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
-                                         @Provided @Nonnull EntityNameControlDataDtoComparator entityNameControlDataDtoComparator,
                                          @Provided @Nonnull ImageControlDataDtoComparator imageControlDataDtoComparator,
                                          @Provided @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory,
-                                         @Nonnull TextControlValuesBuilder textControlValuesBuilder,
-                                         @Nonnull NumberControlValuesBuilder numberControlValuesBuilder,
-                                         @Nonnull MultiChoiceControlValueBuilder multiChoiceControlValueBuilder,
-                                         @Nonnull SingleChoiceControlValuesBuilder singleChoiceControlValuesBuilder) {
+                                         @Provided @Nonnull TextControlValuesBuilder textControlValuesBuilder,
+                                         @Provided @Nonnull NumberControlValuesBuilder numberControlValuesBuilder,
+                                         @Provided @Nonnull MultiChoiceControlValueBuilder multiChoiceControlValueBuilder,
+                                         @Provided @Nonnull SingleChoiceControlValuesBuilder singleChoiceControlValuesBuilder, @Nonnull EntityNameControlValuesBuilder entityNameControlValuesBuilder) {
         this.bindingValuesExtractor = bindingValuesExtractor;
         this.sessionRenderer = sessionRenderer;
-        this.entitiesInProjectSignatureByIriIndex = checkNotNull(entitiesInProjectSignatureByIriIndex);
-        this.entityNameControlDataDtoComparator = entityNameControlDataDtoComparator;
         this.imageControlDataDtoComparator = imageControlDataDtoComparator;
         this.gridRowDataDtoComparatorFactory = gridRowDataDtoComparatorFactory;
         this.textControlValuesBuilder = textControlValuesBuilder;
         this.numberControlValuesBuilder = numberControlValuesBuilder;
         this.multiChoiceControlValueBuilder = multiChoiceControlValueBuilder;
         SingleChoiceControlValuesBuilder = singleChoiceControlValuesBuilder;
+        this.entityNameControlValuesBuilder = entityNameControlValuesBuilder;
     }
 
     private FormSubjectDto getFormSubject(OWLPrimitiveData root) {
@@ -168,7 +158,9 @@ public class EntityFrameFormDataDtoBuilder {
 
             @Override
             public ImmutableList<FormControlDataDto> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
-                return getEntityNameControlDataDtoValues(entityNameControlDescriptor, subject, theBinding);
+                return entityNameControlValuesBuilder.getEntityNameControlDataDtoValues(entityNameControlDescriptor,
+                                                                                        subject,
+                                                                                        theBinding);
             }
 
             @Override
@@ -238,25 +230,6 @@ public class EntityFrameFormDataDtoBuilder {
                      .map(p -> (IRI) p)
                      .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri))
                      .sorted(imageControlDataDtoComparator)
-                     .collect(toImmutableList());
-    }
-
-    private ImmutableList<FormControlDataDto> getEntityNameControlDataDtoValues(EntityNameControlDescriptor entityNameControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
-        return values.stream()
-                     // Allow IRIs which correspond to entities
-                     .filter(p -> p instanceof OWLEntity || p instanceof IRI)
-                     .flatMap(p -> {
-                         if (p instanceof OWLEntity) {
-                             return Stream.of((OWLEntity) p);
-                         } else {
-                             var iri = (IRI) p;
-                             return entitiesInProjectSignatureByIriIndex.getEntitiesInSignature(iri);
-                         }
-                     })
-                     .map(this::getRendering)
-                     .map(entity -> EntityNameControlDataDto.get(entityNameControlDescriptor, entity))
-                     .sorted(entityNameControlDataDtoComparator)
                      .collect(toImmutableList());
     }
 
