@@ -25,10 +25,10 @@ public class GridRowDtoByColumnIndexComparator implements Comparator<GridRowData
 
     @Override
     public int compare(GridRowDataDto o1, GridRowDataDto o2) {
-        GridCellDataDto cellDataDto1 = o1.getCells()
-                                         .get(columnIndex);
-        GridCellDataDto cellDataDto2 = o2.getCells()
-                                         .get(columnIndex);
+        var cellDataDto1 = o1.getCells()
+                             .get(columnIndex);
+        var cellDataDto2 = o2.getCells()
+                             .get(columnIndex);
         return cellDataDtoComparator.compare(cellDataDto1, cellDataDto2);
     }
 

@@ -29,13 +29,13 @@ public class GridRowDataDtoComparatorFactory {
     @Nonnull
     public Comparator<GridRowDataDto> get(@Nonnull ImmutableList<GridControlOrderBy> orderBy,
                                           @Nonnull GridControlDescriptor descriptor) {
-        ImmutableMap<GridColumnId, GridColumnId> leafColumnToTopLevelColumnMap = descriptor.getLeafColumnToTopLevelColumnMap();
+        var leafColumnToTopLevelColumnMap = descriptor.getLeafColumnToTopLevelColumnMap();
         return orderBy.stream()
                       .map(order -> {
-                          GridColumnId nestedColumnId = order.getColumnId();
-                          GridColumnId topLevelColumnId = leafColumnToTopLevelColumnMap.get(nestedColumnId);
+                          var nestedColumnId = order.getColumnId();
+                          var topLevelColumnId = leafColumnToTopLevelColumnMap.get(nestedColumnId);
                           int columnIndex = getColumnIndex(descriptor, topLevelColumnId);
-                          GridRowDtoByColumnIndexComparator rowComp = new GridRowDtoByColumnIndexComparator(
+                          var rowComp = new GridRowDtoByColumnIndexComparator(
                                   cellComparator,
                                   columnIndex);
                           if(order.isAscending()) {
@@ -52,9 +52,9 @@ public class GridRowDataDtoComparatorFactory {
 
 
     private static int getColumnIndex(@Nonnull GridControlDescriptor descriptor, GridColumnId mappedColumnId) {
-        ImmutableList<GridColumnDescriptor> columns = descriptor.getColumns();
+        var columns = descriptor.getColumns();
         for (int i = 0; i < columns.size(); i++) {
-            GridColumnId iColumnId = columns.get(i).getId();
+            var iColumnId = columns.get(i).getId();
             if (iColumnId.equals(mappedColumnId)) {
                 return i;
             }

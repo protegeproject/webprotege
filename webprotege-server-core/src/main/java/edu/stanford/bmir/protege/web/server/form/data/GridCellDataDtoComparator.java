@@ -21,10 +21,8 @@ public class GridCellDataDtoComparator implements Comparator<GridCellDataDto> {
 
     @Override
     public int compare(GridCellDataDto cellData1, GridCellDataDto cellData2) {
-        List<FormControlDataDto> valuesPage = cellData1.getValues()
-                                                       .getPageElements();
-        List<FormControlDataDto> otherValuesPage = cellData2.getValues()
-                                                            .getPageElements();
+        var valuesPage = cellData1.getValues().getPageElements();
+        var otherValuesPage = cellData2.getValues().getPageElements();
         return lexComparator.compare(valuesPage, otherValuesPage);
     }
 
