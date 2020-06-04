@@ -1,7 +1,8 @@
-package edu.stanford.bmir.protege.web.shared.form.data;
+package edu.stanford.bmir.protege.web.server.form.data;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.shared.form.data.GridRowDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;

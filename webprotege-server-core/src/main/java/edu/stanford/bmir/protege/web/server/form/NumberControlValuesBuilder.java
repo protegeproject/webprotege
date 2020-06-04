@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDtoComparator;
+import edu.stanford.bmir.protege.web.server.form.data.NumberControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import org.semanticweb.owlapi.model.OWLLiteral;

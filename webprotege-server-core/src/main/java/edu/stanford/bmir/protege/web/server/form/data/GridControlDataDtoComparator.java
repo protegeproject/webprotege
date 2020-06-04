@@ -1,6 +1,8 @@
-package edu.stanford.bmir.protege.web.shared.form.data;
+package edu.stanford.bmir.protege.web.server.form.data;
 
 import com.google.common.collect.Comparators;
+import edu.stanford.bmir.protege.web.shared.form.data.GridControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.GridRowDataDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

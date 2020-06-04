@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.server.form.data.GridCellDataDtoComparator;
+import edu.stanford.bmir.protege.web.server.form.data.GridRowDataDtoComparatorFactory;
+import edu.stanford.bmir.protege.web.server.form.data.GridRowDtoByColumnIndexComparator;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;

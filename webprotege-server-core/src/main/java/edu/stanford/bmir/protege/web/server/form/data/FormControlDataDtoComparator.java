@@ -1,4 +1,6 @@
-package edu.stanford.bmir.protege.web.shared.form.data;
+package edu.stanford.bmir.protege.web.server.form.data;
+
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

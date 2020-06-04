@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.shared.form.data;
+package edu.stanford.bmir.protege.web.server.form.data;
 
 import com.google.common.collect.Comparators;
+import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDto;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.inject.Inject;

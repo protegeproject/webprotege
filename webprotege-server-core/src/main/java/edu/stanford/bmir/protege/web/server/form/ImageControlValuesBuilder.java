@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDtoComparator;
+import edu.stanford.bmir.protege.web.server.form.data.ImageControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import org.semanticweb.owlapi.model.IRI;

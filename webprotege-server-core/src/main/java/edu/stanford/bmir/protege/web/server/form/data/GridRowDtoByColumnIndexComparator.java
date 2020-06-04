@@ -1,4 +1,7 @@
-package edu.stanford.bmir.protege.web.shared.form.data;
+package edu.stanford.bmir.protege.web.server.form.data;
+
+import edu.stanford.bmir.protege.web.shared.form.data.GridCellDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.GridRowDataDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
