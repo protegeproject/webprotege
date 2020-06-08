@@ -200,6 +200,10 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     private void validate() {
         String trimmedText = numberField.getText()
                                         .trim();
+        if(trimmedText.isEmpty()) {
+            clearErrorMessage();
+            return;
+        }
         try {
             format.parse(trimmedText);
         } catch(NumberFormatException e) {
