@@ -461,9 +461,12 @@
 .wp-btn-g--sort-ascending {
     mask-image: sortAscendingIconUrl;
     -webkit-mask-image: sortAscendingIconUrl;
+    -webkit-mask-repeat: no-repeat;
 }
 
 .wp-btn-g--sort-descending {
     mask-image: sortDescendingIconUrl;
     -webkit-mask-image: sortDescendingIconUrl;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
 }
