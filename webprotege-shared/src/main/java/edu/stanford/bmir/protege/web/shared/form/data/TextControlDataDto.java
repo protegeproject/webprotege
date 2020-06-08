@@ -17,7 +17,7 @@ import java.util.Optional;
 public abstract class TextControlDataDto implements FormControlDataDto, Comparable<TextControlDataDto> {
 
     private static Comparator<OWLLiteral> literalComparator = Comparator.nullsLast(Comparator.comparing(OWLLiteral::getLang)
-            .thenComparing(OWLLiteral::getLiteral)
+            .thenComparing(OWLLiteral::getLiteral, String::compareToIgnoreCase)
             .thenComparing(OWLLiteral::getDatatype));
 
     @Nonnull
