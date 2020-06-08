@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -45,6 +46,8 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     @UiField
     ListBox comboBox;
+    @UiField
+    Label readOnlyLabel;
 
     private final List<PrimitiveFormControlData> choices = new ArrayList<>();
 
@@ -58,6 +61,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @UiHandler("comboBox")
     protected void handleValueChanged(ChangeEvent changeEvent) {
         ValueChangeEvent.fire(this, getValue());
+        updateReadonlyLabel();
     }
 
     public void setChoices(List<ChoiceDescriptorDto> choices) {
@@ -90,6 +94,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     private void selectDefaultChoice() {
         comboBox.setSelectedIndex(0);
+        readOnlyLabel.setText("");
     }
 
     @Override
@@ -103,6 +108,8 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
                 for(PrimitiveFormControlData c : choices) {
                     if(c.equals(choice.get())) {
                         comboBox.setSelectedIndex(index);
+                        String itemText = comboBox.getItemText(index);
+                        readOnlyLabel.setText(itemText);
                         break;
                     }
                     index++;
@@ -114,6 +121,16 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
         }
         else {
             clearValue();
+        }
+    }
+
+    private void updateReadonlyLabel() {
+        int sel = comboBox.getSelectedIndex();
+        if(sel == -1) {
+            readOnlyLabel.setText("");
+        }
+        else {
+            readOnlyLabel.setText(comboBox.getItemText(sel));
         }
     }
 
@@ -145,6 +162,8 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @Override
     public void setEnabled(boolean enabled) {
         comboBox.setEnabled(enabled);
+        comboBox.setVisible(enabled);
+        readOnlyLabel.setVisible(!enabled);
     }
 
     @Override
