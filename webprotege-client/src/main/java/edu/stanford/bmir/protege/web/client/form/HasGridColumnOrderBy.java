@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
 
@@ -14,5 +14,5 @@ public interface HasGridColumnOrderBy {
     void setGridColumnOrderByChangeHandler(@Nonnull ChangeHandler handler);
 
     @Nonnull
-    ImmutableList<GridControlOrderBy> getOrderBy();
+    ImmutableList<FormRegionOrdering> getOrderBy();
 }

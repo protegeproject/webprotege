@@ -1,6 +1,11 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
+import dagger.BindsInstance;
+import dagger.Component;
 import dagger.Subcomponent;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
+import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 
 import javax.annotation.Nonnull;
 
@@ -8,6 +13,22 @@ import javax.annotation.Nonnull;
 @FormDataBuilderSession
 public interface EntityFrameFormDataComponent {
 
-    EntityFrameFormDataDtoBuilder createFormDataBuilder();
+    @Nonnull
+    EntityFrameFormDataDtoBuilder formDataBuilder();
 
+//    @Subcomponent.Builder
+//    interface Builder {
+//
+//        @BindsInstance
+//        Builder withFormRegionOrdering(@Nonnull ImmutableList<FormRegionOrdering> formRegionOrderings);
+//
+//        @BindsInstance
+//        Builder withLanguageTagFilter(@Nonnull LangTagFilter filter);
+//
+//        @BindsInstance
+//        Builder withFormPageRequestIndex(@Nonnull FormPageRequestIndex pageRequestIndex);
+//
+//        @Nonnull
+//        EntityFrameFormDataComponent build();
+//    }
 }

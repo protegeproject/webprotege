@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.form.data.FormControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.server.form.data.GridRowDataDtoComparatorFactory;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -19,11 +21,9 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderByDirection.ASC;
+import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
 @FormDataBuilderSession
 public class GridControlValuesBuilder {
@@ -32,77 +32,88 @@ public class GridControlValuesBuilder {
     private final BindingValuesExtractor bindingValuesExtractor;
 
     @Nonnull
-    private final GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory;
-
-    @Nonnull
     private final Provider<EntityFrameFormDataDtoBuilder> formDataDtoBuilderProvider;
 
     @Nonnull
     private final FormDataBuilderSessionRenderer sessionRenderer;
 
+    @Nonnull
+    private final FormRegionOrderingIndex formRegionOrderingIndex;
+
+    @Nonnull
+    private final LangTagFilter langTagFilter;
+
+    @Nonnull
+    private final FormPageRequestIndex formPageRequestIndex;
+
+    @Nonnull
+    private final GridRowDataDtoComparatorFactory comparatorFactory;
+
+    @Nonnull
+    private final FormControlDataDtoComparator formControlDataDtoComparator;
+
+
     @Inject
     public GridControlValuesBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
-                                    @Nonnull GridRowDataDtoComparatorFactory gridRowDataDtoComparatorFactory,
                                     @Nonnull Provider<EntityFrameFormDataDtoBuilder> formDataDtoBuilderProvider,
-                                    @Nonnull FormDataBuilderSessionRenderer sessionRenderer) {
+                                    @Nonnull FormDataBuilderSessionRenderer sessionRenderer,
+                                    @Nonnull FormRegionOrderingIndex formRegionOrderingIndex,
+                                    @Nonnull LangTagFilter langTagFilter,
+                                    @Nonnull FormPageRequestIndex formPageRequestIndex,
+                                    @Nonnull GridRowDataDtoComparatorFactory comparatorFactory, @Nonnull FormControlDataDtoComparator formControlDataDtoComparator) {
         this.bindingValuesExtractor = checkNotNull(bindingValuesExtractor);
-        this.gridRowDataDtoComparatorFactory = checkNotNull(gridRowDataDtoComparatorFactory);
         this.formDataDtoBuilderProvider = checkNotNull(formDataDtoBuilderProvider);
         this.sessionRenderer = checkNotNull(sessionRenderer);
+        this.formRegionOrderingIndex = formRegionOrderingIndex;
+        this.langTagFilter = langTagFilter;
+        this.formPageRequestIndex = formPageRequestIndex;
+        this.comparatorFactory = comparatorFactory;
+        this.formControlDataDtoComparator = formControlDataDtoComparator;
     }
 
     @Nonnull
-    public ImmutableList<FormControlDataDto> getGridControlDataDtoValues(GridControlDescriptor gridControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding, @Nonnull FormRegionId formFieldId, @Nonnull FormPageRequestIndex formPageRequestIndex, @Nonnull LangTagFilter langTagFilter, @Nonnull Optional<GridControlOrdering> regionOrdering, @Nonnull ImmutableList<GridControlOrdering> orderings) {
+    public ImmutableList<FormControlDataDto> getGridControlDataDtoValues(@Nonnull GridControlDescriptor gridControlDescriptor,
+                                                                         @Nonnull OWLEntityData subject,
+                                                                         @Nonnull OwlBinding theBinding,
+                                                                         @Nonnull FormRegionId formFieldId) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return ImmutableList.of(toGridControlData(subject,
                                                   formFieldId,
                                                   values,
-                                                  gridControlDescriptor,
-                                                  formPageRequestIndex,
-                                                  langTagFilter,
-                                                  regionOrdering,
-                                                  orderings));
+                                                  gridControlDescriptor));
     }
 
 
     private GridControlDataDto toGridControlData(OWLPrimitiveData root,
                                                  FormRegionId formFieldId,
                                                  ImmutableList<OWLPrimitive> subjects,
-                                                 GridControlDescriptor gridControlDescriptor,
-                                                 @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                                 @Nonnull LangTagFilter langTagFilter,
-                                                 @Nonnull Optional<GridControlOrdering> regionOrdering,
-                                                 @Nonnull ImmutableList<GridControlOrdering> orderings) {
+                                                 GridControlDescriptor descriptor) {
         var rootSubject = FormSubjectDto.getFormSubject(root);
         var pageRequest = formPageRequestIndex.getPageRequest(rootSubject.toFormSubject(),
                                                               formFieldId,
                                                               FormPageRequest.SourceType.GRID_CONTROL);
-        var comparator = regionOrdering.filter(ordering -> ordering.getFieldId().equals(formFieldId))
-                                       .map(ordering -> gridRowDataDtoComparatorFactory.get(ordering.getOrdering(),
-                                                                                            gridControlDescriptor))
-                                       .orElseGet(() -> gridRowDataDtoComparatorFactory.get(ImmutableList.of(),
-                                                                                            gridControlDescriptor));
+        var comparator = comparatorFactory.get(descriptor);
         var rowData = subjects.stream()
                               .map(this::toEntityFormSubject)
                               .filter(Objects::nonNull)
-                              .map(entity -> toGridRow(entity,
-                                                       gridControlDescriptor,
-                                                       formPageRequestIndex,
-                                                       langTagFilter,
-                                                       orderings))
+                              .map(entity -> toGridRow(entity, descriptor))
                               .filter(Objects::nonNull)
                               .sorted(comparator)
                               .collect(PageCollector.toPage(pageRequest.getPageNumber(),
                                                             pageRequest.getPageSize()));
-        var gridOrdering = regionOrdering.map(GridControlOrdering::getOrdering)
-                                         .orElseGet(() -> {
-                                             return gridControlDescriptor.getLeafColumns()
-                                                                         .map(GridColumnDescriptor::getId)
-                                                                         .map(id -> GridControlOrderBy.get(id, ASC))
-                                                                         .limit(1)
-                                                                         .collect(toImmutableList());
-                                         });
-        return GridControlDataDto.get(gridControlDescriptor, rowData.orElse(Page.emptyPage()), gridOrdering);
+        var orderings = formRegionOrderingIndex.getOrderings();
+        if(orderings.isEmpty()) {
+            orderings = descriptor.getColumns()
+                      .stream()
+                      .findFirst()
+                      .map(GridColumnDescriptor::getId)
+                      .map(columnId -> FormRegionOrdering.get(columnId, FormRegionOrderingDirection.ASC))
+                      .map(ImmutableSet::of)
+                    .orElse(ImmutableSet.of());
+        }
+        return GridControlDataDto.get(descriptor,
+                                      rowData.orElse(Page.emptyPage()),
+                                      orderings);
     }
 
     /**
@@ -114,17 +125,11 @@ public class GridControlValuesBuilder {
      */
     @Nullable
     private GridRowDataDto toGridRow(OWLEntityData rowSubject,
-                                     GridControlDescriptor gridControlDescriptor,
-                                     @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                     @Nonnull LangTagFilter langTagFilter,
-                                     @Nonnull ImmutableList<GridControlOrdering> orderings) {
+                                     GridControlDescriptor gridControlDescriptor) {
         var columnDescriptors = gridControlDescriptor.getColumns();
         // To Cells
         var cellData = toGridRowCells(rowSubject,
-                                      columnDescriptors,
-                                      formPageRequestIndex,
-                                      langTagFilter,
-                                      orderings);
+                                      columnDescriptors);
         if (cellData.isEmpty()) {
             return null;
         }
@@ -134,37 +139,38 @@ public class GridControlValuesBuilder {
 
     @Nonnull
     private ImmutableList<GridCellDataDto> toGridRowCells(OWLEntityData rowSubject,
-                                                          @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors,
-                                                          @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                                          @Nonnull LangTagFilter langTagFilter,
-                                                          @Nonnull ImmutableList<GridControlOrdering> orderings) {
+                                                          @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors) {
         var resultBuilder = ImmutableList.<GridCellDataDto>builder();
         for (var columnDescriptor : columnDescriptors) {
-            var formControlData = formDataDtoBuilderProvider.get().toFormControlValues(
-                    rowSubject,
-                    columnDescriptor.getId(),
-                    columnDescriptor,
-                    formPageRequestIndex,
-                    langTagFilter,
-                    Optional.empty(),
-                    orderings);
-            if (formControlData.isEmpty()) {
-                var cellData = GridCellDataDto.get(columnDescriptor.getId(), Page.emptyPage());
+            var columnId = columnDescriptor.getId();
+            var direction = formRegionOrderingIndex.getOrderingDirection(columnId);
+            var comp = direction.isAscending() ? formControlDataDtoComparator : formControlDataDtoComparator.reversed();
+            var cellValues = formDataDtoBuilderProvider.get()
+                                                       .toFormControlValues(rowSubject, columnId, columnDescriptor)
+                    .stream()
+                    .sorted(comp)
+                    .collect(toImmutableList());
+
+            if (cellValues.isEmpty()) {
+                var cellData = GridCellDataDto.get(columnId, Page.emptyPage());
                 resultBuilder.add(cellData);
-            } else {
+            }
+            else {
                 if (columnDescriptor.getRepeatability() == Repeatability.NON_REPEATABLE) {
-                    var firstValue = formControlData.get(0);
-                    if (isIncluded(firstValue, langTagFilter)) {
-                        var cellData = GridCellDataDto.get(columnDescriptor.getId(),
+                    var firstValue = cellValues.get(0);
+                    if (isIncluded(firstValue)) {
+                        var cellData = GridCellDataDto.get(columnId,
                                                            Page.of(firstValue));
                         resultBuilder.add(cellData);
-                    } else {
+                    }
+                    else {
                         return ImmutableList.of();
                     }
 
-                } else {
-                    var cellData = GridCellDataDto.get(columnDescriptor.getId(),
-                                                       new Page<>(1, 1, formControlData, formControlData.size()));
+                }
+                else {
+                    var cellData = GridCellDataDto.get(columnId,
+                                                       new Page<>(1, 1, cellValues, cellValues.size()));
                     resultBuilder.add(cellData);
                 }
             }
@@ -172,11 +178,11 @@ public class GridControlValuesBuilder {
         return resultBuilder.build();
     }
 
-    private boolean isIncluded(FormControlDataDto firstValue, LangTagFilter langTagFilter) {
-        if(firstValue instanceof TextControlDataDto) {
-            return  ((TextControlDataDto) firstValue).getValue()
-                                                     .map(v -> langTagFilter.isIncluded(v.getLang()))
-                                                     .orElse(false);
+    private boolean isIncluded(FormControlDataDto firstValue) {
+        if (firstValue instanceof TextControlDataDto) {
+            return ((TextControlDataDto) firstValue).getValue()
+                                                    .map(v -> langTagFilter.isIncluded(v.getLang()))
+                                                    .orElse(false);
         }
         else {
             return true;
@@ -188,14 +194,16 @@ public class GridControlValuesBuilder {
     private OWLEntityData toEntityFormSubject(OWLPrimitive primitive) {
         if (primitive instanceof OWLEntity) {
             return sessionRenderer.getEntityRendering((OWLEntity) primitive);
-        } else if (primitive instanceof IRI) {
+        }
+        else if (primitive instanceof IRI) {
             var iri = (IRI) primitive;
             return sessionRenderer.getRendering(iri)
                                   .stream()
                                   .sorted()
                                   .findFirst()
                                   .orElse(null);
-        } else {
+        }
+        else {
             return null;
         }
     }

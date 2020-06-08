@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -126,12 +124,12 @@ public class FormFieldPresenter implements FormRegionPresenter {
         return stackPresenter.getPageRequests(formSubject, formFieldDescriptor.getId());
     }
 
-    public Stream<GridControlOrdering> getGridControlOrderings() {
-        List<GridControlOrdering> orderings = new ArrayList<>();
+    public Stream<FormRegionOrdering> getOrderings() {
+        List<FormRegionOrdering> orderings = new ArrayList<>();
         stackPresenter.forEachFormControl(formControl -> {
             if(formControl instanceof GridControl) {
-                ImmutableList<GridControlOrderBy> ordering = ((GridControl) formControl).getOrdering();
-                orderings.add(GridControlOrdering.get(formFieldDescriptor.getId(), ordering));
+                ImmutableList<FormRegionOrdering> ordering = ((GridControl) formControl).getOrdering();
+                orderings.addAll(ordering);
             }
         });
         return orderings.stream();

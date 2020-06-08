@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -102,6 +103,23 @@ public abstract class GridControlDescriptor implements FormControlDescriptor {
                                   });
                 });
         return builder.build();
+    }
+
+    /**
+     * Gets the index of the specified columnId.
+     * @param columnId The {@link GridColumnId}
+     * @return The column index of the specified column Id.  A value of -1 is returned if the
+     * {@link GridColumnId} does not identify a column in this grid.
+     */
+    @JsonIgnore
+    public int getColumnIndex(GridColumnId columnId) {
+        ImmutableList<GridColumnDescriptor> columns = getColumns();
+        for(int i = 0; i < columns.size(); i++) {
+            if(columns.get(i).getId().equals(columnId)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

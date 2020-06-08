@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -170,9 +172,9 @@ public class FormStackPresenter {
     }
 
     @Nonnull
-    public ImmutableList<GridControlOrdering> getGridControlOrderings() {
+    public ImmutableSet<FormRegionOrdering> getGridControlOrderings() {
         return formPresenters.stream()
-                      .flatMap(FormPresenter::getGridControlOrderings)
-                      .collect(toImmutableList());
+                      .flatMap(FormPresenter::getOrderings)
+                      .collect(toImmutableSet());
     }
 }

@@ -52,12 +52,12 @@ public abstract class NumberControlDataDto implements FormControlDataDto, Compar
         if (numericValue == null) {
             OWLLiteral literal = getValueInternal();
             if (literal == null) {
-                numericValue = Double.MAX_VALUE;
+                numericValue = Double.MIN_VALUE;
             } else {
                 try {
                     numericValue = Double.parseDouble(literal.getLiteral().trim());
                 } catch (NumberFormatException e) {
-                    numericValue = Double.MAX_VALUE;
+                    numericValue = Double.MIN_VALUE;
                 }
             }
         }

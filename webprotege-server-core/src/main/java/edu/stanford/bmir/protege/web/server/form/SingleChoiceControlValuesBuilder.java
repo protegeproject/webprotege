@@ -27,25 +27,29 @@ public class SingleChoiceControlValuesBuilder {
     @Nonnull
     private final ChoiceDescriptorCache choiceDescriptorCache;
 
+    @Nonnull
+    private final LangTagFilter langTagFilter;
+
     @Inject
     public SingleChoiceControlValuesBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
                                             @Nonnull PrimitiveFormControlDataDtoRenderer renderer,
-                                            @Nonnull ChoiceDescriptorCache choiceDescriptorCache) {
+                                            @Nonnull ChoiceDescriptorCache choiceDescriptorCache,
+                                            @Nonnull LangTagFilter langTagFilter) {
         this.bindingValuesExtractor = checkNotNull(bindingValuesExtractor);
         this.renderer = checkNotNull(renderer);
         this.choiceDescriptorCache = checkNotNull(choiceDescriptorCache);
+        this.langTagFilter = checkNotNull(langTagFilter);
     }
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getSingleChoiceControlDataDtoValues(@Nonnull SingleChoiceControlDescriptor singleChoiceControlDescriptor,
                                                                                  @Nonnull OWLEntityData subject,
-                                                                                 @Nonnull OwlBinding theBinding,
-                                                                                 @Nonnull LangTagFilter langTagFilter) {
+                                                                                 @Nonnull OwlBinding theBinding) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         var choiceSource = singleChoiceControlDescriptor.getSource();
         var vals = values.stream()
                          .flatMap(renderer::toFormControlDataDto)
-                         .filter(data -> isIncluded(data, langTagFilter))
+                         .filter(this::isIncluded)
                          .map(value -> SingleChoiceControlDataDto.get(
                                  singleChoiceControlDescriptor,
                                  choiceDescriptorCache.getChoices(choiceSource),
@@ -63,7 +67,7 @@ public class SingleChoiceControlValuesBuilder {
         }
     }
 
-    private boolean isIncluded(@Nonnull PrimitiveFormControlDataDto dto, LangTagFilter langTagFilter) {
+    private boolean isIncluded(@Nonnull PrimitiveFormControlDataDto dto) {
         var primitive = dto.toPrimitiveFormControlData().getPrimitive();
         if (primitive instanceof OWLLiteral) {
             return langTagFilter.isIncluded(((OWLLiteral) primitive).getLang());

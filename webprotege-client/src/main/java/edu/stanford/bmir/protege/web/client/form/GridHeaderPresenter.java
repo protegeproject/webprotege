@@ -40,7 +40,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     @Nonnull
     private ChangeHandler orderByChangedHandler = () -> {};
 
-    private Optional<GridControlOrderBy> orderBy = Optional.empty();
+    private Optional<FormRegionOrdering> orderBy = Optional.empty();
 
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
@@ -91,8 +91,8 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         this.orderBy = Optional.empty();
         columnPresenters.values().forEach(cp -> {
             if(cp.isPresenterFor(id)) {
-                GridControlOrderByDirection dir = cp.toggleSortOrder();
-                this.orderBy = Optional.of(GridControlOrderBy.get(id, dir));
+                FormRegionOrderingDirection dir = cp.toggleSortOrder();
+                this.orderBy = Optional.of(FormRegionOrdering.get(id, dir));
             }
             else {
                 cp.clearSortOrder();
@@ -133,25 +133,32 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
 
     @Nonnull
     @Override
-    public ImmutableList<GridControlOrderBy> getOrderBy() {
+    public ImmutableList<FormRegionOrdering> getOrderBy() {
         return orderBy.map(ImmutableList::of).orElse(ImmutableList.of());
     }
 
-    public void setOrderBy(@Nonnull ImmutableList<GridControlOrderBy> ordering) {
+    public void setOrderBy(@Nonnull ImmutableSet<FormRegionOrdering> ordering) {
         if(ordering.isEmpty()) {
             this.orderBy = Optional.empty();
             columnPresenters.values()
                             .forEach(GridHeaderColumnPresenter::clearSortOrder);
         }
         else {
-            GridControlOrderBy orderBy = ordering.get(0);
-            this.orderBy = Optional.of(orderBy);
-            columnPresenters.values().forEach(cp -> {
-                if(cp.isPresenterFor(orderBy.getColumnId())) {
-                    cp.setSortOrder(orderBy.getDirection());
+            Map<GridColumnId, FormRegionOrdering> orderingsById = new HashMap<>();
+            ordering.stream()
+                    .filter(o -> o.getRegionId() instanceof GridColumnId)
+                    .forEach(o -> orderingsById.put((GridColumnId) o.getRegionId(), o));
+            this.orderBy = Optional.empty();
+            columnPresenters.forEach((columnId, columnPresenter) -> {
+                FormRegionOrdering columnOrdering = orderingsById.get(columnId);
+                if(!orderBy.isPresent()) {
+                    orderBy = Optional.ofNullable(columnOrdering);
+                }
+                if(columnOrdering != null) {
+                    columnPresenter.setSortOrder(columnOrdering.getDirection());
                 }
                 else {
-                    cp.clearSortOrder();
+                    columnPresenter.clearSortOrder();
                 }
             });
         }

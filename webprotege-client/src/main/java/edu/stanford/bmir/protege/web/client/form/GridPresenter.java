@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -19,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -110,7 +108,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
                 .map(GridRowPresenter::getFormDataValue)
                 .collect(toImmutableList());
         Page<GridRowData> page = new Page<>(1, 1, rows, rows.size());
-        return GridControlData.get(descriptor, page, ImmutableList.of());
+        return GridControlData.get(descriptor, page, ImmutableSet.of());
     }
 
     public boolean isEnabled() {
@@ -152,7 +150,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         view.setElementCount(rowsPage.getTotalElements());
         view.setPaginatorVisible(rowsPage.getPageCount() > 1);
         view.setEnabled(enabled);
-        ImmutableList<GridControlOrderBy> ordering = value.getOrdering();
+        ImmutableSet<FormRegionOrdering> ordering = value.getOrdering();
         headerPresenter.setOrderBy(ordering);
     }
 
@@ -253,7 +251,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         rowPresenters.forEach(GridRowPresenter::updateColumnVisibility);
     }
 
-    public ImmutableList<GridControlOrderBy> getOrdering() {
+    public ImmutableList<FormRegionOrdering> getOrdering() {
         return headerPresenter.getOrderBy();
     }
 

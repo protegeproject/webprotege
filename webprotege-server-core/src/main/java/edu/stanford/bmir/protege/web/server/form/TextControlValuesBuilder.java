@@ -34,8 +34,7 @@ public class TextControlValuesBuilder {
     @Nonnull
     public ImmutableList<FormControlDataDto> getTextControlDataDtoValues(@Nonnull TextControlDescriptor textControlDescriptor,
                                                                   @Nonnull OWLEntityData subject,
-                                                                  @Nonnull OwlBinding theBinding,
-                                                                  @Nonnull LangTagFilter langTagFilter) {
+                                                                  @Nonnull OwlBinding theBinding) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return values.stream()
                      .filter(p -> p instanceof OWLLiteral)

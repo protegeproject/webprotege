@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.server.form.FormRegionOrderingIndex;
 import edu.stanford.bmir.protege.web.server.form.data.GridCellDataDtoComparator;
 import edu.stanford.bmir.protege.web.server.form.data.GridRowDataDtoComparatorFactory;
 import edu.stanford.bmir.protege.web.server.form.data.GridRowDtoByColumnIndexComparator;
@@ -20,9 +21,11 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GridRowDataDtoComparatorFactory_TestCase {
@@ -47,9 +50,13 @@ public class GridRowDataDtoComparatorFactory_TestCase {
     @Mock
     private GridCellDataDtoComparator gridCellDataDtoComparator;
 
+    @Mock
+    private FormRegionOrderingIndex orderingIndex;
+
     @Before
     public void setUp() throws Exception {
-        comparatorFactory = new GridRowDataDtoComparatorFactory(gridCellDataDtoComparator);
+        comparatorFactory = new GridRowDataDtoComparatorFactory(gridCellDataDtoComparator,
+                                                                orderingIndex);
     }
 
     @Test
@@ -90,9 +97,11 @@ public class GridRowDataDtoComparatorFactory_TestCase {
     public Comparator<GridRowDataDto> createComparatorOrderByColumnIds(GridControlDescriptor gridControlDescriptor,
                                                                        GridColumnId ... columnIds) {
         var orderBys = Stream.of(columnIds)
-              .map(columnId -> GridControlOrderBy.get(columnId, GridControlOrderByDirection.ASC))
-              .collect(toImmutableList());
-        return comparatorFactory.get(orderBys, gridControlDescriptor);
+              .map(columnId -> FormRegionOrdering.get(columnId, FormRegionOrderingDirection.ASC))
+              .collect(toImmutableSet());
+        when(orderingIndex.getOrderings())
+                .thenReturn(orderBys);
+        return comparatorFactory.get(gridControlDescriptor);
     }
 
 

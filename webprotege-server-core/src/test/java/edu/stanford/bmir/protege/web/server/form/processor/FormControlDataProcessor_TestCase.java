@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form.processor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.form.FormFrameBuilder;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -52,7 +53,7 @@ public class FormControlDataProcessor_TestCase {
     @Mock
     private IRI iri;
 
-    private ImmutableList<GridControlOrderBy> ordering = ImmutableList.of();
+    private ImmutableSet<FormRegionOrdering> ordering = ImmutableSet.of();
 
     @Before
     public void setUp() {

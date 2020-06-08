@@ -65,7 +65,7 @@ public class FormControlDataDtoComparator implements Comparator<FormControlDataD
 
     @Override
     public int compare(FormControlDataDto d1, FormControlDataDto d2) {
-        return d1.accept(new FormControlDataDtoVisitorEx<Integer>() {
+        return d1.accept(new FormControlDataDtoVisitorEx<>() {
             @Override
             public Integer visit(@Nonnull EntityNameControlDataDto entityNameControlData) {
                 return entityNameControlDataComparator.compare(entityNameControlData, with(d2));

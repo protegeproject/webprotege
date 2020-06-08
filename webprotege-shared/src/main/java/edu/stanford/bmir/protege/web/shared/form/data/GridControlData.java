@@ -3,13 +3,12 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -23,7 +22,7 @@ public abstract class GridControlData implements ComplexFormControlValue {
     @Nonnull
     public static GridControlData get(@Nonnull GridControlDescriptor descriptor,
                                       @Nonnull Page<GridRowData> rows,
-                                      @Nonnull ImmutableList<GridControlOrderBy> ordering) {
+                                      @Nonnull ImmutableSet<FormRegionOrdering> ordering) {
         return new AutoValue_GridControlData(descriptor, rows, ordering);
     }
 
@@ -44,5 +43,5 @@ public abstract class GridControlData implements ComplexFormControlValue {
     public abstract Page<GridRowData> getRows();
 
     @Nonnull
-    public abstract ImmutableList<GridControlOrderBy> getOrdering();
+    public abstract ImmutableSet<FormRegionOrdering> getOrdering();
 }

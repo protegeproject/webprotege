@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -255,9 +255,9 @@ public class FormPresenter {
         container.setWidget(noFormView);
     }
 
-    public Stream<GridControlOrdering> getGridControlOrderings() {
+    public Stream<FormRegionOrdering> getOrderings() {
         return fieldPresenters.stream()
-                .flatMap(FormFieldPresenter::getGridControlOrderings);
+                .flatMap(FormFieldPresenter::getOrderings);
     }
 
     interface FormDataChangedHandler {

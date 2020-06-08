@@ -1,64 +1,66 @@
 package edu.stanford.bmir.protege.web.server.form.data;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.server.form.FormRegionOrderingIndex;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class GridRowDataDtoComparatorFactory {
 
 
+    private static final int FIRST_COLUMN = 0;
+
     @Nonnull
     private final GridCellDataDtoComparator cellComparator;
 
+    @Nonnull
+    private final FormRegionOrderingIndex orderingIndex;
+
     @Inject
-    public GridRowDataDtoComparatorFactory(@Nonnull GridCellDataDtoComparator cellComparator) {
+    public GridRowDataDtoComparatorFactory(@Nonnull GridCellDataDtoComparator cellComparator,
+                                           @Nonnull FormRegionOrderingIndex orderingIndex) {
         this.cellComparator = checkNotNull(cellComparator);
+        this.orderingIndex = checkNotNull(orderingIndex);
+        System.out.println();
+        this.orderingIndex.getOrderings().forEach(System.out::println);
     }
 
     @Nonnull
-    public Comparator<GridRowDataDto> get(@Nonnull ImmutableList<GridControlOrderBy> orderBy,
-                                          @Nonnull GridControlDescriptor descriptor) {
-        var leafColumnToTopLevelColumnMap = descriptor.getLeafColumnToTopLevelColumnMap();
-        return orderBy.stream()
-                      .map(order -> {
-                          var nestedColumnId = order.getColumnId();
-                          var topLevelColumnId = leafColumnToTopLevelColumnMap.get(nestedColumnId);
-                          int columnIndex = getColumnIndex(descriptor, topLevelColumnId);
-                          var rowComp = new GridRowDtoByColumnIndexComparator(
-                                  cellComparator,
-                                  columnIndex);
-                          if(order.isAscending()) {
-                              return rowComp;
-                          }
-                          else {
-                              return rowComp.reversed();
-                          }
-                      })
-                      .reduce(Comparator::thenComparing)
-                      // Compare by the first column
-                      .orElseGet(() -> new GridRowDtoByColumnIndexComparator(cellComparator, 0));
+    public Comparator<GridRowDataDto> get(@Nonnull GridControlDescriptor descriptor) {
+        return orderingIndex.getOrderings()
+                            .stream()
+                            .filter(this::isColumnOrdering)
+                            .map(ordering -> {
+                                var leafColumnToTopLevelColumnMap = descriptor.getLeafColumnToTopLevelColumnMap();
+                                var leafColumnId = (GridColumnId) ordering.getRegionId();
+                                var topLevelColumnId = leafColumnToTopLevelColumnMap.get(leafColumnId);
+                                int columnIndex = descriptor.getColumnIndex(topLevelColumnId);
+                                if (columnIndex == -1) {
+                                    return null;
+                                }
+                                FormRegionOrderingDirection direction = ordering.getDirection();
+                                return new GridRowDtoByColumnIndexComparator(
+                                        cellComparator,
+                                        direction,
+                                        columnIndex);
+                            })
+                            .filter(Objects::nonNull)
+                            .map(c -> (Comparator<GridRowDataDto>) c)
+                            .reduce(Comparator::thenComparing)
+                            // Compare by the first column
+                            .orElseGet(() -> new GridRowDtoByColumnIndexComparator(cellComparator,
+                                                                                   FormRegionOrderingDirection.ASC,
+                                                                                   FIRST_COLUMN));
     }
 
-
-    private static int getColumnIndex(@Nonnull GridControlDescriptor descriptor, GridColumnId mappedColumnId) {
-        var columns = descriptor.getColumns();
-        for (int i = 0; i < columns.size(); i++) {
-            var iColumnId = columns.get(i).getId();
-            if (iColumnId.equals(mappedColumnId)) {
-                return i;
-            }
-        }
-        return -1;
+    private boolean isColumnOrdering(FormRegionOrdering ordering) {
+        return ordering.getRegionId() instanceof GridColumnId;
     }
 }

@@ -213,11 +213,11 @@ public class RpcWhiteList implements Action, Result {
 
     public ChoiceDescriptorDto choiceDescriptorDto;
 
-    public GridControlOrderBy gridControlOrderBy;
+    public FormRegionOrdering formRegionOrdering;
 
-    public GridControlOrdering gridControlOrdering;
+    public FormRegionOrdering gridControlOrdering;
 
-    public GridControlOrderByDirection gridControlOrderByDirection;
+    public FormRegionOrderingDirection formRegionOrderingDirection;
 
     public FormPageRequest.SourceType getSource() {
         return source;

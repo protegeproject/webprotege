@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.SubFormControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
@@ -35,20 +34,14 @@ public class SubFormControlValuesBuilder {
     @Nonnull
     public ImmutableList<FormControlDataDto> getSubFormControlDataDtoValues(SubFormControlDescriptor subFormControlDescriptor,
                                                                      @Nonnull OWLEntityData subject,
-                                                                     @Nonnull OwlBinding theBinding,
-                                                                     @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                                                     @Nonnull LangTagFilter langTagFilter,
-                                                                     @Nonnull ImmutableList<GridControlOrdering> orderings) {
+                                                                     @Nonnull OwlBinding theBinding) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         FormDescriptor subFormDescriptor = subFormControlDescriptor.getFormDescriptor();
         return values.stream()
                      .filter(p -> p instanceof OWLEntity)
                      .map(p -> (OWLEntity) p)
                      .map(entity -> formDataDtoBuilderProvider.get().toFormData(entity,
-                                                                            subFormDescriptor,
-                                                                            formPageRequestIndex,
-                                                                            langTagFilter,
-                                                                            orderings))
+                                                                            subFormDescriptor))
                      .collect(ImmutableList.toImmutableList());
     }
 }

@@ -15,7 +15,7 @@ import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -138,7 +138,7 @@ public class EntityFormStackPresenter {
     private void updateFormsForCurrentEntity() {
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
-            ImmutableList<GridControlOrdering> orderings = formStackPresenter.getGridControlOrderings();
+            ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
             dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests, langTagFilter,
                                                       orderings),

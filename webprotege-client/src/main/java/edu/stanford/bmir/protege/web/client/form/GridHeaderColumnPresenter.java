@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasVisibility;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrderingDirection;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderByDirection;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,8 +13,8 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderByDirection.ASC;
-import static edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderByDirection.DESC;
+import static edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrderingDirection.ASC;
+import static edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrderingDirection.DESC;
 
 /**
  * Matthew Horridge
@@ -24,7 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy
 public class GridHeaderColumnPresenter implements HasVisibility {
 
     @Nonnull
-    private Optional<GridControlOrderByDirection> sortOrder = Optional.empty();
+    private Optional<FormRegionOrderingDirection> sortOrder = Optional.empty();
 
     interface ColumnHeaderClickedHandler {
         void handleGridHeaderColumnClicked();
@@ -60,7 +60,7 @@ public class GridHeaderColumnPresenter implements HasVisibility {
         container.setWidget(view);
     }
 
-    public boolean isPresenterFor(@Nonnull GridColumnId columnId) {
+    public boolean isPresenterFor(@Nonnull FormRegionId columnId) {
         return columnDescriptor.map(GridColumnDescriptor::getId)
                                .map(id -> id.equals(columnId))
                 .orElse(false);
@@ -80,7 +80,7 @@ public class GridHeaderColumnPresenter implements HasVisibility {
         this.columnHeaderClicked = checkNotNull(handler);
     }
 
-    public void setSortOrder(@Nonnull GridControlOrderByDirection direction) {
+    public void setSortOrder(@Nonnull FormRegionOrderingDirection direction) {
         this.sortOrder = Optional.of(direction);
         if(direction.equals(ASC)) {
             view.setSortAscending();
@@ -95,8 +95,8 @@ public class GridHeaderColumnPresenter implements HasVisibility {
         view.clearSortOrder();
     }
 
-    public GridControlOrderByDirection toggleSortOrder() {
-        GridControlOrderByDirection next = sortOrder.map(o -> {
+    public FormRegionOrderingDirection toggleSortOrder() {
+        FormRegionOrderingDirection next = sortOrder.map(o -> {
             if (o.equals(ASC)) {
                 return DESC;
             } else {

@@ -10,23 +10,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GridControlOrderBy_TestCase {
+public class FormRegionOrdering_TestCase {
 
     @Mock
     private GridColumnId columnId;
 
-    private GridControlOrderByDirection direction = GridControlOrderByDirection.ASC;
+    private FormRegionOrderingDirection direction = FormRegionOrderingDirection.ASC;
 
-    private GridControlOrderBy orderBy;
+    private FormRegionOrdering orderBy;
 
     @Before
     public void setUp() throws Exception {
-        orderBy = GridControlOrderBy.get(columnId, direction);
+        orderBy = FormRegionOrdering.get(columnId, direction);
     }
 
     @Test
     public void shouldReturnSuppliedColumnId() {
-        assertThat(orderBy.getColumnId(), equalTo(columnId));
+        assertThat(orderBy.getRegionId(), equalTo(columnId));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class GridControlOrderBy_TestCase {
 
     @Test
     public void shouldReturnFalseForDesc() {
-        GridControlOrderBy orderByDesc = GridControlOrderBy.get(columnId, GridControlOrderByDirection.DESC);
+        FormRegionOrdering orderByDesc = FormRegionOrdering.get(columnId, FormRegionOrderingDirection.DESC);
         assertThat(orderByDesc.isAscending(), equalTo(false));
     }
 }

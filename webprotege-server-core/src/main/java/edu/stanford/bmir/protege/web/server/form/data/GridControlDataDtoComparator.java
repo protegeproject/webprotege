@@ -8,17 +8,28 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Comparator;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class GridControlDataDtoComparator implements Comparator<GridControlDataDto> {
 
-    private Comparator<Iterable<GridRowDataDto>> lexicographical;
+    @Nonnull
+    private final GridRowDataDtoComparatorFactory comparatorFactory;
 
     @Inject
-    public GridControlDataDtoComparator(@Nonnull GridRowDtoByColumnIndexComparator gridRowDtoByColumnIndexComparator) {
-        this.lexicographical = Comparators.lexicographical(gridRowDtoByColumnIndexComparator);
+    public GridControlDataDtoComparator(@Nonnull GridRowDataDtoComparatorFactory comparatorFactory) {
+        this.comparatorFactory = checkNotNull(comparatorFactory);
     }
 
     @Override
     public int compare(GridControlDataDto o1, GridControlDataDto o2) {
+        var gridControlDescriptor1 = o1.getDescriptor();
+        var gridControlDescriptor2 = o2.getDescriptor();
+        if(!gridControlDescriptor1.equals(gridControlDescriptor2)) {
+            // Incomparable
+            throw new RuntimeException("Incomparable grids");
+        }
+        var comparator = comparatorFactory.get(gridControlDescriptor1);
+        var lexicographical = Comparators.lexicographical(comparator);
         return lexicographical.compare(o1.getRows(), o2.getRows());
     }
 }

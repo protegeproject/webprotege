@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -53,11 +52,18 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         var pageRequestIndex = FormPageRequestIndex.create(pageRequests);
         var entity = action.getEntity();
         var langTagFilter = action.getLangTagFilter();
-        var formDataDtoBuilder = projectComponent.getFormDataComponent().createFormDataBuilder();
         var ordering = action.getGridControlOrdering();
+        FormRegionOrderingIndex formRegionOrderingIndex = FormRegionOrderingIndex.get(ordering);
+        var module = new EntityFrameFormDataModule(
+                formRegionOrderingIndex,
+                langTagFilter,
+                pageRequestIndex
+        );
+        var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module)
+                                                 .formDataBuilder();
         var forms = formManager.getFormDescriptors(entity, projectId)
                           .stream()
-                          .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor, pageRequestIndex, langTagFilter, ordering))
+                          .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
                           .collect(toImmutableList());
         return new GetEntityFormsResult(forms);
     }

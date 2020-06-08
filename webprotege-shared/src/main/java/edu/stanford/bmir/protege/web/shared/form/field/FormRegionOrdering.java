@@ -10,29 +10,29 @@ import javax.annotation.Nonnull;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class GridControlOrderBy {
+public abstract class FormRegionOrdering {
 
-    public static final String COLUMN_ID = "columnId";
+    public static final String REGION_ID = "regionId";
 
     public static final String DIRECTION = "direction";
 
     @JsonCreator
     @Nonnull
-    public static GridControlOrderBy get(@JsonProperty(COLUMN_ID) @Nonnull GridColumnId columnId,
-                                         @JsonProperty(DIRECTION) @Nonnull GridControlOrderByDirection direction) {
-        return new AutoValue_GridControlOrderBy(columnId, direction);
+    public static FormRegionOrdering get(@JsonProperty(REGION_ID) @Nonnull FormRegionId formRegionId,
+                                         @JsonProperty(DIRECTION) @Nonnull FormRegionOrderingDirection direction) {
+        return new AutoValue_FormRegionOrdering(formRegionId, direction);
     }
 
-    @JsonProperty(COLUMN_ID)
+    @JsonProperty(REGION_ID)
     @Nonnull
-    public abstract GridColumnId getColumnId();
+    public abstract FormRegionId getRegionId();
 
     @JsonProperty(DIRECTION)
     @Nonnull
-    public abstract GridControlOrderByDirection getDirection();
+    public abstract FormRegionOrderingDirection getDirection();
 
     @JsonIgnore
     public boolean isAscending() {
-        return getDirection().equals(GridControlOrderByDirection.ASC);
+        return getDirection().equals(FormRegionOrderingDirection.ASC);
     }
 }
