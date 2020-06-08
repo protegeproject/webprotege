@@ -17,8 +17,9 @@ public abstract class GridControlDataDto implements FormControlDataDto {
     @Nonnull
     public static GridControlDataDto get(@Nonnull GridControlDescriptor descriptor,
                                          @Nonnull Page<GridRowDataDto> rows,
-                                         @Nonnull ImmutableSet<FormRegionOrdering> ordering) {
-        return new AutoValue_GridControlDataDto(descriptor, rows, ordering);
+                                         @Nonnull ImmutableSet<FormRegionOrdering> ordering,
+                                         int depth) {
+        return new AutoValue_GridControlDataDto(depth, descriptor, rows, ordering);
     }
 
     @Nonnull

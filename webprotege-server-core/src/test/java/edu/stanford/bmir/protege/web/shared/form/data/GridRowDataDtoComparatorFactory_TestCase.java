@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -101,7 +102,7 @@ public class GridRowDataDtoComparatorFactory_TestCase {
               .collect(toImmutableSet());
         when(orderingIndex.getOrderings())
                 .thenReturn(orderBys);
-        return comparatorFactory.get(gridControlDescriptor);
+        return comparatorFactory.get(gridControlDescriptor, Optional.empty());
     }
 
 

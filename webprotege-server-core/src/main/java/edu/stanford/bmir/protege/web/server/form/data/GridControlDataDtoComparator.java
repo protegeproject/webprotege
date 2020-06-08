@@ -1,12 +1,16 @@
 package edu.stanford.bmir.protege.web.server.form.data;
 
 import com.google.common.collect.Comparators;
+import edu.stanford.bmir.protege.web.server.form.FormRegionOrderingIndex;
 import edu.stanford.bmir.protege.web.shared.form.data.GridControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowDataDto;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrderingDirection;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Comparator;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,11 +29,12 @@ public class GridControlDataDtoComparator implements Comparator<GridControlDataD
         var gridControlDescriptor1 = o1.getDescriptor();
         var gridControlDescriptor2 = o2.getDescriptor();
         if(!gridControlDescriptor1.equals(gridControlDescriptor2)) {
-            // Incomparable
             throw new RuntimeException("Incomparable grids");
         }
-        var comparator = comparatorFactory.get(gridControlDescriptor1);
-        var lexicographical = Comparators.lexicographical(comparator);
-        return lexicographical.compare(o1.getRows(), o2.getRows());
+        // Always sort ascending otherwise reversed order gets cancelled out
+        var directionOverride = Optional.of(FormRegionOrderingDirection.ASC);
+        var comparator = comparatorFactory.get(gridControlDescriptor1, directionOverride);
+        return Comparators.lexicographical(comparator).compare(o1.getRows().getPageElements(),
+                                                               o2.getRows().getPageElements());
     }
 }

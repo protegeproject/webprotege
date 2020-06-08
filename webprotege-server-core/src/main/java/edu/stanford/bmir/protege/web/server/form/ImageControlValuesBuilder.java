@@ -31,12 +31,12 @@ public class ImageControlValuesBuilder {
     }
 
     @Nonnull
-    public ImmutableList<FormControlDataDto> getImageControlDataDtoValues(ImageControlDescriptor imageControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+    public ImmutableList<FormControlDataDto> getImageControlDataDtoValues(ImageControlDescriptor imageControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding, int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return values.stream()
                      .filter(p -> p instanceof IRI)
                      .map(p -> (IRI) p)
-                     .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri))
+                     .map(iri -> ImageControlDataDto.get(imageControlDescriptor, iri, depth))
                      .sorted(comparator)
                      .collect(toImmutableList());
     }

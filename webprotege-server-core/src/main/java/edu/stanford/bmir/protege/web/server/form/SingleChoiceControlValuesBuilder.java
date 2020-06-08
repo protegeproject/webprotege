@@ -44,7 +44,7 @@ public class SingleChoiceControlValuesBuilder {
     @Nonnull
     public ImmutableList<FormControlDataDto> getSingleChoiceControlDataDtoValues(@Nonnull SingleChoiceControlDescriptor singleChoiceControlDescriptor,
                                                                                  @Nonnull OWLEntityData subject,
-                                                                                 @Nonnull OwlBinding theBinding) {
+                                                                                 @Nonnull OwlBinding theBinding, int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         var choiceSource = singleChoiceControlDescriptor.getSource();
         var vals = values.stream()
@@ -53,14 +53,16 @@ public class SingleChoiceControlValuesBuilder {
                          .map(value -> SingleChoiceControlDataDto.get(
                                  singleChoiceControlDescriptor,
                                  choiceDescriptorCache.getChoices(choiceSource),
-                                 value))
+                                 value,
+                                 depth))
                          .limit(1)
                          .collect(ImmutableList.<FormControlDataDto>toImmutableList());
         if (vals.isEmpty()) {
             return ImmutableList.of(
                     SingleChoiceControlDataDto.get(singleChoiceControlDescriptor,
                                                    choiceDescriptorCache.getChoices(choiceSource),
-                                                   null)
+                                                   null,
+                                                   depth)
             );
         } else {
             return vals;

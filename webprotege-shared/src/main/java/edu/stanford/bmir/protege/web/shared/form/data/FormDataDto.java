@@ -20,8 +20,9 @@ public abstract class FormDataDto implements FormControlDataDto {
     @Nonnull
     public static FormDataDto get(@Nonnull FormSubjectDto subject,
                                   @Nonnull FormDescriptor formDescriptor,
-                                  @Nonnull ImmutableList<FormFieldDataDto> formFieldData) {
-        return new AutoValue_FormDataDto(subject, formDescriptor, formFieldData);
+                                  @Nonnull ImmutableList<FormFieldDataDto> formFieldData,
+                                  int depth) {
+        return new AutoValue_FormDataDto(depth, subject, formDescriptor, formFieldData);
     }
 
     @Nonnull

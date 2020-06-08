@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
@@ -75,28 +76,29 @@ public class GridControlValuesBuilder {
     public ImmutableList<FormControlDataDto> getGridControlDataDtoValues(@Nonnull GridControlDescriptor gridControlDescriptor,
                                                                          @Nonnull OWLEntityData subject,
                                                                          @Nonnull OwlBinding theBinding,
-                                                                         @Nonnull FormRegionId formFieldId) {
+                                                                         @Nonnull FormRegionId formFieldId,
+                                                                         int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return ImmutableList.of(toGridControlData(subject,
                                                   formFieldId,
                                                   values,
-                                                  gridControlDescriptor));
+                                                  gridControlDescriptor, depth));
     }
 
 
     private GridControlDataDto toGridControlData(OWLPrimitiveData root,
                                                  FormRegionId formFieldId,
                                                  ImmutableList<OWLPrimitive> subjects,
-                                                 GridControlDescriptor descriptor) {
+                                                 GridControlDescriptor descriptor, int depth) {
         var rootSubject = FormSubjectDto.getFormSubject(root);
         var pageRequest = formPageRequestIndex.getPageRequest(rootSubject.toFormSubject(),
                                                               formFieldId,
                                                               FormPageRequest.SourceType.GRID_CONTROL);
-        var comparator = comparatorFactory.get(descriptor);
+        var comparator = comparatorFactory.get(descriptor, Optional.empty());
         var rowData = subjects.stream()
                               .map(this::toEntityFormSubject)
                               .filter(Objects::nonNull)
-                              .map(entity -> toGridRow(entity, descriptor))
+                              .map(entity -> toGridRow(entity, descriptor, depth))
                               .filter(Objects::nonNull)
                               .sorted(comparator)
                               .collect(PageCollector.toPage(pageRequest.getPageNumber(),
@@ -113,7 +115,8 @@ public class GridControlValuesBuilder {
         }
         return GridControlDataDto.get(descriptor,
                                       rowData.orElse(Page.emptyPage()),
-                                      orderings);
+                                      orderings,
+                                      depth);
     }
 
     /**
@@ -121,15 +124,18 @@ public class GridControlValuesBuilder {
      *
      * @param rowSubject            The row subject
      * @param gridControlDescriptor The grid control descriptor
+     * @param depth
      * @return null if there is no row for the specified subject (because it is filtered out)
      */
     @Nullable
     private GridRowDataDto toGridRow(OWLEntityData rowSubject,
-                                     GridControlDescriptor gridControlDescriptor) {
+                                     GridControlDescriptor gridControlDescriptor,
+                                     int depth) {
         var columnDescriptors = gridControlDescriptor.getColumns();
         // To Cells
         var cellData = toGridRowCells(rowSubject,
-                                      columnDescriptors);
+                                      columnDescriptors,
+                                      depth);
         if (cellData.isEmpty()) {
             return null;
         }
@@ -139,14 +145,15 @@ public class GridControlValuesBuilder {
 
     @Nonnull
     private ImmutableList<GridCellDataDto> toGridRowCells(OWLEntityData rowSubject,
-                                                          @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors) {
+                                                          @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors,
+                                                          int depth) {
         var resultBuilder = ImmutableList.<GridCellDataDto>builder();
         for (var columnDescriptor : columnDescriptors) {
             var columnId = columnDescriptor.getId();
             var direction = formRegionOrderingIndex.getOrderingDirection(columnId);
             var comp = direction.isAscending() ? formControlDataDtoComparator : formControlDataDtoComparator.reversed();
             var cellValues = formDataDtoBuilderProvider.get()
-                                                       .toFormControlValues(rowSubject, columnId, columnDescriptor)
+                                                       .toFormControlValues(rowSubject, columnId, columnDescriptor, depth + 1)
                     .stream()
                     .sorted(comp)
                     .collect(toImmutableList());

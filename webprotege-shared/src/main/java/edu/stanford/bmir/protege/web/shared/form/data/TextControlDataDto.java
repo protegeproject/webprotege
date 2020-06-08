@@ -22,8 +22,9 @@ public abstract class TextControlDataDto implements FormControlDataDto, Comparab
 
     @Nonnull
     public static TextControlDataDto get(@Nonnull TextControlDescriptor descriptor,
-                                         @Nonnull OWLLiteral value) {
-        return new AutoValue_TextControlDataDto(descriptor, value);
+                                         @Nonnull OWLLiteral value,
+                                         int depth) {
+        return new AutoValue_TextControlDataDto(depth, descriptor, value);
     }
 
     @JsonProperty("descriptor")

@@ -43,8 +43,9 @@ public class EntityNameControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getEntityNameControlDataDtoValues(@Nonnull EntityNameControlDescriptor entityNameControlDescriptor,
-                                                                        @Nonnull OWLEntityData subject,
-                                                                        @Nonnull OwlBinding theBinding) {
+                                                                               @Nonnull OWLEntityData subject,
+                                                                               @Nonnull OwlBinding theBinding,
+                                                                               int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return values.stream()
                      // Allow IRIs which correspond to entities
@@ -58,7 +59,7 @@ public class EntityNameControlValuesBuilder {
                          }
                      })
                      .map(renderer::getEntityRendering)
-                     .map(entity -> EntityNameControlDataDto.get(entityNameControlDescriptor, entity))
+                     .map(entity -> EntityNameControlDataDto.get(entityNameControlDescriptor, entity, depth))
                      .sorted(comparator)
                      .collect(ImmutableList.toImmutableList());
     }

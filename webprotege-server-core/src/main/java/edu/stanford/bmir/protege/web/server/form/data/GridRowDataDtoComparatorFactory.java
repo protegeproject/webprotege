@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,12 +29,11 @@ public class GridRowDataDtoComparatorFactory {
                                            @Nonnull FormRegionOrderingIndex orderingIndex) {
         this.cellComparator = checkNotNull(cellComparator);
         this.orderingIndex = checkNotNull(orderingIndex);
-        System.out.println();
-        this.orderingIndex.getOrderings().forEach(System.out::println);
     }
 
     @Nonnull
-    public Comparator<GridRowDataDto> get(@Nonnull GridControlDescriptor descriptor) {
+    public Comparator<GridRowDataDto> get(@Nonnull GridControlDescriptor descriptor,
+                                          Optional<FormRegionOrderingDirection> directionOverride) {
         return orderingIndex.getOrderings()
                             .stream()
                             .filter(this::isColumnOrdering)
@@ -45,7 +45,7 @@ public class GridRowDataDtoComparatorFactory {
                                 if (columnIndex == -1) {
                                     return null;
                                 }
-                                FormRegionOrderingDirection direction = ordering.getDirection();
+                                var direction = directionOverride.orElse(ordering.getDirection());
                                 return new GridRowDtoByColumnIndexComparator(
                                         cellComparator,
                                         direction,

@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.form.data.TextControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.TextControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
@@ -33,13 +32,14 @@ public class TextControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getTextControlDataDtoValues(@Nonnull TextControlDescriptor textControlDescriptor,
-                                                                  @Nonnull OWLEntityData subject,
-                                                                  @Nonnull OwlBinding theBinding) {
+                                                                         @Nonnull OWLEntityData subject,
+                                                                         @Nonnull OwlBinding theBinding,
+                                                                         int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return values.stream()
                      .filter(p -> p instanceof OWLLiteral)
                      .map(p -> (OWLLiteral) p)
-                     .map(literal -> TextControlDataDto.get(textControlDescriptor, literal))
+                     .map(literal -> TextControlDataDto.get(textControlDescriptor, literal, depth))
                      .sorted(textControlDataDtoComparator)
                      .collect(ImmutableList.toImmutableList());
     }

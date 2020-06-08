@@ -31,12 +31,12 @@ public class NumberControlValuesBuilder {
     }
 
     @Nonnull
-    public ImmutableList<FormControlDataDto> getNumberControlDataDtoValues(NumberControlDescriptor numberControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding) {
+    public ImmutableList<FormControlDataDto> getNumberControlDataDtoValues(NumberControlDescriptor numberControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding, int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         return values.stream()
                      .filter(p -> p instanceof OWLLiteral)
                      .map(p -> (OWLLiteral) p)
-                     .map(value -> NumberControlDataDto.get(numberControlDescriptor, value))
+                     .map(value -> NumberControlDataDto.get(numberControlDescriptor, value, depth))
                      .sorted(comparator)
                      .collect(ImmutableList.toImmutableList());
     }

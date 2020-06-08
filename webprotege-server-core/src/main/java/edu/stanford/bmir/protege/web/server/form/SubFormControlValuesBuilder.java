@@ -34,14 +34,16 @@ public class SubFormControlValuesBuilder {
     @Nonnull
     public ImmutableList<FormControlDataDto> getSubFormControlDataDtoValues(SubFormControlDescriptor subFormControlDescriptor,
                                                                      @Nonnull OWLEntityData subject,
-                                                                     @Nonnull OwlBinding theBinding) {
+                                                                     @Nonnull OwlBinding theBinding,
+                                                                            int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         FormDescriptor subFormDescriptor = subFormControlDescriptor.getFormDescriptor();
         return values.stream()
                      .filter(p -> p instanceof OWLEntity)
                      .map(p -> (OWLEntity) p)
-                     .map(entity -> formDataDtoBuilderProvider.get().toFormData(entity,
-                                                                            subFormDescriptor))
+                     .map(entity -> formDataDtoBuilderProvider.get().getFormDataDto(entity,
+                                                                                subFormDescriptor,
+                                                                                depth))
                      .collect(ImmutableList.toImmutableList());
     }
 }

@@ -21,8 +21,9 @@ public abstract class MultiChoiceControlDataDto implements FormControlDataDto {
     @Nonnull
     public static MultiChoiceControlDataDto get(@Nonnull MultiChoiceControlDescriptor descriptor,
                                                 ImmutableList<ChoiceDescriptorDto> choices,
-                                                @Nonnull ImmutableList<PrimitiveFormControlDataDto> values) {
-        return new AutoValue_MultiChoiceControlDataDto(descriptor, choices, values);
+                                                @Nonnull ImmutableList<PrimitiveFormControlDataDto> values,
+                                                int depth) {
+        return new AutoValue_MultiChoiceControlDataDto(depth, descriptor, choices, values);
     }
 
     @JsonProperty("descriptor")

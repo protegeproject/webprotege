@@ -37,7 +37,8 @@ public class MultiChoiceControlValueBuilder {
     @Nonnull
     public ImmutableList<FormControlDataDto> getMultiChoiceControlDataDtoValues(@Nonnull MultiChoiceControlDescriptor multiChoiceControlDescriptor,
                                                                          @Nonnull OWLEntityData subject,
-                                                                         @Nonnull OwlBinding theBinding) {
+                                                                         @Nonnull OwlBinding theBinding,
+                                                                                int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
         var vals = values.stream()
                          .flatMap(renderer::toFormControlDataDto)
@@ -45,6 +46,7 @@ public class MultiChoiceControlValueBuilder {
         return ImmutableList.of(MultiChoiceControlDataDto.get(multiChoiceControlDescriptor,
                                                               choiceDescriptorCache.getChoices(
                                                                       multiChoiceControlDescriptor.getSource()),
-                                                              vals));
+                                                              vals,
+                                                              depth));
     }
 }

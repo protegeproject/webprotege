@@ -19,8 +19,9 @@ public abstract class NumberControlDataDto implements FormControlDataDto, Compar
 
     @Nonnull
     public static NumberControlDataDto get(@Nonnull NumberControlDescriptor descriptor,
-                                           @Nonnull OWLLiteral value) {
-        return new AutoValue_NumberControlDataDto(descriptor, value);
+                                           @Nonnull OWLLiteral value,
+                                           int depth) {
+        return new AutoValue_NumberControlDataDto(depth, descriptor, value);
     }
 
     @Nonnull

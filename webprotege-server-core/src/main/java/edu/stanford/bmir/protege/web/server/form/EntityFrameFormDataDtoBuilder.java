@@ -84,8 +84,9 @@ public class EntityFrameFormDataDtoBuilder {
 
     @Nonnull
     protected ImmutableList<FormControlDataDto> toFormControlValues(@Nonnull OWLEntityData subject,
-                                                                   @Nonnull FormRegionId formFieldId,
-                                                                   @Nonnull BoundControlDescriptor descriptor) {
+                                                                    @Nonnull FormRegionId formFieldId,
+                                                                    @Nonnull BoundControlDescriptor descriptor,
+                                                                    int depth) {
         var owlBinding = descriptor.getOwlBinding();
         if (owlBinding.isEmpty()) {
             return ImmutableList.of();
@@ -97,42 +98,43 @@ public class EntityFrameFormDataDtoBuilder {
             public ImmutableList<FormControlDataDto> visit(TextControlDescriptor textControlDescriptor) {
                 return textControlValuesBuilder.getTextControlDataDtoValues(textControlDescriptor,
                                                                             subject,
-                                                                            theBinding);
+                                                                            theBinding, depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(NumberControlDescriptor numberControlDescriptor) {
                 return numberControlValuesBuilder.getNumberControlDataDtoValues(numberControlDescriptor,
                                                                                 subject,
-                                                                                theBinding);
+                                                                                theBinding, depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(SingleChoiceControlDescriptor singleChoiceControlDescriptor) {
                 return SingleChoiceControlValuesBuilder.getSingleChoiceControlDataDtoValues(singleChoiceControlDescriptor,
                                                                                             subject,
-                                                                                            theBinding);
+                                                                                            theBinding, depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(MultiChoiceControlDescriptor multiChoiceControlDescriptor) {
                 return multiChoiceControlValueBuilder.getMultiChoiceControlDataDtoValues(multiChoiceControlDescriptor,
                                                                                          subject,
-                                                                                         theBinding);
+                                                                                         theBinding,
+                                                                                         depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(EntityNameControlDescriptor entityNameControlDescriptor) {
                 return entityNameControlValuesBuilder.getEntityNameControlDataDtoValues(entityNameControlDescriptor,
                                                                                         subject,
-                                                                                        theBinding);
+                                                                                        theBinding, depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(ImageControlDescriptor imageControlDescriptor) {
                 return imageControlValuesBuilder.getImageControlDataDtoValues(imageControlDescriptor,
                                                                               subject,
-                                                                              theBinding);
+                                                                              theBinding, depth);
             }
 
             @Override
@@ -140,14 +142,15 @@ public class EntityFrameFormDataDtoBuilder {
                 return gridControlValuesBuilder.getGridControlDataDtoValues(gridControlDescriptor,
                                                                             subject,
                                                                             theBinding,
-                                                                            formFieldId);
+                                                                            formFieldId, depth);
             }
 
             @Override
             public ImmutableList<FormControlDataDto> visit(SubFormControlDescriptor subFormControlDescriptor) {
                 return subFormControlValuesBuilder.getSubFormControlDataDtoValues(subFormControlDescriptor,
                                                                                   subject,
-                                                                                  theBinding);
+                                                                                  theBinding,
+                                                                                  depth);
             }
         });
     }
@@ -155,6 +158,12 @@ public class EntityFrameFormDataDtoBuilder {
 
     public FormDataDto toFormData(@Nonnull OWLEntity subject,
                                   @Nonnull FormDescriptor formDescriptor) {
+        int depth = 0;
+        return getFormDataDto(subject, formDescriptor, depth);
+    }
+
+    protected FormDataDto getFormDataDto(@Nonnull OWLEntity subject,
+                                         @Nonnull FormDescriptor formDescriptor, int depth) {
         var subjectData = sessionRenderer.getEntityRendering(subject);
         var formSubject = FormSubjectDto.getFormSubject(subjectData);
         var fieldData = formDescriptor.getFields()
@@ -162,7 +171,8 @@ public class EntityFrameFormDataDtoBuilder {
                                       .map(field -> {
                                           var formControlValues = toFormControlValues(subjectData,
                                                                                       field.getId(),
-                                                                                      field);
+                                                                                      field,
+                                                                                      depth);
                                           var controlValuesStream = formControlValues
                                                   .stream()
                                                   .filter(this::isIncluded);
@@ -177,7 +187,7 @@ public class EntityFrameFormDataDtoBuilder {
                                           return FormFieldDataDto.get(field, controlValuesPage);
                                       })
                                       .collect(toImmutableList());
-        return FormDataDto.get(formSubject, formDescriptor, fieldData);
+        return FormDataDto.get(formSubject, formDescriptor, fieldData, depth);
     }
 
     private boolean isIncluded(@Nonnull FormControlDataDto formControlData) {

@@ -16,8 +16,9 @@ public abstract class ImageControlDataDto implements FormControlDataDto {
 
     @Nonnull
     public static ImageControlDataDto get(@Nonnull ImageControlDescriptor descriptor,
-                                          @Nonnull IRI iri) {
-        return new AutoValue_ImageControlDataDto(descriptor, iri);
+                                          @Nonnull IRI iri,
+                                          int depth) {
+        return new AutoValue_ImageControlDataDto(depth, descriptor, iri);
     }
 
     @JsonProperty("descriptor")
