@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -11,10 +12,7 @@ import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +40,7 @@ public class SubFormControlDescriptor_IT {
                                                 LanguageMap.of("en", "The sub form"),
                                                 singletonList(
                                                         FormFieldDescriptor.get(
-                                                                FormFieldId.get("Label"),
+                                                                FormFieldId.get(UUID.randomUUID().toString()),
                                                                 OwlPropertyBinding.get(new OWLObjectPropertyImpl(
                                                                                                OWLRDFVocabulary.RDFS_LABEL.getIRI()),
                                                                                        null),
@@ -58,6 +56,7 @@ public class SubFormControlDescriptor_IT {
                                                                 Repeatability.NON_REPEATABLE,
                                                                 Optionality.REQUIRED,
                                                                 true,
+                                                                ExpansionState.COLLAPSED,
                                                                 LanguageMap.empty()
                                                         )
                                                 ), Optional.empty());

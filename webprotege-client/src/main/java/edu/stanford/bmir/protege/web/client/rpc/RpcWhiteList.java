@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -226,6 +227,8 @@ public class RpcWhiteList implements Action, Result {
     public void setSource(FormPageRequest.SourceType source) {
         this.source = source;
     }
+
+    public ExpansionState expansionState;
 
     FormPageRequest.SourceType source;
 

@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
@@ -80,7 +81,7 @@ public class FormPresenter {
     }
 
     public void collapseAll() {
-        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED));
+        fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.COLLAPSED));
     }
 
     /**
@@ -116,7 +117,7 @@ public class FormPresenter {
     public void saveExpansionState() {
         collapsedFields.clear();
         fieldPresenters.forEach(p -> {
-            if(p.getExpansionState() == FormFieldPresenter.ExpansionState.COLLAPSED) {
+            if(p.getExpansionState() == ExpansionState.COLLAPSED) {
                 FormFieldId id = p.getValue()
                                   .getFormFieldDescriptor()
                                   .getId();
@@ -178,6 +179,9 @@ public class FormPresenter {
 
     private void addFormField(@Nonnull FormFieldDataDto formFieldData) {
         FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
+        if(formFieldDescriptor.getInitialExpansionState().equals(ExpansionState.COLLAPSED)) {
+            collapsedFields.add(formFieldData.getFormFieldDescriptor().getId());
+        }
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
@@ -186,8 +190,7 @@ public class FormPresenter {
         fieldPresenters.add(presenter);
         if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()
                                                  .getId())) {
-            GWT.log("[FormPresenter] Setting collapsed");
-            presenter.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED);
+            presenter.setExpansionState(ExpansionState.COLLAPSED);
         }
         // TODO : Change handler
         presenter.setValue(formFieldData);
@@ -196,7 +199,7 @@ public class FormPresenter {
     }
 
     public void expandAll() {
-        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.EXPANDED));
+        fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.EXPANDED));
     }
 
     /**

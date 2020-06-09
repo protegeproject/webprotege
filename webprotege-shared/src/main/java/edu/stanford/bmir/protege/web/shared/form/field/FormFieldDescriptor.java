@@ -5,6 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.HasFormFieldId;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -37,6 +38,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     public static final String REPEATABILITY = "repeatability";
     public static final String OPTIONALITY = "optionality";
     public static final String READ_ONLY = "readOnly";
+    public static final String INITIAL_EXPANSIONS_STATE = "initialExpansionState";
     public static final String HELP = "help";
 
     @JsonCreator
@@ -49,6 +51,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                           @JsonProperty(REPEATABILITY) @Nullable Repeatability repeatability,
                                           @JsonProperty(OPTIONALITY) @Nullable Optionality optionality,
                                           @JsonProperty(READ_ONLY) boolean readOnly,
+                                          @JsonProperty(INITIAL_EXPANSIONS_STATE) @Nullable ExpansionState expansionState,
                                           @JsonProperty(HELP) @Nullable LanguageMap help) {
         return new AutoValue_FormFieldDescriptor(id,
                                                  owlBinding,
@@ -58,6 +61,7 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
                                                  optionality == null ? Optionality.REQUIRED : optionality,
                                                  repeatability == null ? Repeatability.NON_REPEATABLE : repeatability,
                                                  readOnly,
+                                                 expansionState == null ? ExpansionState.EXPANDED : expansionState,
                                                  help == null ? LanguageMap.empty() : help);
     }
 
@@ -98,6 +102,10 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     public abstract Repeatability getRepeatability();
 
     public abstract boolean isReadOnly();
+
+    @JsonProperty(INITIAL_EXPANSIONS_STATE)
+    @Nonnull
+    public abstract ExpansionState getInitialExpansionState();
 
     @Nonnull
     public abstract LanguageMap getHelp();

@@ -95,13 +95,13 @@ public class ProjectChangesManager_IT {
         when(defaultOntologyIdManager.getDefaultOntologyId())
                 .thenReturn(rootOntology.getOntologyID());
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
+
         var ontologiesIndex = new ProjectOntologiesIndexImpl();
+        ontologiesIndex.init(revisionManager);
 
         var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl();
         var projectAnnotationAssertionsIndex = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex,
                                                                                                       annotationAssertionsIndex);
-        var annotationAssertionAxioms = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
-        AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl();
 
         var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
         var projectOntologiesIndex = new ProjectOntologiesIndexImpl();

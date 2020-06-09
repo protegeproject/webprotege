@@ -98,6 +98,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
                                                                  view.getRepeatability(),
                                                                  view.getOptionality(),
                                                                  view.isReadOnly(),
+                                                                 view.getInitialExpansionState(),
                                                                  view.getHelp());
         return Optional.of(descriptor);
     }
@@ -125,6 +126,7 @@ public class FormFieldDescriptorPresenter implements ObjectPresenter<FormFieldDe
 
         view.setReadOnly(descriptor.isReadOnly());
 
+        view.setInitialExpansionState(descriptor.getInitialExpansionState());
 
 
         FormControlDescriptor formControlDescriptor = descriptor.getFormControlDescriptor();

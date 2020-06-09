@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 
@@ -25,6 +23,11 @@ public abstract class FormRegionOrdering {
 
     @JsonProperty(REGION_ID)
     @Nonnull
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = FormFieldId.class),
+            @JsonSubTypes.Type(value = GridColumnId.class)
+    })
     public abstract FormRegionId getRegionId();
 
     @JsonProperty(DIRECTION)

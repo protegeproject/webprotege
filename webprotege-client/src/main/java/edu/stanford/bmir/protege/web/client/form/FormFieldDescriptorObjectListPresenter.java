@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
@@ -35,6 +36,7 @@ public class FormFieldDescriptorObjectListPresenter extends ObjectListPresenter<
                 Repeatability.NON_REPEATABLE,
                 Optionality.REQUIRED,
                 false,
+                ExpansionState.COLLAPSED,
                 LanguageMap.empty()
         );
     }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -30,11 +31,6 @@ public class FormFieldPresenter implements FormRegionPresenter {
 
     private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
         updateRequiredValuePresent();
-    }
-
-    enum ExpansionState {
-        EXPANDED,
-        COLLAPSED
     }
 
     @Nonnull

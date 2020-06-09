@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
@@ -57,4 +58,9 @@ public interface FormFieldDescriptorView extends IsWidget, HasRequestFocus {
 
     @Nonnull
     AcceptsOneWidget getFieldDescriptorViewContainer();
+
+    @Nonnull
+    ExpansionState getInitialExpansionState();
+
+    void setInitialExpansionState(@Nonnull ExpansionState expansionState);
 }
