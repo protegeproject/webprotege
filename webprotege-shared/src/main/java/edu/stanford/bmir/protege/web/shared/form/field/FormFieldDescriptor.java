@@ -80,11 +80,6 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
         return Optional.ofNullable(getOwlBindingInternal());
     }
 
-    @JsonIgnore
-    public Optional<OWLProperty> getOwlProperty() {
-        return getOwlBinding().flatMap(OwlBinding::getOwlProperty);
-    }
-
     @Nonnull
     public abstract LanguageMap getLabel();
 
@@ -113,15 +108,5 @@ public abstract class FormFieldDescriptor implements HasFormFieldId, HasRepeatab
     @JsonIgnore
     public boolean isComposite() {
         return getFormControlDescriptor() instanceof SubFormControlDescriptor;
-    }
-
-    @JsonIgnore
-    public boolean isNonComposite() {
-        return !(getFormControlDescriptor() instanceof SubFormControlDescriptor);
-    }
-
-    @JsonIgnore
-    public boolean isRepeatable() {
-        return !getRepeatability().equals(Repeatability.NON_REPEATABLE);
     }
 }
