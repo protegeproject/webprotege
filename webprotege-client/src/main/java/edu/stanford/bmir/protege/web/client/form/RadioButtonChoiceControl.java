@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
 
     private ValueChangeHandler<Boolean> radioButtonValueChangedHandler;
 
-    private SingleChoiceControlDescriptor descriptor;
+    private SingleChoiceControlDescriptorDto descriptor;
 
     private boolean enabled = true;
 
@@ -62,9 +63,11 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     }
 
     @Override
-    public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
+    public void setDescriptor(@Nonnull SingleChoiceControlDescriptorDto descriptor) {
         this.descriptor = descriptor;
-        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+        setChoices(descriptor.getAvailableChoices());
+//        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+
     }
 
     private void setChoices(List<ChoiceDescriptorDto> choiceDescriptorDtos) {
@@ -111,7 +114,6 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     public void setValue(@Nonnull FormControlDataDto value) {
         if(value instanceof SingleChoiceControlDataDto) {
             SingleChoiceControlDataDto choiceControlDataDto = (SingleChoiceControlDataDto) value;
-            setChoices(choiceControlDataDto.getAvailableChoices());
             Optional<PrimitiveFormControlData> choice = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::toPrimitiveFormControlData);
             setChoice(choice);
         }
@@ -147,7 +149,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
         for(RadioButton radioButton : choiceButtons.keySet()) {
             if(radioButton.getValue()) {
                 PrimitiveFormControlData value = choiceButtons.get(radioButton);
-                return Optional.of(SingleChoiceControlData.get(descriptor, value));
+                return Optional.of(SingleChoiceControlData.get(descriptor.toFormControlDescriptor(), value));
             }
         }
         return Optional.empty();

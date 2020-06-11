@@ -7,12 +7,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
@@ -45,7 +43,7 @@ public class FormPresenter {
     private final List<FormFieldPresenter> fieldPresenters = new ArrayList<>();
 
     @Nonnull
-    private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
+    private Optional<FormDescriptorDto> currentFormDescriptor = Optional.empty();
 
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
@@ -160,7 +158,7 @@ public class FormPresenter {
      */
     private void createFormAndSetFormData(@Nonnull FormDataDto formData) {
         clear();
-        FormDescriptor formDescriptor = formData.getFormDescriptor();
+        FormDescriptorDto formDescriptor = formData.getFormDescriptor();
         currentFormDescriptor = Optional.of(formDescriptor);
         dispatchServiceManager.beginBatch();
         for(FormFieldDataDto fieldData : formData.getFormFieldData()) {
@@ -178,7 +176,7 @@ public class FormPresenter {
     }
 
     private void addFormField(@Nonnull FormFieldDataDto formFieldData) {
-        FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
+        FormFieldDescriptorDto formFieldDescriptor = formFieldData.getFormFieldDescriptor();
         if(formFieldDescriptor.getInitialExpansionState().equals(ExpansionState.COLLAPSED)) {
             collapsedFields.add(formFieldData.getFormFieldDescriptor().getId());
         }
@@ -215,7 +213,7 @@ public class FormPresenter {
                                                                         .map(FormFieldPresenter::getValue)
                                                                         .collect(toImmutableList());
             return FormData.get(currentSubject.map(FormSubjectDto::toFormSubject),
-                                formDescriptor,
+                                formDescriptor.toFormDescriptor(),
                                 formFieldData);
         });
     }

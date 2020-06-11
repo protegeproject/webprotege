@@ -37,7 +37,7 @@ public class FormFieldPresenter implements FormRegionPresenter {
     private final FormFieldView view;
 
     @Nonnull
-    private final FormFieldDescriptor formFieldDescriptor;
+    private final FormFieldDescriptorDto formFieldDescriptor;
 
     private ExpansionState expansionState = ExpansionState.EXPANDED;
 
@@ -49,7 +49,7 @@ public class FormFieldPresenter implements FormRegionPresenter {
     private final LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper;
 
     public FormFieldPresenter(@Nonnull FormFieldView view,
-                              @Nonnull FormFieldDescriptor formFieldDescriptor,
+                              @Nonnull FormFieldDescriptorDto formFieldDescriptor,
                               @Nonnull FormControlStackPresenter formControlStackPresenter,
                               @Nonnull LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper) {
         this.view = checkNotNull(view);
@@ -133,12 +133,12 @@ public class FormFieldPresenter implements FormRegionPresenter {
 
     public FormFieldData getValue() {
         if(stackPresenter == null) {
-            return FormFieldData.get(formFieldDescriptor, Page.emptyPage());
+            return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), Page.emptyPage());
         }
         ImmutableList<FormControlData> formControlData = stackPresenter.getValue();
 
         Page<FormControlData> controlDataPage = new Page<>(1, 1, formControlData, formControlData.size());
-        return FormFieldData.get(formFieldDescriptor, controlDataPage);
+        return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), controlDataPage);
     }
 
     public void setValue(@Nonnull FormFieldDataDto formFieldData) {

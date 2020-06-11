@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -13,5 +14,5 @@ import java.util.List;
  */
 public interface MultiValueChoiceControl extends ChoiceControl {
 
-    void setDescriptor(@Nonnull MultiChoiceControlDescriptor descriptor);
+    void setDescriptor(@Nonnull MultiChoiceControlDescriptorDto descriptor);
 }

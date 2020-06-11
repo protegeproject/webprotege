@@ -35,7 +35,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
 
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
 
-    private Map<GridColumnDescriptor, GridHeaderCellContainer> containersByDescriptor = new HashMap<>();
+    private Map<GridColumnDescriptorDto, GridHeaderCellContainer> containersByDescriptor = new HashMap<>();
 
     @Nonnull
     private ChangeHandler orderByChangedHandler = () -> {};
@@ -66,7 +66,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         columnPresenters.clear();;
     }
 
-    public void setGridDescriptor(@Nonnull GridControlDescriptor descriptor) {
+    public void setGridDescriptor(@Nonnull GridControlDescriptorDto descriptor) {
         clear();
         double totalSpan = descriptor.getNestedColumnCount();
         descriptor.getLeafColumns().forEach(leafColumnDescriptor -> {

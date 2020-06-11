@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityNameControl extends Composite implements FormControl, HasPlaceholder {
 
-    private EntityNameControlDescriptor descriptor;
+    private EntityNameControlDescriptorDto descriptor;
 
     interface EntityNameControlUiBinder extends UiBinder<HTMLPanel, EntityNameControl> {
 
@@ -59,7 +60,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
         editor.setDatatypesAllowed(true);
     }
 
-    public void setDescriptor(@Nonnull EntityNameControlDescriptor descriptor) {
+    public void setDescriptor(@Nonnull EntityNameControlDescriptorDto descriptor) {
         this.descriptor = checkNotNull(descriptor);
         descriptor.getMatchCriteria().ifPresent(c -> editor.setCriteria(c));
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
@@ -107,7 +108,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     public Optional<FormControlData> getValue() {
         return editor.getValue()
                 .flatMap(OWLPrimitiveData::asEntity)
-                .map(entity -> EntityNameControlData.get(descriptor, entity));
+                .map(entity -> EntityNameControlData.get(descriptor.toFormControlDescriptor(), entity));
     }
 
     @Override

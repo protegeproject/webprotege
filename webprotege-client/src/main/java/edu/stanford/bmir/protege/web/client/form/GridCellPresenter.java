@@ -35,7 +35,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
     private final GridCellView view;
 
     @Nonnull
-    private final GridColumnDescriptor descriptor;
+    private final GridColumnDescriptorDto descriptor;
 
     @Nonnull
     private final FormControlStackPresenter stackPresenter;
@@ -44,7 +44,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
 
     @AutoFactory
     public GridCellPresenter(@Provided @Nonnull GridCellView view,
-                             @Nonnull GridColumnDescriptor columnDescriptor,
+                             @Nonnull GridColumnDescriptorDto columnDescriptor,
                              @Nonnull FormControlStackPresenter stackPresenter) {
         this.view = checkNotNull(view);
         this.descriptor = checkNotNull(columnDescriptor);

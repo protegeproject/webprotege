@@ -6,9 +6,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -39,7 +37,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     private final Map<GridColumnId, GridCellPresenter> cellPresentersById = new HashMap<>();
 
-    private GridControlDescriptor gridControlDescriptor = GridControlDescriptor.get(ImmutableList.of(), null);
+    private GridControlDescriptorDto gridControlDescriptor = GridControlDescriptorDto.get(ImmutableList.of(), null);
 
     private Map<GridColumnId, GridCellContainer> cellContainersById = new HashMap<>();
 
@@ -99,7 +97,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                       .ifPresent(GridCellPresenter::requestFocus);
     }
 
-    public void setColumnDescriptors(GridControlDescriptor gridDescriptor) {
+    public void setColumnDescriptors(GridControlDescriptorDto gridDescriptor) {
         if(this.gridControlDescriptor.equals(gridDescriptor)) {
             return;
         }
@@ -109,7 +107,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
         view.clear();
         cellContainersById.clear();
         double totalSpan = gridControlDescriptor.getNestedColumnCount();
-        ImmutableList<GridColumnDescriptor> columnDescriptors = gridDescriptor.getColumns();
+        ImmutableList<GridColumnDescriptorDto> columnDescriptors = gridDescriptor.getColumns();
         range(0, columnDescriptors.size())
                 .mapToObj(columnDescriptors::get)
                 .forEach(columnDescriptor -> {
@@ -165,7 +163,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
     public void updateColumnVisibility() {
         columnVisibilityManager.ifPresent(cvm -> {
             double totalSpan = gridControlDescriptor.getNestedColumnCount();
-            for(GridColumnDescriptor descriptor : gridControlDescriptor.getColumns()) {
+            for(GridColumnDescriptorDto descriptor : gridControlDescriptor.getColumns()) {
                 GridColumnId columnId = descriptor.getId();
                 GridCellContainer cellContainer = cellContainersById.get(columnId);
                 if(cellContainer != null) {
@@ -175,7 +173,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                     }
                     else {
                         visible = descriptor.getLeafColumnDescriptors()
-                                            .map(GridColumnDescriptor::getId)
+                                            .map(GridColumnDescriptorDto::getId)
                                             .anyMatch(cvm::isVisible);
                     }
 

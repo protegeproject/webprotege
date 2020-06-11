@@ -47,7 +47,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     private final List<GridRowViewContainer> rowContainers = new ArrayList<>();
 
     @Nonnull
-    private GridControlDescriptor descriptor = GridControlDescriptor.get(ImmutableList.of(),
+    private GridControlDescriptorDto descriptor = GridControlDescriptorDto.get(ImmutableList.of(),
                                                                          null);
 
     @Nonnull
@@ -108,7 +108,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
                 .map(GridRowPresenter::getFormDataValue)
                 .collect(toImmutableList());
         Page<GridRowData> page = new Page<>(1, 1, rows, rows.size());
-        return GridControlData.get(descriptor, page, ImmutableSet.of());
+        return GridControlData.get(descriptor.toFormControlDescriptor(), page, ImmutableSet.of());
     }
 
     public boolean isEnabled() {
@@ -130,7 +130,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     public void setTopLevel() {
         this.topLevel = true;
         ImmutableSet<GridColumnId> gridColumnIds = descriptor.getLeafColumns()
-                                                             .map(GridColumnDescriptor::getId)
+                                                             .map(GridColumnDescriptorDto::getId)
                                                              .collect(toImmutableSet());
         columnVisibilityManager.setVisibleColumns(gridColumnIds);
     }
@@ -193,7 +193,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         view.requestFocus();
     }
 
-    public void setDescriptor(GridControlDescriptor descriptor) {
+    public void setDescriptor(GridControlDescriptorDto descriptor) {
         if (this.descriptor.equals(descriptor)) {
             return;
         }

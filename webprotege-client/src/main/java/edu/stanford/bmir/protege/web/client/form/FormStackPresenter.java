@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -117,8 +118,9 @@ public class FormStackPresenter {
                                                      .map(Optional::get)
                                                      .collect(Collectors.toList());
         List<FormDescriptor> nextFormDescriptors = forms.stream()
-                .map(FormDataDto::getFormDescriptor)
-                .collect(Collectors.toList());
+                                                           .map(FormDataDto::getFormDescriptor)
+                                                           .map(FormDescriptorDto::toFormDescriptor)
+                                                           .collect(Collectors.toList());
         if(currentFormDescriptors.equals(nextFormDescriptors)) {
             for(int i = 0; i < forms.size(); i++) {
                 formPresenters.get(i).displayForm(forms.get(i));
@@ -130,7 +132,7 @@ public class FormStackPresenter {
             view.clear();
             forms.forEach(formData -> {
                 FormPresenter formPresenter = formPresenterProvider.get();
-                FormDescriptor formDescriptor = formData.getFormDescriptor();
+                FormDescriptorDto formDescriptor = formData.getFormDescriptor();
                 FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
                 formPresenter.start(formContainer);
                 formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);

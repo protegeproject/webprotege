@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
 
     private ValueChangeHandler<Boolean> checkBoxValueChangedHandler;
 
-    private MultiChoiceControlDescriptor descriptor;
+    private MultiChoiceControlDescriptorDto descriptor;
 
     private boolean enabled = true;
 
@@ -64,9 +65,10 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
         ValueChangeEvent.fire(CheckBoxChoiceControl.this, getValue());
     }
 
-    public void setDescriptor(@Nonnull MultiChoiceControlDescriptor descriptor) {
+    public void setDescriptor(@Nonnull MultiChoiceControlDescriptorDto descriptor) {
         this.descriptor = checkNotNull(descriptor);
-        setDefaultChoices(descriptor.getDefaultChoices());
+//        setDefaultChoices(descriptor.getDefaultChoices());
+        setChoices(descriptor.getAvailableChoices());
     }
 
     private void setChoices(List<ChoiceDescriptorDto> choiceDtos) {
@@ -103,7 +105,6 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
             MultiChoiceControlDataDto multiChoiceControlData = (MultiChoiceControlDataDto) value;
             ImmutableList<PrimitiveFormControlData> values = multiChoiceControlData.getValues().stream().map(
                     PrimitiveFormControlDataDto::toPrimitiveFormControlData).collect(toImmutableList());
-            setChoices(multiChoiceControlData.getAvailableChoices());
             for(CheckBox checkBox : checkBoxes.keySet()) {
                 boolean sel = values.contains(checkBoxes.get(checkBox));
                 checkBox.setValue(sel);
@@ -141,7 +142,7 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
             return Optional.empty();
         }
         else {
-            return Optional.of(MultiChoiceControlData.get(descriptor, selectedValues));
+            return Optional.of(MultiChoiceControlData.get(descriptor.toFormControlDescriptor(), selectedValues));
         }
     }
 

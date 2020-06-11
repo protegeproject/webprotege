@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasVisibility;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrderingDirection;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,7 +37,7 @@ public class GridHeaderColumnPresenter implements HasVisibility {
     private ColumnHeaderClickedHandler columnHeaderClicked = () -> {};
 
     @Nonnull
-    private Optional<GridColumnDescriptor> columnDescriptor = Optional.empty();
+    private Optional<GridColumnDescriptorDto> columnDescriptor = Optional.empty();
 
     @Inject
     public GridHeaderColumnPresenter(@Nonnull GridHeaderCellView view,
@@ -50,7 +47,7 @@ public class GridHeaderColumnPresenter implements HasVisibility {
         this.view.setClickHandler(event -> columnHeaderClicked.handleGridHeaderColumnClicked());
     }
 
-    public void setColumnDescriptor(@Nonnull GridColumnDescriptor columnDescriptor) {
+    public void setColumnDescriptor(@Nonnull GridColumnDescriptorDto columnDescriptor) {
         String label = localeMapper.getValueForCurrentLocale(columnDescriptor.getLabel());
         view.setLabel(label);
         this.columnDescriptor = Optional.of(columnDescriptor);
@@ -61,7 +58,7 @@ public class GridHeaderColumnPresenter implements HasVisibility {
     }
 
     public boolean isPresenterFor(@Nonnull FormRegionId columnId) {
-        return columnDescriptor.map(GridColumnDescriptor::getId)
+        return columnDescriptor.map(GridColumnDescriptorDto::getId)
                                .map(id -> id.equals(columnId))
                 .orElse(false);
     }

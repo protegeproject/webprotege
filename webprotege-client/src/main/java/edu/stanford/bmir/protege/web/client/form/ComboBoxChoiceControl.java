@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class ComboBoxChoiceControl extends Composite implements SingleChoiceControl {
 
-    private SingleChoiceControlDescriptor descriptor;
+    private SingleChoiceControlDescriptorDto descriptor;
 
     interface ComboBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
 
@@ -83,9 +84,10 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     }
 
     @Override
-    public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
+    public void setDescriptor(@Nonnull SingleChoiceControlDescriptorDto descriptor) {
         this.descriptor = descriptor;
-        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+//        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+        setChoices(descriptor.getAvailableChoices());
     }
 
     private void setDefaultChoice(@Nonnull ChoiceDescriptor defaultChoice) {
@@ -101,7 +103,6 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     public void setValue(@Nonnull FormControlDataDto value) {
         if(value instanceof SingleChoiceControlDataDto) {
             SingleChoiceControlDataDto choiceControlDataDto = (SingleChoiceControlDataDto) value;
-            setChoices(choiceControlDataDto.getAvailableChoices());
             Optional<PrimitiveFormControlData> choice = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::toPrimitiveFormControlData);
             if(choice.isPresent()) {
                 int index = 1;
@@ -146,7 +147,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
             return Optional.empty();
         }
         PrimitiveFormControlData choice = choices.get(selIndex - 1);
-        return Optional.of(SingleChoiceControlData.get(descriptor, choice));
+        return Optional.of(SingleChoiceControlData.get(descriptor.toFormControlDescriptor(), choice));
     }
 
     @Override

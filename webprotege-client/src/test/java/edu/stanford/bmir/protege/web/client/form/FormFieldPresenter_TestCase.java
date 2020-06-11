@@ -37,7 +37,7 @@ public class FormFieldPresenter_TestCase {
     private LanguageMap labelMap;
 
     @Mock
-    private FormControlDescriptor formControlDescriptor;
+    private FormControlDescriptorDto formControlDescriptor;
 
     @Mock
     private LanguageMap helpMap;
@@ -50,14 +50,14 @@ public class FormFieldPresenter_TestCase {
 
     @Before
     public void setUp() {
-        FormFieldDescriptor fieldDescriptor = FormFieldDescriptor.get(fieldId,
+        FormFieldDescriptorDto fieldDescriptor = FormFieldDescriptorDto.get(fieldId,
                                                                       owlBinding,
                                                                       labelMap,
                                                                       FieldRun.START,
                                                                       formControlDescriptor,
-                                                                      Repeatability.NON_REPEATABLE,
                                                                       Optionality.OPTIONAL,
-                                                                      true,
+                                                                            Repeatability.NON_REPEATABLE,
+                                                                            true,
                                                                       ExpansionState.COLLAPSED,
                                                                       helpMap);
 

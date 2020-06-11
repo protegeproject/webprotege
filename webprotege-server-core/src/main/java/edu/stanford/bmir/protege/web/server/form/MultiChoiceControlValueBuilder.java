@@ -22,16 +22,11 @@ public class MultiChoiceControlValueBuilder {
     @Nonnull
     private final PrimitiveFormControlDataDtoRenderer renderer;
 
-    @Nonnull
-    private final ChoiceDescriptorCache choiceDescriptorCache;
-
     @Inject
     public MultiChoiceControlValueBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
-                                          @Nonnull PrimitiveFormControlDataDtoRenderer renderer,
-                                          @Nonnull ChoiceDescriptorCache choiceDescriptorCache) {
+                                          @Nonnull PrimitiveFormControlDataDtoRenderer renderer) {
         this.bindingValuesExtractor = checkNotNull(bindingValuesExtractor);
         this.renderer = checkNotNull(renderer);
-        this.choiceDescriptorCache = checkNotNull(choiceDescriptorCache);
     }
 
     @Nonnull
@@ -44,8 +39,6 @@ public class MultiChoiceControlValueBuilder {
                          .flatMap(renderer::toFormControlDataDto)
                          .collect(ImmutableList.toImmutableList());
         return ImmutableList.of(MultiChoiceControlDataDto.get(multiChoiceControlDescriptor,
-                                                              choiceDescriptorCache.getChoices(
-                                                                      multiChoiceControlDescriptor.getSource()),
                                                               vals,
                                                               depth));
     }

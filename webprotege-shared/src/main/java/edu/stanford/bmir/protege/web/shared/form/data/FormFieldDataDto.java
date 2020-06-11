@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
@@ -13,13 +14,13 @@ import java.util.stream.DoubleStream;
 public abstract class FormFieldDataDto {
 
     @Nonnull
-    public static FormFieldDataDto get(@Nonnull FormFieldDescriptor descriptor,
+    public static FormFieldDataDto get(@Nonnull FormFieldDescriptorDto descriptor,
                                     @Nonnull Page<FormControlDataDto> formControlData) {
         return new AutoValue_FormFieldDataDto(descriptor, formControlData);
     }
 
     @Nonnull
-    public abstract FormFieldDescriptor getFormFieldDescriptor();
+    public abstract FormFieldDescriptorDto getFormFieldDescriptor();
 
     /**
      * Gets the page of form control values for this field.
@@ -30,13 +31,13 @@ public abstract class FormFieldDataDto {
     @Nonnull
     public FormFieldData toFormFieldData() {
         return FormFieldData.get(
-                getFormFieldDescriptor(),
+                getFormFieldDescriptor().toFormFieldDescriptor(),
                 getFormControlData().transform(FormControlDataDto::toFormControlData));
     }
 
     @Nonnull
     public FormFieldData getFormFieldData() {
-        return FormFieldData.get(getFormFieldDescriptor(),
+        return FormFieldData.get(getFormFieldDescriptor().toFormFieldDescriptor(),
                 getFormControlData().transform(FormControlDataDto::toFormControlData));
     }
 }

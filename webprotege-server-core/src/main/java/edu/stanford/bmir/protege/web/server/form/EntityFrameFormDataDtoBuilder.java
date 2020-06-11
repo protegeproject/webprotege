@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -57,6 +58,8 @@ public class EntityFrameFormDataDtoBuilder {
     @Nonnull
     private final FormPageRequestIndex formPageRequestIndex;
 
+    private final FormDescriptorDtoTranslator formDataDtoTranslator;
+
     @Inject
     public EntityFrameFormDataDtoBuilder(@Nonnull FormDataBuilderSessionRenderer sessionRenderer,
                                          @Nonnull TextControlValuesBuilder textControlValuesBuilder,
@@ -68,7 +71,8 @@ public class EntityFrameFormDataDtoBuilder {
                                          @Nonnull GridControlValuesBuilder gridControlValuesBuilder,
                                          @Nonnull SubFormControlValuesBuilder subFormControlValuesBuilder,
                                          @Nonnull LangTagFilter langTagFilter,
-                                         @Nonnull FormPageRequestIndex formPageRequestIndex) {
+                                         @Nonnull FormPageRequestIndex formPageRequestIndex,
+                                         @Nonnull FormDescriptorDtoTranslator formDataDtoTranslator) {
         this.sessionRenderer = sessionRenderer;
         this.textControlValuesBuilder = textControlValuesBuilder;
         this.numberControlValuesBuilder = numberControlValuesBuilder;
@@ -80,6 +84,7 @@ public class EntityFrameFormDataDtoBuilder {
         this.subFormControlValuesBuilder = subFormControlValuesBuilder;
         this.langTagFilter = langTagFilter;
         this.formPageRequestIndex = formPageRequestIndex;
+        this.formDataDtoTranslator = formDataDtoTranslator;
     }
 
     @Nonnull
@@ -182,12 +187,13 @@ public class EntityFrameFormDataDtoBuilder {
                                           var controlValuesPage = controlValuesStream.collect(PageCollector.toPage(
                                                   pageRequest.getPageNumber(),
                                                   pageRequest.getPageSize()
-                                          ))
-                                                                                     .orElse(Page.emptyPage());
-                                          return FormFieldDataDto.get(field, controlValuesPage);
+                                          )).orElse(Page.emptyPage());
+                                          var fieldDescriptorDto = formDataDtoTranslator.toFormFieldDescriptorDto(field);
+                                          return FormFieldDataDto.get(fieldDescriptorDto, controlValuesPage);
                                       })
                                       .collect(toImmutableList());
-        return FormDataDto.get(formSubject, formDescriptor, fieldData, depth);
+        var formDescriptorDto = formDataDtoTranslator.toFormDescriptorDto(formDescriptor);
+        return FormDataDto.get(formSubject, formDescriptorDto, fieldData, depth);
     }
 
     private boolean isIncluded(@Nonnull FormControlDataDto formControlData) {

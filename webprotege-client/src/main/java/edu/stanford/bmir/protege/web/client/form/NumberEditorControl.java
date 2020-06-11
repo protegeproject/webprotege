@@ -24,6 +24,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.NumberControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlRange;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
@@ -45,11 +46,11 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private NumberControlRange range = NumberControlRange.all();
 
-    private NumberControlDescriptor descriptor;
+    private NumberControlDescriptorDto descriptor;
 
     private Optional<OWLLiteral> currentValue = Optional.empty();
 
-    public void setDescriptor(NumberControlDescriptor formFieldDescriptor) {
+    public void setDescriptor(NumberControlDescriptorDto formFieldDescriptor) {
         this.descriptor = formFieldDescriptor;
         setFormat(formFieldDescriptor.getFormat());
         setRange(formFieldDescriptor.getRange());
@@ -128,10 +129,10 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
                 OWLLiteral v = DataFactory.getOWLLiteral(numberField.getText().trim(),
                                                          DataFactory.getXSDDecimal());
                 GWT.log("[NumberEditorControl] Value: " + v);
-                return Optional.of(NumberControlData.get(descriptor, v));
+                return Optional.of(NumberControlData.get(descriptor.getDescriptor(), v));
             }
             else {
-                return currentValue.map(v -> NumberControlData.get(descriptor, v));
+                return currentValue.map(v -> NumberControlData.get(descriptor.getDescriptor(), v));
 
             }
         } catch (NumberFormatException e) {

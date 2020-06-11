@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +54,7 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
         }
     }
 
-    public void setDescriptor(@Nullable GridControlDescriptor descriptor) {
+    public void setDescriptor(@Nullable GridControlDescriptorDto descriptor) {
         gridPresenter.setDescriptor(descriptor);
     }
 

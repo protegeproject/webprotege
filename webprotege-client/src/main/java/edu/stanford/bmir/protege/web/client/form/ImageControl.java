@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.ImageControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptorDto;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ public class ImageControl extends Composite implements FormControl {
     @Nonnull
     private final InputBox inputBox;
 
-    private ImageControlDescriptor descriptor;
+    private ImageControlDescriptorDto descriptor;
 
     private boolean editable = true;
 
@@ -80,7 +81,7 @@ public class ImageControl extends Composite implements FormControl {
         });
     }
 
-    public void setDescriptor(ImageControlDescriptor descriptor) {
+    public void setDescriptor(ImageControlDescriptorDto descriptor) {
         this.descriptor = checkNotNull(descriptor);
     }
 
@@ -167,7 +168,7 @@ public class ImageControl extends Composite implements FormControl {
 
     @Override
     public Optional<FormControlData> getValue() {
-        return theIRI.map(iri -> ImageControlData.get(descriptor, iri));
+        return theIRI.map(iri -> ImageControlData.get(descriptor.toFormControlDescriptor(), iri));
     }
 
     @Override
