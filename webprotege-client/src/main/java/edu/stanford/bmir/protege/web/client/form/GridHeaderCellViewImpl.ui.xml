@@ -13,14 +13,17 @@
             width: 20px;
             height: 16px;
             background-color: literal("var(--primary--background-color)");
+            align-self: start;
         }
         .descending {
             width: 20px;
             height: 16px;
             background-color: literal("var(--primary--background-color)");
+            align-self: start;
         }
         .headerLabel {
             padding-right: 3px;
+            white-space: nowrap;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
