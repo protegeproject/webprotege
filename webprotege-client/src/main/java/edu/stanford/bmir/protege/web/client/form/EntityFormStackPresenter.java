@@ -2,17 +2,13 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
@@ -101,7 +97,7 @@ public class EntityFormStackPresenter {
     }
 
     private void handleGridOrderByChanged() {
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void setHasBusy(HasBusy hasBusy) {
@@ -110,21 +106,21 @@ public class EntityFormStackPresenter {
 
     private void handleLangTagFilterChanged() {
         stashLanguagesFilter();
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     private void handlePageChange() {
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void setEntity(@Nonnull OWLEntity entity) {
         this.currentEntity = Optional.of(entity);
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void clear() {
         this.currentEntity = Optional.empty();
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void expandAllFields() {
@@ -135,12 +131,12 @@ public class EntityFormStackPresenter {
         formStackPresenter.collapseAllFields();
     }
 
-    private void updateFormsForCurrentEntity() {
+    private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilter) {
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
-            dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests, langTagFilter,
+            dispatch.execute(new GetEntityFormsAction(projectId, entity, formFilter, pageRequests, langTagFilter,
                                                       orderings),
                              hasBusy,
                              this::handleGetEntityFormsResult);
@@ -207,7 +203,7 @@ public class EntityFormStackPresenter {
     }
 
     private void dropEdits() {
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {

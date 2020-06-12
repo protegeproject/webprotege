@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRendererFactory;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,6 +16,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import java.util.function.Predicate;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
@@ -61,11 +66,18 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         );
         var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module)
                                                  .formDataBuilder();
+        var formsFilterList = action.getFormFilter();
         var forms = formManager.getFormDescriptors(entity, projectId)
                           .stream()
+                               .filter(byFormIds(formsFilterList))
                           .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
                           .collect(toImmutableList());
         return new GetEntityFormsResult(forms);
+    }
+
+    public static Predicate<FormDescriptor> byFormIds(ImmutableList<FormId> formsFilterList) {
+        return (FormDescriptor formDescriptor) -> formsFilterList.isEmpty()
+                || formsFilterList.contains(formDescriptor.getFormId());
     }
 
     @Nonnull

@@ -24,19 +24,35 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
 
     private OWLEntity entity;
 
+    private ImmutableList<FormId> formFilter;
+
     private ImmutableList<FormPageRequest> formPageRequests;
 
     private LangTagFilter langTagFilter;
 
     private ImmutableSet<FormRegionOrdering> orderings;
 
+    /**
+     * Get the forms for an entity
+     * @param projectId The project id
+     * @param entity The entity
+     * @param formFilter A list of {@link FormId}s.  If the list is empty then all forms that are applicable
+     *                   to the entity will be retrieved.  If the list is non-empty then the only the applicable
+     *                   forms that have form Ids in the list will be retrieved.
+     * @param formPageRequests A list of page requests pertaining to various regions on the form.
+     * @param langTagFilter A language tag filter that can be used to filter data in a specific language.
+     * @param orderings A set of region orderings that can be used to specify the ordering of specific regions of
+     *                  data.
+     */
     public GetEntityFormsAction(@Nonnull ProjectId projectId,
                                 @Nonnull OWLEntity entity,
+                                @Nonnull ImmutableList<FormId> formFilter,
                                 @Nonnull ImmutableList<FormPageRequest> formPageRequests,
                                 @Nonnull LangTagFilter langTagFilter,
                                 @Nonnull ImmutableSet<FormRegionOrdering> orderings) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
+        this.formFilter = checkNotNull(formFilter);
         this.formPageRequests = checkNotNull(formPageRequests);
         this.langTagFilter = checkNotNull(langTagFilter);
         this.orderings = checkNotNull(orderings);
@@ -70,5 +86,9 @@ public class GetEntityFormsAction implements ProjectAction<GetEntityFormsResult>
     @Nonnull
     public ImmutableSet<FormRegionOrdering> getGridControlOrdering() {
         return orderings;
+    }
+
+    public ImmutableList<FormId> getFormFilter() {
+        return formFilter;
     }
 }
