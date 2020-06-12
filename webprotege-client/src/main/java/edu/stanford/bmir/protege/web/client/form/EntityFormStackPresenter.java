@@ -84,7 +84,7 @@ public class EntityFormStackPresenter {
         container.setWidget(view);
         formStackPresenter.start(view.getFormStackContainer());
         formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
-        formStackPresenter.setGridOrderByChangedHandler(this::handleGridOrderByChanged);
+        formStackPresenter.setFormRegionOrderingChangedHandler(this::handleGridOrderByChanged);
         langTagFilterPresenter.start(view.getLangTagFilterContainer());
         langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);

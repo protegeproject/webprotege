@@ -80,7 +80,7 @@ public class FormStackPresenter {
         formPresenters.forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));
     }
 
-    public void setGridOrderByChangedHandler(@Nonnull GridOrderByChangedHandler handler) {
+    public void setFormRegionOrderingChangedHandler(@Nonnull GridOrderByChangedHandler handler) {
         this.orderByChangedHandler = checkNotNull(handler);
         formPresenters.forEach(p -> p.setGridOrderByChangedHandler(handler));
     }
