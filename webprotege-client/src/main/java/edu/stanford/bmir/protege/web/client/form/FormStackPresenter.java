@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.*;
@@ -114,14 +113,21 @@ public class FormStackPresenter {
         getFormPresenters().forEach(FormPresenter::collapseAll);
     }
 
-    public void setForms(@Nonnull ImmutableList<FormDataDto> forms, FormUpdate updateType) {
-
+    public void setForms(@Nonnull ImmutableList<FormDataDto> forms,
+                         @Nonnull FormUpdate updateType) {
         if (updateType.equals(FormUpdate.PATCH)) {
-            GWT.log("[FormStackPresenter] Patching forms (" + forms.size() + ")");
             updateForms(forms);
-            return;
         }
+        else if (formsAreCurrent(forms)) {
+            updateForms(forms);
+        }
+        else {
+            replaceForms(forms);
+        }
+        updateView();
+    }
 
+    private boolean formsAreCurrent(@Nonnull ImmutableList<FormDataDto> forms) {
         List<FormDescriptor> currentFormDescriptors = getFormPresenters().stream()
                                                                          .map(p -> p.getFormData()
                                                                                     .map(FormData::getFormDescriptor))
@@ -132,33 +138,31 @@ public class FormStackPresenter {
                                                         .map(FormDataDto::getFormDescriptor)
                                                         .map(FormDescriptorDto::toFormDescriptor)
                                                         .collect(Collectors.toList());
-        if (currentFormDescriptors.equals(nextFormDescriptors)) {
-            updateForms(forms);
-        }
-        else {
-            formPresenters.clear();
-            formTabBarPresenter.clear();
-            view.clear();
-            forms.forEach(formData -> {
-                FormPresenter formPresenter = formPresenterProvider.get();
-                FormDescriptorDto formDescriptor = formData.getFormDescriptor();
-                FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
-                formPresenter.start(formContainer);
-                formPresenter.setFormRegionPageChangedHandler(regionPageChangedHandler);
-                formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
-                formPresenter.displayForm(formData);
-                formPresenter.setEnabled(enabled);
-                formPresenters.put(formData.getFormId(), formPresenter);
-                formTabBarPresenter.addForm(formDescriptor.getFormId(),
-                                            formDescriptor.getLabel(),
-                                            formContainer);
-            });
-            formTabBarPresenter.restoreSelection();
-        }
-        updateView();
+        return currentFormDescriptors.equals(nextFormDescriptors);
     }
 
-    public void updateForms(@Nonnull ImmutableList<FormDataDto> forms) {
+    private void replaceForms(@Nonnull ImmutableList<FormDataDto> forms) {
+        formPresenters.clear();
+        formTabBarPresenter.clear();
+        view.clear();
+        forms.forEach(formData -> {
+            FormPresenter formPresenter = formPresenterProvider.get();
+            FormDescriptorDto formDescriptor = formData.getFormDescriptor();
+            FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
+            formPresenter.start(formContainer);
+            formPresenter.setFormRegionPageChangedHandler(regionPageChangedHandler);
+            formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
+            formPresenter.displayForm(formData);
+            formPresenter.setEnabled(enabled);
+            formPresenters.put(formData.getFormId(), formPresenter);
+            formTabBarPresenter.addForm(formDescriptor.getFormId(),
+                                        formDescriptor.getLabel(),
+                                        formContainer);
+        });
+        formTabBarPresenter.restoreSelection();
+    }
+
+    private void updateForms(@Nonnull ImmutableList<FormDataDto> forms) {
         forms.forEach(form -> {
             FormId formId = form.getFormId();
             FormPresenter formPresenter = formPresenters.get(formId);
