@@ -4,9 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
@@ -40,7 +39,7 @@ public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedH
     }
 
     @Override
-    default void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
+    default void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler handler) {
 
     }
 

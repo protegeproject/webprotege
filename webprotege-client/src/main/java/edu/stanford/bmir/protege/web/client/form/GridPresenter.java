@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -50,7 +50,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
                                                                          null);
 
     @Nonnull
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {
+    private RegionPageChangedHandler regionPageChangedHandler = () -> {
     };
 
     private boolean enabled = true;
@@ -121,9 +121,9 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         rowContainers.forEach(rowContainer -> rowContainer.setEnabled(enabled));
     }
 
-    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler formRegionPageChangedHandler) {
-        this.formRegionPageChangedHandler = checkNotNull(formRegionPageChangedHandler);
-        rowPresenters.forEach(row -> row.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
+    public void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler regionPageChangedHandler) {
+        this.regionPageChangedHandler = checkNotNull(regionPageChangedHandler);
+        rowPresenters.forEach(row -> row.setRegionPageChangedHandler(regionPageChangedHandler));
     }
 
     public void setTopLevel() {
@@ -161,7 +161,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
 
     private GridRowPresenter createAndSetupGridRowPresenter() {
         GridRowPresenter rowPresenter = rowPresenterProvider.get();
-        rowPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+        rowPresenter.setRegionPageChangedHandler(regionPageChangedHandler);
         rowPresenter.setColumnDescriptors(descriptor);
         rowPresenter.setEnabled(enabled);
         rowPresenter.setColumnVisibilityManager(columnVisibilityManager);
@@ -215,7 +215,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
                 columnVisibilityManager.setVisibleColumns(source.getFilteredColumns());
             }
         });
-        view.setPageNumberChangedHandler(pageNumber -> formRegionPageChangedHandler.handleFormRegionPageChanged());
+        view.setPageNumberChangedHandler(pageNumber -> regionPageChangedHandler.handleRegionPageChanged());
         view.setNewRowHandler(() -> {
             if(!enabled) {
                 return;

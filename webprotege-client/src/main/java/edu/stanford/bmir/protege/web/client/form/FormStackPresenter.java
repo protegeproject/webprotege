@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
@@ -46,7 +46,7 @@ public class FormStackPresenter {
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
     @Nonnull
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private RegionPageChangedHandler regionPageChangedHandler = () -> {};
 
     private boolean enabled = true;
 
@@ -75,9 +75,9 @@ public class FormStackPresenter {
         formPresenters.forEach(formPresenter -> formPresenter.setEnabled(enabled));
     }
 
-    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
-        this.formRegionPageChangedHandler = checkNotNull(handler);
-        formPresenters.forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));
+    public void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler handler) {
+        this.regionPageChangedHandler = checkNotNull(handler);
+        formPresenters.forEach(formPresenter -> formPresenter.setRegionPageChangedHandler(handler));
     }
 
     public void setFormRegionOrderingChangedHandler(@Nonnull FormRegionOrderingChangedHandler handler) {
@@ -135,7 +135,7 @@ public class FormStackPresenter {
                 FormDescriptorDto formDescriptor = formData.getFormDescriptor();
                 FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
                 formPresenter.start(formContainer);
-                formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+                formPresenter.setRegionPageChangedHandler(regionPageChangedHandler);
                 formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
                 formPresenter.displayForm(formData);
                 formPresenter.setEnabled(enabled);

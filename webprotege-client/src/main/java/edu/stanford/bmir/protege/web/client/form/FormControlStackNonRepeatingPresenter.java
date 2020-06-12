@@ -8,7 +8,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
@@ -127,8 +127,8 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
     }
 
     @Override
-    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
-        formControl.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+    public void setRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler) {
+        formControl.setRegionPageChangedHandler(regionPageChangedHandler);
     }
 
     @Override

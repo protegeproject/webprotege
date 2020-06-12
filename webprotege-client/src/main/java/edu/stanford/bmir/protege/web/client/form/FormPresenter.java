@@ -53,7 +53,7 @@ public class FormPresenter {
 
     private Set<FormFieldId> collapsedFields = new HashSet<>();
 
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private RegionPageChangedHandler regionPageChangedHandler = () -> {};
 
     private boolean enabled = true;
 
@@ -132,8 +132,8 @@ public class FormPresenter {
         this.orderByChangedHandler = checkNotNull(handler);
     }
 
-    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler handler) {
-        this.formRegionPageChangedHandler = checkNotNull(handler);
+    public void setRegionPageChangedHandler(RegionPageChangedHandler handler) {
+        this.regionPageChangedHandler = checkNotNull(handler);
         fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(handler));
     }
 
@@ -181,7 +181,7 @@ public class FormPresenter {
         }
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         presenter.setEnabled(enabled);
-        presenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+        presenter.setFormRegionPageChangedHandler(regionPageChangedHandler);
         presenter.start();
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         fieldPresenters.add(presenter);

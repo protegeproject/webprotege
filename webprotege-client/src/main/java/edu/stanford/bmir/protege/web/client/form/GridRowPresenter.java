@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -43,7 +43,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     private Optional<FormSubjectDto> subject = Optional.empty();
 
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private RegionPageChangedHandler regionPageChangedHandler = () -> {};
 
     private boolean enabled = true;
 
@@ -127,7 +127,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                     cellContainer.setVisible(visible);
                     cellContainersById.put(columnId, cellContainer);
                     cellPresenter.start(cellContainer);
-                    cellPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+                    cellPresenter.setRegionPageChangedHandler(regionPageChangedHandler);
                     cellPresenter.setEnabled(enabled);
                     cellPresenters.add(cellPresenter);
                     cellPresentersById.put(columnId, cellPresenter);
@@ -142,9 +142,9 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
     }
 
     @Override
-    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
-        this.formRegionPageChangedHandler = checkNotNull(handler);
-        cellPresenters.forEach(cp -> cp.setFormRegionPageChangedHandler(handler));
+    public void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler handler) {
+        this.regionPageChangedHandler = checkNotNull(handler);
+        cellPresenters.forEach(cp -> cp.setRegionPageChangedHandler(handler));
     }
 
     public void setValue(GridRowDataDto formDataObject) {

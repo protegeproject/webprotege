@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.F
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
@@ -54,7 +54,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     private FormRegionPosition position;
 
     @Nonnull
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private RegionPageChangedHandler regionPageChangedHandler = () -> {};
 
     @AutoFactory
     @Inject
@@ -93,7 +93,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         paginatorPresenter.setPageNumber(value.getPageNumber());
         paginatorPresenter.setPageCount(value.getPageCount());
         paginatorPresenter.setElementCount(value.getTotalElements());
-        paginatorPresenter.setPageNumberChangedHandler(page -> formRegionPageChangedHandler.handleFormRegionPageChanged());
+        paginatorPresenter.setPageNumberChangedHandler(page -> regionPageChangedHandler.handleRegionPageChanged());
         value.getPageElements()
              .stream()
              .map(this::createFormControl)
@@ -216,9 +216,9 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     }
 
     @Override
-    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
-        this.formRegionPageChangedHandler = checkNotNull(formRegionPageChangedHandler);
-        formControls.forEach(formControl -> formControl.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
+    public void setRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler) {
+        this.regionPageChangedHandler = checkNotNull(regionPageChangedHandler);
+        formControls.forEach(formControl -> formControl.setRegionPageChangedHandler(regionPageChangedHandler));
     }
 
     @Override

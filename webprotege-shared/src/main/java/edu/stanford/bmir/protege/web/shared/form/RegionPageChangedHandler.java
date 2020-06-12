@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-04-22
  */
-public interface FormRegionPageChangedHandler {
+public interface RegionPageChangedHandler {
 
-    void handleFormRegionPageChanged();
+    void handleRegionPageChanged();
 }

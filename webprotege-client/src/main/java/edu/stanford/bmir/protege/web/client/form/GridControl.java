@@ -8,7 +8,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
@@ -106,8 +106,8 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     }
 
     @Override
-    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
-        gridPresenter.setFormRegionPageChangedHandler(handler);
+    public void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler handler) {
+        gridPresenter.setRegionPageChangedHandler(handler);
     }
 
     @Override

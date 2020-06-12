@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -180,8 +180,8 @@ public class FormFieldPresenter implements FormRegionPresenter {
         }
     }
 
-    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
-        stackPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+    public void setFormRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler) {
+        stackPresenter.setRegionPageChangedHandler(regionPageChangedHandler);
     }
 
 

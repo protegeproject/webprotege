@@ -10,5 +10,5 @@ import javax.annotation.Nonnull;
 public
 interface HasFormRegionPagedChangedHandler {
 
-    void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler);
+    void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler handler);
 }

@@ -5,23 +5,20 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIRED;
 
 /**
@@ -66,8 +63,8 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
     }
 
     @Override
-    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
-        stackPresenter.setFormRegionPageChangedHandler(handler);
+    public void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler handler) {
+        stackPresenter.setRegionPageChangedHandler(handler);
     }
 
     public GridColumnId getId() {
