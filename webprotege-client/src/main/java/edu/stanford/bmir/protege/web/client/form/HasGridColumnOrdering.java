@@ -5,14 +5,14 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
 
-public interface HasGridColumnOrderBy {
+public interface HasGridColumnOrdering {
 
     interface ChangeHandler {
-        void handleGridColumnOrderByChanged();
+        void handleGridColumnOrderingChanged();
     }
 
-    void setGridColumnOrderByChangeHandler(@Nonnull ChangeHandler handler);
+    void setGridColumnOrderingChangeHandler(@Nonnull ChangeHandler handler);
 
     @Nonnull
-    ImmutableList<FormRegionOrdering> getOrderBy();
+    ImmutableList<FormRegionOrdering> getGridColumnOrdering();
 }

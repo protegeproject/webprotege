@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
@@ -59,7 +58,7 @@ public class FormPresenter {
     private boolean enabled = true;
 
     @Nonnull
-    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
+    private FormRegionOrderingChangedHandler orderByChangedHandler = () -> {};
 
     @AutoFactory
     @Inject
@@ -129,7 +128,7 @@ public class FormPresenter {
         fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setEnabled(enabled));
     }
 
-    public void setGridOrderByChangedHandler(GridOrderByChangedHandler handler) {
+    public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler handler) {
         this.orderByChangedHandler = checkNotNull(handler);
     }
 

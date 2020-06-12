@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptorDto;
 
 import javax.annotation.Nonnull;
@@ -134,7 +133,7 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
         return gridPresenter.getOrdering();
     }
 
-    public void setGridOrderByChangedHandler(GridOrderByChangedHandler orderByChangedHandler) {
+    public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         gridPresenter.setOrderByChangedHandler(orderByChangedHandler);
     }
 }

@@ -51,7 +51,7 @@ public class FormStackPresenter {
     private boolean enabled = true;
 
     @Nonnull
-    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
+    private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {};
 
     @Inject
     public FormStackPresenter(@Nonnull FormTabBarPresenter formTabBarPresenter,
@@ -80,8 +80,8 @@ public class FormStackPresenter {
         formPresenters.forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));
     }
 
-    public void setFormRegionOrderingChangedHandler(@Nonnull GridOrderByChangedHandler handler) {
-        this.orderByChangedHandler = checkNotNull(handler);
+    public void setFormRegionOrderingChangedHandler(@Nonnull FormRegionOrderingChangedHandler handler) {
+        this.formRegionOrderingChangedHandler = checkNotNull(handler);
         formPresenters.forEach(p -> p.setGridOrderByChangedHandler(handler));
     }
 
@@ -136,7 +136,7 @@ public class FormStackPresenter {
                 FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
                 formPresenter.start(formContainer);
                 formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
-                formPresenter.setGridOrderByChangedHandler(orderByChangedHandler);
+                formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
                 formPresenter.displayForm(formData);
                 formPresenter.setEnabled(enabled);
                 formPresenters.add(formPresenter);

@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-27
  */
-public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrderBy {
+public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrdering {
 
     @Nonnull
     private final GridHeaderView view;
@@ -98,7 +98,7 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
                 cp.clearSortOrder();
             }
         });
-        orderByChangedHandler.handleGridColumnOrderByChanged();
+        orderByChangedHandler.handleGridColumnOrderingChanged();
     }
 
     @Override
@@ -127,17 +127,17 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     }
 
     @Override
-    public void setGridColumnOrderByChangeHandler(@Nonnull ChangeHandler handler) {
+    public void setGridColumnOrderingChangeHandler(@Nonnull ChangeHandler handler) {
         this.orderByChangedHandler = checkNotNull(handler);
     }
 
     @Nonnull
     @Override
-    public ImmutableList<FormRegionOrdering> getOrderBy() {
+    public ImmutableList<FormRegionOrdering> getGridColumnOrdering() {
         return orderBy.map(ImmutableList::of).orElse(ImmutableList.of());
     }
 
-    public void setOrderBy(@Nonnull ImmutableSet<FormRegionOrdering> ordering) {
+    public void setOrdering(@Nonnull ImmutableSet<FormRegionOrdering> ordering) {
         if(ordering.isEmpty()) {
             this.orderBy = Optional.empty();
             columnPresenters.values()

@@ -65,7 +65,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     private boolean topLevel = false;
 
     @Nonnull
-    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
+    private FormRegionOrderingChangedHandler orderByChangedHandler = () -> {};
 
     @Inject
     public GridPresenter(@Nonnull GridView view,
@@ -151,7 +151,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         view.setPaginatorVisible(rowsPage.getPageCount() > 1);
         view.setEnabled(enabled);
         ImmutableSet<FormRegionOrdering> ordering = value.getOrdering();
-        headerPresenter.setOrderBy(ordering);
+        headerPresenter.setOrdering(ordering);
     }
 
     private GridRowPresenter toGridRowPresenter(GridRowDataDto rowDataValue) {
@@ -225,11 +225,11 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
             addRow(presenter);
             presenter.requestFocus();
         });
-        headerPresenter.setGridColumnOrderByChangeHandler(this::handleOrderByChanged);
+        headerPresenter.setGridColumnOrderingChangeHandler(this::handlerOrderingChanged);
     }
 
-    private void handleOrderByChanged() {
-        this.orderByChangedHandler.handleOrderByChanged();
+    private void handlerOrderingChanged() {
+        this.orderByChangedHandler.handleFormRegionOrderingChanged();
     }
 
     @Override
@@ -252,10 +252,10 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     }
 
     public ImmutableList<FormRegionOrdering> getOrdering() {
-        return headerPresenter.getOrderBy();
+        return headerPresenter.getGridColumnOrdering();
     }
 
-    public void setOrderByChangedHandler(GridOrderByChangedHandler orderByChangedHandler) {
+    public void setOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         this.orderByChangedHandler = checkNotNull(orderByChangedHandler);
     }
 }

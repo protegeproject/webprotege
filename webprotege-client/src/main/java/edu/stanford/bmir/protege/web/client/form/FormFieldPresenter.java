@@ -185,7 +185,7 @@ public class FormFieldPresenter implements FormRegionPresenter {
     }
 
 
-    public void setGridOrderByChangedHandler(GridOrderByChangedHandler orderByChangedHandler) {
+    public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         stackPresenter.forEachFormControl(formControl -> {
             if(formControl instanceof GridControl) {
                 ((GridControl) formControl).setGridOrderByChangedHandler(orderByChangedHandler);
