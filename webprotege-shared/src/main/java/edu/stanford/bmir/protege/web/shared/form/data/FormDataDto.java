@@ -6,6 +6,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -57,5 +58,10 @@ public abstract class FormDataDto implements FormControlDataDto {
         return FormData.get(getSubject().map(FormSubjectDto::toFormSubject),
                 getFormDescriptor().toFormDescriptor(),
                 getFormFieldData().stream().map(FormFieldDataDto::toFormFieldData).collect(toImmutableList()));
+    }
+
+    @Nonnull
+    public FormId getFormId() {
+        return getFormDescriptor().getFormId();
     }
 }

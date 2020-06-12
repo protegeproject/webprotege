@@ -72,7 +72,7 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
                                .filter(byFormIds(formsFilterList))
                           .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
                           .collect(toImmutableList());
-        return new GetEntityFormsResult(forms);
+        return new GetEntityFormsResult(action.getFormFilter(), forms);
     }
 
     public static Predicate<FormDescriptor> byFormIds(ImmutableList<FormId> formsFilterList) {

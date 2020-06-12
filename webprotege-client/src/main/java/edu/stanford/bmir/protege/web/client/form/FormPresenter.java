@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
@@ -53,12 +54,15 @@ public class FormPresenter {
 
     private Set<FormFieldId> collapsedFields = new HashSet<>();
 
-    private RegionPageChangedHandler regionPageChangedHandler = () -> {};
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = formId -> {};
 
     private boolean enabled = true;
 
     @Nonnull
     private FormRegionOrderingChangedHandler orderByChangedHandler = () -> {};
+
+    @Nonnull
+    private Optional<FormId> formId = Optional.empty();
 
     @AutoFactory
     @Inject
@@ -90,6 +94,7 @@ public class FormPresenter {
         checkNotNull(formData);
         saveExpansionState();
         currentSubject = formData.getSubject();
+        this.formId = Optional.of(formData.getFormDescriptor().getFormId());
         if(currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()))) {
             updateFormData(formData);
         }
@@ -132,9 +137,9 @@ public class FormPresenter {
         this.orderByChangedHandler = checkNotNull(handler);
     }
 
-    public void setRegionPageChangedHandler(RegionPageChangedHandler handler) {
-        this.regionPageChangedHandler = checkNotNull(handler);
-        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(handler));
+    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler handler) {
+        this.formRegionPageChangedHandler = checkNotNull(handler);
+        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler()));
     }
 
     private void updateFormData(@Nonnull FormDataDto formData) {
@@ -181,7 +186,7 @@ public class FormPresenter {
         }
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         presenter.setEnabled(enabled);
-        presenter.setFormRegionPageChangedHandler(regionPageChangedHandler);
+        presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
         presenter.start();
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         fieldPresenters.add(presenter);
@@ -193,6 +198,14 @@ public class FormPresenter {
         presenter.setValue(formFieldData);
         FormFieldView formFieldView = presenter.getFormFieldView();
         formView.addFormElementView(formFieldView, formFieldDescriptor.getFieldRun());
+    }
+
+    private RegionPageChangedHandler newRegionPageChangedHandler() {
+        return () -> {
+            formId.ifPresent(id -> {
+                formRegionPageChangedHandler.handleFormRegionPageChanged(FormRegionPageChangedEvent.get(id));
+            });
+        };
     }
 
     public void expandAll() {
