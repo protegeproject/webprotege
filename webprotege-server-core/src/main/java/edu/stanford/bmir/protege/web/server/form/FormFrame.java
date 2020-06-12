@@ -36,15 +36,17 @@ public abstract class FormFrame {
     @Nonnull
     public static FormFrame get(@Nonnull FormSubject formSubject,
                                 @Nonnull ImmutableSet<OWLClass> parents,
+                                @Nonnull ImmutableSet<OWLClass> subClasses,
                                 @Nonnull ImmutableSet<OWLNamedIndividual> instances,
                                 @Nonnull ImmutableSet<PlainPropertyValue> propertyValues,
                                 @Nonnull ImmutableSet<FormFrame> nestedFrames) {
-        return new AutoValue_FormFrame(formSubject, parents, instances, propertyValues, nestedFrames);
+        return new AutoValue_FormFrame(formSubject, parents, subClasses, instances, propertyValues, nestedFrames);
     }
 
     @Nonnull
     public static FormFrame get(@Nonnull FormSubject formSubject) {
         return get(formSubject,
+                   ImmutableSet.of(),
                    ImmutableSet.of(),
                    ImmutableSet.of(),
                    ImmutableSet.of(),
@@ -56,6 +58,9 @@ public abstract class FormFrame {
 
     @Nonnull
     public abstract ImmutableSet<OWLClass> getClasses();
+
+    @Nonnull
+    public abstract ImmutableSet<OWLClass> getSubClasses();
 
     @Nonnull
     public abstract ImmutableSet<OWLNamedIndividual> getInstances();

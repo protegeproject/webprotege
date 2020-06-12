@@ -7,10 +7,7 @@ import edu.stanford.bmir.protege.web.client.match.RelationshipValueCriteriaListP
 import edu.stanford.bmir.protege.web.client.match.RelationshipValueCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlClassBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlInstanceBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.match.criteria.AnyRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRelationshipValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
@@ -80,6 +77,9 @@ public class OwlBindingPresenter {
         else if(binding instanceof OwlInstanceBinding) {
             view.setOwlInstanceBinding(true);
         }
+        else if(binding instanceof OwlSubClassBinding) {
+            view.setOwlSubClassBinding(true);
+        }
     }
 
     @Nonnull
@@ -89,6 +89,9 @@ public class OwlBindingPresenter {
         }
         else if(view.isOwlInstanceBinding()) {
             return Optional.of(OwlInstanceBinding.get());
+        }
+        else if(view.isOwlSubClassBinding()) {
+            return Optional.of(OwlSubClassBinding.get());
         }
         return view.getEntity().map(OWLEntityData::getEntity)
             .map(entity -> {

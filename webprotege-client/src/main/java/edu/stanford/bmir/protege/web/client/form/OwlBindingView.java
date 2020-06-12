@@ -25,10 +25,15 @@ public interface OwlBindingView extends IsWidget {
 
     boolean isOwlInstanceBinding();
 
+    void setOwlSubClassBinding(boolean subClassBinding);
+
+    boolean isOwlSubClassBinding();
+
     void setProperty(@Nonnull OWLEntityData entity);
 
     Optional<OWLEntityData> getEntity();
 
     @Nonnull
     AcceptsOneWidget getValuesFilterViewContainer();
+
 }

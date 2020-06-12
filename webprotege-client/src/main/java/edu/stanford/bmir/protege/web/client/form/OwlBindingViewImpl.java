@@ -41,6 +41,9 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
     RadioButton instanceRadioButton;
 
     @UiField
+    RadioButton subClassRadioButton;
+
+    @UiField
     RadioButton propertyRadioButton;
 
     @UiField
@@ -82,6 +85,16 @@ public class OwlBindingViewImpl extends Composite implements OwlBindingView {
     @Override
     public boolean isOwlInstanceBinding() {
         return instanceRadioButton.getValue();
+    }
+
+    @Override
+    public void setOwlSubClassBinding(boolean subClassBinding) {
+        subClassRadioButton.setValue(subClassBinding);
+    }
+
+    @Override
+    public boolean isOwlSubClassBinding() {
+        return subClassRadioButton.getValue();
     }
 
     @Override

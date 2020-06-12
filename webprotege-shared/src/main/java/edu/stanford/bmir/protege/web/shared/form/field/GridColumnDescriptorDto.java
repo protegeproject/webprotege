@@ -95,7 +95,7 @@ public abstract class GridColumnDescriptorDto {
 
     @JsonIgnore
     public boolean isLeafColumnDescriptor() {
-        return !(getFormControlDescriptor() instanceof GridControlDescriptor);
+        return !(getFormControlDescriptor() instanceof GridControlDescriptorDto);
     }
 
 }

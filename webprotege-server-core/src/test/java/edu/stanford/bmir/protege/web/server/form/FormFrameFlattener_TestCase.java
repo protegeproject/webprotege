@@ -32,7 +32,7 @@ public class FormFrameFlattener_TestCase {
     private FormSubject subject, otherSubject;
 
     @Mock
-    private OWLClass parentA, parentB;
+    private OWLClass parentA, parentB, subClassA, subClassB;
 
     @Mock
     private OWLNamedIndividual instanceA, instanceB;
@@ -47,24 +47,29 @@ public class FormFrameFlattener_TestCase {
         formFrameFlattener = new FormFrameFlattener();
 
         var parentsInA = ImmutableSet.of(parentA);
+        var subClassesInA = ImmutableSet.of(subClassA);
         var instancesInA = ImmutableSet.of(instanceA);
         var propertyValuesInA = ImmutableSet.of(propertyValueA);
 
         var parentsInB = ImmutableSet.of(parentB);
+        var subClassesInB = ImmutableSet.of(subClassB);
         var instancesInB = ImmutableSet.of(instanceB);
         var propertyValuesInB = ImmutableSet.of(propertyValueB);
 
         var frameA = FormFrame.get(subject,
                                    parentsInA,
+                                   subClassesInA,
                                    instancesInA,
                                    propertyValuesInA,
                                    ImmutableSet.of());
         var frameB = FormFrame.get(subject,
                                    parentsInB,
+                                   subClassesInB,
                                    instancesInB,
                                    propertyValuesInB,
                                    ImmutableSet.of());
         parentFrame = FormFrame.get(otherSubject,
+                                        ImmutableSet.of(),
                                         ImmutableSet.of(),
                                         ImmutableSet.of(),
                                         ImmutableSet.of(),
@@ -93,6 +98,7 @@ public class FormFrameFlattener_TestCase {
         var frameWithSubject = flattenedFrames.stream().filter(f -> f.getSubject().equals(subject)).findFirst().orElseThrow();
         assertThat(frameWithSubject.getSubject(), is(subject));
         assertThat(frameWithSubject.getClasses(), containsInAnyOrder(parentA, parentB));
+        assertThat(frameWithSubject.getSubClasses(), containsInAnyOrder(subClassA, subClassB));
         assertThat(frameWithSubject.getInstances(), containsInAnyOrder(instanceA, instanceB));
         assertThat(frameWithSubject.getPropertyValues(), containsInAnyOrder(propertyValueA, propertyValueB));
     }

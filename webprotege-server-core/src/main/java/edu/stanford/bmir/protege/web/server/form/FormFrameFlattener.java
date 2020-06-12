@@ -56,6 +56,7 @@ public class FormFrameFlattener {
             throw new RuntimeException("Form frame set is empty");
         }
         var parents = ImmutableSet.<OWLClass>builder();
+        var subClasses = ImmutableSet.<OWLClass>builder();
         var instances = ImmutableSet.<OWLNamedIndividual>builder();
         var propertyValues = ImmutableSet.<PlainPropertyValue>builder();
         FormSubject subject = formFrames.iterator().next().getSubject();
@@ -67,6 +68,7 @@ public class FormFrameFlattener {
         }
         return FormFrame.get(subject,
                              parents.build(),
+                             subClasses.build(),
                              instances.build(),
                              propertyValues.build(),
                              ImmutableSet.of());

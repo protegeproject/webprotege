@@ -211,7 +211,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
         headerPresenter.start(view.getHeaderContainer());
         headerPresenter.addFilteredColumnsChangedHandler(source -> {
             // We only take direction from the filter menu if its for the top level grid
-            // in the situatation where there are nested grids
+            // in the situation where there are nested grids
             if (topLevel) {
                 columnVisibilityManager.setVisibleColumns(source.getFilteredColumns());
             }
