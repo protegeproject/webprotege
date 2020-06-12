@@ -64,7 +64,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     private boolean topLevel = false;
 
     @Nonnull
-    private FormRegionOrderingChangedHandler orderByChangedHandler = () -> {};
+    private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {};
 
     @Inject
     public GridPresenter(@Nonnull GridView view,
@@ -228,7 +228,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     }
 
     private void handlerOrderingChanged() {
-        this.orderByChangedHandler.handleFormRegionOrderingChanged();
+        this.formRegionOrderingChangedHandler.handleFormRegionOrderingChanged();
     }
 
     @Override
@@ -255,6 +255,6 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     }
 
     public void setOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
-        this.orderByChangedHandler = checkNotNull(orderByChangedHandler);
+        this.formRegionOrderingChangedHandler = checkNotNull(orderByChangedHandler);
     }
 }
