@@ -8,6 +8,8 @@
             flex-wrap: nowrap;
             align-items: center;
             cursor: pointer;
+            overflow: hidden;
+            margin-right: 2px;
         }
         .ascending {
             width: 20px;
