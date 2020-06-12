@@ -24,7 +24,6 @@
             min-height: 0;
             flex-grow: 1;
             flex-shrink: 1;
-            overflow-y: scroll;
             position: relative;
         }
         .container {
@@ -33,7 +32,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            overflow: scroll;
             display: flex;
             flex-direction: column;
             justify-items: stretch;
