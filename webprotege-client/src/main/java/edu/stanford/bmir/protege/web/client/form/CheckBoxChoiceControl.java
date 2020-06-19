@@ -171,4 +171,9 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     public boolean isEnabled() {
         return enabled;
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

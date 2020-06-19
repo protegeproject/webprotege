@@ -107,4 +107,9 @@ public class SubFormControl implements FormControl {
     public Widget asWidget() {
         return container;
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        formPresenter.setFormRegionFilterChangedHandler(handler);
+    }
 }

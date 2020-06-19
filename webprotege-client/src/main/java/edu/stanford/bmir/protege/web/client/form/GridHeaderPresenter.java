@@ -12,18 +12,16 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-27
  */
-public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrdering {
+public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrdering, HasFormRegionFilterChangedHandler {
 
     @Nonnull
     private final GridHeaderView view;
@@ -52,10 +50,14 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     @Nonnull
     private List<FormRegionFilter> filters = new ArrayList<>();
 
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
                                @Nonnull Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider,
-                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper, @Nonnull GridFilterPresenter filterPresenter) {
+                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper,
+                               @Nonnull GridFilterPresenter filterPresenter) {
         this.view = checkNotNull(view);
         this.headerColumnPresenterProvider = checkNotNull(headerColumnPresenterProvider);
         this.localeMapper = checkNotNull(localeMapper);
@@ -77,13 +79,13 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
                               .stream()
                               .collect(toImmutableList());
         filterPresenter.showModal(columnDescriptors, ImmutableList.of(),
-                                  this::setFilters, () -> {});
+                                  this::handleApplyFilters, () -> {});
     }
 
-    private void setFilters(ImmutableList<FormRegionFilter> filters) {
+    private void handleApplyFilters(ImmutableList<FormRegionFilter> filters) {
         this.filters.clear();
         this.filters.addAll(filters);
-        // TODO: FIRE FILTERS CHANGED
+        formRegionFilterChangedHandler.handleFormRegionFilterChanged(new FormRegionFilterChangedEvent());
     }
 
     public void clear() {
@@ -193,5 +195,10 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     @Nonnull
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.copyOf(filters);
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        this.formRegionFilterChangedHandler = checkNotNull(handler);
     }
 }

@@ -186,4 +186,9 @@ public class ImageControl extends Composite implements FormControl {
     public boolean isEnabled() {
         return this.editable;
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

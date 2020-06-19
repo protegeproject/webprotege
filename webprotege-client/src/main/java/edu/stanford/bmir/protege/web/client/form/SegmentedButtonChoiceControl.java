@@ -217,4 +217,9 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     public boolean isEnabled() {
         return enabled;
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

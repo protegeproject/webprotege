@@ -239,4 +239,9 @@ public class TextControl extends Composite implements FormControl {
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormControlData>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

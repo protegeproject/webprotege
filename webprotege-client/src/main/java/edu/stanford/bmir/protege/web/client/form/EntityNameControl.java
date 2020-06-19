@@ -128,4 +128,9 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     public boolean isEnabled() {
         return editor.isEnabled();
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

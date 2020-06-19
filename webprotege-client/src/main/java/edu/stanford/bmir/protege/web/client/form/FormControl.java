@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedHandler, HasEnabled, HasValueChangeHandlers<Optional<FormControlData>>, IsWidget {
+public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedHandler, HasFormRegionFilterChangedHandler, HasEnabled, HasValueChangeHandlers<Optional<FormControlData>>, IsWidget {
 
     void setEnabled(boolean enabled);
 

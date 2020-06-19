@@ -25,7 +25,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-20
  */
-public class FormStackPresenter {
+public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
 
     enum FormUpdate {
         REPLACE,
@@ -54,8 +54,11 @@ public class FormStackPresenter {
     private boolean enabled = true;
 
     @Nonnull
-    private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {
-    };
+    private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {};
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+
 
     @Inject
     public FormStackPresenter(@Nonnull FormTabBarPresenter formTabBarPresenter,
@@ -155,6 +158,7 @@ public class FormStackPresenter {
             formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
             formPresenter.displayForm(formData);
             formPresenter.setEnabled(enabled);
+            formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
             formPresenters.put(formData.getFormId(), formPresenter);
             formTabBarPresenter.addForm(formDescriptor.getFormId(),
                                         formDescriptor.getLabel(),
@@ -216,5 +220,11 @@ public class FormStackPresenter {
         return getFormPresenters().stream()
                 .flatMap(formPresenter -> formPresenter.getFilters().stream())
                 .collect(toImmutableSet());
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler formRegionFilterChangedHandler) {
+        this.formRegionFilterChangedHandler = checkNotNull(formRegionFilterChangedHandler);
+        getFormPresenters().forEach(formPresenter -> formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler));
     }
 }

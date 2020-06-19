@@ -143,4 +143,9 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         gridPresenter.setOrderByChangedHandler(orderByChangedHandler);
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        gridPresenter.setFormRegionFilterChangedHandler(handler);
+    }
 }

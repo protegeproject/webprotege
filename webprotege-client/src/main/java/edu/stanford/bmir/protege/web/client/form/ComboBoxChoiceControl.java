@@ -174,4 +174,9 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     public boolean isEnabled() {
         return comboBox.isEnabled();
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

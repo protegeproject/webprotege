@@ -31,7 +31,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * <p>
  * Presents a form and its associated form data.
  */
-public class FormPresenter {
+public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     @Nonnull
     private final FormView formView;
@@ -65,6 +65,9 @@ public class FormPresenter {
 
     @Nonnull
     private Optional<FormId> formId = Optional.empty();
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangeHandler = event -> {};
 
     @AutoFactory
     @Inject
@@ -189,6 +192,7 @@ public class FormPresenter {
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
+        presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
         presenter.start();
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         fieldPresenters.add(presenter);
@@ -279,6 +283,14 @@ public class FormPresenter {
         return fieldPresenters.stream()
                 .flatMap(formFieldPresenter -> formFieldPresenter.getFilters().stream())
                 .collect(toImmutableSet());
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        formRegionFilterChangeHandler = checkNotNull(handler);
+        fieldPresenters.forEach(formFieldPresenter -> {
+            formFieldPresenter.setFormRegionFilterChangedHandler(handler);
+        });
     }
 
     interface FormDataChangedHandler {

@@ -181,4 +181,9 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     public boolean isEnabled() {
         return this.enabled;
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

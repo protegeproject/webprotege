@@ -262,4 +262,9 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     public boolean isEnabled() {
         return numberField.isEnabled();
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
+    }
 }

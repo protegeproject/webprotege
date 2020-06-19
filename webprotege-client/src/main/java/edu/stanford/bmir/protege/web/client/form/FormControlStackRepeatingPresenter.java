@@ -56,6 +56,9 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Nonnull
     private RegionPageChangedHandler regionPageChangedHandler = () -> {};
 
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+
     @AutoFactory
     @Inject
     public FormControlStackRepeatingPresenter(@Provided @Nonnull FormControlStackRepeatingView view,
@@ -130,7 +133,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         formControl.setValue(dto);
         formControl.setEnabled(enabled);
         formControl.addValueChangeHandler(this);
-
+        formControl.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
         return formControl;
     }
 
@@ -224,5 +227,10 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public void forEachFormControl(@Nonnull Consumer<FormControl> formControlConsumer) {
         formControls.forEach(formControlConsumer);
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        this.formRegionFilterChangedHandler = checkNotNull(handler);
     }
 }

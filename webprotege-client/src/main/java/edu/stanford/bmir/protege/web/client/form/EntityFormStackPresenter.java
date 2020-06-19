@@ -83,6 +83,7 @@ public class EntityFormStackPresenter {
         formStackPresenter.start(view.getFormStackContainer());
         formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
         formStackPresenter.setFormRegionOrderingChangedHandler(this::handleGridOrderByChanged);
+        formStackPresenter.setFormRegionFilterChangedHandler(this::handleFormRegionFilterChanged);
         langTagFilterPresenter.start(view.getLangTagFilterContainer());
         langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
@@ -92,6 +93,10 @@ public class EntityFormStackPresenter {
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
                                         view::setEditButtonVisible);
         setMode(Mode.READ_ONLY_MODE);
+    }
+
+    private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     private void handleGridOrderByChanged() {
