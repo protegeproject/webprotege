@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -10,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -68,6 +70,12 @@ public class SubFormControl implements FormControl {
     @Override
     public void clearValue() {
         formPresenter.clearData();
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return formPresenter.getFilters();
     }
 
     @Override

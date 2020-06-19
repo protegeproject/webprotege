@@ -11,6 +11,6 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
  */
-public interface LangTagCriteria extends AnnotationValueCriteria {
+public interface LangTagCriteria extends LiteralCriteria {
 
 }

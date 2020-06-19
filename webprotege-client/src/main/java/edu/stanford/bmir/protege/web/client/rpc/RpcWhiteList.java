@@ -69,6 +69,16 @@ public class RpcWhiteList implements Action, Result {
         this.langTagFilter = langTagFilter;
     }
 
+    public FormRegionFilter getFormRegionFilter() {
+        return formRegionFilter;
+    }
+
+    public void setFormRegionFilter(FormRegionFilter formRegionFilter) {
+        this.formRegionFilter = formRegionFilter;
+    }
+
+    FormRegionFilter formRegionFilter;
+
     LangTagFilter langTagFilter;
 
     MultiMatchType multiMatchType;

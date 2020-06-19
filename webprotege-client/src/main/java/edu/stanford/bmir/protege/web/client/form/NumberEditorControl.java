@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -17,13 +18,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.NumberControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlRange;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -120,6 +115,12 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
         numberField.setText("");
         currentValue = Optional.empty();
         dirty = false;
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
     }
 
     @Override

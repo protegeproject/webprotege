@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -13,13 +14,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -47,6 +43,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     @UiField
     ListBox comboBox;
+
     @UiField
     Label readOnlyLabel;
 
@@ -138,6 +135,12 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @Override
     public void clearValue() {
         selectDefaultChoice();
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
     }
 
     @Override

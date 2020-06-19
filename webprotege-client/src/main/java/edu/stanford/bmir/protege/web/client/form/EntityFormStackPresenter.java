@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
@@ -23,7 +24,6 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -133,9 +133,10 @@ public class EntityFormStackPresenter {
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
+            ImmutableSet<FormRegionFilter> filters = formStackPresenter.getRegionFilters();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
             dispatch.execute(new GetEntityFormsAction(projectId, entity, formFilter, pageRequests, langTagFilter,
-                                                      orderings),
+                                                      orderings, filters),
                              hasBusy,
                              this::handleGetEntityFormsResult);
         });

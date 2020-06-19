@@ -11,42 +11,42 @@ public class PropertyValueFormDataTranslator {
 //
 //    private final OWLPrimitiveDataVisitor<FormDataValue, RuntimeException> primitiveDataMapper = new OWLPrimitiveDataVisitor<FormDataValue, RuntimeException>() {
 //        @Override
-//        public FormDataValue visit(OWLClassData data) throws RuntimeException {
+//        public FormDataValue accept(OWLClassData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getEntity());
 //        }
 //
 //        @Override
-//        public FormDataValue visit(OWLObjectPropertyData data) throws RuntimeException {
+//        public FormDataValue accept(OWLObjectPropertyData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getEntity());
 //        }
 //
 //        @Override
-//        public FormDataValue visit(OWLDataPropertyData data) throws RuntimeException {
+//        public FormDataValue accept(OWLDataPropertyData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getEntity());
 //        }
 //
 //        @Override
-//        public FormDataValue visit(OWLAnnotationPropertyData data) throws RuntimeException {
+//        public FormDataValue accept(OWLAnnotationPropertyData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getEntity());
 //        }
 //
 //        @Override
-//        public FormDataValue visit(OWLNamedIndividualData data) throws RuntimeException {
+//        public FormDataValue accept(OWLNamedIndividualData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getEntity());
 //        }
 //
 //        @Override
-//        public FormDataValue visit(OWLDatatypeData data) throws RuntimeException {
+//        public FormDataValue accept(OWLDatatypeData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getEntity());
 //        }
 //
 //        @Override
-//        public FormDataValue visit(OWLLiteralData data) throws RuntimeException {
+//        public FormDataValue accept(OWLLiteralData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getLiteral());
 //        }
 //
 //        @Override
-//        public FormDataValue visit(IRIData data) throws RuntimeException {
+//        public FormDataValue accept(IRIData data) throws RuntimeException {
 //            return FormDataPrimitive.get(data.getObject());
 //        }
 //    };

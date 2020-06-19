@@ -257,4 +257,8 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
     public void setOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         this.formRegionOrderingChangedHandler = checkNotNull(orderByChangedHandler);
     }
+
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return headerPresenter.getFilters();
+    }
 }

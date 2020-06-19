@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.Form
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
@@ -206,5 +207,14 @@ public class FormStackPresenter {
 
     public Collection<FormPresenter> getFormPresenters() {
         return formPresenters.values();
+    }
+
+
+
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getRegionFilters() {
+        return getFormPresenters().stream()
+                .flatMap(formPresenter -> formPresenter.getFilters().stream())
+                .collect(toImmutableSet());
     }
 }

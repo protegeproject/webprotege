@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -35,6 +36,9 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
 
     private Map<FilterId, GridColumnId> filterMap = new HashMap<>();
 
+    @Nonnull
+    private EditGridFilterHandler editGridFilterHandler = () -> {};
+
     interface GridHeaderViewImplUiBinder extends UiBinder<HTMLPanel, GridHeaderViewImpl> {
 
     }
@@ -47,15 +51,24 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
     @UiField
     MenuButton menuButton;
 
+    @UiField
+    Button filterButton;
+
     private FilterView filterView;
 
     private FilterViewPopup filterViewPopup = new FilterViewPopup();
+
 
     @Inject
     public GridHeaderViewImpl(FilterView filterView) {
         this.filterView = checkNotNull(filterView);
         initWidget(ourUiBinder.createAndBindUi(this));
         menuButton.addClickHandler(this::handleMenuButtonClicked);
+        filterButton.addClickHandler(this::handleFilterButtonClicked);
+    }
+
+    private void handleFilterButtonClicked(ClickEvent event) {
+        editGridFilterHandler.handleEditGridFilter();
     }
 
     private void handleMenuButtonClicked(@Nonnull ClickEvent event) {
@@ -76,6 +89,11 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
     public void clear() {
         headerContainer.clear();
         filterMap.clear();
+    }
+
+    @Override
+    public void setEditGridFilterHandler(@Nonnull EditGridFilterHandler handler) {
+        this.editGridFilterHandler = checkNotNull(handler);
     }
 
     @Override

@@ -7,6 +7,6 @@
     </ui:style>
     <g:HTMLPanel>
         <g:ListBox ui:field="comboBox" visibleItemCount="1"/>
-        <g:Label ui:field="readOnlyLabel" addStyleNames="{style.readOnlyLabel}"/>
+        <g:Label ui:field="readOnlyLabel" visible="false" addStyleNames="{style.readOnlyLabel}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -24,6 +24,7 @@
 @url downloadIconUrl downloadIcon;
 @url settingsIconUrl settingsIcon;
 @url filterIconUrl filterIcon;
+@url funnelIconUrl svgFunnel;
 @url crossIconUrl svgCrossIcon;
 @url expandAllIconUrl svgExpandAllIcon;
 @url collapseAllIconUrl svgCollapseAllIcon;
@@ -440,6 +441,12 @@
 .wp-btn-g--filter {
     mask-image: filterIconUrl;
     -webkit-mask-image: filterIconUrl;
+}
+
+
+.wp-btn-g--funnel {
+    mask-image: funnelIconUrl;
+    -webkit-mask-image: funnelIconUrl;
 }
 
 .wp-btn-g--cross {

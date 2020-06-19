@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -70,6 +71,12 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     @Override
     public void clearValue() {
         gridPresenter.clearValue();
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return gridPresenter.getFilters();
     }
 
     @Override

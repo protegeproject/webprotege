@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -13,11 +14,7 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptorDto;
 
 import javax.annotation.Nonnull;
@@ -102,6 +99,12 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     @Override
     public void clearValue() {
         editor.clearValue();
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
     }
 
     @Override

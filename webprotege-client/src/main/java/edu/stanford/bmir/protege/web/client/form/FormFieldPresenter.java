@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
@@ -193,4 +194,14 @@ public class FormFieldPresenter implements FormRegionPresenter {
         });
     }
 
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        // TODO: Filter for stack?
+
+        ImmutableSet.Builder<FormRegionFilter> filters = ImmutableSet.builder();
+        stackPresenter.forEachFormControl(formControl ->  {
+            filters.addAll(formControl.getFilters());
+        });
+        return filters.build();
+    }
 }

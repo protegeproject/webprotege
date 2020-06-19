@@ -49,4 +49,6 @@ public interface AnnotationValueCriteriaVisitor<R> extends LangTagCriteriaVisito
 
     @Override
     R visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria);
+
+    R visit(CompositeLiteralCriteria compositeLiteralCriteria);
 }

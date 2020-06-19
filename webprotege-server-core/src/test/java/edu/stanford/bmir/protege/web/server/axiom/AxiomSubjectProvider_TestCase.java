@@ -101,7 +101,7 @@ public class AxiomSubjectProvider_TestCase {
     }
 
     /**
-     * Mocks the visit method for a given axiom.
+     * Mocks the accept method for a given axiom.
      *
      * @param axiom      The axiom.
      * @param axiomClass The type of class of the axiom.
@@ -112,7 +112,7 @@ public class AxiomSubjectProvider_TestCase {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object visitorImplementation = invocationOnMock.getArguments()[0];
-                Method method = visitorImplementation.getClass().getMethod("visit", axiomClass);
+                Method method = visitorImplementation.getClass().getMethod("accept", axiomClass);
                 method.setAccessible(true);
                 return method.invoke(visitorImplementation, axiom);
             }

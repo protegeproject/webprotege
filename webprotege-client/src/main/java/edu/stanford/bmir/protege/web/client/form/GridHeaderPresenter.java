@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
@@ -11,8 +12,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -42,13 +46,20 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
 
     private Optional<FormRegionOrdering> orderBy = Optional.empty();
 
+    @Nonnull
+    private final GridFilterPresenter filterPresenter;
+
+    @Nonnull
+    private List<FormRegionFilter> filters = new ArrayList<>();
+
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
                                @Nonnull Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider,
-                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
+                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper, @Nonnull GridFilterPresenter filterPresenter) {
         this.view = checkNotNull(view);
         this.headerColumnPresenterProvider = checkNotNull(headerColumnPresenterProvider);
         this.localeMapper = checkNotNull(localeMapper);
+        this.filterPresenter = checkNotNull(filterPresenter);
     }
 
     @Override
@@ -56,8 +67,23 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         this.columnVisibilityManager = Optional.of(checkNotNull(columnVisibilityManager));
     }
 
-    void start(@Nonnull AcceptsOneWidget container) {
+    public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        view.setEditGridFilterHandler(this::handleEditGridFilter);
+    }
+
+    private void handleEditGridFilter() {
+        ImmutableList<GridColumnDescriptorDto> columnDescriptors = containersByDescriptor.keySet()
+                              .stream()
+                              .collect(toImmutableList());
+        filterPresenter.showModal(columnDescriptors, ImmutableList.of(),
+                                  this::setFilters, () -> {});
+    }
+
+    private void setFilters(ImmutableList<FormRegionFilter> filters) {
+        this.filters.clear();
+        this.filters.addAll(filters);
+        // TODO: FIRE FILTERS CHANGED
     }
 
     public void clear() {
@@ -162,5 +188,10 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
                 }
             });
         }
+    }
+
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.copyOf(filters);
     }
 }

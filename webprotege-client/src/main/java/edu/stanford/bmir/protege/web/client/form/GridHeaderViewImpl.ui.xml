@@ -18,10 +18,14 @@
             align-items: center;
             padding-right: 0.4em;
         }
+        .filterButton {
+            background-color: white;
+        }
     </ui:style>
         <g:HTMLPanel addStyleNames="{wp.style.formGridHeaderRow}">
             <g:HTMLPanel ui:field="headerContainer" addStyleNames="{style.header}"/>
             <g:HTMLPanel addStyleNames="{style.menuButtonContainer}">
+                <g:Button ui:field="filterButton" addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.funnel} {style.filterButton}"/>
                 <popupmenu:MenuButton ui:field="menuButton"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
