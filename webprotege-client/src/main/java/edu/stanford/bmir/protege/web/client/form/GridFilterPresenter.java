@@ -7,14 +7,17 @@ import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.*;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -48,11 +51,13 @@ public class GridFilterPresenter {
                           @Nonnull Consumer<ImmutableList<FormRegionFilter>> applyFiltersHandler,
                           @Nonnull Runnable cancelHandler) {
         view.clear();
+        Map<FormRegionId, FormControlFilterPresenter> filterPresenters = new LinkedHashMap<>();
         columns.forEach(col -> {
             String columnName = localeMapper.getValueForCurrentLocale(col.getLabel());
             AcceptsOneWidget filterContainer = view.addFilter(columnName);
             FormControlFilterPresenter presenter = formControlFilterMapper.getPresenter(col.getFormControlDescriptor());
             if (presenter != null) {
+                filterPresenters.put(col.getId(), presenter);
                 presenter.start(filterContainer);
             }
 
@@ -64,7 +69,13 @@ public class GridFilterPresenter {
         modalPresenter.setPrimaryButton(DialogButton.OK);
         modalPresenter.setButtonHandler(DialogButton.OK, closer -> {
             closer.closeModal();
-            applyFiltersHandler.accept(ImmutableList.of());
+            ImmutableList.Builder<FormRegionFilter> filterBuilder = ImmutableList.builder();
+            filterPresenters.forEach((id, filterPresenter) -> {
+                filterPresenter.getFilter()
+                .map(filterCriteria -> FormRegionFilter.get(id, filterCriteria))
+                .ifPresent(filterBuilder::add);
+            });
+            applyFiltersHandler.accept(filterBuilder.build());
         });
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setButtonHandler(DialogButton.CANCEL, closer -> {

@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static dagger.internal.codegen.DaggerStreams.toImmutableList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 @FormDataBuilderSession
 public class GridControlValuesBuilder {
@@ -53,6 +53,10 @@ public class GridControlValuesBuilder {
     @Nonnull
     private final FormControlDataDtoComparator formControlDataDtoComparator;
 
+    @Nonnull
+    private final FormRegionFilterPredicateManager filters;
+
+
 
     @Inject
     public GridControlValuesBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
@@ -61,7 +65,10 @@ public class GridControlValuesBuilder {
                                     @Nonnull FormRegionOrderingIndex formRegionOrderingIndex,
                                     @Nonnull LangTagFilter langTagFilter,
                                     @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                    @Nonnull GridRowDataDtoComparatorFactory comparatorFactory, @Nonnull FormControlDataDtoComparator formControlDataDtoComparator) {
+                                    @Nonnull GridRowDataDtoComparatorFactory comparatorFactory,
+                                    @Nonnull FormControlDataDtoComparator formControlDataDtoComparator,
+                                    @Nonnull FormRegionFilterIndex formRegionFilterIndex,
+                                    @Nonnull FormFilterMatcherFactory formFilterMatcherFactory, @Nonnull FormRegionFilterPredicateManager filters) {
         this.bindingValuesExtractor = checkNotNull(bindingValuesExtractor);
         this.formDataDtoBuilderProvider = checkNotNull(formDataDtoBuilderProvider);
         this.sessionRenderer = checkNotNull(sessionRenderer);
@@ -70,6 +77,7 @@ public class GridControlValuesBuilder {
         this.formPageRequestIndex = formPageRequestIndex;
         this.comparatorFactory = comparatorFactory;
         this.formControlDataDtoComparator = formControlDataDtoComparator;
+        this.filters = filters;
     }
 
     @Nonnull
@@ -104,14 +112,14 @@ public class GridControlValuesBuilder {
                               .collect(PageCollector.toPage(pageRequest.getPageNumber(),
                                                             pageRequest.getPageSize()));
         var orderings = formRegionOrderingIndex.getOrderings();
-        if(orderings.isEmpty()) {
+        if (orderings.isEmpty()) {
             orderings = descriptor.getColumns()
-                      .stream()
-                      .findFirst()
-                      .map(GridColumnDescriptor::getId)
-                      .map(columnId -> FormRegionOrdering.get(columnId, FormRegionOrderingDirection.ASC))
-                      .map(ImmutableSet::of)
-                    .orElse(ImmutableSet.of());
+                                  .stream()
+                                  .findFirst()
+                                  .map(GridColumnDescriptor::getId)
+                                  .map(columnId -> FormRegionOrdering.get(columnId, FormRegionOrderingDirection.ASC))
+                                  .map(ImmutableSet::of)
+                                  .orElse(ImmutableSet.of());
         }
         return GridControlDataDto.get(descriptor,
                                       rowData.orElse(Page.emptyPage()),
@@ -152,12 +160,15 @@ public class GridControlValuesBuilder {
             var columnId = columnDescriptor.getId();
             var direction = formRegionOrderingIndex.getOrderingDirection(columnId);
             var comp = direction.isAscending() ? formControlDataDtoComparator : formControlDataDtoComparator.reversed();
+            var filterPredicate = filters.getFilterPredicate(columnId);
             var cellValues = formDataDtoBuilderProvider.get()
-                                                       .toFormControlValues(rowSubject, columnId, columnDescriptor, depth + 1)
-                    .stream()
-                    .sorted(comp)
-                    .collect(toImmutableList());
-
+                                                       .toFormControlValues(rowSubject,
+                                                                            columnId,
+                                                                            columnDescriptor,
+                                                                            depth + 1)
+                                                       .stream()
+                                                       .sorted(comp)
+                                                       .collect(toImmutableList());
             if (cellValues.isEmpty()) {
                 var cellData = GridCellDataDto.get(columnId, Page.emptyPage());
                 resultBuilder.add(cellData);
@@ -165,7 +176,7 @@ public class GridControlValuesBuilder {
             else {
                 if (columnDescriptor.getRepeatability() == Repeatability.NON_REPEATABLE) {
                     var firstValue = cellValues.get(0);
-                    if (isIncluded(firstValue)) {
+                    if (filterPredicate.test(firstValue) && isIncluded(firstValue)) {
                         var cellData = GridCellDataDto.get(columnId,
                                                            Page.of(firstValue));
                         resultBuilder.add(cellData);

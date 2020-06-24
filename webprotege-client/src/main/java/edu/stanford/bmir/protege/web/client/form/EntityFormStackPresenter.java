@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
@@ -96,6 +98,7 @@ public class EntityFormStackPresenter {
     }
 
     private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
+        GWT.log("[EntityFormStackPresenter] Form filter changed");
         updateFormsForCurrentEntity(ImmutableList.of());
     }
 

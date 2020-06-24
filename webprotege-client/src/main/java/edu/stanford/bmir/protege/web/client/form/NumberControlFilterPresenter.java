@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.NumericValueCriteriaPresenter;
+import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlDataMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptorDto;
 
@@ -46,6 +47,6 @@ public class NumberControlFilterPresenter implements FormControlFilterPresenter 
     @Nonnull
     @Override
     public Optional<PrimitiveFormControlDataMatchCriteria> getFilter() {
-        return Optional.empty();
+        return numericValueCriteriaPresenter.getCriteria().map(LiteralFormControlDataMatchCriteria::get);
     }
 }

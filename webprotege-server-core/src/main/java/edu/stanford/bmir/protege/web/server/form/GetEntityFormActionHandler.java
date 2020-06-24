@@ -58,12 +58,13 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         var entity = action.getEntity();
         var langTagFilter = action.getLangTagFilter();
         var ordering = action.getGridControlOrdering();
-        FormRegionOrderingIndex formRegionOrderingIndex = FormRegionOrderingIndex.get(ordering);
+        var formRegionOrderingIndex = FormRegionOrderingIndex.get(ordering);
+        var formRegionFilterIndex = FormRegionFilterIndex.get(action.getFilters());
         var module = new EntityFrameFormDataModule(
                 formRegionOrderingIndex,
                 langTagFilter,
-                pageRequestIndex
-        );
+                pageRequestIndex,
+                formRegionFilterIndex);
         var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module)
                                                  .formDataBuilder();
         var formsFilterList = action.getFormFilter();

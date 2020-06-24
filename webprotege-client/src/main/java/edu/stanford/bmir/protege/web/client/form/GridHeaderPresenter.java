@@ -78,7 +78,8 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         ImmutableList<GridColumnDescriptorDto> columnDescriptors = containersByDescriptor.keySet()
                               .stream()
                               .collect(toImmutableList());
-        filterPresenter.showModal(columnDescriptors, ImmutableList.of(),
+        filterPresenter.showModal(columnDescriptors,
+                                  ImmutableList.copyOf(filters),
                                   this::handleApplyFilters, () -> {});
     }
 

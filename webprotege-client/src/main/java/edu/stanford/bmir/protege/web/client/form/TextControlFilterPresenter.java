@@ -53,14 +53,7 @@ public class TextControlFilterPresenter implements FormControlFilterPresenter {
     @Nonnull
     @Override
     public Optional<PrimitiveFormControlDataMatchCriteria> getFilter() {
-        criteriaPresenter.getCriteria()
-                         .map(c -> {
-                             ImmutableList<LiteralFormControlDataMatchCriteria> criteria = c.getCriteria()
-                                                                                           .stream()
-                                                                                           .map(LiteralFormControlDataMatchCriteria::get)
-                                                                                           .collect(toImmutableList());
-                             return CompositePrimitiveFormControlDataMatchCriteria.get(criteria, c.getMultiMatchType());
-                         });
-        return Optional.empty();
+        return criteriaPresenter.getCriteria()
+                         .map(LiteralFormControlDataMatchCriteria::get);
     }
 }
