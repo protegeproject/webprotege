@@ -18,7 +18,7 @@ public abstract class ShortForm {
     public static final String SHORT_FORM = "shortForm";
 
     @Nonnull
-    protected static ShortForm get(@Nonnull @JsonProperty(DICTIONARY_LANGUAGE) DictionaryLanguage language,
+    public static ShortForm get(@Nonnull @JsonProperty(DICTIONARY_LANGUAGE) DictionaryLanguage language,
                                 @Nonnull @JsonProperty(SHORT_FORM) String shortForm) {
         return new AutoValue_ShortForm(language, shortForm);
     }
