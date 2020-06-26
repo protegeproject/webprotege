@@ -21,6 +21,11 @@ import javax.annotation.Nonnull;
 public class IndexModule {
 
     @Provides
+    ClassFrameAxiomsIndex provideClassFrameAxiomsIndex(ClassFrameAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
     AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
             AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
