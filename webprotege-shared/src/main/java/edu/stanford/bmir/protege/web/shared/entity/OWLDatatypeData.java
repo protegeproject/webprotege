@@ -25,9 +25,8 @@ public abstract class OWLDatatypeData extends OWLEntityData {
 
     @Nonnull
     public static OWLDatatypeData get(@Nonnull OWLDatatype datatype,
-                                      @Nonnull String browserText,
                                       @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
-        return new AutoValue_OWLDatatypeData(browserText,  shortForms, datatype);
+        return new AutoValue_OWLDatatypeData(shortForms, datatype);
     }
 
     @Nonnull

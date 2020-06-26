@@ -228,6 +228,18 @@
                             <moduleTemplate>${project.basedir}/src/main/module-dev.gwt.xml</moduleTemplate>
                         </configuration>
                     </plugin>
+                            <plugin>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>2.22.1</version>
+                            <configuration>
+                            <additionalClasspathElements>
+                            <additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
+                            <additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <useManifestOnlyJar>false</useManifestOnlyJar>
+                            <forkMode>always</forkMode>
+                            </configuration>
+                            </plugin>
                 </plugins>
             </build>
         </profile>

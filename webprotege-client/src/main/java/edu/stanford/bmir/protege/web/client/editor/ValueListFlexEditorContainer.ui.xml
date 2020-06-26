@@ -10,7 +10,6 @@
             flex-flow: nowrap;
         }
         .editorHolder {
-            flex-basis: 500px;
             min-width: 0;
             flex-grow: 1;
             flex-shrink: 1;

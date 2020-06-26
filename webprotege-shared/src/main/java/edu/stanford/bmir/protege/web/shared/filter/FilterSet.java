@@ -1,8 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.filter;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -35,5 +41,13 @@ public class FilterSet {
 
     public boolean hasSetting(FilterId filterId, FilterSetting value) {
         return value.equals(map.get(filterId));
+    }
+
+    public ImmutableList<FilterId> getOnFilters() {
+        return map.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(FilterSetting.ON))
+                .map(Map.Entry::getKey)
+                .collect(toImmutableList());
     }
 }

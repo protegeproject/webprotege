@@ -28,25 +28,19 @@ public class OWLClassData_TestCase {
 
     @Before
     public void setUp() {
-        shortForms = ImmutableMap.of();
-        clsData = OWLClassData.get(entity, browserText, shortForms);
+        shortForms = ImmutableMap.of(DictionaryLanguage.localName(), browserText);
+        clsData = OWLClassData.get(entity, shortForms);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        OWLClassData.get(null, browserText, shortForms);
+        OWLClassData.get(null, shortForms);
     }
 
     @Test
     public void shouldReturnSupplied_entity() {
         assertThat(clsData.getEntity(), is(this.entity));
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        OWLClassData.get(entity, null, shortForms);
     }
 
     @Test
@@ -67,22 +61,17 @@ public class OWLClassData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(clsData, is(OWLClassData.get(entity, browserText, shortForms)));
+        assertThat(clsData, is(OWLClassData.get(entity, shortForms)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(clsData, is(not(OWLClassData.get(Mockito.mock(OWLClass.class), browserText, shortForms))));
-    }
-
-    @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(clsData, is(not(OWLClassData.get(entity, "String-f194bedd-dffb-4dda-b795-50790e318fc9", shortForms))));
+        assertThat(clsData, is(not(OWLClassData.get(Mockito.mock(OWLClass.class), shortForms))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(clsData.hashCode(), is(OWLClassData.get(entity, browserText, shortForms).hashCode()));
+        assertThat(clsData.hashCode(), is(OWLClassData.get(entity, shortForms).hashCode()));
     }
 
     @Test

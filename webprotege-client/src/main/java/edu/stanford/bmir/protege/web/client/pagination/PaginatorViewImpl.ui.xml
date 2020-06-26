@@ -17,6 +17,10 @@
             vertical-align: baseline;
             margin-right: 4px;
         }
+        .totalRows {
+            padding-left: 1em;
+            justify-self: flex-end;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Label text="{msg.pagination_Page} " addStyleNames="{style.label}"/>
@@ -31,6 +35,6 @@
                       addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"
                       text="{msg.pagination_next}"/>
         </div>
-
+        <g:Label ui:field="rowCountField" text="" addStyleNames="{style.label} {style.totalRows}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

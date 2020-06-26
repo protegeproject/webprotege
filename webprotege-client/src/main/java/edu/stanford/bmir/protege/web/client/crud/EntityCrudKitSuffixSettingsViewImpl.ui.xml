@@ -1,0 +1,12 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+
+        <div class="{wp.style.formGroup}">
+            <g:ListBox ui:field="suffixSelectorListBox" visibleItemCount="1"/>
+        </div>
+        <g:SimplePanel ui:field="settingsContainer"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

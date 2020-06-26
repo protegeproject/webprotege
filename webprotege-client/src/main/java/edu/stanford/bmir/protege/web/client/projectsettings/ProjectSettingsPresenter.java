@@ -6,8 +6,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
-import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsView;
@@ -61,7 +60,7 @@ public class ProjectSettingsPresenter {
     private final DefaultDisplayNameSettingsView defaultDisplayNameSettingsView;
 
     @Nonnull
-    private final EntityCrudKitSettingsEditor entityCrudKitSettingsEditor;
+    private final EntityCrudKitSettingsPresenter entityCrudKitSettingsPresenter;
 
     @Nonnull
     private final SlackWebhookSettingsView slackWebhookSettingsView;
@@ -90,9 +89,11 @@ public class ProjectSettingsPresenter {
                                     @Nonnull GeneralSettingsView generalSettingsView,
                                     @Nonnull DefaultDictionaryLanguageView defaultDictionaryLanguageView,
                                     @Nonnull DefaultDisplayNameSettingsView defaultDisplayNameSettingsView,
-                                    @Nonnull EntityCrudKitSettingsEditor entityCrudKitSettingsEditor, @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
+                                    @Nonnull EntityCrudKitSettingsPresenter entityCrudKitSettingsPresenter,
+                                    @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
                                     @Nonnull WebhookSettingsView webhookSettingsView,
-                                    @Nonnull Messages messages, @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer) {
+                                    @Nonnull Messages messages,
+                                    @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer) {
         this.projectId = checkNotNull(projectId);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -101,7 +102,7 @@ public class ProjectSettingsPresenter {
         this.generalSettingsView = checkNotNull(generalSettingsView);
         this.defaultDictionaryLanguageView = checkNotNull(defaultDictionaryLanguageView);
         this.defaultDisplayNameSettingsView = checkNotNull(defaultDisplayNameSettingsView);
-        this.entityCrudKitSettingsEditor = checkNotNull(entityCrudKitSettingsEditor);
+        this.entityCrudKitSettingsPresenter = entityCrudKitSettingsPresenter;
         this.slackWebhookSettingsView = checkNotNull(slackWebhookSettingsView);
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
         this.messages = checkNotNull(messages);
@@ -131,7 +132,8 @@ public class ProjectSettingsPresenter {
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
         // TODO: Check that the user can do this
-        settingsPresenter.addSection(messages.newEntitySettings()).setWidget(entityCrudKitSettingsEditor);
+        AcceptsOneWidget newEntitySettingsContainer = settingsPresenter.addSection(messages.newEntitySettings());
+        entityCrudKitSettingsPresenter.start(newEntitySettingsContainer);
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
         settingsPresenter.addSection(messages.displayName_settings_project_title()).setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
@@ -144,8 +146,7 @@ public class ProjectSettingsPresenter {
                                        });
         dispatchServiceManager.execute(new GetEntityCrudKitsAction(projectId),
                                        result -> {
-                                            entityCrudKitSettingsEditor.setEntityCrudKits(result.getKits());
-                                            entityCrudKitSettingsEditor.setValue(result.getCurrentSettings());
+                                            entityCrudKitSettingsPresenter.setSettings(result.getCurrentSettings());
                                        });
         defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
     }
@@ -218,12 +219,12 @@ public class ProjectSettingsPresenter {
             eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
             settingsPresenter.goToNextPlace();
         });
-        entityCrudKitSettingsEditor.getValue().ifPresent(settings -> {
+        EntityCrudKitSettings<?> settings = entityCrudKitSettingsPresenter.getSettings();
             dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId,
                                                                               settings, settings,
                                                                               IRIPrefixUpdateStrategy.LEAVE_INTACT),
                                            result -> {});
-        });
+
 
     }
 

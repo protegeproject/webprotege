@@ -36,6 +36,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private final EditProjectTagsUIActionHandler editProjectTagsUIActionHandler;
 
+    private final EditProjectFormsUiHandler editProjectFormsUiHandler;
+
     private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
         @Override
         public void execute() {
@@ -64,19 +66,28 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private AbstractUiAction editProjectForms = new AbstractUiAction(MESSAGES.forms_EditProjectForms()) {
+        @Override
+        public void execute() {
+            editProjectFormsUiHandler.handleEditProjectForms();
+        }
+    };
+
     @Inject
     public ProjectMenuPresenter(LoggedInUserProjectPermissionChecker permissionChecker,
                                 ProjectMenuView view,
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
-                                EditProjectTagsUIActionHandler editProjectTagsUIActionHandler) {
+                                EditProjectTagsUIActionHandler editProjectTagsUIActionHandler,
+                                EditProjectFormsUiHandler editProjectFormsUiHandler) {
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
         this.editProjectPrefixDeclarationsHandler = editProjectPrefixDeclarationsHandler;
         this.editProjectTagsUIActionHandler = editProjectTagsUIActionHandler;
+        this.editProjectFormsUiHandler = editProjectFormsUiHandler;
         setupActions();
     }
 
@@ -92,6 +103,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                         canEdit -> editProjectPrefixes.setEnabled(canEdit));
         permissionChecker.hasPermission(EDIT_PROJECT_TAGS,
                                         canEdit -> editProjectTags.setEnabled(canEdit));
+        permissionChecker.hasPermission(EDIT_FORMS,
+                                        canEdit -> editProjectForms.setEnabled(canEdit));
     }
 
     public void dispose() {
@@ -105,6 +118,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private void setupActions() {
         view.addMenuAction(editProjectSettings);
         view.addMenuAction(editProjectTags);
+        view.addMenuAction(editProjectForms);
         view.addMenuAction(editProjectPrefixes);
         view.addMenuAction(uploadAndMerge);
 

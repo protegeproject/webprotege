@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.resources;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.*;
+import org.checkerframework.checker.units.qual.C;
 
 /**
  * Author: Matthew Horridge<br>
@@ -22,6 +23,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("busy.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource busy();
+
+    @Source("help.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgHelpIcon();
+
+    @Source("ascending.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgAscendingIcon();
+
+    @Source("descending.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDescendingIcon();
 
     @Source("class.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -276,6 +289,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource filterIcon();
 
+    @Source("expand-all.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgExpandAllIcon();
+
+    @Source("collapse-all.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgCollapseAllIcon();
+
     @Source("glyphs.css")
     Glyphs glyphs();
 
@@ -292,11 +313,32 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-group")
         String formGroup();
 
+        @ClassName("wp-form-group--narrow")
+        String formGroupNarrow();
+
+        @ClassName("wp-form-group__row")
+        String formGroupRow();
+
+        @ClassName("wp-form-group--multi-col")
+        String formGroupMultiCol();
+
+        @ClassName("wp-form-group--single-col")
+        String formGroupSingleCol();
+
         @ClassName("wp-form-stretch")
         String formStretch();
 
         @ClassName("wp-form-label")
         String formLabel();
+
+        @ClassName("wp-form-label--error")
+        String formLabelError();
+
+        @ClassName("wp-form-editor")
+        String formEditor();
+
+        @ClassName("wp-form-editor--error")
+        String formEditorError();
 
         @ClassName("wp-form-checkbox")
         String formCheckBox();
@@ -358,6 +400,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String errorBorder();
 
+        String errorBorderColor();
+
         String noErrorBorder();
 
         String errorLabel();
@@ -384,11 +428,47 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("home-icon")
         String homeIcon();
 
+        @ClassName("wp-form__control-stack--horizontal")
+        String formStackHorizontal();
+
+        @ClassName("wp-form__control-stack--vertical")
+        String formStackVertical();
+
+        @ClassName("wp-form__control-stack__item--delete-hover")
+        String formStackItemDeleteHover();
+
+        @ClassName("wp-form__form-tab-bar")
+        String formTabBar();
+
+        @ClassName("wp-form__form-tab-bar__tab")
+        String formTabBar__tab();
+
+        @ClassName("wp-form__form-tab-bar__tab--selected")
+        String formTabBar__tab__selected();
+
         @ClassName("wp-form__text-block")
         String formTextBlock();
 
         @ClassName("wp-form__iri-field")
         String formIriField();
+
+        @ClassName("wp-form__grid")
+        String formGrid();
+
+        @ClassName("wp-form__grid__header-row")
+        String formGridHeaderRow();
+
+        @ClassName("wp-form__grid__row")
+        String formGridRow();
+
+        @ClassName("wp-form__grid__column")
+        String formGridColumn();
+
+        @ClassName("wp-form__grid__cell")
+        String formGridCell();
+
+        @ClassName("wp-help-icon")
+        String helpIcon();
     }
 
     interface DateTimePicker extends CssResource {
@@ -672,6 +752,21 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--cross")
         String cross();
+
+        @ClassName("wp-btn-g--expand-all")
+        String expandAll();
+
+        @ClassName("wp-btn-g--collapse-all")
+        String collapseAll();
+
+        @ClassName("wp-btn-g--sort-ascending")
+        String sortAscending();
+
+
+        @ClassName("wp-btn-g--sort-descending")
+        String sortDescending();
+
+
     }
 
     interface SettingsPageCss extends CssResource {

@@ -3,7 +3,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
-            margin-bottom: 5px;
+            margin: 5px;
             white-space: nowrap;
         }
         .label {

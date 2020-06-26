@@ -181,8 +181,17 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     @Override
     public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity,
                                                                   List<DictionaryLanguage> languages) {
+        var resultBuilder = ImmutableMap.<DictionaryLanguage, String>builder();
         findDictionaries(languages);
-        return getShortForms(entity);
+        languages.stream()
+                 .map(dictionaries::get)
+                 .forEach(dictionary -> {
+                     var shortForm = dictionary.getShortForm(entity, "");
+                     if(!shortForm.isEmpty()) {
+                         resultBuilder.put(dictionary.getLanguage(), shortForm);
+                     }
+                 });
+        return resultBuilder.build();
     }
 
     @Nonnull

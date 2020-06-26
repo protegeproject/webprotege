@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
@@ -17,7 +18,7 @@ import java.util.Optional;
  * Date: 14/08/2013
  */
 @ApplicationSingleton
-public class OBOIdSuffixKit extends EntityCrudKit<OBOIdSuffixSettings> {
+public class OBOIdSuffixKit extends EntityCrudKit<OboIdSuffixSettings> {
 
     public static final String DEFAULT_PREFIX = "http://purl.obolibrary.org/obo/ONT_";
 
@@ -34,12 +35,12 @@ public class OBOIdSuffixKit extends EntityCrudKit<OBOIdSuffixSettings> {
 
     @Override
     public EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
-        return new EntityCrudKitPrefixSettings(DEFAULT_PREFIX);
+        return EntityCrudKitPrefixSettings.get(DEFAULT_PREFIX, ImmutableList.of());
     }
 
     @Override
-    public OBOIdSuffixSettings getDefaultSuffixSettings() {
-        return new OBOIdSuffixSettings();
+    public OboIdSuffixSettings getDefaultSuffixSettings() {
+        return OboIdSuffixSettings.get();
     }
 
     @Override
@@ -56,7 +57,7 @@ public class OBOIdSuffixKit extends EntityCrudKit<OBOIdSuffixSettings> {
     }
 
     @Override
-    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, OBOIdSuffixSettings suffixSettings) {
+    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, OboIdSuffixSettings suffixSettings) {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < suffixSettings.getTotalDigits() - 1; i++) {
             sb.append("0");

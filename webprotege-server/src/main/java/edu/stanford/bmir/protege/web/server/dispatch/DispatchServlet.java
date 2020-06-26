@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
@@ -15,6 +16,12 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,6 +50,7 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
     public DispatchServiceResultContainer executeAction(Action action) throws ActionExecutionException, PermissionDeniedException {
         UserId userId = getUserInSession();
         HttpServletRequest request = getThreadLocalRequest();
+        var locales = ImmutableList.copyOf(Collections.list(request.getLocales()));
         HttpSession session = request.getSession();
         final RequestContext requestContext = new RequestContext(userId);
         final ExecutionContext executionContext = new ExecutionContext(new WebProtegeSessionImpl(session));

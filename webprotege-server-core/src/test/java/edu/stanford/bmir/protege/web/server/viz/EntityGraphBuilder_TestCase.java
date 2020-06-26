@@ -399,15 +399,15 @@ public class EntityGraphBuilder_TestCase {
         indA = null;
         OWLObjectProperty property = MockingUtils.mockOWLObjectProperty();
         when(renderingManager.getObjectPropertyData(property))
-                .thenReturn(OWLObjectPropertyData.get(property, "", ImmutableMap.of()));
+                .thenReturn(OWLObjectPropertyData.get(property, ImmutableMap.of()));
         // Enough to cause a stack over flow with a recursive implementation of the graph builder
         int count = 1000;
         for(int i = 0; i < count; i++) {
             OWLNamedIndividual indB = MockingUtils.mockOWLNamedIndividual();
             when(renderingManager.getIndividualData(indB))
-                    .thenReturn(OWLNamedIndividualData.get(indB, "", ImmutableMap.of()));
+                    .thenReturn(OWLNamedIndividualData.get(indB, ImmutableMap.of()));
             when(renderingManager.getRendering(indB))
-                    .thenReturn(OWLNamedIndividualData.get(indB, "", ImmutableMap.of()));
+                    .thenReturn(OWLNamedIndividualData.get(indB, ImmutableMap.of()));
             if(head == null) {
                 head = indB;
             }

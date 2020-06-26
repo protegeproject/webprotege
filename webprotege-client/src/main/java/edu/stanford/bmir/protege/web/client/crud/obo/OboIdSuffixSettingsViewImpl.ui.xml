@@ -1,0 +1,28 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .userRangeList {
+            width: 100%;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <g:HTMLPanel>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="Digit count" addStyleNames="{wp.style.formLabel}"/>
+                <g:TextBox ui:field="totalDigitsEditor"/>
+            </div>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="User specific ranges" addStyleNames="{wp.style.formLabel}"/>
+                <editor:ValueListFlexEditorImpl ui:field="userRangeTable" enabled="true"
+                                                addStyleNames="{style.userRangeList}"/>
+            </div>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

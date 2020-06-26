@@ -26,6 +26,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.*;
@@ -183,6 +184,11 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         return getValue()
                 .filter(prop -> prop instanceof OWLAnnotationPropertyData)
                 .map(prop -> (OWLAnnotationPropertyData) prop);
+    }
+
+    @Override
+    public void setCriteria(@Nonnull CompositeRootCriteria entityMatchCriteria) {
+        entitySuggestOracle.setCriteria(entityMatchCriteria);
     }
 
     @Override
@@ -364,7 +370,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         OWLEntity entity = freshEntitiesHandler.getFreshEntity(text, entityType);
         ImmutableMap<DictionaryLanguage, String> shortForms = currentData.map(OWLPrimitiveData::getShortForms)
                                                                          .orElse(ImmutableMap.of());
-        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, text, shortForms);
+        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, shortForms);
         setCurrentData(Optional.of(coercedData), EventStrategy.FIRE_EVENTS);
         updateDisplayForCurrentData();
     }

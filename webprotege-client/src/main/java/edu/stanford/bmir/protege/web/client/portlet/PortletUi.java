@@ -20,7 +20,7 @@ import java.util.function.BiConsumer;
  * Stanford Center for Biomedical Informatics Research
  * 10/02/16
  */
-public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions, HasViewTitleChangedHandlers, HasForbiddenView, HasViewTitle, HasBusy, HasDispose {
+public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions, HasViewTitleChangedHandlers, HasForbiddenView, HasViewTitle, HasBusy, HasDispose, HasNodeProperties {
 
     void setToolbarVisible(boolean visible);
 
@@ -45,8 +45,10 @@ public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions
 
     void setNodeProperties(@Nonnull NodeProperties nodeProperties);
 
+    @Override
     void setNodeProperty(@Nonnull String propertyName, @Nonnull String propertyValue);
 
+    @Override
     String getNodeProperty(@Nonnull String propertyName, String defaultValue);
 
     void setNodePropertiesChangedHandler(BiConsumer<PortletUi, NodeProperties> handler);

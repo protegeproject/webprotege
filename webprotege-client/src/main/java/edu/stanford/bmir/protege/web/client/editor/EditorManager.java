@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
+import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,7 +17,7 @@ public interface EditorManager<C extends EditorCtx, V, A extends Action<R>, R ex
 
     EditorView<V> getView(C editorContext);
 
-    UpdateObjectAction<V> createUpdateObjectAction(V pristineObject, V editedObject, C editorContext);
+    UpdateFrameAction createUpdateObjectAction(V pristineObject, V editedObject, C editorContext);
 
     A createAction(C editorContext);
 

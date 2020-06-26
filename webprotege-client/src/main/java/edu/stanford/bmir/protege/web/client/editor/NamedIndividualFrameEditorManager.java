@@ -40,8 +40,10 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
     }
 
     @Override
-    public UpdateObjectAction<NamedIndividualFrame> createUpdateObjectAction(NamedIndividualFrame pristineObject, NamedIndividualFrame editedObject, OWLEntityContext editorContext) {
-        return new UpdateNamedIndividualFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
+    public UpdateNamedIndividualFrameAction createUpdateObjectAction(NamedIndividualFrame pristineObject, NamedIndividualFrame editedObject, OWLEntityContext editorContext) {
+        return new UpdateNamedIndividualFrameAction(editorContext.getProjectId(),
+                                                    pristineObject.toPlainFrame(),
+                                                    editedObject.toPlainFrame());
     }
 
     @Override

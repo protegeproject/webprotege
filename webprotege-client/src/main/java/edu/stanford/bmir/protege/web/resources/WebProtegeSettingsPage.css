@@ -8,6 +8,7 @@
 .wp-settings__section {
     border-radius: 5px;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 .wp-settings__section + .wp-settings__section {

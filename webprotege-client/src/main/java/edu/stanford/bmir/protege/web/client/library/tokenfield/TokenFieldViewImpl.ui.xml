@@ -5,6 +5,11 @@
         .main {
             display: flex;
             flex-direction: row;
+            align-items: center;
+        }
+        .placeholderLabel {
+            color: literal("var(--placeholder--color)");
+            cursor: pointer;
         }
         .container {
             display: flex;
@@ -14,10 +19,11 @@
             align-items: center;
         }
         .addButton {
-            margin-left: 1rem;
+            margin-left: 0.5rem;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label ui:field="placeholder" addStyleNames="{style.placeholderLabel}"/>
         <g:HTMLPanel ui:field="container" addStyleNames="{style.container}">
             <g:Button ui:field="addTokenButton" addStyleNames="{wp.buttons.addButton} {style.addButton}"/>
         </g:HTMLPanel>

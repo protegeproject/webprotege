@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +62,7 @@ public class PrimitiveDataParserImpl_LiteralParsing_TestCase {
                 callback.onSuccess(Optional.empty());
                 return null;
             }
-        }).when(lookupHandler).lookupEntity(any(String.class), any(Set.class), any(AsyncCallback.class));
+        }).when(lookupHandler).lookupEntity(any(String.class), any(Set.class), any(CompositeRootCriteria.class), any(AsyncCallback.class));
         parser = new PrimitiveDataParserImpl(lookupHandler);
     }
 

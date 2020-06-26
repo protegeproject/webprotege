@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameAction;
 
 import javax.annotation.Nonnull;
@@ -20,7 +21,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class UpdateObjectPropertyFrameHandler extends AbstractUpdateFrameHandler<UpdateObjectPropertyFrameAction, ObjectPropertyFrame, OWLObjectPropertyData> {
+public class UpdateObjectPropertyFrameHandler extends AbstractUpdateFrameHandler<UpdateObjectPropertyFrameAction, ObjectPropertyFrame> {
 
     @Inject
     public UpdateObjectPropertyFrameHandler(@Nonnull AccessManager accessManager,
@@ -31,7 +32,7 @@ public class UpdateObjectPropertyFrameHandler extends AbstractUpdateFrameHandler
     }
 
     @Override
-    protected Result createResponse(ObjectPropertyFrame to, EventList<ProjectEvent<?>> events) {
+    protected Result createResponse(PlainEntityFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
     }
 

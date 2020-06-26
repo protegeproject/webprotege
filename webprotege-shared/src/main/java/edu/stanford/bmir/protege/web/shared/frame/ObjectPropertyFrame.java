@@ -9,6 +9,9 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -37,6 +40,16 @@ public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectProper
     }
 
     @Nonnull
+    public static ObjectPropertyFrame empty(@Nonnull OWLObjectPropertyData subject) {
+        return get(subject,
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of());
+    }
+
+    @Nonnull
     public abstract OWLObjectPropertyData getSubject();
 
     @Nonnull
@@ -54,4 +67,17 @@ public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectProper
 
     @Nonnull
     public abstract ImmutableSet<OWLObjectPropertyData> getInverseProperties();
+
+    @Nonnull
+    @Override
+    public PlainObjectPropertyFrame toPlainFrame() {
+        return PlainObjectPropertyFrame.get(
+                getSubject().getEntity(),
+                getAnnotationPropertyValues().stream().map(PropertyAnnotationValue::toPlainPropertyValue).collect(toImmutableSet()),
+                getCharacteristics(),
+                getDomains().stream().map(OWLClassData::getEntity).collect(toImmutableSet()),
+                getRanges().stream().map(OWLClassData::getEntity).collect(toImmutableSet()),
+                getInverseProperties().stream().map(OWLObjectPropertyData::getEntity).collect(toImmutableSet())
+        );
+    }
 }

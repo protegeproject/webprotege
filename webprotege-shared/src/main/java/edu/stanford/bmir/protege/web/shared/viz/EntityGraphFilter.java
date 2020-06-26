@@ -12,6 +12,8 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.Null;
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.shared.DeserializationUtil.nonNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -38,7 +40,7 @@ public abstract class EntityGraphFilter {
                                         @Nonnull @JsonProperty(INCLUSION_CRITERIA) CompositeEdgeCriteria inclusionCriteria,
                                         @Nonnull @JsonProperty(EXCLUSION_CRITERIA) CompositeEdgeCriteria exclusionCriteria,
                                         @JsonProperty(ACTIVE) boolean active) {
-        return new AutoValue_EntityGraphFilter(name, description == null ? "" : description, inclusionCriteria, exclusionCriteria, active);
+        return new AutoValue_EntityGraphFilter(name, nonNull(description), inclusionCriteria, exclusionCriteria, active);
     }
 
     /**

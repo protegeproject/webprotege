@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.server.api.HashedApiKeyConverter;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemConverter;
 import edu.stanford.bmir.protege.web.server.color.ColorConverter;
-import edu.stanford.bmir.protege.web.server.form.FormDataConverter;
-import edu.stanford.bmir.protege.web.server.form.FormDataValueConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import edu.stanford.bmir.protege.web.server.user.UserActivityRecord;
@@ -90,10 +88,6 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(projectIdConverter);
         converters.addConverter(threadIdConverter);
         converters.addConverter(commentIdConverter);
-        FormDataValueConverter formDataValueConverter = new FormDataValueConverter(new OWLDataFactoryImpl(),
-                                                               entityConverter);
-        converters.addConverter(formDataValueConverter);
-        converters.addConverter(new FormDataConverter(formDataValueConverter));
         converters.addConverter(collectionIdConverter);
         converters.addConverter(formIdConverter);
         converters.addConverter(tagIdConverter);

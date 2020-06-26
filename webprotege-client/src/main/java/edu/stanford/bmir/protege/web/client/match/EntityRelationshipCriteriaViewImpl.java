@@ -34,9 +34,6 @@ public class EntityRelationshipCriteriaViewImpl extends Composite implements Ent
             EntityRelationshipCriteriaViewImplUiBinder.class);
 
     @UiField
-    ListBox valueMatchTypeSelector;
-
-    @UiField
     SimplePanel valueMatchCriteriaContainer;
 
     @UiField(provided = true)
@@ -46,22 +43,6 @@ public class EntityRelationshipCriteriaViewImpl extends Composite implements Ent
     public EntityRelationshipCriteriaViewImpl(@Nonnull PrimitiveDataEditor propertyField) {
         this.propertyField = propertyField;
         initWidget(ourUiBinder.createAndBindUi(this));
-        valueMatchTypeSelector.addChangeHandler(event -> valueMatchTypeChangedHandler.run());
-    }
-
-    @Override
-    public void setValueMatchTypeChangedHandler(@Nonnull Runnable runnable) {
-        this.valueMatchTypeChangedHandler = checkNotNull(runnable);
-    }
-
-    @Override
-    public void setValueMatchType(@Nonnull RelationshipValueMatchType matchType) {
-        valueMatchTypeSelector.setSelectedIndex(matchType.ordinal());
-    }
-
-    @Override
-    public RelationshipValueMatchType getValueMatchType() {
-        return RelationshipValueMatchType.values()[valueMatchTypeSelector.getSelectedIndex()];
     }
 
     @Override
@@ -84,12 +65,12 @@ public class EntityRelationshipCriteriaViewImpl extends Composite implements Ent
 
     @Override
     public void setPropertyChangeHandler(@Nonnull Runnable handler) {
-
+        propertyField.addValueChangeHandler(event -> handler.run());
     }
 
     @Nonnull
     @Override
-    public AcceptsOneWidget getValueEntityCriteriaContainer() {
+    public AcceptsOneWidget getValueCriteriaContainer() {
         return valueMatchCriteriaContainer;
     }
 }

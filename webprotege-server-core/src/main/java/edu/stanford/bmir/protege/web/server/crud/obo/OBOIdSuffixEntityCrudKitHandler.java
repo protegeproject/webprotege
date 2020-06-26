@@ -2,19 +2,21 @@ package edu.stanford.bmir.protege.web.server.crud.obo;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.EntityIriPrefixResolver;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
-import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -38,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> {
+public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OboIdSuffixSettings, OBOIdSession> {
 
 
     private static final IRI CREATED_BY = IRI.create("http://www.geneontology.org/formats/oboInOwl#created_by");
@@ -49,7 +51,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     private EntityCrudKitPrefixSettings prefixSettings;
 
-    private OBOIdSuffixSettings suffixSettings;
+    private OboIdSuffixSettings suffixSettings;
 
     @Nonnull
     private final OWLDataFactory dataFactory;
@@ -61,15 +63,20 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     @Nonnull
     private final EntitiesInProjectSignatureByIriIndex projectSignatureIndex;
 
+    @Nonnull
+    private final EntityIriPrefixResolver entityIriPrefixResolver;
+
     @AutoFactory
     public OBOIdSuffixEntityCrudKitHandler(@Nonnull EntityCrudKitPrefixSettings prefixSettings,
-                                           @Nonnull OBOIdSuffixSettings suffixSettings,
+                                           @Nonnull OboIdSuffixSettings suffixSettings,
                                            @Provided @Nonnull OWLDataFactory dataFactory,
-                                           @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex) {
+                                           @Provided @Nonnull EntitiesInProjectSignatureByIriIndex projectSignatureIndex,
+                                           @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(suffixSettings);
         this.dataFactory = dataFactory;
         this.projectSignatureIndex = projectSignatureIndex;
+        this.entityIriPrefixResolver = entityIriPrefixResolver;
 
         ImmutableMap.Builder<UserId, UserIdRange> builder = ImmutableMap.builder();
         for(UserIdRange range : suffixSettings.getUserIdRanges()) {
@@ -91,7 +98,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     }
 
     @Override
-    public OBOIdSuffixSettings getSuffixSettings() {
+    public OboIdSuffixSettings getSuffixSettings() {
         return suffixSettings;
     }
 
@@ -101,23 +108,31 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     }
 
     @Override
-    public EntityCrudKitSettings<OBOIdSuffixSettings> getSettings() {
-        return new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
+    public EntityCrudKitSettings<OboIdSuffixSettings> getSettings() {
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
     }
 
     @Override
-    public <E extends OWLEntity> E create(@Nonnull OBOIdSession session, @Nonnull EntityType<E> entityType, @Nonnull EntityShortForm shortForm, @Nonnull Optional<String> langTag, @Nonnull EntityCrudContext context, @Nonnull OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(@Nonnull OBOIdSession session,
+                                          @Nonnull EntityType<E> entityType,
+                                          @Nonnull EntityShortForm shortForm,
+                                          @Nonnull Optional<String> langTag,
+                                          @Nonnull ImmutableList<OWLEntity> parents,
+                                          @Nonnull EntityCrudContext context,
+                                          @Nonnull OntologyChangeList.Builder<E> builder) {
         var targetOntology = context.getTargetOntologyId();
-        var iri = getNextIRI(session, context.getUserId());
+        var iri = getNextIRI(session, context.getUserId(), parents);
         var entity = dataFactory.getOWLEntity(entityType, iri);
         var declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
         builder.add(AddAxiomChange.of(targetOntology, declarationAxiom));
         DictionaryLanguage language = context.getDictionaryLanguage();
-        IRI annotationPropertyIri = language.getAnnotationPropertyIri();
-        if (annotationPropertyIri != null) {
-            final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
-            var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-            builder.add(AddAxiomChange.of(targetOntology, ax));
+        if(!shortForm.getShortForm().isBlank()) {
+            IRI annotationPropertyIri = language.getAnnotationPropertyIri();
+            if (annotationPropertyIri != null) {
+                final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
+                var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+                builder.add(AddAxiomChange.of(targetOntology, ax));
+            }
         }
         OWLAnnotationAssertionAxiom createdByAx = dataFactory.getOWLAnnotationAssertionAxiom(
                 dataFactory.getOWLAnnotationProperty(CREATED_BY),
@@ -138,7 +153,8 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
 
 
-    private synchronized IRI getNextIRI(OBOIdSession session, UserId userId) {
+    private synchronized IRI getNextIRI(OBOIdSession session, UserId userId, ImmutableList<OWLEntity> parents
+    ) {
         StringBuilder formatStringBuilder = new StringBuilder();
         for (int i = 0; i < suffixSettings.getTotalDigits(); i++) {
             formatStringBuilder.append("0");
@@ -149,7 +165,8 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
             currentId++;
             if(!session.isSessionId(currentId)) {
                 String shortName = numberFormat.format(currentId);
-                IRI iri = IRI.create(prefixSettings.getIRIPrefix() + shortName);
+                var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, parents);
+                IRI iri = IRI.create(iriPrefix + shortName);
                 if (projectSignatureIndex.getEntitiesInSignature(iri).limit(1).count() == 0) {
                     session.addSessionId(currentId);
                     setCurrentId(userId, currentId);

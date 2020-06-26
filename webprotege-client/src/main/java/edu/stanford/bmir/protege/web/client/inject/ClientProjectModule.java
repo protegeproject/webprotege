@@ -1,23 +1,30 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.bulkop.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
-import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
-import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditorImpl;
+import edu.stanford.bmir.protege.web.client.crud.*;
+import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.obo.OboIdSuffixSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
+import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsView;
+import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedNameSuffixSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
+import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesViewImpl;
-import edu.stanford.bmir.protege.web.client.form.FormView;
-import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
+import edu.stanford.bmir.protege.web.client.form.*;
+import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
+import edu.stanford.bmir.protege.web.client.form.input.CheckBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
 import edu.stanford.bmir.protege.web.client.hierarchy.*;
@@ -49,8 +56,11 @@ import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
 import edu.stanford.bmir.protege.web.client.watches.WatchViewImpl;
+import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
@@ -58,8 +68,11 @@ import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.*;
+import static edu.stanford.bmir.protege.web.client.uuid.UuidV4.uuidv4;
 
 /**
  * Matthew Horridge
@@ -133,11 +146,6 @@ public class ClientProjectModule {
     @Provides
     FormView provideFormView(FormViewImpl view) {
         return view;
-    }
-
-    @Provides
-    EntityCrudKitSettingsEditor provideEntityCrudKitSettingsEditor(EntityCrudKitSettingsEditorImpl editor) {
-        return editor;
     }
 
     @Provides
@@ -400,7 +408,73 @@ public class ClientProjectModule {
     }
 
     @Provides
+    FormsManagerView provideFormsManagerView(FormsManagerViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     RelationshipEdgePropertyEqualsCriteriaView provideRelationshipEdgePropertyEqualsCriteriaView(RelationshipEdgePropertyEqualsCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormFieldDescriptorView provideFormElementDescriptorEditorView(FormFieldDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TextControlDescriptorView provideTextFieldDescriptorEditorView(TextControlDescriptorViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    FormDescriptorView provideFormDescriptorView(FormDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectListView provideFormElementDescriptorListView(@Nonnull ObjectListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectListViewHolder provideFormElementDescriptorViewHolder(@Nonnull ObjectListViewHolderImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    FormFieldView provideFormElementView(FormFieldViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormViewRow provideFormViewRow(FormViewRowImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NoFormView provideNoFormView(NoFormViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NumberControlRangeView provideNumberFieldRangeView(@Nonnull NumberControlRangeViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NumberControlDescriptorView provideNumberFieldDescriptorView(@Nonnull NumberControlDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ChoiceDescriptorView provideChoiceDescriptorView(@Nonnull ChoiceDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SingleChoiceControlDescriptorView provideChoiceFieldDescriptorView(SingleChoiceControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -430,7 +504,17 @@ public class ClientProjectModule {
     }
 
     @Provides
+    LanguageMapEntryView provideLanguageMapEntryView(LanguageMapEntryViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     EntityIsCriteriaView provideEntityIsCriteriaView(EntityIsCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NoControlDescriptorView provideNoFieldDescriptorView(NoControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -440,7 +524,17 @@ public class ClientProjectModule {
     }
 
     @Provides
+    ImageDescriptorView provideImageDescriptorView(ImageDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     EntityGraphFilterListItemView provideEntityGraphFilterListItemView(EntityGraphFilterListItemViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityNameControlDescriptorView provideEntityNameFieldDescriptorView(@Nonnull EntityNameControlDescriptorViewImpl impl) {
         return impl;
     }
 
@@ -450,7 +544,22 @@ public class ClientProjectModule {
     }
 
     @Provides
+    SubFormControlDescriptorView provideSubFormFieldDescriptorView(@Nonnull SubFormControlDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
     EntityGraphView provideEntityGraphView(EntityGraphViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NoFormDescriptorSelectedView provideNoFormDescriptorSelectedView(NoFormDescriptorSelectedViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridView provideGridView(GridViewImpl impl) {
         return impl;
     }
 
@@ -466,15 +575,251 @@ public class ClientProjectModule {
     }
 
     @Provides
-    TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
+    GridRowView provideGridRowView(GridRowViewImpl impl) {
         return impl;
     }
 
+    @Provides
+        TokenFieldView provideTokenFieldView(TokenFieldViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridCellView provideGridCellView(GridCellViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridControlDescriptorView provideGridFieldDescriptorView(GridControlDescriptorViewImpl impl) {
+        return impl;
+    }
+
+
+    @Provides
+    ObjectPresenter<FormFieldDescriptor> providesFormElementDescriptorPresenter(FormFieldDescriptorPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ImmutableList<FormControlDescriptorPresenterFactory> provideFormFieldDescriptorPresenterFactories(
+            TextControlDescriptorPresenterFactory textFieldDescriptorEditorPresenterFactory,
+            NumberControlDescriptorPresenterFactory numberFieldDescriptorPresenterFactory,
+            SingleChoiceControlDescriptorPresenterFactory choiceFieldDescriptorPresenterFactory,
+            MultiChoiceControlDescriptorPresenterFactory multiChoiceControlDescriptorPresenterFactory,
+            ImageDescriptorPresenterFactory imageDescriptorPresenterFactory,
+            EntityNameControlDescriptorPresenterFactory entityNameFieldDescriptorPresenterFactory,
+            SubFormControlDescriptorPresenterFactory subFormControlDescriptorPresenterFactory,
+            GridControlDescriptorPresenterFactory gridControlDescriptorPresenterFactory) {
+        return ImmutableList.of(textFieldDescriptorEditorPresenterFactory,
+                                numberFieldDescriptorPresenterFactory,
+                                choiceFieldDescriptorPresenterFactory,
+                                multiChoiceControlDescriptorPresenterFactory,
+                                imageDescriptorPresenterFactory,
+                                entityNameFieldDescriptorPresenterFactory,
+                                subFormControlDescriptorPresenterFactory,
+                                gridControlDescriptorPresenterFactory);
+    }
+
+    @Provides
+    FormControlDescriptorChooserView providesFormFieldDescriptorChooserView(FormControlDescriptorChooserViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectPresenter<GridColumnDescriptor> provideGridColumnDescriptor(GridColumnDescriptorPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides
+    GridColumnDescriptorView provideGridColumnDescriptorView(GridColumnDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OwlBindingView provideOwlBindingView(OwlBindingViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridHeaderView provideGridHeaderView(GridHeaderViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridHeaderCellView provideGridColumnHeaderView(GridHeaderCellViewImpl view) {
+        return view;
+    }
+    
     @Provides
     EntityGraphFilterTokenView provideEntityGraphFilterTokenView(EntityGraphFilterTokenViewImpl impl) {
         return impl;
     }
 
+    @Provides
+    FormEditorView provideFormEditorView(FormEditorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    MultiChoiceControlDescriptorView provideMultiChoiceControlDescriptorView(MultiChoiceControlDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ChoiceListSourceDescriptorView provideChoiceListSourceDescriptorView(ChoiceListSourceDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FixedChoiceListSourceDescriptorView provideFixedChoiceListSourceDescriptorView(FixedChoiceListSourceDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DynamicChoiceListSourceDescriptorView provideDynamicChoiceListSourceDescriptorView(DynamicChoiceListSourceDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormSubjectFactoryDescriptorView provideFormSubjectFactoryDescriptorView(FormSubjectFactoryDescriptorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityFormSelectorView provideEntityFormSelectorView(EntityFormSelectorViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormIdView provideFormIdView(FormIdViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormStackView provideFormStackView(FormStackViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    RelationshipValueCriteriaView provideRelationshipValueCriteriaView(RelationshipValueCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    UuidSuffixSettingsView provideUuidSuffixSettingsView(UuidSuffixSettingViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SuppliedNameSuffixSettingsView provideSuppliedNameSuffixSettingsView(SuppliedNameSuffixSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    OboIdSuffixSettingsView provideOboIdSuffixSettingsView(OboIdSuffixSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCrudKitPrefixSettingsView provideEntityCrudKitPrefixSettingsView(EntityCrudKitPrefixSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCrudKitSettingsView provideEntityCrudKitSettingsView(EntityCrudKitSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityCrudKitSuffixSettingsView provideEntityCrudKitSuffixSettingsView(EntityCrudKitSuffixSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ConditionalIriPrefixView provideConditionalIriPrefixesView(ConditionalIriPrefixViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ObjectListPresenter<ConditionalIriPrefix> getConditionalIriPrefixesListPresenter(@Nonnull ObjectListView objectListView,
+                                                                                     Provider<ObjectPresenter<ConditionalIriPrefix>> objectListPresenterProvider,
+                                                                                     Provider<ObjectListViewHolder> objectViewHolderProvider,
+                                                                                     Provider<ConditionalIriPrefix> defaultObjectProvider) {
+        return new ObjectListPresenter<>(objectListView,
+                                         objectListPresenterProvider,
+                                         objectViewHolderProvider,
+                                         defaultObjectProvider);
+    }
+
+    @Provides
+    ObjectPresenter<ConditionalIriPrefix> provideConditionalIriPrefixObjectPresenter(ConditionalIriPrefixPresenter conditionalIriPrefixPresenter) {
+        return conditionalIriPrefixPresenter;
+    }
+
+    @Provides
+    ConditionalIriPrefix provideConditionalIriPrefixProvider() {
+        return ConditionalIriPrefix.get();
+    }
+
+    @Provides
+    CopyFormsFromProjectView provideExportFormToProjectView(CopyFormsFromProjectViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ProjectDetailsView provideProjectDetailsView(ProjectDetailsViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    RepeatabilityView provideRepeatabilityView(RepeatabilityViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityFormStackView provideFormStackManagerView(EntityFormStackViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    LangTagFilterView provideLangTagFilterView(LangTagFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormTabBarView provideFormSelectorView(FormTabBarViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormTabView provideFormSelectorItemView(FormTabViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormControlContainer provideFormControlContainer(FormControlContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormControlStackView provideFormControlStackView(FormControlStackViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    FormControlStackRepeatingView provideFormControlStackRepeatingView(FormControlStackRepeatingViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridRowViewContainer provideGridRowViewContainer(@Nonnull GridRowViewContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CheckBoxView provideCheckBoxView(CheckBoxViewImpl impl) {
+        return impl;
+    }
 }
 
 

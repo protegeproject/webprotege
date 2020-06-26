@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -11,10 +13,12 @@ import java.util.List;
  */
 public interface FormView extends IsWidget {
 
-    void addFormElementView(FormElementView view);
+    void addFormElementView(FormFieldView view,
+                            FieldRun fieldRun);
 
-    List<FormElementView> getElementViews();
+    List<FormFieldView> getFieldViews();
 
     void clear();
 
+    void requestFocus();
 }

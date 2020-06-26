@@ -53,6 +53,10 @@ public class PopupMenu {
         holder.addSeparator();
     }
 
+    public boolean isEmpty() {
+        return holder.isEmpty();
+    }
+
     public void show() {
         popupPanel.show();
         resetSelectionAndFocusMenu();

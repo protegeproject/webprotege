@@ -10,12 +10,12 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class UpdateDataPropertyFrameAction extends UpdateFrameAction<DataPropertyFrame, OWLDataPropertyData> implements HasProjectId {
+public class UpdateDataPropertyFrameAction extends UpdateFrameAction implements HasProjectId {
 
     private UpdateDataPropertyFrameAction() {
     }
 
-    public UpdateDataPropertyFrameAction(ProjectId projectId, DataPropertyFrame from, DataPropertyFrame to) {
+    public UpdateDataPropertyFrameAction(ProjectId projectId, PlainDataPropertyFrame from, PlainDataPropertyFrame to) {
         super(projectId, from, to);
     }
 }

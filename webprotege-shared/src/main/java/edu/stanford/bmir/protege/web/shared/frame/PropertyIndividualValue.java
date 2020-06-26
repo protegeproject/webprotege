@@ -59,4 +59,14 @@ public abstract class PropertyIndividualValue extends ObjectPropertyValue {
     protected PropertyValue duplicateWithState(State state) {
         return PropertyIndividualValue.get(getProperty(), getValue(), state);
     }
+
+    @Nonnull
+    @Override
+    public PlainPropertyIndividualValue toPlainPropertyValue() {
+        return PlainPropertyIndividualValue.get(
+                getProperty().getEntity(),
+                getValue().getEntity(),
+                getState()
+        );
+    }
 }

@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class UpdateObjectPropertyFrameAction extends UpdateFrameAction<ObjectPropertyFrame, OWLObjectPropertyData> {
+public class UpdateObjectPropertyFrameAction extends UpdateFrameAction {
 
     /**
      * For serialization purposes only
@@ -17,7 +17,7 @@ public class UpdateObjectPropertyFrameAction extends UpdateFrameAction<ObjectPro
     private UpdateObjectPropertyFrameAction() {
     }
 
-    public UpdateObjectPropertyFrameAction(ProjectId projectId, ObjectPropertyFrame from, ObjectPropertyFrame to) {
+    public UpdateObjectPropertyFrameAction(ProjectId projectId, PlainObjectPropertyFrame from, PlainObjectPropertyFrame to) {
         super(projectId, from, to);
     }
 }

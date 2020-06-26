@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ import javax.annotation.Nullable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, S>, F extends EntityFrame<S>,  S extends OWLEntityData> extends AbstractProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
+public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction, F extends EntityFrame> extends AbstractProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
 
     @Nonnull
     private final EventManager<ProjectEvent<?>> eventManager;
@@ -76,5 +77,5 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
         return createResponse(action.getTo(), events);
     }
 
-    protected abstract Result createResponse(F to, EventList<ProjectEvent<?>> events);
+    protected abstract Result createResponse(PlainEntityFrame to, EventList<ProjectEvent<?>> events);
 }

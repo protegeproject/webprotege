@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.pagination;
 
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -12,6 +14,10 @@ public interface HasPagination {
     void setPageNumber(int pageNumber);
 
     int getPageNumber();
+
+    default int getPageSize() {
+        return FormPageRequest.DEFAULT_PAGE_SIZE;
+    }
 
     void setPageNumberChangedHandler(PageNumberChangedHandler handler);
 

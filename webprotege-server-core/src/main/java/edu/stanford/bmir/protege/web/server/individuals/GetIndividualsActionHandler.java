@@ -83,11 +83,10 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                                  pageRequest);
         OWLClassData typeData = renderingManager.getClassData(type);
         logger.info(BROWSING,
-                    "{} {} retrieved instances of {} ({})",
+                    "{} {} retrieved instances of {}",
                     projectId,
                     executionContext.getUserId(),
-                    type,
-                    typeData.getBrowserText());
+                    type);
         Page<OWLNamedIndividual> pg = result.getIndividuals();
         Page<EntityNode> entityNodes = pg.transform(entityNodeRenderer::render);
         Optional<OWLClassData> renderedType = action.getType().map(t -> typeData);

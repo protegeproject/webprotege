@@ -69,6 +69,17 @@ public abstract class PropertyAnnotationValue extends PropertyValue {
         return PropertyAnnotationValue.get(getProperty(), getValue(), state);
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Nonnull
+    @Override
+    public PlainPropertyAnnotationValue toPlainPropertyValue() {
+        return PlainPropertyAnnotationValue.get(
+                getProperty().getEntity(),
+                getValue().asAnnotationValue().get(),
+                getState()
+        );
+    }
+
     @Override
     public <R, E extends Throwable> R accept(PropertyValueVisitor<R, E> visitor) throws E {
         return visitor.visit(this);

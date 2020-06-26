@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 1 Mar 2017
  */
 public class PaginatorViewImpl extends Composite implements PaginatorView {
+
+    private Messages messages;
 
     interface PaginatorViewImplUiBinder extends UiBinder<HTMLPanel, PaginatorViewImpl> {
 
@@ -35,6 +38,8 @@ public class PaginatorViewImpl extends Composite implements PaginatorView {
 
     @UiField
     protected HasText pageCountField;
+    @UiField
+    Label rowCountField;
 
     private PageNumberHandler pageNumberHandler = (value) -> {};
 
@@ -46,7 +51,8 @@ public class PaginatorViewImpl extends Composite implements PaginatorView {
     private static PaginatorViewImplUiBinder ourUiBinder = GWT.create(PaginatorViewImplUiBinder.class);
 
     @Inject
-    public PaginatorViewImpl() {
+    public PaginatorViewImpl(Messages messages) {
+        this.messages = checkNotNull(messages);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -104,5 +110,11 @@ public class PaginatorViewImpl extends Composite implements PaginatorView {
     @Override
     public String getPageNumber() {
         return pageNumberField.getValue().trim();
+    }
+
+    @Override
+    public void setElementCount(long elementCount) {
+        String msg = messages.pagination_rows(elementCount);
+        rowCountField.setText(msg);
     }
 }

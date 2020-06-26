@@ -23,9 +23,8 @@ public abstract class OWLNamedIndividualData extends OWLEntityData {
 
 
     public static OWLNamedIndividualData get(@Nonnull OWLNamedIndividual individual,
-                                             @Nonnull String browserText,
                                              @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
-        return new AutoValue_OWLNamedIndividualData(browserText, shortForms, individual);
+        return new AutoValue_OWLNamedIndividualData(shortForms, individual);
     }
 
     @Nonnull

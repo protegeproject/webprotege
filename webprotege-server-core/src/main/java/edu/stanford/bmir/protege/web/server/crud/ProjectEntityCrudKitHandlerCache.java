@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -57,7 +57,7 @@ public class ProjectEntityCrudKitHandlerCache {
         Optional<ProjectEntityCrudKitSettings> settings = repository.findOne(projectId);
         ProjectEntityCrudKitSettings projectSettings;
         if (!settings.isPresent()) {
-            projectSettings = new ProjectEntityCrudKitSettings(projectId, getDefaultSettings());
+            projectSettings = ProjectEntityCrudKitSettings.get(projectId, getDefaultSettings());
             repository.save(projectSettings);
         }
         else {
@@ -76,14 +76,14 @@ public class ProjectEntityCrudKitHandlerCache {
      * @return The default settings.  Not {@code null}.
      */
     private static EntityCrudKitSettings<?> getDefaultSettings() {
-        return new EntityCrudKitSettings<>(getDefaultPrefixSettings(), getDefaultSuffixSettings());
+        return EntityCrudKitSettings.get(getDefaultPrefixSettings(), getDefaultSuffixSettings());
     }
 
     private static EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
-        return new EntityCrudKitPrefixSettings();
+        return EntityCrudKitPrefixSettings.get();
     }
 
     private static EntityCrudKitSuffixSettings getDefaultSuffixSettings() {
-        return new UUIDSuffixSettings();
+        return UuidSuffixSettings.get();
     }
 }

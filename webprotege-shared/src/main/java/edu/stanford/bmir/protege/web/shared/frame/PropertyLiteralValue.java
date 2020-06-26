@@ -58,4 +58,14 @@ public abstract class PropertyLiteralValue extends DataPropertyValue {
     protected PropertyValue duplicateWithState(State state) {
         return PropertyLiteralValue.get(getProperty(), getValue(), state);
     }
+
+    @Nonnull
+    @Override
+    public PlainPropertyLiteralValue toPlainPropertyValue() {
+        return PlainPropertyLiteralValue.get(
+                getProperty().getEntity(),
+                getValue().getLiteral(),
+                getState()
+        );
+    }
 }

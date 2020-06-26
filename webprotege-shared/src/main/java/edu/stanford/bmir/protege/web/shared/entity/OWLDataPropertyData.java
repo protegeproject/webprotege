@@ -24,9 +24,8 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 public abstract class OWLDataPropertyData extends OWLPropertyData {
 
     public static OWLDataPropertyData get(@Nonnull OWLDataProperty property,
-                                          @Nonnull String browserText,
                                           @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
-        return new AutoValue_OWLDataPropertyData(browserText, shortForms, property);
+        return new AutoValue_OWLDataPropertyData(shortForms, property);
     }
 
     @Nonnull

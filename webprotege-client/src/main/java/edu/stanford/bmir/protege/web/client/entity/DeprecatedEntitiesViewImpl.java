@@ -100,4 +100,9 @@ public class DeprecatedEntitiesViewImpl extends Composite implements DeprecatedE
     public void setPageCount(int pageCount) {
         paginatorPresenter.setPageCount(pageCount);
     }
+
+    @Override
+    public void setElementCount(long elementCount) {
+        paginatorPresenter.setElementCount(elementCount);
+    }
 }

@@ -7,10 +7,13 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordView;
@@ -25,18 +28,14 @@ import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
-import edu.stanford.bmir.protege.web.client.form.FormElementView;
-import edu.stanford.bmir.protege.web.client.form.FormElementViewImpl;
+import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.help.*;
-import edu.stanford.bmir.protege.web.client.issues.CommentEditorView;
-import edu.stanford.bmir.protege.web.client.issues.CommentEditorViewImpl;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
 import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalView;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalViewImpl;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxView;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxViewImpl;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
@@ -47,7 +46,6 @@ import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
 import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditor;
 import edu.stanford.bmir.protege.web.client.mail.EmailAddressEditorImpl;
-import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.perspective.*;
@@ -58,14 +56,12 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageViewImpl;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
 import edu.stanford.bmir.protege.web.client.projectmanager.*;
-import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.client.search.SearchView;
 import edu.stanford.bmir.protege.web.client.search.SearchViewImpl;
 import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainer;
@@ -88,7 +84,6 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 
 import javax.annotation.Nonnull;
@@ -137,6 +132,12 @@ public class ClientApplicationModule {
     @ApplicationSingleton
     Messages provideMessages() {
         return GWT.create(Messages.class);
+    }
+
+    @Provides
+    @ApplicationSingleton
+    FormsMessages provideFormsMessages() {
+        return GWT.create(FormsMessages.class);
     }
 
     @Provides
@@ -373,11 +374,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    FormElementView provideFormElementView(FormElementViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
     CollectionView provideCollectionView(CollectionViewImpl impl) {
         return impl;
     }
@@ -526,5 +522,10 @@ public class ClientApplicationModule {
     @Provides
     InputBoxView providesInputBoxView(InputBoxViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    AcceptsOneWidget provideAcceptsOneWidget() {
+        return new SimplePanel();
     }
 }

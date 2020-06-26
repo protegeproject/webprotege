@@ -1,0 +1,16 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .choiceList {
+            margin-top: 1em;
+            margin-left: 2em;
+            max-width: 600px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+        <g:HTMLPanel addStyleNames="{style.choiceList}">
+            <g:SimplePanel ui:field="criteriaContainer"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

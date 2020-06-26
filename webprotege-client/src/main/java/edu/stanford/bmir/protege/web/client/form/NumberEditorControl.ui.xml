@@ -1,0 +1,20 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            background-color: transparent;
+        }
+        .editorField {
+            border-top: 1px solid transparent;
+            border-left: 1px solid transparent;
+            border-right: 1px solid transparent;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:TextBox ui:field="numberField" addStyleNames="{style.editorField}"/>
+        <g:Label ui:field="errorLabel" addStyleNames="{wp.style.errorLabel}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

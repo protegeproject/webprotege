@@ -3,12 +3,11 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.frame.translator.DataPropertyFrameTranslator;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
-import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +15,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import java.util.Comparator;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
@@ -31,18 +32,23 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     private static final Logger logger = LoggerFactory.getLogger(GetDataPropertyFrameActionHandler.class);
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final Provider<DataPropertyFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final Provider<DataPropertyFrameTranslator> translatorProvider;
+    private final FrameComponentSessionRendererFactory rendererFactory;
+
+    @Nonnull
+    private final Comparator<PropertyValue> propertyValueComparator;
 
     @Inject
     public GetDataPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
-                                             @Nonnull RenderingManager renderingManager,
-                                             @Nonnull Provider<DataPropertyFrameTranslator> translatorProvider) {
+                                             @Nonnull Provider<DataPropertyFrameTranslator> translatorProvider,
+                                             @Nonnull FrameComponentSessionRendererFactory rendererFactory,
+                                             @Nonnull Comparator<PropertyValue> propertyValueComparator) {
         super(accessManager);
-        this.renderingManager = renderingManager;
         this.translatorProvider = translatorProvider;
+        this.rendererFactory = rendererFactory;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     @Nullable
@@ -54,17 +60,15 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     @Nonnull
     @Override
     public GetDataPropertyFrameResult execute(@Nonnull GetDataPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        DataPropertyFrameTranslator translator = translatorProvider.get();
-        OWLDataPropertyData dataPropertyData = renderingManager.getDataPropertyData(action.getSubject());
-        DataPropertyFrame frame = translator.getFrame(dataPropertyData);
-        String displayName = renderingManager.getShortForm(action.getSubject());
+        var translator = translatorProvider.get();
+        var plainFrame = translator.getFrame(action.getSubject());
+        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
-                    "{} {} retrieved DataProperty frame for {} ({})",
+                    "{} {} retrieved DataProperty frame for {}",
                     action.getProjectId(),
                     executionContext.getUserId(),
-                    action.getSubject(),
-                    displayName);
-        return new GetDataPropertyFrameResult(frame);
+                    action.getSubject());
+        return new GetDataPropertyFrameResult(renderedFrame);
     }
 
     @Nonnull

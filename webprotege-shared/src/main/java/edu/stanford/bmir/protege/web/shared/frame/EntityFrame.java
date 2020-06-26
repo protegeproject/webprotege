@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 /**
@@ -12,6 +13,5 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
  * </p>
  */
 public interface EntityFrame<E extends OWLEntityData> extends Frame<E> {
-
 
 }

@@ -34,7 +34,7 @@ public class BulkOpMessageFormatter {
         }
         else {
             return entities.stream()
-                    .map(HasBrowserText::getBrowserText)
+                    .map(OWLEntityData::getBrowserText)
                     .sorted(Comparator.comparing(String::toLowerCase))
                     .collect(Collectors.joining(", "));
         }

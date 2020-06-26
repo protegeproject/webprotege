@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLPrimitive;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -12,7 +13,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-02
  */
-public class PropertyValueMatcher implements Matcher<PropertyValue> {
+public class PropertyValueMatcher implements Matcher<PlainPropertyValue> {
 
     @Nonnull
     private final Matcher<OWLProperty> propertyMatcher;
@@ -28,8 +29,8 @@ public class PropertyValueMatcher implements Matcher<PropertyValue> {
     }
 
     @Override
-    public boolean matches(@Nonnull PropertyValue value) {
-        return propertyMatcher.matches(value.getProperty().getEntity())
-                && valueMatcher.matches(value.getValue().getObject());
+    public boolean matches(@Nonnull PlainPropertyValue value) {
+        return propertyMatcher.matches(value.getProperty())
+                && valueMatcher.matches(value.getValue());
     }
 }

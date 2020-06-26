@@ -115,9 +115,9 @@ public enum BuiltInAction {
 
     EDIT_PROJECT_TAGS,
 
-    UPLOAD_AND_MERGE
+    UPLOAD_AND_MERGE,
 
-    ;
+    EDIT_FORMS;
 
 
 

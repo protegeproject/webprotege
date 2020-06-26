@@ -9,6 +9,7 @@ import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 /**
@@ -26,8 +27,8 @@ public abstract class DisplayNameSettings {
 
     @JsonCreator
     @Nonnull
-    public static DisplayNameSettings get(@Nonnull @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> primaryLanguages,
-                                          @Nonnull @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> secondaryLanguages) {
+    public static DisplayNameSettings get(@Nullable @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> primaryLanguages,
+                                          @Nullable @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> secondaryLanguages) {
         return new AutoValue_DisplayNameSettings(primaryLanguages == null ? ImmutableList.of() : primaryLanguages,
                                                  secondaryLanguages == null ? ImmutableList.of() : secondaryLanguages);
     }

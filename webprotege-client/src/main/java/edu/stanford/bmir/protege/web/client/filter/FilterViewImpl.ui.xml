@@ -7,6 +7,6 @@
             overflow-y: auto;
         }
     </ui:style>
-    <g:HTMLPanel ui:field="container" addStyleNames="{style.main} {wp.style.form}">
+    <g:HTMLPanel ui:field="container" addStyleNames="{style.main}">
     </g:HTMLPanel>
 </ui:UiBinder>

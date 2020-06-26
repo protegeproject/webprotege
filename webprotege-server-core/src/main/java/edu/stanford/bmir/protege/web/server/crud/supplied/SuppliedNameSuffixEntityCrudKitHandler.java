@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud.supplied;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.AddAxiomChange;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
@@ -40,15 +41,20 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final EntityIriPrefixResolver entityIriPrefixResolver;
+
     @AutoFactory
     @Inject
     public SuppliedNameSuffixEntityCrudKitHandler(
             @Nonnull EntityCrudKitPrefixSettings prefixSettings,
             @Nonnull SuppliedNameSuffixSettings settings,
-            @Provided @Nonnull OWLDataFactory dataFactory) {
+            @Provided @Nonnull OWLDataFactory dataFactory,
+            @Provided @Nonnull EntityIriPrefixResolver entityIriPrefixResolver) {
         this.prefixSettings = checkNotNull(prefixSettings);
         this.suffixSettings = checkNotNull(settings);
         this.dataFactory = dataFactory;
+        this.entityIriPrefixResolver = checkNotNull(entityIriPrefixResolver);
     }
 
     @Nonnull
@@ -70,7 +76,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public EntityCrudKitSettings<SuppliedNameSuffixSettings> getSettings() {
-        return new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
+        return EntityCrudKitSettings.get(prefixSettings, suffixSettings);
     }
 
     @Override
@@ -83,7 +89,9 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             @Nonnull ChangeSetEntityCrudSession session,
             @Nonnull EntityType<E> entityType,
             @Nonnull EntityShortForm shortForm,
-            @Nonnull Optional<String> langTag, @Nonnull EntityCrudContext context,
+            @Nonnull Optional<String> langTag,
+            @Nonnull ImmutableList<OWLEntity> parents,
+            @Nonnull EntityCrudContext context,
             @Nonnull OntologyChangeList.Builder<E> changeListBuilder) {
 
         // The supplied name can either be a fully quoted IRI, a prefixed name or some other string
@@ -121,7 +129,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             }
             else {
                 // Suffix of IRI
-                iri = createEntityIRI(shortForm);
+                iri = createEntityIRI(shortForm, parents);
                 // Label is supplied name
                 label = suppliedName;
             }
@@ -141,11 +149,12 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         return entity;
     }
 
-    private IRI createEntityIRI(EntityShortForm shortForm) {
+    private IRI createEntityIRI(EntityShortForm shortForm, ImmutableList<OWLEntity> parents) {
         var whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
         var transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
         var escapedShortForm = URLEncoder.encode(transformedShortForm, Charsets.UTF_8);
-        return IRI.create(prefixSettings.getIRIPrefix() + escapedShortForm);
+        var iriPrefix = entityIriPrefixResolver.getIriPrefix(prefixSettings, parents);
+        return IRI.create(iriPrefix + escapedShortForm);
     }
 
     private OWLAnnotationProperty rdfsLabel() {

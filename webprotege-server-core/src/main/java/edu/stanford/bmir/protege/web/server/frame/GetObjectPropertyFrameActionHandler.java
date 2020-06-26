@@ -3,12 +3,10 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.frame.translator.ObjectPropertyFrameTranslator;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
-import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,18 +29,23 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
     private static Logger logger = LoggerFactory.getLogger(GetObjectPropertyFrameAction.class);
 
     @Nonnull
-    private final RenderingManager rm;
+    private final Provider<ObjectPropertyFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final Provider<ObjectPropertyFrameTranslator> translatorProvider;
+    private final FrameComponentSessionRendererFactory rendererFactory;
+
+    @Nonnull
+    private final PropertyValueComparator propertyValueComparator;
 
     @Inject
     public GetObjectPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
-                                               @Nonnull RenderingManager rm,
-                                               @Nonnull Provider<ObjectPropertyFrameTranslator> translatorProvider) {
+                                               @Nonnull Provider<ObjectPropertyFrameTranslator> translatorProvider,
+                                               @Nonnull FrameComponentSessionRendererFactory rendererFactory,
+                                               @Nonnull PropertyValueComparator propertyValueComparator) {
         super(accessManager);
-        this.rm = rm;
+        this.rendererFactory = rendererFactory;
         this.translatorProvider = translatorProvider;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     @Nullable
@@ -53,16 +56,15 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
 
     @Nonnull
     public GetObjectPropertyFrameResult execute(@Nonnull GetObjectPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        ObjectPropertyFrameTranslator translator = translatorProvider.get();
-        OWLObjectPropertyData objectPropertyData = rm.getObjectPropertyData(action.getSubject());
-        ObjectPropertyFrame f = translator.getFrame(objectPropertyData);
+        var translator = translatorProvider.get();
+        var plainFrame = translator.getFrame(action.getSubject());
+        var renderedFrame = plainFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
-                     "{} {} retrieved ObjectProperty frame for {} ({})",
+                     "{} {} retrieved ObjectProperty frame for {}",
                      action.getProjectId(),
                      executionContext.getUserId(),
-                     action.getSubject(),
-                     f.getSubject().getBrowserText());
-        return new GetObjectPropertyFrameResult(f);
+                     action.getSubject());
+        return new GetObjectPropertyFrameResult(renderedFrame);
     }
 
     @Nonnull

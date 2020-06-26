@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityHtmlRenderingResult;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -64,13 +66,13 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        entity.ifPresent(owlEntity -> dsm.execute(new GetEntityRenderingAction(getProjectId(),
-                                                                               owlEntity),
+        entity.ifPresent(owlEntity -> dsm.execute(new GetEntityHtmlRenderingAction(getProjectId(),
+                                                                                   owlEntity),
                                                   this,
                                                   this::handleRenderingResult));
     }
 
-    private void handleRenderingResult(GetEntityRenderingResult result) {
+    private void handleRenderingResult(GetEntityHtmlRenderingResult result) {
         setDisplayedEntity(Optional.of(result.getEntityData()));
         html.setHTML(result.getRendering());
     }

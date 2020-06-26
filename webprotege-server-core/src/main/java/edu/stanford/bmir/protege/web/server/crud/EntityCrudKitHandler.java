@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import org.semanticweb.owlapi.model.EntityType;
@@ -25,7 +26,7 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings, C e
 
     /**
      * Creates a fresh change set session.  Each time a set of changes is applied to an ontology a session is created
-     * and passes to the {@link #create(ChangeSetEntityCrudSession, EntityType, EntityShortForm, Optional, EntityCrudContext, OntologyChangeList.Builder)}
+     * and passes to the {@link #create(ChangeSetEntityCrudSession, EntityType, EntityShortForm, Optional, ImmutableList, EntityCrudContext, OntologyChangeList.Builder)}
      * method.  The session can be used to persist things like counters over multiple entity creations.
      *
      * @return A {@link C}.  Not {@code null}.
@@ -37,6 +38,7 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings, C e
             @Nonnull EntityType<E> entityType,
             @Nonnull EntityShortForm shortForm,
             @Nonnull Optional<String> langTag,
+            @Nonnull ImmutableList<OWLEntity> parents,
             @Nonnull EntityCrudContext context,
             @Nonnull OntologyChangeList.Builder<E> changeListBuilder) throws CannotGenerateFreshEntityIdException;
 }

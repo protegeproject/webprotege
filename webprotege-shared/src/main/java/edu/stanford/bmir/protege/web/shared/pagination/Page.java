@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.pagination;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,6 +50,14 @@ public class Page<T> implements Serializable, Iterable<T>, IsSerializable {
 
     public static <T> Page<T> emptyPage() {
         return new Page<>(1, 1, Collections.emptyList(), 0);
+    }
+
+    public static Page<FormControlDataDto> of(FormControlDataDto firstValue) {
+        return new Page<>(1, 1, ImmutableList.of(firstValue), 1);
+    }
+
+    public static <T> Page<T> of(ImmutableList<T> values) {
+        return new Page<T>(1, 1, values, values.size());
     }
 
     public List<T> getPageElements() {

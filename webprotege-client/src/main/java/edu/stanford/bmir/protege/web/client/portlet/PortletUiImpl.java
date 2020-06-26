@@ -221,11 +221,11 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void setForbiddenVisible(boolean forbiddenVisible) {
         if (forbiddenVisible) {
-            setToolbarVisible(false);
+            toolbar.setVisible(false);
             contentHolder.setWidget(forbiddenView);
         }
         else {
-            setToolbarVisible(toolbarVisible);
+            toolbar.setVisible(toolbarVisible);
             content.ifPresent(widget -> contentHolder.setWidget(widget));
         }
     }
@@ -234,11 +234,11 @@ public class PortletUiImpl extends Composite implements PortletUi {
     public void setNothingSelectedVisible(boolean nothingSelectedVisible) {
         GWT.log("Set nothing selected: " + nothingSelectedVisible);
         if(nothingSelectedVisible) {
-            setToolbarVisible(false);
+            toolbar.setVisible(false);
             contentHolder.setWidget(nothingSelectedView);
         }
         else {
-            setToolbarVisible(toolbarVisible);
+            toolbar.setVisible(toolbarVisible);
             content.ifPresent(widget -> contentHolder.setWidget(widget));
         }
     }

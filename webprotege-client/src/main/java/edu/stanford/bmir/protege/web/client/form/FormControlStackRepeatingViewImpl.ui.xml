@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+    </ui:style>
+    <g:HTMLPanel>
+        <g:SimplePanel ui:field="paginatorContainer" addStyleNames="{wp.style.panelFilled}" visible="false"/>
+        <g:HTMLPanel ui:field="stackContainer"/>
+        <g:Button ui:field="addButton" addStyleNames="{wp.buttons.addButton}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

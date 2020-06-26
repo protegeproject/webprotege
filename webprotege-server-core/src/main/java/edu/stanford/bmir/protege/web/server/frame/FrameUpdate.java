@@ -14,56 +14,55 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class FrameUpdate {
 
-    public static <F extends Frame<S>, S extends OWLEntityData> FrameUpdate get(F from,
-                                                                                F to) {
+    public static FrameUpdate get(PlainEntityFrame from, PlainEntityFrame to) {
         if(!from.getClass().equals(to.getClass())) {
             throw new RuntimeException("Frames must be of the same type");
         }
-        if(from instanceof ClassFrame) {
-            return get((ClassFrame) from, (ClassFrame) to);
+        if(from instanceof PlainClassFrame) {
+            return get((PlainClassFrame) from, (PlainClassFrame) to);
         }
-        if(from instanceof NamedIndividualFrame) {
-            return get((NamedIndividualFrame) from, (NamedIndividualFrame) to);
+        if(from instanceof PlainNamedIndividualFrame) {
+            return get((PlainNamedIndividualFrame) from, (PlainNamedIndividualFrame) to);
         }
-        if(from instanceof ObjectPropertyFrame) {
-            return get((ObjectPropertyFrame) from, (ObjectPropertyFrame) to);
+        if(from instanceof PlainObjectPropertyFrame) {
+            return get((PlainObjectPropertyFrame) from, (PlainObjectPropertyFrame) to);
         }
-        if(from instanceof DataPropertyFrame) {
-            return get((DataPropertyFrame) from, (DataPropertyFrame) to);
+        if(from instanceof PlainDataPropertyFrame) {
+            return get((PlainDataPropertyFrame) from, (PlainDataPropertyFrame) to);
         }
-        if(from instanceof AnnotationPropertyFrame) {
-            return get((AnnotationPropertyFrame) from, (AnnotationPropertyFrame) to);
+        if(from instanceof PlainAnnotationPropertyFrame) {
+            return get((PlainAnnotationPropertyFrame) from, (PlainAnnotationPropertyFrame) to);
         }
         throw new RuntimeException("Unknown frame type: " + from);
     }
 
-    public static FrameUpdate get(@Nonnull ClassFrame fromFrame,
-                                  @Nonnull ClassFrame toFrame) {
+    public static FrameUpdate get(@Nonnull PlainClassFrame fromFrame,
+                                  @Nonnull PlainClassFrame toFrame) {
         return new AutoValue_FrameUpdate(fromFrame, toFrame);
     }
     
-    public static FrameUpdate get(@Nonnull NamedIndividualFrame fromFrame,
-                                  @Nonnull NamedIndividualFrame toFrame) {
+    public static FrameUpdate get(@Nonnull PlainNamedIndividualFrame fromFrame,
+                                  @Nonnull PlainNamedIndividualFrame toFrame) {
         return new AutoValue_FrameUpdate(fromFrame, toFrame);
     }
     
-    public static FrameUpdate get(@Nonnull ObjectPropertyFrame fromFrame,
-                                  @Nonnull ObjectPropertyFrame toFrame) {
+    public static FrameUpdate get(@Nonnull PlainObjectPropertyFrame fromFrame,
+                                  @Nonnull PlainObjectPropertyFrame toFrame) {
         return new AutoValue_FrameUpdate(fromFrame, toFrame);
     }
 
-    public static FrameUpdate get(@Nonnull DataPropertyFrame fromFrame,
-                                  @Nonnull DataPropertyFrame toFrame) {
+    public static FrameUpdate get(@Nonnull PlainDataPropertyFrame fromFrame,
+                                  @Nonnull PlainDataPropertyFrame toFrame) {
         return new AutoValue_FrameUpdate(fromFrame, toFrame);
     }
 
-    public static FrameUpdate get(@Nonnull AnnotationPropertyFrame fromFrame,
-                                  @Nonnull AnnotationPropertyFrame toFrame) {
+    public static FrameUpdate get(@Nonnull PlainAnnotationPropertyFrame fromFrame,
+                                  @Nonnull PlainAnnotationPropertyFrame toFrame) {
         return new AutoValue_FrameUpdate(fromFrame, toFrame);
     }
 
-    public abstract Frame<? extends OWLEntityData> getFromFrame();
+    public abstract PlainEntityFrame getFromFrame();
 
-    public abstract Frame<? extends OWLEntityData> getToFrame();
+    public abstract PlainEntityFrame getToFrame();
 
 }
