@@ -5,9 +5,12 @@
         .main {
             padding-bottom: 1.4em;
         }
+        .container {
+            padding: 1px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Label ui:field="columnNameField" addStyleNames="{wp.style.formLabel}"/>
-        <g:SimplePanel ui:field="container"/>
+        <g:SimplePanel ui:field="container" addStyleNames="{style.container}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
