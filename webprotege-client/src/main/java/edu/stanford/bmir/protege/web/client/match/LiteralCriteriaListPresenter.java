@@ -21,7 +21,6 @@ public class LiteralCriteriaListPresenter extends CriteriaListPresenter<LiteralC
     public LiteralCriteriaListPresenter(@Nonnull CriteriaListView view, @Nonnull Provider<CriteriaListCriteriaViewContainer> viewContainerProvider,
                                         @Nonnull SelectableLiteralCriteriaPresenterFactory literalCriteriaPresenter) {
         super(view, viewContainerProvider, literalCriteriaPresenter);
-        setDisplayAtLeastOneCriteria(false);
     }
 
     @Override
