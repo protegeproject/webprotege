@@ -479,6 +479,7 @@
 }
 
 .wp-form__grid__cell {
+    padding: 1px;
 }
 
 .wp-form__grid__header-row {
