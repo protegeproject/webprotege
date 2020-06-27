@@ -559,5 +559,5 @@
 
 .wp-form__control-stack__item--delete-hover {
     outline: 2px solid literal("var(--delete--color)");
-    outline-offset: 1px;
+    outline-offset: -2px;
 }
