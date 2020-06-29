@@ -38,11 +38,11 @@ public class GridColumnFilterPresenter {
 
     public void setGridColumnDescriptor(@Nonnull GridColumnDescriptorDto descriptor) {
         FormControlDescriptorDto formControlDescriptor = descriptor.getFormControlDescriptor();
-        FormControlFilterPresenter presenter = formControlFilterMapper.getPresenter(formControlDescriptor);
-        if (presenter != null) {
-            presenter.start(view.getFilterContainer());
-            this.presenter = Optional.of(presenter);
-        }
+        Optional<FormControlFilterPresenter> presenter = formControlFilterMapper.getPresenter(formControlDescriptor);
+        presenter.ifPresent(thePresenter -> {
+            thePresenter.start(view.getFilterContainer());
+            this.presenter = Optional.of(thePresenter);
+        });
     }
 
     public Optional<PrimitiveFormControlDataMatchCriteria> getFilter() {

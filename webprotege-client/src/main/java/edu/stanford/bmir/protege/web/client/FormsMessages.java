@@ -147,4 +147,9 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Missing Field Label")
     @Key("missingFieldLabel")
     String missingFieldLabel();
+
+    @DefaultMessage("Column  Filter")
+    @Key("grid.columnFilter")
+    String grid_columnFilter();
+
 }

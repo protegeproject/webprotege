@@ -46,4 +46,9 @@ public class EntityNameControlFilterViewImpl extends Composite implements Entity
         return entityEditor.getValue().filter(OWLPrimitiveData::isOWLEntity)
                            .flatMap(OWLPrimitiveData::asEntity);
     }
+
+    @Override
+    public void setEntity(OWLEntityData entity) {
+        entityEditor.setValue(entity);
+    }
 }

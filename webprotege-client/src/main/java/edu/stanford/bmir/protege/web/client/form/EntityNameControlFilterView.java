@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -18,4 +18,6 @@ public interface EntityNameControlFilterView extends IsWidget {
     void setEntityMatchCriteria(@Nonnull CompositeRootCriteria criteria);
 
     Optional<OWLEntity> getEntity();
+
+    void setEntity(OWLEntityData entity);
 }

@@ -4,9 +4,9 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.NumericValueCriteriaPresenter;
-import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlDataMatchCriteria;
-import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -48,5 +48,21 @@ public class NumberControlFilterPresenter implements FormControlFilterPresenter 
     @Override
     public Optional<PrimitiveFormControlDataMatchCriteria> getFilter() {
         return numericValueCriteriaPresenter.getCriteria().map(LiteralFormControlDataMatchCriteria::get);
+    }
+
+    @Override
+    public void setFilter(@Nonnull FormRegionFilter filter) {
+        PrimitiveFormControlDataMatchCriteria matchCriteria = filter.getMatchCriteria();
+        if (!(matchCriteria instanceof LiteralFormControlDataMatchCriteria)) {
+            return;
+        }
+        LiteralCriteria lexicalValueCriteria = ((LiteralFormControlDataMatchCriteria) matchCriteria).getLexicalValueCriteria();
+        lexicalValueCriteria.accept(new LiteralCriteriaVisitor<Object>() {
+            @Override
+            public Object visit(NumericValueCriteria numericValueCriteria) {
+                numericValueCriteriaPresenter.setCriteria(numericValueCriteria);
+                return null;
+            }
+        });
     }
 }

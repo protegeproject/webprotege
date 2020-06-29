@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.server.form;
 import edu.stanford.bmir.protege.web.server.match.LiteralMatcherFactory;
 import edu.stanford.bmir.protege.web.server.match.Matcher;
 import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,9 +21,14 @@ public class FormFilterMatcherFactory {
     @Nonnull
     private final LiteralMatcherFactory literalMatcherFactory;
 
+    @Nonnull
+    private final MatcherFactory matcherFactory;
+
     @Inject
-    public FormFilterMatcherFactory(@Nonnull LiteralMatcherFactory literalMatcherFactory) {
+    public FormFilterMatcherFactory(@Nonnull LiteralMatcherFactory literalMatcherFactory,
+                                    @Nonnull MatcherFactory matcherFactory) {
         this.literalMatcherFactory = literalMatcherFactory;
+        this.matcherFactory = matcherFactory;
     }
 
     public Matcher<FormControlDataDto> getMatcher(@Nonnull FormRegionFilter formRegionFilter) {
@@ -35,7 +40,58 @@ public class FormFilterMatcherFactory {
         return matchCriteria.accept(new PrimitiveFormControlDataMatchCriteriaVisitor<>() {
             @Override
             public Matcher<FormControlDataDto> visit(EntityFormControlDataMatchCriteria criteria) {
-                return m -> false;
+                var entityMatcher = matcherFactory.getMatcher(criteria.getEntityMatchCriteria());
+
+                return data -> {
+                    return data.accept(new FormControlDataDtoVisitorEx<Boolean>() {
+                        @Override
+                        public Boolean visit(@Nonnull EntityNameControlDataDto entityNameControlData) {
+                            return entityNameControlData.getEntity()
+                                                        .map(OWLEntityData::getEntity)
+                                                        .map(entityMatcher::matches)
+                                                        .orElse(false);
+                        }
+
+                        @Override
+                        public Boolean visit(@Nonnull FormDataDto formData) {
+                            return false;
+                        }
+
+                        @Override
+                        public Boolean visit(@Nonnull GridControlDataDto gridControlData) {
+                            return false;
+                        }
+
+                        @Override
+                        public Boolean visit(@Nonnull ImageControlDataDto imageControlData) {
+                            return false;
+                        }
+
+                        @Override
+                        public Boolean visit(@Nonnull MultiChoiceControlDataDto multiChoiceControlData) {
+                            return false;
+                        }
+
+                        @Override
+                        public Boolean visit(@Nonnull SingleChoiceControlDataDto singleChoiceControlData) {
+                            return singleChoiceControlData.getChoice()
+                                                          .map(PrimitiveFormControlDataDto::toPrimitiveFormControlData)
+                                                          .flatMap(PrimitiveFormControlData::asEntity)
+                                                          .map(entityMatcher::matches)
+                                                          .orElse(false);
+                        }
+
+                        @Override
+                        public Boolean visit(@Nonnull NumberControlDataDto numberControlData) {
+                            return false;
+                        }
+
+                        @Override
+                        public Boolean visit(@Nonnull TextControlDataDto textControlData) {
+                            return false;
+                        }
+                    });
+                };
             }
 
             @Override

@@ -7,9 +7,15 @@ package edu.stanford.bmir.protege.web.shared.form.data;
  */
 public interface PrimitiveFormControlDataMatchCriteriaVisitor<R> {
 
-    R visit(EntityFormControlDataMatchCriteria entityFormControlDataMatchCriteria);
+    default R visit(EntityFormControlDataMatchCriteria entityFormControlDataMatchCriteria) {
+        return null;
+    };
 
-    R visit(LiteralFormControlDataMatchCriteria literalFormControlDataMatchCriteria);
+    default R visit(LiteralFormControlDataMatchCriteria literalFormControlDataMatchCriteria) {
+        return null;
+    };
 
-    R visit(CompositePrimitiveFormControlDataMatchCriteria compositePrimitiveFormControlDataMatchCriteria);
+    default R visit(CompositePrimitiveFormControlDataMatchCriteria compositePrimitiveFormControlDataMatchCriteria) {
+        return null;
+    };
 }

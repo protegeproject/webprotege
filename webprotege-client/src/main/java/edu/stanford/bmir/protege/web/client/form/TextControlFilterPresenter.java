@@ -6,11 +6,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.AnnotationValueCriteriaPresenter;
 import edu.stanford.bmir.protege.web.client.match.LiteralCriteriaListPresenter;
-import edu.stanford.bmir.protege.web.shared.form.data.CompositePrimitiveFormControlDataMatchCriteria;
-import edu.stanford.bmir.protege.web.shared.form.data.LiteralFormControlDataMatchCriteria;
-import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.TextControlDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeLiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteriaVisitor;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -55,5 +55,34 @@ public class TextControlFilterPresenter implements FormControlFilterPresenter {
     public Optional<PrimitiveFormControlDataMatchCriteria> getFilter() {
         return criteriaPresenter.getCriteria()
                          .map(LiteralFormControlDataMatchCriteria::get);
+    }
+
+    @Override
+    public void setFilter(@Nonnull FormRegionFilter filter) {
+        PrimitiveFormControlDataMatchCriteria matchCriteria = filter.getMatchCriteria();
+        matchCriteria.accept(new PrimitiveFormControlDataMatchCriteriaVisitor<Object>() {
+            @Override
+            public Object visit(EntityFormControlDataMatchCriteria entityFormControlDataMatchCriteria) {
+                return null;
+            }
+
+            @Override
+            public Object visit(LiteralFormControlDataMatchCriteria literalFormControlDataMatchCriteria) {
+                LiteralCriteria lexicalValueCriteria = literalFormControlDataMatchCriteria.getLexicalValueCriteria();
+                lexicalValueCriteria.accept(new LiteralCriteriaVisitor<Object>() {
+                    @Override
+                    public Object visit(CompositeLiteralCriteria compositeLiteralCriteria) {
+                        criteriaPresenter.setCriteria(compositeLiteralCriteria);
+                        return null;
+                    }
+                });
+                return null;
+            }
+
+            @Override
+            public Object visit(CompositePrimitiveFormControlDataMatchCriteria compositePrimitiveFormControlDataMatchCriteria) {
+                return null;
+            }
+        });
     }
 }

@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.form.field.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -35,8 +37,8 @@ public class FormControlFilterMapper {
     }
 
     @Nonnull
-    public FormControlFilterPresenter getPresenter(@Nonnull FormControlDescriptorDto descriptor) {
-        return descriptor.accept(new FormControlDescriptorDtoVisitor<FormControlFilterPresenter>() {
+    public Optional<FormControlFilterPresenter> getPresenter(@Nonnull FormControlDescriptorDto descriptor) {
+        FormControlFilterPresenter presenter = descriptor.accept(new FormControlDescriptorDtoVisitor<FormControlFilterPresenter>() {
             @Override
             public FormControlFilterPresenter visit(TextControlDescriptorDto textControlDescriptorDto) {
                 return textControlFilterPresenterFactory.create(textControlDescriptorDto);
@@ -77,6 +79,7 @@ public class FormControlFilterMapper {
                 return entityNameControlFilterPresenterFactory.create(entityNameControlDescriptorDto);
             }
         });
+        return Optional.ofNullable(presenter);
     }
 
 }

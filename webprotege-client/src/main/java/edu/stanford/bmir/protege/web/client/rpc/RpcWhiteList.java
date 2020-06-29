@@ -12,10 +12,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
-import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -104,6 +101,8 @@ public class RpcWhiteList implements Action, Result {
     ProjectDetails projectDetails;
 
     OWLPrimitiveData primitiveData;
+
+    FilterState filterState;
 
     State state;
 

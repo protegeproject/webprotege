@@ -25,4 +25,8 @@ public abstract class FormRegionFilterIndex {
 
     @Nonnull
     public abstract ImmutableSet<FormRegionFilter> getFilters();
+
+    public boolean hasFilter(FormRegionId formRegionId) {
+        return getFilters().stream().map(FormRegionFilter::getFormRegionId).anyMatch(id -> id.equals(formRegionId));
+    }
 }

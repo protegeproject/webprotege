@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.match.Matcher;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
+import edu.stanford.bmir.protege.web.shared.form.field.GridColumnId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -64,5 +65,9 @@ public class FormRegionFilterPredicateManager {
 
     private Predicate<FormControlDataDto> toPredicate(Matcher<FormControlDataDto> matcher) {
         return matcher::matches;
+    }
+
+    public boolean isFiltered(FormRegionId formRegionId) {
+        return formRegionFilterIndex.hasFilter(formRegionId);
     }
 }

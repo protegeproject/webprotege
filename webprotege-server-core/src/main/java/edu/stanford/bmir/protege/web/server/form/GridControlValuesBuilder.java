@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.form.data.GridRowDataDtoComparatorFa
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.FilterState;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.partitioningBy;
 
 @FormDataBuilderSession
 public class GridControlValuesBuilder {
@@ -55,7 +57,6 @@ public class GridControlValuesBuilder {
 
     @Nonnull
     private final FormRegionFilterPredicateManager filters;
-
 
 
     @Inject
@@ -93,24 +94,48 @@ public class GridControlValuesBuilder {
                                                   gridControlDescriptor, depth));
     }
 
+    private FilterState getFilterState(@Nonnull GridControlDescriptor gridControlDescriptor) {
+        var filtered = gridControlDescriptor.getColumns()
+                                            .stream()
+                                            .flatMap(GridColumnDescriptor::getLeafColumnIds)
+                                            .anyMatch(filters::isFiltered);
+        if (filtered) {
+            return FilterState.FILTERED;
+        }
+        else {
+            return FilterState.UNFILTERED;
+        }
+    }
+
 
     private GridControlDataDto toGridControlData(OWLPrimitiveData root,
                                                  FormRegionId formFieldId,
                                                  ImmutableList<OWLPrimitive> subjects,
                                                  GridControlDescriptor descriptor, int depth) {
+        if (subjects.isEmpty()) {
+            var filterState = getFilterState(descriptor);
+            return GridControlDataDto.get(descriptor,
+                                          Page.emptyPage(),
+                                          formRegionOrderingIndex.getOrderings(),
+                                          depth,
+                                          filterState);
+        }
+
         var rootSubject = FormSubjectDto.getFormSubject(root);
         var pageRequest = formPageRequestIndex.getPageRequest(rootSubject.toFormSubject(),
                                                               formFieldId,
                                                               FormPageRequest.SourceType.GRID_CONTROL);
         var comparator = comparatorFactory.get(descriptor, Optional.empty());
-        var rowData = subjects.stream()
-                              .map(this::toEntityFormSubject)
-                              .filter(Objects::nonNull)
-                              .map(entity -> toGridRow(entity, descriptor, depth))
-                              .filter(Objects::nonNull)
-                              .sorted(comparator)
-                              .collect(PageCollector.toPage(pageRequest.getPageNumber(),
-                                                            pageRequest.getPageSize()));
+
+        var rowsPage = subjects.stream()
+                               .map(this::toEntityFormSubject)
+                               .filter(Objects::nonNull)
+                               .map(entity -> toGridRow(entity, descriptor, depth))
+                               .filter(row -> !row.containsFilteredEmptyCells())
+                               .sorted(comparator)
+                               .collect(PageCollector.toPage(pageRequest.getPageNumber(),
+                                                             pageRequest.getPageSize()))
+                               .orElse(Page.emptyPage());
         var orderings = formRegionOrderingIndex.getOrderings();
         if (orderings.isEmpty()) {
             orderings = descriptor.getColumns()
@@ -121,10 +146,12 @@ public class GridControlValuesBuilder {
                                   .map(ImmutableSet::of)
                                   .orElse(ImmutableSet.of());
         }
+        var filterState = getFilterState(descriptor);
         return GridControlDataDto.get(descriptor,
-                                      rowData.orElse(Page.emptyPage()),
+                                      rowsPage,
                                       orderings,
-                                      depth);
+                                      depth,
+                                      filterState);
     }
 
     /**
@@ -132,22 +159,18 @@ public class GridControlValuesBuilder {
      *
      * @param rowSubject            The row subject
      * @param gridControlDescriptor The grid control descriptor
-     * @param depth
      * @return null if there is no row for the specified subject (because it is filtered out)
      */
-    @Nullable
+    @Nonnull
     private GridRowDataDto toGridRow(OWLEntityData rowSubject,
                                      GridControlDescriptor gridControlDescriptor,
                                      int depth) {
         var columnDescriptors = gridControlDescriptor.getColumns();
+        var formSubject = FormEntitySubjectDto.get(rowSubject);
         // To Cells
         var cellData = toGridRowCells(rowSubject,
                                       columnDescriptors,
                                       depth);
-        if (cellData.isEmpty()) {
-            return null;
-        }
-        var formSubject = FormEntitySubjectDto.get(rowSubject);
         return GridRowDataDto.get(formSubject, cellData);
     }
 
@@ -155,45 +178,63 @@ public class GridControlValuesBuilder {
     private ImmutableList<GridCellDataDto> toGridRowCells(OWLEntityData rowSubject,
                                                           @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors,
                                                           int depth) {
-        var resultBuilder = ImmutableList.<GridCellDataDto>builder();
-        for (var columnDescriptor : columnDescriptors) {
-            var columnId = columnDescriptor.getId();
-            var direction = formRegionOrderingIndex.getOrderingDirection(columnId);
-            var comp = direction.isAscending() ? formControlDataDtoComparator : formControlDataDtoComparator.reversed();
-            var filterPredicate = filters.getFilterPredicate(columnId);
-            var cellValues = formDataDtoBuilderProvider.get()
-                                                       .toFormControlValues(rowSubject,
-                                                                            columnId,
-                                                                            columnDescriptor,
-                                                                            depth + 1)
-                                                       .stream()
-                                                       .sorted(comp)
-                                                       .collect(toImmutableList());
-            if (cellValues.isEmpty()) {
-                var cellData = GridCellDataDto.get(columnId, Page.emptyPage());
-                resultBuilder.add(cellData);
-            }
-            else {
-                if (columnDescriptor.getRepeatability() == Repeatability.NON_REPEATABLE) {
-                    var firstValue = cellValues.get(0);
-                    if (filterPredicate.test(firstValue) && isIncluded(firstValue)) {
-                        var cellData = GridCellDataDto.get(columnId,
-                                                           Page.of(firstValue));
-                        resultBuilder.add(cellData);
-                    }
-                    else {
-                        return ImmutableList.of();
-                    }
+        return columnDescriptors.stream()
+                                .map(cd -> toGridCellData(rowSubject, depth, cd))
+                                .collect(toImmutableList());
+    }
 
-                }
-                else {
-                    var cellData = GridCellDataDto.get(columnId,
-                                                       new Page<>(1, 1, cellValues, cellValues.size()));
-                    resultBuilder.add(cellData);
-                }
-            }
+    private GridCellDataDto toGridCellData(OWLEntityData rowSubject, int depth, GridColumnDescriptor columnDescriptor) {
+        var columnId = columnDescriptor.getId();
+        var direction = formRegionOrderingIndex.getOrderingDirection(columnId);
+        var cellValueComparator = direction.isAscending() ? formControlDataDtoComparator : formControlDataDtoComparator.reversed();
+        var filterPredicate = filters.getFilterPredicate(columnId);
+        var cellValues = formDataDtoBuilderProvider.get()
+                                                   .toFormControlValues(rowSubject,
+                                                                        columnId,
+                                                                        columnDescriptor,
+                                                                        depth + 1)
+                                                   .stream()
+                                                   .filter(GridControlValuesBuilder::isNotEmptyGrid)
+                                                   .filter(filterPredicate)
+                                                   .sorted(cellValueComparator)
+                                                   .collect(toImmutableList());
+        var filterState = getFilterState(columnDescriptor);
+        if (cellValues.isEmpty()) {
+            return GridCellDataDto.get(columnId, Page.emptyPage(), filterState);
         }
-        return resultBuilder.build();
+        if (columnDescriptor.isRepeatable()) {
+            return GridCellDataDto.get(columnId, Page.of(cellValues), filterState);
+        }
+        // There should only be one to return, but we allow for the fact that
+        // there could be more than one – after sorting we take the first one
+        var firstValue = cellValues.get(0);
+        if (isIncluded(firstValue)) {
+            return GridCellDataDto.get(columnId,
+                                       Page.of(firstValue),
+                                       filterState);
+        }
+        return GridCellDataDto.get(columnId, Page.emptyPage(), filterState);
+    }
+
+    private static boolean isNotEmptyGrid(FormControlDataDto value) {
+        return !(value instanceof GridControlDataDto) || !((GridControlDataDto) value).isFilteredEmpty();
+    }
+
+    /**
+     * Get the filter state for the specified column
+     *
+     * @param descriptor The column descriptor
+     * @return The filter state.  If the column is filtered, or it contains a nested grid that
+     * has one or more filtered columns then the state is FILTERED, otherwise it is UNFILTERED
+     */
+    private FilterState getFilterState(@Nonnull GridColumnDescriptor descriptor) {
+        boolean filtered = descriptor.getLeafColumnIds().anyMatch(filters::isFiltered);
+        if (filtered) {
+            return FilterState.FILTERED;
+        }
+        else {
+            return FilterState.UNFILTERED;
+        }
     }
 
     private boolean isIncluded(FormControlDataDto firstValue) {

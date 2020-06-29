@@ -9,33 +9,37 @@ import javax.annotation.Nonnull;
  */
 public interface LiteralCriteriaVisitor<R> {
 
-    R visit(StringEndsWithCriteria stringEndsWithCriteria);
+    default R doDefault(LiteralCriteria criteria) {
+        return null;
+    }
 
-    R visit(StringContainsCriteria stringContainsCriteria);
+    default R visit(StringEndsWithCriteria stringEndsWithCriteria) { return doDefault(stringEndsWithCriteria); }
 
-    R visit(StringEqualsCriteria stringEqualsCriteria);
+    default R visit(StringContainsCriteria stringContainsCriteria) { return doDefault(stringContainsCriteria); };
 
-    R visit(StringStartsWithCriteria stringStartsWithCriteria);
+    default R visit(StringEqualsCriteria stringEqualsCriteria) { return doDefault(stringEqualsCriteria); };
 
-    R visit(StringContainsRegexMatchCriteria stringContainsRegexMatchCriteria);
+    default R visit(StringStartsWithCriteria stringStartsWithCriteria) { return doDefault(stringStartsWithCriteria); };
 
-    R visit(StringDoesNotContainRegexMatchCriteria stringDoesNotContainRegexMatchCriteria);
+    default R visit(StringContainsRegexMatchCriteria stringContainsRegexMatchCriteria) { return doDefault(stringContainsRegexMatchCriteria); };
 
-    R visit(NumericValueCriteria numericValueCriteria);
+    default R visit(StringDoesNotContainRegexMatchCriteria stringDoesNotContainRegexMatchCriteria) { return doDefault(stringDoesNotContainRegexMatchCriteria); };
 
-    R visit(DateIsBeforeCriteria dateIsBeforeCriteria);
+    default R visit(NumericValueCriteria numericValueCriteria) { return doDefault(numericValueCriteria); };
 
-    R visit(DateIsAfterCriteria dateIsAfterCriteria);
+    default R visit(DateIsBeforeCriteria dateIsBeforeCriteria) { return doDefault(dateIsBeforeCriteria); };
 
-    R visit(StringContainsRepeatedSpacesCriteria stringContainsRepeatedSpacesCriteria);
+    default R visit(DateIsAfterCriteria dateIsAfterCriteria) { return doDefault(dateIsAfterCriteria); };
 
-    R visit(StringHasUntrimmedSpaceCriteria stringHasUntrimmedSpaceCriteria);
+    default R visit(StringContainsRepeatedSpacesCriteria stringContainsRepeatedSpacesCriteria) { return doDefault(stringContainsRepeatedSpacesCriteria); };
 
-    R visit(AnyLangTagOrEmptyLangTagCriteria anyLangTagOrEmptyLangTagCriteria);
+    default R visit(StringHasUntrimmedSpaceCriteria stringHasUntrimmedSpaceCriteria) { return doDefault(stringHasUntrimmedSpaceCriteria); };
 
-    R visit(LangTagIsEmptyCriteria langTagIsEmptyCriteria);
+    default R visit(AnyLangTagOrEmptyLangTagCriteria anyLangTagOrEmptyLangTagCriteria) { return doDefault(anyLangTagOrEmptyLangTagCriteria); };
 
-    R visit(LangTagMatchesCriteria langTagMatchesCriteria);
+    default R visit(LangTagIsEmptyCriteria langTagIsEmptyCriteria) { return doDefault(langTagIsEmptyCriteria); };
 
-    R visit(CompositeLiteralCriteria compositeLiteralCriteria);
+    default R visit(LangTagMatchesCriteria langTagMatchesCriteria) { return doDefault(langTagMatchesCriteria); };
+
+    default R visit(CompositeLiteralCriteria compositeLiteralCriteria) { return doDefault(compositeLiteralCriteria); };
 }
