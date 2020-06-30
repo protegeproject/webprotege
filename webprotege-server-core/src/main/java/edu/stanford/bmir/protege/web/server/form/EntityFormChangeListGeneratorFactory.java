@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.form.processor.FormDataConverter;
 import edu.stanford.bmir.protege.web.server.frame.EmptyEntityFrameFactory;
@@ -8,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.frame.FrameChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -73,8 +75,8 @@ public class EntityFormChangeListGeneratorFactory {
     }
 
     public EntityFormChangeListGenerator create(@Nonnull OWLEntity subject,
-                                                @Nonnull ImmutableList<FormData> pristineFormsData,
-                                                @Nonnull ImmutableList<FormData> formsData) {
+                                                @Nonnull ImmutableMap<FormId, FormData> pristineFormsData,
+                                                @Nonnull ImmutableMap<FormId, FormData> formsData) {
         checkNotNull(formsData);
         checkNotNull(pristineFormsData);
         return new EntityFormChangeListGenerator(subject,

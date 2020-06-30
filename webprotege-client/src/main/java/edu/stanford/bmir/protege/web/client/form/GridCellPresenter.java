@@ -73,6 +73,7 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
 
     public void requestFocus() {
         view.requestFocus();
+        stackPresenter.requestFocus();
     }
 
     public void start(AcceptsOneWidget cellContainer) {

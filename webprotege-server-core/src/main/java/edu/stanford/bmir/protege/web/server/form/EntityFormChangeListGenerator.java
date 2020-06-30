@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.frame.FrameUpdate;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
@@ -39,10 +40,10 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     private final MessageFormatter messageFormatter;
 
     @Nonnull
-    private final ImmutableList<FormData> pristineFormsData;
+    private final ImmutableMap<FormId, FormData> pristineFormsData;
 
     @Nonnull
-    private final ImmutableList<FormData> editedFormsData;
+    private final ImmutableMap<FormId, FormData> editedFormsData;
 
     @Nonnull
     private final FrameChangeGeneratorFactory frameChangeGeneratorFactory;
@@ -65,8 +66,8 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
 
     @Inject
     public EntityFormChangeListGenerator(@Nonnull OWLEntity subject,
-                                         @Nonnull ImmutableList<FormData> pristineFormsData,
-                                         @Nonnull ImmutableList<FormData> editedFormData,
+                                         @Nonnull ImmutableMap<FormId, FormData> pristineFormsData,
+                                         @Nonnull ImmutableMap<FormId, FormData> editedFormData,
                                          @Nonnull FormDataConverter formDataProcessor,
                                          @Nonnull MessageFormatter messageFormatter,
                                          @Nonnull FrameChangeGeneratorFactory frameChangeGeneratorFactory,
@@ -89,16 +90,20 @@ public class EntityFormChangeListGenerator implements ChangeListGenerator<OWLEnt
     @Override
     public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
         var allChanges = new ArrayList<OntologyChangeList<OWLEntity>>();
-        for(int i = 0; i < pristineFormsData.size(); i++) {
-            var pristineFormData = pristineFormsData.get(i);
-            var editedFormData = editedFormsData.get(i);
-            var pristineFormFrame = formDataProcessor.convert(pristineFormData);
+        for(FormId formId : pristineFormsData.keySet()) {
+            var pristineFormData = pristineFormsData.get(formId);
+            var editedFormData = editedFormsData.get(formId);
+            if(pristineFormData == null) {
+                throw new RuntimeException("Pristine form data not found for form " + formId);
+            }
             var editedFormFrame = formDataProcessor.convert(editedFormData);
-
+            if(editedFormFrame == null) {
+                throw new RuntimeException("Edited form data not found for form " + formId);
+            }
+            var pristineFormFrame = formDataProcessor.convert(pristineFormData);
             if(!pristineFormFrame.equals(editedFormFrame)) {
                 var pristineFramesBySubject = getFormFrameClosureBySubject(pristineFormFrame);
                 var editedFramesBySubject = getFormFrameClosureBySubject(editedFormFrame);
-
                 var changes = generateChangesForFormFrames(pristineFramesBySubject, editedFramesBySubject, context);
                 allChanges.addAll(changes);
             }
