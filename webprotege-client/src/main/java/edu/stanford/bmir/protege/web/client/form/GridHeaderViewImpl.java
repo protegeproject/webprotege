@@ -54,6 +54,9 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
     @UiField
     Button filterButton;
 
+    @UiField
+    HTMLPanel filterActiveView;
+
     private FilterView filterView;
 
     private FilterViewPopup filterViewPopup = new FilterViewPopup();
@@ -65,6 +68,7 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
         initWidget(ourUiBinder.createAndBindUi(this));
         menuButton.addClickHandler(this::handleMenuButtonClicked);
         filterButton.addClickHandler(this::handleFilterButtonClicked);
+        filterActiveView.setVisible(false);
     }
 
     private void handleFilterButtonClicked(ClickEvent event) {
@@ -94,6 +98,11 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
     @Override
     public void setEditGridFilterHandler(@Nonnull EditGridFilterHandler handler) {
         this.editGridFilterHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setFilterActive(boolean filterActive) {
+        filterActiveView.setVisible(filterActive);
     }
 
     @Override

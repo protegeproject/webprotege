@@ -22,5 +22,5 @@ public interface GridHeaderView extends IsWidget, HasGridColumnFilter {
 
     void setEditGridFilterHandler(@Nonnull EditGridFilterHandler handler);
 
-
+    void setFilterActive(boolean filterActive);
 }

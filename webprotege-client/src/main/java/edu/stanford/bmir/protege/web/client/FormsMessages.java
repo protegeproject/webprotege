@@ -152,4 +152,7 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("grid.columnFilter")
     String grid_columnFilter();
 
+    @DefaultMessage("Filtered")
+    @Key("filtered")
+    String filtered();
 }

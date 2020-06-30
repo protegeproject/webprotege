@@ -86,13 +86,19 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     private void handleApplyFilters(ImmutableList<FormRegionFilter> filters) {
         this.filters.clear();
         this.filters.addAll(filters);
+        updateFilterActiveDisplay();
         formRegionFilterChangedHandler.handleFormRegionFilterChanged(new FormRegionFilterChangedEvent());
+    }
+
+    private void updateFilterActiveDisplay() {
+        boolean filterActive = !this.filters.isEmpty();
+        view.setFilterActive(filterActive);
     }
 
     public void clear() {
         view.clear();
         containersByDescriptor.clear();
-        columnPresenters.clear();;
+        columnPresenters.clear();
     }
 
     public void setGridDescriptor(@Nonnull GridControlDescriptorDto descriptor) {

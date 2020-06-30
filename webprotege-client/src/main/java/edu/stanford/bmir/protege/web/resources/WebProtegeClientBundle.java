@@ -473,6 +473,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-help-icon")
         String helpIcon();
+
+        @ClassName("wp-form__filtered-indication")
+        String formFilteredIndication();
     }
 
     interface DateTimePicker extends CssResource {

@@ -562,3 +562,11 @@
     outline: 2px solid literal("var(--delete--color)");
     outline-offset: -2px;
 }
+
+.wp-form__filtered-indication {
+    font-size: 12px;
+    color: literal("var(--tertiary--color)");
+    background-color: #fffae6;
+    padding: 4px;
+    border-radius: 2px;
+}
