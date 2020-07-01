@@ -155,4 +155,8 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Filtered")
     @Key("filtered")
     String filtered();
+
+    @DefaultMessage("Clear filters")
+    @Key("clearFilters")
+    String clearFilters();
 }

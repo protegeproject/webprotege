@@ -57,6 +57,7 @@ public class GridFilterPresenter {
         this.formControlFilterMapper = checkNotNull(formControlFilterMapper);
         this.localeMapper = checkNotNull(localeMapper);
         this.formsMessages = checkNotNull(formsMessages);
+        this.view.setClearFiltersHandler(this::clearFilters);
     }
 
     public void clear() {
@@ -85,6 +86,10 @@ public class GridFilterPresenter {
             cancelHandler.run();
         });
         modalManager.showModal(modalPresenter);
+    }
+
+    private void clearFilters() {
+        filterPresenters.values().forEach(FormControlFilterPresenter::clear);
     }
 
     private void setFilters(ImmutableList<FormRegionFilter> filters) {

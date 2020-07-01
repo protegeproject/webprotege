@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
@@ -14,6 +16,7 @@ import javax.inject.Provider;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class GridFilterViewImpl extends Composite implements GridFilterView {
+
 
     interface GridFilterViewImplUiBinder extends UiBinder<HTMLPanel, GridFilterViewImpl> {
     }
@@ -26,10 +29,21 @@ public class GridFilterViewImpl extends Composite implements GridFilterView {
     @UiField
     HTMLPanel outer;
 
+    @UiField
+    Button clearFiltersButton;
+
+    @Nonnull
+    private ClearFiltersHandler clearFiltersHandler = () -> {};
+
     @Inject
     public GridFilterViewImpl(@Nonnull Provider<GridColumnFilterContainer> filterContainerProvider) {
         this.filterContainerProvider = checkNotNull(filterContainerProvider);
         initWidget(ourUiBinder.createAndBindUi(this));
+        clearFiltersButton.addClickHandler(this::handleClearFilters);
+    }
+
+    private void handleClearFilters(ClickEvent event) {
+        clearFiltersHandler.handleClearFilters();
     }
 
     @Nonnull
@@ -44,5 +58,10 @@ public class GridFilterViewImpl extends Composite implements GridFilterView {
     @Override
     public void clear() {
         outer.clear();
+    }
+
+    @Override
+    public void setClearFiltersHandler(@Nonnull ClearFiltersHandler handler) {
+        this.clearFiltersHandler = checkNotNull(handler);
     }
 }

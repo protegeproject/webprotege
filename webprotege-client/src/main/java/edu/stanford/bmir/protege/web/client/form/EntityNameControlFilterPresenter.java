@@ -78,4 +78,9 @@ public class EntityNameControlFilterPresenter implements FormControlFilterPresen
         dispatch.execute(new GetEntityRenderingAction(projectId, entity),
                          result -> view.setEntity(result.getEntityData()));
     }
+
+    @Override
+    public void clear() {
+        view.clear();
+    }
 }

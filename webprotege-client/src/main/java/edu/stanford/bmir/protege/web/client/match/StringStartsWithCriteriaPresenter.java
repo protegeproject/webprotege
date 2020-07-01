@@ -38,6 +38,9 @@ public class StringStartsWithCriteriaPresenter implements CriteriaPresenter<Stri
 
     @Override
     public Optional<StringStartsWithCriteria> getCriteria() {
+        if(view.getValue().isEmpty()) {
+            return Optional.empty();
+        }
         StringStartsWithCriteria stringStartsWithCriteria = StringStartsWithCriteria.get(view.getValue(), view.isIgnoreCase());
         return Optional.of(stringStartsWithCriteria);
     }

@@ -23,6 +23,7 @@
             background-color: white;
         }
         .filterIndication {
+            cursor: pointer;
         }
     </ui:style>
         <g:HTMLPanel>

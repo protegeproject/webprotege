@@ -12,8 +12,14 @@ import javax.annotation.Nonnull;
  */
 public interface GridFilterView extends IsWidget {
 
+    interface ClearFiltersHandler {
+        void handleClearFilters();
+    }
+
     @Nonnull
     AcceptsOneWidget addFilter(@Nonnull String columnName);
 
     void clear();
+
+    void setClearFiltersHandler(@Nonnull ClearFiltersHandler handler);
 }

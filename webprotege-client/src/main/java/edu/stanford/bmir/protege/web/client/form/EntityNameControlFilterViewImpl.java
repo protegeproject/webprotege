@@ -51,4 +51,9 @@ public class EntityNameControlFilterViewImpl extends Composite implements Entity
     public void setEntity(OWLEntityData entity) {
         entityEditor.setValue(entity);
     }
+
+    @Override
+    public void clear() {
+        entityEditor.clearValue();
+    }
 }

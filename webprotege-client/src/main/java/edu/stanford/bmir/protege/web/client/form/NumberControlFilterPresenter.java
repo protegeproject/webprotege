@@ -65,4 +65,9 @@ public class NumberControlFilterPresenter implements FormControlFilterPresenter 
             }
         });
     }
+
+    @Override
+    public void clear() {
+        numericValueCriteriaPresenter.clear();
+    }
 }

@@ -3,9 +3,12 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -69,6 +72,12 @@ public class GridHeaderViewImpl extends Composite implements GridHeaderView {
         menuButton.addClickHandler(this::handleMenuButtonClicked);
         filterButton.addClickHandler(this::handleFilterButtonClicked);
         filterActiveView.setVisible(false);
+        filterActiveView.sinkEvents(Event.ONMOUSEUP);
+        filterActiveView.addHandler(this::handleFilterButtonClicked, MouseUpEvent.getType());
+    }
+
+    private void handleFilterButtonClicked(MouseUpEvent event) {
+        editGridFilterHandler.handleEditGridFilter();
     }
 
     private void handleFilterButtonClicked(ClickEvent event) {

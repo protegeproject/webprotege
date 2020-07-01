@@ -85,4 +85,9 @@ public class TextControlFilterPresenter implements FormControlFilterPresenter {
             }
         });
     }
+
+    @Override
+    public void clear() {
+        criteriaPresenter.clear();
+    }
 }

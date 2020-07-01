@@ -21,4 +21,6 @@ public interface FormControlFilterPresenter {
     Optional<PrimitiveFormControlDataMatchCriteria> getFilter();
 
     void setFilter(@Nonnull FormRegionFilter filter);
+
+    void clear();
 }

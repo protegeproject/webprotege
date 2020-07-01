@@ -123,4 +123,9 @@ public class SingleChoiceControlFilterPresenter implements FormControlFilterPres
     public void setFilter(@Nonnull FormRegionFilter filter) {
 
     }
+
+    @Override
+    public void clear() {
+        formControl.ifPresent(FormControl::clearValue);
+    }
 }

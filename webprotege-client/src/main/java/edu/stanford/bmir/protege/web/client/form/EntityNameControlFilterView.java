@@ -20,4 +20,6 @@ public interface EntityNameControlFilterView extends IsWidget {
     Optional<OWLEntity> getEntity();
 
     void setEntity(OWLEntityData entity);
+
+    void clear();
 }

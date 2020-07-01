@@ -83,4 +83,9 @@ public class NumericValueCriteriaViewImpl extends Composite implements NumericVa
     public void setNumericPredicate(@Nonnull NumericPredicate predicate) {
         numericPredicateField.setSelectedIndex(predicate.ordinal());
     }
+
+    @Override
+    public void clear() {
+        numericPredicateField.clear();
+    }
 }
