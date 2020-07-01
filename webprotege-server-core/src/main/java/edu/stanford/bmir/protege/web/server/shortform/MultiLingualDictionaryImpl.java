@@ -59,7 +59,11 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         this.dictionaryBuilder = checkNotNull(dictionaryBuilder);
     }
 
-    @Override
+    /**
+     * Causes the specified list of languages to be pre-loaded.
+     * @param languages The list of languages that should be loaded.  After loading these languages will
+     *                  be available for looking up short forms and entities.
+     */
     public synchronized void loadLanguages(@Nonnull List<DictionaryLanguage> languages) {
         if(loaded) {
             return;

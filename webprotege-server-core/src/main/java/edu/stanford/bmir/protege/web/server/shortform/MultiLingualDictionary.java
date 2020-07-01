@@ -23,13 +23,6 @@ import java.util.stream.Stream;
 public interface MultiLingualDictionary {
 
     /**
-     * Causes the specified list of languages to be pre-loaded.
-     * @param languages The list of languages that should be loaded.  After loading these languages will
-     *                  be available for looking up short forms and entities.
-     */
-    void loadLanguages(@Nonnull List<DictionaryLanguage> languages);
-
-    /**
      * Gets a short form for the specified entity.  Dictionaries for the specified languages are examined
      * in the specified order.  This means that a short form for a language that appears earlier in the
      * list will be returned first.
