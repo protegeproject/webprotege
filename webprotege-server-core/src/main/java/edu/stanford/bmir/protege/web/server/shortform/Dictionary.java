@@ -106,7 +106,7 @@ public class Dictionary {
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes) {
         ShortFormMatchFunction supplier = (entity, shortForm, matchCount, matchPositions) ->
-                new ShortFormMatch(entity, shortForm, language, matchCount, matchPositions);
+                ShortFormMatch.get(entity, shortForm, language, matchCount, matchPositions);
         return shortFormCache.getShortFormsContaining(searchStrings,
                                                       entityTypes,
                                                       supplier);
