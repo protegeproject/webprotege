@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
@@ -24,7 +26,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-20
  */
-public class FormStackPresenter {
+public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
 
     enum FormUpdate {
         REPLACE,
@@ -53,8 +55,11 @@ public class FormStackPresenter {
     private boolean enabled = true;
 
     @Nonnull
-    private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {
-    };
+    private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {};
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+
 
     @Inject
     public FormStackPresenter(@Nonnull FormTabBarPresenter formTabBarPresenter,
@@ -96,13 +101,14 @@ public class FormStackPresenter {
                                   .collect(toImmutableList());
     }
 
+    /** @noinspection OptionalGetWithoutIsPresent*/
     @Nonnull
-    public ImmutableList<FormData> getForms() {
-        return getFormPresenters().stream()
-                                  .map(FormPresenter::getFormData)
-                                  .filter(Optional::isPresent)
-                                  .map(Optional::get)
-                                  .collect(toImmutableList());
+    public ImmutableMap<FormId, FormData> getForms() {
+        return formPresenters.entrySet()
+                      .stream()
+                      .filter(e -> e.getValue().getFormData().isPresent())
+                      .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey,
+                                                           e -> e.getValue().getFormData().get()));
     }
 
     public void expandAllFields() {
@@ -154,6 +160,7 @@ public class FormStackPresenter {
             formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
             formPresenter.displayForm(formData);
             formPresenter.setEnabled(enabled);
+            formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
             formPresenters.put(formData.getFormId(), formPresenter);
             formTabBarPresenter.addForm(formDescriptor.getFormId(),
                                         formDescriptor.getLabel(),
@@ -206,5 +213,20 @@ public class FormStackPresenter {
 
     public Collection<FormPresenter> getFormPresenters() {
         return formPresenters.values();
+    }
+
+
+
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getRegionFilters() {
+        return getFormPresenters().stream()
+                .flatMap(formPresenter -> formPresenter.getFilters().stream())
+                .collect(toImmutableSet());
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler formRegionFilterChangedHandler) {
+        this.formRegionFilterChangedHandler = checkNotNull(formRegionFilterChangedHandler);
+        getFormPresenters().forEach(formPresenter -> formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler));
     }
 }

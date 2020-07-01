@@ -63,6 +63,7 @@ public class FormFrameFlattener {
         for(FormFrame formFrame : formFrames) {
             parents.addAll(formFrame.getClasses());
             instances.addAll(formFrame.getInstances());
+            subClasses.addAll(formFrame.getSubClasses());
             propertyValues.addAll(formFrame.getPropertyValues());
             subject = formFrame.getSubject();
         }

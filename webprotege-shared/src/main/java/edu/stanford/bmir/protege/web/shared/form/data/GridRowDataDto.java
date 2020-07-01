@@ -32,6 +32,15 @@ public  abstract class GridRowDataDto {
     @Nonnull
     public abstract ImmutableList<GridCellDataDto> getCells();
 
+    /**
+     * Determines whether this row contains cells that have been filtered empty
+     * @return true if this row contains cells that have been filtered empty, otherwise false.
+     */
+    public boolean containsFilteredEmptyCells() {
+        return getCells().stream()
+                .anyMatch(GridCellDataDto::isFilteredEmpty);
+    }
+
     public GridRowData toGridRowData() {
         return GridRowData.get(getSubject().map(FormSubjectDto::toFormSubject).orElse(null),
                 getCells().stream().map(GridCellDataDto::toGridCellData).collect(toImmutableList()));

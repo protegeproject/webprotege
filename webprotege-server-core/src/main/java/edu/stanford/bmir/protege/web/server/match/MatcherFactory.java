@@ -480,6 +480,20 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
                         langTag -> true
                 );
             }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(CompositeLiteralCriteria criteria) {
+                var matchers = criteria.getCriteria().stream().map(c -> c.accept(this))
+                        .collect(toImmutableList());
+                switch (criteria.getMultiMatchType()) {
+                    case ALL:
+                        return new AndMatcher<>(matchers);
+                    case ANY:
+                        return new OrMatcher<>(matchers);
+                    default:
+                        throw new IllegalStateException();
+                }
+            }
         });
     }
 }

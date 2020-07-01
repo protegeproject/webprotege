@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:popupmenu="urn:import:edu.stanford.bmir.protege.web.client.library.popupmenu">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
     <ui:style>
         .header {
             display: flex;
@@ -18,11 +19,24 @@
             align-items: center;
             padding-right: 0.4em;
         }
+        .filterButton {
+            background-color: white;
+        }
+        .filterIndication {
+            cursor: pointer;
+        }
     </ui:style>
-        <g:HTMLPanel addStyleNames="{wp.style.formGridHeaderRow}">
-            <g:HTMLPanel ui:field="headerContainer" addStyleNames="{style.header}"/>
-            <g:HTMLPanel addStyleNames="{style.menuButtonContainer}">
-                <popupmenu:MenuButton ui:field="menuButton"/>
+        <g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.style.formGridHeaderRow}">
+                <g:HTMLPanel ui:field="headerContainer" addStyleNames="{style.header}"/>
+                <g:HTMLPanel addStyleNames="{style.menuButtonContainer}">
+                    <g:Button ui:field="filterButton"
+                              addStyleNames="{wp.buttons.btnGlyph} {wp.buttons.funnel} {style.filterButton}"/>
+                    <popupmenu:MenuButton ui:field="menuButton"/>
+                </g:HTMLPanel>
+            </g:HTMLPanel>
+            <g:HTMLPanel ui:field="filterActiveView" addStyleNames="{wp.style.formFilteredIndication} {style.filterIndication}">
+                <ui:text from="{msg.filtered}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
 </ui:UiBinder>

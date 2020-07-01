@@ -63,7 +63,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
     @Nonnull
     public GridRowData getFormDataValue() {
         ImmutableList<GridCellData> cellData =
-                cellPresenters.stream()
+                cellPresentersById.values().stream()
                               .map(GridCellPresenter::getValue)
                               .collect(toImmutableList());
         return GridRowData.get(subject.map(FormSubjectDto::toFormSubject).orElse(null),

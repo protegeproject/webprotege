@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -72,6 +73,12 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
         gridPresenter.clearValue();
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return gridPresenter.getFilters();
+    }
+
     @Override
     public Widget asWidget() {
         return view;
@@ -135,5 +142,10 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
 
     public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         gridPresenter.setOrderByChangedHandler(orderByChangedHandler);
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        gridPresenter.setFormRegionFilterChangedHandler(handler);
     }
 }

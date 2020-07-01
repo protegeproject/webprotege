@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
@@ -23,7 +25,6 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -83,6 +84,7 @@ public class EntityFormStackPresenter {
         formStackPresenter.start(view.getFormStackContainer());
         formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
         formStackPresenter.setFormRegionOrderingChangedHandler(this::handleGridOrderByChanged);
+        formStackPresenter.setFormRegionFilterChangedHandler(this::handleFormRegionFilterChanged);
         langTagFilterPresenter.start(view.getLangTagFilterContainer());
         langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
@@ -92,6 +94,10 @@ public class EntityFormStackPresenter {
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
                                         view::setEditButtonVisible);
         setMode(Mode.READ_ONLY_MODE);
+    }
+
+    private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     private void handleGridOrderByChanged() {
@@ -133,9 +139,10 @@ public class EntityFormStackPresenter {
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
+            ImmutableSet<FormRegionFilter> filters = formStackPresenter.getRegionFilters();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
             dispatch.execute(new GetEntityFormsAction(projectId, entity, formFilter, pageRequests, langTagFilter,
-                                                      orderings),
+                                                      orderings, filters),
                              hasBusy,
                              this::handleGetEntityFormsResult);
         });
@@ -202,10 +209,11 @@ public class EntityFormStackPresenter {
 
     private void commitEdits() {
         currentEntity.ifPresent(entity -> {
-            ImmutableList<FormData> editedFormData = formStackPresenter.getForms();
+            ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms();
+            ImmutableMap<FormId, FormData> pristineFormData = ImmutableMap.copyOf(this.pristineFormData);
             dispatch.execute(new SetEntityFormsDataAction(projectId,
                                                           entity,
-                                                          ImmutableList.copyOf(pristineFormData.values()),
+                                                          pristineFormData,
                                                           editedFormData),
                              result -> {});
         });

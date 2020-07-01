@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -10,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandle
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 
@@ -24,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedHandler, HasEnabled, HasValueChangeHandlers<Optional<FormControlData>>, IsWidget {
+public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedHandler, HasFormRegionFilterChangedHandler, HasEnabled, HasValueChangeHandlers<Optional<FormControlData>>, IsWidget {
 
     void setEnabled(boolean enabled);
 
@@ -48,4 +50,7 @@ public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedH
     Optional<FormControlData> getValue();
 
     void clearValue();
+
+    @Nonnull
+    ImmutableSet<FormRegionFilter> getFilters();
 }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
@@ -23,14 +24,14 @@ public class SetEntityFormsDataAction implements ProjectAction<SetEntityFormData
 
     private OWLEntity entity;
 
-    private ImmutableList<FormData> pristineFormsData;
+    private ImmutableMap<FormId, FormData> pristineFormsData;
 
-    private ImmutableList<FormData> editedFormsData;
+    private ImmutableMap<FormId, FormData> editedFormsData;
 
     public SetEntityFormsDataAction(@Nonnull ProjectId projectId,
                                     @Nonnull OWLEntity entity,
-                                    @Nonnull ImmutableList<FormData> pristineFormsData,
-                                    @Nonnull ImmutableList<FormData> editedFormsData) {
+                                    @Nonnull ImmutableMap<FormId, FormData> pristineFormsData,
+                                    @Nonnull ImmutableMap<FormId, FormData> editedFormsData) {
         this.projectId = checkNotNull(projectId);
         this.entity = checkNotNull(entity);
         this.pristineFormsData = checkNotNull(pristineFormsData);
@@ -54,12 +55,12 @@ public class SetEntityFormsDataAction implements ProjectAction<SetEntityFormData
     }
 
     @Nonnull
-    public ImmutableList<FormData> getPristineFormsData() {
+    public ImmutableMap<FormId, FormData> getPristineFormsData() {
         return pristineFormsData;
     }
 
     @Nonnull
-    public ImmutableList<FormData> getEditedFormsData() {
+    public ImmutableMap<FormId, FormData> getEditedFormsData() {
         return editedFormsData;
     }
 }

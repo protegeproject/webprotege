@@ -5,7 +5,8 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Module
 public class EntityFrameFormDataModule {
@@ -19,13 +20,17 @@ public class EntityFrameFormDataModule {
     @Nonnull
     private final FormPageRequestIndex pageRequestIndex;
 
+    @Nonnull
+    private FormRegionFilterIndex formRegionFilterIndex;
+
 
     public EntityFrameFormDataModule(@Nonnull FormRegionOrderingIndex formRegionOrderingIndex,
                                      @Nonnull LangTagFilter langTagFilter,
-                                     @Nonnull FormPageRequestIndex pageRequestIndex) {
-        this.formRegionOrderingIndex = formRegionOrderingIndex;
-        this.langTagFilter = langTagFilter;
-        this.pageRequestIndex = pageRequestIndex;
+                                     @Nonnull FormPageRequestIndex pageRequestIndex, @Nonnull FormRegionFilterIndex formRegionFilterIndex) {
+        this.formRegionOrderingIndex = checkNotNull(formRegionOrderingIndex);
+        this.langTagFilter = checkNotNull(langTagFilter);
+        this.pageRequestIndex = checkNotNull(pageRequestIndex);
+        this.formRegionFilterIndex = checkNotNull(formRegionFilterIndex);
     }
 
 
@@ -42,5 +47,10 @@ public class EntityFrameFormDataModule {
     @Provides
     public FormPageRequestIndex providePageRequestIndex() {
         return pageRequestIndex;
+    }
+
+    @Provides
+    public FormRegionFilterIndex provideFormRegionFilterIndex() {
+        return formRegionFilterIndex;
     }
 }

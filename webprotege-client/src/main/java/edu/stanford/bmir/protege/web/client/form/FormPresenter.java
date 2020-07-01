@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -29,7 +31,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * <p>
  * Presents a form and its associated form data.
  */
-public class FormPresenter {
+public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     @Nonnull
     private final FormView formView;
@@ -63,6 +65,9 @@ public class FormPresenter {
 
     @Nonnull
     private Optional<FormId> formId = Optional.empty();
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangeHandler = event -> {};
 
     @AutoFactory
     @Inject
@@ -187,6 +192,7 @@ public class FormPresenter {
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
+        presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
         presenter.start();
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         fieldPresenters.add(presenter);
@@ -271,6 +277,20 @@ public class FormPresenter {
     public Stream<FormRegionOrdering> getOrderings() {
         return fieldPresenters.stream()
                 .flatMap(FormFieldPresenter::getOrderings);
+    }
+
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return fieldPresenters.stream()
+                .flatMap(formFieldPresenter -> formFieldPresenter.getFilters().stream())
+                .collect(toImmutableSet());
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        formRegionFilterChangeHandler = checkNotNull(handler);
+        fieldPresenters.forEach(formFieldPresenter -> {
+            formFieldPresenter.setFormRegionFilterChangedHandler(handler);
+        });
     }
 
     interface FormDataChangedHandler {

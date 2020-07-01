@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -58,6 +57,9 @@ public class EntityFrameFormDataDtoBuilder {
     @Nonnull
     private final FormPageRequestIndex formPageRequestIndex;
 
+    @Nonnull
+    private final FormRegionFilterIndex formRegionFilterIndex;
+
     private final FormDescriptorDtoTranslator formDataDtoTranslator;
 
     @Inject
@@ -72,7 +74,7 @@ public class EntityFrameFormDataDtoBuilder {
                                          @Nonnull SubFormControlValuesBuilder subFormControlValuesBuilder,
                                          @Nonnull LangTagFilter langTagFilter,
                                          @Nonnull FormPageRequestIndex formPageRequestIndex,
-                                         @Nonnull FormDescriptorDtoTranslator formDataDtoTranslator) {
+                                         @Nonnull FormRegionFilterIndex formRegionFilterIndex, @Nonnull FormDescriptorDtoTranslator formDataDtoTranslator) {
         this.sessionRenderer = sessionRenderer;
         this.textControlValuesBuilder = textControlValuesBuilder;
         this.numberControlValuesBuilder = numberControlValuesBuilder;
@@ -84,6 +86,7 @@ public class EntityFrameFormDataDtoBuilder {
         this.subFormControlValuesBuilder = subFormControlValuesBuilder;
         this.langTagFilter = langTagFilter;
         this.formPageRequestIndex = formPageRequestIndex;
+        this.formRegionFilterIndex = formRegionFilterIndex;
         this.formDataDtoTranslator = formDataDtoTranslator;
     }
 
@@ -197,6 +200,7 @@ public class EntityFrameFormDataDtoBuilder {
     }
 
     private boolean isIncluded(@Nonnull FormControlDataDto formControlData) {
+
         FormControlDataLangTagBasedInclusion formControlDataLangTagBasedInclusion = new FormControlDataLangTagBasedInclusion(
                 langTagFilter);
         return formControlDataLangTagBasedInclusion.isIncluded(formControlData);

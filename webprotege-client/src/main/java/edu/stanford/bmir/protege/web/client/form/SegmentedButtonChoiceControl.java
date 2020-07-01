@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -15,10 +16,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -159,6 +157,12 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
         setDefaultChoiceSelected();
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
+    }
+
     @Override
     public Optional<FormControlData> getValue() {
         if(selectedIndex == -1) {
@@ -212,5 +216,10 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
     }
 }

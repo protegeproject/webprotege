@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Consumer;
 
-public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, HasPagination, HasValueChangeHandlers<List<FormControlData>> {
+public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, HasPagination, HasValueChangeHandlers<List<FormControlData>>, HasFormRegionFilterChangedHandler {
 
     void start(@Nonnull AcceptsOneWidget container);
 

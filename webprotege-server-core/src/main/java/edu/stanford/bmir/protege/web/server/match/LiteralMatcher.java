@@ -40,7 +40,6 @@ public class LiteralMatcher implements Matcher<OWLLiteral> {
                 && datatypeMatcher.matches(literal.getDatatype());
     }
 
-
     public static LiteralMatcher forLexicalPattern(@Nonnull Pattern pattern) {
         return new LiteralMatcher(
                 lexicalValue -> pattern.matcher(lexicalValue).find(),
@@ -61,6 +60,16 @@ public class LiteralMatcher implements Matcher<OWLLiteral> {
         return new LiteralMatcher(lexicalValue -> true,
                                   langTag -> !langTag.isEmpty(),
                                   datatype -> true);
+    }
+
+    public static Matcher<OWLLiteral> forLexicalValue(Matcher<String> lexicalValueMatcher) {
+        return new LiteralMatcher(lexicalValueMatcher, langTag -> true, datatype -> true);
+    }
+
+    public static Matcher<OWLLiteral> forLangTag(Matcher<String> languageTagMatcher) {
+        return new LiteralMatcher(Matcher.matchesAny(),
+                                  languageTagMatcher,
+                                  Matcher.matchesAny());
     }
 
     public static Matcher<OWLLiteral> forHasLangTag(@Nonnull String langTagMatch) {

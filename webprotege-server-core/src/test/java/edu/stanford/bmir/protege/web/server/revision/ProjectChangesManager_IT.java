@@ -104,19 +104,18 @@ public class ProjectChangesManager_IT {
                                                                                                       annotationAssertionsIndex);
 
         var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
-        var projectOntologiesIndex = new ProjectOntologiesIndexImpl();
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
                                                                                                         axiomsByEntityReference,
-                                                                                                        projectOntologiesIndex), repo);
+                                                                                                        ontologiesIndex), repo);
 
         var entitiesInOntologySignatureByIri = new EntitiesInOntologySignatureByIriIndexImpl(axiomsByEntityReference,
                                                                                              new OntologyAnnotationsIndexImpl());
-        var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex,
+        var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(ontologiesIndex,
                                                                                     entitiesInOntologySignatureByIri);
         var ontologySignatureIndex = new OntologySignatureIndexImpl(axiomsByEntityReference);
-        var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
+        var projectSignatureIndex = new ProjectSignatureIndexImpl(ontologiesIndex, ontologySignatureIndex);
 
-        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex,
+        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, ontologiesIndex,
                                                                                                      axiomsByEntityReference,
                                                                                                      entitiesInSignatureIndex,
                                                                                                      projectSignatureIndex,
@@ -169,7 +168,7 @@ public class ProjectChangesManager_IT {
                 ),
                                                    () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(defaultOntologyIdManager),
                                                                                              defaultOntologyIdManager,
-                                                                                             projectOntologiesIndex));
+                                                                                             ontologiesIndex));
 
 
         createChanges(manager, rootOntology, dataFactory, revisionManager);

@@ -140,4 +140,9 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
     public void forEachFormControl(@Nonnull Consumer<FormControl> formControlConsumer) {
         formControlConsumer.accept(formControl);
     }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        formControl.setFormRegionFilterChangedHandler(handler);
+    }
 }

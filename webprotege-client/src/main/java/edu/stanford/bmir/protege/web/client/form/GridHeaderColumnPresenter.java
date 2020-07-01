@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasVisibility;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
@@ -39,17 +41,23 @@ public class GridHeaderColumnPresenter implements HasVisibility {
     @Nonnull
     private Optional<GridColumnDescriptorDto> columnDescriptor = Optional.empty();
 
+    @Nonnull
+    private GridColumnFilterPresenter filterPresenter;
+
     @Inject
     public GridHeaderColumnPresenter(@Nonnull GridHeaderCellView view,
-                                     @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
+                                     @Nonnull LanguageMapCurrentLocaleMapper localeMapper,
+                                     @Nonnull GridColumnFilterPresenter filterPresenter) {
         this.view = checkNotNull(view);
         this.localeMapper = checkNotNull(localeMapper);
+        this.filterPresenter = checkNotNull(filterPresenter);
         this.view.setClickHandler(event -> columnHeaderClicked.handleGridHeaderColumnClicked());
     }
 
     public void setColumnDescriptor(@Nonnull GridColumnDescriptorDto columnDescriptor) {
         String label = localeMapper.getValueForCurrentLocale(columnDescriptor.getLabel());
         view.setLabel(label);
+        filterPresenter.setGridColumnDescriptor(columnDescriptor);
         this.columnDescriptor = Optional.of(columnDescriptor);
     }
 

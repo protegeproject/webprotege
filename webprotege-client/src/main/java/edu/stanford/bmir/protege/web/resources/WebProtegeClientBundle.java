@@ -243,6 +243,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgFilter();
 
+    @Source("funnel.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgFunnel();
+
     @Source("language-codes.txt")
     TextResource languageCodes();
 
@@ -469,6 +473,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-help-icon")
         String helpIcon();
+
+        @ClassName("wp-form__filtered-indication")
+        String formFilteredIndication();
     }
 
     interface DateTimePicker extends CssResource {
@@ -749,6 +756,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-btn-g--filter")
         String filter();
+
+        @ClassName("wp-btn-g--funnel")
+        String funnel();
 
         @ClassName("wp-btn-g--cross")
         String cross();

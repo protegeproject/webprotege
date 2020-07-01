@@ -820,6 +820,41 @@ public class ClientProjectModule {
     CheckBoxView provideCheckBoxView(CheckBoxViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    GridColumnFilterView provideGridColumnFilterView(GridColumnFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TextControlFilterView provideTextControlFilterView(TextControlFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NumberControlFilterView provideNumberControlFilterView(NumberControlFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridFilterView provideGridFilterView(GridFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GridColumnFilterContainer provideGridColumnFilterContainer(GridColumnFilterContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityNameControlFilterView provideEntityNameControlFilterView(EntityNameControlFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SingleChoiceControlFilterView provideSingleChoiceControlFilterView(SingleChoiceControlFilterViewImpl impl) {
+        return impl;
+    }
 }
 
 

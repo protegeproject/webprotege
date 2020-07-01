@@ -36,8 +36,9 @@ public class DynamicListChoiceDescriptorDtoSupplier {
     public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull DynamicChoiceListSourceDescriptor descriptor) {
         var matchCriteria = descriptor.getCriteria();
         return matchingEngine.match(matchCriteria)
-                             .limit(CHOICE_LIMIT)
                              .map(sessionRenderer::getEntityRendering)
+                             .sorted()
+                             .limit(CHOICE_LIMIT)
                              .map(this::toChoiceDescriptorDto)
                              .collect(toImmutableList());
     }

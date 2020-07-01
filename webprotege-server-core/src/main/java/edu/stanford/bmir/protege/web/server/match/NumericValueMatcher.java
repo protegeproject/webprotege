@@ -26,6 +26,9 @@ public class NumericValueMatcher implements Matcher<String> {
 
     @Override
     public boolean matches(@Nonnull String s) {
+        if(s.isEmpty()) {
+            return false;
+        }
         // We use Doubles.tryParse because failures are expected
         // and Double.parseDouble uses exceptions to indicate failure,
         // which are expensive.

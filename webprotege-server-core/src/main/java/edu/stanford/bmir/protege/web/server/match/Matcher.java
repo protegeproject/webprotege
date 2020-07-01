@@ -10,4 +10,8 @@ import javax.annotation.Nonnull;
 public interface Matcher<T>  {
 
     boolean matches(@Nonnull T value);
+
+    static <T> Matcher<T> matchesAny() {
+        return o -> true;
+    }
 }

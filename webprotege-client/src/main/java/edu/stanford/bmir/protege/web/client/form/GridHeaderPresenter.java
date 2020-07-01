@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
@@ -13,13 +14,14 @@ import javax.inject.Provider;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-27
  */
-public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrdering {
+public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrdering, HasFormRegionFilterChangedHandler {
 
     @Nonnull
     private final GridHeaderView view;
@@ -42,13 +44,24 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
 
     private Optional<FormRegionOrdering> orderBy = Optional.empty();
 
+    @Nonnull
+    private final GridFilterPresenter filterPresenter;
+
+    @Nonnull
+    private List<FormRegionFilter> filters = new ArrayList<>();
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
                                @Nonnull Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider,
-                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
+                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper,
+                               @Nonnull GridFilterPresenter filterPresenter) {
         this.view = checkNotNull(view);
         this.headerColumnPresenterProvider = checkNotNull(headerColumnPresenterProvider);
         this.localeMapper = checkNotNull(localeMapper);
+        this.filterPresenter = checkNotNull(filterPresenter);
     }
 
     @Override
@@ -56,14 +69,36 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         this.columnVisibilityManager = Optional.of(checkNotNull(columnVisibilityManager));
     }
 
-    void start(@Nonnull AcceptsOneWidget container) {
+    public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        view.setEditGridFilterHandler(this::handleEditGridFilter);
+    }
+
+    private void handleEditGridFilter() {
+        ImmutableList<GridColumnDescriptorDto> columnDescriptors = containersByDescriptor.keySet()
+                              .stream()
+                              .collect(toImmutableList());
+        filterPresenter.showModal(columnDescriptors,
+                                  ImmutableList.copyOf(filters),
+                                  this::handleApplyFilters, () -> {});
+    }
+
+    private void handleApplyFilters(ImmutableList<FormRegionFilter> filters) {
+        this.filters.clear();
+        this.filters.addAll(filters);
+        updateFilterActiveDisplay();
+        formRegionFilterChangedHandler.handleFormRegionFilterChanged(new FormRegionFilterChangedEvent());
+    }
+
+    private void updateFilterActiveDisplay() {
+        boolean filterActive = !this.filters.isEmpty();
+        view.setFilterActive(filterActive);
     }
 
     public void clear() {
         view.clear();
         containersByDescriptor.clear();
-        columnPresenters.clear();;
+        columnPresenters.clear();
     }
 
     public void setGridDescriptor(@Nonnull GridControlDescriptorDto descriptor) {
@@ -162,5 +197,15 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
                 }
             });
         }
+    }
+
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.copyOf(filters);
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        this.formRegionFilterChangedHandler = checkNotNull(handler);
     }
 }

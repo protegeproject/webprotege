@@ -1,24 +1,19 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBox;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -128,6 +123,12 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
         ValueChangeEvent.fire(this, getValue());
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
+    }
+
     @Override
     public Optional<FormControlData> getValue() {
         if(checkBoxes.isEmpty()) {
@@ -169,5 +170,10 @@ public class CheckBoxChoiceControl extends Composite implements MultiValueChoice
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
     }
 }

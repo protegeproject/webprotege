@@ -1,0 +1,9 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <g:HTMLPanel>
+        <primitive:PrimitiveDataEditor ui:field="entityEditor"
+                                       classesAllowed="true"
+                                       namedIndividualsAllowed="true" placeholder="Enter entity name"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

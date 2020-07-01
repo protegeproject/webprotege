@@ -479,6 +479,7 @@
 }
 
 .wp-form__grid__cell {
+    padding: 1px;
 }
 
 .wp-form__grid__header-row {
@@ -559,5 +560,13 @@
 
 .wp-form__control-stack__item--delete-hover {
     outline: 2px solid literal("var(--delete--color)");
-    outline-offset: 1px;
+    outline-offset: -2px;
+}
+
+.wp-form__filtered-indication {
+    font-size: 12px;
+    color: literal("var(--tertiary--color)");
+    background-color: #fffae6;
+    padding: 4px;
+    border-radius: 2px;
 }

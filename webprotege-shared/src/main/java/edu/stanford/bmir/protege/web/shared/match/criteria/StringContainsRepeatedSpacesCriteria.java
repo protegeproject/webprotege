@@ -27,4 +27,9 @@ public abstract class StringContainsRepeatedSpacesCriteria implements LexicalVal
     public <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public <R> R accept(@Nonnull LiteralCriteriaVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
 }

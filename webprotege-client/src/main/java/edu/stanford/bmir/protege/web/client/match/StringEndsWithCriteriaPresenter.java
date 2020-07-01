@@ -37,6 +37,9 @@ public class StringEndsWithCriteriaPresenter implements CriteriaPresenter<String
 
     @Override
     public Optional<StringEndsWithCriteria> getCriteria() {
+        if(view.getValue().isEmpty()) {
+            return Optional.empty();
+        }
         StringEndsWithCriteria criteria = StringEndsWithCriteria.get(view.getValue(), view.isIgnoreCase());
         return Optional.of(criteria);
     }

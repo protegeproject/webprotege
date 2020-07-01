@@ -28,7 +28,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-25
  */
-public class GridPresenter implements HasGridColumnVisibilityManager {
+public class GridPresenter implements HasGridColumnVisibilityManager, HasFormRegionFilterChangedHandler {
 
     @Nonnull
     private final GridView view;
@@ -256,5 +256,14 @@ public class GridPresenter implements HasGridColumnVisibilityManager {
 
     public void setOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         this.formRegionOrderingChangedHandler = checkNotNull(orderByChangedHandler);
+    }
+
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return headerPresenter.getFilters();
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        headerPresenter.setFormRegionFilterChangedHandler(handler);
     }
 }

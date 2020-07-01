@@ -101,7 +101,7 @@ public class AxiomSubjectProvider_TestCase {
     }
 
     /**
-     * Mocks the visit method for a given axiom.
+     * Mocks the accept method for a given axiom.
      *
      * @param axiom      The axiom.
      * @param axiomClass The type of class of the axiom.

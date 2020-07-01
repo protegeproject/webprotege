@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
@@ -25,7 +26,7 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-08
  */
-public class FormFieldPresenter implements FormRegionPresenter {
+public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler {
 
     private boolean enabled = true;
 
@@ -193,4 +194,19 @@ public class FormFieldPresenter implements FormRegionPresenter {
         });
     }
 
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        // TODO: Filter for stack?
+
+        ImmutableSet.Builder<FormRegionFilter> filters = ImmutableSet.builder();
+        stackPresenter.forEachFormControl(formControl ->  {
+            filters.addAll(formControl.getFilters());
+        });
+        return filters.build();
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        stackPresenter.setFormRegionFilterChangedHandler(handler);
+    }
 }
