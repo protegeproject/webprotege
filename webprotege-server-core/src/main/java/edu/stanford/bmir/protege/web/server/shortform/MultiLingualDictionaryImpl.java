@@ -28,7 +28,7 @@ import static java.util.stream.Collectors.toList;
  * 3 Apr 2018
  */
 @ProjectSingleton
-public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
+public class MultiLingualDictionaryImpl implements MultiLingualDictionary, MultilingualDictionaryUpdater {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiLingualDictionaryImpl.class);
 
@@ -154,6 +154,7 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
 
     }
 
+    @Nonnull
     @Override
     public Stream<OWLEntity> getEntities(@Nonnull String shortForm,
                                          @Nonnull List<DictionaryLanguage> languages) {
@@ -182,9 +183,10 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         return dictionaries.values().stream();
     }
 
+    @Nonnull
     @Override
-    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity,
-                                                                  List<DictionaryLanguage> languages) {
+    public ImmutableMap<DictionaryLanguage, String> getShortForms(@Nonnull OWLEntity entity,
+                                                                  @Nonnull List<DictionaryLanguage> languages) {
         var resultBuilder = ImmutableMap.<DictionaryLanguage, String>builder();
         findDictionaries(languages);
         languages.stream()

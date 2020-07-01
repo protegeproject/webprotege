@@ -122,6 +122,7 @@ public class ProjectChangesManager_IT {
                                                                                                      dataFactory), new DictionaryUpdater(projectAnnotationAssertionsIndex));
         DictionaryManager dictionaryManager = new DictionaryManager(languageManager,
                                                                     multilingualDictionary,
+                                                                    multilingualDictionary,
                                                                     new BuiltInShortFormDictionary(new ShortFormCache(),
                                                                                                    dataFactory));
         ShortFormAdapter shortFormAdapter = new ShortFormAdapter(dictionaryManager);
@@ -136,7 +137,7 @@ public class ProjectChangesManager_IT {
         OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
         SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(languageManager, multilingualDictionary, new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
+                new DictionaryManager(languageManager, multilingualDictionary, multilingualDictionary, new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
                         shortFormAdapter,

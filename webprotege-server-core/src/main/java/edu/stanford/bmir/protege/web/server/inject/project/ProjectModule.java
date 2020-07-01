@@ -18,7 +18,6 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UuidEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
-import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataComponent;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
@@ -542,6 +541,11 @@ public class ProjectModule {
         // Preload existing languages to avoid delays after loading in the UI
 //        dictionary.loadLanguages(languageManager.getActiveLanguages());
         return dictionary;
+    }
+
+    @Provides
+    MultilingualDictionaryUpdater provideUpdatableMultilingualDictionary(MultiLingualDictionaryImpl impl) {
+        return impl;
     }
 
     @Provides
