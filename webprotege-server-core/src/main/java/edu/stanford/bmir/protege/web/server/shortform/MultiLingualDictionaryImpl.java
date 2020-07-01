@@ -193,17 +193,4 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
                  });
         return resultBuilder.build();
     }
-
-    @Nonnull
-    @Override
-    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
-        var resultBuilder = ImmutableMap.<DictionaryLanguage, String>builder();
-        dictionaries.forEach((lang, dict) -> {
-            var shortForm = dict.getShortForm(entity, "");
-            if(!shortForm.isEmpty()) {
-                resultBuilder.put(lang, shortForm);
-            }
-        });
-        return resultBuilder.build();
-    }
 }
