@@ -108,7 +108,7 @@ public class AxiomIRISubjectProvider_TestCase {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object visitorImplementation = invocationOnMock.getArguments()[0];
-                Method method = visitorImplementation.getClass().getMethod("accept", axiomClass);
+                Method method = visitorImplementation.getClass().getMethod("visit", axiomClass);
                 method.setAccessible(true);
                 return method.invoke(visitorImplementation, axiom);
             }
