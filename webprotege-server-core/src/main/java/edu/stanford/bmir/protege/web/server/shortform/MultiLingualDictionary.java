@@ -20,20 +20,7 @@ import java.util.stream.Stream;
  * A dictionary that supports look up for multiple languages
  */
 @ProjectSingleton
-public interface MultiLingualDictionary extends MultiLingualShortFormDictionary {
-
-    /**
-     * Gets short forms containing the specified search strings
-     *
-     * @param searchStrings The search strings.
-     * @param entityTypes   The types of entities to be retrieved.
-     * @param languages     The list of languages to consider.
-     * @return A stream of short forms.
-     */
-    @Nonnull
-    Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
-                                                   @Nonnull Set<EntityType<?>> entityTypes,
-                                                   @Nonnull List<DictionaryLanguage> languages);
+public interface MultiLingualDictionary extends MultiLingualShortFormDictionary, SearchableMultiLingualShortFormDictionary {
 
     /**
      * Gets a stream of entities that exactly match the specified short form.
