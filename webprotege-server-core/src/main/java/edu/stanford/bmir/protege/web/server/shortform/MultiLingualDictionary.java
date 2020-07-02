@@ -20,24 +20,7 @@ import java.util.stream.Stream;
  * A dictionary that supports look up for multiple languages
  */
 @ProjectSingleton
-public interface MultiLingualDictionary {
-
-    /**
-     * Gets a short form for the specified entity.  Dictionaries for the specified languages are examined
-     * in the specified order.  This means that a short form for a language that appears earlier in the
-     * list will be returned first.
-     *
-     * @param entity           The entity for which a short form is to be retrieved.
-     * @param languages        The languages to be considered.
-     * @param defaultShortForm The short form to be returned if none of the dictionaries corresponding to
-     *                         the specified languages contain the specified short form.
-     * @return The default short form to return in case no dictionary contains a short form for the specified
-     * entity.
-     */
-    @Nonnull
-    String getShortForm(@Nonnull OWLEntity entity,
-                        @Nonnull List<DictionaryLanguage> languages,
-                        @Nonnull String defaultShortForm);
+public interface MultiLingualDictionary extends MultiLingualShortFormDictionary {
 
     /**
      * Gets short forms containing the specified search strings
@@ -61,15 +44,4 @@ public interface MultiLingualDictionary {
     @Nonnull
     Stream<OWLEntity> getEntities(@Nonnull String shortForm,
                                   @Nonnull List<DictionaryLanguage> languages);
-
-    /**
-     * Gets the short forms in the specified languages for the specified entity.
-     *
-     * @param entity    The entity
-     * @param languages The list of languages to consider
-     * @return A map of languages for short forms for known language short form mappings
-     */
-    @Nonnull
-    ImmutableMap<DictionaryLanguage, String> getShortForms(@Nonnull OWLEntity entity,
-                                                           @Nonnull List<DictionaryLanguage> languages);
 }
