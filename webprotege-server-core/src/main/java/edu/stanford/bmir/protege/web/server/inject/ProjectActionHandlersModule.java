@@ -20,14 +20,15 @@ import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
 import edu.stanford.bmir.protege.web.server.entity.GetDeprecatedEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.MergeEntitiesActionHandler;
-import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
-import edu.stanford.bmir.protege.web.server.form.SetFormDataActionHandler;
+import edu.stanford.bmir.protege.web.server.form.*;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsPageContainingIndividualActionHandler;
 import edu.stanford.bmir.protege.web.server.issues.*;
+import edu.stanford.bmir.protege.web.server.lang.GetProjectLangTagsActionHandler;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityHtmlRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.match.GetMatchingEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
@@ -57,8 +58,6 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
-import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
-import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
@@ -598,8 +597,18 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
+    public ProjectActionHandler providesSetEntityFormDataActionHandler(SetEntityFormsDataActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
     public ProjectActionHandler providesGetUserProjectEntityGraphCriteriaActionHandler(
             GetUserProjectEntityGraphCriteriaActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesGetEntityFormActionHandler(GetEntityFormActionHandler handler) {
         return handler;
     }
 
@@ -610,7 +619,52 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
+    public ProjectActionHandler providesGetProjectFormDescriptorsActionHandler(GetProjectFormDescriptorsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesSetProjectFormDescriptorsActionHandler(SetProjectFormDescriptorsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
     public ProjectActionHandler provideSetEntityGraphActiveFiltersActionHandler(SetEntityGraphActiveFiltersActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityFormDescriptorActionHandler(GetEntityFormDescriptorActionHandler actionHandler) {
+        return actionHandler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideSetEntityFormDescriptorActionHandler(SetEntityFormDescriptorActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetFreshFormIdActionHandler(GetFreshFormIdActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityHtmlRenderingActionHandler(GetEntityHtmlRenderingActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideCopyFormDescriptorsFromProjectActionHandler(CopyFormDescriptorsFromProjectActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideDeleteFormActionHandler(DeleteFormActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetProjectLangTagsActionHandler(GetProjectLangTagsActionHandler handler) {
         return handler;
     }
 }

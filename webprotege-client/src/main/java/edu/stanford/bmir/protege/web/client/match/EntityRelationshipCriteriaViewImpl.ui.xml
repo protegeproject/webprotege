@@ -26,12 +26,6 @@
             padding-right: 5px;
         }
 
-        .valueCriteriaEditor {
-            display:        flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
         .valueMatchCriteria {
             padding-top:    2px;
             padding-bottom: 2px;
@@ -44,14 +38,7 @@
                                        placeholder="Enter property name"  addStyleNames="{style.propertyField}"/>
         <g:HTMLPanel addStyleNames="{style.valueCriteria}">
             <g:InlineLabel text="that " addStyleNames="{style.prefixLabel} {wp.style.formLabel}"/>
-            <g:HTMLPanel addStyleNames="{style.valueCriteriaEditor}">
-                <g:ListBox visibleItemCount="1" ui:field="valueMatchTypeSelector">
-                    <g:item value="ANY_VALUE">has any value</g:item>
-                    <g:item value="SPECIFIC_VALUE">has a value equal to</g:item>
-                    <g:item value="VALUE_THAT_MATCHES">has a value that</g:item>
-                </g:ListBox>
                 <g:SimplePanel ui:field="valueMatchCriteriaContainer" addStyleNames="{style.valueMatchCriteria}"/>
-            </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

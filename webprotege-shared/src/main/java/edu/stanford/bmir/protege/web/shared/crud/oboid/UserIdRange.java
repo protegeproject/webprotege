@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
-import com.google.common.base.MoreObjects;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -11,25 +15,9 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 30/07/2013
  */
-public class UserIdRange implements Serializable {
-
-    private UserId userId;
-
-    private long start;
-
-    private long end;
-
-    /**
-     * For serialization purposes only
-     */
-    private UserIdRange() {
-    }
-
-    public UserIdRange(UserId userId, long start, long end) {
-        this.userId = userId;
-        this.start = start;
-        this.end = end;
-    }
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class UserIdRange implements Serializable {
 
     public static long getDefaultEnd() {
         return Long.MAX_VALUE;
@@ -39,24 +27,18 @@ public class UserIdRange implements Serializable {
         return 0;
     }
 
-    public UserId getUserId() {
-        return userId;
+    @Nonnull
+    @JsonCreator
+    public static UserIdRange get(@JsonProperty("userId") @Nonnull UserId userId,
+                                  @JsonProperty("start") long start,
+                                  @JsonProperty("end") long end) {
+        return new AutoValue_UserIdRange(userId, start, end);
     }
 
-    public long getStart() {
-        return start;
-    }
+    @Nonnull
+    public abstract UserId getUserId();
 
-    public long getEnd() {
-        return end;
-    }
+    public abstract long getStart();
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper("UserIdRange")
-                          .add("userId", userId)
-                          .add("start", start)
-                          .add("end", end)
-                          .toString();
-    }
+    public abstract long getEnd();
 }

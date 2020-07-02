@@ -1,16 +1,27 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
+import com.google.common.collect.ImmutableList;
+import dagger.BindsInstance;
+import dagger.Component;
 import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataComponent;
+import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataDtoBuilder;
+import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataModule;
+import edu.stanford.bmir.protege.web.server.form.FormPageRequestIndex;
 import edu.stanford.bmir.protege.web.server.index.IndexModule;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.OntologyStoreModule;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
@@ -37,5 +48,8 @@ public interface ProjectComponent {
     ProjectActionHandlerRegistry getActionHandlerRegistry();
 
     RevisionManager getRevisionManager();
+
+    EntityFrameFormDataComponent getEntityFrameFormDataComponentBuilder(EntityFrameFormDataModule module);
+
 }
 

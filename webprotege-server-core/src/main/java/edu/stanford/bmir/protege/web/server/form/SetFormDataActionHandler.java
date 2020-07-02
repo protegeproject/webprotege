@@ -4,10 +4,10 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataResult;
+import org.semanticweb.owlapi.model.OWLEntityProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -22,11 +22,21 @@ public class SetFormDataActionHandler extends AbstractProjectActionHandler<SetFo
     @Nonnull
     private final CollectionItemDataRepository repository;
 
+    @Nonnull
+    private final OWLEntityProvider entityProvider;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
     public SetFormDataActionHandler(@Nonnull AccessManager accessManager,
-                                    @Nonnull CollectionItemDataRepository repository) {
+                                    @Nonnull CollectionItemDataRepository repository,
+                                    @Nonnull OWLEntityProvider entityProvider,
+                                    @Nonnull RenderingManager renderingManager) {
         super(accessManager);
         this.repository = repository;
+        this.entityProvider = entityProvider;
+        this.renderingManager = renderingManager;
     }
 
     @Nonnull
@@ -38,21 +48,23 @@ public class SetFormDataActionHandler extends AbstractProjectActionHandler<SetFo
     @Nonnull
     @Override
     public SetFormDataResult execute(@Nonnull SetFormDataAction action, @Nonnull ExecutionContext executionContext) {
-        FormData formData = action.getFormData();
-        CollectionItemData data = null;
-        if (formData.isEmpty()) {
-            data = new CollectionItemData(
-                    action.getCollectionId(),
-                    action.getElementId());
-        }
-        else {
-            data = new CollectionItemData(
-                    action.getCollectionId(),
-                    action.getElementId(),
-                    formData);
 
-        }
-        repository.save(data);
+
+//        CollectionItemData data = null;
+//        if (formData.isEmpty()) {
+//            data = new CollectionItemData(
+//                    action.getCollectionId(),
+//                    action.getElementId());
+//        }
+//        else {
+//            data = new CollectionItemData(
+//                    action.getCollectionId(),
+//                    action.getElementId(),
+//                    formData);
+//
+//        }
+//        repository.save(data);
         return new SetFormDataResult();
     }
+
 }

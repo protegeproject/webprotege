@@ -1,0 +1,42 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .main {
+            width: 100%;
+        }
+        .image {
+            max-height: 50px;
+            width: auto;
+            cursor: pointer;
+        }
+        .focusPanel {
+            border: 1px solid transparent;
+        }
+        .placeHolder {
+            color: #c0c0c0;
+            border: 2px dashed #d0d0d0;
+            border-radius: 12px;
+            margin: 2px;
+            width: auto;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            text-align: center;
+            box-sizing: border-box;
+            cursor: pointer;
+            font-weight: normal;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}" ui:field="container">
+        <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
+            <g:HTMLPanel>
+                <div style="display: flex; align-items: center;">
+                    <g:Label ui:field="placeHolder" text="Drop images here or click to set image"
+                             addStyleNames="{style.placeHolder}"/>
+                </div>
+                <g:Image ui:field="imageField" addStyleNames="{style.image}"/>
+            </g:HTMLPanel>
+        </g:FocusPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

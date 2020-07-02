@@ -7,9 +7,13 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
+import java.io.DataOutput;
 import java.io.Serializable;
+
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,6 +36,15 @@ public abstract class DataPropertyFrame implements EntityFrame<OWLDataPropertyDa
                                                domains,
                                                ranges,
                                                functional);
+    }
+
+    @Nonnull
+    public static DataPropertyFrame empty(@Nonnull OWLDataPropertyData subject) {
+        return get(subject,
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   ImmutableSet.of(),
+                   false);
     }
 
     @Override
@@ -61,5 +74,15 @@ public abstract class DataPropertyFrame implements EntityFrame<OWLDataPropertyDa
     @Override
     public ImmutableList<PropertyValue> getLogicalPropertyValues() {
         return getPropertyValueList().getLogicalPropertyValues();
+    }
+
+    @Nonnull
+    @Override
+    public PlainDataPropertyFrame toPlainFrame() {
+        return PlainDataPropertyFrame.get(getSubject().getEntity(),
+                                          getAnnotationPropertyValues().stream().map(PropertyAnnotationValue::toPlainPropertyValue).collect(toImmutableSet()),
+                                          getDomains().stream().map(OWLClassData::getEntity).collect(toImmutableSet()),
+                                          getRanges().stream().map(OWLDatatypeData::getEntity).collect(toImmutableSet()),
+                                          isFunctional());
     }
 }

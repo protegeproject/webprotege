@@ -55,9 +55,14 @@ public class TokenFieldPresenter<T> {
         this.tokensChangedHandler = checkNotNull(tokensChangedHandler);
     }
 
+    public void setPlaceholder(String placeholder) {
+        view.setPlaceholder(checkNotNull(placeholder));
+    }
+
     public void clear() {
         view.clear();
         tokenPresenters.clear();
+        updatePlaceholder();
     }
 
     public void setAddTokenPrompt(@Nonnull AddTokenPrompt<T> addTokenPrompt) {
@@ -82,11 +87,17 @@ public class TokenFieldPresenter<T> {
         });
         tokenPresenters.add(tokenPresenter);
         view.add(tokenPresenter.getView());
+        updatePlaceholder();
     }
 
     private void handleAddToken(T tokenObject, String label) {
         addToken(tokenObject, label);
         tokensChangedHandler.handleTokensChanged(getTokenObjects());
+        updatePlaceholder();
+    }
+
+    private void updatePlaceholder() {
+        view.setPlaceholderVisible(getTokenObjects().isEmpty());
     }
 
 

@@ -1,0 +1,46 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="formsMsg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            position:       absolute;
+            top:            0;
+            left:           0;
+            right:          0;
+            bottom:         0;
+            box-sizing: border-box;
+        }
+        .headerLabels {
+            display: flex;
+            flex-direction: row;
+            padding: 0.8em;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+        .viewport {
+            min-height: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
+            position: relative;
+        }
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-items: stretch;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:SimplePanel ui:field="selectorContainer" addStyleNames="{style.headerLabels} {wp.style.formTabBar}"/>
+        <g:HTMLPanel addStyleNames="{style.viewport}">
+            <g:FlowPanel ui:field="container" addStyleNames="{style.container}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

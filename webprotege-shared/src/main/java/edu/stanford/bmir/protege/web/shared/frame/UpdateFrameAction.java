@@ -6,17 +6,19 @@ import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public abstract class UpdateFrameAction<F extends Frame<S>, S extends OWLEntityData> extends AbstractHasProjectAction<Result> implements UpdateObjectAction<F> {
+public abstract class UpdateFrameAction extends AbstractHasProjectAction<Result> {
 
-    private F from;
+    private PlainEntityFrame from;
 
-    private F to;
+    private PlainEntityFrame to;
 
     /**
      * For serialization purposes only
@@ -24,19 +26,17 @@ public abstract class UpdateFrameAction<F extends Frame<S>, S extends OWLEntityD
     protected UpdateFrameAction() {
     }
 
-    protected UpdateFrameAction(ProjectId projectId, F from, F to) {
+    protected UpdateFrameAction(ProjectId projectId, PlainEntityFrame from, PlainEntityFrame to) {
         super(projectId);
-        this.from = from;
-        this.to = to;
+        this.from = checkNotNull(from);
+        this.to = checkNotNull(to);
     }
 
-    @Override
-    public F getFrom() {
+    public PlainEntityFrame getFrom() {
         return from;
     }
 
-    @Override
-    public F getTo() {
+    public PlainEntityFrame getTo() {
         return to;
     }
 }

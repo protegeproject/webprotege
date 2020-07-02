@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.list;
 
 import com.google.common.base.Objects;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -12,6 +13,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 
 import javax.annotation.Nonnull;
@@ -31,7 +33,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  * Stanford Center for Biomedical Informatics Research
  * 7 Aug 2017
  */
-public class ListBox<K, E> extends Composite implements HasSelectionHandlers<List<E>>, HasClickHandlers, HasDoubleClickHandlers {
+public class ListBox<K, E> extends Composite implements HasSelectionHandlers<List<E>>, HasClickHandlers, HasDoubleClickHandlers, HasRequestFocus {
 
     interface ListBoxUiBinder extends UiBinder<HTMLPanel, ListBox> {
 
@@ -269,6 +271,12 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
         }
     }
 
+    @Override
+    public void requestFocus() {
+        Scheduler.get().scheduleDeferred(() -> {
+            focusPanel.setFocus(true);
+        });
+    }
 
     public static class SelectionInterval {
 

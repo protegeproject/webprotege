@@ -38,6 +38,7 @@ public class OWLLiteralDeserializer extends StdDeserializer<OWLLiteral> {
         IRI iri = null;
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String fieldname = jsonParser.getCurrentName();
+            System.out.println(fieldname);
             if ("lang".equals(fieldname)) {
                 jsonParser.nextToken();
                 lang = jsonParser.readValueAs(String.class);
@@ -49,6 +50,9 @@ public class OWLLiteralDeserializer extends StdDeserializer<OWLLiteral> {
             else if("type".equals(fieldname)) {
                 jsonParser.nextToken();
                 iri = jsonParser.readValueAs(IRI.class);
+            }
+            if(fieldname == null) {
+                break;
             }
         }
         if(value == null) {

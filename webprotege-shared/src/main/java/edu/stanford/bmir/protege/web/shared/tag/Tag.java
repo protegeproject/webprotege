@@ -16,8 +16,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static edu.stanford.bmir.protege.web.shared.DeserializationUtil.nonNull;
 
 /**
  * Matthew Horridge
@@ -73,7 +75,7 @@ public abstract class Tag implements IsSerializable {
         else {
             rootCriteria = ImmutableList.of();
         }
-        return new AutoValue_Tag(tagId, projectId, label, description, color, backgroundColor, rootCriteria);
+        return new AutoValue_Tag(tagId, projectId, nonNull(label), nonNull(description), color, backgroundColor, rootCriteria);
     }
 
     /**

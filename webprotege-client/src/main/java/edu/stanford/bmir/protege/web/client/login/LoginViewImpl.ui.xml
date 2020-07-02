@@ -65,7 +65,7 @@
     </ui:style>
 
 
-    <g:HTMLPanel addStyleNames="{style.main} {wp.login.login}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.login.login} {wp.style.panelFilled}">
         <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
                   addStyleNames="{style.signUp} {style.wp-login__signup-button} {wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.alternateButton}"/>
 

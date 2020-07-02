@@ -32,14 +32,19 @@ public class DictionaryManager {
     private final MultiLingualDictionary dictionary;
 
     @Nonnull
+    private MultilingualDictionaryUpdater updatableDictionary;
+
+    @Nonnull
     private final BuiltInShortFormDictionary builtInShortFormDictionary;
 
     @Inject
     public DictionaryManager(@Nonnull LanguageManager languageManager,
                              @Nonnull MultiLingualDictionary dictionary,
+                             @Nonnull MultilingualDictionaryUpdater updatableDictionary,
                              @Nonnull BuiltInShortFormDictionary builtInShortFormDictionary) {
         this.languageManager = checkNotNull(languageManager);
         this.dictionary = checkNotNull(dictionary);
+        this.updatableDictionary = updatableDictionary;
         this.builtInShortFormDictionary = checkNotNull(builtInShortFormDictionary);
     }
 
@@ -110,8 +115,8 @@ public class DictionaryManager {
     }
 
     public void update(@Nonnull Collection<OWLEntity> entities) {
-        dictionary.update(entities,
-                          languageManager.getLanguages());
+        updatableDictionary.update(entities,
+                                   languageManager.getLanguages());
     }
 
     @Nonnull
@@ -120,6 +125,6 @@ public class DictionaryManager {
         if(shortForm != null) {
             return ImmutableMap.of(DictionaryLanguage.localName(), shortForm);
         }
-        return dictionary.getShortForms(entity, languageManager.getActiveLanguages());
+        return dictionary.getShortForms(entity, languageManager.getLanguages());
     }
 }

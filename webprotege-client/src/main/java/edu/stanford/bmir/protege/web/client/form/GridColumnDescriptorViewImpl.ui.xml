@@ -1,0 +1,35 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
+    <ui:style>
+        .options {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <g:Label text="Column header" addStyleNames="{wp.style.formLabel}"/>
+            <form:LanguageMapEditor ui:field="labelField"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <g:Label text="Binding" addStyleNames="{wp.style.formLabel}"/>
+            <g:SimplePanel ui:field="bindingViewContainer"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroupRow} {style.options}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label text="Optionality" addStyleNames="{wp.style.formLabel}"/>
+                <g:RadioButton name="col-optionality-{counter.getValue}" text="Required" ui:field="requiredRadio"/>
+                <g:RadioButton name="col-optionality-{counter.getValue}" text="Optional" ui:field="optionalRadio"/>
+            </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label text="Repeatability" addStyleNames="{wp.style.formLabel}"/>
+                <form:RepeatabilityViewImpl ui:field="repeatabilityView"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+        <g:SimplePanel ui:field="fieldDescriptorChooserContainer"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

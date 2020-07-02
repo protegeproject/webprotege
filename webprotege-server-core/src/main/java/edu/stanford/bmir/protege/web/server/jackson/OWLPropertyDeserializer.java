@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLProperty;
@@ -13,33 +12,37 @@ import org.semanticweb.owlapi.model.OWLProperty;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-12-04
  */
-public class OWLPropertyDeserializer extends StdDeserializer<OWLProperty> {
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
+public class OWLPropertyDeserializer<P extends OWLProperty> extends StdDeserializer<P> {
 
     @Nonnull
     private final OWLEntityDeserializer deserializer;
 
-    public OWLPropertyDeserializer(@Nonnull OWLDataFactory dataFactory) {
+    @Nonnull
+    private final Class<P> cls;
+
+    public OWLPropertyDeserializer(@Nonnull OWLDataFactory dataFactory,
+                                   @Nonnull Class<P> cls) {
         super(OWLProperty.class);
-        this.dataFactory = dataFactory;
-        deserializer = new OWLEntityDeserializer(dataFactory);
+        deserializer = new OWLEntityDeserializer(dataFactory, cls);
+        this.cls = checkNotNull(cls);
     }
 
     @Override
-    public OWLProperty deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public P deserialize(JsonParser jsonParser,
+                                   DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         OWLEntity entity = deserializer.deserialize(jsonParser, deserializationContext);
-        if(!entity.isOWLObjectProperty() && !entity.isOWLDataProperty() && !entity.isOWLAnnotationProperty()) {
+        if(!(cls.isInstance(entity))) {
             throw new JsonParseException(jsonParser,
-                                         "Expected an owl:Class but found an "
+                                         "Expected " + cls.getSimpleName() + " but found "
                                                  + entity.getEntityType().getPrefixedName());
         }
-        return (OWLProperty) entity;
+        return cls.cast(entity);
     }
 }

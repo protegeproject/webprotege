@@ -212,6 +212,11 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
             public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria) {
                 return null;
             }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(CompositeLiteralCriteria compositeLiteralCriteria) {
+                return null;
+            }
         });
     }
 }

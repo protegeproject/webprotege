@@ -62,6 +62,10 @@ public class PopupMenuContainer extends Composite {
         this.dismissHandler = checkNotNull(dismissHandler);
     }
 
+    public boolean isEmpty() {
+        return holder.getWidgetCount() == 0;
+    }
+
     /**
      * Set the selected index.  Styles will be updated to reflect the selected index.
      * @param selectedIndex The selected index.

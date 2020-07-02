@@ -73,7 +73,7 @@ public class EntityCrudKitRegistry {
     @SuppressWarnings("unchecked")
     public <S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getHandler(EntityCrudKitId id) {
         EntityCrudKit<S> kit = getKit(id);
-        return getHandler(new EntityCrudKitSettings<>(kit.getDefaultPrefixSettings(), kit.getDefaultSuffixSettings()));
+        return getHandler(EntityCrudKitSettings.get(kit.getDefaultPrefixSettings(), kit.getDefaultSuffixSettings()));
     }
 
     public <H extends EntityCrudKitHandler<S, C>, S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getHandler(EntityCrudKitSettings<S> settings) {

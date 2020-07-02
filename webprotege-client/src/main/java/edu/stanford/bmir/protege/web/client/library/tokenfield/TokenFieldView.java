@@ -18,6 +18,10 @@ public interface TokenFieldView extends IsWidget {
 
     void clear();
 
+    void setPlaceholder(String placeholder);
+
+    void setPlaceholderVisible(boolean visible);
+
     interface AddTokenHandler {
         void handleAddToken(ClickEvent e);
     }

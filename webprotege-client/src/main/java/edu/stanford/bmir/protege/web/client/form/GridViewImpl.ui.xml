@@ -1,0 +1,27 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor"
+             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .bodyContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .headerContainer {
+            position: sticky;
+            position: -webkit-sticky;
+            top: -1px;
+            z-index: 2;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{wp.style.formGrid}">
+        <g:HTMLPanel addStyleNames="{wp.style.panelFilled}">
+            <pagination:PaginatorView ui:field="paginatorView" visible="false"/>
+        </g:HTMLPanel>
+        <g:SimplePanel ui:field="headerContainer" addStyleNames="{style.headerContainer}"/>
+        <g:HTMLPanel ui:field="bodyContainer" addStyleNames="{style.bodyContainer}"/>
+        <g:Button ui:field="addRowButton" addStyleNames="{wp.buttons.addButton}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -2,15 +2,13 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         .main {
-            padding: 3px;
+            padding: 1x;
+            padding-right: 5px;
             padding-left: 10px;
             white-space: nowrap;
         }
         .main:hover {
             background-color: literal("var(--item--hover--background-color)");
-        }
-        .checkBox {
-            padding: 4px;
         }
         .checkBox input {
             padding-right: 4px;

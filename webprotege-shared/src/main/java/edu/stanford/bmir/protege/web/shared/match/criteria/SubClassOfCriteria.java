@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("SubClassOf")
-public abstract class SubClassOfCriteria implements EntityMatchCriteria {
+public abstract class SubClassOfCriteria implements EntityMatchCriteria, HierarchyPositionCriteria {
 
     private static final String TARGET = "target";
 
@@ -39,6 +39,11 @@ public abstract class SubClassOfCriteria implements EntityMatchCriteria {
 
     @Override
     public <R> R accept(RootCriteriaVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public <R> R accept(@Nonnull HierarchyPositionCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
 }

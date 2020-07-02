@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
+    <g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:RadioButton name="source-type-{counter.getValue}" ui:field="fixedRadioButton" text="Fixed"/>
+            <g:RadioButton name="source-type-{counter.getValue}" ui:field="dynamicRadioButton" text="Dynamic"/>
+        </g:HTMLPanel>
+        <g:SimplePanel ui:field="descriptorContainer"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

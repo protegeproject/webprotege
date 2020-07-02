@@ -79,7 +79,7 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
     }
 
     private void parseEntityDataIRIOrLiteral(final String trimmedContent, final java.util.Optional<String> lang, final Set<EntityType<?>> allowedEntityTypes, final Set<PrimitiveType> allowedTypes, final PrimitiveDataParserCallback callback) {
-        entityDataLookupHandler.lookupEntity(trimmedContent, allowedEntityTypes, new AsyncCallback<java.util.Optional<OWLEntityData>>() {
+        entityDataLookupHandler.lookupEntity(trimmedContent, allowedEntityTypes, null, new AsyncCallback<java.util.Optional<OWLEntityData>>() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.parsingFailure();

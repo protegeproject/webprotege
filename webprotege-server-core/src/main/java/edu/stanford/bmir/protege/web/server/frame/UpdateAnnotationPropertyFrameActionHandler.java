@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PlainEntityFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameAction;
 
 import javax.annotation.Nonnull;
@@ -20,7 +21,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 24/04/2013
  */
-public class UpdateAnnotationPropertyFrameActionHandler extends AbstractUpdateFrameHandler<UpdateAnnotationPropertyFrameAction, AnnotationPropertyFrame, OWLAnnotationPropertyData> {
+public class UpdateAnnotationPropertyFrameActionHandler extends AbstractUpdateFrameHandler<UpdateAnnotationPropertyFrameAction, AnnotationPropertyFrame> {
 
     @Inject
     public UpdateAnnotationPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
@@ -31,7 +32,7 @@ public class UpdateAnnotationPropertyFrameActionHandler extends AbstractUpdateFr
     }
 
     @Override
-    protected Result createResponse(AnnotationPropertyFrame to, EventList<ProjectEvent<?>> events) {
+    protected Result createResponse(PlainEntityFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
     }
 

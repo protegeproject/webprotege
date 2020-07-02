@@ -6,15 +6,15 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityShortFormsParser;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static org.semanticweb.owlapi.model.EntityType.*;
 
 /**
@@ -107,7 +107,11 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
                 freshEntity = DataFactory.getOWLEntity(entityType, expanded);
             }
             else {
-                freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText, Optional.of(langTag.trim()));
+                var freshEntityIri = FreshEntityIri.get(browserText,
+                                   langTag.trim(),
+                                   "",
+                                   parents.stream().map(OWLEntity::getIRI).collect(toImmutableSet()));
+                freshEntity = DataFactory.getOWLEntity(entityType, freshEntityIri.getIri());
                 var ontologyId = defaultOntologyIdManager.getDefaultOntologyId();
                 builder.add(AddAxiomChange.of(ontologyId, dataFactory.getOWLDeclarationAxiom(freshEntity)));
             }

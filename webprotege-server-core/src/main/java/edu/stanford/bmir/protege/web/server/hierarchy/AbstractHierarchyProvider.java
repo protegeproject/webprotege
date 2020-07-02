@@ -4,10 +4,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -56,6 +53,27 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
                 getAncestors(results, parent);
             }
         }
+    }
+
+    @Override
+    public boolean isAncestor(N descendant, N ancestor) {
+        Set<N> processed = new HashSet<>();
+        Deque<N> processingQueue = new ArrayDeque<>();
+        processingQueue.push(descendant);
+        while(!processingQueue.isEmpty()) {
+            var currentNode = processingQueue.pop();
+            var parents = getParents(currentNode);
+            for(var parent : parents) {
+                if(ancestor.equals(parent)) {
+                    return true;
+                }
+                if(!processed.contains(parent)) {
+                    processed.add(parent);
+                    processingQueue.add(parent);
+                }
+            }
+        }
+        return false;
     }
 
 

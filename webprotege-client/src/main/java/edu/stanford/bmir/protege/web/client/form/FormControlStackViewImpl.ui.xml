@@ -1,0 +1,24 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .paginator {
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: auto;
+        }
+        .container {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:SimplePanel ui:field="paginatorContainer" addStyleNames="{style.paginator}"/>
+        <g:SimplePanel ui:field="container" addStyleNames="{style.container}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

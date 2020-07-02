@@ -46,7 +46,7 @@ public class CollectionViewPlaceTokenizer implements WebProtegePlaceTokenizer<Co
         MatchResult result = regExp.exec(token);
         ProjectId projectId = ProjectId.get(result.getGroup(1));
         CollectionId collectionId = CollectionId.get(result.getGroup(2));
-        FormId formId = new FormId(result.getGroup(3));
+        FormId formId = FormId.get(result.getGroup(3));
         String selectionString = result.getGroup(5);
         GWT.log("[CollectionViewPlaceTokenizer] Selection string: " + selectionString);
         Optional<CollectionItem> selection = Optional.ofNullable(selectionString).map(CollectionItem::get);

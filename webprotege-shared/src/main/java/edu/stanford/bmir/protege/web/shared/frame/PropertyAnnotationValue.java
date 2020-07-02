@@ -69,25 +69,19 @@ public abstract class PropertyAnnotationValue extends PropertyValue {
         return PropertyAnnotationValue.get(getProperty(), getValue(), state);
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Nonnull
+    @Override
+    public PlainPropertyAnnotationValue toPlainPropertyValue() {
+        return PlainPropertyAnnotationValue.get(
+                getProperty().getEntity(),
+                getValue().asAnnotationValue().get(),
+                getState()
+        );
+    }
+
     @Override
     public <R, E extends Throwable> R accept(PropertyValueVisitor<R, E> visitor) throws E {
         return visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return "PropertyAnnotationValue".hashCode() + getProperty().hashCode() + getValue().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof PropertyAnnotationValue)) {
-            return false;
-        }
-        PropertyAnnotationValue other = (PropertyAnnotationValue) obj;
-        return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
     }
 }

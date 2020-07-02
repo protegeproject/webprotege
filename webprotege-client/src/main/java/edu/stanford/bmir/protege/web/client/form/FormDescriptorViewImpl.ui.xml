@@ -1,0 +1,27 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .formElementsContainer {
+            margin-top: 1.5em;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:Label ui:field="numberField"/>
+        <g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+                <g:Label text="Form Label" addStyleNames="{wp.style.formLabel}"/>
+                <form:LanguageMapEditor ui:field="labelField"/>
+                <g:HTMLPanel addStyleNames="{wp.style.formHelpText} {wp.style.formGroupNarrow}">
+                    This label will appear on the form view for an entity that is selected and matched with this form.
+                </g:HTMLPanel>
+            </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label text="Form Fields" addStyleNames="{wp.style.formLabel}"/>
+                <g:SimplePanel ui:field="elementDescriptorListContainer" addStyleNames="{style.formElementsContainer}"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

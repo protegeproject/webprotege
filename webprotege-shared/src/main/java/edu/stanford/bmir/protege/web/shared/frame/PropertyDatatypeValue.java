@@ -58,4 +58,12 @@ public abstract class PropertyDatatypeValue extends DataPropertyValue {
     protected PropertyValue duplicateWithState(State state) {
         return PropertyDatatypeValue.get(getProperty(), getValue(), state);
     }
+
+    @Nonnull
+    @Override
+    public PlainPropertyDatatypeValue toPlainPropertyValue() {
+        return PlainPropertyDatatypeValue.get(getProperty().getEntity(),
+                                              getValue().getEntity(),
+                                              getState());
+    }
 }

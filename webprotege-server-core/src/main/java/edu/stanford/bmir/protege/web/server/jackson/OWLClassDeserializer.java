@@ -18,21 +18,15 @@ import java.io.IOException;
  */
 public class OWLClassDeserializer extends StdDeserializer<OWLClass> {
 
-    private OWLEntityDeserializer deserializer;
+    private OWLEntityDeserializer<OWLClass> deserializer;
 
     public OWLClassDeserializer(OWLDataFactory dataFactory) {
         super(OWLClass.class);
-        deserializer = new OWLEntityDeserializer(dataFactory);
+        deserializer = new OWLEntityDeserializer<>(dataFactory, OWLClass.class);
     }
 
     @Override
     public OWLClass deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        OWLEntity entity = deserializer.deserialize(jsonParser, deserializationContext);
-        if(!entity.isOWLClass()) {
-            throw new JsonParseException(jsonParser,
-                                         "Expected an owl:Class but found an "
-                                                 + entity.getEntityType().getPrefixedName());
-        }
-        return (OWLClass) entity;
+        return deserializer.deserialize(jsonParser, deserializationContext);
     }
 }

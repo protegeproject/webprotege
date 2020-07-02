@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -54,7 +55,7 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
     }
 
 
-    public FormData getFormData() {
+    public FormData getFormValue() {
         return formData;
     }
 

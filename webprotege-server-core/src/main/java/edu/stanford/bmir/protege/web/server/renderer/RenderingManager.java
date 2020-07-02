@@ -87,7 +87,6 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
     public OWLEntityData getRendering(OWLEntity entity) {
         return DataFactory.getOWLEntityData(entity,
-                                            dictionaryManager.getShortForm(entity),
                                             dictionaryManager.getShortForms(entity));
     }
 
@@ -104,27 +103,27 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLClassData getClassData(OWLClass cls) {
-        return OWLClassData.get(cls, dictionaryManager.getShortForm(cls), dictionaryManager.getShortForms(cls));
+        return OWLClassData.get(cls, dictionaryManager.getShortForms(cls));
     }
 
     public OWLObjectPropertyData getObjectPropertyData(OWLObjectProperty property) {
-        return OWLObjectPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
+        return OWLObjectPropertyData.get(property, dictionaryManager.getShortForms(property));
     }
 
     public OWLDataPropertyData getDataPropertyData(OWLDataProperty property) {
-        return OWLDataPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
+        return OWLDataPropertyData.get(property, dictionaryManager.getShortForms(property));
     }
 
     public OWLAnnotationPropertyData getAnnotationPropertyData(OWLAnnotationProperty property) {
-        return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
+        return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForms(property));
     }
 
     public OWLNamedIndividualData getIndividualData(OWLNamedIndividual individual) {
-        return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForm(individual), dictionaryManager.getShortForms(individual));
+        return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForms(individual));
     }
 
     public OWLDatatypeData getDatatypeData(OWLDatatype datatype) {
-        return OWLDatatypeData.get(datatype, dictionaryManager.getShortForm(datatype), dictionaryManager.getShortForms(datatype));
+        return OWLDatatypeData.get(datatype, dictionaryManager.getShortForms(datatype));
     }
 
     public void dispose() {

@@ -5,13 +5,15 @@
             display: inline-block;
             width: 12px;
             cursor: pointer;
-            height: 12px;
+            height: 10px;
+            position: relative;
         }
 
         .container {
         }
 
         .container svg {
+            position: absolute;
             top: 0;
             left: 0;
         }

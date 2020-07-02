@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Matthew Horridge
@@ -19,13 +21,29 @@ import javax.annotation.Nonnull;
 public abstract class RelationshipValueMatchesCriteria implements RelationshipValueCriteria {
 
     @Nonnull
-    @JsonCreator
-    public static RelationshipValueMatchesCriteria get(@Nonnull @JsonProperty("matchCriteria") EntityMatchCriteria criteria) {
+    public static RelationshipValueMatchesCriteria get(@Nonnull @JsonProperty("criteria") CompositeRootCriteria criteria) {
         return new AutoValue_RelationshipValueMatchesCriteria(criteria);
     }
 
+    /**
+     * Support earlier serializations that just used to use an {@link EntityMatchCriteria}.
+     */
     @Nonnull
-    public abstract EntityMatchCriteria getMatchCriteria();
+    @JsonCreator
+    protected static RelationshipValueMatchesCriteria get(
+            @Nullable @JsonProperty("criteria") CompositeRootCriteria criteria,
+            @Nullable @JsonProperty("matchCriteria") EntityMatchCriteria entityMatchCriteria) {
+        if(entityMatchCriteria != null) {
+            return new AutoValue_RelationshipValueMatchesCriteria(CompositeRootCriteria.get(ImmutableList.of(entityMatchCriteria), MultiMatchType.ALL));
+        }
+        else {
+            return new AutoValue_RelationshipValueMatchesCriteria(criteria);
+        }
+    }
+
+    @JsonProperty("criteria")
+    @Nonnull
+    public abstract CompositeRootCriteria getMatchCriteria();
 
     @Override
     public <R> R accept(@Nonnull RelationshipValueCriteriaVisitor<R> visitor) {

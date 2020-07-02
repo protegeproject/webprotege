@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mongodb.client.MongoDatabase;
@@ -13,24 +14,20 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
-import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.uuid.UuidEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.events.*;
-import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
-import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
+import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
-import edu.stanford.bmir.protege.web.server.index.impl.*;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
-import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
-import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
+import edu.stanford.bmir.protege.web.server.match.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCacheFactory;
@@ -55,6 +52,8 @@ import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -100,6 +99,12 @@ public class ProjectModule {
     @Provides
     @ProjectSingleton
     public OWLEntityProvider providesOWLEntityProvider(OWLDataFactory dataFactory) {
+        return dataFactory;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public OWLEntityByTypeProvider provideOwlEntityByTypeProvider(OWLDataFactory dataFactory) {
         return dataFactory;
     }
 
@@ -443,6 +448,11 @@ public class ProjectModule {
     }
 
     @Provides
+    Comparator<PropertyValue> providePropertyValueComparator(PropertyValueComparator propertyValueComparator) {
+        return propertyValueComparator;
+    }
+
+    @Provides
     Comparator<OWLAxiom> providesAxiomComparator(AxiomComparatorImpl impl) {
         return impl;
     }
@@ -534,6 +544,11 @@ public class ProjectModule {
     }
 
     @Provides
+    MultilingualDictionaryUpdater provideUpdatableMultilingualDictionary(MultiLingualDictionaryImpl impl) {
+        return impl;
+    }
+
+    @Provides
     ShortFormCache provideShortFormCache() {
         return ShortFormCache.create();
     }
@@ -599,7 +614,7 @@ public class ProjectModule {
 
     @Provides
     @IntoSet
-    public EntityCrudKitPlugin<?, ?, ?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
+    public EntityCrudKitPlugin<?, ?, ?> provideUUIDPlugin(UuidEntityCrudKitPlugin plugin) {
         return plugin;
     }
 
@@ -619,8 +634,8 @@ public class ProjectModule {
     @Provides
     @ProjectSingleton
     public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
-            MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
-        return new ProjectEntityCrudKitSettingsRepository(database, converter);
+            MongoDatabase database, ObjectMapper objectMapper) {
+        return new ProjectEntityCrudKitSettingsRepository(database, objectMapper);
     }
 
     @Provides
@@ -674,5 +689,24 @@ public class ProjectModule {
         return IRIOrdinalProvider.withDefaultAnnotationPropertyOrdering();
     }
 
+    @Provides
+    FrameComponentRenderer provideFrameComponentRenderer(FrameComponentRendererImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    RelationshipMatcherFactory provideRelationshipMatcherFactory(MatcherFactory matcherFactory) {
+        return matcherFactory;
+    }
+
+    @Provides
+    HierarchyPositionMatcherFactory provideHierarchyPositionMatcherFactory(MatcherFactory matcherFactory) {
+        return matcherFactory;
+    }
+
+    @Provides
+    ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
+        return impl;
+    }
 }
 

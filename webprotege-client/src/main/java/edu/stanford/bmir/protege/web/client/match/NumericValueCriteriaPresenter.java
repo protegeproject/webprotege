@@ -49,4 +49,8 @@ public class NumericValueCriteriaPresenter implements CriteriaPresenter<NumericV
         view.setValue(criteria.getValue());
         view.setNumericPredicate(criteria.getPredicate());
     }
+
+    public void clear() {
+        view.clear();
+    }
 }

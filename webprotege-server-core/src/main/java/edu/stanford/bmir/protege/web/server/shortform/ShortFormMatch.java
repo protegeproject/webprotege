@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Objects;
 import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -17,7 +18,8 @@ import static java.util.Comparator.comparing;
  * Stanford Center for Biomedical Informatics Research
  * 6 Apr 2018
  */
-public class ShortFormMatch implements Comparable<ShortFormMatch> {
+@AutoValue
+public abstract class ShortFormMatch implements Comparable<ShortFormMatch> {
 
     private static final int NOT_FOUND = -1;
 
@@ -69,86 +71,27 @@ public class ShortFormMatch implements Comparable<ShortFormMatch> {
                                                .thenComparing(byEntity));
 
     @Nonnull
-    private final OWLEntity entity;
-
-    @Nonnull
-    private final String shortForm;
-
-    @Nonnull
-    private final DictionaryLanguage language;
-
-    private final int matchCount;
-
-    private final ImmutableIntArray matchPositions;
-
-    public ShortFormMatch(@Nonnull OWLEntity entity,
-                          @Nonnull String shortForm,
-                          @Nonnull DictionaryLanguage language,
-                          int matchCount,
-                          @Nonnull ImmutableIntArray matchPositions) {
-        this.entity = checkNotNull(entity);
-        this.shortForm = checkNotNull(shortForm);
-        this.language = checkNotNull(language);
-        this.matchCount = matchCount;
-        this.matchPositions = checkNotNull(matchPositions);
+    public static ShortFormMatch get(@Nonnull OWLEntity entity,
+                                     @Nonnull String shortForm,
+                                     @Nonnull DictionaryLanguage language,
+                                     int matchCount,
+                                     @Nonnull ImmutableIntArray matchPositions) {
+        return new AutoValue_ShortFormMatch(entity, shortForm, matchPositions, matchCount, language);
     }
 
     @Nonnull
-    public OWLEntity getEntity() {
-        return entity;
-    }
+    public abstract OWLEntity getEntity();
 
     @Nonnull
-    public String getShortForm() {
-        return shortForm;
-    }
+    public abstract String getShortForm();
 
     @Nonnull
-    public ImmutableIntArray getMatchPositions() {
-        return matchPositions;
-    }
+    public abstract ImmutableIntArray getMatchPositions();
 
-    public int getMatchCount() {
-        return matchCount;
-    }
+    public abstract int getMatchCount();
 
     @Nonnull
-    public DictionaryLanguage getLanguage() {
-        return language;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(entity, shortForm, language, matchCount, matchPositions);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ShortFormMatch)) {
-            return false;
-        }
-        ShortFormMatch other = (ShortFormMatch) obj;
-        return this.entity.equals(other.entity)
-                && this.shortForm.equals(other.shortForm)
-                && this.language.equals(other.language)
-                && this.matchCount == other.matchCount
-                && this.matchPositions.equals(other.matchPositions);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("ShortFormMatch")
-                .add("entity", entity)
-                .add("shortForm", shortForm)
-                .add("language", language)
-                .add("matchCount", matchCount)
-                .add("matchPositions", matchPositions)
-                .toString();
-    }
+    public abstract DictionaryLanguage getLanguage();
 
     @Override
     public int compareTo(@Nonnull ShortFormMatch other) {

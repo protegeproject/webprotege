@@ -1,0 +1,72 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="formsMsg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
+    <ui:style>
+        .container {
+            display:        flex;
+            flex-direction: column;
+            justify-items:  stretch;
+        }
+
+        .outer {
+            display:        flex;
+            flex-direction: column;
+            position:       absolute;
+            top:            0;
+            left:           0;
+            right:          0;
+            bottom:         0;
+        }
+
+        .headerBar {
+            margin:         0.2em;
+            flex-grow:      0;
+            flex-shrink:    0;
+            display:        flex;
+            flex-direction: row;
+            align-items:    start;
+            justify-content: space-between;
+            padding-bottom: 2px;
+            border-bottom: 1px solid literal("var(--separator--color)");
+        }
+
+        .container {
+            box-sizing: border-box;
+            flex-grow: 1;
+            flex-shrink: 1;
+            position: relative;
+        }
+
+        .btn {
+            margin-left: 0.7em;
+        }
+
+        .langTagFilterContainer {
+            justify-self: flex-start;
+        }
+
+        .buttonBar {
+            justify-self: flex-end;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.outer}">
+            <g:HTMLPanel addStyleNames="{style.headerBar}">
+                <g:HTMLPanel addStyleNames="{style.langTagFilterContainer}">
+                    <g:SimplePanel ui:field="langTagFilterContainer" addStyleNames="{style.langTagFilterContainer}"/>
+                </g:HTMLPanel>
+                <g:HTMLPanel addStyleNames="{style.buttonBar}">
+                    <g:Button ui:field="applyEditsButton" visible="false" text="{formsMsg.edits_Apply}"
+                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptButton}"/>
+                    <g:Button ui:field="cancelEditsButton" visible="false" text="{formsMsg.edits_Cancel}"
+                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
+                    <g:Button ui:field="editButton" visible="false" text="{formsMsg.edit}"
+                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+                </g:HTMLPanel>
+            </g:HTMLPanel>
+            <g:SimplePanel ui:field="formsStackContainer" addStyleNames="{style.container}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

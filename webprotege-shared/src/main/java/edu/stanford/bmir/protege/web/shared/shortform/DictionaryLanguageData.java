@@ -67,7 +67,7 @@ public abstract class DictionaryLanguageData {
             return "";
         }
         return WellKnownLabellingIris.get(propertyIri)
-                                     .map(l -> l.getPrefixedName())
+                                     .map(WellKnownLabellingIris::getPrefixedName)
                                      .orElse(propertyIri.toString());
     }
 
@@ -104,14 +104,16 @@ public abstract class DictionaryLanguageData {
     @JsonIgnore
     @Nonnull
     public Optional<OWLAnnotationPropertyData> getAnnotationPropertyData() {
-        if(getAnnotationPropertyIri() == null) {
+        IRI propertyIri = getAnnotationPropertyIri();
+        if(propertyIri == null) {
             return Optional.empty();
         }
         return Optional.of(
                 OWLAnnotationPropertyData.get(
-                        DataFactory.getOWLAnnotationProperty(getAnnotationPropertyIri()),
-                        getAnnotationPropertyBrowserText(),
-                        ImmutableMap.of()
+                        DataFactory.getOWLAnnotationProperty(propertyIri),
+                        ImmutableMap.of(
+                                createDictionaryLanguage(), getBrowserText(propertyIri)
+                        )
                 )
         );
     }

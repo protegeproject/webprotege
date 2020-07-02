@@ -1,0 +1,22 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="cb" type="edu.stanford.bmir.protege.web.client.form.input.CheckBoxResourceBundle"/>
+    <g:HTMLPanel addStyleNames="{cb.style.checkBox}">
+        <g:HTMLPanel ui:field="input" addStyleNames="{cb.style.checkBox__input}" width="16px" height="16px">
+            <svg width="14px" height="14px">
+                <rect class="wp-checkbox__input__box"
+                      x="1" y="1"
+                      width="12" height="12"
+                      rx="2" ry="2"/>
+                <path class="wp-checkbox__input__check-mark"
+                      d="M3.5 7
+                         L6 11
+                         L10.5 3.5"
+                      fill="none"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"/>
+            </svg>
+        </g:HTMLPanel>
+        <g:Label ui:field="label" addStyleNames="{cb.style.checkBox__label}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

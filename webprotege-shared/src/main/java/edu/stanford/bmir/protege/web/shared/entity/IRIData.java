@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 
 import javax.annotation.Nonnull;
@@ -67,6 +68,16 @@ public abstract class IRIData extends OWLPrimitiveData {
 
     @Override
     public Optional<OWLAnnotationValue> asAnnotationValue() {
+        return Optional.of(getObject());
+    }
+
+    @Override
+    public Optional<OWLEntity> asEntity() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<IRI> asIRI() {
         return Optional.of(getObject());
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -14,31 +15,47 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CompositeFieldDescriptorEntry implements Serializable, IsSerializable {
 
-    private FormElementId elementId;
-
     private FormFieldDescriptor descriptor;
+
+    private double flexBasis;
 
     private double flexGrow;
 
     private double flexShrink;
 
+
     private CompositeFieldDescriptorEntry() {
     }
 
-    public CompositeFieldDescriptorEntry(FormElementId elementId,
-                                         double flexGrow,
+    public CompositeFieldDescriptorEntry(double flexGrow,
                                          double flexShrink,
-                                         FormFieldDescriptor descriptor) {
-        this.elementId = checkNotNull(elementId);
+                                         FormFieldDescriptor descriptor, double flexBasis) {
         this.descriptor = checkNotNull(descriptor);
         this.flexGrow = flexGrow;
         this.flexShrink = flexShrink;
+        this.flexBasis = flexBasis;
     }
 
-    public FormElementId getElementId() {
-        return elementId;
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof CompositeFieldDescriptorEntry)) {
+            return false;
+        }
+        CompositeFieldDescriptorEntry other = (CompositeFieldDescriptorEntry) obj;
+        return this.descriptor.equals(other.descriptor)
+                && this.flexBasis == other.flexBasis
+                && this.flexGrow == other.flexGrow
+                && this.flexShrink == other.flexShrink;
     }
 
+    public double getBasis() {
+        return flexBasis;
+    }
+
+    @JsonUnwrapped
     public FormFieldDescriptor getDescriptor() {
         return descriptor;
     }
@@ -53,21 +70,6 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(elementId, descriptor, flexGrow, flexShrink);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof CompositeFieldDescriptorEntry)) {
-            return false;
-        }
-        CompositeFieldDescriptorEntry other = (CompositeFieldDescriptorEntry) obj;
-        return this.elementId.equals(other.elementId)
-                && this.descriptor.equals(other.descriptor)
-                && this.flexGrow == other.flexGrow
-                && this.flexShrink == other.flexShrink;
+        return Objects.hashCode(descriptor, flexBasis, flexGrow, flexShrink);
     }
 }

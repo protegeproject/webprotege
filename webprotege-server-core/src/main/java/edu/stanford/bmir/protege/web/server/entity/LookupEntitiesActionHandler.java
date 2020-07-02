@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
+import edu.stanford.bmir.protege.web.server.match.Matcher;
+import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
@@ -15,7 +17,6 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchType;
-import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
 import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -55,6 +56,9 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     @Nonnull
     private final LanguageManager languageManager;
 
+    @Nonnull
+    private final MatcherFactory matcherFactory;
+
     @Inject
     public LookupEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull ProjectId projectId,
@@ -62,7 +66,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
                                        @Nonnull RenderingManager renderingManager,
                                        @Nonnull EntityNodeRenderer entityNodeRenderer,
                                        @Nonnull DictionaryManager dictionaryManager,
-                                       @Nonnull LanguageManager languageManager) {
+                                       @Nonnull LanguageManager languageManager,
+                                       @Nonnull MatcherFactory matcherFactory) {
         super(accessManager);
         this.projectId = projectId;
         this.placeUrl = placeUrl;
@@ -70,6 +75,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
         this.entityNodeRenderer = entityNodeRenderer;
         this.dictionaryManager = dictionaryManager;
         this.languageManager = languageManager;
+        this.matcherFactory = matcherFactory;
     }
 
     @Nonnull
@@ -92,12 +98,14 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
 
 
     private List<EntityLookupResult> lookupEntities(final EntityLookupRequest entityLookupRequest) {
-        EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
+        Matcher<OWLEntity> matcher = entityLookupRequest.getEntityMatchCriteria()
+                                                        .map(matcherFactory::getMatcher).orElse(entity -> true);
         Set<OWLEntity> addedEntities = new HashSet<>();
         List<SearchString> searchStrings = SearchString.parseMultiWordSearchString(entityLookupRequest.getSearchString());
         return dictionaryManager.getShortFormsContaining(searchStrings,
                                                          entityLookupRequest.getSearchedEntityTypes(),
                                                          languageManager.getLanguages())
+                                .filter(sf -> matcher.matches(sf.getEntity()))
                                 // This is arbitrary and possibly leads to bad completion results.  We need to
                                 // see how things work in practice when users type in enough to get the right
                                 // result.
@@ -119,7 +127,6 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
                                             PrefixNameMatchType.NOT_IN_PREFIX_NAME
                                     );
                                     OWLEntityData ed = DataFactory.getOWLEntityData(match.getEntity(),
-                                                                                    match.getShortForm(),
                                                                                     dictionaryManager.getShortForms(match.getEntity()));
                                     return new OWLEntityDataMatch(match.getLanguage(), ed, result);
                                 })

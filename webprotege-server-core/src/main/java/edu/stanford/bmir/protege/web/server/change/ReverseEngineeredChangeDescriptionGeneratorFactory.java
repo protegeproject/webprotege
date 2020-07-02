@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -31,7 +33,7 @@ public class ReverseEngineeredChangeDescriptionGeneratorFactory {
         this.formatter = formatter;
     }
 
-    public <S extends OWLEntityData> ReverseEngineeredChangeDescriptionGenerator<S> get(String defaultDescription) {
+    public <S extends OWLEntity> ReverseEngineeredChangeDescriptionGenerator<S> get(String defaultDescription) {
         return new ReverseEngineeredChangeDescriptionGenerator<>(defaultDescription, changeMatchers, formatter);
     }
 }

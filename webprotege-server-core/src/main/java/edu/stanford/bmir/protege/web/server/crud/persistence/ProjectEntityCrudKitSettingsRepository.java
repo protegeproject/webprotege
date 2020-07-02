@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.persistence;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
@@ -12,7 +13,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter.withProjectId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,25 +32,25 @@ public class ProjectEntityCrudKitSettingsRepository {
     private final MongoCollection<Document> collection;
 
     @Nonnull
-    private final ProjectEntityCrudKitSettingsConverter converter;
+    private final ObjectMapper objectMapper;
 
     @Inject
     public ProjectEntityCrudKitSettingsRepository(@Nonnull MongoDatabase database,
-                                                  @Nonnull ProjectEntityCrudKitSettingsConverter converter) {
+                                                  @Nonnull ObjectMapper objectMapper) {
         this.collection = checkNotNull(database).getCollection(COLLECTION_NAME);
-        this.converter = checkNotNull(converter);
+        this.objectMapper = objectMapper;
     }
 
     @Nonnull
     public Optional<ProjectEntityCrudKitSettings> findOne(@Nonnull ProjectId projectId) {
-        return Optional.ofNullable(collection.find(withProjectId(projectId))
+        return Optional.ofNullable(collection.find(new Document("_id", projectId.getId()))
                                              .limit(1).first())
-                       .map(converter::fromDocument);
+                       .map(d -> objectMapper.convertValue(d, ProjectEntityCrudKitSettings.class));
     }
 
     public void save(@Nonnull ProjectEntityCrudKitSettings settings) {
-        collection.replaceOne(withProjectId(settings.getProjectId()),
-                              converter.toDocument(checkNotNull(settings)),
+        collection.replaceOne(new Document("_id", settings.getProjectId().getId()),
+                              objectMapper.convertValue(settings, Document.class),
                               new UpdateOptions().upsert(true));
     }
 }

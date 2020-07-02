@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -56,5 +57,15 @@ public abstract class PropertyClassValue extends ObjectPropertyValue {
     @Override
     protected PropertyValue duplicateWithState(State state) {
         return PropertyClassValue.get(getProperty(), getValue(), state);
+    }
+
+    @Nonnull
+    @Override
+    public PlainPropertyClassValue toPlainPropertyValue() {
+        return PlainPropertyClassValue.get(
+                getProperty().getEntity(),
+                getValue().getEntity(),
+                getState()
+        );
     }
 }

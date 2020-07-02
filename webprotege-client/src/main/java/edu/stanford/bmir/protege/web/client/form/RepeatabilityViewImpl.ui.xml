@@ -1,0 +1,12 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="counter" type="edu.stanford.bmir.protege.web.client.ui.Counter"/>
+    <g:HTMLPanel>
+        <g:RadioButton name="repeatability-{counter.getValue}" text="Non-repeatable"
+                       ui:field="nonRepeatableRadio"/>
+        <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable vertically"
+                       ui:field="repeatableVerticallyRadio"/>
+        <g:RadioButton name="repeatability-{counter.getValue}" text="Repeatable horizontally"
+                       ui:field="repeatableHorizontallyRadio"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

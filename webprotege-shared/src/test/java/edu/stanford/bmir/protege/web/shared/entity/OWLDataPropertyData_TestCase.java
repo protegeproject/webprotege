@@ -31,25 +31,19 @@ public class OWLDataPropertyData_TestCase {
 
     @Before
     public void setUp() {
-        shortForms = ImmutableMap.of();
-        oWLDataPropertyData = OWLDataPropertyData.get(entity, browserText, shortForms);
+        shortForms = ImmutableMap.of(DictionaryLanguage.localName(), browserText);
+        oWLDataPropertyData = OWLDataPropertyData.get(entity, shortForms);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        OWLDataPropertyData.get(null, browserText, shortForms);
+        OWLDataPropertyData.get(null, shortForms);
     }
 
     @Test
     public void shouldReturnSupplied_entity() {
         assertThat(oWLDataPropertyData.getEntity(), is(this.entity));
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        OWLDataPropertyData.get(entity, null, shortForms);
     }
 
     @Test
@@ -70,22 +64,17 @@ public class OWLDataPropertyData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(oWLDataPropertyData, is(OWLDataPropertyData.get(entity, browserText, shortForms)));
+        assertThat(oWLDataPropertyData, is(OWLDataPropertyData.get(entity, shortForms)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(oWLDataPropertyData, is(not(OWLDataPropertyData.get(Mockito.mock(OWLDataProperty.class), browserText, shortForms))));
-    }
-
-    @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(oWLDataPropertyData, is(not(OWLDataPropertyData.get(entity, "String-aa07abdc-dc06-4e7a-82ba-58eaa8482871", shortForms))));
+        assertThat(oWLDataPropertyData, is(not(OWLDataPropertyData.get(Mockito.mock(OWLDataProperty.class), shortForms))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(oWLDataPropertyData.hashCode(), is(OWLDataPropertyData.get(entity, browserText, shortForms).hashCode()));
+        assertThat(oWLDataPropertyData.hashCode(), is(OWLDataPropertyData.get(entity, shortForms).hashCode()));
     }
 
     @Test

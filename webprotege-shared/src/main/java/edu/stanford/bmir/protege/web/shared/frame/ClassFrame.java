@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
@@ -40,6 +41,10 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
         return new AutoValue_ClassFrame(subject,
                                         classEntries,
                                         propertyValues);
+    }
+
+    public static ClassFrame empty(@Nonnull OWLClassData subject) {
+        return get(subject, ImmutableSet.of(), ImmutableSet.of());
     }
 
     /**
@@ -76,5 +81,15 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
     @Nonnull
     public ImmutableList<PropertyValue> getLogicalPropertyValues() {
         return getPropertyValueList().getLogicalPropertyValues();
+    }
+
+    @Override
+    @Nonnull
+    public PlainClassFrame toPlainFrame() {
+        return PlainClassFrame.get(
+                getSubject().getEntity(),
+                getClassEntries().stream().map(OWLClassData::getEntity).collect(toImmutableSet()),
+                getPropertyValues().stream().map(PropertyValue::toPlainPropertyValue).collect(toImmutableSet())
+        );
     }
 }

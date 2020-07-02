@@ -24,4 +24,5 @@ public interface NumericValueCriteriaView extends IsWidget {
 
     void setNumericPredicate(@Nonnull NumericPredicate predicate);
 
+    void clear();
 }

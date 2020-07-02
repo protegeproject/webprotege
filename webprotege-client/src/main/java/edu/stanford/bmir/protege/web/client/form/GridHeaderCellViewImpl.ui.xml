@@ -1,0 +1,50 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+        }
+        .labelContainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            cursor: pointer;
+            overflow: hidden;
+            margin-right: 2px;
+        }
+        .filterContainer {
+
+        }
+        .ascending {
+            width: 20px;
+            height: 16px;
+            background-color: literal("var(--primary--background-color)");
+            align-self: start;
+        }
+        .descending {
+            width: 20px;
+            height: 16px;
+            background-color: literal("var(--primary--background-color)");
+            align-self: start;
+        }
+        .headerLabel {
+            padding-right: 3px;
+            white-space: nowrap;
+        }
+
+    </ui:style>
+    <g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.labelContainer}">
+            <g:Label ui:field="labelField" addStyleNames="{style.headerLabel}" visible="false"/>
+            <g:HTMLPanel ui:field="sortDirectionAscending" visible="false"
+                         addStyleNames="{style.ascending} {wp.buttons.sortAscending}"/>
+            <g:HTMLPanel ui:field="sortDirectionDescending" visible="false"
+                         addStyleNames="{style.descending} {wp.buttons.sortDescending}"/>
+        </g:HTMLPanel>
+        <g:SimplePanel ui:field="filterContainer" addStyleNames="{style.filterContainer}">
+        </g:SimplePanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

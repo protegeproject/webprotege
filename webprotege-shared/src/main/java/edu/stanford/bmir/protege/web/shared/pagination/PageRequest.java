@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.pagination;
 
+import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
@@ -91,5 +92,14 @@ public class PageRequest implements Serializable, IsSerializable {
         }
         PageRequest other = (PageRequest) o;
         return this.pageNumber == other.pageNumber && this.pageSize == other.pageSize;
+    }
+
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper("PageRequest")
+                .add("pageNumber", pageNumber)
+                .add("pageSize", pageSize)
+                .toString();
     }
 }

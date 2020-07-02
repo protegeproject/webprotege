@@ -7,6 +7,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Matthew Horridge
@@ -20,13 +21,18 @@ public abstract class StringContainsCriteria implements SimpleStringCriteria {
 
     @JsonCreator
     @Nonnull
-    public static StringContainsCriteria get(@Nonnull @JsonProperty(VALUE) String value,
+    public static StringContainsCriteria get(@Nullable @JsonProperty(VALUE) String value,
                                              @JsonProperty(IGNORE_CASE) boolean ignoreCase) {
-        return new AutoValue_StringContainsCriteria(value, ignoreCase);
+        return new AutoValue_StringContainsCriteria(value == null ? "" : value, ignoreCase);
     }
 
     @Override
     public <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public <R> R accept(@Nonnull LiteralCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
 }

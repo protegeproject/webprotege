@@ -22,10 +22,12 @@
         .operatorListBox {
             display: inline-block;
         }
-        .addButton {
+        .addButtonContainer {
+            padding: 1px;
             align-self: flex-start;
-            position: relative;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
+        }
+        .addButton {
         }
     </ui:style>
 
@@ -38,6 +40,7 @@
             </g:ListBox> of the following:
         </g:HTMLPanel>
         <g:FlowPanel ui:field="criteriaViewsContainer" addStyleNames="{style.viewsContainer}"/>
-        <g:Button ui:field="addButton" addStyleNames="{wp.buttons.addButton} {style.addButton}"/>
-    </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.addButtonContainer}">
+            <g:Button ui:field="addButton" addStyleNames="{wp.buttons.addButton} {style.addButton}"/>
+        </g:HTMLPanel></g:HTMLPanel>
 </ui:UiBinder>

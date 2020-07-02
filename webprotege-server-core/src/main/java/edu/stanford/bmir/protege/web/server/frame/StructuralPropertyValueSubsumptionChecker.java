@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HasHasAncestor;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class StructuralPropertyValueSubsumptionChecker implements PropertyValueS
     }
 
     @Override
-    public boolean isSubsumedBy(PropertyValue propertyValueA, PropertyValue propertyValueB) {
+    public boolean isSubsumedBy(PlainPropertyValue propertyValueA, PlainPropertyValue propertyValueB) {
         if (isSubsumedBy(propertyValueA.getProperty(), propertyValueB.getProperty())) {
             if (isSubsumedBy(propertyValueA.getValue(), propertyValueB.getValue())) {
                 return true;

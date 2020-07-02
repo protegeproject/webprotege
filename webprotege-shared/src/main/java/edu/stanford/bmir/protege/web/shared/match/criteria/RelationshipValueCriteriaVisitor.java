@@ -15,4 +15,5 @@ public interface RelationshipValueCriteriaVisitor<R> {
 
     R visit(RelationshipValueEqualsLiteralCriteria criteria);
 
+    R visit(CompositeRelationshipValueCriteria compositeRelationshipValueCriteria);
 }

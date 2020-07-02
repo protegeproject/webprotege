@@ -19,6 +19,7 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
+            background-color: literal("var(--list--background-color)");
         }
         .contentHolder > * {
             cursor: default;

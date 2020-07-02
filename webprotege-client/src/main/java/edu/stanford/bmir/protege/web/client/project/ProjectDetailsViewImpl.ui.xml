@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:user="urn:import:edu.stanford.bmir.protege.web.client.user">
+    <ui:style>
+        .main {
+            padding: literal("var(--list-item--padding)");
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label ui:field="displayNameField"/>
+        <g:Label ui:field="ownerField"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

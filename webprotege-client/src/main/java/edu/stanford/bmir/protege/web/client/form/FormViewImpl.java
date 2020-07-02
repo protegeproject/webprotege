@@ -3,14 +3,18 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -19,6 +23,8 @@ import java.util.List;
  */
 public class FormViewImpl extends Composite implements FormView {
 
+    private final Provider<FormViewRow> rowProvider;
+
     interface FormViewImplUiBinder extends UiBinder<HTMLPanel, FormViewImpl> {
 
     }
@@ -26,33 +32,52 @@ public class FormViewImpl extends Composite implements FormView {
     private static FormViewImplUiBinder ourUiBinder = GWT.create(FormViewImplUiBinder.class);
 
     @UiField
-    FlowPanel holder;
+    HTMLPanel holder;
+
+    private FormViewRow currentRow;
+
+    private List<FormFieldView> elementViews = new ArrayList<>();
 
     @Inject
-    public FormViewImpl() {
+    public FormViewImpl(Provider<FormViewRow> rowProvider) {
+        this.rowProvider = rowProvider;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @Override
-    public void addFormElementView(FormElementView view) {
-        holder.add(view);
+    public void addFormElementView(FormFieldView view,
+                                   FieldRun fieldRun) {
+
+        if(currentRow == null) {
+            createAndAddNewRow();
+        }
+        else if(fieldRun.isStart()) {
+            createAndAddNewRow();
+        }
+        currentRow.add(view);
+        elementViews.add(view);
+    }
+
+    private void createAndAddNewRow() {
+        currentRow = rowProvider.get();
+        holder.add(currentRow);
     }
 
     @Override
-    public List<FormElementView> getElementViews() {
-        List<FormElementView> result = new ArrayList<>();
-        for(int i = 0; i < holder.getWidgetCount(); i++) {
-            Widget w = holder.getWidget(i);
-            if(w instanceof FormElementView) {
-                result.add((FormElementView) w);
-            }
-        }
-        return result;
-
+    public List<FormFieldView> getFieldViews() {
+        return new ArrayList<>(elementViews);
     }
 
     @Override
     public void clear() {
         holder.clear();
+    }
+
+    @Override
+    public void requestFocus() {
+        if(elementViews.isEmpty()) {
+            return;
+        }
+        elementViews.get(0).getEditor().requestFocus();
     }
 }

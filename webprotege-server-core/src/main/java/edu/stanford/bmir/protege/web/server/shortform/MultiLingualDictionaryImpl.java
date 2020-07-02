@@ -28,7 +28,7 @@ import static java.util.stream.Collectors.toList;
  * 3 Apr 2018
  */
 @ProjectSingleton
-public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
+public class MultiLingualDictionaryImpl implements MultiLingualDictionary, MultilingualDictionaryUpdater {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiLingualDictionaryImpl.class);
 
@@ -59,7 +59,11 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         this.dictionaryBuilder = checkNotNull(dictionaryBuilder);
     }
 
-    @Override
+    /**
+     * Causes the specified list of languages to be pre-loaded.
+     * @param languages The list of languages that should be loaded.  After loading these languages will
+     *                  be available for looking up short forms and entities.
+     */
     public synchronized void loadLanguages(@Nonnull List<DictionaryLanguage> languages) {
         if(loaded) {
             return;
@@ -150,6 +154,7 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
 
     }
 
+    @Nonnull
     @Override
     public Stream<OWLEntity> getEntities(@Nonnull String shortForm,
                                          @Nonnull List<DictionaryLanguage> languages) {
@@ -178,23 +183,20 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         return dictionaries.values().stream();
     }
 
-    @Override
-    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity,
-                                                                  List<DictionaryLanguage> languages) {
-        findDictionaries(languages);
-        return getShortForms(entity);
-    }
-
     @Nonnull
     @Override
-    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
+    public ImmutableMap<DictionaryLanguage, String> getShortForms(@Nonnull OWLEntity entity,
+                                                                  @Nonnull List<DictionaryLanguage> languages) {
         var resultBuilder = ImmutableMap.<DictionaryLanguage, String>builder();
-        dictionaries.forEach((lang, dict) -> {
-            var shortForm = dict.getShortForm(entity, "");
-            if(!shortForm.isEmpty()) {
-                resultBuilder.put(lang, shortForm);
-            }
-        });
+        findDictionaries(languages);
+        languages.stream()
+                 .map(dictionaries::get)
+                 .forEach(dictionary -> {
+                     var shortForm = dictionary.getShortForm(entity, "");
+                     if(!shortForm.isEmpty()) {
+                         resultBuilder.put(dictionary.getLanguage(), shortForm);
+                     }
+                 });
         return resultBuilder.build();
     }
 }

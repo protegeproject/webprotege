@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owlapi.model.*;
@@ -18,7 +19,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
  */
-public class MatcherFactory {
+public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPositionMatcherFactory {
 
     @Nonnull
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
@@ -67,6 +68,43 @@ public class MatcherFactory {
         this.entityRelationshipMatcherFactory = entityRelationshipMatcherFactory;
     }
 
+    @Nonnull
+    public Matcher<OWLEntity> getHierarchyPositionMatcher(@Nonnull CompositeHierarchyPositionCriteria criteria) {
+        return criteria.accept(new HierarchyPositionCriteriaVisitor<Matcher<OWLEntity>>() {
+            @Override
+            public Matcher<OWLEntity> visit(CompositeHierarchyPositionCriteria criteria) {
+                ImmutableList<Matcher<OWLEntity>> matchers = criteria.getCriteria().stream()
+                                                                     .map(c -> c.accept(this))
+                                                                     .collect(toImmutableList());
+                return getMultiMatchMatcher(matchers, criteria.getMatchType());
+            }
+
+            @Override
+            public Matcher<OWLEntity> visit(SubClassOfCriteria subClassOfCriteria) {
+                return subClassOfMatcherFactory.create(subClassOfCriteria.getTarget(),
+                                                       subClassOfCriteria.getFilterType());
+            }
+
+            @Override
+            public Matcher<OWLEntity> visit(InstanceOfCriteria instanceOfCriteria) {
+                return instanceOfMatcherFactory.create(instanceOfCriteria.getTarget(),
+                                                       instanceOfCriteria.getFilterType());
+            }
+        });
+    }
+
+    public Matcher<OWLEntity> getMultiMatchMatcher(ImmutableList<Matcher<OWLEntity>> matchers,
+                                                   MultiMatchType matchType) {
+        switch (matchType) {
+            case ANY:
+                return new OrMatcher<>(matchers);
+            case ALL:
+                return new AndMatcher<>(matchers);
+            default:
+                throw new RuntimeException();
+        }
+    }
+
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
         return criteria.accept(new RootCriteriaVisitor<Matcher<OWLEntity>>() {
 
@@ -76,14 +114,7 @@ public class MatcherFactory {
                 ImmutableList<Matcher<OWLEntity>> matchers = criteria.getRootCriteria().stream()
                                                                      .map(c -> c.accept(this))
                                                                      .collect(toImmutableList());
-                switch (criteria.getMatchType()) {
-                    case ANY:
-                        return new OrMatcher<>(matchers);
-                    case ALL:
-                        return new AndMatcher<>(matchers);
-                    default:
-                        throw new RuntimeException();
-                }
+                return getMultiMatchMatcher(matchers, criteria.getMatchType());
             }
 
             @Nonnull
@@ -162,7 +193,7 @@ public class MatcherFactory {
                 var propertyMatcher = getRelationshipPropertyMatcher(propertyCriteria);
                 var valueCriteria = criteria.getRelationshipValueCriteria();
                 var valueMatcher = getRelationshipValueMatcher(valueCriteria);
-                var propertyValueMatcher = new PropertyValueMatcher(propertyMatcher, valueMatcher);
+                var propertyValueMatcher = getPropertyValueMatcher(propertyMatcher, valueMatcher);
                 return entityRelationshipMatcherFactory.create(criteria.getRelationshipPresence(),
                                                                propertyValueMatcher);
             }
@@ -173,6 +204,18 @@ public class MatcherFactory {
                 return entity -> entity.equals(entityIsCriteria.getEntity());
             }
         });
+    }
+
+    @Nonnull
+    public Matcher<PlainPropertyValue> getRelationshipMatcher(@Nonnull RelationshipCriteria relationshipCriteria) {
+        var propertyMatcher = getRelationshipPropertyMatcher(relationshipCriteria.getPropertyCriteria());
+        var valueMatcher = getRelationshipValueMatcher(relationshipCriteria.getValueCriteria());
+        return getPropertyValueMatcher(propertyMatcher, valueMatcher);
+    }
+
+    private PropertyValueMatcher getPropertyValueMatcher(Matcher<OWLProperty> propertyMatcher,
+                                                        Matcher<OWLPrimitive> valueMatcher) {
+        return new PropertyValueMatcher(propertyMatcher, valueMatcher);
     }
 
 
@@ -191,7 +234,7 @@ public class MatcherFactory {
         });
     }
 
-    private Matcher<OWLPrimitive> getRelationshipValueMatcher(RelationshipValueCriteria criteria) {
+    public Matcher<OWLPrimitive> getRelationshipValueMatcher(RelationshipValueCriteria criteria) {
         return criteria.accept(new RelationshipValueCriteriaVisitor<>() {
             @Override
             public Matcher<OWLPrimitive> visit(AnyRelationshipValueCriteria criteria) {
@@ -211,6 +254,22 @@ public class MatcherFactory {
             @Override
             public Matcher<OWLPrimitive> visit(RelationshipValueEqualsLiteralCriteria criteria) {
                 return primitive -> primitive.equals(criteria.getValue());
+            }
+
+            @Override
+            public Matcher<OWLPrimitive> visit(CompositeRelationshipValueCriteria criteria) {
+                var matchers = criteria.getCriteria()
+                                                  .stream()
+                                                  .map(c -> getRelationshipValueMatcher(c))
+                                                  .collect(toImmutableList());
+                switch (criteria.getMultiMatchType()) {
+                    case ALL:
+                        return new AndMatcher<>(matchers);
+                    case ANY:
+                        return new OrMatcher<>(matchers);
+                    default:
+                        throw new IllegalStateException();
+                }
             }
         });
     }
@@ -420,6 +479,20 @@ public class MatcherFactory {
                 return LiteralAnnotationValueMatcher.forLangTagMatcher(
                         langTag -> true
                 );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(CompositeLiteralCriteria criteria) {
+                var matchers = criteria.getCriteria().stream().map(c -> c.accept(this))
+                        .collect(toImmutableList());
+                switch (criteria.getMultiMatchType()) {
+                    case ALL:
+                        return new AndMatcher<>(matchers);
+                    case ANY:
+                        return new OrMatcher<>(matchers);
+                    default:
+                        throw new IllegalStateException();
+                }
             }
         });
     }

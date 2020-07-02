@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CreateCollectionItemsAction;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataAction;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -86,17 +86,17 @@ public class CollectionPresenter implements Presenter {
     }
 
     private void handleClearElementData() {
-        current.ifPresent(subject -> {
-            subject.getSelection().ifPresent(selection -> {
-                dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
-                                                                     subject.getCollectionId(),
-                                                                     selection,
-                                                                     subject.getFormId(),
-                                                                     FormData.empty()),
-                                               result -> formPresenter.clearData());
-            });
-
-        });
+//        current.ifPresent(subject -> {
+//            subject.getSelection().ifPresent(selection -> {
+//                dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
+//                                                                     subject.getCollectionId(),
+//                                                                     selection,
+//                                                                     subject.getFormId(),
+//                                                                     FormData.empty(subject.getFormId())),
+//                                               result -> formPresenter.clearData());
+//            });
+//
+//        });
     }
 
     private void handleAddCollectionItems() {
@@ -138,37 +138,39 @@ public class CollectionPresenter implements Presenter {
 
     private void submitFormData() {
         GWT.log("[CollectionPresenter] Submitting form data.  Current place is " + current);
-        FormData formData = formPresenter.getFormData();
+        Optional<FormData> formData = formPresenter.getFormData();
+
         current.ifPresent(subject -> {
             GWT.log("[CollectionPresenter] Saving data for " + subject.getSelection());
-            dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
-                                                                 subject.getCollectionId(),
-                                                                 subject.getSelection().get(),
-                                                                 subject.getFormId(),
-                                                                 formData),
-                                           result -> {
-                                           });
+            formData.ifPresent(fd -> {
+                dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
+                                                                     subject.getCollectionId(),
+                                                                     subject.getSelection().get(),
+                                                                     subject.getFormId(),
+                                                                     fd),
+                                               result -> {
+                                               });
+            });
+
         });
 
     }
 
     private void displayForm(CollectionViewPlace place) {
-        view.setCollectionTitle(place.getCollectionId().getId());
-        current = Optional.empty();
-        GWT.log("[CollectionPresenter] Clearing form");
-        place.getSelection().ifPresent(sel -> {
-            view.setItem(sel);
-            current = Optional.of(place);
-            GWT.log("[CollectionPresenter] Selection: " + sel);
-            dispatchServiceManager.execute(new GetFormDescriptorAction(
-                                                   place.getProjectId(),
-                                                   place.getCollectionId(),
-                                                   place.getFormId(),
-                                                   sel),
-                                           result -> formPresenter.displayForm(result.getFormDescriptor(),
-                                                                               result.getFormData()));
-        });
-        if (!place.getSelection().isPresent()) {
-        }
+//        view.setCollectionTitle(place.getCollectionId().getId());
+//        current = Optional.empty();
+//        GWT.log("[CollectionPresenter] Clearing form");
+//        place.getSelection().ifPresent(sel -> {
+//            view.setItem(sel);
+//            current = Optional.of(place);
+//            GWT.log("[CollectionPresenter] Selection: " + sel);
+//            dispatchServiceManager.execute(new GetFormDescriptorAction(
+//                                                   place.getProjectId(),
+//                                                   place.getCollectionId(),
+//                                                   place.getFormId(),
+//                                                   sel),
+//                                           result -> formPresenter.displayForm(result.getFormDescriptor(),
+//                                                                               result.getNewformData()));
+//        });
     }
 }

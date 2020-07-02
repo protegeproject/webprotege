@@ -1,14 +1,26 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.project.ProjectView;
 import edu.stanford.bmir.protege.web.client.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -16,13 +28,14 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent.CLASS_FRAME_CHANGED;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-//@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
+@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays forms for the selected entity")
 public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
 
@@ -30,55 +43,54 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final FormPresenter formPresenter;
-
-    @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
-
-    @Nonnull
-    private Optional<OWLEntity> currentSubject = Optional.empty();
+    private final EntityFormStackPresenter entityFormStackPresenter;
 
     @Inject
-    public FormPortletPresenter(SelectionModel selectionModel,
+    public FormPortletPresenter(@Nonnull SelectionModel selectionModel,
                                 @Nonnull ProjectId projectId,
-                                @Nonnull FormPresenter formPresenter,
-                                @Nonnull DispatchServiceManager dispatchServiceManager, DisplayNameRenderer displayNameRenderer) {
+                                @Nonnull DisplayNameRenderer displayNameRenderer,
+                                @Nonnull EntityFormStackPresenter entityFormStackPresenter) {
         super(selectionModel, projectId, displayNameRenderer);
-        this.projectId = projectId;
-        this.formPresenter = formPresenter;
-        this.dispatchServiceManager = dispatchServiceManager;
+        this.projectId = checkNotNull(projectId);
+        this.entityFormStackPresenter = checkNotNull(entityFormStackPresenter);
+    }
+
+    @Override
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        updateForms();
+    }
+
+    @Override
+    protected void handlePlaceChangeFromNonProjectViewPlace() {
+        updateForms();
+    }
+
+    private void updateForms() {
+        Optional<OWLEntity> entity = getSelectedEntity();
+        if(entity.isPresent()) {
+            setNothingSelectedVisible(false);
+            entityFormStackPresenter.setEntity(entity.get());
+        }
+        else {
+            setNothingSelectedVisible(true);
+        }
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        formPresenter.start(portletUi);
+        portletUi.addAction(new PortletAction("Expand all", "wp-btn-g--expand-all", entityFormStackPresenter::expandAllFields));
+        portletUi.addAction(new PortletAction("Collapse all", "wp-btn-g--collapse-all", entityFormStackPresenter::collapseAllFields));
+        setDisplaySelectedEntityNameAsSubtitle(true);
+        entityFormStackPresenter.start(portletUi);
+        entityFormStackPresenter.setHasBusy(portletUi);
+        entityFormStackPresenter.setSelectedFormIdStash(new SelectedFormIdStash(portletUi));
+        entityFormStackPresenter.setLanguageFilterStash(new FormLanguageFilterStash(portletUi));
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        GWT.log("[FormPortletPresenter] handleAfterSetEntity " + entityData);
-        if (entityData.isPresent()) {
-            setSubject(entityData.get());
-        }
-        else {
-            formPresenter.clear();
-        }
+    public void dispose() {
+        super.dispose();
+
     }
-
-
-    private void setSubject(@Nonnull final OWLEntity entity) {
-        checkNotNull(entity);
-        FormData formData = formPresenter.getFormData();
-//        currentSubject.ifPresent(subject -> {
-//            dispatchServiceManager.execute(new SetFormDataAction(projectId,
-//                                                                 new FormId("MyForm"),
-//                                                                 subject,
-//                                                                 formData),
-//                                           result -> {});
-//        });
-        currentSubject = Optional.of(entity);
-//        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, new FormId("MyForm"), entity),
-//                                       result -> formPresenter.displayForm(result.getFormDescriptor(), result.getFormData()));
-    }
-
 }

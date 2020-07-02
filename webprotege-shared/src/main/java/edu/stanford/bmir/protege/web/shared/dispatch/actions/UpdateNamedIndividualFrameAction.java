@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PlainNamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -11,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class UpdateNamedIndividualFrameAction extends UpdateFrameAction<NamedIndividualFrame, OWLNamedIndividualData> {
+public class UpdateNamedIndividualFrameAction extends UpdateFrameAction {
 
     /**
      * For serialization purposes only
@@ -19,7 +20,7 @@ public class UpdateNamedIndividualFrameAction extends UpdateFrameAction<NamedInd
     private UpdateNamedIndividualFrameAction() {
     }
 
-    public UpdateNamedIndividualFrameAction(ProjectId projectId, NamedIndividualFrame from, NamedIndividualFrame to) {
+    public UpdateNamedIndividualFrameAction(ProjectId projectId, PlainNamedIndividualFrame from, PlainNamedIndividualFrame to) {
         super(projectId, from, to);
     }
 }

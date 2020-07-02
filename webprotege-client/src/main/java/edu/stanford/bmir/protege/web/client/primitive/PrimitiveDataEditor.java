@@ -7,13 +7,17 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.common.HasTextRendering;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -28,7 +32,7 @@ import java.util.Optional;
  *     contains various boolean setters and getters to do this so that it may be used with UIBinder.
  * </p>
  */
-public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<OWLPrimitiveData>, HasFocusHandlers, HasKeyUpHandlers, HasTextRendering, HasPlaceholder, HasPrimitiveDataPlaceholder {
+public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<OWLPrimitiveData>, HasFocusHandlers, HasKeyUpHandlers, HasTextRendering, HasPlaceholder, HasPrimitiveDataPlaceholder, HasRequestFocus {
 
     /**
      * Gets the language editor for this primitive data editor
@@ -243,5 +247,11 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
     Optional<OWLAnnotationPropertyData> getValueAsAnnotationPropertyData();
 
     void addStyleName(@Nonnull String styleName);
+
+    /**
+     * Sets the criteria for filtering matches
+     * @param entityMatchCriteria The criteria
+     */
+    void setCriteria(@Nonnull CompositeRootCriteria entityMatchCriteria);
     
 }

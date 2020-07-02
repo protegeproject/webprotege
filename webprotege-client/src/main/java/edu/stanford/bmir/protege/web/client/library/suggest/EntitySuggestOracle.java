@@ -12,11 +12,14 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityLookupResult;
 import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -43,6 +46,9 @@ public class EntitySuggestOracle extends SuggestOracle {
 
     final Set<EntityType<?>> entityTypes = new HashSet<>();
 
+    @Nullable
+    private CompositeRootCriteria entityMatchCriteria = null;
+
     @Inject
     public EntitySuggestOracle(@Nonnull ProjectId projectId,
                                @EntitySuggestOracleSuggestLimit int suggestLimit,
@@ -53,6 +59,10 @@ public class EntitySuggestOracle extends SuggestOracle {
         this.dispatchServiceManager = dispatchServiceManager;
         this.renderer = renderer;
         renderer.setRenderTags(false);
+    }
+
+    public void setCriteria(CompositeRootCriteria entityMatchCriteria) {
+        this.entityMatchCriteria = entityMatchCriteria;
     }
 
     public void setEntityTypes(Set<EntityType<?>> entityTypes) {
@@ -71,7 +81,7 @@ public class EntitySuggestOracle extends SuggestOracle {
             callback.onSuggestionsReady(request, new Response(Collections.emptyList()));
             return;
         }
-        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), result -> {
+        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes, entityMatchCriteria)), result -> {
             List<EntitySuggestion> suggestions = new ArrayList<>();
             for (final EntityLookupResult entity : result.getEntityLookupResults()) {
                 GWT.log("EntitySuggestOracle] " + entity);

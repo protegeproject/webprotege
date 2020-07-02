@@ -1,0 +1,71 @@
+@external wp-*;
+
+@url checkbox__inputMask__url svg_checkBox__inputMask;
+@url checkbox__checkMask__url svg_checkBox__checkMask;
+
+.wp-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 1px;
+    cursor: pointer;
+    justify-items: start;
+}
+
+.wp-checkbox[aria-disabled=true] {
+    cursor: default;
+}
+
+.wp-checkbox__input {
+    display: inline-block;
+}
+
+.wp-checkbox__input--checked {
+}
+
+.wp-checkbox__input__box {
+    stroke-width: 1.5;
+    stroke: literal("var(--tertiary--color)");
+    fill: none;
+}
+
+.wp-checkbox[aria-checked=true] .wp-checkbox__input__box {
+    stroke: literal("var(--accent--color)");
+    fill: literal("var(--accent--color)");
+}
+
+.wp-checkbox[aria-disabled=true] .wp-checkbox__input__box {
+    stroke: literal("var(--tertiary--color)");
+}
+
+.wp-checkbox[aria-disabled=true][aria-checked=true] .wp-checkbox__input__box {
+    stroke: literal("var(--tertiary--color)");
+    fill: literal("var(--tertiary--color)");
+    fill-opacity: 0.2;
+}
+
+
+
+
+.wp-checkbox__input__check-mark {
+    stroke-width: 2;
+    stroke: #ffffff;
+}
+
+.wp-checkbox[aria-disabled=true] .wp-checkbox__input__check-mark {
+    stroke: literal("var(--primary--color)");
+}
+
+.wp-checkbox[aria-checked=false] .wp-checkbox__input__check-mark {
+    visibility: hidden;
+}
+
+.wp-checkbox__label {
+    text-wrap: none;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding-left: 3px;
+    flex-basis: auto;
+}
+

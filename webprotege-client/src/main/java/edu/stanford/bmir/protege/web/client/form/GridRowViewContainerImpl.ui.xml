@@ -1,0 +1,36 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style field="style" type="edu.stanford.bmir.protege.web.client.form.GridRowViewContainerCss">
+        .main {
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            min-height: 22px;
+        }
+        .rowContainer {
+            flex-grow: 1;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+        .deleteRowButton {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            visibility: hidden;
+        }
+        .main:hover .deleteRowButton {
+            visibility: visible;
+        }
+        .disabled {
+
+        }
+        .disabled .deleteRowButton {
+            visibility: hidden !important;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.formGridRow}">
+        <g:SimplePanel ui:field="container" addStyleNames="{style.rowContainer}"/>
+        <g:Button ui:field="deleteButton" addStyleNames="{wp.buttons.deleteButton} {style.deleteRowButton}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

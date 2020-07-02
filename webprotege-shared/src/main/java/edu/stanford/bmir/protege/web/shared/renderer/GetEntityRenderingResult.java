@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.renderer;
 
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -10,22 +13,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetEntityRenderingResult implements Result {
 
-    private String rendering;
-
     private OWLEntityData entityData;
 
+    @GwtSerializationConstructor
     private GetEntityRenderingResult() {
     }
 
-    public GetEntityRenderingResult(String rendering, OWLEntityData entityData) {
-        this.rendering = checkNotNull(rendering);
+    public GetEntityRenderingResult(@Nonnull OWLEntityData entityData) {
         this.entityData = checkNotNull(entityData);
     }
 
-    public String getRendering() {
-        return rendering;
-    }
-
+    @Nonnull
     public OWLEntityData getEntityData() {
         return entityData;
     }

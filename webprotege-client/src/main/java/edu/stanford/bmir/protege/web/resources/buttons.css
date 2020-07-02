@@ -24,7 +24,12 @@
 @url downloadIconUrl downloadIcon;
 @url settingsIconUrl settingsIcon;
 @url filterIconUrl filterIcon;
+@url funnelIconUrl svgFunnel;
 @url crossIconUrl svgCrossIcon;
+@url expandAllIconUrl svgExpandAllIcon;
+@url collapseAllIconUrl svgCollapseAllIcon;
+@url sortAscendingIconUrl svgAscendingIcon;
+@url sortDescendingIconUrl svgDescendingIcon;
 
 .wp-btn {
     border: none;
@@ -94,6 +99,7 @@
 }
 
 .wp-btn--primary:hover {
+    color: #fff;
     background-color: #501c70;
 }
 
@@ -108,6 +114,7 @@
 }
 
 .wp-btn--secondary:hover {
+    color: #fff;
     background-color: #0073a5;
 }
 
@@ -122,6 +129,7 @@
 }
 
 .wp-btn--alternate:hover {
+    color: #fff;
     background-color: #bc4d26;
 }
 
@@ -136,6 +144,7 @@
 }
 
 .wp-btn--escape:hover {
+    color: #fff;
     background-color: #737c85;
 }
 
@@ -145,6 +154,7 @@
 }
 
 .wp-btn--accept:hover {
+    color: #fff;
     background-color: #501c70;
 }
 
@@ -433,7 +443,37 @@
     -webkit-mask-image: filterIconUrl;
 }
 
+
+.wp-btn-g--funnel {
+    mask-image: funnelIconUrl;
+    -webkit-mask-image: funnelIconUrl;
+}
+
 .wp-btn-g--cross {
     mask-image: crossIconUrl;
     -webkit-mask-image: crossIconUrl;
+}
+
+
+.wp-btn-g--expand-all {
+    mask-image: expandAllIconUrl;
+    -webkit-mask-image: expandAllIconUrl;
+}
+
+.wp-btn-g--collapse-all {
+    mask-image: collapseAllIconUrl;
+    -webkit-mask-image: collapseAllIconUrl;
+}
+
+.wp-btn-g--sort-ascending {
+    mask-image: sortAscendingIconUrl;
+    -webkit-mask-image: sortAscendingIconUrl;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.wp-btn-g--sort-descending {
+    mask-image: sortDescendingIconUrl;
+    -webkit-mask-image: sortDescendingIconUrl;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
 }

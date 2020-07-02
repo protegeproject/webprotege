@@ -1,9 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.google.common.base.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
+import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlData;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -12,57 +18,19 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class ChoiceDescriptor implements IsSerializable {
+@GwtCompatible(serializable = true)
+@AutoValue
+public abstract class ChoiceDescriptor implements IsSerializable {
 
-    private String label;
-
-    @JsonUnwrapped
-    private FormDataValue value;
-
-    private ChoiceDescriptor() {
+    @JsonCreator
+    public static ChoiceDescriptor choice(@Nonnull @JsonProperty("label") LanguageMap label,
+                                          @Nonnull @JsonProperty("value") PrimitiveFormControlData value) {
+        return new AutoValue_ChoiceDescriptor(label, value);
     }
 
-    private ChoiceDescriptor(String label, FormDataValue value) {
-        this.label = label;
-        this.value = value;
-    }
+    @Nonnull
+    public abstract LanguageMap getLabel();
 
-    public static ChoiceDescriptor choice(String label, FormDataValue value) {
-        return new ChoiceDescriptor(label, value);
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public FormDataValue getValue() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(label, value);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ChoiceDescriptor)) {
-            return false;
-        }
-        ChoiceDescriptor other = (ChoiceDescriptor) obj;
-        return this.label.equals(other.label)
-                && this.value.equals(other.value);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("ChoiceDescriptor")
-                .add("label", label)
-                .add("value", value)
-                .toString();
-    }
+    @Nonnull
+    public abstract PrimitiveFormControlData getValue();
 }

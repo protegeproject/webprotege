@@ -32,12 +32,12 @@ public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSetti
 
     @Override
     public EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
-        return new EntityCrudKitPrefixSettings();
+        return EntityCrudKitPrefixSettings.get();
     }
 
     @Override
     public SuppliedNameSuffixSettings getDefaultSuffixSettings() {
-        return new SuppliedNameSuffixSettings();
+        return SuppliedNameSuffixSettings.get();
     }
 
     @Override

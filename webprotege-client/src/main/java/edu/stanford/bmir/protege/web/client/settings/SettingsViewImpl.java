@@ -83,6 +83,11 @@ public class SettingsViewImpl extends Composite implements SettingsView {
     }
 
     @Override
+    public void setApplyButtonVisible(boolean visible) {
+        applyButton.setVisible(visible);
+    }
+
+    @Override
     public void setCancelButtonVisible(boolean visible) {
         cancelButton.setVisible(visible);
     }
@@ -90,6 +95,16 @@ public class SettingsViewImpl extends Composite implements SettingsView {
     @Override
     public void addSectionViewContainer(@Nonnull SettingsSectionViewContainer view) {
         settingsContainer.add(view);
+    }
+
+    @Override
+    public void setApplyButtonText(@Nonnull String text) {
+        this.applyButton.setText(checkNotNull(text));
+    }
+
+    @Override
+    public void setCancelButtonText(@Nonnull String text) {
+        this.cancelButton.setText(checkNotNull(text));
     }
 
     @Override

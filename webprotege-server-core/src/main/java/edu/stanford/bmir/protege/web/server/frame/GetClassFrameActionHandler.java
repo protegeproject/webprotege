@@ -3,19 +3,27 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Provider;
+
+import java.util.Comparator;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
+import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.EXCLUDE_ANCESTORS;
+import static edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions.AncestorsTreatment.INCLUDE_ANCESTORS;
+import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.*;
+import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.MINIMIZED_RELATIONSHIPS;
+import static edu.stanford.bmir.protege.web.shared.frame.RelationshipTranslationOptions.RelationshipMinification.NON_MINIMIZED_RELATIONSHIPS;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,18 +36,23 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     private static final Logger logger = LoggerFactory.getLogger(GetClassFrameActionHandler.class);
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final ClassFrameProvider classFrameProvider;
 
     @Nonnull
-    private final Provider<ClassFrameTranslator> translatorProvider;
+    private final FrameComponentSessionRendererFactory rendererFactory;
+
+    @Nonnull
+    private final Comparator<PropertyValue> propertyValueComparator;
 
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull RenderingManager renderingManager,
-                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
+                                      @Nonnull ClassFrameProvider classFrameProvider,
+                                      @Nonnull FrameComponentSessionRendererFactory rendererFactory,
+                                      @Nonnull Comparator<PropertyValue> propertyValueComparator) {
         super(accessManager);
-        this.renderingManager = renderingManager;
-        this.translatorProvider = translatorProvider;
+        this.classFrameProvider = classFrameProvider;
+        this.rendererFactory = rendererFactory;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     /**
@@ -60,17 +73,21 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
 
     @Nonnull
     @Override
-    public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
+    public GetClassFrameResult execute(@Nonnull GetClassFrameAction action,
+                                       @Nonnull ExecutionContext executionContext) {
         var subject = action.getSubject();
-        var subjectData = renderingManager.getClassData(subject);
-        var translator = translatorProvider.get();
-        var classFrame = translator.getFrame(subjectData);
+        var options = ClassFrameTranslationOptions.get(
+                EXCLUDE_ANCESTORS,
+                RelationshipTranslationOptions.get(allOutgoingRelationships(),
+                                                   noIncomingRelationships(),
+                                                   NON_MINIMIZED_RELATIONSHIPS));
+        var classFrame = classFrameProvider.getFrame(subject, options);
+        var renderedFrame = classFrame.toEntityFrame(rendererFactory.create(), propertyValueComparator);
         logger.info(BROWSING,
-                    "{} {} retrieved Class frame for {} ({})",
+                    "{} {} retrieved Class frame for {}",
                     action.getProjectId(),
                     executionContext.getUserId(),
-                    subject,
-                    classFrame.getSubject().getBrowserText());
-        return new GetClassFrameResult(classFrame);
+                    subject);
+        return new GetClassFrameResult(renderedFrame);
     }
 }

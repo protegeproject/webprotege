@@ -1,0 +1,24 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroupRow}">
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label addStyleNames="{wp.style.formLabel}" text="Number format"/>
+                <g:TextBox ui:field="numberFormatField"/>
+            </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                <g:Label addStyleNames="{wp.style.formLabel}" text="Number length"/>
+                <g:TextBox ui:field="numberLengthField"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel><g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label addStyleNames="{wp.style.formLabel}" text="Range details"/>
+            <g:SimplePanel ui:field="rangeViewContainer"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label addStyleNames="{wp.style.formLabel}" text="Placeholder"/>
+            <form:LanguageMapEditor ui:field="placeholderEditor"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

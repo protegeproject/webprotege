@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
+import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
@@ -33,14 +34,13 @@ import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
+import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -52,6 +52,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
@@ -65,6 +66,9 @@ public class ChangeManager implements HasApplyChanges {
 
     @Nonnull
     private final ProjectId projectId;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
 
     @Nonnull
     private final DictionaryUpdatesProcessor dictionaryUpdatesProcessor;
@@ -146,6 +150,7 @@ public class ChangeManager implements HasApplyChanges {
 
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
+                         @Nonnull OWLDataFactory dataFactory,
                          @Nonnull DictionaryUpdatesProcessor dictionaryUpdatesProcessor,
                          @Nonnull ActiveLanguagesManager activeLanguagesManager,
                          @Nonnull AccessManager accessManager,
@@ -170,6 +175,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull DefaultOntologyIdManager defaultOntologyIdManager,
                          @Nonnull IriReplacerFactory iriReplacerFactory) {
         this.projectId = projectId;
+        this.dataFactory = dataFactory;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
         this.activeLanguagesManager = activeLanguagesManager;
         this.accessManager = accessManager;
@@ -256,13 +262,21 @@ public class ChangeManager implements HasApplyChanges {
                               changesToBeRenamed.add(change);
                               var tempIri = entityInSignature.getIRI();
                               if(!tempIri2MintedIri.containsKey(tempIri)) {
-                                  var shortName = extractShortNameFromFreshEntity(entityInSignature);
-                                  var langTag = extractLangTagFromFreshEntity(entityInSignature);
-                                  var entityType = extractEntityTypeFromFreshEntity(entityInSignature);
+                                  var freshEntityIri = FreshEntityIri.parse(tempIri.toString());
+                                  var shortName = freshEntityIri.getSuppliedName();
+                                  var langTag = Optional.<String>empty();
+                                  if(!shortName.isEmpty()) {
+                                      langTag = Optional.of(freshEntityIri.getLangTag());
+                                  }
+                                  var entityType = entityInSignature.getEntityType();
+                                  var discriminator = freshEntityIri.getDiscriminator();
+                                  var parents = freshEntityIri.getParentEntities(dataFactory, entityType);
                                   var creator = getEntityCreator(changeSession,
                                                                  crudContext,
                                                                  shortName,
+                                                                 discriminator,
                                                                  langTag,
+                                                                 parents,
                                                                  entityType);
                                   changesToCreateFreshEntities.addAll(creator.getChanges());
                                   var mintedIri = creator.getEntity()
@@ -271,6 +285,10 @@ public class ChangeManager implements HasApplyChanges {
                               }
                           }
                       });
+                if(isChangeForAnnotationAssertionWithFreshIris(change)) {
+                    changesToBeRenamed.add(change);
+                }
+
             }
 
 
@@ -358,7 +376,7 @@ public class ChangeManager implements HasApplyChanges {
     }
 
     private static boolean isFreshEntity(OWLEntity entity) {
-        return DataFactory.isFreshEntity(entity);
+        return FreshEntityIri.isFreshEntityIri(entity.getIRI());
     }
 
     private void throwCreatePermissionDeniedIfNecessary(OWLEntity entity,
@@ -395,35 +413,49 @@ public class ChangeManager implements HasApplyChanges {
         }
     }
 
-    private static String extractShortNameFromFreshEntity(OWLEntity freshEntity) {
-        return DataFactory.getFreshEntityShortName(freshEntity);
-    }
-
-    private static Optional<String> extractLangTagFromFreshEntity(OWLEntity freshEntity) {
-        return DataFactory.getFreshEntityLangTag(freshEntity);
-    }
-
-    private static EntityType<?> extractEntityTypeFromFreshEntity(OWLEntity freshEntity) {
-        return freshEntity.getEntityType();
-    }
-
     private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session,
                                                                        EntityCrudContext context,
                                                                        String shortName,
+                                                                       String discriminator,
                                                                        Optional<String> langTag,
+                                                                       ImmutableList<OWLEntity> parents,
                                                                        EntityType<E> entityType) {
-        Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
-        if(entity.isPresent()) {
-            return new OWLEntityCreator<>(entity.get(), Collections.emptyList());
+        if (discriminator.isEmpty() && !shortName.isEmpty()) {
+            Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
+            if(entity.isPresent()) {
+                return new OWLEntityCreator<>(entity.get(), Collections.emptyList());
+            }
         }
         OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
         EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler = getEntityCrudKitHandler();
         handler.createChangeSetSession();
-        E ent = handler.create(session, entityType, EntityShortForm.get(shortName), langTag, context, builder);
+        E ent = handler.create(session, entityType, EntityShortForm.get(shortName), langTag, parents, context, builder);
         return new OWLEntityCreator<>(ent,
                                       builder.build(ent)
                                              .getChanges());
 
+    }
+
+    private boolean isChangeForAnnotationAssertionWithFreshIris(OntologyChange change) {
+        if(!change.isAxiomChange()) {
+            return false;
+        }
+        var axiom = change.getAxiomOrThrow();
+        if(!(axiom instanceof OWLAnnotationAssertionAxiom)) {
+            return false;
+        }
+        var assertion = (OWLAnnotationAssertionAxiom) axiom;
+        var subject = assertion.getSubject();
+        if(subject instanceof IRI) {
+            if(DataFactory.isFreshIri((IRI) subject)) {
+                return true;
+            }
+        }
+        var object = assertion.getValue();
+        if(object instanceof IRI) {
+            return DataFactory.isFreshIri((IRI) object);
+        }
+        return false;
     }
 
     /**

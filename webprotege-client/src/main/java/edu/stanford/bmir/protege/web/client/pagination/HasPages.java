@@ -16,4 +16,6 @@ public interface HasPages {
     void setPageNumber(int pageNumber);
 
     void setPageCount(int pageCount);
+
+    void setElementCount(long elementCount);
 }
