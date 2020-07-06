@@ -57,7 +57,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
             for (OWLEntity entity : change.getSignature()) {
                 if (entity.isType(entityType)) {
                     final T t = (T) entity;
-                    final Set<T> parentsBefore = hierarchyProvider.getParents(t);
+                    final Collection<T> parentsBefore = hierarchyProvider.getParents(t);
                     child2ParentMap.putAll(t, parentsBefore);
                 }
             }
@@ -76,7 +76,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                     if (!changeSignature.contains(t)) {
                         changeSignature.add(t);
                         Set<T> parentsBefore = child2ParentMap.get(t);
-                        Set<T> parentsAfter = hierarchyProvider.getParents(t);
+                        Collection<T> parentsAfter = hierarchyProvider.getParents(t);
                         for (T parentBefore : parentsBefore) {
                             if (!parentsAfter.contains(parentBefore)) {
                                 // Removed

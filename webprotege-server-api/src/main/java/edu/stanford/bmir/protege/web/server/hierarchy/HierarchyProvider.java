@@ -22,7 +22,7 @@ public interface HierarchyProvider<N> extends HasGetAncestors<N> {
 
     Collection<N> getDescendants(N object);
 
-    Set<N> getParents(N object);
+    Collection<N> getParents(N object);
 
     Set<N> getAncestors(N object);
 

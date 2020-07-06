@@ -87,7 +87,7 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
         nodesToUpdate.clear();
     }
 
-    public synchronized Set<OWLClass> getParents(OWLClass object) {
+    public synchronized Collection<OWLClass> getParents(OWLClass object) {
         rebuildIfNecessary();
         // If the object is thing then there are no
         // parents

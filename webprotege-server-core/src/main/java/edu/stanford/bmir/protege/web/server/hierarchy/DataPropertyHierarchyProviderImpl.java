@@ -9,7 +9,6 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
@@ -72,7 +71,7 @@ public class DataPropertyHierarchyProviderImpl extends AbstractOWLPropertyHierar
     }
 
     @Override
-    public Set<OWLDataProperty> getParents(OWLDataProperty property) {
+    public Collection<OWLDataProperty> getParents(OWLDataProperty property) {
         rebuildIfNecessary();
         return projectOntologiesIndex.getOntologyIds()
                                      .flatMap(ontId -> subDataPropertyAxiomsBySubPropertyIndex.getSubPropertyOfAxioms(

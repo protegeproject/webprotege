@@ -125,7 +125,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
 
         // We deem a property to be a sub of the top property if this is asserted
         // or if no named superproperties are asserted
-        final Set<P> parents = getParents(prop);
+        final Collection<P> parents = getParents(prop);
         if (parents.isEmpty() || parents.contains(getRoot())){
                 if (containsReference(prop)) {
                     return true;

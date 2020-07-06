@@ -94,7 +94,7 @@ public class AnnotationPropertyHierarchyProviderImpl extends AbstractHierarchyPr
     }
 
 
-    public Set<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
+    public Collection<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
         rebuildIfNecessary();
         return projectOntologiesIndex.getOntologyIds()
                                      .flatMap(ontId -> subAnnotationPropertyAxioms.getSubPropertyOfAxioms(object, ontId))
