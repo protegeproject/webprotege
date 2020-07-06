@@ -26,9 +26,9 @@ import static org.mockito.Mockito.when;
  * 2019-08-22
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ObjectPropertyHierarchyProvider_TestCase {
+public class ObjectPropertyHierarchyProviderImpl_TestCase {
 
-    private OWLObjectPropertyHierarchyProvider provider;
+    private ObjectPropertyHierarchyProviderImpl provider;
 
     @Mock
     private ProjectId projectId;
@@ -95,13 +95,13 @@ public class ObjectPropertyHierarchyProvider_TestCase {
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_OBJECT_PROPERTY, ontologyId))
                 .thenAnswer(invocation -> Stream.of(propertyASubPropertyOfB, propertyBSubPropertyOfC));
 
-        provider = new OWLObjectPropertyHierarchyProvider(projectId,
-                                                          dataFactory.getOWLTopObjectProperty(),
-                                                          entitiesInSignature,
-                                                          projectOntologiesIndex,
-                                                          ontologySignatureByTypeIndex,
-                                                          subPropertyAxiomsIndex,
-                                                          axiomsByTypeIndex);
+        provider = new ObjectPropertyHierarchyProviderImpl(projectId,
+                                                           dataFactory.getOWLTopObjectProperty(),
+                                                           entitiesInSignature,
+                                                           projectOntologiesIndex,
+                                                           ontologySignatureByTypeIndex,
+                                                           subPropertyAxiomsIndex,
+                                                           axiomsByTypeIndex);
     }
 
     private static Set<OWLAnnotation> noAnnotations() {

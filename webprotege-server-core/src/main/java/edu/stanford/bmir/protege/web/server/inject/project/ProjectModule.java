@@ -199,7 +199,7 @@ public class ProjectModule {
 
     @Provides
     public HierarchyProvider<OWLObjectProperty>
-    provideObjectPropertyHierarchyProvider(OWLObjectPropertyHierarchyProvider provider) {
+    provideHierarchyProviderOfObjectProperty(ObjectPropertyHierarchyProvider provider) {
         return provider;
     }
 
@@ -236,6 +236,11 @@ public class ProjectModule {
     @Provides
     public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(HierarchyProvider<OWLDataProperty> hierarchyProvider) {
         return hierarchyProvider;
+    }
+
+    @Provides
+    public ObjectPropertyHierarchyProvider provideObjectPropertyHierarchyProvider(ObjectPropertyHierarchyProviderImpl impl) {
+        return impl;
     }
 
     @Provides

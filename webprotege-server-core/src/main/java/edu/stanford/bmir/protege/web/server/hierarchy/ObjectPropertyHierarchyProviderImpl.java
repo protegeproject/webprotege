@@ -26,7 +26,7 @@ import static org.semanticweb.owlapi.model.AxiomType.SUB_OBJECT_PROPERTY;
  * Date: 23-Jan-2007<br><br>
  */
 @ProjectSingleton
-public class OWLObjectPropertyHierarchyProvider extends AbstractOWLPropertyHierarchyProvider<OWLObjectProperty> {
+public class ObjectPropertyHierarchyProviderImpl extends AbstractOWLPropertyHierarchyProvider<OWLObjectProperty> implements ObjectPropertyHierarchyProvider {
 
     @Nonnull
     private final EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex;
@@ -42,13 +42,13 @@ public class OWLObjectPropertyHierarchyProvider extends AbstractOWLPropertyHiera
 
     @AutoFactory
     @Inject
-    public OWLObjectPropertyHierarchyProvider(@Provided @Nonnull ProjectId projectId,
-                                              @Provided @ObjectPropertyHierarchyRoot OWLObjectProperty root,
-                                              @Provided @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex,
-                                              @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                              @Provided @Nonnull OntologySignatureByTypeIndex ontologySignatureByTypeIndex,
-                                              @Provided @Nonnull SubObjectPropertyAxiomsBySubPropertyIndex subObjectPropertyAxiomsBySubPropertyIndex,
-                                              @Provided @Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
+    public ObjectPropertyHierarchyProviderImpl(@Provided @Nonnull ProjectId projectId,
+                                               @Provided @ObjectPropertyHierarchyRoot OWLObjectProperty root,
+                                               @Provided @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex,
+                                               @Provided @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                               @Provided @Nonnull OntologySignatureByTypeIndex ontologySignatureByTypeIndex,
+                                               @Provided @Nonnull SubObjectPropertyAxiomsBySubPropertyIndex subObjectPropertyAxiomsBySubPropertyIndex,
+                                               @Provided @Nonnull AxiomsByTypeIndex axiomsByTypeIndex) {
         super(projectId, root, entitiesInProjectSignatureIndex, EntityType.OBJECT_PROPERTY, projectOntologiesIndex,
               ontologySignatureByTypeIndex);
         this.entitiesInProjectSignatureIndex = entitiesInProjectSignatureIndex;
