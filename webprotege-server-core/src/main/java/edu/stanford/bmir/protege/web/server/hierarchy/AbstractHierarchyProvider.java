@@ -100,7 +100,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
      * Gets the paths to the root class for the specified object.
      * @return A <code>Set</code> of <code>List</code>s of <code>N</code>s
      */
-    public Set<List<N>> getPathsToRoot(N obj) {
+    public Collection<List<N>> getPathsToRoot(N obj) {
         return setOfPaths(obj, new HashSet<>());
     }
 

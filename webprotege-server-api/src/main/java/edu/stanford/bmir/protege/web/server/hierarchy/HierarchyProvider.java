@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -26,7 +25,7 @@ public interface HierarchyProvider<N> extends HasGetAncestors<N> {
 
     Collection<N> getAncestors(N object);
 
-    Set<List<N>> getPathsToRoot(N object);
+    Collection<List<N>> getPathsToRoot(N object);
 
     boolean isAncestor(N descendant, N ancestor);
 
