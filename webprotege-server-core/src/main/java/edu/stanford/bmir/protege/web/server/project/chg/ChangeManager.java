@@ -10,8 +10,8 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
+import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
@@ -115,7 +115,7 @@ public class ChangeManager implements HasApplyChanges {
     private final DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider;
 
     @Nonnull
-    private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
+    private final AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider;
 
     @Nonnull
     private final UserInSessionFactory userInSessionFactory;
@@ -165,7 +165,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
                          @Nonnull ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider,
                          @Nonnull DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider,
-                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
+                         @Nonnull AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider,
                          @Nonnull UserInSessionFactory userInSessionFactory,
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,
                          @Nonnull RenameMapFactory renameMapFactory,

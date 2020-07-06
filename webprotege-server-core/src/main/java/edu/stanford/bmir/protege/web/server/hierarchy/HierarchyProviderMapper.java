@@ -20,7 +20,7 @@ public class HierarchyProviderMapper {
     public HierarchyProviderMapper(@Nonnull ClassHierarchyProvider classHierarchyProvider,
                                    @Nonnull ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                                    @Nonnull DataPropertyHierarchyProvider dataPropertyHierarchyProvider,
-                                   @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider) {
+                                   @Nonnull AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider) {
         map.put(HierarchyId.CLASS_HIERARCHY, classHierarchyProvider);
         map.put(HierarchyId.OBJECT_PROPERTY_HIERARCHY, objectPropertyHierarchyProvider);
         map.put(HierarchyId.DATA_PROPERTY_HIERARCHY, dataPropertyHierarchyProvider);

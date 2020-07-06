@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProvider;
@@ -37,7 +38,7 @@ public class WatchedChangesManager {
 
     private final DataPropertyHierarchyProvider dataPropertyHierarchyProvider;
 
-    private final HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider;
+    private final AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
     private final RevisionManager changeManager;
 
@@ -52,7 +53,7 @@ public class WatchedChangesManager {
                                  HierarchyProvider<OWLClass> classHierarchyProvider,
                                  ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                                  DataPropertyHierarchyProvider dataPropertyHierarchyProvider,
-                                 HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider,
+                                 AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
                                  RevisionManager changeManager,
                                  EntitiesByRevisionCache entitiesByRevisionCache,
                                  ProjectClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex) {

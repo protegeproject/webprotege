@@ -218,9 +218,15 @@ public class ProjectModule {
 
     @Provides
     public HierarchyProvider<OWLAnnotationProperty>
-    provideAnnotationPropertyHierarchyProvider(
-            OWLAnnotationPropertyHierarchyProvider provider) {
+    provideHierarchyProviderOfAnnotationProperty(
+            AnnotationPropertyHierarchyProvider provider) {
         return provider;
+    }
+
+    @Provides
+    AnnotationPropertyHierarchyProvider provideAnnotationPropertyHierarchyProvider(
+            AnnotationPropertyHierarchyProviderImpl impl) {
+        return impl;
     }
 
     @Provides

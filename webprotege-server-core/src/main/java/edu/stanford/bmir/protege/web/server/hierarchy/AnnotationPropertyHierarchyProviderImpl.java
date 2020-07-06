@@ -30,9 +30,9 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * Date: Apr 23, 2009<br><br>
  */
 @ProjectSingleton
-public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyProvider<OWLAnnotationProperty> {
+public class AnnotationPropertyHierarchyProviderImpl extends AbstractHierarchyProvider<OWLAnnotationProperty> implements AnnotationPropertyHierarchyProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(OWLAnnotationPropertyHierarchyProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AnnotationPropertyHierarchyProviderImpl.class);
 
     private final ProjectId projectId;
 
@@ -54,13 +54,13 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     @Inject
-    public OWLAnnotationPropertyHierarchyProvider(ProjectId projectId,
-                                                  OWLAnnotationPropertyProvider annotationPropertyProvider,
-                                                  ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
-                                                  ProjectOntologiesIndex projectOntologiesIndex,
-                                                  SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyAxioms,
-                                                  SubAnnotationPropertyAxiomsBySuperPropertyIndex subAnnotationPropertyAxiomsBySuperPropertyIndex,
-                                                  EntitiesInProjectSignatureIndex entitiesInSignature) {
+    public AnnotationPropertyHierarchyProviderImpl(ProjectId projectId,
+                                                   OWLAnnotationPropertyProvider annotationPropertyProvider,
+                                                   ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
+                                                   ProjectOntologiesIndex projectOntologiesIndex,
+                                                   SubAnnotationPropertyAxiomsBySubPropertyIndex subAnnotationPropertyAxioms,
+                                                   SubAnnotationPropertyAxiomsBySuperPropertyIndex subAnnotationPropertyAxiomsBySuperPropertyIndex,
+                                                   EntitiesInProjectSignatureIndex entitiesInSignature) {
         this.projectId = projectId;
         this.projectSignatureByTypeIndex = projectSignatureByTypeIndex;
         this.projectOntologiesIndex = projectOntologiesIndex;

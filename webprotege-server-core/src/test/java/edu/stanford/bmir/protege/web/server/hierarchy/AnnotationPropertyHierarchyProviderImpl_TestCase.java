@@ -27,9 +27,9 @@ import static org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory.creat
  * 2019-08-16
  */
 @RunWith(MockitoJUnitRunner.class)
-public class OWLAnnotationPropertyHierarchyProvider_TestCase {
+public class AnnotationPropertyHierarchyProviderImpl_TestCase {
 
-    private OWLAnnotationPropertyHierarchyProvider provider;
+    private AnnotationPropertyHierarchyProviderImpl provider;
 
     @Mock
     private ProjectId projectId;
@@ -98,13 +98,13 @@ public class OWLAnnotationPropertyHierarchyProvider_TestCase {
                 .thenReturn(true);
 
 
-        provider = new OWLAnnotationPropertyHierarchyProvider(projectId,
-                                                              annotationPropertyProvider,
-                                                              projectSignatureIndex,
-                                                              projectOntologiesIndex,
-                                                              subPropertyAxiomsIndex,
-                                                              subPropertyAxiomsBySuperPropertyIndex,
-                                                              entitiesInSignature);
+        provider = new AnnotationPropertyHierarchyProviderImpl(projectId,
+                                                               annotationPropertyProvider,
+                                                               projectSignatureIndex,
+                                                               projectOntologiesIndex,
+                                                               subPropertyAxiomsIndex,
+                                                               subPropertyAxiomsBySuperPropertyIndex,
+                                                               entitiesInSignature);
     }
 
     private static Set<OWLAnnotation> noAnnotations() {
