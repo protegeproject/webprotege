@@ -448,6 +448,7 @@
 
     <modules>
         <module>webprotege-shared</module>
+        <module>webprotege-server-api</module>
         <module>webprotege-server-core</module>
         <module>webprotege-server</module>
         <module>webprotege-client</module>
