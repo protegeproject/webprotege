@@ -16,7 +16,7 @@ public interface HierarchyProvider<N> extends HasGetAncestors<N> {
      */
     Collection<N> getRoots();
 
-    Set<N> getChildren(N object);
+    Collection<N> getChildren(N object);
 
     boolean isLeaf(N object);
 

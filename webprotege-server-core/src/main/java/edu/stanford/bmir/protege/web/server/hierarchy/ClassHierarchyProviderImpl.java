@@ -248,7 +248,7 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
         return Collections.singleton(root);
     }
 
-    public synchronized Set<OWLClass> getChildren(OWLClass object) {
+    public synchronized Collection<OWLClass> getChildren(OWLClass object) {
         rebuildIfNecessary();
         Set<OWLClass> result;
         if(object.equals(root)) {

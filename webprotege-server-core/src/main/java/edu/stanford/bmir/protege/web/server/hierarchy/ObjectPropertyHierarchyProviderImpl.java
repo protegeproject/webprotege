@@ -68,7 +68,7 @@ public class ObjectPropertyHierarchyProviderImpl extends AbstractOWLPropertyHier
     }
 
     @Override
-    public Set<OWLObjectProperty> getChildren(OWLObjectProperty object) {
+    public Collection<OWLObjectProperty> getChildren(OWLObjectProperty object) {
         rebuildIfNecessary();
         if(getRoot().equals(object)) {
             return getChildrenOfRoot();

@@ -58,7 +58,7 @@ public class DataPropertyHierarchyProviderImpl extends AbstractOWLPropertyHierar
 
 
     @Override
-    public Set<OWLDataProperty> getChildren(OWLDataProperty property) {
+    public Collection<OWLDataProperty> getChildren(OWLDataProperty property) {
         rebuildIfNecessary();
         if(getRoot().equals(property)) {
             return getChildrenOfRoot();
