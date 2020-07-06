@@ -68,6 +68,11 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
     }
 
 
+    @Override
+    public boolean isLeaf(N object) {
+        return getChildren(object).isEmpty();
+    }
+
     public Set<N> getDescendants(N object) {
         Set<N> results = new HashSet<>();
         getDescendants(results, object);

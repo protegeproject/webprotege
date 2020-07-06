@@ -48,19 +48,21 @@ public class OWLObjectPropertyHierarchyChangeComputer extends HierarchyChangeCom
                 new GraphNode<>(renderer.render(parent)),
                 new GraphNode<>(renderer.render(child))
         ));
-        return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), OBJECT_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge)))
-        );
+        return Collections.singletonList(new EntityHierarchyChangedEvent(getProjectId(),
+                                                                         OBJECT_PROPERTY_HIERARCHY,
+                                                                         new GraphModelChangedEvent<>(Collections.singletonList(
+                                                                                 removeEdge))));
     }
 
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLObjectProperty child, OWLObjectProperty parent) {
         AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent), hierarchyProvider.isLeaf(parent)),
+                new GraphNode<>(renderer.render(child), hierarchyProvider.isLeaf(child))
         ));
-        return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), OBJECT_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))
-        );
+        return Collections.singletonList(new EntityHierarchyChangedEvent(getProjectId(),
+                                                                         OBJECT_PROPERTY_HIERARCHY,
+                                                                         new GraphModelChangedEvent<>(Collections.singletonList(
+                                                                                 addEdge))));
     }
 }

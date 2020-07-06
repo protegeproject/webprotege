@@ -65,7 +65,7 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
                     roots.stream()
                          .map(rootEntity -> {
                              EntityNode rootNode = renderer.render(rootEntity);
-                             return new GraphNode<>(rootNode, hierarchyProvider.getChildren(rootEntity).isEmpty());
+                             return new GraphNode<>(rootNode, hierarchyProvider.isLeaf(rootEntity));
                          })
                          .sorted(comparing(node -> node.getUserObject().getBrowserText()))
                          .collect(toList());

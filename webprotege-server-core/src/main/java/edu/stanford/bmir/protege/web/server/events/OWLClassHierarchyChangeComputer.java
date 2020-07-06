@@ -57,11 +57,12 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLClass child, OWLClass parent) {
         AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent), classHierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderer.render(child), classHierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent), classHierarchyProvider.isLeaf(parent)),
+                new GraphNode<>(renderer.render(child), classHierarchyProvider.isLeaf(child))
         ));
-        return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))
-        );
+        return Collections.singletonList(new EntityHierarchyChangedEvent(getProjectId(),
+                                                                         CLASS_HIERARCHY,
+                                                                         new GraphModelChangedEvent<>(Collections.singletonList(
+                                                                                 addEdge))));
     }
 }

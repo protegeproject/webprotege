@@ -50,8 +50,8 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLDataProperty child, OWLDataProperty parent) {
         AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent), hierarchyProvider.isLeaf(parent)),
+                new GraphNode<>(renderer.render(child), hierarchyProvider.isLeaf(child))
         ));
         return Collections.singletonList(
                 new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))

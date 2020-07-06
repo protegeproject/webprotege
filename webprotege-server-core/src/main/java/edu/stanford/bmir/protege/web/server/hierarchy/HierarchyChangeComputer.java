@@ -99,7 +99,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
             if (!roots.contains(rootAfter)) {
                 List<GraphModelChange<EntityNode>> changes = Collections.singletonList(new AddRootNode<>(
                         new GraphNode<>(renderer.render(rootAfter),
-                                        hierarchyProvider.getChildren(rootAfter).isEmpty())));
+                                        hierarchyProvider.isLeaf(rootAfter))));
                 EntityHierarchyChangedEvent event = new EntityHierarchyChangedEvent(projectId,
                                                                                     hierarchyId,
                                                                                     new GraphModelChangedEvent<>(changes));
