@@ -243,7 +243,7 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
                 .anyMatch(entity -> entity.equals(object));
     }
 
-    public synchronized Set<OWLClass> getRoots() {
+    public synchronized Collection<OWLClass> getRoots() {
         rebuildIfNecessary();
         return Collections.singleton(root);
     }

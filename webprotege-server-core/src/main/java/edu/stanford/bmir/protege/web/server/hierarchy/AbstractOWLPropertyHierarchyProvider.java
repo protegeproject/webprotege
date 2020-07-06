@@ -179,7 +179,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
     /**
      * Gets the objects that represent the roots of the hierarchy.
      */
-    public Set<P> getRoots() {
+    public Collection<P> getRoots() {
         rebuildIfNecessary();
         return Collections.singleton(getRoot());
     }

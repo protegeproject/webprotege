@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -60,7 +61,7 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
     public GetHierarchyRootsResult execute(@Nonnull GetHierarchyRootsAction action, @Nonnull ExecutionContext executionContext) {
         HierarchyId hierarchyId = action.getHierarchyId();
         return hierarchyProviderMapper.getHierarchyProvider(hierarchyId).map(hierarchyProvider -> {
-            Set<OWLEntity> roots = hierarchyProvider.getRoots();
+            Collection<OWLEntity> roots = hierarchyProvider.getRoots();
             List<GraphNode<EntityNode>> rootNodes =
                     roots.stream()
                          .map(rootEntity -> {

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public interface HierarchyProvider<N> extends HasGetAncestors<N> {
     /**
      * Gets the objects that represent the roots of the hierarchy.
      */
-    Set<N> getRoots();
+    Collection<N> getRoots();
 
     Set<N> getChildren(N object);
 
