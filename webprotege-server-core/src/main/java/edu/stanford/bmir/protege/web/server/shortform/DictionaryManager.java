@@ -32,7 +32,7 @@ public class DictionaryManager {
     private final MultiLingualDictionary dictionary;
 
     @Nonnull
-    private MultilingualDictionaryUpdater updatableDictionary;
+    private final MultilingualDictionaryUpdater updatableDictionary;
 
     @Nonnull
     private final BuiltInShortFormDictionary builtInShortFormDictionary;
