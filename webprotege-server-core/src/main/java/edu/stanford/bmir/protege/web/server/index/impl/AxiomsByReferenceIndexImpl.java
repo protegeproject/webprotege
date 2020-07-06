@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
 import com.google.common.collect.Streams;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAxiomsByIriReferenceIndex;
-import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
-import edu.stanford.bmir.protege.web.server.index.AxiomsByReferenceIndex;
+import edu.stanford.bmir.protege.web.server.index.*;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;

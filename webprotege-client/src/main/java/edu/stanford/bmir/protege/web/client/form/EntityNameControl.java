@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -13,11 +14,8 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
+import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityNameControl extends Composite implements FormControl, HasPlaceholder {
 
-    private EntityNameControlDescriptor descriptor;
+    private EntityNameControlDescriptorDto descriptor;
 
     interface EntityNameControlUiBinder extends UiBinder<HTMLPanel, EntityNameControl> {
 
@@ -59,7 +57,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
         editor.setDatatypesAllowed(true);
     }
 
-    public void setDescriptor(@Nonnull EntityNameControlDescriptor descriptor) {
+    public void setDescriptor(@Nonnull EntityNameControlDescriptorDto descriptor) {
         this.descriptor = checkNotNull(descriptor);
         descriptor.getMatchCriteria().ifPresent(c -> editor.setCriteria(c));
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
@@ -103,11 +101,17 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
         editor.clearValue();
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
+    }
+
     @Override
     public Optional<FormControlData> getValue() {
         return editor.getValue()
                 .flatMap(OWLPrimitiveData::asEntity)
-                .map(entity -> EntityNameControlData.get(descriptor, entity));
+                .map(entity -> EntityNameControlData.get(descriptor.toFormControlDescriptor(), entity));
     }
 
     @Override
@@ -123,5 +127,10 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     @Override
     public boolean isEnabled() {
         return editor.isEnabled();
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
     }
 }

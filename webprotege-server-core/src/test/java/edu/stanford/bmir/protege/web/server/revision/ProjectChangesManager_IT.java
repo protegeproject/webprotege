@@ -95,33 +95,33 @@ public class ProjectChangesManager_IT {
         when(defaultOntologyIdManager.getDefaultOntologyId())
                 .thenReturn(rootOntology.getOntologyID());
         when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
+
         var ontologiesIndex = new ProjectOntologiesIndexImpl();
+        ontologiesIndex.init(revisionManager);
 
         var annotationAssertionsIndex = new AnnotationAssertionAxiomsBySubjectIndexImpl();
         var projectAnnotationAssertionsIndex = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex,
                                                                                                       annotationAssertionsIndex);
-        var annotationAssertionAxioms = new ProjectAnnotationAssertionAxiomsBySubjectIndexImpl(ontologiesIndex, annotationAssertionsIndex);
-        AxiomsByTypeIndex axiomsByTypeIndex = new AxiomsByTypeIndexImpl();
 
         var axiomsByEntityReference = new AxiomsByEntityReferenceIndexImpl(dataFactory);
-        var projectOntologiesIndex = new ProjectOntologiesIndexImpl();
         LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManagerImpl(projectId,
                                                                                                         axiomsByEntityReference,
-                                                                                                        projectOntologiesIndex), repo);
+                                                                                                        ontologiesIndex), repo);
 
         var entitiesInOntologySignatureByIri = new EntitiesInOntologySignatureByIriIndexImpl(axiomsByEntityReference,
                                                                                              new OntologyAnnotationsIndexImpl());
-        var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(projectOntologiesIndex,
+        var entitiesInSignatureIndex = new EntitiesInProjectSignatureByIriIndexImpl(ontologiesIndex,
                                                                                     entitiesInOntologySignatureByIri);
         var ontologySignatureIndex = new OntologySignatureIndexImpl(axiomsByEntityReference);
-        var projectSignatureIndex = new ProjectSignatureIndexImpl(projectOntologiesIndex, ontologySignatureIndex);
+        var projectSignatureIndex = new ProjectSignatureIndexImpl(ontologiesIndex, ontologySignatureIndex);
 
-        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, projectOntologiesIndex,
+        var multilingualDictionary = new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, ontologiesIndex,
                                                                                                      axiomsByEntityReference,
                                                                                                      entitiesInSignatureIndex,
                                                                                                      projectSignatureIndex,
                                                                                                      dataFactory), new DictionaryUpdater(projectAnnotationAssertionsIndex));
         DictionaryManager dictionaryManager = new DictionaryManager(languageManager,
+                                                                    multilingualDictionary,
                                                                     multilingualDictionary,
                                                                     new BuiltInShortFormDictionary(new ShortFormCache(),
                                                                                                    dataFactory));
@@ -137,7 +137,7 @@ public class ProjectChangesManager_IT {
         OWLIndividualSelector individualSelector = new OWLIndividualSelector(entityComparator);
         SWRLAtomSelector atomSelector = new SWRLAtomSelector((o1, o2) -> 0);
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(languageManager, multilingualDictionary, new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
+                new DictionaryManager(languageManager, multilingualDictionary, multilingualDictionary, new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 NullDeprecatedEntityChecker.get(),
                 new ManchesterSyntaxObjectRenderer(
                         shortFormAdapter,
@@ -169,7 +169,7 @@ public class ProjectChangesManager_IT {
                 ),
                                                    () -> new Revision2DiffElementsTranslator(new WebProtegeOntologyIRIShortFormProvider(defaultOntologyIdManager),
                                                                                              defaultOntologyIdManager,
-                                                                                             projectOntologiesIndex));
+                                                                                             ontologiesIndex));
 
 
         createChanges(manager, rootOntology, dataFactory, revisionManager);

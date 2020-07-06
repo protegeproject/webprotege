@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.ProjectClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.revision.EntitiesByRevisionCache;
 import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,13 +30,13 @@ import static edu.stanford.bmir.protege.web.shared.watches.WatchType.BRANCH;
 @ProjectSingleton
 public class WatchedChangesManager {
 
-    private final HierarchyProvider<OWLClass> classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
-    private final HierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider;
+    private final ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
 
-    private final HierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider;
+    private final DataPropertyHierarchyProvider dataPropertyHierarchyProvider;
 
-    private final HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider;
+    private final AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
     private final RevisionManager changeManager;
 
@@ -47,10 +48,10 @@ public class WatchedChangesManager {
 
     @Inject
     public WatchedChangesManager(ProjectChangesManager projectChangesManager,
-                                 HierarchyProvider<OWLClass> classHierarchyProvider,
-                                 HierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider,
-                                 HierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider,
-                                 HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider,
+                                 ClassHierarchyProvider classHierarchyProvider,
+                                 ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
+                                 DataPropertyHierarchyProvider dataPropertyHierarchyProvider,
+                                 AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
                                  RevisionManager changeManager,
                                  EntitiesByRevisionCache entitiesByRevisionCache,
                                  ProjectClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex) {
@@ -114,7 +115,7 @@ public class WatchedChangesManager {
             @Nonnull
             @Override
             public Boolean visit(@Nonnull OWLClass cls) {
-                final Set<? extends OWLEntity> ancestors = classHierarchyProvider.getAncestors(cls);
+                final var ancestors = classHierarchyProvider.getAncestors(cls);
                 return isWatchedByAncestor(ancestors);
             }
 
@@ -157,7 +158,7 @@ public class WatchedChangesManager {
                 return isWatchedByAncestor(annotationPropertyHierarchyProvider.getAncestors(property));
             }
 
-            private Boolean isWatchedByAncestor(Set<? extends OWLEntity> ancestors) {
+            private Boolean isWatchedByAncestor(Collection<? extends OWLEntity> ancestors) {
                 for (OWLEntity anc : ancestors) {
                     if (watchedAncestors.contains(anc)) {
                         return true;

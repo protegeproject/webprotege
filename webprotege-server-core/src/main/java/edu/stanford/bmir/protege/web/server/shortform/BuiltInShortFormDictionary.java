@@ -56,7 +56,7 @@ public class BuiltInShortFormDictionary {
         return shortFormCache.getShortFormsContaining(searchStrings,
                                                       entityTypes,
                                                       (entity, shortForm, matchCount, matchPositions)
-                -> new ShortFormMatch(entity, shortForm, DictionaryLanguage.localName(), matchCount, matchPositions));
+                -> ShortFormMatch.get(entity, shortForm, DictionaryLanguage.localName(), matchCount, matchPositions));
     }
 
     public void load() {

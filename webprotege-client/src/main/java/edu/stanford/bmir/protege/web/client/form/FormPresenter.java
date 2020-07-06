@@ -3,17 +3,17 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -30,7 +31,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * <p>
  * Presents a form and its associated form data.
  */
-public class FormPresenter {
+public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     @Nonnull
     private final FormView formView;
@@ -44,7 +45,7 @@ public class FormPresenter {
     private final List<FormFieldPresenter> fieldPresenters = new ArrayList<>();
 
     @Nonnull
-    private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
+    private Optional<FormDescriptorDto> currentFormDescriptor = Optional.empty();
 
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
@@ -55,12 +56,18 @@ public class FormPresenter {
 
     private Set<FormFieldId> collapsedFields = new HashSet<>();
 
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = formId -> {};
 
     private boolean enabled = true;
 
     @Nonnull
-    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
+    private FormRegionOrderingChangedHandler orderByChangedHandler = () -> {};
+
+    @Nonnull
+    private Optional<FormId> formId = Optional.empty();
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangeHandler = event -> {};
 
     @AutoFactory
     @Inject
@@ -80,7 +87,7 @@ public class FormPresenter {
     }
 
     public void collapseAll() {
-        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED));
+        fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.COLLAPSED));
     }
 
     /**
@@ -92,6 +99,7 @@ public class FormPresenter {
         checkNotNull(formData);
         saveExpansionState();
         currentSubject = formData.getSubject();
+        this.formId = Optional.of(formData.getFormDescriptor().getFormId());
         if(currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()))) {
             updateFormData(formData);
         }
@@ -116,7 +124,7 @@ public class FormPresenter {
     public void saveExpansionState() {
         collapsedFields.clear();
         fieldPresenters.forEach(p -> {
-            if(p.getExpansionState() == FormFieldPresenter.ExpansionState.COLLAPSED) {
+            if(p.getExpansionState() == ExpansionState.COLLAPSED) {
                 FormFieldId id = p.getValue()
                                   .getFormFieldDescriptor()
                                   .getId();
@@ -130,13 +138,13 @@ public class FormPresenter {
         fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setEnabled(enabled));
     }
 
-    public void setGridOrderByChangedHandler(GridOrderByChangedHandler handler) {
+    public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler handler) {
         this.orderByChangedHandler = checkNotNull(handler);
     }
 
     public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler handler) {
         this.formRegionPageChangedHandler = checkNotNull(handler);
-        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(handler));
+        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler()));
     }
 
     private void updateFormData(@Nonnull FormDataDto formData) {
@@ -159,7 +167,7 @@ public class FormPresenter {
      */
     private void createFormAndSetFormData(@Nonnull FormDataDto formData) {
         clear();
-        FormDescriptor formDescriptor = formData.getFormDescriptor();
+        FormDescriptorDto formDescriptor = formData.getFormDescriptor();
         currentFormDescriptor = Optional.of(formDescriptor);
         dispatchServiceManager.beginBatch();
         for(FormFieldDataDto fieldData : formData.getFormFieldData()) {
@@ -177,17 +185,20 @@ public class FormPresenter {
     }
 
     private void addFormField(@Nonnull FormFieldDataDto formFieldData) {
-        FormFieldDescriptor formFieldDescriptor = formFieldData.getFormFieldDescriptor();
+        FormFieldDescriptorDto formFieldDescriptor = formFieldData.getFormFieldDescriptor();
+        if(formFieldDescriptor.getInitialExpansionState().equals(ExpansionState.COLLAPSED)) {
+            collapsedFields.add(formFieldData.getFormFieldDescriptor().getId());
+        }
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
         presenter.setEnabled(enabled);
-        presenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+        presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
+        presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
         presenter.start();
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         fieldPresenters.add(presenter);
         if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()
                                                  .getId())) {
-            GWT.log("[FormPresenter] Setting collapsed");
-            presenter.setExpansionState(FormFieldPresenter.ExpansionState.COLLAPSED);
+            presenter.setExpansionState(ExpansionState.COLLAPSED);
         }
         // TODO : Change handler
         presenter.setValue(formFieldData);
@@ -195,8 +206,16 @@ public class FormPresenter {
         formView.addFormElementView(formFieldView, formFieldDescriptor.getFieldRun());
     }
 
+    private RegionPageChangedHandler newRegionPageChangedHandler() {
+        return () -> {
+            formId.ifPresent(id -> {
+                formRegionPageChangedHandler.handleFormRegionPageChanged(FormRegionPageChangedEvent.get(id));
+            });
+        };
+    }
+
     public void expandAll() {
-        fieldPresenters.forEach(p -> p.setExpansionState(FormFieldPresenter.ExpansionState.EXPANDED));
+        fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.EXPANDED));
     }
 
     /**
@@ -212,7 +231,7 @@ public class FormPresenter {
                                                                         .map(FormFieldPresenter::getValue)
                                                                         .collect(toImmutableList());
             return FormData.get(currentSubject.map(FormSubjectDto::toFormSubject),
-                                formDescriptor,
+                                formDescriptor.toFormDescriptor(),
                                 formFieldData);
         });
     }
@@ -255,9 +274,23 @@ public class FormPresenter {
         container.setWidget(noFormView);
     }
 
-    public Stream<GridControlOrdering> getGridControlOrderings() {
+    public Stream<FormRegionOrdering> getOrderings() {
         return fieldPresenters.stream()
-                .flatMap(FormFieldPresenter::getGridControlOrderings);
+                .flatMap(FormFieldPresenter::getOrderings);
+    }
+
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return fieldPresenters.stream()
+                .flatMap(formFieldPresenter -> formFieldPresenter.getFilters().stream())
+                .collect(toImmutableSet());
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        formRegionFilterChangeHandler = checkNotNull(handler);
+        fieldPresenters.forEach(formFieldPresenter -> {
+            formFieldPresenter.setFormRegionFilterChangedHandler(handler);
+        });
     }
 
     interface FormDataChangedHandler {

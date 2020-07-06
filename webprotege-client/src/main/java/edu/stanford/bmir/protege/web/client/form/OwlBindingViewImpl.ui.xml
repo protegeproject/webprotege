@@ -29,6 +29,7 @@
         </g:HTMLPanel>
         <g:RadioButton ui:field="classRadioButton" name="binding-{counter.getValue}" text="Parents (classes or types) of subject"/>
         <g:RadioButton ui:field="instanceRadioButton" name="binding-{counter.getValue}" text="Instances of subject"/>
+        <g:RadioButton ui:field="subClassRadioButton" name="binding-{counter.getValue}" text="Subclasses of subject"/>
 
     </g:HTMLPanel>
 </ui:UiBinder>

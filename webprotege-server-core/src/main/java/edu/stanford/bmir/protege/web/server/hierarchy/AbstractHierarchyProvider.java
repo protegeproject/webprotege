@@ -24,23 +24,14 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHierarchyProvider.class);
 
-
-    private boolean fireEvents;
-
-    private List<OWLObjectHierarchyProviderListener<N>> listeners;
-
-
     protected AbstractHierarchyProvider() {
-        listeners = new ArrayList<>();
-        fireEvents = true;
     }
 
     public void dispose() {
-        listeners.clear();
     }
 
 
-    public Set<N> getAncestors(N object) {
+    public Collection<N> getAncestors(N object) {
         Set<N> results = new HashSet<>();
         getAncestors(results, object);
         return results;
@@ -77,7 +68,12 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
     }
 
 
-    public Set<N> getDescendants(N object) {
+    @Override
+    public boolean isLeaf(N object) {
+        return getChildren(object).isEmpty();
+    }
+
+    public Collection<N> getDescendants(N object) {
         Set<N> results = new HashSet<>();
         getDescendants(results, object);
         return results;
@@ -104,7 +100,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
      * Gets the paths to the root class for the specified object.
      * @return A <code>Set</code> of <code>List</code>s of <code>N</code>s
      */
-    public Set<List<N>> getPathsToRoot(N obj) {
+    public Collection<List<N>> getPathsToRoot(N obj) {
         return setOfPaths(obj, new HashSet<>());
     }
 
@@ -138,62 +134,5 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
             path.add(obj);
         }
         return setOfPaths;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    private Set<N> createSet() {
-        return new HashSet<>();
-    }
-
-
-    protected void setFireEvents(boolean b) {
-        fireEvents = b;
-    }
-
-
-    public void addListener(OWLObjectHierarchyProviderListener<N> listener) {
-        listeners.add(listener);
-    }
-
-
-    public void removeListener(OWLObjectHierarchyProviderListener<N> listener) {
-        listeners.remove(listener);
-    }
-
-
-    protected void fireNodeChanged(N node) {
-        if (!fireEvents) {
-            return;
-        }
-        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<>(
-                listeners)) {
-            try {
-                listener.nodeChanged(node);
-            }
-            catch (Throwable e) {
-                e.printStackTrace();
-                logger.warn(getClass().getName() + ": Listener" + listener + " has thrown an exception.  Removing bad listener!");
-                listeners.remove(listener);
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-
-    protected void fireHierarchyChanged() {
-        if (!fireEvents) {
-            return;
-        }
-        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<>(
-                listeners)) {
-            try {
-                listener.hierarchyChanged();
-            }
-            catch (Throwable e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

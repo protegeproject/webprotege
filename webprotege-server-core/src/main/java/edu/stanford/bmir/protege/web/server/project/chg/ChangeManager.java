@@ -10,10 +10,10 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProviderImpl;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
+import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProviderImpl;
+import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
@@ -52,7 +52,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
@@ -107,16 +106,16 @@ public class ChangeManager implements HasApplyChanges {
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final ClassHierarchyProvider classHierarchyProvider;
+    private final ClassHierarchyProviderImpl classHierarchyProvider;
 
     @Nonnull
-    private final OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
+    private final ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider;
 
     @Nonnull
-    private final OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider;
+    private final DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider;
 
     @Nonnull
-    private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
+    private final AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider;
 
     @Nonnull
     private final UserInSessionFactory userInSessionFactory;
@@ -163,10 +162,10 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull RevisionManager changeManager,
                          @Nonnull RootIndex rootIndex,
                          @Nonnull DictionaryManager dictionaryManager,
-                         @Nonnull ClassHierarchyProvider classHierarchyProvider,
-                         @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
-                         @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
-                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
+                         @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
+                         @Nonnull ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider,
+                         @Nonnull DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider,
+                         @Nonnull AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider,
                          @Nonnull UserInSessionFactory userInSessionFactory,
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,
                          @Nonnull RenameMapFactory renameMapFactory,

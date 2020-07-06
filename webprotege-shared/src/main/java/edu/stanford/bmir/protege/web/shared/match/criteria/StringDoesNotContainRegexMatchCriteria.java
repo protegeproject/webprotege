@@ -29,4 +29,9 @@ public abstract class StringDoesNotContainRegexMatchCriteria implements RegexMat
     public <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public <R> R accept(@Nonnull LiteralCriteriaVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
 }

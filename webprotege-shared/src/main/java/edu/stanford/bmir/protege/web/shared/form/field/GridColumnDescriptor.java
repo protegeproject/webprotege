@@ -52,6 +52,11 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
     }
 
     @JsonIgnore
+    public Stream<GridColumnId> getLeafColumnIds() {
+        return getLeafColumnDescriptors().map(GridColumnDescriptor::getId);
+    }
+
+    @JsonIgnore
     public boolean isLeafColumnDescriptor() {
         return !(getFormControlDescriptor() instanceof GridControlDescriptor);
     }
@@ -88,6 +93,11 @@ public abstract class GridColumnDescriptor implements BoundControlDescriptor {
         else {
             return 1;
         }
+    }
+
+    @JsonIgnore
+    public boolean isRepeatable() {
+        return getRepeatability().isRepeatable();
     }
 
     // TODO: Column width, grow, shrink

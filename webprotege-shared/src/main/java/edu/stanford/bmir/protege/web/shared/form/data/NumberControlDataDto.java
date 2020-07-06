@@ -13,12 +13,15 @@ import java.util.Optional;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class NumberControlDataDto implements FormControlDataDto {
+public abstract class NumberControlDataDto implements FormControlDataDto, Comparable<NumberControlDataDto> {
+
+    private Double numericValue;
 
     @Nonnull
     public static NumberControlDataDto get(@Nonnull NumberControlDescriptor descriptor,
-                                           @Nonnull OWLLiteral value) {
-        return new AutoValue_NumberControlDataDto(descriptor, value);
+                                           @Nonnull OWLLiteral value,
+                                           int depth) {
+        return new AutoValue_NumberControlDataDto(depth, descriptor, value);
     }
 
     @Nonnull
@@ -43,6 +46,27 @@ public abstract class NumberControlDataDto implements FormControlDataDto {
     @Override
     public NumberControlData toFormControlData() {
         return NumberControlData.get(getDescriptor(),
-                getValueInternal());
+                                     getValueInternal());
+    }
+
+    private Double getNumericValue() {
+        if (numericValue == null) {
+            OWLLiteral literal = getValueInternal();
+            if (literal == null) {
+                numericValue = Double.MIN_VALUE;
+            } else {
+                try {
+                    numericValue = Double.parseDouble(literal.getLiteral().trim());
+                } catch (NumberFormatException e) {
+                    numericValue = Double.MIN_VALUE;
+                }
+            }
+        }
+        return numericValue;
+    }
+
+    @Override
+    public int compareTo(@Nonnull NumberControlDataDto o) {
+        return getNumericValue().compareTo(o.getNumericValue());
     }
 }

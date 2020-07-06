@@ -17,8 +17,9 @@ import java.util.Optional;
 public abstract class EntityNameControlDataDto implements FormControlDataDto {
 
     public static EntityNameControlDataDto get(@Nonnull EntityNameControlDescriptor descriptor,
-                                               @Nonnull OWLEntityData entityData) {
-        return new AutoValue_EntityNameControlDataDto(descriptor, entityData);
+                                               @Nonnull OWLEntityData entityData,
+                                               int depth) {
+        return new AutoValue_EntityNameControlDataDto(depth, descriptor, entityData);
     }
 
     @JsonProperty("descriptor")

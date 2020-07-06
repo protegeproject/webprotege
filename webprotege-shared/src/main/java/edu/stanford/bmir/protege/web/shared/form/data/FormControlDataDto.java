@@ -11,4 +11,6 @@ public interface FormControlDataDto extends IsSerializable {
 
     @Nonnull
     FormControlData toFormControlData();
+
+    int getDepth();
 }

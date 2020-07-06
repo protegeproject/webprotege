@@ -12,8 +12,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -67,6 +66,16 @@ public class RpcWhiteList implements Action, Result {
         this.langTagFilter = langTagFilter;
     }
 
+    public FormRegionFilter getFormRegionFilter() {
+        return formRegionFilter;
+    }
+
+    public void setFormRegionFilter(FormRegionFilter formRegionFilter) {
+        this.formRegionFilter = formRegionFilter;
+    }
+
+    FormRegionFilter formRegionFilter;
+
     LangTagFilter langTagFilter;
 
     MultiMatchType multiMatchType;
@@ -92,6 +101,8 @@ public class RpcWhiteList implements Action, Result {
     ProjectDetails projectDetails;
 
     OWLPrimitiveData primitiveData;
+
+    FilterState filterState;
 
     State state;
 
@@ -213,11 +224,11 @@ public class RpcWhiteList implements Action, Result {
 
     public ChoiceDescriptorDto choiceDescriptorDto;
 
-    public GridControlOrderBy gridControlOrderBy;
+    public FormRegionOrdering formRegionOrdering;
 
-    public GridControlOrdering gridControlOrdering;
+    public FormRegionOrdering gridControlOrdering;
 
-    public GridControlOrderByDirection gridControlOrderByDirection;
+    public FormRegionOrderingDirection formRegionOrderingDirection;
 
     public FormPageRequest.SourceType getSource() {
         return source;
@@ -227,7 +238,171 @@ public class RpcWhiteList implements Action, Result {
         this.source = source;
     }
 
+    public ExpansionState expansionState;
+
     FormPageRequest.SourceType source;
+
+    FormDescriptorDto formDescriptorDto;
+
+    FormFieldDescriptorDto formFieldDescriptorDto;
+
+    FormControlDescriptorDto formControlDescriptorDto;
+
+    GridColumnDescriptorDto gridColumnDescriptorDto;
+
+    OwlSubClassBinding subClassBinding;
+
+    public PrimitiveFormControlDataDto getPrimitiveFormControlDataDto() {
+        return primitiveFormControlDataDto;
+    }
+
+    public void setPrimitiveFormControlDataDto(PrimitiveFormControlDataDto primitiveFormControlDataDto) {
+        this.primitiveFormControlDataDto = primitiveFormControlDataDto;
+    }
+
+    public FormControlDataDto getFormControlDataDto() {
+        return formControlDataDto;
+    }
+
+    public void setFormControlDataDto(FormControlDataDto formControlDataDto) {
+        this.formControlDataDto = formControlDataDto;
+    }
+
+    public FormDataDto getFormDataDto() {
+        return formDataDto;
+    }
+
+    public void setFormDataDto(FormDataDto formDataDto) {
+        this.formDataDto = formDataDto;
+    }
+
+    public FormFieldDataDto getFormFieldDataDto() {
+        return formFieldDataDto;
+    }
+
+    public void setFormFieldDataDto(FormFieldDataDto formFieldDataDto) {
+        this.formFieldDataDto = formFieldDataDto;
+    }
+
+    public FormSubjectDto getFormSubjectDto() {
+        return formSubjectDto;
+    }
+
+    public void setFormSubjectDto(FormSubjectDto formSubjectDto) {
+        this.formSubjectDto = formSubjectDto;
+    }
+
+    public FormEntitySubjectDto getFormEntitySubjectDto() {
+        return formEntitySubjectDto;
+    }
+
+    public void setFormEntitySubjectDto(FormEntitySubjectDto formEntitySubjectDto) {
+        this.formEntitySubjectDto = formEntitySubjectDto;
+    }
+
+    public GridControlDataDto getGridControlDataDto() {
+        return gridControlDataDto;
+    }
+
+    public void setGridControlDataDto(GridControlDataDto gridControlDataDto) {
+        this.gridControlDataDto = gridControlDataDto;
+    }
+
+    public GridRowDataDto getGridRowDataDto() {
+        return gridRowDataDto;
+    }
+
+    public void setGridRowDataDto(GridRowDataDto gridRowDataDto) {
+        this.gridRowDataDto = gridRowDataDto;
+    }
+
+    public GridCellDataDto getGridCellDataDto() {
+        return gridCellDataDto;
+    }
+
+    public void setGridCellDataDto(GridCellDataDto gridCellDataDto) {
+        this.gridCellDataDto = gridCellDataDto;
+    }
+
+    public ChoiceDescriptorDto getChoiceDescriptorDto() {
+        return choiceDescriptorDto;
+    }
+
+    public void setChoiceDescriptorDto(ChoiceDescriptorDto choiceDescriptorDto) {
+        this.choiceDescriptorDto = choiceDescriptorDto;
+    }
+
+    public FormRegionOrdering getFormRegionOrdering() {
+        return formRegionOrdering;
+    }
+
+    public void setFormRegionOrdering(FormRegionOrdering formRegionOrdering) {
+        this.formRegionOrdering = formRegionOrdering;
+    }
+
+    public FormRegionOrdering getGridControlOrdering() {
+        return gridControlOrdering;
+    }
+
+    public void setGridControlOrdering(FormRegionOrdering gridControlOrdering) {
+        this.gridControlOrdering = gridControlOrdering;
+    }
+
+    public FormRegionOrderingDirection getFormRegionOrderingDirection() {
+        return formRegionOrderingDirection;
+    }
+
+    public void setFormRegionOrderingDirection(FormRegionOrderingDirection formRegionOrderingDirection) {
+        this.formRegionOrderingDirection = formRegionOrderingDirection;
+    }
+
+    public ExpansionState getExpansionState() {
+        return expansionState;
+    }
+
+    public void setExpansionState(ExpansionState expansionState) {
+        this.expansionState = expansionState;
+    }
+
+    public FormDescriptorDto getFormDescriptorDto() {
+        return formDescriptorDto;
+    }
+
+    public void setFormDescriptorDto(FormDescriptorDto formDescriptorDto) {
+        this.formDescriptorDto = formDescriptorDto;
+    }
+
+    public FormFieldDescriptorDto getFormFieldDescriptorDto() {
+        return formFieldDescriptorDto;
+    }
+
+    public void setFormFieldDescriptorDto(FormFieldDescriptorDto formFieldDescriptorDto) {
+        this.formFieldDescriptorDto = formFieldDescriptorDto;
+    }
+
+    public FormControlDescriptorDto getFormControlDescriptorDto() {
+        return formControlDescriptorDto;
+    }
+
+    public void setFormControlDescriptorDto(FormControlDescriptorDto formControlDescriptorDto) {
+        this.formControlDescriptorDto = formControlDescriptorDto;
+    }
+
+    public GridColumnDescriptorDto getGridColumnDescriptorDto() {
+        return gridColumnDescriptorDto;
+    }
+
+    public void setGridColumnDescriptorDto(GridColumnDescriptorDto gridColumnDescriptorDto) {
+        this.gridColumnDescriptorDto = gridColumnDescriptorDto;
+    }
+
+    public OwlSubClassBinding getSubClassBinding() {
+        return subClassBinding;
+    }
+
+    public void setSubClassBinding(OwlSubClassBinding subClassBinding) {
+        this.subClassBinding = subClassBinding;
+    }
 
     public FormPageRequest getFormPageRequest() {
         return formPageRequest;

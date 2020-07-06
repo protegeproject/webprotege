@@ -62,28 +62,6 @@ public class FormDescriptor implements IsSerializable {
         return label;
     }
 
-    @JsonIgnore
-    @Nonnull
-    public ImmutableSet<OWLProperty> getOwlProperties() {
-        return elements.stream()
-                       .map(FormFieldDescriptor::getOwlBinding)
-                       .filter(Optional::isPresent)
-                       .map(Optional::get)
-                       .filter(binding -> binding instanceof OwlPropertyBinding)
-                       .map(binding -> (OwlPropertyBinding) binding)
-                       .map(OwlPropertyBinding::getProperty)
-                       .collect(toImmutableSet());
-    }
-
-    public Optional<OWLProperty> getOwlProperty(@Nonnull FormFieldId formFieldId) {
-        return elements.stream()
-                .filter(element -> element.getId().equals(formFieldId))
-                       .map(FormFieldDescriptor::getOwlProperty)
-                       .filter(Optional::isPresent)
-                       .map(Optional::get)
-                       .findFirst();
-    }
-
     @Nonnull
     public Optional<FormSubjectFactoryDescriptor> getSubjectFactoryDescriptor() {
         return Optional.ofNullable(subjectFactoryDescriptor);

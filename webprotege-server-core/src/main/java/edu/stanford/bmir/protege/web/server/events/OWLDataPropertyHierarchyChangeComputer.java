@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
+import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -24,12 +25,12 @@ import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.DATA_PR
 */
 public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeComputer<OWLDataProperty> {
 
-    private final HierarchyProvider<OWLDataProperty> hierarchyProvider;
+    private final DataPropertyHierarchyProvider hierarchyProvider;
 
     private final EntityNodeRenderer renderer;
 
     @Inject
-    public OWLDataPropertyHierarchyChangeComputer(ProjectId projectId, HierarchyProvider<OWLDataProperty> hierarchyProvider, EntityNodeRenderer renderer) {
+    public OWLDataPropertyHierarchyChangeComputer(ProjectId projectId, DataPropertyHierarchyProvider hierarchyProvider, EntityNodeRenderer renderer) {
         super(projectId, EntityType.DATA_PROPERTY, hierarchyProvider, DATA_PROPERTY_HIERARCHY, renderer);
         this.hierarchyProvider = hierarchyProvider;
         this.renderer = renderer;
@@ -49,8 +50,8 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLDataProperty child, OWLDataProperty parent) {
         AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent), hierarchyProvider.isLeaf(parent)),
+                new GraphNode<>(renderer.render(child), hierarchyProvider.isLeaf(child))
         ));
         return Collections.singletonList(
                 new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))

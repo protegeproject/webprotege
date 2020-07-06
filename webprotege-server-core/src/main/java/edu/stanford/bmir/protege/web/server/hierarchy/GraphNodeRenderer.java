@@ -31,6 +31,6 @@ public class GraphNodeRenderer {
      */
     public GraphNode<EntityNode> toGraphNode(@Nonnull OWLEntity entity,
                                              @Nonnull HierarchyProvider<OWLEntity> hierarchyProvider) {
-        return new GraphNode<>(renderer.render(entity), hierarchyProvider.getChildren(entity).isEmpty());
+        return new GraphNode<>(renderer.render(entity), hierarchyProvider.isLeaf(entity));
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -15,9 +16,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,7 +36,7 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     private static final int SEGMENT_SIZE = 120;
 
-    private SingleChoiceControlDescriptor descriptor;
+    private SingleChoiceControlDescriptorDto descriptor;
 
     private Optional<PrimitiveFormControlData> mostRecentSetValue = Optional.empty();
 
@@ -69,9 +68,10 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     }
 
     @Override
-    public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
+    public void setDescriptor(@Nonnull SingleChoiceControlDescriptorDto descriptor) {
         this.descriptor = checkNotNull(descriptor);
-        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+//        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+        setChoices(descriptor.getAvailableChoices());
     }
 
     private void setChoices(List<ChoiceDescriptorDto> choiceDtos) {
@@ -133,7 +133,6 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     public void setValue(@Nonnull FormControlDataDto object) {
         mostRecentSetValue = Optional.empty();
         if(object instanceof SingleChoiceControlDataDto) {
-            setChoices(((SingleChoiceControlDataDto) object).getAvailableChoices());
             Optional<PrimitiveFormControlDataDto> choice = ((SingleChoiceControlDataDto) object).getChoice();
             if(choice.isPresent()) {
                 setSelection(choice.get().toPrimitiveFormControlData(), false);
@@ -158,13 +157,19 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
         setDefaultChoiceSelected();
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
+    }
+
     @Override
     public Optional<FormControlData> getValue() {
         if(selectedIndex == -1) {
             return Optional.empty();
         }
         PrimitiveFormControlData dataValue = choices.get(selectedIndex);
-        return Optional.of(SingleChoiceControlData.get(descriptor, dataValue));
+        return Optional.of(SingleChoiceControlData.get(descriptor.toFormControlDescriptor(), dataValue));
     }
 
     private void incrementSelection() {
@@ -211,5 +216,10 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
     }
 }

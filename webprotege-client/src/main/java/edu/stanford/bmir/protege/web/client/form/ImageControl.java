@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,13 +14,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.ImageControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
+import edu.stanford.bmir.protege.web.shared.form.field.ImageControlDescriptorDto;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
@@ -38,7 +34,7 @@ public class ImageControl extends Composite implements FormControl {
     @Nonnull
     private final InputBox inputBox;
 
-    private ImageControlDescriptor descriptor;
+    private ImageControlDescriptorDto descriptor;
 
     private boolean editable = true;
 
@@ -80,7 +76,7 @@ public class ImageControl extends Composite implements FormControl {
         });
     }
 
-    public void setDescriptor(ImageControlDescriptor descriptor) {
+    public void setDescriptor(ImageControlDescriptorDto descriptor) {
         this.descriptor = checkNotNull(descriptor);
     }
 
@@ -165,9 +161,15 @@ public class ImageControl extends Composite implements FormControl {
         updateUi();
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
+    }
+
     @Override
     public Optional<FormControlData> getValue() {
-        return theIRI.map(iri -> ImageControlData.get(descriptor, iri));
+        return theIRI.map(iri -> ImageControlData.get(descriptor.toFormControlDescriptor(), iri));
     }
 
     @Override
@@ -183,5 +185,10 @@ public class ImageControl extends Composite implements FormControl {
     @Override
     public boolean isEnabled() {
         return this.editable;
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
     }
 }

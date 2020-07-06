@@ -18,16 +18,13 @@ public abstract class SingleChoiceControlDataDto implements FormControlDataDto {
 
     @Nonnull
     public static SingleChoiceControlDataDto get(@Nonnull SingleChoiceControlDescriptor descriptor,
-                                                 @Nonnull ImmutableList<ChoiceDescriptorDto> availableChoices,
-                                                 @Nullable PrimitiveFormControlDataDto choice) {
-        return new AutoValue_SingleChoiceControlDataDto(descriptor, availableChoices, choice);
+                                                 @Nullable PrimitiveFormControlDataDto choice,
+                                                 int depth) {
+        return new AutoValue_SingleChoiceControlDataDto(depth, descriptor, choice);
     }
 
     @Nonnull
     public abstract SingleChoiceControlDescriptor getDescriptor();
-
-    @Nonnull
-    public abstract List<ChoiceDescriptorDto> getAvailableChoices();
 
     @JsonProperty("choice")
     @Nullable

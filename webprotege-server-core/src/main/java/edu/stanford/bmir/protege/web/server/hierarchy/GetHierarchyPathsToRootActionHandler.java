@@ -14,10 +14,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 import static edu.stanford.protege.gwt.graphtree.shared.PathCollector.toPath;
@@ -60,7 +57,7 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractProjectActionH
     public GetHierarchyPathsToRootResult execute(@Nonnull GetHierarchyPathsToRootAction action, @Nonnull ExecutionContext executionContext) {
         Optional<HierarchyProvider<OWLEntity>> hierarchyProvider = hierarchyProviderMapper.getHierarchyProvider(action.getHierarchyId());
         return hierarchyProvider.map(hp -> {
-            Set<List<OWLEntity>> pathsToRoot = hp.getPathsToRoot(action.getEntity());
+            Collection<List<OWLEntity>> pathsToRoot = hp.getPathsToRoot(action.getEntity());
             List<Path<GraphNode<EntityNode>>> result =
                     pathsToRoot.stream()
                                .map(pathList -> pathList.stream()

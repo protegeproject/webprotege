@@ -17,13 +17,14 @@ import java.util.Optional;
 public abstract class TextControlDataDto implements FormControlDataDto, Comparable<TextControlDataDto> {
 
     private static Comparator<OWLLiteral> literalComparator = Comparator.nullsLast(Comparator.comparing(OWLLiteral::getLang)
-            .thenComparing(OWLLiteral::getLiteral)
+            .thenComparing(OWLLiteral::getLiteral, String::compareToIgnoreCase)
             .thenComparing(OWLLiteral::getDatatype));
 
     @Nonnull
     public static TextControlDataDto get(@Nonnull TextControlDescriptor descriptor,
-                                         @Nonnull OWLLiteral value) {
-        return new AutoValue_TextControlDataDto(descriptor, value);
+                                         @Nonnull OWLLiteral value,
+                                         int depth) {
+        return new AutoValue_TextControlDataDto(depth, descriptor, value);
     }
 
     @JsonProperty("descriptor")

@@ -5,10 +5,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlClassBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlInstanceBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityVisitorAdapter;
@@ -35,6 +32,9 @@ public class FormFrameBuilder {
 
     @Nonnull
     private final ImmutableSet.Builder<OWLNamedIndividual> instances = ImmutableSet.builder();
+
+    @Nonnull
+    private final ImmutableSet.Builder<OWLClass> subClasses = ImmutableSet.builder();
 
     @Nonnull
     private final ImmutableSet.Builder<PlainPropertyValue> propertyValues = ImmutableSet.builder();
@@ -111,6 +111,7 @@ public class FormFrameBuilder {
         var resolvedSubject = subjectResolver.resolveSubject(this);
         return FormFrame.get(resolvedSubject,
                              classes.build(),
+                             subClasses.build(),
                              instances.build(),
                              propertyValues.build(),
                              nestedFramesBuilder.build());
@@ -145,6 +146,11 @@ public class FormFrameBuilder {
         else if(binding instanceof OwlInstanceBinding) {
             if(value instanceof OWLNamedIndividual) {
                 addIndividual((OWLNamedIndividual) value);
+            }
+        }
+        else if(binding instanceof OwlSubClassBinding) {
+            if(value instanceof OWLClass) {
+                subClasses.add((OWLClass) value);
             }
         }
         else {

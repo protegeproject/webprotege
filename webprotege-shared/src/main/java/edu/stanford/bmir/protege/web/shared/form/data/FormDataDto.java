@@ -5,6 +5,8 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormControlDescriptor;
 
 import javax.annotation.Nonnull;
@@ -19,9 +21,10 @@ public abstract class FormDataDto implements FormControlDataDto {
 
     @Nonnull
     public static FormDataDto get(@Nonnull FormSubjectDto subject,
-                                  @Nonnull FormDescriptor formDescriptor,
-                                  @Nonnull ImmutableList<FormFieldDataDto> formFieldData) {
-        return new AutoValue_FormDataDto(subject, formDescriptor, formFieldData);
+                                  @Nonnull FormDescriptorDto formDescriptor,
+                                  @Nonnull ImmutableList<FormFieldDataDto> formFieldData,
+                                  int depth) {
+        return new AutoValue_FormDataDto(depth, subject, formDescriptor, formFieldData);
     }
 
     @Nonnull
@@ -33,7 +36,7 @@ public abstract class FormDataDto implements FormControlDataDto {
     @Nullable
     protected abstract FormSubjectDto getSubjectInternal();
 
-    public abstract FormDescriptor getFormDescriptor();
+    public abstract FormDescriptorDto getFormDescriptor();
 
     public abstract ImmutableList<FormFieldDataDto> getFormFieldData();
 
@@ -46,14 +49,19 @@ public abstract class FormDataDto implements FormControlDataDto {
     @Override
     public FormControlData toFormControlData() {
         return FormData.get(getSubject().map(FormSubjectDto::toFormSubject),
-                getFormDescriptor(),
+                getFormDescriptor().toFormDescriptor(),
                 getFormFieldData().stream().map(FormFieldDataDto::getFormFieldData).collect(toImmutableList()));
     }
 
     @Nonnull
     public FormData toFormData() {
         return FormData.get(getSubject().map(FormSubjectDto::toFormSubject),
-                getFormDescriptor(),
+                getFormDescriptor().toFormDescriptor(),
                 getFormFieldData().stream().map(FormFieldDataDto::toFormFieldData).collect(toImmutableList()));
+    }
+
+    @Nonnull
+    public FormId getFormId() {
+        return getFormDescriptor().getFormId();
     }
 }

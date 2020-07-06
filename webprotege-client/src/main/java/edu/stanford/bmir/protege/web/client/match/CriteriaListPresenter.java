@@ -102,7 +102,7 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
         updateRemoveButtonVisibility();
     }
 
-    private void clear() {
+    public void clear() {
         criteriaPresenters.forEach(CriteriaPresenter::stop);
         criteriaPresenters.clear();
         viewContainers.clear();

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -36,7 +37,7 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
 
     @Inject
     public OWLClassHierarchyChangeComputer(@Nonnull ProjectId projectId,
-                                           @Nonnull HierarchyProvider<OWLClass> hierarchyProvider, @Nonnull EntityNodeRenderer renderer, @Nonnull ClassHierarchyProvider classHierarchyProvider) {
+                                           @Nonnull ClassHierarchyProvider hierarchyProvider, @Nonnull EntityNodeRenderer renderer, @Nonnull ClassHierarchyProviderImpl classHierarchyProvider) {
         super(projectId, EntityType.CLASS, hierarchyProvider, CLASS_HIERARCHY, renderer);
         this.renderer = checkNotNull(renderer);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
@@ -56,11 +57,12 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLClass child, OWLClass parent) {
         AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent), classHierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderer.render(child), classHierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent), classHierarchyProvider.isLeaf(parent)),
+                new GraphNode<>(renderer.render(child), classHierarchyProvider.isLeaf(child))
         ));
-        return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))
-        );
+        return Collections.singletonList(new EntityHierarchyChangedEvent(getProjectId(),
+                                                                         CLASS_HIERARCHY,
+                                                                         new GraphModelChangedEvent<>(Collections.singletonList(
+                                                                                 addEdge))));
     }
 }

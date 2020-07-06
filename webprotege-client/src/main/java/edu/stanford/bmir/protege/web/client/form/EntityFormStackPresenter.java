@@ -1,21 +1,19 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
-import edu.stanford.bmir.protege.web.shared.form.SetEntityFormsDataAction;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.lang.LangTag;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -24,12 +22,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -40,7 +35,7 @@ public class EntityFormStackPresenter {
 
     private Optional<OWLEntity> currentEntity = Optional.empty();
 
-    private final List<FormData> pristineFormData = new ArrayList<>();
+    private final Map<FormId, FormData> pristineFormData = new HashMap<>();
 
     private HasBusy hasBusy = (busy) -> {};
 
@@ -88,7 +83,8 @@ public class EntityFormStackPresenter {
         container.setWidget(view);
         formStackPresenter.start(view.getFormStackContainer());
         formStackPresenter.setFormRegionPageChangedHandler(this::handlePageChange);
-        formStackPresenter.setGridOrderByChangedHandler(this::handleGridOrderByChanged);
+        formStackPresenter.setFormRegionOrderingChangedHandler(this::handleGridOrderByChanged);
+        formStackPresenter.setFormRegionFilterChangedHandler(this::handleFormRegionFilterChanged);
         langTagFilterPresenter.start(view.getLangTagFilterContainer());
         langTagFilterPresenter.setLangTagFilterChangedHandler(this::handleLangTagFilterChanged);
         view.setEnterEditModeHandler(this::handleEnterEditMode);
@@ -100,8 +96,12 @@ public class EntityFormStackPresenter {
         setMode(Mode.READ_ONLY_MODE);
     }
 
+    private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
+        updateFormsForCurrentEntity(ImmutableList.of());
+    }
+
     private void handleGridOrderByChanged() {
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void setHasBusy(HasBusy hasBusy) {
@@ -110,21 +110,21 @@ public class EntityFormStackPresenter {
 
     private void handleLangTagFilterChanged() {
         stashLanguagesFilter();
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
-    private void handlePageChange() {
-        updateFormsForCurrentEntity();
+    private void handlePageChange(FormRegionPageChangedEvent event) {
+        updateFormsForCurrentEntity(ImmutableList.of(event.getFormId()));
     }
 
     public void setEntity(@Nonnull OWLEntity entity) {
         this.currentEntity = Optional.of(entity);
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void clear() {
         this.currentEntity = Optional.empty();
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void expandAllFields() {
@@ -135,13 +135,14 @@ public class EntityFormStackPresenter {
         formStackPresenter.collapseAllFields();
     }
 
-    private void updateFormsForCurrentEntity() {
+    private void updateFormsForCurrentEntity(ImmutableList<FormId> formFilter) {
         currentEntity.ifPresent(entity -> {
             ImmutableList<FormPageRequest> pageRequests = formStackPresenter.getPageRequests();
-            ImmutableList<GridControlOrdering> orderings = formStackPresenter.getGridControlOrderings();
+            ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
+            ImmutableSet<FormRegionFilter> filters = formStackPresenter.getRegionFilters();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
-            dispatch.execute(new GetEntityFormsAction(projectId, entity, pageRequests, langTagFilter,
-                                                      orderings),
+            dispatch.execute(new GetEntityFormsAction(projectId, entity, formFilter, pageRequests, langTagFilter,
+                                                      orderings, filters),
                              hasBusy,
                              this::handleGetEntityFormsResult);
         });
@@ -152,9 +153,20 @@ public class EntityFormStackPresenter {
 
     private void handleGetEntityFormsResult(GetEntityFormsResult result) {
         ImmutableList<FormDataDto> formData = result.getFormData();
-        pristineFormData.clear();
-        pristineFormData.addAll(formData.stream().map(FormDataDto::toFormData).collect(toImmutableList()));
-        formStackPresenter.setForms(formData);
+        // If we have a subset of the forms then just replace the ones that we have
+        boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
+        if (replaceAllForms) {
+            pristineFormData.clear();
+        }
+        for(FormDataDto formDataDto : result.getFormData()) {
+            pristineFormData.put(formDataDto.getFormId(), formDataDto.toFormData());
+        }
+        if (replaceAllForms) {
+            formStackPresenter.setForms(formData, FormStackPresenter.FormUpdate.REPLACE);
+        }
+        else {
+            formStackPresenter.setForms(formData, FormStackPresenter.FormUpdate.PATCH);
+        }
     }
 
     private void handleEnterEditMode() {
@@ -197,17 +209,18 @@ public class EntityFormStackPresenter {
 
     private void commitEdits() {
         currentEntity.ifPresent(entity -> {
-            ImmutableList<FormData> editedFormData = formStackPresenter.getForms();
+            ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms();
+            ImmutableMap<FormId, FormData> pristineFormData = ImmutableMap.copyOf(this.pristineFormData);
             dispatch.execute(new SetEntityFormsDataAction(projectId,
                                                           entity,
-                                                          ImmutableList.copyOf(pristineFormData),
+                                                          pristineFormData,
                                                           editedFormData),
                              result -> {});
         });
     }
 
     private void dropEdits() {
-        updateFormsForCurrentEntity();
+        updateFormsForCurrentEntity(ImmutableList.of());
     }
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash formIdStash) {

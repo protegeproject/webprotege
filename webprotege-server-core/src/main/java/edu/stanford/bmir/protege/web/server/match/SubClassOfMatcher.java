@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.match;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -42,6 +43,9 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
         if(!value.isOWLClass()) {
             return false;
         }
+        if(cls.isOWLThing()) {
+            return true;
+        }
         // Config for strict?
         if(value.equals(cls)) {
             return true;
@@ -50,9 +54,6 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
             return provider.isParent(value.asOWLClass(), cls);
         }
         else {
-            if(cls.isOWLThing()) {
-                return true;
-            }
             return provider.isAncestor(value.asOWLClass(), cls);
         }
     }

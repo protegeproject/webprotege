@@ -3,19 +3,15 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.*;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlClassBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlInstanceBinding;
-import edu.stanford.bmir.protege.web.shared.form.field.OwlPropertyBinding;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
 import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.stream.Collectors;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
@@ -151,6 +147,9 @@ public class BindingValuesExtractor {
                                          .sorted()
                                          .collect(toImmutableList());
 
+        }
+        else if(binding instanceof OwlSubClassBinding) {
+            return classHierarchyProvider.getChildren(subject).stream().sorted().collect(toImmutableList());
         }
         else {
             return ImmutableList.of();

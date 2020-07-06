@@ -37,13 +37,9 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureI
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
-import edu.stanford.bmir.protege.web.server.project.chg.ProjectOWLOntologyManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
-import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
-import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
-import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
-import edu.stanford.bmir.protege.web.server.revision.RevisionStoreProvider;
+import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -139,12 +135,6 @@ public class ProjectModule {
     }
 
     @Provides
-    @ProjectSingleton
-    public OWLOntologyManager provideProjectOntologyManager(ProjectOWLOntologyManager projectOWLOntologyManager) {
-        return projectOWLOntologyManager;
-    }
-
-    @Provides
     public OWLAnnotationPropertyProvider provideAnnotationPropertyProvider(OWLDataFactory factory) {
         return factory;
     }
@@ -202,28 +192,44 @@ public class ProjectModule {
 
     @Provides
     public HierarchyProvider<OWLObjectProperty>
-    provideObjectPropertyHierarchyProvider(OWLObjectPropertyHierarchyProvider provider) {
+    provideHierarchyProviderOfObjectProperty(ObjectPropertyHierarchyProvider provider) {
         return provider;
     }
 
 
     @Provides
     public HierarchyProvider<OWLDataProperty>
-    provideDataPropertyHierarchyProvider(
-            OWLDataPropertyHierarchyProvider provider) {
+    provideHierarchyProviderOfDataProperty(
+            DataPropertyHierarchyProvider provider) {
         return provider;
     }
 
     @Provides
+    DataPropertyHierarchyProvider provideDataPropertyHierarchyProvider(DataPropertyHierarchyProviderImpl impl) {
+        return impl;
+    }
+
+    @Provides
     public HierarchyProvider<OWLAnnotationProperty>
-    provideAnnotationPropertyHierarchyProvider(
-            OWLAnnotationPropertyHierarchyProvider provider) {
+    provideHierarchyProviderOfAnnotationProperty(
+            AnnotationPropertyHierarchyProvider provider) {
         return provider;
+    }
+
+    @Provides
+    AnnotationPropertyHierarchyProvider provideAnnotationPropertyHierarchyProvider(
+            AnnotationPropertyHierarchyProviderImpl impl) {
+        return impl;
     }
 
     @Provides
     public HasGetAncestors<OWLClass> providesOWLClassAncestors(HierarchyProvider<OWLClass> hierarchyProvider) {
         return hierarchyProvider;
+    }
+
+    @Provides
+    public ClassHierarchyProvider getClassHierarchyProvider(ClassHierarchyProviderImpl impl) {
+        return impl;
     }
 
     @Provides
@@ -234,6 +240,11 @@ public class ProjectModule {
     @Provides
     public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(HierarchyProvider<OWLDataProperty> hierarchyProvider) {
         return hierarchyProvider;
+    }
+
+    @Provides
+    public ObjectPropertyHierarchyProvider provideObjectPropertyHierarchyProvider(ObjectPropertyHierarchyProviderImpl impl) {
+        return impl;
     }
 
     @Provides
@@ -372,7 +383,7 @@ public class ProjectModule {
 
     @Provides
     @ProjectSingleton
-    HierarchyProvider<OWLClass> provideClassHierarchyProvider(ClassHierarchyProvider provider) {
+    HierarchyProvider<OWLClass> provideClassHierarchyProvider(ClassHierarchyProviderImpl provider) {
         return provider;
     }
 
@@ -544,6 +555,23 @@ public class ProjectModule {
     }
 
     @Provides
+    MultilingualDictionaryUpdater provideUpdatableMultilingualDictionary(MultiLingualDictionaryImpl impl) {
+        return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    MultiLingualShortFormDictionary provideMultiLingualShortFormDictionary(MultiLingualDictionaryImpl impl) {
+        return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    MultiLingualShortFormIndex provideMultiLingualShortFormIndex(MultiLingualDictionaryImpl impl) {
+        return impl;
+    }
+
+    @Provides
     ShortFormCache provideShortFormCache() {
         return ShortFormCache.create();
     }
@@ -703,6 +731,5 @@ public class ProjectModule {
     ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
         return impl;
     }
-
 }
 

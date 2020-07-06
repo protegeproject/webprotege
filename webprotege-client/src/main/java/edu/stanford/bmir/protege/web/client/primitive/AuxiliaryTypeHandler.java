@@ -32,7 +32,7 @@ public abstract class AuxiliaryTypeHandler {
 //            }
 //
 //            @Override
-//            public AuxiliaryTypeHandler visit(OWLClassData data) {
+//            public AuxiliaryTypeHandler accept(OWLClassData data) {
 //                return new AuxiliaryClassHandler(data);
 //            }
 //        });
@@ -80,12 +80,12 @@ public abstract class AuxiliaryTypeHandler {
 //                }
 //
 //                @Override
-//                public Set<OWLAxiom> visit(OWLClass desc) {
+//                public Set<OWLAxiom> accept(OWLClass desc) {
 //                    return Collections.singleton(DataFactory.get().getOWLSubClassOfAxiom(desc, type.getEntity()));
 //                }
 //
 //                @Override
-//                public Set<OWLAxiom> visit(OWLNamedIndividual individual) {
+//                public Set<OWLAxiom> accept(OWLNamedIndividual individual) {
 //                    return Collections.singleton(DataFactory.get().getOWLClassAssertionAxiom(type.getEntity(), individual));
 //                }
 //            });
@@ -100,12 +100,12 @@ public abstract class AuxiliaryTypeHandler {
 //                }
 //
 //                @Override
-//                public String visit(OWLClassData data) {
+//                public String accept(OWLClassData data) {
 //                    return format(data, " SubclassOf ", type);
 //                }
 //
 //                @Override
-//                public String visit(OWLNamedIndividualData data) {
+//                public String accept(OWLNamedIndividualData data) {
 //                    return format(data, " InstanceOf ", type);
 //                }
 //            });

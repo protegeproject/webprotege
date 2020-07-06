@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -63,7 +64,7 @@ public class EntityFormRepositoryImpl_IT {
         var formId = FormId.generate();
         var formDescriptor = FormDescriptor.builder(formId)
                       .addDescriptor(FormFieldDescriptor.get(
-                              FormFieldId.get("Brand"),
+                              FormFieldId.get(UUID.randomUUID().toString()),
                               OwlPropertyBinding.get(new OWLObjectPropertyImpl(OWLRDFVocabulary.RDFS_COMMENT.getIRI()),
                                                      null),
                               languageMap,
@@ -78,6 +79,7 @@ public class EntityFormRepositoryImpl_IT {
                               Repeatability.NON_REPEATABLE,
                               Optionality.OPTIONAL,
                               true,
+                              ExpansionState.COLLAPSED,
                               LanguageMap.of("en", "Help text")
                       ))
                       .build();

@@ -73,7 +73,7 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
     public GetHierarchyChildrenResult execute(@Nonnull GetHierarchyChildrenAction action, @Nonnull ExecutionContext executionContext) {
         HierarchyId hierarchyId = action.getHierarchyId();
         Optional<HierarchyProvider<OWLEntity>> hierarchyProvider = hierarchyProviderMapper.getHierarchyProvider(hierarchyId);
-        if (!hierarchyProvider.isPresent()) {
+        if (hierarchyProvider.isEmpty()) {
             return emptyResult();
         }
         OWLEntity parent = action.getEntity();

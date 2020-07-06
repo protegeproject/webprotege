@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.Counter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
@@ -70,6 +71,10 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     SimplePanel bindingViewContainer;
     @UiField
     CheckBox readOnlyCheckBox;
+    @UiField
+    RadioButton initialExpansionStateExpanded;
+    @UiField
+    RadioButton initialExpansionStateCollapsed;
 
     @Inject
     public FormFieldDescriptorViewImpl(LanguageMapEditor labelEditor,
@@ -184,5 +189,26 @@ public class FormFieldDescriptorViewImpl extends Composite implements FormFieldD
     @Override
     public AcceptsOneWidget getFieldDescriptorViewContainer() {
         return fieldViewContainer;
+    }
+
+    @Nonnull
+    @Override
+    public ExpansionState getInitialExpansionState() {
+        if(initialExpansionStateExpanded.getValue()) {
+            return ExpansionState.EXPANDED;
+        }
+        else {
+            return ExpansionState.COLLAPSED;
+        }
+    }
+
+    @Override
+    public void setInitialExpansionState(@Nonnull ExpansionState expansionState) {
+        if(expansionState.equals(ExpansionState.EXPANDED)) {
+            initialExpansionStateExpanded.setValue(true);
+        }
+        else {
+            initialExpansionStateCollapsed.setValue(true);
+        }
     }
 }

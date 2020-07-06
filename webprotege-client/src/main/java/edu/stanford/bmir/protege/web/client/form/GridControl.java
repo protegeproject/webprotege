@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -8,13 +9,12 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
+import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
         }
     }
 
-    public void setDescriptor(@Nullable GridControlDescriptor descriptor) {
+    public void setDescriptor(@Nullable GridControlDescriptorDto descriptor) {
         gridPresenter.setDescriptor(descriptor);
     }
 
@@ -71,6 +71,12 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     @Override
     public void clearValue() {
         gridPresenter.clearValue();
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return gridPresenter.getFilters();
     }
 
     @Override
@@ -107,8 +113,8 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     }
 
     @Override
-    public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
-        gridPresenter.setFormRegionPageChangedHandler(handler);
+    public void setRegionPageChangedHandler(@Nonnull RegionPageChangedHandler handler) {
+        gridPresenter.setRegionPageChangedHandler(handler);
     }
 
     @Override
@@ -130,11 +136,16 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
         gridPresenter.updateVisibleColumns();
     }
 
-    public ImmutableList<GridControlOrderBy> getOrdering() {
+    public ImmutableList<FormRegionOrdering> getOrdering() {
         return gridPresenter.getOrdering();
     }
 
-    public void setGridOrderByChangedHandler(GridOrderByChangedHandler orderByChangedHandler) {
+    public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         gridPresenter.setOrderByChangedHandler(orderByChangedHandler);
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        gridPresenter.setFormRegionFilterChangedHandler(handler);
     }
 }

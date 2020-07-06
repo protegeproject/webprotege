@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptorDto;
 
 import javax.annotation.Nonnull;
 
@@ -11,5 +12,5 @@ import javax.annotation.Nonnull;
  */
 public interface SingleChoiceControl extends ChoiceControl {
 
-    void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor);
+    void setDescriptor(@Nonnull SingleChoiceControlDescriptorDto descriptor);
 }

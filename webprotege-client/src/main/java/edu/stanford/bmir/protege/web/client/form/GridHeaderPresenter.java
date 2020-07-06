@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
@@ -13,13 +14,14 @@ import javax.inject.Provider;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-27
  */
-public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrderBy {
+public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVisibilityManager, HasGridColumnOrdering, HasFormRegionFilterChangedHandler {
 
     @Nonnull
     private final GridHeaderView view;
@@ -35,20 +37,31 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
 
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
 
-    private Map<GridColumnDescriptor, GridHeaderCellContainer> containersByDescriptor = new HashMap<>();
+    private Map<GridColumnDescriptorDto, GridHeaderCellContainer> containersByDescriptor = new HashMap<>();
 
     @Nonnull
     private ChangeHandler orderByChangedHandler = () -> {};
 
-    private Optional<GridControlOrderBy> orderBy = Optional.empty();
+    private Optional<FormRegionOrdering> orderBy = Optional.empty();
+
+    @Nonnull
+    private final GridFilterPresenter filterPresenter;
+
+    @Nonnull
+    private List<FormRegionFilter> filters = new ArrayList<>();
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
 
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
                                @Nonnull Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider,
-                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
+                               @Nonnull LanguageMapCurrentLocaleMapper localeMapper,
+                               @Nonnull GridFilterPresenter filterPresenter) {
         this.view = checkNotNull(view);
         this.headerColumnPresenterProvider = checkNotNull(headerColumnPresenterProvider);
         this.localeMapper = checkNotNull(localeMapper);
+        this.filterPresenter = checkNotNull(filterPresenter);
     }
 
     @Override
@@ -56,17 +69,39 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         this.columnVisibilityManager = Optional.of(checkNotNull(columnVisibilityManager));
     }
 
-    void start(@Nonnull AcceptsOneWidget container) {
+    public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+        view.setEditGridFilterHandler(this::handleEditGridFilter);
+    }
+
+    private void handleEditGridFilter() {
+        ImmutableList<GridColumnDescriptorDto> columnDescriptors = containersByDescriptor.keySet()
+                              .stream()
+                              .collect(toImmutableList());
+        filterPresenter.showModal(columnDescriptors,
+                                  ImmutableList.copyOf(filters),
+                                  this::handleApplyFilters, () -> {});
+    }
+
+    private void handleApplyFilters(ImmutableList<FormRegionFilter> filters) {
+        this.filters.clear();
+        this.filters.addAll(filters);
+        updateFilterActiveDisplay();
+        formRegionFilterChangedHandler.handleFormRegionFilterChanged(new FormRegionFilterChangedEvent());
+    }
+
+    private void updateFilterActiveDisplay() {
+        boolean filterActive = !this.filters.isEmpty();
+        view.setFilterActive(filterActive);
     }
 
     public void clear() {
         view.clear();
         containersByDescriptor.clear();
-        columnPresenters.clear();;
+        columnPresenters.clear();
     }
 
-    public void setGridDescriptor(@Nonnull GridControlDescriptor descriptor) {
+    public void setGridDescriptor(@Nonnull GridControlDescriptorDto descriptor) {
         clear();
         double totalSpan = descriptor.getNestedColumnCount();
         descriptor.getLeafColumns().forEach(leafColumnDescriptor -> {
@@ -91,14 +126,14 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
         this.orderBy = Optional.empty();
         columnPresenters.values().forEach(cp -> {
             if(cp.isPresenterFor(id)) {
-                GridControlOrderByDirection dir = cp.toggleSortOrder();
-                this.orderBy = Optional.of(GridControlOrderBy.get(id, dir));
+                FormRegionOrderingDirection dir = cp.toggleSortOrder();
+                this.orderBy = Optional.of(FormRegionOrdering.get(id, dir));
             }
             else {
                 cp.clearSortOrder();
             }
         });
-        orderByChangedHandler.handleGridColumnOrderByChanged();
+        orderByChangedHandler.handleGridColumnOrderingChanged();
     }
 
     @Override
@@ -127,33 +162,50 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     }
 
     @Override
-    public void setGridColumnOrderByChangeHandler(@Nonnull ChangeHandler handler) {
+    public void setGridColumnOrderingChangeHandler(@Nonnull ChangeHandler handler) {
         this.orderByChangedHandler = checkNotNull(handler);
     }
 
     @Nonnull
     @Override
-    public ImmutableList<GridControlOrderBy> getOrderBy() {
+    public ImmutableList<FormRegionOrdering> getGridColumnOrdering() {
         return orderBy.map(ImmutableList::of).orElse(ImmutableList.of());
     }
 
-    public void setOrderBy(@Nonnull ImmutableList<GridControlOrderBy> ordering) {
+    public void setOrdering(@Nonnull ImmutableSet<FormRegionOrdering> ordering) {
         if(ordering.isEmpty()) {
             this.orderBy = Optional.empty();
             columnPresenters.values()
                             .forEach(GridHeaderColumnPresenter::clearSortOrder);
         }
         else {
-            GridControlOrderBy orderBy = ordering.get(0);
-            this.orderBy = Optional.of(orderBy);
-            columnPresenters.values().forEach(cp -> {
-                if(cp.isPresenterFor(orderBy.getColumnId())) {
-                    cp.setSortOrder(orderBy.getDirection());
+            Map<GridColumnId, FormRegionOrdering> orderingsById = new HashMap<>();
+            ordering.stream()
+                    .filter(o -> o.getRegionId() instanceof GridColumnId)
+                    .forEach(o -> orderingsById.put((GridColumnId) o.getRegionId(), o));
+            this.orderBy = Optional.empty();
+            columnPresenters.forEach((columnId, columnPresenter) -> {
+                FormRegionOrdering columnOrdering = orderingsById.get(columnId);
+                if(!orderBy.isPresent()) {
+                    orderBy = Optional.ofNullable(columnOrdering);
+                }
+                if(columnOrdering != null) {
+                    columnPresenter.setSortOrder(columnOrdering.getDirection());
                 }
                 else {
-                    cp.clearSortOrder();
+                    columnPresenter.clearSortOrder();
                 }
             });
         }
+    }
+
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.copyOf(filters);
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        this.formRegionFilterChangedHandler = checkNotNull(handler);
     }
 }

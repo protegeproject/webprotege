@@ -13,6 +13,6 @@ import javax.annotation.Nonnull;
  *
  * The criteria for matching a literal lexical value
  */
-public interface LexicalValueCriteria extends AnnotationValueCriteria {
+public interface LexicalValueCriteria extends LiteralCriteria {
 
 }

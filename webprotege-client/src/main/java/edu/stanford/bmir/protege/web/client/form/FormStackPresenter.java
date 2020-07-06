@@ -1,31 +1,37 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.client.form.FormRegionPageChangedEvent.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrdering;
+import edu.stanford.bmir.protege.web.shared.form.data.FormRegionFilter;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-20
  */
-public class FormStackPresenter {
+public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
+
+    enum FormUpdate {
+        REPLACE,
+        PATCH
+    }
 
     @Nonnull
     private final FormTabBarPresenter formTabBarPresenter;
@@ -35,7 +41,7 @@ public class FormStackPresenter {
 
     private final NoFormView noFormView;
 
-    private final List<FormPresenter> formPresenters = new ArrayList<>();
+    private final Map<FormId, FormPresenter> formPresenters = new LinkedHashMap<>();
 
     @Nonnull
     private final Provider<FormPresenter> formPresenterProvider;
@@ -43,12 +49,17 @@ public class FormStackPresenter {
     private Optional<AcceptsOneWidget> container = Optional.empty();
 
     @Nonnull
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private FormRegionPageChangedHandler regionPageChangedHandler = formId -> {
+    };
 
     private boolean enabled = true;
 
     @Nonnull
-    private GridOrderByChangedHandler orderByChangedHandler = () -> {};
+    private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {};
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+
 
     @Inject
     public FormStackPresenter(@Nonnull FormTabBarPresenter formTabBarPresenter,
@@ -69,84 +80,108 @@ public class FormStackPresenter {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        formPresenters.forEach(formPresenter -> formPresenter.setEnabled(enabled));
+        getFormPresenters().forEach(formPresenter -> formPresenter.setEnabled(enabled));
     }
 
     public void setFormRegionPageChangedHandler(@Nonnull FormRegionPageChangedHandler handler) {
-        this.formRegionPageChangedHandler = checkNotNull(handler);
-        formPresenters.forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));
+        this.regionPageChangedHandler = checkNotNull(handler);
+        getFormPresenters().forEach(formPresenter -> formPresenter.setFormRegionPageChangedHandler(handler));
     }
 
-    public void setGridOrderByChangedHandler(@Nonnull GridOrderByChangedHandler handler) {
-        this.orderByChangedHandler = checkNotNull(handler);
-        formPresenters.forEach(p -> p.setGridOrderByChangedHandler(handler));
+    public void setFormRegionOrderingChangedHandler(@Nonnull FormRegionOrderingChangedHandler handler) {
+        this.formRegionOrderingChangedHandler = checkNotNull(handler);
+        getFormPresenters().forEach(p -> p.setGridOrderByChangedHandler(handler));
     }
 
     @Nonnull
     public ImmutableList<FormPageRequest> getPageRequests() {
-        return formPresenters.stream()
-                      .map(FormPresenter::getPageRequest)
-                      .flatMap(ImmutableList::stream)
-                      .collect(toImmutableList());
+        return getFormPresenters().stream()
+                                  .map(FormPresenter::getPageRequest)
+                                  .flatMap(ImmutableList::stream)
+                                  .collect(toImmutableList());
     }
 
+    /** @noinspection OptionalGetWithoutIsPresent*/
     @Nonnull
-    public ImmutableList<FormData> getForms() {
-        return formPresenters.stream()
-                             .map(FormPresenter::getFormData)
-                             .filter(Optional::isPresent)
-                             .map(Optional::get)
-                             .collect(toImmutableList());
+    public ImmutableMap<FormId, FormData> getForms() {
+        return formPresenters.entrySet()
+                      .stream()
+                      .filter(e -> e.getValue().getFormData().isPresent())
+                      .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey,
+                                                           e -> e.getValue().getFormData().get()));
     }
 
     public void expandAllFields() {
-        formPresenters.forEach(FormPresenter::expandAll);
+        getFormPresenters().forEach(FormPresenter::expandAll);
     }
 
     public void collapseAllFields() {
-        formPresenters.forEach(FormPresenter::collapseAll);
+        getFormPresenters().forEach(FormPresenter::collapseAll);
     }
 
-    public void setForms(@Nonnull ImmutableList<FormDataDto> forms) {
-        List<FormDescriptor> currentFormDescriptors = formPresenters.stream()
-                                                     .map(p -> p.getFormData()
-                                                                .map(FormData::getFormDescriptor))
-                                                     .filter(Optional::isPresent)
-                                                     .map(Optional::get)
-                                                     .collect(Collectors.toList());
-        List<FormDescriptor> nextFormDescriptors = forms.stream()
-                .map(FormDataDto::getFormDescriptor)
-                .collect(Collectors.toList());
-        if(currentFormDescriptors.equals(nextFormDescriptors)) {
-            for(int i = 0; i < forms.size(); i++) {
-                formPresenters.get(i).displayForm(forms.get(i));
-            }
+    public void setForms(@Nonnull ImmutableList<FormDataDto> forms,
+                         @Nonnull FormUpdate updateType) {
+        if (updateType.equals(FormUpdate.PATCH)) {
+            updateForms(forms);
+        }
+        else if (formsAreCurrent(forms)) {
+            updateForms(forms);
         }
         else {
-            formPresenters.clear();
-            formTabBarPresenter.clear();
-            view.clear();
-            forms.forEach(formData -> {
-                FormPresenter formPresenter = formPresenterProvider.get();
-                FormDescriptor formDescriptor = formData.getFormDescriptor();
-                FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
-                formPresenter.start(formContainer);
-                formPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
-                formPresenter.setGridOrderByChangedHandler(orderByChangedHandler);
-                formPresenter.displayForm(formData);
-                formPresenter.setEnabled(enabled);
-                formPresenters.add(formPresenter);
-                formTabBarPresenter.addForm(formDescriptor.getFormId(),
-                                            formDescriptor.getLabel(),
-                                            formContainer);
-            });
-            formTabBarPresenter.restoreSelection();
+            replaceForms(forms);
         }
         updateView();
     }
 
+    private boolean formsAreCurrent(@Nonnull ImmutableList<FormDataDto> forms) {
+        List<FormDescriptor> currentFormDescriptors = getFormPresenters().stream()
+                                                                         .map(p -> p.getFormData()
+                                                                                    .map(FormData::getFormDescriptor))
+                                                                         .filter(Optional::isPresent)
+                                                                         .map(Optional::get)
+                                                                         .collect(Collectors.toList());
+        List<FormDescriptor> nextFormDescriptors = forms.stream()
+                                                        .map(FormDataDto::getFormDescriptor)
+                                                        .map(FormDescriptorDto::toFormDescriptor)
+                                                        .collect(Collectors.toList());
+        return currentFormDescriptors.equals(nextFormDescriptors);
+    }
+
+    private void replaceForms(@Nonnull ImmutableList<FormDataDto> forms) {
+        formPresenters.clear();
+        formTabBarPresenter.clear();
+        view.clear();
+        forms.forEach(formData -> {
+            FormPresenter formPresenter = formPresenterProvider.get();
+            FormDescriptorDto formDescriptor = formData.getFormDescriptor();
+            FormContainer formContainer = view.addContainer(formDescriptor.getLabel());
+            formPresenter.start(formContainer);
+            formPresenter.setFormRegionPageChangedHandler(regionPageChangedHandler);
+            formPresenter.setGridOrderByChangedHandler(formRegionOrderingChangedHandler);
+            formPresenter.displayForm(formData);
+            formPresenter.setEnabled(enabled);
+            formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
+            formPresenters.put(formData.getFormId(), formPresenter);
+            formTabBarPresenter.addForm(formDescriptor.getFormId(),
+                                        formDescriptor.getLabel(),
+                                        formContainer);
+        });
+        formTabBarPresenter.restoreSelection();
+    }
+
+    private void updateForms(@Nonnull ImmutableList<FormDataDto> forms) {
+        forms.forEach(form -> {
+            FormId formId = form.getFormId();
+            FormPresenter formPresenter = formPresenters.get(formId);
+            if(formPresenter == null) {
+                throw new RuntimeException("Can't find form presenter for " + formId);
+            }
+            formPresenter.displayForm(form);
+        });
+    }
+
     private void updateView() {
-        if(formPresenters.isEmpty()) {
+        if (formPresenters.isEmpty()) {
             container.ifPresent(c -> c.setWidget(noFormView));
         }
         else {
@@ -170,9 +205,28 @@ public class FormStackPresenter {
     }
 
     @Nonnull
-    public ImmutableList<GridControlOrdering> getGridControlOrderings() {
-        return formPresenters.stream()
-                      .flatMap(FormPresenter::getGridControlOrderings)
-                      .collect(toImmutableList());
+    public ImmutableSet<FormRegionOrdering> getGridControlOrderings() {
+        return getFormPresenters().stream()
+                                  .flatMap(FormPresenter::getOrderings)
+                                  .collect(toImmutableSet());
+    }
+
+    public Collection<FormPresenter> getFormPresenters() {
+        return formPresenters.values();
+    }
+
+
+
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getRegionFilters() {
+        return getFormPresenters().stream()
+                .flatMap(formPresenter -> formPresenter.getFilters().stream())
+                .collect(toImmutableSet());
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler formRegionFilterChangedHandler) {
+        this.formRegionFilterChangedHandler = checkNotNull(formRegionFilterChangedHandler);
+        getFormPresenters().forEach(formPresenter -> formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler));
     }
 }

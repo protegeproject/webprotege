@@ -76,7 +76,7 @@ public class EntityGraphSettingsRepositoryImpl_IT {
         var userSettings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
         repository.saveSettings(userSettings);
 
-        var projectSettings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
+        var projectSettings = ProjectUserEntityGraphSettings.getDefault(projectId, null);
         repository.saveSettings(projectSettings);
 
 
@@ -93,7 +93,7 @@ public class EntityGraphSettingsRepositoryImpl_IT {
 
     @Test
     public void shouldSaveSettingsWithoutUserId() {
-        var settings = ProjectUserEntityGraphSettings.getDefault(projectId, userId);
+        var settings = ProjectUserEntityGraphSettings.getDefault(projectId, null);
         repository.saveSettings(settings);
         var collection = database.getCollection(EntityGraphSettingsRepositoryImpl.getCollectionName());
         assertThat(collection.countDocuments(), is(1L));

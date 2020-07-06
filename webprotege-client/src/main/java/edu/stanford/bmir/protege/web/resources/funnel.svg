@@ -1,0 +1,6 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" stroke-width="1px" stroke-linecap="round" stroke="currentColor"  fill="currentColor">
+    <polygon points="1,2 13,2 9,8 9,13 5,13, 5,8" fill="none" stroke-width="2px" stroke-linejoin="round"/>
+</svg>

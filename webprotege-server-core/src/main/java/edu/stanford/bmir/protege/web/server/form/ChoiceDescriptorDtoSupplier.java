@@ -21,20 +21,19 @@ public class ChoiceDescriptorDtoSupplier {
     private final DynamicListChoiceDescriptorDtoSupplier dynamicListSupplier;
 
     @Inject
-    public ChoiceDescriptorDtoSupplier(@Nonnull FixedListChoiceDescriptorDtoSupplier fixedListSupplier, @Nonnull DynamicListChoiceDescriptorDtoSupplier dynamicListSupplier) {
+    public ChoiceDescriptorDtoSupplier(@Nonnull FixedListChoiceDescriptorDtoSupplier fixedListSupplier, @Nonnull DynamicListChoiceDescriptorDtoSupplier dynamicListSupplier, @Nonnull FormDataBuilderSessionRenderer sessionRenderer) {
         this.fixedListSupplier = checkNotNull(fixedListSupplier);
         this.dynamicListSupplier = checkNotNull(dynamicListSupplier);
     }
 
     @Nonnull
-    public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull ChoiceListSourceDescriptor descriptor,
-                                                         @Nonnull FrameComponentSessionRenderer sessionRenderer) {
+    public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull ChoiceListSourceDescriptor descriptor) {
         checkNotNull(descriptor);
         if(descriptor instanceof FixedChoiceListSourceDescriptor) {
-            return fixedListSupplier.getChoices((FixedChoiceListSourceDescriptor) descriptor, sessionRenderer);
+            return fixedListSupplier.getChoices((FixedChoiceListSourceDescriptor) descriptor);
         }
         else {
-            return dynamicListSupplier.getChoices((DynamicChoiceListSourceDescriptor) descriptor, sessionRenderer);
+            return dynamicListSupplier.getChoices((DynamicChoiceListSourceDescriptor) descriptor);
         }
     }
 }

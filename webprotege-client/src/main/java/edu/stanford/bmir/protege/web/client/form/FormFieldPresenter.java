@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -26,7 +26,7 @@ import static edu.stanford.bmir.protege.web.shared.form.field.Optionality.REQUIR
  * Stanford Center for Biomedical Informatics Research
  * 2020-01-08
  */
-public class FormFieldPresenter implements FormRegionPresenter {
+public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFilterChangedHandler {
 
     private boolean enabled = true;
 
@@ -34,16 +34,11 @@ public class FormFieldPresenter implements FormRegionPresenter {
         updateRequiredValuePresent();
     }
 
-    enum ExpansionState {
-        EXPANDED,
-        COLLAPSED
-    }
-
     @Nonnull
     private final FormFieldView view;
 
     @Nonnull
-    private final FormFieldDescriptor formFieldDescriptor;
+    private final FormFieldDescriptorDto formFieldDescriptor;
 
     private ExpansionState expansionState = ExpansionState.EXPANDED;
 
@@ -55,7 +50,7 @@ public class FormFieldPresenter implements FormRegionPresenter {
     private final LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper;
 
     public FormFieldPresenter(@Nonnull FormFieldView view,
-                              @Nonnull FormFieldDescriptor formFieldDescriptor,
+                              @Nonnull FormFieldDescriptorDto formFieldDescriptor,
                               @Nonnull FormControlStackPresenter formControlStackPresenter,
                               @Nonnull LanguageMapCurrentLocaleMapper languageMapCurrentLocaleMapper) {
         this.view = checkNotNull(view);
@@ -126,12 +121,12 @@ public class FormFieldPresenter implements FormRegionPresenter {
         return stackPresenter.getPageRequests(formSubject, formFieldDescriptor.getId());
     }
 
-    public Stream<GridControlOrdering> getGridControlOrderings() {
-        List<GridControlOrdering> orderings = new ArrayList<>();
+    public Stream<FormRegionOrdering> getOrderings() {
+        List<FormRegionOrdering> orderings = new ArrayList<>();
         stackPresenter.forEachFormControl(formControl -> {
             if(formControl instanceof GridControl) {
-                ImmutableList<GridControlOrderBy> ordering = ((GridControl) formControl).getOrdering();
-                orderings.add(GridControlOrdering.get(formFieldDescriptor.getId(), ordering));
+                ImmutableList<FormRegionOrdering> ordering = ((GridControl) formControl).getOrdering();
+                orderings.addAll(ordering);
             }
         });
         return orderings.stream();
@@ -139,12 +134,12 @@ public class FormFieldPresenter implements FormRegionPresenter {
 
     public FormFieldData getValue() {
         if(stackPresenter == null) {
-            return FormFieldData.get(formFieldDescriptor, Page.emptyPage());
+            return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), Page.emptyPage());
         }
         ImmutableList<FormControlData> formControlData = stackPresenter.getValue();
 
         Page<FormControlData> controlDataPage = new Page<>(1, 1, formControlData, formControlData.size());
-        return FormFieldData.get(formFieldDescriptor, controlDataPage);
+        return FormFieldData.get(formFieldDescriptor.toFormFieldDescriptor(), controlDataPage);
     }
 
     public void setValue(@Nonnull FormFieldDataDto formFieldData) {
@@ -186,12 +181,12 @@ public class FormFieldPresenter implements FormRegionPresenter {
         }
     }
 
-    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
-        stackPresenter.setFormRegionPageChangedHandler(formRegionPageChangedHandler);
+    public void setFormRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler) {
+        stackPresenter.setRegionPageChangedHandler(regionPageChangedHandler);
     }
 
 
-    public void setGridOrderByChangedHandler(GridOrderByChangedHandler orderByChangedHandler) {
+    public void setGridOrderByChangedHandler(FormRegionOrderingChangedHandler orderByChangedHandler) {
         stackPresenter.forEachFormControl(formControl -> {
             if(formControl instanceof GridControl) {
                 ((GridControl) formControl).setGridOrderByChangedHandler(orderByChangedHandler);
@@ -199,4 +194,19 @@ public class FormFieldPresenter implements FormRegionPresenter {
         });
     }
 
+    @Nonnull
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        // TODO: Filter for stack?
+
+        ImmutableSet.Builder<FormRegionFilter> filters = ImmutableSet.builder();
+        stackPresenter.forEachFormControl(formControl ->  {
+            filters.addAll(formControl.getFilters());
+        });
+        return filters.build();
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        stackPresenter.setFormRegionFilterChangedHandler(handler);
+    }
 }

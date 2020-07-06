@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -12,12 +13,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,7 +33,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
 
     private ValueChangeHandler<Boolean> radioButtonValueChangedHandler;
 
-    private SingleChoiceControlDescriptor descriptor;
+    private SingleChoiceControlDescriptorDto descriptor;
 
     private boolean enabled = true;
 
@@ -62,9 +59,11 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     }
 
     @Override
-    public void setDescriptor(@Nonnull SingleChoiceControlDescriptor descriptor) {
+    public void setDescriptor(@Nonnull SingleChoiceControlDescriptorDto descriptor) {
         this.descriptor = descriptor;
-        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+        setChoices(descriptor.getAvailableChoices());
+//        descriptor.getDefaultChoice().ifPresent(this::setDefaultChoice);
+
     }
 
     private void setChoices(List<ChoiceDescriptorDto> choiceDescriptorDtos) {
@@ -111,7 +110,6 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     public void setValue(@Nonnull FormControlDataDto value) {
         if(value instanceof SingleChoiceControlDataDto) {
             SingleChoiceControlDataDto choiceControlDataDto = (SingleChoiceControlDataDto) value;
-            setChoices(choiceControlDataDto.getAvailableChoices());
             Optional<PrimitiveFormControlData> choice = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::toPrimitiveFormControlData);
             setChoice(choice);
         }
@@ -142,12 +140,18 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
         selectDefaultChoice();
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
+    }
+
     @Override
     public Optional<FormControlData> getValue() {
         for(RadioButton radioButton : choiceButtons.keySet()) {
             if(radioButton.getValue()) {
                 PrimitiveFormControlData value = choiceButtons.get(radioButton);
-                return Optional.of(SingleChoiceControlData.get(descriptor, value));
+                return Optional.of(SingleChoiceControlData.get(descriptor.toFormControlDescriptor(), value));
             }
         }
         return Optional.empty();
@@ -176,5 +180,10 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
     }
 }

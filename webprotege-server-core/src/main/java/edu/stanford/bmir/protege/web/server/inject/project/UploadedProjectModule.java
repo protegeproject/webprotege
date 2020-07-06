@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdater;
 import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionary;
 import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionaryImpl;
+import edu.stanford.bmir.protege.web.server.shortform.MultilingualDictionaryUpdater;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -188,6 +189,12 @@ public class UploadedProjectModule {
     MultiLingualDictionary providesMultiLingualDictionary(MultiLingualDictionaryImpl impl,
                                                           ImmutableList<DictionaryLanguage> dictionaryLanguages) {
         impl.loadLanguages(dictionaryLanguages);
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    MultilingualDictionaryUpdater provideMultilingualDictionaryUpdater(MultiLingualDictionaryImpl impl) {
         return impl;
     }
 

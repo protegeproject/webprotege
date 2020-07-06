@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
+import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -27,10 +28,10 @@ public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChang
 
     private final EntityNodeRenderer renderer;
 
-    private final HierarchyProvider<OWLAnnotationProperty> hierarchyProvider;
+    private final AnnotationPropertyHierarchyProvider hierarchyProvider;
 
     @Inject
-    public OWLAnnotationPropertyHierarchyChangeComputer(ProjectId projectId, HierarchyProvider<OWLAnnotationProperty> hierarchyProvider, EntityNodeRenderer renderer) {
+    public OWLAnnotationPropertyHierarchyChangeComputer(ProjectId projectId, AnnotationPropertyHierarchyProvider hierarchyProvider, EntityNodeRenderer renderer) {
         super(projectId, EntityType.ANNOTATION_PROPERTY, hierarchyProvider, ANNOTATION_PROPERTY_HIERARCHY, renderer);
         this.renderer = checkNotNull(renderer);
         this.hierarchyProvider = checkNotNull(hierarchyProvider);
@@ -50,8 +51,8 @@ public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChang
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
         AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent), hierarchyProvider.isLeaf(parent)),
+                new GraphNode<>(renderer.render(child), hierarchyProvider.isLeaf(child))
         ));
         return singletonList(
                 new EntityHierarchyChangedEvent(getProjectId(), ANNOTATION_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(singletonList(addEdge)))

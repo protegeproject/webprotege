@@ -11,6 +11,9 @@ public enum Repeatability {
 
     REPEATABLE_VERTICALLY,
 
-    REPEATABLE_HORIZONTALLY,
+    REPEATABLE_HORIZONTALLY;
 
+    public boolean isRepeatable() {
+        return this != NON_REPEATABLE;
+    }
 }

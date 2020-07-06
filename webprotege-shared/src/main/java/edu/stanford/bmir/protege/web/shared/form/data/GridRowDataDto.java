@@ -12,7 +12,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 @AutoValue
 @GwtCompatible(serializable = true)
-public  abstract class GridRowDataDto implements Comparable<GridRowDataDto> {
+public  abstract class GridRowDataDto {
 
     @Nonnull
     public static GridRowDataDto get(@Nullable FormSubjectDto subject,
@@ -32,19 +32,13 @@ public  abstract class GridRowDataDto implements Comparable<GridRowDataDto> {
     @Nonnull
     public abstract ImmutableList<GridCellDataDto> getCells();
 
-    @Override
-    public int compareTo(@Nonnull GridRowDataDto o) {
-        ImmutableList<GridCellDataDto> cells = getCells();
-        ImmutableList<GridCellDataDto> otherCells = o.getCells();
-        for(int i = 0; i < cells.size() && i < otherCells.size(); i++) {
-            GridCellDataDto cellData = cells.get(i);
-            GridCellDataDto otherCellData = otherCells.get(i);
-            int diff = cellData.compareTo(otherCellData);
-            if(diff != 0) {
-                return diff;
-            }
-        }
-        return 0;
+    /**
+     * Determines whether this row contains cells that have been filtered empty
+     * @return true if this row contains cells that have been filtered empty, otherwise false.
+     */
+    public boolean containsFilteredEmptyCells() {
+        return getCells().stream()
+                .anyMatch(GridCellDataDto::isFilteredEmpty);
     }
 
     public GridRowData toGridRowData() {

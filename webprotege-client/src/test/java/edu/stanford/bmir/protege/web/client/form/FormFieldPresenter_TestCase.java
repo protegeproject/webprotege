@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import org.junit.Before;
@@ -7,8 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -38,7 +37,7 @@ public class FormFieldPresenter_TestCase {
     private LanguageMap labelMap;
 
     @Mock
-    private FormControlDescriptor formControlDescriptor;
+    private FormControlDescriptorDto formControlDescriptor;
 
     @Mock
     private LanguageMap helpMap;
@@ -51,14 +50,15 @@ public class FormFieldPresenter_TestCase {
 
     @Before
     public void setUp() {
-        FormFieldDescriptor fieldDescriptor = FormFieldDescriptor.get(fieldId,
+        FormFieldDescriptorDto fieldDescriptor = FormFieldDescriptorDto.get(fieldId,
                                                                       owlBinding,
                                                                       labelMap,
                                                                       FieldRun.START,
                                                                       formControlDescriptor,
-                                                                      Repeatability.NON_REPEATABLE,
                                                                       Optionality.OPTIONAL,
-                                                                      true,
+                                                                            Repeatability.NON_REPEATABLE,
+                                                                            true,
+                                                                      ExpansionState.COLLAPSED,
                                                                       helpMap);
 
 
@@ -76,17 +76,17 @@ public class FormFieldPresenter_TestCase {
 
     @Test
     public void shouldBeExpandedByDefault() {
-        assertThat(presenter.getExpansionState(), is(FormFieldPresenter.ExpansionState.EXPANDED));
+        assertThat(presenter.getExpansionState(), is(ExpansionState.EXPANDED));
     }
 
     @Test
     public void shouldToggleExpansionState() {
         presenter.toggleExpansionState();
-        assertThat(presenter.getExpansionState(), is(FormFieldPresenter.ExpansionState.COLLAPSED));
+        assertThat(presenter.getExpansionState(), is(ExpansionState.COLLAPSED));
         verify(view, times(1)).collapse();
 
         presenter.toggleExpansionState();
-        assertThat(presenter.getExpansionState(), is(FormFieldPresenter.ExpansionState.EXPANDED));
+        assertThat(presenter.getExpansionState(), is(ExpansionState.EXPANDED));
         verify(view, times(1)).expand();
     }
 

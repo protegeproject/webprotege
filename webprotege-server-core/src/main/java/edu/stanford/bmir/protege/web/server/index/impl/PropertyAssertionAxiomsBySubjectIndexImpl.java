@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.DataPropertyAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ObjectPropertyAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.PropertyAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.*;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;

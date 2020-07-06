@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDescriptorDto;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class FormFieldPresenterFactory {
     }
 
     @Nonnull
-    public FormFieldPresenter create(@Nonnull FormFieldDescriptor fieldDescriptor) {
+    public FormFieldPresenter create(@Nonnull FormFieldDescriptorDto fieldDescriptor) {
 
         FormControlStackPresenter controlStackPresenter = controlStackPresenterFactory.create(fieldDescriptor.getFormControlDescriptor(),
                                                                                               fieldDescriptor.getRepeatability(),

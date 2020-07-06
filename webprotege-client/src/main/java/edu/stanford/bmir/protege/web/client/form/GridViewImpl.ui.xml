@@ -9,12 +9,18 @@
             flex-direction: column;
             align-items: stretch;
         }
+        .headerContainer {
+            position: sticky;
+            position: -webkit-sticky;
+            top: -1px;
+            z-index: 2;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{wp.style.formGrid}">
         <g:HTMLPanel addStyleNames="{wp.style.panelFilled}">
             <pagination:PaginatorView ui:field="paginatorView" visible="false"/>
         </g:HTMLPanel>
-        <g:SimplePanel ui:field="headerContainer"/>
+        <g:SimplePanel ui:field="headerContainer" addStyleNames="{style.headerContainer}"/>
         <g:HTMLPanel ui:field="bodyContainer" addStyleNames="{style.bodyContainer}"/>
         <g:Button ui:field="addRowButton" addStyleNames="{wp.buttons.addButton}"/>
     </g:HTMLPanel>

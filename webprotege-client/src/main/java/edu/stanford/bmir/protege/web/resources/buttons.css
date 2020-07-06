@@ -24,6 +24,7 @@
 @url downloadIconUrl downloadIcon;
 @url settingsIconUrl settingsIcon;
 @url filterIconUrl filterIcon;
+@url funnelIconUrl svgFunnel;
 @url crossIconUrl svgCrossIcon;
 @url expandAllIconUrl svgExpandAllIcon;
 @url collapseAllIconUrl svgCollapseAllIcon;
@@ -442,6 +443,12 @@
     -webkit-mask-image: filterIconUrl;
 }
 
+
+.wp-btn-g--funnel {
+    mask-image: funnelIconUrl;
+    -webkit-mask-image: funnelIconUrl;
+}
+
 .wp-btn-g--cross {
     mask-image: crossIconUrl;
     -webkit-mask-image: crossIconUrl;
@@ -461,9 +468,12 @@
 .wp-btn-g--sort-ascending {
     mask-image: sortAscendingIconUrl;
     -webkit-mask-image: sortAscendingIconUrl;
+    -webkit-mask-repeat: no-repeat;
 }
 
 .wp-btn-g--sort-descending {
     mask-image: sortDescendingIconUrl;
     -webkit-mask-image: sortDescendingIconUrl;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
 }

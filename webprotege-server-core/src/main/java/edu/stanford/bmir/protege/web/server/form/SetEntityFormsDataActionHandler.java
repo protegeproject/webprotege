@@ -69,6 +69,7 @@ public class SetEntityFormsDataActionHandler extends AbstractProjectChangeHandle
 
         var pristineFormsData = action.getPristineFormsData();
         var editedFormsData = action.getEditedFormsData();
+        FormDataUpdateSanityChecker.check(pristineFormsData, editedFormsData);
         var subject = action.getEntity();
         return changeListGeneratorFactory.create(subject,
                                                  pristineFormsData,

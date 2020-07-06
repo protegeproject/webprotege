@@ -11,8 +11,16 @@ import javax.annotation.Nonnull;
  */
 public interface GridHeaderView extends IsWidget, HasGridColumnFilter {
 
+    interface EditGridFilterHandler {
+        void handleEditGridFilter();
+    }
+
     @Nonnull
     GridHeaderCellContainer addColumnHeader();
 
     void clear();
+
+    void setEditGridFilterHandler(@Nonnull EditGridFilterHandler handler);
+
+    void setFilterActive(boolean filterActive);
 }

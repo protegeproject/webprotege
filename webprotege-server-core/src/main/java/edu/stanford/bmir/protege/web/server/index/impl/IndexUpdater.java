@@ -9,6 +9,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.graph.Graph;
 import com.google.common.graph.GraphBuilder;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
+import edu.stanford.bmir.protege.web.server.index.DependentIndex;
 import edu.stanford.bmir.protege.web.server.index.IndexUpdatingService;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;

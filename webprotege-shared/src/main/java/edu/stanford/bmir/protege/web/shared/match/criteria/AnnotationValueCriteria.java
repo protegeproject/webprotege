@@ -23,20 +23,6 @@ import javax.annotation.Nonnull;
         @Type(IriCriteria.class),
         @Type(AnyAnnotationValueCriteria.class),
         @Type(CompositeAnnotationValueCriteria.class),
-        @Type(LangTagMatchesCriteria.class),
-        @Type(AnyLangTagOrEmptyLangTagCriteria.class),
-        @Type(LangTagIsEmptyCriteria.class),
-        @Type(StringStartsWithCriteria.class),
-        @Type(StringEndsWithCriteria.class),
-        @Type(StringContainsCriteria.class),
-        @Type(StringEqualsCriteria.class),
-        @Type(StringContainsRegexMatchCriteria.class),
-        @Type(StringDoesNotContainRegexMatchCriteria.class),
-        @Type(NumericValueCriteria.class),
-        @Type(DateIsBeforeCriteria.class),
-        @Type(DateIsAfterCriteria.class),
-        @Type(StringContainsRepeatedSpacesCriteria.class),
-        @Type(StringHasUntrimmedSpaceCriteria.class),
         @Type(IriEqualsCriteria.class)
 })
 public interface AnnotationValueCriteria extends Criteria {

@@ -86,7 +86,6 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
         for (P prop : properties) {
             if (isSubPropertyOfRoot(prop)) {
                 subPropertiesOfRoot.add(prop);
-                fireNodeChanged(getRoot());
             }
             else {
                 if (getAncestors(prop).contains(prop)) {
@@ -94,7 +93,6 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
                     for (P anc : getAncestors(prop)) {
                         if (getAncestors(anc).contains(prop)) {
                             subPropertiesOfRoot.add(anc);
-                            fireNodeChanged(anc);
                         }
                     }
                 }
@@ -102,9 +100,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
                     subPropertiesOfRoot.remove(prop);
                 }
             }
-            fireNodeChanged(prop);
         }
-        fireNodeChanged(getRoot());
     }
 
     private Set<P> getPropertiesReferencedInChange(List<OntologyChange> changes) {
@@ -129,7 +125,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
 
         // We deem a property to be a sub of the top property if this is asserted
         // or if no named superproperties are asserted
-        final Set<P> parents = getParents(prop);
+        final Collection<P> parents = getParents(prop);
         if (parents.isEmpty() || parents.contains(getRoot())){
                 if (containsReference(prop)) {
                     return true;
@@ -183,7 +179,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
     /**
      * Gets the objects that represent the roots of the hierarchy.
      */
-    public Set<P> getRoots() {
+    public Collection<P> getRoots() {
         rebuildIfNecessary();
         return Collections.singleton(getRoot());
     }

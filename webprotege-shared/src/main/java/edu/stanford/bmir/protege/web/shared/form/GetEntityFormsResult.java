@@ -3,12 +3,9 @@ package edu.stanford.bmir.protege.web.shared.form;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,13 +16,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetEntityFormsResult implements Result {
 
+    private ImmutableList<FormId> filteredFormIds;
+
     private ImmutableList<FormDataDto> formData;
 
-    public GetEntityFormsResult(@Nonnull ImmutableList<FormDataDto> formData) {
+    public GetEntityFormsResult(@Nonnull ImmutableList<FormId> filteredFormIds,
+                                @Nonnull ImmutableList<FormDataDto> formData) {
+        this.filteredFormIds = checkNotNull(filteredFormIds);
         this.formData = checkNotNull(formData);
     }
 
     private GetEntityFormsResult() {
+    }
+
+    @Nonnull
+    public ImmutableList<FormId> getFilteredFormIds() {
+        return filteredFormIds;
     }
 
     @Nonnull

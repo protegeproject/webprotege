@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -17,13 +18,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.NumberControlData;
-import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
+import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlRange;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
@@ -45,11 +41,11 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private NumberControlRange range = NumberControlRange.all();
 
-    private NumberControlDescriptor descriptor;
+    private NumberControlDescriptorDto descriptor;
 
     private Optional<OWLLiteral> currentValue = Optional.empty();
 
-    public void setDescriptor(NumberControlDescriptor formFieldDescriptor) {
+    public void setDescriptor(NumberControlDescriptorDto formFieldDescriptor) {
         this.descriptor = formFieldDescriptor;
         setFormat(formFieldDescriptor.getFormat());
         setRange(formFieldDescriptor.getRange());
@@ -121,6 +117,12 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
         dirty = false;
     }
 
+    @Nonnull
+    @Override
+    public ImmutableSet<FormRegionFilter> getFilters() {
+        return ImmutableSet.of();
+    }
+
     @Override
     public Optional<FormControlData> getValue() {
         try {
@@ -128,10 +130,10 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
                 OWLLiteral v = DataFactory.getOWLLiteral(numberField.getText().trim(),
                                                          DataFactory.getXSDDecimal());
                 GWT.log("[NumberEditorControl] Value: " + v);
-                return Optional.of(NumberControlData.get(descriptor, v));
+                return Optional.of(NumberControlData.get(descriptor.getDescriptor(), v));
             }
             else {
-                return currentValue.map(v -> NumberControlData.get(descriptor, v));
+                return currentValue.map(v -> NumberControlData.get(descriptor.getDescriptor(), v));
 
             }
         } catch (NumberFormatException e) {
@@ -200,6 +202,10 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     private void validate() {
         String trimmedText = numberField.getText()
                                         .trim();
+        if(trimmedText.isEmpty()) {
+            clearErrorMessage();
+            return;
+        }
         try {
             format.parse(trimmedText);
         } catch(NumberFormatException e) {
@@ -255,5 +261,10 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     @Override
     public boolean isEnabled() {
         return numberField.isEnabled();
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+
     }
 }

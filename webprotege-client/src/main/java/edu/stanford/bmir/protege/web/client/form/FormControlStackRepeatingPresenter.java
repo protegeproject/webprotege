@@ -12,13 +12,15 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.FormControlContainer;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
-import edu.stanford.bmir.protege.web.shared.form.FormRegionPageChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -52,7 +54,10 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     private FormRegionPosition position;
 
     @Nonnull
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = () -> {};
+    private RegionPageChangedHandler regionPageChangedHandler = () -> {};
+
+    @Nonnull
+    private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
 
     @AutoFactory
     @Inject
@@ -88,6 +93,10 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         formControls.clear();
         view.clear();
         view.setPaginatorVisible(value.getPageCount() > 1);
+        paginatorPresenter.setPageNumber(value.getPageNumber());
+        paginatorPresenter.setPageCount(value.getPageCount());
+        paginatorPresenter.setElementCount(value.getTotalElements());
+        paginatorPresenter.setPageNumberChangedHandler(page -> regionPageChangedHandler.handleRegionPageChanged());
         value.getPageElements()
              .stream()
              .map(this::createFormControl)
@@ -124,7 +133,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         formControl.setValue(dto);
         formControl.setEnabled(enabled);
         formControl.addValueChangeHandler(this);
-        // TODO: Paging
+        formControl.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
         return formControl;
     }
 
@@ -201,20 +210,27 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Nonnull
     @Override
     public ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject, @Nonnull FormRegionId formRegionId) {
-        return formControls.stream()
+        Stream<FormRegionPageRequest> controlPages = formControls.stream()
                 .map(formControl -> formControl.getPageRequests(formSubject, formRegionId))
-                .flatMap(ImmutableList::stream)
-                .collect(toImmutableList());
+                .flatMap(ImmutableList::stream);
+        PageRequest stackPageRequest = PageRequest.requestPageWithSize(paginatorPresenter.getPageNumber(), FormPageRequest.DEFAULT_PAGE_SIZE);
+        Stream<FormRegionPageRequest> stackPage = Stream.of(FormRegionPageRequest.get(formSubject, formRegionId, FormPageRequest.SourceType.CONTROL_STACK, stackPageRequest));
+        return Stream.concat(stackPage, controlPages).collect(toImmutableList());
     }
 
     @Override
-    public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler formRegionPageChangedHandler) {
-        this.formRegionPageChangedHandler = checkNotNull(formRegionPageChangedHandler);
-        formControls.forEach(formControl -> formControl.setFormRegionPageChangedHandler(formRegionPageChangedHandler));
+    public void setRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler) {
+        this.regionPageChangedHandler = checkNotNull(regionPageChangedHandler);
+        formControls.forEach(formControl -> formControl.setRegionPageChangedHandler(regionPageChangedHandler));
     }
 
     @Override
     public void forEachFormControl(@Nonnull Consumer<FormControl> formControlConsumer) {
         formControls.forEach(formControlConsumer);
+    }
+
+    @Override
+    public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
+        this.formRegionFilterChangedHandler = checkNotNull(handler);
     }
 }

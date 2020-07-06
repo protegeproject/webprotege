@@ -1,14 +1,15 @@
 package edu.stanford.bmir.protege.web.server.form.processor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.form.FormFrameBuilder;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptorMissingException;
 import edu.stanford.bmir.protege.web.shared.form.data.GridControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
+import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
 import edu.stanford.bmir.protege.web.shared.form.field.GridColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.GridControlDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.GridControlOrderBy;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.junit.Before;
@@ -57,7 +58,7 @@ public class GridControlDataProcessor_TestCase {
 
     private GridControlData gridControlData;
 
-    private ImmutableList<GridControlOrderBy> ordering = ImmutableList.of();
+    private ImmutableSet<FormRegionOrdering> ordering = ImmutableSet.of();
 
     @Before
     public void setUp() {
