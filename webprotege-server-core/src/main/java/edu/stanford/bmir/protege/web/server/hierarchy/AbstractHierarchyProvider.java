@@ -73,7 +73,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
         return getChildren(object).isEmpty();
     }
 
-    public Set<N> getDescendants(N object) {
+    public Collection<N> getDescendants(N object) {
         Set<N> results = new HashSet<>();
         getDescendants(results, object);
         return results;
