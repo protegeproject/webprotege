@@ -24,9 +24,9 @@ import static org.mockito.Mockito.when;
  * 2019-08-16
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ClassHierarchyProvider_TestCase {
+public class ClassHierarchyProviderImpl_TestCase {
 
-    private ClassHierarchyProvider classHierarchyProvider;
+    private ClassHierarchyProviderImpl classHierarchyProvider;
 
     private OWLDataFactory dataFactory = new OWLDataFactoryImpl();
 
@@ -111,14 +111,14 @@ public class ClassHierarchyProvider_TestCase {
         when(axiomsByEntityReferenceIndex.getReferencingAxioms(clsD, ontologyId))
                 .thenReturn(Stream.of(clsA2EquivalentToClsDandClsE));
 
-        classHierarchyProvider = new ClassHierarchyProvider(projectId,
-                                                            owlThing,
-                                                            projectOntologiesIndex,
-                                                            subClassOfAxiomsBySubClassIndex,
-                                                            equivalentClassesAxiomIndex,
-                                                            projectSignatureByTypeIndex,
-                                                            axiomsByEntityReferenceIndex,
-                                                            entitiesInProjectSignatureByIriIndex);
+        classHierarchyProvider = new ClassHierarchyProviderImpl(projectId,
+                                                                owlThing,
+                                                                projectOntologiesIndex,
+                                                                subClassOfAxiomsBySubClassIndex,
+                                                                equivalentClassesAxiomIndex,
+                                                                projectSignatureByTypeIndex,
+                                                                axiomsByEntityReferenceIndex,
+                                                                entitiesInProjectSignatureByIriIndex);
 
     }
 

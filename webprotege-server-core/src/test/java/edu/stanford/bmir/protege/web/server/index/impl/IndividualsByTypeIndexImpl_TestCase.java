@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
-import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureByTypeIndex;
-import edu.stanford.bmir.protege.web.server.index.impl.IndividualsByTypeIndexImpl;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import org.junit.Before;
@@ -52,7 +50,7 @@ public class IndividualsByTypeIndexImpl_TestCase {
     private ClassAssertionAxiomsByClassIndex classAssertionsByClass;
 
     @Mock
-    private ClassHierarchyProvider classHierarchyProvider;
+    private ClassHierarchyProviderImpl classHierarchyProvider;
 
     @Mock
     private DictionaryManager dictionaryManager;

@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
@@ -52,7 +52,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
@@ -107,7 +106,7 @@ public class ChangeManager implements HasApplyChanges {
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final ClassHierarchyProvider classHierarchyProvider;
+    private final ClassHierarchyProviderImpl classHierarchyProvider;
 
     @Nonnull
     private final OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
@@ -163,7 +162,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull RevisionManager changeManager,
                          @Nonnull RootIndex rootIndex,
                          @Nonnull DictionaryManager dictionaryManager,
-                         @Nonnull ClassHierarchyProvider classHierarchyProvider,
+                         @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                          @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
                          @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,

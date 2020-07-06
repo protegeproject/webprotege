@@ -30,9 +30,9 @@ import static java.util.stream.Collectors.toSet;
  * Date: 17-Jan-2007<br><br>
  */
 @ProjectSingleton
-public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> {
+public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLClass> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClassHierarchyProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClassHierarchyProviderImpl.class);
 
     @Nonnull
     private final ProjectId projectId;
@@ -67,14 +67,14 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     private boolean stale = true;
 
     @Inject
-    public ClassHierarchyProvider(ProjectId projectId,
-                                  @Nonnull @ClassHierarchyRoot OWLClass rootCls,
-                                  @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                  @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
-                                  @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
-                                  @Nonnull ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
-                                  @Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex,
-                                  @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
+    public ClassHierarchyProviderImpl(ProjectId projectId,
+                                      @Nonnull @ClassHierarchyRoot OWLClass rootCls,
+                                      @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                      @Nonnull SubClassOfAxiomsBySubClassIndex subClassOfAxiomsIndex,
+                                      @Nonnull EquivalentClassesAxiomsIndex equivalentClassesAxiomsIndex,
+                                      @Nonnull ProjectSignatureByTypeIndex projectSignatureByTypeIndex,
+                                      @Nonnull AxiomsByEntityReferenceIndex axiomsByEntityReferenceIndex,
+                                      @Nonnull EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex) {
         this.projectId = checkNotNull(projectId);
         this.root = checkNotNull(rootCls);
         this.projectOntologiesIndex = projectOntologiesIndex;
