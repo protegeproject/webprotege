@@ -234,7 +234,6 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
     }
 
     private void notifyNodeChanges() {
-        nodesToUpdate.forEach(this::fireNodeChanged);
         nodesToUpdate.clear();
     }
 

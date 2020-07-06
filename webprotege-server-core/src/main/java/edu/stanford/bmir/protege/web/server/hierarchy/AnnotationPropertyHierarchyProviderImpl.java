@@ -139,7 +139,6 @@ public class AnnotationPropertyHierarchyProviderImpl extends AbstractHierarchyPr
                     for (OWLAnnotationProperty anc : getAncestors(prop)) {
                         if (getAncestors(anc).contains(prop)) {
                             roots.add(anc);
-                            fireNodeChanged(anc);
                         }
                     }
                 }
@@ -147,7 +146,6 @@ public class AnnotationPropertyHierarchyProviderImpl extends AbstractHierarchyPr
                     roots.remove(prop);
                 }
             }
-            fireNodeChanged(prop);
         }
     }
 

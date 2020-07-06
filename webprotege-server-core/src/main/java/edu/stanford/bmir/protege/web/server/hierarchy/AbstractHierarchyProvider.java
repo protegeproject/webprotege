@@ -24,19 +24,10 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHierarchyProvider.class);
 
-
-    private boolean fireEvents;
-
-    private List<OWLObjectHierarchyProviderListener<N>> listeners;
-
-
     protected AbstractHierarchyProvider() {
-        listeners = new ArrayList<>();
-        fireEvents = true;
     }
 
     public void dispose() {
-        listeners.clear();
     }
 
 
@@ -138,62 +129,5 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
             path.add(obj);
         }
         return setOfPaths;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    private Set<N> createSet() {
-        return new HashSet<>();
-    }
-
-
-    protected void setFireEvents(boolean b) {
-        fireEvents = b;
-    }
-
-
-    public void addListener(OWLObjectHierarchyProviderListener<N> listener) {
-        listeners.add(listener);
-    }
-
-
-    public void removeListener(OWLObjectHierarchyProviderListener<N> listener) {
-        listeners.remove(listener);
-    }
-
-
-    protected void fireNodeChanged(N node) {
-        if (!fireEvents) {
-            return;
-        }
-        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<>(
-                listeners)) {
-            try {
-                listener.nodeChanged(node);
-            }
-            catch (Throwable e) {
-                e.printStackTrace();
-                logger.warn(getClass().getName() + ": Listener" + listener + " has thrown an exception.  Removing bad listener!");
-                listeners.remove(listener);
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-
-    protected void fireHierarchyChanged() {
-        if (!fireEvents) {
-            return;
-        }
-        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<>(
-                listeners)) {
-            try {
-                listener.hierarchyChanged();
-            }
-            catch (Throwable e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

@@ -86,7 +86,6 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
         for (P prop : properties) {
             if (isSubPropertyOfRoot(prop)) {
                 subPropertiesOfRoot.add(prop);
-                fireNodeChanged(getRoot());
             }
             else {
                 if (getAncestors(prop).contains(prop)) {
@@ -94,7 +93,6 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
                     for (P anc : getAncestors(prop)) {
                         if (getAncestors(anc).contains(prop)) {
                             subPropertiesOfRoot.add(anc);
-                            fireNodeChanged(anc);
                         }
                     }
                 }
@@ -102,9 +100,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<P extends OWLProperty
                     subPropertiesOfRoot.remove(prop);
                 }
             }
-            fireNodeChanged(prop);
         }
-        fireNodeChanged(getRoot());
     }
 
     private Set<P> getPropertiesReferencedInChange(List<OntologyChange> changes) {
