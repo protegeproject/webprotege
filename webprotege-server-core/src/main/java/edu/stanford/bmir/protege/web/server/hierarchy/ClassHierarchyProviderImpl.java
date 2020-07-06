@@ -276,28 +276,4 @@ public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLCla
         return childClassExtractor.getResult();
     }
 
-    public synchronized Set<OWLClass> getEquivalents(OWLClass object) {
-        rebuildIfNecessary();
-        Set<OWLClass> result = new HashSet<>();
-        projectOntologiesIndex
-                .getOntologyIds()
-                .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(object, ontId))
-                .flatMap(cls -> cls.getClassExpressions()
-                                   .stream())
-                .filter(cls -> !cls.equals(object))
-                .filter(OWLClassExpression::isNamed)
-                .map(OWLClassExpression::asOWLClass)
-                .forEach(result::add);
-
-        Set<OWLClass> ancestors = getAncestors(object);
-        if(ancestors.contains(object)) {
-            result.addAll(ancestors.stream()
-                                   .filter(cls -> getAncestors(cls).contains(object))
-                                   .collect(toList()));
-            result.remove(object);
-            result.remove(root);
-        }
-        return result;
-    }
-
 }

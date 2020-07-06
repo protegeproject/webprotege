@@ -94,22 +94,6 @@ public class AnnotationPropertyHierarchyProviderImpl extends AbstractHierarchyPr
     }
 
 
-    public Set<OWLAnnotationProperty> getEquivalents(OWLAnnotationProperty object) {
-        rebuildIfNecessary();
-        Set<OWLAnnotationProperty> result = new HashSet<>();
-        Set<OWLAnnotationProperty> ancestors = getAncestors(object);
-        if (ancestors.contains(object)) {
-            for (OWLAnnotationProperty anc : ancestors) {
-                if (getAncestors(anc).contains(object)) {
-                    result.add(anc);
-                }
-            }
-        }
-        result.remove(object);
-        return result;
-    }
-
-
     public Set<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
         rebuildIfNecessary();
         return projectOntologiesIndex.getOntologyIds()

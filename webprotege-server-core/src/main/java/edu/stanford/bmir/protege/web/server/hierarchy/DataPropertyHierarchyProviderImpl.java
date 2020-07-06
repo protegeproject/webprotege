@@ -13,7 +13,6 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
-import static org.semanticweb.owlapi.model.AxiomType.EQUIVALENT_DATA_PROPERTIES;
 import static org.semanticweb.owlapi.model.AxiomType.SUB_DATA_PROPERTY;
 
 
@@ -85,17 +84,4 @@ public class DataPropertyHierarchyProviderImpl extends AbstractOWLPropertyHierar
                                      .collect(toSet());
     }
 
-    @Override
-    public Set<OWLDataProperty> getEquivalents(OWLDataProperty property) {
-        rebuildIfNecessary();
-        return projectOntologiesIndex.getOntologyIds()
-                                     .flatMap(ontId -> axiomsByTypeIndex.getAxiomsByType(EQUIVALENT_DATA_PROPERTIES,
-                                                                                         ontId))
-                                     .map(OWLEquivalentDataPropertiesAxiom::getProperties)
-                                     .flatMap(Collection::stream)
-                                     .filter(OWLDataPropertyExpression::isNamed)
-                                     .filter(propertyExpression -> !propertyExpression.equals(property))
-                                     .map(OWLDataPropertyExpression::asOWLDataProperty)
-                                     .collect(toSet());
-    }
 }
