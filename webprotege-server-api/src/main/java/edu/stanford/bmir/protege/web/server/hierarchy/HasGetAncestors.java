@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * Matthew Horridge
@@ -9,5 +9,5 @@ import java.util.Set;
  */
 public interface HasGetAncestors<N> {
 
-    Set<N> getAncestors(N object);
+    Collection<N> getAncestors(N object);
 }

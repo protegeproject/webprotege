@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -114,7 +115,7 @@ public class WatchedChangesManager {
             @Nonnull
             @Override
             public Boolean visit(@Nonnull OWLClass cls) {
-                final Set<? extends OWLEntity> ancestors = classHierarchyProvider.getAncestors(cls);
+                final var ancestors = classHierarchyProvider.getAncestors(cls);
                 return isWatchedByAncestor(ancestors);
             }
 
@@ -157,7 +158,7 @@ public class WatchedChangesManager {
                 return isWatchedByAncestor(annotationPropertyHierarchyProvider.getAncestors(property));
             }
 
-            private Boolean isWatchedByAncestor(Set<? extends OWLEntity> ancestors) {
+            private Boolean isWatchedByAncestor(Collection<? extends OWLEntity> ancestors) {
                 for (OWLEntity anc : ancestors) {
                     if (watchedAncestors.contains(anc)) {
                         return true;

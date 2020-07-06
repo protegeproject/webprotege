@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -48,47 +49,47 @@ public class IndirectlyWatchedEntitiesFinder {
         this.classAssertionAxiomsIndex = classAssertionAxiomsIndex;
     }
 
-    public Set<? extends OWLEntity> getRelatedWatchedEntities(OWLEntity entity) {
-        return entity.accept(new OWLEntityVisitorEx<Set<? extends OWLEntity>>() {
+    public Collection<? extends OWLEntity> getRelatedWatchedEntities(OWLEntity entity) {
+        return entity.accept(new OWLEntityVisitorEx<>() {
 
             @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(@Nonnull OWLClass desc) {
+            public Collection<? extends OWLEntity> visit(@Nonnull OWLClass desc) {
                 return classAncestorsProvider.getAncestors(desc);
             }
 
             @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(@Nonnull OWLDataProperty property) {
+            public Collection<? extends OWLEntity> visit(@Nonnull OWLDataProperty property) {
                 return dataPropertyAncestorsProvider.getAncestors(property);
             }
 
             @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(@Nonnull OWLObjectProperty property) {
+            public Collection<? extends OWLEntity> visit(@Nonnull OWLObjectProperty property) {
                 return objectAncestorsProvider.getAncestors(property);
             }
 
             @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(@Nonnull OWLNamedIndividual individual) {
+            public Collection<? extends OWLEntity> visit(@Nonnull OWLNamedIndividual individual) {
                 return classAssertionAxiomsIndex.getClassAssertionAxioms(individual)
-                        .map(OWLClassAssertionAxiom::getClassExpression)
-                        .filter(OWLClassExpression::isNamed)
-                        .map(OWLClassExpression::asOWLClass)
-                        .flatMap(cls -> classAncestorsProvider.getAncestors(cls).stream())
-                        .collect(toImmutableSet());
+                                                .map(OWLClassAssertionAxiom::getClassExpression)
+                                                .filter(OWLClassExpression::isNamed)
+                                                .map(OWLClassExpression::asOWLClass)
+                                                .flatMap(cls -> classAncestorsProvider.getAncestors(cls).stream())
+                                                .collect(toImmutableSet());
             }
 
             @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(@Nonnull OWLDatatype owlDatatype) {
+            public Collection<? extends OWLEntity> visit(@Nonnull OWLDatatype owlDatatype) {
                 return Collections.singleton(owlDatatype);
             }
 
             @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(@Nonnull OWLAnnotationProperty owlAnnotationProperty) {
+            public Collection<? extends OWLEntity> visit(@Nonnull OWLAnnotationProperty owlAnnotationProperty) {
                 return annotationPropertyAncestorsProvider.getAncestors(owlAnnotationProperty);
             }
         });

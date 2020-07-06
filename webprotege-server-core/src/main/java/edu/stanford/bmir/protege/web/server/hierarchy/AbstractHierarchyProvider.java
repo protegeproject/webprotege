@@ -31,7 +31,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
     }
 
 
-    public Set<N> getAncestors(N object) {
+    public Collection<N> getAncestors(N object) {
         Set<N> results = new HashSet<>();
         getAncestors(results, object);
         return results;
