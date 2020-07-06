@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.semanticweb.owlapi.change.AddImportData;
 import org.semanticweb.owlapi.model.AxiomType;
@@ -14,8 +17,9 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Matthew Horridge
@@ -59,7 +63,7 @@ public class AddImportChange_TestCase<R> {
 
     @Test
     public void shouldGetSignature() {
-        assertThat(change.getSignature(), is(empty()));
+        assertThat(change.getSignature(), is(Matchers.empty()));
     }
 
     @Test
@@ -133,14 +137,14 @@ public class AddImportChange_TestCase<R> {
     @Test
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
-        assertThat(revertingChange, is(instanceOf(RemoveImportChange.class)));
+        assertThat(revertingChange, is(Matchers.instanceOf(RemoveImportChange.class)));
         assertThat(revertingChange.getOntologyId(), is(ontologyId));
         assertThat(revertingChange.getImportsDeclaration(), is(importsDeclaration));
     }
 
     @Test
     public void shouldReplaceOntologyId() {
-        var otherOntologyId = mock(OWLOntologyID.class);
+        var otherOntologyId = Mockito.mock(OWLOntologyID.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
         assertThat(replaced.getOntologyId(), is(otherOntologyId));
     }
@@ -148,6 +152,6 @@ public class AddImportChange_TestCase<R> {
     @Test
     public void shouldReturnSameForSameOntologyId() {
         var replaced = change.replaceOntologyId(ontologyId);
-        assertThat(replaced, is(sameInstance(change)));
+        assertThat(replaced, is(Matchers.sameInstance(change)));
     }
 }

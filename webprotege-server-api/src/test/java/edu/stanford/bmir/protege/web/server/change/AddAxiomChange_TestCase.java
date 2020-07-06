@@ -1,17 +1,23 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.semanticweb.owlapi.change.RemoveImportData;
+import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLImportsDeclaration;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import java.util.Collections;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -20,18 +26,23 @@ import static org.mockito.Mockito.*;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2019-08-28
+ * 2019-08-27
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RemoveImportChange_TestCase<R> {
+public class AddAxiomChange_TestCase<R> {
 
-    private RemoveImportChange change;
+
+    private AddAxiomChange change;
 
     @Mock
     private OWLOntologyID ontologyId;
 
     @Mock
-    private OWLImportsDeclaration importsDeclaration;
+    private OWLAnnotationAssertionAxiom axiom;
+
+
+    @Mock
+    private Set<OWLEntity> signature = Collections.singleton(mock(OWLEntity.class));
 
     @Mock
     private IriReplacer iriReplacer;
@@ -44,7 +55,14 @@ public class RemoveImportChange_TestCase<R> {
 
     @Before
     public void setUp() {
-        change = RemoveImportChange.of(ontologyId, importsDeclaration);
+        change = AddAxiomChange.of(ontologyId, axiom);
+        Mockito.when(axiom.getSignature())
+               .thenReturn(signature);
+        Mockito.when(axiom.getAxiomType())
+               .thenAnswer(invocation -> AxiomType.ANNOTATION_ASSERTION);
+
+        Mockito.when(iriReplacer.replaceIris(axiom))
+               .thenReturn(axiom);
     }
 
     @Test
@@ -53,23 +71,23 @@ public class RemoveImportChange_TestCase<R> {
     }
 
     @Test
-    public void shouldGetSuppliedDeclaration() {
-        assertThat(change.getImportsDeclaration(), is(importsDeclaration));
+    public void shouldGetSuppliedAxiom() {
+        assertThat(change.getAxiom(), is(axiom));
     }
 
     @Test
     public void shouldGetSignature() {
-        assertThat(change.getSignature(), is(empty()));
+        assertThat(change.getSignature(), is(signature));
     }
 
     @Test
     public void shouldReturnIsAxiomChange() {
-        assertThat(change.isAxiomChange(), is(false));
+        assertThat(change.isAxiomChange(), is(true));
     }
 
     @Test
     public void shouldReturnIsAddAxiom() {
-        assertThat(change.isAddAxiom(), is(false));
+        assertThat(change.isAddAxiom(), is(true));
     }
 
     @Test
@@ -77,14 +95,19 @@ public class RemoveImportChange_TestCase<R> {
         assertThat(change.isRemoveAxiom(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void shouldGetAxiomOrThrow() {
-        change.getAxiomOrThrow();
+        assertThat(change.getAxiomOrThrow(), is(axiom));
+    }
+
+    @Test
+    public void shouldReturnIsChangeForAxiomType() {
+        assertThat(change.isChangeFor(AxiomType.ANNOTATION_ASSERTION), is(true));
     }
 
     @Test
     public void shouldReturnIsNotChangeForAxiomType() {
-        AxiomType.AXIOM_TYPES.forEach(axiomType -> assertThat(change.isChangeFor(axiomType), is(false)));
+        assertThat(change.isChangeFor(AxiomType.CLASS_ASSERTION), is(false));
     }
 
     @Test
@@ -95,13 +118,13 @@ public class RemoveImportChange_TestCase<R> {
     @Test
     public void shouldVisitChange() {
         change.accept(visitor);
-        verify(visitor, times(1)).visit(change);
+        Mockito.verify(visitor, Mockito.times(1)).visit(change);
     }
 
     @Test
     public void shouldVisitChangeEx() {
         change.accept(changeVisitorEx);
-        verify(changeVisitorEx, times(1)).visit(change);
+        Mockito.verify(changeVisitorEx, Mockito.times(1)).visit(change);
     }
 
     @Test
@@ -118,7 +141,7 @@ public class RemoveImportChange_TestCase<R> {
     public void shouldCreateOwlOntologyChangeRecord() {
         var changeRecord = change.toOwlOntologyChangeRecord();
         assertThat(changeRecord.getOntologyID(), is(ontologyId));
-        assertThat(changeRecord.getData(), is(new RemoveImportData(importsDeclaration)));
+        assertThat(changeRecord.getData(), is(new AddAxiomData(axiom)));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -126,16 +149,17 @@ public class RemoveImportChange_TestCase<R> {
         change.getAnnotationOrThrow();
     }
 
+    @Test(expected = NoSuchElementException.class)
     public void shouldGetImportsDeclarationOrThrow() {
-        assertThat(change.getImportsDeclarationOrThrow(), is(importsDeclaration));
+        change.getImportsDeclarationOrThrow();
     }
 
     @Test
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
-        assertThat(revertingChange, is(instanceOf(AddImportChange.class)));
+        assertThat(revertingChange, is(Matchers.instanceOf(RemoveAxiomChange.class)));
         assertThat(revertingChange.getOntologyId(), is(ontologyId));
-        assertThat(revertingChange.getImportsDeclaration(), is(importsDeclaration));
+        assertThat(revertingChange.getAxiom(), is(axiom));
     }
 
     @Test
@@ -148,6 +172,6 @@ public class RemoveImportChange_TestCase<R> {
     @Test
     public void shouldReturnSameForSameOntologyId() {
         var replaced = change.replaceOntologyId(ontologyId);
-        assertThat(replaced, is(sameInstance(change)));
+        assertThat(replaced, is(Matchers.sameInstance(change)));
     }
 }

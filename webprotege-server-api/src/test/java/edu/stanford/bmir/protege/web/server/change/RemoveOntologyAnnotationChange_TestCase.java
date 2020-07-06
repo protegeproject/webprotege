@@ -1,12 +1,15 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.semanticweb.owlapi.change.AddOntologyAnnotationData;
+import org.semanticweb.owlapi.change.RemoveOntologyAnnotationData;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -16,19 +19,15 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-28
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AddOntologyAnnotationChange_TestCase<R> {
+public class RemoveOntologyAnnotationChange_TestCase<R> {
 
-    private AddOntologyAnnotationChange change;
+    private RemoveOntologyAnnotationChange change;
 
     @Mock
     private OWLOntologyID ontologyId;
@@ -37,7 +36,7 @@ public class AddOntologyAnnotationChange_TestCase<R> {
     private OWLAnnotation ontologyAnnotation;
 
     @Mock
-    private Set<OWLEntity> signature = Collections.singleton(mock(OWLEntity.class));
+    private Set<OWLEntity> signature = Collections.singleton(Mockito.mock(OWLEntity.class));
 
     @Mock
     private IriReplacer iriReplacer;
@@ -50,41 +49,41 @@ public class AddOntologyAnnotationChange_TestCase<R> {
 
     @Before
     public void setUp() {
-        change = AddOntologyAnnotationChange.of(ontologyId, ontologyAnnotation);
-        when(ontologyAnnotation.getSignature())
-                .thenReturn(signature);
-        when(iriReplacer.replaceIris(ontologyAnnotation))
-                .thenReturn(ontologyAnnotation);
+        change = RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation);
+        Mockito.when(ontologyAnnotation.getSignature())
+               .thenReturn(signature);
+        Mockito.when(iriReplacer.replaceIris(ontologyAnnotation))
+               .thenReturn(ontologyAnnotation);
     }
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        assertThat(change.getOntologyId(), is(ontologyId));
+        MatcherAssert.assertThat(change.getOntologyId(), Matchers.is(ontologyId));
     }
 
     @Test
     public void shouldGetSuppliedAnnotation() {
-        assertThat(change.getAnnotation(), is(ontologyAnnotation));
+        MatcherAssert.assertThat(change.getAnnotation(), Matchers.is(ontologyAnnotation));
     }
 
     @Test
     public void shouldGetSignature() {
-        assertThat(change.getSignature(), is(signature));
+        MatcherAssert.assertThat(change.getSignature(), Matchers.is(signature));
     }
 
     @Test
     public void shouldReturnIsAxiomChange() {
-        assertThat(change.isAxiomChange(), is(false));
+        MatcherAssert.assertThat(change.isAxiomChange(), Matchers.is(false));
     }
 
     @Test
     public void shouldReturnIsAddAxiom() {
-        assertThat(change.isAddAxiom(), is(false));
+        MatcherAssert.assertThat(change.isAddAxiom(), Matchers.is(false));
     }
 
     @Test
     public void shouldReturnIsRemoveAxiom() {
-        assertThat(change.isRemoveAxiom(), is(false));
+        MatcherAssert.assertThat(change.isRemoveAxiom(), Matchers.is(false));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -94,47 +93,46 @@ public class AddOntologyAnnotationChange_TestCase<R> {
 
     @Test
     public void shouldReturnIsNotChangeForAxiomType() {
-        AxiomType.AXIOM_TYPES.forEach(axiomType -> assertThat(change.isChangeFor(axiomType), is(false)));
+        AxiomType.AXIOM_TYPES.forEach(axiomType -> MatcherAssert.assertThat(change.isChangeFor(axiomType), Matchers.is(false)));
 
     }
 
     @Test
     public void shouldReplaceIris() {
-        assertThat(change.replaceIris(iriReplacer), is(change));
+        MatcherAssert.assertThat(change.replaceIris(iriReplacer), Matchers.is(change));
     }
 
     @Test
     public void shouldVisitChange() {
         change.accept(visitor);
-        verify(visitor, times(1)).visit(change);
+        Mockito.verify(visitor, Mockito.times(1)).visit(change);
     }
 
     @Test
     public void shouldVisitChangeEx() {
         change.accept(changeVisitorEx);
-        verify(changeVisitorEx, times(1)).visit(change);
+        Mockito.verify(changeVisitorEx, Mockito.times(1)).visit(change);
     }
 
     @Test
     public void shouldReturnIsRemoveOntologyAnnotation() {
-        assertThat(change.isRemoveOntologyAnnotation(), is(false));
+        MatcherAssert.assertThat(change.isRemoveOntologyAnnotation(), Matchers.is(true));
     }
 
     @Test
     public void shouldReturnIsAddOntologyAnnotation() {
-        assertThat(change.isAddOntologyAnnotation(), is(true));
+        MatcherAssert.assertThat(change.isAddOntologyAnnotation(), Matchers.is(false));
     }
 
     @Test
     public void shouldCreateOwlOntologyChangeRecord() {
         var changeRecord = change.toOwlOntologyChangeRecord();
-        assertThat(changeRecord.getOntologyID(), is(ontologyId));
-        assertThat(changeRecord.getData(), is(new AddOntologyAnnotationData(ontologyAnnotation)));
+        MatcherAssert.assertThat(changeRecord.getOntologyID(), Matchers.is(ontologyId));
+        MatcherAssert.assertThat(changeRecord.getData(), Matchers.is(new RemoveOntologyAnnotationData(ontologyAnnotation)));
     }
 
-    @Test
     public void shouldGetAnnotationOrThrow() {
-        assertThat(change.getAnnotationOrThrow(), is(ontologyAnnotation));
+        MatcherAssert.assertThat(change.getAnnotation(), Matchers.is(ontologyAnnotation));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -145,21 +143,21 @@ public class AddOntologyAnnotationChange_TestCase<R> {
     @Test
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
-        assertThat(revertingChange, is(instanceOf(RemoveOntologyAnnotationChange.class)));
-        assertThat(revertingChange.getOntologyId(), is(ontologyId));
-        assertThat(revertingChange.getAnnotation(), is(ontologyAnnotation));
+        MatcherAssert.assertThat(revertingChange, Matchers.is(Matchers.instanceOf(AddOntologyAnnotationChange.class)));
+        MatcherAssert.assertThat(revertingChange.getOntologyId(), Matchers.is(ontologyId));
+        MatcherAssert.assertThat(revertingChange.getAnnotation(), Matchers.is(ontologyAnnotation));
     }
 
     @Test
     public void shouldReplaceOntologyId() {
-        var otherOntologyId = mock(OWLOntologyID.class);
+        var otherOntologyId = Mockito.mock(OWLOntologyID.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
-        assertThat(replaced.getOntologyId(), is(otherOntologyId));
+        MatcherAssert.assertThat(replaced.getOntologyId(), Matchers.is(otherOntologyId));
     }
 
     @Test
     public void shouldReturnSameForSameOntologyId() {
         var replaced = change.replaceOntologyId(ontologyId);
-        assertThat(replaced, is(sameInstance(change)));
+        MatcherAssert.assertThat(replaced, Matchers.is(Matchers.sameInstance(change)));
     }
 }

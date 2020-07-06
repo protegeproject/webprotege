@@ -1,12 +1,15 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.semanticweb.owlapi.change.RemoveOntologyAnnotationData;
+import org.semanticweb.owlapi.change.AddOntologyAnnotationData;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -26,9 +29,9 @@ import static org.mockito.Mockito.*;
  * 2019-08-28
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RemoveOntologyAnnotationChange_TestCase<R> {
+public class AddOntologyAnnotationChange_TestCase<R> {
 
-    private RemoveOntologyAnnotationChange change;
+    private AddOntologyAnnotationChange change;
 
     @Mock
     private OWLOntologyID ontologyId;
@@ -50,11 +53,11 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
 
     @Before
     public void setUp() {
-        change = RemoveOntologyAnnotationChange.of(ontologyId, ontologyAnnotation);
+        change = AddOntologyAnnotationChange.of(ontologyId, ontologyAnnotation);
         when(ontologyAnnotation.getSignature())
-                .thenReturn(signature);
+               .thenReturn(signature);
         when(iriReplacer.replaceIris(ontologyAnnotation))
-                .thenReturn(ontologyAnnotation);
+               .thenReturn(ontologyAnnotation);
     }
 
     @Test
@@ -106,34 +109,35 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     @Test
     public void shouldVisitChange() {
         change.accept(visitor);
-        verify(visitor, times(1)).visit(change);
+        Mockito.verify(visitor, Mockito.times(1)).visit(change);
     }
 
     @Test
     public void shouldVisitChangeEx() {
         change.accept(changeVisitorEx);
-        verify(changeVisitorEx, times(1)).visit(change);
+        Mockito.verify(changeVisitorEx, Mockito.times(1)).visit(change);
     }
 
     @Test
     public void shouldReturnIsRemoveOntologyAnnotation() {
-        assertThat(change.isRemoveOntologyAnnotation(), is(true));
+        assertThat(change.isRemoveOntologyAnnotation(), is(false));
     }
 
     @Test
     public void shouldReturnIsAddOntologyAnnotation() {
-        assertThat(change.isAddOntologyAnnotation(), is(false));
+        assertThat(change.isAddOntologyAnnotation(), is(true));
     }
 
     @Test
     public void shouldCreateOwlOntologyChangeRecord() {
         var changeRecord = change.toOwlOntologyChangeRecord();
         assertThat(changeRecord.getOntologyID(), is(ontologyId));
-        assertThat(changeRecord.getData(), is(new RemoveOntologyAnnotationData(ontologyAnnotation)));
+        assertThat(changeRecord.getData(), is(new AddOntologyAnnotationData(ontologyAnnotation)));
     }
 
+    @Test
     public void shouldGetAnnotationOrThrow() {
-        assertThat(change.getAnnotation(), is(ontologyAnnotation));
+        assertThat(change.getAnnotationOrThrow(), is(ontologyAnnotation));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -144,7 +148,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     @Test
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
-        assertThat(revertingChange, is(instanceOf(AddOntologyAnnotationChange.class)));
+        assertThat(revertingChange, is(Matchers.instanceOf(RemoveOntologyAnnotationChange.class)));
         assertThat(revertingChange.getOntologyId(), is(ontologyId));
         assertThat(revertingChange.getAnnotation(), is(ontologyAnnotation));
     }
@@ -159,6 +163,6 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     @Test
     public void shouldReturnSameForSameOntologyId() {
         var replaced = change.replaceOntologyId(ontologyId);
-        assertThat(replaced, is(sameInstance(change)));
+        assertThat(replaced, is(Matchers.sameInstance(change)));
     }
 }
