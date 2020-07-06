@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -21,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SubClassOfMatcher implements Matcher<OWLEntity> {
 
     @Nonnull
-    private final ClassHierarchyProviderImpl provider;
+    private final ClassHierarchyProvider provider;
 
     @Nonnull
     private final OWLClass cls;
@@ -29,7 +30,7 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
     private final HierarchyFilterType filterType;
 
     @Inject
-    public SubClassOfMatcher(@Provided @Nonnull ClassHierarchyProviderImpl provider,
+    public SubClassOfMatcher(@Provided @Nonnull ClassHierarchyProvider provider,
                              @Nonnull OWLClass cls,
                              @Nonnull HierarchyFilterType filterType) {
         this.provider = checkNotNull(provider);

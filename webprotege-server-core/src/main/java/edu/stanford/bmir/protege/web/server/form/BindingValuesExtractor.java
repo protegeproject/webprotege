@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -28,7 +29,7 @@ public class BindingValuesExtractor {
     private final ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex;
 
     @Nonnull
-    private final ClassHierarchyProviderImpl classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
     private final ObjectPropertyAssertionAxiomsBySubjectIndex objectPropertyAssertionAxiomsBySubjectIndex;
@@ -48,7 +49,7 @@ public class BindingValuesExtractor {
     @Inject
     public BindingValuesExtractor(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                   @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividualIndex,
-                                  @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
+                                  @Nonnull ClassHierarchyProvider classHierarchyProvider,
                                   @Nonnull ObjectPropertyAssertionAxiomsBySubjectIndex objectPropertyAssertionAxiomsBySubjectIndex,
                                   @Nonnull DataPropertyAssertionAxiomsBySubjectIndex dataPropertyAssertionAxiomsBySubjectIndex,
                                   @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex,

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.individuals.IndividualRendering;
@@ -45,7 +46,7 @@ public class IndividualsIndexImpl implements IndividualsIndex, DependentIndex {
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final ClassHierarchyProviderImpl classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
     private final OWLDataFactory dataFactory;
@@ -57,7 +58,7 @@ public class IndividualsIndexImpl implements IndividualsIndex, DependentIndex {
     public IndividualsIndexImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
                                 @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionAxiomsByIndividual,
                                 @Nonnull DictionaryManager dictionaryManager,
-                                @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
+                                @Nonnull ClassHierarchyProvider classHierarchyProvider,
                                 @Nonnull OWLDataFactory dataFactory,
                                 @Nonnull IndividualsByTypeIndex individualsByTypeIndex) {
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);

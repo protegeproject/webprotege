@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index.impl;
 
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
@@ -50,7 +51,7 @@ public class IndividualsByTypeIndexImpl_TestCase {
     private ClassAssertionAxiomsByClassIndex classAssertionsByClass;
 
     @Mock
-    private ClassHierarchyProviderImpl classHierarchyProvider;
+    private ClassHierarchyProvider classHierarchyProvider;
 
     @Mock
     private DictionaryManager dictionaryManager;

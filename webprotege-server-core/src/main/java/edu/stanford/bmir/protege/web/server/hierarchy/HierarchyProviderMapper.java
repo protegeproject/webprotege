@@ -17,7 +17,7 @@ public class HierarchyProviderMapper {
     private final Map<HierarchyId, HierarchyProvider<? extends OWLEntity>> map = new HashMap<>();
 
     @Inject
-    public HierarchyProviderMapper(@Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
+    public HierarchyProviderMapper(@Nonnull ClassHierarchyProvider classHierarchyProvider,
                                    @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                                    @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
                                    @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider) {

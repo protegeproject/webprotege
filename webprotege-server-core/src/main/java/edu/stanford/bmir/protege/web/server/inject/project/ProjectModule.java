@@ -224,6 +224,11 @@ public class ProjectModule {
     }
 
     @Provides
+    public ClassHierarchyProvider getClassHierarchyProvider(ClassHierarchyProviderImpl impl) {
+        return impl;
+    }
+
+    @Provides
     public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(HierarchyProvider<OWLObjectProperty> hierarchyProvider) {
         return hierarchyProvider;
     }

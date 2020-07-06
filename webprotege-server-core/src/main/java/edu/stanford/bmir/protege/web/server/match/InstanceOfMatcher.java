@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByClassIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
@@ -25,7 +26,7 @@ import static java.util.stream.Collectors.toSet;
 public class InstanceOfMatcher implements Matcher<OWLEntity> {
 
     @Nonnull
-    private final ClassHierarchyProviderImpl hierarchyProvider;
+    private final ClassHierarchyProvider hierarchyProvider;
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -46,7 +47,7 @@ public class InstanceOfMatcher implements Matcher<OWLEntity> {
 
     private Set<OWLNamedIndividual> instances;
 
-    public InstanceOfMatcher(@Nonnull @Provided ClassHierarchyProviderImpl hierarchyProvider,
+    public InstanceOfMatcher(@Nonnull @Provided ClassHierarchyProvider hierarchyProvider,
                              @Nonnull @Provided ProjectOntologiesIndex projectOntologiesIndex,
                              @Nonnull @Provided ClassAssertionAxiomsByClassIndex classAssertionsByClass,
                              @Nonnull @Provided ProjectSignatureByTypeIndex projectSignatureByType,

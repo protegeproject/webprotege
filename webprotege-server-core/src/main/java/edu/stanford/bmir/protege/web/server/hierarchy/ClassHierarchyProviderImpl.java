@@ -30,7 +30,7 @@ import static java.util.stream.Collectors.toSet;
  * Date: 17-Jan-2007<br><br>
  */
 @ProjectSingleton
-public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLClass> {
+public class ClassHierarchyProviderImpl extends AbstractHierarchyProvider<OWLClass> implements ClassHierarchyProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ClassHierarchyProviderImpl.class);
 
