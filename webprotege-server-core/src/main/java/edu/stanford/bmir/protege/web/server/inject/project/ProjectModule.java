@@ -548,6 +548,18 @@ public class ProjectModule {
         return impl;
     }
 
+    @ProjectSingleton
+    @Provides
+    MultiLingualShortFormDictionary provideMultiLingualShortFormDictionary(MultiLingualDictionaryImpl impl) {
+        return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    MultiLingualShortFormIndex provideMultiLingualShortFormIndex(MultiLingualDictionaryImpl impl) {
+        return impl;
+    }
+
     @Provides
     ShortFormCache provideShortFormCache() {
         return ShortFormCache.create();
