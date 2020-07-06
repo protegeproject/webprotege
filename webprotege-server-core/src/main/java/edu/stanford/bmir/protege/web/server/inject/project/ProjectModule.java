@@ -37,7 +37,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureI
 import edu.stanford.bmir.protege.web.server.owlapi.StringFormatterLiteralRendererImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
-import edu.stanford.bmir.protege.web.server.project.chg.ProjectOWLOntologyManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.revision.*;
@@ -133,12 +132,6 @@ public class ProjectModule {
     @ProjectSpecificUiConfigurationDataDirectory
     public File provideProjectSpecificUiConfigurationDataDirectory(ProjectSpecificUiConfigurationDataDirectoryProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    @ProjectSingleton
-    public OWLOntologyManager provideProjectOntologyManager(ProjectOWLOntologyManager projectOWLOntologyManager) {
-        return projectOWLOntologyManager;
     }
 
     @Provides
