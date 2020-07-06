@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
@@ -112,7 +112,7 @@ public class ChangeManager implements HasApplyChanges {
     private final ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider;
 
     @Nonnull
-    private final OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider;
+    private final DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider;
 
     @Nonnull
     private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
@@ -164,7 +164,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull DictionaryManager dictionaryManager,
                          @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
                          @Nonnull ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider,
-                         @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
+                         @Nonnull DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider,
                          @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
                          @Nonnull UserInSessionFactory userInSessionFactory,
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,

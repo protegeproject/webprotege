@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataPropertyImpl;
 
 import java.util.Collections;
 import java.util.Set;
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DataPropertyHierarchyProvider_TestCase {
 
-    private OWLDataPropertyHierarchyProvider provider;
+    private DataPropertyHierarchyProviderImpl provider;
 
     @Mock
     private ProjectId projectId;
@@ -105,13 +104,13 @@ public class DataPropertyHierarchyProvider_TestCase {
         when(axiomsByTypeIndex.getAxiomsByType(AxiomType.SUB_DATA_PROPERTY, ontologyId))
                 .thenAnswer(invocation -> Stream.of(propertyASubPropertyOfB, propertyBSubPropertyOfC));
 
-        provider = new OWLDataPropertyHierarchyProvider(projectId,
-                                                        dataFactory.getOWLTopDataProperty(),
-                                                        projectOntologiesIndex,
-                                                        axiomsByTypeIndex,
-                                                        ontologySignatureByTypeIndex,
-                                                        subPropertyAxiomsIndex,
-                                                        entitiesInSignature);
+        provider = new DataPropertyHierarchyProviderImpl(projectId,
+                                                         dataFactory.getOWLTopDataProperty(),
+                                                         projectOntologiesIndex,
+                                                         axiomsByTypeIndex,
+                                                         ontologySignatureByTypeIndex,
+                                                         subPropertyAxiomsIndex,
+                                                         entitiesInSignature);
     }
 
     private static Set<OWLAnnotation> noAnnotations() {

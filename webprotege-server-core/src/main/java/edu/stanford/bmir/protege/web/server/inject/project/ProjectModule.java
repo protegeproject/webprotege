@@ -206,9 +206,14 @@ public class ProjectModule {
 
     @Provides
     public HierarchyProvider<OWLDataProperty>
-    provideDataPropertyHierarchyProvider(
-            OWLDataPropertyHierarchyProvider provider) {
+    provideHierarchyProviderOfDataProperty(
+            DataPropertyHierarchyProvider provider) {
         return provider;
+    }
+
+    @Provides
+    DataPropertyHierarchyProvider provideDataPropertyHierarchyProvider(DataPropertyHierarchyProviderImpl impl) {
+        return impl;
     }
 
     @Provides

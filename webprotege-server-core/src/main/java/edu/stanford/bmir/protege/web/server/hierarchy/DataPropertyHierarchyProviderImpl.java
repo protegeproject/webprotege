@@ -24,7 +24,7 @@ import static org.semanticweb.owlapi.model.AxiomType.SUB_DATA_PROPERTY;
  * Date: 23-Jan-2007<br><br>
  */
 @ProjectSingleton
-public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarchyProvider<OWLDataProperty> {
+public class DataPropertyHierarchyProviderImpl extends AbstractOWLPropertyHierarchyProvider<OWLDataProperty> implements DataPropertyHierarchyProvider {
 
     @Nonnull
     private final ProjectOntologiesIndex projectOntologiesIndex;
@@ -36,13 +36,13 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
     private SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyAxiomsBySubPropertyIndex;
 
     @Inject
-    public OWLDataPropertyHierarchyProvider(ProjectId projectId,
-                                            @DataPropertyHierarchyRoot OWLDataProperty root,
-                                            @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                            @Nonnull AxiomsByTypeIndex axiomsByTypeIndex,
-                                            @Nonnull OntologySignatureByTypeIndex ontologySignatureByTypeIndex,
-                                            @Nonnull SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyAxiomsBySubPropertyIndex,
-                                            @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex) {
+    public DataPropertyHierarchyProviderImpl(ProjectId projectId,
+                                             @DataPropertyHierarchyRoot OWLDataProperty root,
+                                             @Nonnull ProjectOntologiesIndex projectOntologiesIndex,
+                                             @Nonnull AxiomsByTypeIndex axiomsByTypeIndex,
+                                             @Nonnull OntologySignatureByTypeIndex ontologySignatureByTypeIndex,
+                                             @Nonnull SubDataPropertyAxiomsBySubPropertyIndex subDataPropertyAxiomsBySubPropertyIndex,
+                                             @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex) {
         super(projectId, root, entitiesInProjectSignatureIndex, EntityType.DATA_PROPERTY, projectOntologiesIndex,
               ontologySignatureByTypeIndex);
         this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
