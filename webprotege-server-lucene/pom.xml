@@ -11,5 +11,12 @@
 
     <artifactId>webprotege-server-lucene</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>edu.stanford.protege</groupId>
+            <artifactId>webprotege-server-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
