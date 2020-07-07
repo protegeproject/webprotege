@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
+import edu.stanford.bmir.protege.web.server.inject.ShortFormModule;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
@@ -77,7 +78,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
  *         A  module for a project.  The module ensures that any object graph contains project specific objects for the
  *         specified project (e.g. root ontology, short form provider etc.)
  */
-@Module(includes = {IndexModule.class, ProjectActionHandlersModule.class})
+@Module(includes = {IndexModule.class, ShortFormModule.class, ProjectActionHandlersModule.class})
 public class ProjectModule {
 
     private final ProjectId projectId;
@@ -540,47 +541,6 @@ public class ProjectModule {
         var namespaceCache = factory.create();
         namespaceCache.rebuildNamespaceCache();
         return namespaceCache;
-    }
-
-    @Provides
-    ActiveLanguagesManager provideActiveLanguagesManager(ActiveLanguagesManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    MultiLingualDictionary provideDictionary(MultiLingualDictionaryImpl dictionary, LanguageManager languageManager) {
-        // Preload existing languages to avoid delays after loading in the UI
-//        dictionary.loadLanguages(languageManager.getActiveLanguages());
-        return dictionary;
-    }
-
-    @Provides
-    MultilingualDictionaryUpdater provideUpdatableMultilingualDictionary(MultiLingualDictionaryImpl impl) {
-        return impl;
-    }
-
-    @ProjectSingleton
-    @Provides
-    MultiLingualShortFormDictionary provideMultiLingualShortFormDictionary(MultiLingualDictionaryImpl impl) {
-        return impl;
-    }
-
-    @ProjectSingleton
-    @Provides
-    MultiLingualShortFormIndex provideMultiLingualShortFormIndex(MultiLingualDictionaryImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    ShortFormCache provideShortFormCache() {
-        return ShortFormCache.create();
-    }
-
-    @Provides
-    BuiltInShortFormDictionary provideBuiltInShortFormDictionary(ShortFormCache cache, OWLEntityProvider provider) {
-        BuiltInShortFormDictionary dictionary = new BuiltInShortFormDictionary(cache, provider);
-        dictionary.load();
-        return dictionary;
     }
 
     @Provides
