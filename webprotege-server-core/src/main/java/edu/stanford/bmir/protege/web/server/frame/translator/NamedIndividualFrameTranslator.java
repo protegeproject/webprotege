@@ -5,10 +5,7 @@ import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameProvider;
 import edu.stanford.bmir.protege.web.server.frame.Mode;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueMinimiser;
-import edu.stanford.bmir.protege.web.server.index.ClassAssertionAxiomsByIndividualIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.PropertyAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.SameIndividualAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -31,18 +28,8 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 public class NamedIndividualFrameTranslator {
 
-
     @Nonnull
-    private final ProjectOntologiesIndex projectOntologiesIndex;
-
-    @Nonnull
-    private final ClassAssertionAxiomsByIndividualIndex classAssertionsByIndividual;
-
-    @Nonnull
-    private final PropertyAssertionAxiomsBySubjectIndex assertionsBySubject;
-
-    @Nonnull
-    private final SameIndividualAxiomsIndex sameIndividualAxiomsIndex;
+    private final NamedIndividualFrameAxiomIndex namedIndividualFrameAxiomIndex;
 
     @Nonnull
     private final PropertyValueMinimiser propertyValueMinimiser;
@@ -62,19 +49,13 @@ public class NamedIndividualFrameTranslator {
     private boolean minimizePropertyValues = false;
 
     @Inject
-    public NamedIndividualFrameTranslator(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                          @Nonnull ClassAssertionAxiomsByIndividualIndex classAssertionsByIndividual,
-                                          @Nonnull PropertyAssertionAxiomsBySubjectIndex assertionsBySubject,
-                                          @Nonnull SameIndividualAxiomsIndex sameIndividualAxiomsIndex,
+    public NamedIndividualFrameTranslator(@Nonnull NamedIndividualFrameAxiomIndex namedIndividualFrameAxiomIndex,
                                           @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                           @Nonnull ClassFrameProvider classFrameProvider,
                                           @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider,
                                           @Nonnull PropertyValue2AxiomTranslator propertyValue2AxiomTranslator,
                                           @Nonnull OWLDataFactory dataFactory) {
-        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
-        this.classAssertionsByIndividual = checkNotNull(classAssertionsByIndividual);
-        this.assertionsBySubject = checkNotNull(assertionsBySubject);
-        this.sameIndividualAxiomsIndex = checkNotNull(sameIndividualAxiomsIndex);
+        this.namedIndividualFrameAxiomIndex = namedIndividualFrameAxiomIndex;
         this.propertyValueMinimiser = checkNotNull(propertyValueMinimiser);
         this.axiomPropertyValueTranslatorProvider = checkNotNull(axiomPropertyValueTranslatorProvider);
         this.classFrameProvider = checkNotNull(classFrameProvider);
@@ -99,7 +80,8 @@ public class NamedIndividualFrameTranslator {
 
     private PlainNamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividual subjectindividual,
                                                                  boolean includeDerived) {
-        var relevantAxioms = getRelevantAxioms(subjectindividual);
+
+        var relevantAxioms = namedIndividualFrameAxiomIndex.getNamedIndividualFrameAxioms(subjectindividual);
 
         var types = relevantAxioms
                 .stream()
@@ -118,7 +100,10 @@ public class NamedIndividualFrameTranslator {
         Stream<PlainPropertyValue> derivedPropertyValues;
 
         if(includeDerived) {
-            derivedPropertyValues = getClassAssertionAxioms(subjectindividual)
+            derivedPropertyValues = relevantAxioms
+                    .stream()
+                    .filter(OWLClassAssertionAxiom.class::isInstance)
+                    .map(OWLClassAssertionAxiom.class::cast)
                     .map(OWLClassAssertionAxiom::getClassExpression)
                     .filter(OWLClassExpression::isNamed)
                     .map(OWLClassExpression::asOWLClass)
@@ -141,7 +126,10 @@ public class NamedIndividualFrameTranslator {
                                                       .collect(toImmutableSet());
         }
 
-        var sameIndividuals = getSameIndividualAxioms(subjectindividual)
+        var sameIndividuals = relevantAxioms
+                .stream()
+                .filter(OWLSameIndividualAxiom.class::isInstance)
+                .map(OWLSameIndividualAxiom.class::cast)
                 .flatMap(ax -> ax.getIndividuals().stream())
                 .filter(OWLIndividual::isNamed)
                 .filter(ind -> !ind.equals(subjectindividual))
@@ -168,18 +156,6 @@ public class NamedIndividualFrameTranslator {
         return classFrameProvider.getFrame(subject, options);
     }
 
-    private Stream<OWLClassAssertionAxiom> getClassAssertionAxioms(OWLNamedIndividual subjectIndividual) {
-        return projectOntologiesIndex
-                .getOntologyIds()
-                .flatMap(ontId -> classAssertionsByIndividual.getClassAssertionAxioms(subjectIndividual, ontId));
-    }
-
-    private Stream<OWLSameIndividualAxiom> getSameIndividualAxioms(OWLNamedIndividual subjectIndividual) {
-        return projectOntologiesIndex
-                .getOntologyIds()
-                .flatMap(ontId -> sameIndividualAxiomsIndex.getSameIndividualAxioms(subjectIndividual, ontId));
-    }
-
     private Stream<PlainPropertyValue> toAssertedPropertyValues(OWLNamedIndividual subjectIndividual,
                                                            OWLAxiom ax) {
         return axiomPropertyValueTranslatorProvider.get()
@@ -187,17 +163,7 @@ public class NamedIndividualFrameTranslator {
                 .stream();
     }
 
-    private Set<OWLAxiom> getRelevantAxioms(OWLNamedIndividual subject) {
-        var classAssertions = getClassAssertionAxioms(subject);
-        var propertyAssertions = getPropertyAssertionAxioms(subject);
-        return Streams.concat(classAssertions, propertyAssertions).collect(toImmutableSet());
-    }
 
-    private Stream<OWLAxiom> getPropertyAssertionAxioms(OWLNamedIndividual subject) {
-        return projectOntologiesIndex
-                .getOntologyIds()
-                .flatMap(ontId -> assertionsBySubject.getPropertyAssertions(subject, ontId));
-    }
 
     @Nonnull
     public Set<OWLAxiom> getAxioms(@Nonnull PlainNamedIndividualFrame frame,

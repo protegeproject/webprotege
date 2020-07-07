@@ -26,6 +26,11 @@ public class IndexModule {
     }
 
     @Provides
+    NamedIndividualFrameAxiomIndex provideNamedIndividualFrameAxiomIndex(NamedIndividualFrameAxiomsIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
     AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
             AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
         return impl;
