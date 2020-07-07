@@ -45,9 +45,6 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     private final PlaceUrl placeUrl;
 
     @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
     private final EntityNodeRenderer entityNodeRenderer;
 
     @Nonnull
@@ -63,7 +60,6 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     public LookupEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull ProjectId projectId,
                                        @Nonnull PlaceUrl placeUrl,
-                                       @Nonnull RenderingManager renderingManager,
                                        @Nonnull EntityNodeRenderer entityNodeRenderer,
                                        @Nonnull DictionaryManager dictionaryManager,
                                        @Nonnull LanguageManager languageManager,
@@ -71,7 +67,6 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
         super(accessManager);
         this.projectId = projectId;
         this.placeUrl = placeUrl;
-        this.renderingManager = renderingManager;
         this.entityNodeRenderer = entityNodeRenderer;
         this.dictionaryManager = dictionaryManager;
         this.languageManager = languageManager;
