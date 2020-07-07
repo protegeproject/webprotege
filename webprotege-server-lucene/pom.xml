@@ -17,6 +17,12 @@
             <artifactId>webprotege-server-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>8.5.2</version>
+        </dependency>
     </dependencies>
 
 </project>
