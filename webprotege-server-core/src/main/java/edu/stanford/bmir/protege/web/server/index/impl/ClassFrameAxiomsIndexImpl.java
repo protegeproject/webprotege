@@ -39,8 +39,9 @@ public class ClassFrameAxiomsIndexImpl implements ClassFrameAxiomsIndex {
         this.annotationAssertionAxiomsIndex = checkNotNull(annotationAssertionAxiomsIndex);
     }
 
+    @Nonnull
     @Override
-    public Set<OWLAxiom> getFrameAxioms(OWLClass subject, AnnotationsTreatment annotationsTreatment) {
+    public Set<OWLAxiom> getFrameAxioms(@Nonnull OWLClass subject, @Nonnull AnnotationsTreatment annotationsTreatment) {
         var subClassOfAxioms = getFrameSubClassOfAxioms(subject);
         var equivalentClassesAxioms = getFrameEquivalentClassesAxioms(subject);
         var annotationAssertions = Stream.<OWLAnnotationAssertionAxiom>empty();
@@ -54,22 +55,19 @@ public class ClassFrameAxiomsIndexImpl implements ClassFrameAxiomsIndex {
             .collect(toImmutableSet());
     }
 
-    @Override
-    public Stream<OWLSubClassOfAxiom> getFrameSubClassOfAxioms(OWLClass subject) {
+    private Stream<OWLSubClassOfAxiom> getFrameSubClassOfAxioms(OWLClass subject) {
         return ontologiesIndex
             .getOntologyIds()
             .flatMap(ontId -> subClassOfAxiomsIndex.getSubClassOfAxiomsForSubClass(subject, ontId));
     }
 
-    @Override
-    public Stream<OWLEquivalentClassesAxiom> getFrameEquivalentClassesAxioms(OWLClass subject) {
+    private Stream<OWLEquivalentClassesAxiom> getFrameEquivalentClassesAxioms(OWLClass subject) {
         return ontologiesIndex.getOntologyIds()
             .flatMap(ontId -> equivalentClassesAxiomsIndex.getEquivalentClassesAxioms(subject,
                 ontId));
     }
 
-    @Override
-    public Stream<OWLAnnotationAssertionAxiom> getFrameAnnotationAssertionsAxiom(OWLClass subject) {
+    private Stream<OWLAnnotationAssertionAxiom> getFrameAnnotationAssertionsAxiom(OWLClass subject) {
         return ontologiesIndex.getOntologyIds()
             .flatMap(ontId -> annotationAssertionAxiomsIndex.getAxiomsForSubject(subject.getIRI(),
                 ontId));

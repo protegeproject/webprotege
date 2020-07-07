@@ -95,7 +95,10 @@ public class Class2ClassFrameTranslator {
             }
         }
 
-        var parents = classFrameAxiomsIndex.getFrameSubClassOfAxioms(subject)
+        var parents = frameAxioms
+                .stream()
+                .filter(OWLSubClassOfAxiom.class::isInstance)
+                .map(OWLSubClassOfAxiom.class::cast)
                 .map(OWLSubClassOfAxiom::getSuperClass)
                 .filter(OWLClassExpression::isNamed)
                 .map(OWLClassExpression::asOWLClass)
