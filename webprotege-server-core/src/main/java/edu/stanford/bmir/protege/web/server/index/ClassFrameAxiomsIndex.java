@@ -15,7 +15,7 @@ public interface ClassFrameAxiomsIndex {
 
     Stream<OWLAnnotationAssertionAxiom> getFrameAnnotationAssertionsAxiom(OWLClass subject);
 
-    public enum AnnotationsTreatment {
+    enum AnnotationsTreatment {
         INCLUDE_ANNOTATIONS,
         EXCLUDE_ANNOTATIONS
     }
