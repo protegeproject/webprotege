@@ -3,7 +3,7 @@ FROM maven:3.6.0-jdk-11-slim AS build
 RUN apt-get update && \
     apt-get install -y git mongodb
 
-COPY . /webprotege
+COPY .. /webprotege
 
 WORKDIR /webprotege
 
