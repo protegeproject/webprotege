@@ -19,7 +19,12 @@ RUN rm -rf /usr/local/tomcat/webapps/* \
 
 WORKDIR /usr/local/tomcat/webapps/ROOT
 
-COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-4.0.0-beta-3-SNAPSHOT.jar /webprotege-cli.jar
-COPY --from=build /webprotege/webprotege-server/target/webprotege-server-4.0.0-beta-3-SNAPSHOT.war ./webprotege.war
+# Here WEBPROTEGE_VERSION is coming from the custom build args WEBPROTEGE_VERSION=$DOCKER_TAG hooks/build script.
+# Ref: https://docs.docker.com/docker-hub/builds/advanced/
+ARG WEBPROTEGE_VERSION
+
+ENV WEBPROTEGE_VERSION $WEBPROTEGE_VERSION
+COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-${WEBPROTEGE_VERSION}.jar /webprotege-cli.jar
+COPY --from=build /webprotege/webprotege-server/target/webprotege-server-${WEBPROTEGE_VERSION}.war ./webprotege.war
 RUN unzip webprotege.war \
     && rm webprotege.war

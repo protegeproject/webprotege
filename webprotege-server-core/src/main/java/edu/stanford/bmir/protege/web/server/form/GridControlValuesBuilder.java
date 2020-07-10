@@ -199,11 +199,14 @@ public class GridControlValuesBuilder {
                                                    .sorted(cellValueComparator)
                                                    .collect(toImmutableList());
         var filterState = getFilterState(columnDescriptor);
+        // The combined filter state takes into consideration the fact that global lang tag
+        // filtering may be in place
+        var combinedFilterState = getCombinedFilterState(filterState);
         if (cellValues.isEmpty()) {
-            return GridCellDataDto.get(columnId, Page.emptyPage(), filterState);
+            return GridCellDataDto.get(columnId, Page.emptyPage(), combinedFilterState);
         }
         if (columnDescriptor.isRepeatable()) {
-            return GridCellDataDto.get(columnId, Page.of(cellValues), filterState);
+            return GridCellDataDto.get(columnId, Page.of(cellValues), combinedFilterState);
         }
         // There should only be one to return, but we allow for the fact that
         // there could be more than one – after sorting we take the first one
@@ -211,9 +214,18 @@ public class GridControlValuesBuilder {
         if (isIncluded(firstValue)) {
             return GridCellDataDto.get(columnId,
                                        Page.of(firstValue),
-                                       filterState);
+                                       combinedFilterState);
         }
-        return GridCellDataDto.get(columnId, Page.emptyPage(), filterState);
+        return GridCellDataDto.get(columnId, Page.emptyPage(), combinedFilterState);
+    }
+
+    private FilterState getCombinedFilterState(FilterState gridFilterState) {
+        if(gridFilterState.equals(FilterState.UNFILTERED)) {
+            if(langTagFilter.isFilterActive()) {
+                return FilterState.FILTERED;
+            }
+        }
+        return gridFilterState;
     }
 
     private static boolean isNotEmptyGrid(FormControlDataDto value) {

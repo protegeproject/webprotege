@@ -15,3 +15,5 @@ velocity.log.*
 *.log
 
 dependency-reduced-pom.xml
+
+.protegedata/

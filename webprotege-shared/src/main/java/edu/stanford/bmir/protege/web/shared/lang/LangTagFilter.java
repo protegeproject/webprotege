@@ -28,6 +28,14 @@ public abstract class LangTagFilter {
     }
 
     /**
+     * Determines whether there is at least one filtered lang tag
+     * @return true if there is at least one filtered lang tag, otherwise false
+     */
+    public boolean isFilterActive() {
+        return getFilteringTags().size() > 0;
+    }
+
+    /**
      * Determines if the specified langtag is included by this filter.
      * @param langTag The lang tag.
      */

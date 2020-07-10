@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -82,7 +83,7 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
                          // Filter out deprecated entities that are displayed under owl:Thing, owl:topObjectProperty
                          // owl:topDataProperty
                          .filter(child -> isNotDeprecatedTopLevelEntity(parent, child))
-                         .sorted(comparing(dictionaryManager::getShortForm))
+                         .sorted(comparingShortFormIgnoringCase())
                          .collect(PageCollector.toPage(action.getPageRequest().getPageNumber(),
                                                        2000))
                          .map(pg ->
@@ -90,6 +91,14 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
                          ).orElse(Page.emptyPage());
 
         return new GetHierarchyChildrenResult(parentNode, page);
+    }
+
+    private Comparator<OWLEntity> comparingShortFormIgnoringCase() {
+        return (o1, o2) -> {
+            var s1 = dictionaryManager.getShortForm(o1);
+            var s2 = dictionaryManager.getShortForm(o2);
+            return s1.compareToIgnoreCase(s2);
+        };
     }
 
     private boolean isNotDeprecatedTopLevelEntity(OWLEntity parent, OWLEntity child) {
