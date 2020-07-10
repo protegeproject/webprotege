@@ -17,6 +17,7 @@
         <graphtree.version>1.1.1</graphtree.version>
         <autovalue.version>1.7.1</autovalue.version>
         <jackson.version>2.11.0</jackson.version>
+        <commons.io.version>2.7</commons.io.version>
         <!-- WebProtege Specific Properties -->
         <mail.smtp.host/>
         <mail.smtp.auth/>
