@@ -6,7 +6,13 @@ import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySub
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.search.SearcherFactory;
+import org.apache.lucene.search.SearcherManager;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -111,5 +117,49 @@ public class LuceneModule {
     @ProjectSingleton
     SearchableLanguagesManager provideSearchableLanguagesManager(SearchableLanguagesManagerImpl impl) {
         return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    Directory provideDirectory(ProjectLuceneDirectoryPathSupplier pathSupplier) {
+        try {
+            // FSDirectory.open chooses the best implementation for the platform
+            return FSDirectory.open(pathSupplier.get());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Provides
+    IndexWriterConfig provideIndexWriterConfig(IndexingAnalyzerFactory analyzerFactory,
+                                               SearchableLanguagesManager searchableLanguagesManager) {
+        var analyzer = analyzerFactory.get(searchableLanguagesManager.getSearchableLanguages());
+        return new IndexWriterConfig(analyzer);
+    }
+
+    @ProjectSingleton
+    @Provides
+    IndexWriter provideIndexWriter(Directory directory,
+                                   IndexWriterConfig indexWriterConfig) {
+        try {
+            return new IndexWriter(directory, indexWriterConfig);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @ProjectSingleton
+    @Provides
+    SearcherManager provideSearcherManager(IndexWriter indexWriter, SearcherFactory searcherFactory) {
+        try {
+            return new SearcherManager(indexWriter, searcherFactory);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Provides
+    SearcherFactory provideSearcherFactory() {
+        return new SearcherFactory();
     }
 }

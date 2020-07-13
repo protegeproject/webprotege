@@ -3,9 +3,10 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.MMapDirectory;
+import org.apache.lucene.search.SearcherManager;
+import org.apache.lucene.store.Directory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,6 @@ import javax.inject.Inject;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,7 +28,7 @@ public class LuceneIndexWriterImpl implements LuceneIndexWriter {
     private static final Logger logger = LoggerFactory.getLogger(LuceneIndexWriterImpl.class);
 
     @Nonnull
-    private final ProjectLuceneDirectoryPathSupplier projectLuceneDirectoryPathSupplier;
+    private final Directory luceneDirectory;
 
     @Nonnull
     private final LuceneEntityDocumentTranslator luceneEntityDocumentTranslator;
@@ -37,53 +37,43 @@ public class LuceneIndexWriterImpl implements LuceneIndexWriter {
     private final ProjectSignatureIndex projectSignatureIndex;
 
     @Nonnull
-    private final IndexingAnalyzerFactory indexingAnalyzerFactory;
+    private final IndexWriter indexWriter;
 
     @Nonnull
-    private final SearchableLanguagesManager searchableLanguagesManager;
+    private final SearcherManager searcherManager;
 
 
     @Inject
-    public LuceneIndexWriterImpl(@Nonnull ProjectLuceneDirectoryPathSupplier projectLuceneDirectoryPathSupplier,
+    public LuceneIndexWriterImpl(@Nonnull Directory luceneDirectory,
                                  @Nonnull LuceneEntityDocumentTranslator luceneEntityDocumentTranslator,
                                  @Nonnull ProjectSignatureIndex projectSignatureIndex,
-                                 @Nonnull IndexingAnalyzerFactory indexingAnalyzerFactory,
-                                 @Nonnull SearchableLanguagesManager searchableLanguagesManager) {
-        this.projectLuceneDirectoryPathSupplier = projectLuceneDirectoryPathSupplier;
+                                 @Nonnull IndexWriter indexWriter,
+                                 @Nonnull SearcherManager searcherManager) {
+        this.luceneDirectory = luceneDirectory;
         this.luceneEntityDocumentTranslator = luceneEntityDocumentTranslator;
         this.projectSignatureIndex = checkNotNull(projectSignatureIndex);
-        this.indexingAnalyzerFactory = indexingAnalyzerFactory;
-        this.searchableLanguagesManager = searchableLanguagesManager;
+        this.indexWriter = indexWriter;
+        this.searcherManager = searcherManager;
     }
 
     @Override
     public void writeIndex() throws IOException {
 
-        var stopwatch = Stopwatch.createStarted();
-
-        var directoryPath = projectLuceneDirectoryPathSupplier.get();
-
-        if (Files.exists(directoryPath)) {
-            logger.info("Lucene based dictionary index already exists");
-//            FileUtils.deleteDirectory(directoryPath.toFile());
+        if(DirectoryReader.indexExists(luceneDirectory)) {
+            logger.info("Lucene directory already exists");
             return;
         }
+        var stopwatch = Stopwatch.createStarted();
 
-        var directory = new MMapDirectory(directoryPath);
-
-        var searchableLanguages = searchableLanguagesManager.getSearchableLanguages();
-        var analyzer = indexingAnalyzerFactory.get(searchableLanguages);
-        var indexWriterConfig = new IndexWriterConfig(analyzer);
-        var indexWriter = new IndexWriter(directory, indexWriterConfig);
-        try(indexWriter) {
-            projectSignatureIndex.getSignature()
-                                 .map(luceneEntityDocumentTranslator::getLuceneDocument)
-                                 .forEach(doc -> addDocumentToIndex(indexWriter, doc));
-        }
+        projectSignatureIndex.getSignature()
+                             .map(luceneEntityDocumentTranslator::getLuceneDocument)
+                             .forEach(this::addDocumentToIndex);
+        indexWriter.commit();
+        searcherManager.maybeRefreshBlocking();
         logger.info("Built lucene based dictionary in {} ms", stopwatch.elapsed().toMillis());
     }
 
-    public void addDocumentToIndex(IndexWriter indexWriter, Document doc) {
+    public void addDocumentToIndex(Document doc) {
         try {
             indexWriter.addDocument(doc);
         } catch (IOException e) {

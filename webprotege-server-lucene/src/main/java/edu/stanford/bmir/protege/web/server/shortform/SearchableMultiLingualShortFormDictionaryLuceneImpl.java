@@ -50,7 +50,11 @@ public class SearchableMultiLingualShortFormDictionaryLuceneImpl implements Sear
                 .map(SearchString::getSearchString)
                 .collect(joining(" AND "));
         try {
-            var entities = luceneIndex.search(queryString, languages, PageRequest.requestFirstPage());
+            var entities = luceneIndex.search(queryString, languages, PageRequest.requestFirstPage());;
+            if(entities.isPresent()) {
+                var resultsPage = entities.get();
+                logger.info("Found " + resultsPage.getTotalElements() + " result.  Retrieved " + resultsPage.getPageSize());
+            }
             return entities.map(Page::getPageElements).orElse(ImmutableList.of())
                            .stream()
                            .flatMap(sf -> {
