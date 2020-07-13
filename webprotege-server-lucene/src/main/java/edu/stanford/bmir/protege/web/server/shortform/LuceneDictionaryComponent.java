@@ -13,4 +13,6 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 public interface LuceneDictionaryComponent {
 
     MultiLingualDictionary getDictionary();
+
+    LuceneIndexUpdater getIndexUpdater();
 }

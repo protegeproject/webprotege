@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
@@ -161,5 +160,15 @@ public class LuceneModule {
     @Provides
     SearcherFactory provideSearcherFactory() {
         return new SearcherFactory();
+    }
+
+    @Provides
+    LuceneIndexUpdater provideLuceneIndexUpdater(LuceneIndexUpdaterImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    MultilingualDictionaryUpdater provideMultilingualDictionaryUpdater(LuceneMultiLingualDictionaryUpdater impl) {
+        return impl;
     }
 }

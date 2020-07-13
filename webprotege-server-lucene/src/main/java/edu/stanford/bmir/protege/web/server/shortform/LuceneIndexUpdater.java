@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * Matthew Horridge
@@ -11,5 +12,5 @@ import javax.annotation.Nonnull;
  */
 public interface LuceneIndexUpdater {
 
-    void updateIndexForEntity(@Nonnull OWLEntity entity);
+    void updateIndexForEntity(@Nonnull Collection<OWLEntity> entities);
 }
