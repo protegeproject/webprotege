@@ -14,4 +14,11 @@ public interface EntityDocumentFieldNames {
 
     @Nonnull
     String IRI = "iri";
+
+    String VALUE_FIELD_PREFIX = "value.";
+
+    String WORD_FIELD_PREFIX = "word.";
+
+    String NGRAM_FIELD_PREFIX = "ngram.";
+
 }

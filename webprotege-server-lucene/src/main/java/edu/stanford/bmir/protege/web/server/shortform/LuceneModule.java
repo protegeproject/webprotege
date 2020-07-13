@@ -112,12 +112,6 @@ public class LuceneModule {
         return impl;
     }
 
-    @Provides
-    @ProjectSingleton
-    SearchableLanguagesManager provideSearchableLanguagesManager(SearchableLanguagesManagerImpl impl) {
-        return impl;
-    }
-
     @ProjectSingleton
     @Provides
     Directory provideDirectory(ProjectLuceneDirectoryPathSupplier pathSupplier) {
@@ -130,9 +124,8 @@ public class LuceneModule {
     }
 
     @Provides
-    IndexWriterConfig provideIndexWriterConfig(IndexingAnalyzerFactory analyzerFactory,
-                                               SearchableLanguagesManager searchableLanguagesManager) {
-        var analyzer = analyzerFactory.get(searchableLanguagesManager.getSearchableLanguages());
+    IndexWriterConfig provideIndexWriterConfig(IndexingAnalyzerFactory analyzerFactory) {
+        var analyzer = analyzerFactory.get();
         return new IndexWriterConfig(analyzer);
     }
 

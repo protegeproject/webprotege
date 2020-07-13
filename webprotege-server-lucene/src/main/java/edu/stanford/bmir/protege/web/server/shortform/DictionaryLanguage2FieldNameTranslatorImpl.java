@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.*;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -27,18 +29,18 @@ public class DictionaryLanguage2FieldNameTranslatorImpl implements DictionaryLan
     @Nonnull
     @Override
     public String getValueFieldName(@Nonnull DictionaryLanguage language) {
-        return "value." + getFieldNameSuffix(language);
+        return VALUE_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull
     @Override
     public String getWordFieldName(@Nonnull DictionaryLanguage language) {
-        return "word." + getFieldNameSuffix(language);
+        return WORD_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull
     public String getEdgeNGramFieldName(@Nonnull DictionaryLanguage language) {
-        return "ngram." + getFieldNameSuffix(language);
+        return NGRAM_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull

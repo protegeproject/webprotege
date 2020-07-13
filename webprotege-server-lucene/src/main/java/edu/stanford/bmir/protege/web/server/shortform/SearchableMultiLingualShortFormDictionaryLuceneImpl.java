@@ -61,11 +61,15 @@ public class SearchableMultiLingualShortFormDictionaryLuceneImpl implements Sear
                         return sf.getShortForms()
                           .entrySet()
                           .stream()
-                          .map(entry -> ShortFormMatch.get(sf.getEntity(),
-                                                           entry.getValue(),
-                                                           entry.getKey(),
-                                                           1,
-                                                           ImmutableIntArray.of()));
+                          .map(entry -> {
+                              var shortFormMatch = ShortFormMatch.get(sf.getEntity(),
+                                                                                 entry.getValue(),
+                                                                                 entry.getKey(),
+                                                                                 1,
+                                                                                 ImmutableIntArray.of());
+
+                              return shortFormMatch;
+                          });
                     });
         } catch (IOException | ParseException e) {
             logger.error("Error performing search", e);
