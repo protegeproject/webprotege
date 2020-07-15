@@ -8,12 +8,18 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexableFieldType;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -115,6 +121,17 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
                               .flatMap(this::toFields)
                               .forEach(document::add);
         return document;
+    }
+
+    @Override
+    @Nonnull
+    public Query getEntityDocumentQuery(@Nonnull OWLEntity entity) {
+        var iriQuery = new TermQuery(new Term(EntityDocumentFieldNames.IRI, entity.getIRI().toString()));
+        var typeQuery = new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE, entity.getEntityType().toString()));
+        return new BooleanQuery.Builder()
+                .add(iriQuery, BooleanClause.Occur.MUST)
+                .add(typeQuery, BooleanClause.Occur.MUST)
+                .build();
     }
 
     public Stream<Field> toFields(OWLAnnotationAssertionAxiom ax) {
