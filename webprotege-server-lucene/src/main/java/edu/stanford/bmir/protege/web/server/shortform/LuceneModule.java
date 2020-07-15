@@ -5,8 +5,10 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
+import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.SearcherFactory;
@@ -14,6 +16,8 @@ import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.IOException;
@@ -26,6 +30,8 @@ import java.io.UncheckedIOException;
  */
 @Module
 public class LuceneModule {
+
+    private static final Logger logger = LoggerFactory.getLogger(LuceneModule.class);
 
     @Provides
     @ProjectSingleton
@@ -95,9 +101,20 @@ public class LuceneModule {
     @ProjectSingleton
     @Provides
     IndexWriter provideIndexWriter(Directory directory,
-                                   IndexWriterConfig indexWriterConfig) {
+                                   IndexWriterConfig indexWriterConfig,
+                                   ProjectDisposablesManager projectDisposablesManager,
+                                   ProjectId projectId) {
         try {
-            return new IndexWriter(directory, indexWriterConfig);
+            var indexWriter = new IndexWriter(directory, indexWriterConfig);
+            projectDisposablesManager.register(() -> {
+                try {
+                    indexWriter.close();
+                    logger.info("{} Closed lucene index writer", projectId);
+                } catch (IOException e) {
+                    logger.error("Error when disposing of Project Lucene IndexWriter", e);
+                }
+            });
+            return indexWriter;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
