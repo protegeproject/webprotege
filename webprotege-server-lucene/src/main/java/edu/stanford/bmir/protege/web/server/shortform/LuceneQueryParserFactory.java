@@ -40,4 +40,12 @@ public class LuceneQueryParserFactory {
         return new MultiFieldQueryParser(fields, queryAnalyzerFactory.get());
     }
 
+    @Nonnull
+    public QueryParser createQueryParserForExactShortFormMatch(List<DictionaryLanguage> languages) {
+        String[] fields = languages.stream()
+                                   .flatMap(dl -> Stream.of(fieldNameTranslator.getValueFieldName(dl)))
+                                   .toArray(String[]::new);
+        return new MultiFieldQueryParser(fields, queryAnalyzerFactory.get());
+    }
+
 }

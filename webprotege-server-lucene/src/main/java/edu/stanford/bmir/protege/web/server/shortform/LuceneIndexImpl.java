@@ -21,6 +21,7 @@ import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
@@ -82,11 +83,16 @@ public class LuceneIndexImpl implements LuceneIndex {
     }
 
     public Query getQuery(@Nonnull String queryString,
-                          @Nonnull List<DictionaryLanguage> languages) throws ParseException {
-        var queryParser = queryParserFactory.createQueryParser(languages);
-        var query = queryParser.parse(queryString);
-        logger.info(query.toString());
-        return query;
+                          @Nonnull List<DictionaryLanguage> languages,
+                          boolean exact) throws ParseException {
+        if (!exact) {
+            var queryParser = queryParserFactory.createQueryParser(languages);
+            return queryParser.parse(queryString);
+        }
+        else {
+            var queryParser = queryParserFactory.createQueryParserForExactShortFormMatch(languages);
+            return queryParser.parse(queryString);
+        }
     }
 
     @Override
@@ -101,7 +107,7 @@ public class LuceneIndexImpl implements LuceneIndex {
                     .map(SearchString::getSearchString)
                     .collect(joining(" AND "));
 
-            var query = getQuery(queryString, dictionaryLanguages);
+            var query = getQuery(queryString, dictionaryLanguages, false);
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
             var languagesSet = ImmutableSet.copyOf(dictionaryLanguages);
             var page = getEntityShortFormsStream(dictionaryLanguages, indexSearcher, topDocs)
@@ -111,6 +117,26 @@ public class LuceneIndexImpl implements LuceneIndex {
                 return EntityShortFormMatches.get(entityShortForms.getEntity(), matches);
             }));
         } finally {
+            searcherManager.release(indexSearcher);
+        }
+    }
+
+    @Override
+    public Stream<OWLEntity> findEntities(String shortForm, List<DictionaryLanguage> languages) throws ParseException, IOException {
+        var query = getQuery(shortForm, languages, true);
+        var indexSearcher = searcherManager.acquire();
+        try {
+            var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
+            return getEntityShortFormsStream(languages, indexSearcher, topDocs)
+                    .filter(entityShortForms -> {
+                        var shortForms = entityShortForms.getShortForms();
+                        return languages.stream().map(shortForms::get).anyMatch(sf -> sf.equals(shortForm));
+                    })
+                    .map(EntityShortForms::getEntity)
+                    .collect(Collectors.toList()).stream();
+
+        }
+        finally {
             searcherManager.release(indexSearcher);
         }
     }

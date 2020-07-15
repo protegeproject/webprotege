@@ -27,4 +27,6 @@ public interface LuceneIndex {
     Optional<Page<EntityShortFormMatches>> search(@Nonnull List<SearchString> queryString,
                                      @Nonnull List<DictionaryLanguage> dictionaryLanguages,
                                      @Nonnull PageRequest pageRequest) throws IOException, ParseException;
+
+    Stream<OWLEntity> findEntities(String shortForm, List<DictionaryLanguage> languages) throws ParseException, IOException;
 }

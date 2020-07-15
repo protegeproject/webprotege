@@ -154,4 +154,9 @@ public class LuceneModule {
     MultilingualDictionaryUpdater provideMultilingualDictionaryUpdater(LuceneMultiLingualDictionaryUpdater impl) {
         return impl;
     }
+
+    @Provides
+    MultiLingualShortFormIndex provideMultiLingualShortFormIndex(MultiLingualShortFormIndexLuceneImpl impl) {
+        return impl;
+    }
 }

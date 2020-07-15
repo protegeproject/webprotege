@@ -28,12 +28,17 @@ public class MultiLingualDictionaryLuceneImpl implements MultiLingualDictionary 
     @Nonnull
     private final SearchableMultiLingualShortFormDictionary searchableMultiLingualShortFormDictionary;
 
+    @Nonnull
+    private final MultiLingualShortFormIndex multiLingualShortFormIndex;
+
 
     @Inject
     public MultiLingualDictionaryLuceneImpl(@Nonnull MultiLingualShortFormDictionary multiLingualShortFormDictionary,
-                                            @Nonnull SearchableMultiLingualShortFormDictionary searchableMultiLingualShortFormDictionary) {
+                                            @Nonnull SearchableMultiLingualShortFormDictionary searchableMultiLingualShortFormDictionary,
+                                            @Nonnull MultiLingualShortFormIndex multiLingualShortFormIndex) {
         this.multiLingualShortFormDictionary = checkNotNull(multiLingualShortFormDictionary);
         this.searchableMultiLingualShortFormDictionary = checkNotNull(searchableMultiLingualShortFormDictionary);
+        this.multiLingualShortFormIndex = multiLingualShortFormIndex;
     }
 
     @Nonnull
@@ -54,7 +59,7 @@ public class MultiLingualDictionaryLuceneImpl implements MultiLingualDictionary 
     @Nonnull
     @Override
     public Stream<OWLEntity> getEntities(@Nonnull String shortForm, @Nonnull List<DictionaryLanguage> languages) {
-        throw new RuntimeException("Not Implemented");
+        return multiLingualShortFormIndex.getEntities(shortForm, languages);
     }
 
     @Nonnull
