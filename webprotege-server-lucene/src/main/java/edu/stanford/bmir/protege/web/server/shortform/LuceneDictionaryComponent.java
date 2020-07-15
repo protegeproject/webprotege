@@ -8,7 +8,11 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-08
  */
-@Component(modules = LuceneModule.class)
+@Component(modules = {
+        ProjectIdModule.class,
+        LuceneModule.class,
+        AnnotationAssertionAxiomsModule.class,
+        DataFactoryModule.class})
 @ProjectSingleton
 public interface LuceneDictionaryComponent {
 

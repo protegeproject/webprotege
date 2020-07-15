@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -22,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static dagger.internal.codegen.DaggerStreams.toImmutableList;
+import static java.util.stream.Collectors.joining;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -43,13 +47,18 @@ public class LuceneIndexImpl implements LuceneIndex {
     @Nonnull
     private final LuceneQueryParserFactory queryParserFactory;
 
+    @Nonnull
+    private final LuceneShortFormMatcher luceneShortFormMatcher;
+
     @Inject
     public LuceneIndexImpl(@Nonnull LuceneEntityDocumentTranslator luceneEntityDocumentTranslator,
                            @Nonnull SearcherManager searcherManager,
-                           @Nonnull LuceneQueryParserFactory queryParserFactory) {
+                           @Nonnull LuceneQueryParserFactory queryParserFactory,
+                           @Nonnull LuceneShortFormMatcher luceneShortFormMatcher) {
         this.luceneEntityDocumentTranslator = luceneEntityDocumentTranslator;
         this.searcherManager = searcherManager;
         this.queryParserFactory = queryParserFactory;
+        this.luceneShortFormMatcher = luceneShortFormMatcher;
     }
 
     @Nonnull
@@ -82,16 +91,25 @@ public class LuceneIndexImpl implements LuceneIndex {
 
     @Override
     @Nonnull
-    public Optional<Page<EntityShortForms>> search(@Nonnull String queryString,
+    public Optional<Page<EntityShortFormMatches>> search(@Nonnull List<SearchString> searchStrings,
                                                    @Nonnull List<DictionaryLanguage> dictionaryLanguages,
                                                    @Nonnull PageRequest pageRequest) throws IOException, ParseException {
         var indexSearcher = searcherManager.acquire();
         try {
+            var queryString = searchStrings
+                    .stream()
+                    .map(SearchString::getSearchString)
+                    .collect(joining(" AND "));
+
             var query = getQuery(queryString, dictionaryLanguages);
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
-            return getEntityShortFormsStream(dictionaryLanguages, indexSearcher, topDocs).collect(PageCollector.toPage(
-                    pageRequest.getPageNumber(),
-                    pageRequest.getPageSize()));
+            var languagesSet = ImmutableSet.copyOf(dictionaryLanguages);
+            var page = getEntityShortFormsStream(dictionaryLanguages, indexSearcher, topDocs)
+                    .collect(PageCollector.toPage(pageRequest.getPageNumber(), pageRequest.getPageSize()));
+            return page.map(pg -> pg.transform(entityShortForms -> {
+                var matches = luceneShortFormMatcher.getShortFormMatches(entityShortForms, languagesSet, searchStrings).collect(toImmutableList());
+                return EntityShortFormMatches.get(entityShortForms.getEntity(), matches);
+            }));
         } finally {
             searcherManager.release(indexSearcher);
         }

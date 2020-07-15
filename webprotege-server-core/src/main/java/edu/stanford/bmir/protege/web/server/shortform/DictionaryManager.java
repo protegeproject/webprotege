@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -96,22 +98,21 @@ public class DictionaryManager {
      * @return A stream of matching short forms.
      */
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
-                                                          @Nonnull Set<EntityType<?>> entityTypes,
-                                                          @Nonnull List<DictionaryLanguage> languages) {
-        return Streams.concat(
-                builtInShortFormDictionary.getShortFormsContaining(searchStrings, entityTypes),
-                dictionary.getShortFormsContaining(searchStrings, entityTypes, languages)
-        );
+    public Page<EntityShortFormMatches> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
+                                                        @Nonnull Set<EntityType<?>> entityTypes,
+                                                        @Nonnull List<DictionaryLanguage> languages,
+                                                                @Nonnull PageRequest pageRequest) {
+        return dictionary.getShortFormsContaining(searchStrings, entityTypes, languages, pageRequest);
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
-                                                          @Nonnull Set<EntityType<?>> entityTypes) {
+    public Page<EntityShortFormMatches> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
+                                                          @Nonnull Set<EntityType<?>> entityTypes,
+                                                                @Nonnull PageRequest pageRequest) {
         if(entityTypes.isEmpty()) {
-            return Stream.empty();
+            return Page.emptyPage();
         }
-        return getShortFormsContaining(searchStrings, entityTypes, languageManager.getLanguages());
+        return getShortFormsContaining(searchStrings, entityTypes, languageManager.getLanguages(), pageRequest);
     }
 
     public void update(@Nonnull Collection<OWLEntity> entities) {

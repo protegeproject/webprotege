@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.shortform;
 
-import edu.stanford.bmir.protege.web.server.shortform.Dictionary;
 import edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUtil;
 import org.junit.Test;
 

@@ -49,10 +49,9 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
                                                                      executionContext.getUserId());
         PageRequest pageRequest = action.getPageRequest();
         int pageSize = pageRequest.getPageSize();
-        entitySearcher.setLimit(pageSize);
+        entitySearcher.setPageRequest(pageRequest);
 
         int pageNumber = pageRequest.getPageNumber();
-        entitySearcher.setSkip((pageNumber - 1) * pageSize);
 
         entitySearcher.invoke();
 

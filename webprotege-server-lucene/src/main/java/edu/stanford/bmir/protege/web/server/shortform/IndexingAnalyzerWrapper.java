@@ -53,7 +53,6 @@ public class IndexingAnalyzerWrapper extends DelegatingAnalyzerWrapper {
                                  .withTokenizer(StandardTokenizerFactory.NAME)
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)
-                                 //                                             .addTokenFilter(StopFilterFactory.NAME)
                                  .build();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -65,9 +64,8 @@ public class IndexingAnalyzerWrapper extends DelegatingAnalyzerWrapper {
             return CustomAnalyzer.builder()
                                  .withTokenizer(StandardTokenizerFactory.NAME)
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
-                                 .addTokenFilter(EdgeNGramFilterFactory.NAME, "minGramSize", "2", "maxGramSize", "10")
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)
-                                 //                                 .addTokenFilter(StopFilterFactory.NAME)
+                                 .addTokenFilter(EdgeNGramFilterFactory.NAME, "minGramSize", "2", "maxGramSize", "10")
                                  .build();
         } catch (IOException e) {
             throw new UncheckedIOException(e);

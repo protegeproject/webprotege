@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.*;
@@ -25,12 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentTranslator {
 
-
     @Nonnull
-    private final ProjectOntologiesIndex projectOntologiesIndex;
-
-    @Nonnull
-    private final AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
+    private final ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
 
     @Nonnull
     private final DictionaryLanguage2FieldNameTranslator fieldNameTranslator;
@@ -42,11 +39,9 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public LuceneEntityDocumentTranslatorImpl(@Nonnull ProjectOntologiesIndex projectOntologiesIndex,
-                                              @Nonnull AnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
+    public LuceneEntityDocumentTranslatorImpl(@Nonnull ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
                                               @Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator,
                                               @Nonnull OWLDataFactory dataFactory) {
-        this.projectOntologiesIndex = checkNotNull(projectOntologiesIndex);
         this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
         this.fieldNameTranslator = checkNotNull(fieldNameTranslator);
         this.dataFactory = checkNotNull(dataFactory);
@@ -115,8 +110,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         var localNameFieldName = fieldNameTranslator.getLocalNameFieldName();
 
         document.add(new TextField(localNameFieldName, localName, Field.Store.YES));
-        projectOntologiesIndex.getOntologyIds()
-                              .flatMap(ontId -> annotationAssertionsIndex.getAxiomsForSubject(entity.getIRI(), ontId))
+        annotationAssertionsIndex.getAnnotationAssertionAxioms(entity.getIRI())
                               .filter(ax -> ax.getValue() instanceof OWLLiteral)
                               .flatMap(this::toFields)
                               .forEach(document::add);

@@ -125,34 +125,35 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         EntityNameMatcher entityNameMatcher = new EntityNameMatcher(lastWordPrefix);
 
         Set<OWLEntity> candidateEntities = new HashSet<>();
-        return dictionaryManager.getShortFormsContaining(singletonList(parseSearchString(lastWordPrefix)),
-                                                         expectedEntityTypes)
-                                // Don't show duplicate entities with different short forms.
-                                .filter(match -> !candidateEntities.contains(match.getEntity()))
-                                .peek(match -> candidateEntities.add(match.getEntity()))
-                                // This is a bit arbitrary - however, the user will need to type more characters
-                                // to find the match they want in any case, because we only display around 20
-                                // choices in the auto completer box.  Note that we will process up to this
-                                // limit as we perform a sort further down in this pipeline.
-                                .limit(SEARCH_LIMIT)
-                                // Map to an AutoCompletionChoice because this allows proper sorting for
-                                // better results
-                                .map(match -> {
-                                    String shortForm = match.getShortForm();
-                                    Optional<EntityNameMatchResult> matchResult = entityNameMatcher.findIn(shortForm);
-                                    return matchResult.map(mr -> {
-                                        String quotedShortForm = getQuotedShortForm(shortForm);
-                                        AutoCompletionChoice choice = new AutoCompletionChoice(quotedShortForm,
-                                                                                               shortForm, "",
-                                                                                               fromPos, toPos);
-                                        return new AutoCompletionMatch(matchResult.get(), choice);
-                                    }).orElse(null);
-                                })
-                                .filter(Objects::nonNull)
-                                .sorted()
-                                .limit(action.getEntityTypeSuggestLimit())
-                                .map(AutoCompletionMatch::getAutoCompletionChoice)
-                                .collect(toList());
+        throw new RuntimeException();
+//        return dictionaryManager.getShortFormsContaining(singletonList(parseSearchString(lastWordPrefix)),
+//                                                         expectedEntityTypes)
+//                                // Don't show duplicate entities with different short forms.
+//                                .filter(match -> !candidateEntities.contains(match.getEntity()))
+//                                .peek(match -> candidateEntities.add(match.getEntity()))
+//                                // This is a bit arbitrary - however, the user will need to type more characters
+//                                // to find the match they want in any case, because we only display around 20
+//                                // choices in the auto completer box.  Note that we will process up to this
+//                                // limit as we perform a sort further down in this pipeline.
+//                                .limit(SEARCH_LIMIT)
+//                                // Map to an AutoCompletionChoice because this allows proper sorting for
+//                                // better results
+//                                .map(match -> {
+//                                    String shortForm = match.getShortForm();
+//                                    Optional<EntityNameMatchResult> matchResult = entityNameMatcher.findIn(shortForm);
+//                                    return matchResult.map(mr -> {
+//                                        String quotedShortForm = getQuotedShortForm(shortForm);
+//                                        AutoCompletionChoice choice = new AutoCompletionChoice(quotedShortForm,
+//                                                                                               shortForm, "",
+//                                                                                               fromPos, toPos);
+//                                        return new AutoCompletionMatch(matchResult.get(), choice);
+//                                    }).orElse(null);
+//                                })
+//                                .filter(Objects::nonNull)
+//                                .sorted()
+//                                .limit(action.getEntityTypeSuggestLimit())
+//                                .map(AutoCompletionMatch::getAutoCompletionChoice)
+//                                .collect(toList());
     }
 
     private List<AutoCompletionChoice> getNameOntologyAutocompletionChoices(ParserException e,

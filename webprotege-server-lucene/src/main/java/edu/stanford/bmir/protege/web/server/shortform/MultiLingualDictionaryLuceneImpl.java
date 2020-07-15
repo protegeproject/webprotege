@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -57,12 +59,14 @@ public class MultiLingualDictionaryLuceneImpl implements MultiLingualDictionary 
 
     @Nonnull
     @Override
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
-                                                          @Nonnull Set<EntityType<?>> entityTypes,
-                                                          @Nonnull List<DictionaryLanguage> languages) {
+    public Page<EntityShortFormMatches> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
+                                                        @Nonnull Set<EntityType<?>> entityTypes,
+                                                        @Nonnull List<DictionaryLanguage> languages,
+                                                        @Nonnull PageRequest pageRequest) {
         return searchableMultiLingualShortFormDictionary.getShortFormsContaining(searchStrings,
                                                                                  entityTypes,
-                                                                                 languages);
+                                                                                 languages,
+                                                                                 pageRequest);
     }
 }
 

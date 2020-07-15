@@ -14,36 +14,12 @@ import org.semanticweb.owlapi.model.OWLEntityProvider;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-07
  */
-@Module
+@Module(includes = LuceneModule.class)
 public class ShortFormModule {
 
 
     @Provides
     ActiveLanguagesManager provideActiveLanguagesManager(ActiveLanguagesManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    MultiLingualDictionary provideDictionary(MultiLingualDictionaryImpl dictionary, LanguageManager languageManager) {
-        // Preload existing languages to avoid delays after loading in the UI
-        //        dictionary.loadLanguages(languageManager.getActiveLanguages());
-        return dictionary;
-    }
-
-    @Provides
-    MultilingualDictionaryUpdater provideUpdatableMultilingualDictionary(MultiLingualDictionaryImpl impl) {
-        return impl;
-    }
-
-    @ProjectSingleton
-    @Provides
-    MultiLingualShortFormDictionary provideMultiLingualShortFormDictionary(MultiLingualDictionaryImpl impl) {
-        return impl;
-    }
-
-    @ProjectSingleton
-    @Provides
-    MultiLingualShortFormIndex provideMultiLingualShortFormIndex(MultiLingualDictionaryImpl impl) {
         return impl;
     }
 

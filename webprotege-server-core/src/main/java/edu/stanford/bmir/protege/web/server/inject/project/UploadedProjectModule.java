@@ -12,10 +12,8 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
-import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdater;
-import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionary;
-import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionaryImpl;
-import edu.stanford.bmir.protege.web.server.shortform.MultilingualDictionaryUpdater;
+import edu.stanford.bmir.protege.web.server.shortform.AnnotationAssertionAxiomsModule;
+import edu.stanford.bmir.protege.web.server.shortform.LuceneModule;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -35,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-20
  */
-@Module
+@Module(includes = {LuceneModule.class})
 public class UploadedProjectModule {
 
     private final ProjectId projectId;
@@ -176,26 +174,6 @@ public class UploadedProjectModule {
                                  .filter(axiom -> axiom.getSubject().equals(subject));
             }
         };
-    }
-
-    @Provides
-    @ProjectSingleton
-    DictionaryUpdater providesDictionaryUpdater(ProjectAnnotationAssertionAxiomsBySubjectIndex index) {
-        return new DictionaryUpdater(index);
-    }
-
-    @Provides
-    @ProjectSingleton
-    MultiLingualDictionary providesMultiLingualDictionary(MultiLingualDictionaryImpl impl,
-                                                          ImmutableList<DictionaryLanguage> dictionaryLanguages) {
-        impl.loadLanguages(dictionaryLanguages);
-        return impl;
-    }
-
-    @Provides
-    @ProjectSingleton
-    MultilingualDictionaryUpdater provideMultilingualDictionaryUpdater(MultiLingualDictionaryImpl impl) {
-        return impl;
     }
 
     @Provides

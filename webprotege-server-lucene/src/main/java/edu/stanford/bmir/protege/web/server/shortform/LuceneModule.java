@@ -5,6 +5,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -25,44 +26,6 @@ import java.io.UncheckedIOException;
  */
 @Module
 public class LuceneModule {
-
-    private ProjectOntologiesIndex projectOntologiesIndex;
-
-    private AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex;
-
-    private ProjectSignatureIndex provideProjectSignatureIndex;
-
-    public LuceneModule(ProjectOntologiesIndex projectOntologiesIndex,
-                        AnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex,
-                        ProjectSignatureIndex provideProjectSignatureIndex) {
-        this.projectOntologiesIndex = projectOntologiesIndex;
-        this.annotationAssertionAxiomsBySubjectIndex = annotationAssertionAxiomsBySubjectIndex;
-        this.provideProjectSignatureIndex = provideProjectSignatureIndex;
-    }
-
-    @Provides
-    @ProjectSingleton
-    public ProjectOntologiesIndex provideProjectOntologiesIndex() {
-        return projectOntologiesIndex;
-    }
-
-    @Provides
-    @ProjectSingleton
-    AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex() {
-        return annotationAssertionAxiomsBySubjectIndex;
-    }
-
-    @Provides
-    @ProjectSingleton
-    public ProjectSignatureIndex getProvideProjectSignatureIndex() {
-        return provideProjectSignatureIndex;
-    }
-
-    @ProjectSingleton
-    @Provides
-    public OWLDataFactory provideOWLDataFactory() {
-        return new OWLDataFactoryImpl();
-    }
 
     @Provides
     @ProjectSingleton
@@ -142,9 +105,19 @@ public class LuceneModule {
 
     @ProjectSingleton
     @Provides
-    SearcherManager provideSearcherManager(IndexWriter indexWriter, SearcherFactory searcherFactory) {
+    SearcherManager provideSearcherManager(IndexWriter indexWriter,
+                                           SearcherFactory searcherFactory,
+                                           DisposableObjectManager disposableObjectManager) {
         try {
-            return new SearcherManager(indexWriter, searcherFactory);
+            var searchManager = new SearcherManager(indexWriter, searcherFactory);
+            disposableObjectManager.register(() -> {
+                try {
+                    searchManager.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            return searchManager;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
@@ -23,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-07
  */
-public class LuceneIndexWriterImpl implements LuceneIndexWriter {
+public class LuceneIndexWriterImpl implements LuceneIndexWriter, HasDispose {
 
     private static final Logger logger = LoggerFactory.getLogger(LuceneIndexWriterImpl.class);
 
@@ -78,6 +79,15 @@ public class LuceneIndexWriterImpl implements LuceneIndexWriter {
             indexWriter.addDocument(doc);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public void dispose() {
+        try {
+            indexWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
