@@ -21,8 +21,7 @@ public class DictionaryLanguage2FieldNameTranslatorImpl implements DictionaryLan
     }
 
     @Nonnull
-    @Override
-    public String getLocalNameFieldName() {
+    private String getLocalNameFieldName() {
         return LOCAL_NAME;
     }
 

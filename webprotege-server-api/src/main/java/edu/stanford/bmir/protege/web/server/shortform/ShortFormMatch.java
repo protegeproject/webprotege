@@ -27,6 +27,14 @@ public abstract class ShortFormMatch {
                                      @Nonnull String shortForm,
                                      @Nonnull DictionaryLanguage language,
                                      @Nonnull ImmutableList<ShortFormMatchPosition> shortFormMatchPositions) {
+        for(var shortFormMatchPosition : shortFormMatchPositions) {
+            if(!(shortFormMatchPosition.getStart() < shortForm.length())) {
+                throw new IllegalArgumentException("Short form match start must be less than short from length");
+            }
+            if(!(shortFormMatchPosition.getEnd() <= shortForm.length())) {
+                throw new IllegalArgumentException("Short form match end must be less than or equal to the short from length");
+            }
+        }
         return new AutoValue_ShortFormMatch(entity, shortForm, shortFormMatchPositions, language);
     }
 

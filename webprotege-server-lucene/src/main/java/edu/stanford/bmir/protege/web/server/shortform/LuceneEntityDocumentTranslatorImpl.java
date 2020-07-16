@@ -36,6 +36,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     @Nonnull
     private final LocalNameExtractor localNameExtractor = new LocalNameExtractor();
 
+
     @Nonnull
     private final OWLDataFactory dataFactory;
 
@@ -108,8 +109,11 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         document.add(new StringField(EntityDocumentFieldNames.IRI, iri, Field.Store.YES));
 
         var localName = localNameExtractor.getLocalName(entity.getIRI());
-        var localNameFieldName = fieldNameTranslator.getLocalNameFieldName();
-        document.add(new TextField(localNameFieldName, localName, Field.Store.YES));
+        var localNameFieldNameAnalyzed = fieldNameTranslator.getAnalyzedValueFieldName(DictionaryLanguage.localName());
+        document.add(new TextField(localNameFieldNameAnalyzed, localName, Field.Store.YES));
+        var localNameFieldOriginal = fieldNameTranslator.getOriginalValueFieldName(DictionaryLanguage.localName());
+        document.add(new StringField(localNameFieldOriginal, localName, Field.Store.YES));
+
         annotationAssertionsIndex.getAnnotationAssertionAxioms(entity.getIRI())
                               .filter(ax -> ax.getValue() instanceof OWLLiteral)
                               .flatMap(this::toFields)
@@ -128,7 +132,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
                 .build();
     }
 
-    public Stream<Field> toFields(OWLAnnotationAssertionAxiom ax) {
+    private Stream<Field> toFields(OWLAnnotationAssertionAxiom ax) {
         var literal = (OWLLiteral) ax.getValue();
         var annotationPropertyIri = ax.getProperty().getIRI();
         var dictionaryLanguage = DictionaryLanguage.create(annotationPropertyIri, literal.getLang());
