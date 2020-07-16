@@ -44,7 +44,7 @@ public class SearchableMultiLingualShortFormDictionaryLuceneImpl implements Sear
                                                           @Nonnull List<DictionaryLanguage> languages,
                                                           @Nonnull PageRequest pageRequest) {
         try {
-            var entities = luceneIndex.search(searchStrings, languages, pageRequest);
+            var entities = luceneIndex.search(searchStrings, languages, entityTypes, pageRequest);
             if(entities.isPresent()) {
                 var resultsPage = entities.get();
                 logger.info("Found " + resultsPage.getTotalElements() + " result.  Retrieved " + resultsPage.getPageSize());

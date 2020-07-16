@@ -28,19 +28,14 @@ public class DictionaryLanguage2FieldNameTranslatorImpl implements DictionaryLan
 
     @Nonnull
     @Override
-    public String getValueFieldName(@Nonnull DictionaryLanguage language) {
+    public String getOriginalValueFieldName(@Nonnull DictionaryLanguage language) {
         return VALUE_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull
     @Override
-    public String getWordFieldName(@Nonnull DictionaryLanguage language) {
-        return WORD_FIELD_PREFIX + getFieldNameSuffix(language);
-    }
-
-    @Nonnull
-    public String getEdgeNGramFieldName(@Nonnull DictionaryLanguage language) {
-        return NGRAM_FIELD_PREFIX + getFieldNameSuffix(language);
+    public String getAnalyzedValueFieldName(@Nonnull DictionaryLanguage language) {
+        return ANALYZED_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull

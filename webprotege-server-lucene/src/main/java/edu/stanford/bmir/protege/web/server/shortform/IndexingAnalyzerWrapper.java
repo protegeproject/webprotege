@@ -12,9 +12,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.NGRAM_FIELD_PREFIX;
-import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.WORD_FIELD_PREFIX;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -24,48 +21,30 @@ import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentField
  */
 public class IndexingAnalyzerWrapper extends DelegatingAnalyzerWrapper {
 
-    private final Analyzer wordAnalyzer;
-    private final Analyzer edgeNGramAnalyzer;
+    private final Analyzer analyzer;
 
     @Inject
     public IndexingAnalyzerWrapper() {
         super(PER_FIELD_REUSE_STRATEGY);
-        wordAnalyzer = createWordAnalyzer();
-        edgeNGramAnalyzer = createEdgeNGramAnalyzer();
+        analyzer = createAnalyzer();
     }
 
     @Override
     protected Analyzer getWrappedAnalyzer(String fieldName) {
-        if(fieldName.startsWith(WORD_FIELD_PREFIX)) {
-            return wordAnalyzer;
-        }
-        else if(fieldName.startsWith(NGRAM_FIELD_PREFIX)) {
-            return edgeNGramAnalyzer;
-        }
-        else {
-            return wordAnalyzer;
-        }
+        return analyzer;
     }
 
-    private Analyzer createWordAnalyzer() {
+
+    private Analyzer createAnalyzer() {
         try {
             return CustomAnalyzer.builder()
                                  .withTokenizer(StandardTokenizerFactory.NAME)
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)
-                                 .build();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    private Analyzer createEdgeNGramAnalyzer() {
-        try {
-            return CustomAnalyzer.builder()
-                                 .withTokenizer(StandardTokenizerFactory.NAME)
-                                 .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
-                                 .addTokenFilter(LowerCaseFilterFactory.NAME)
-                                 .addTokenFilter(EdgeNGramFilterFactory.NAME, "minGramSize", "2", "maxGramSize", "10")
+                                 .addTokenFilter(EdgeNGramFilterFactory.NAME,
+                                                 "minGramSize", "2",
+                                                 "maxGramSize", "10",
+                                                 "preserveOriginal", "true")
                                  .build();
         } catch (IOException e) {
             throw new UncheckedIOException(e);

@@ -17,8 +17,5 @@ public interface EntityDocumentFieldNames {
 
     String VALUE_FIELD_PREFIX = "value.";
 
-    String WORD_FIELD_PREFIX = "word.";
-
-    String NGRAM_FIELD_PREFIX = "ngram.";
-
+    String ANALYZED_FIELD_PREFIX = "analyzed.";
 }

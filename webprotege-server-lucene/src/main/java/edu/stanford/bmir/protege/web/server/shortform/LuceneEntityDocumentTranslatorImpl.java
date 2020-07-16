@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.*;
-import org.apache.lucene.index.IndexOptions;
-import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -19,7 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -99,7 +94,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     @Nullable
     private String getShortForm(@Nonnull Document document,
                                 @Nonnull DictionaryLanguage dictionaryLanguage) {
-        var fieldName = fieldNameTranslator.getValueFieldName(dictionaryLanguage);
+        var fieldName = fieldNameTranslator.getOriginalValueFieldName(dictionaryLanguage);
         return document.get(fieldName);
     }
 
@@ -114,7 +109,6 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
 
         var localName = localNameExtractor.getLocalName(entity.getIRI());
         var localNameFieldName = fieldNameTranslator.getLocalNameFieldName();
-
         document.add(new TextField(localNameFieldName, localName, Field.Store.YES));
         annotationAssertionsIndex.getAnnotationAssertionAxioms(entity.getIRI())
                               .filter(ax -> ax.getValue() instanceof OWLLiteral)
@@ -140,24 +134,13 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         var dictionaryLanguage = DictionaryLanguage.create(annotationPropertyIri, literal.getLang());
         var lexicalValue = literal.getLiteral();
 
-        var valueFieldName = fieldNameTranslator.getValueFieldName(dictionaryLanguage);
+        var valueFieldName = fieldNameTranslator.getOriginalValueFieldName(dictionaryLanguage);
         var valueField = new StringField(valueFieldName, lexicalValue, Field.Store.YES);
 
-        var wordFieldName = fieldNameTranslator.getWordFieldName(dictionaryLanguage);
+        var wordFieldName = fieldNameTranslator.getAnalyzedValueFieldName(dictionaryLanguage);
         var wordField = new TextField(wordFieldName, lexicalValue, Field.Store.NO);
 
-//        FieldType type = new FieldType();
-//        type.setStored(true);
-//        type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
-//        type.setStoreTermVectorPositions();
-//        new Field(wordFieldName, lexicalValue, type)
-
-
-        var ngramFieldName = fieldNameTranslator.getEdgeNGramFieldName(dictionaryLanguage);
-        var ngramField = new TextField(ngramFieldName, lexicalValue, Field.Store.NO);
-
         return Stream.of(wordField,
-                         ngramField,
                          valueField);
     }
 }

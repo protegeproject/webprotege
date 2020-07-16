@@ -34,16 +34,16 @@ public class LuceneQueryParserFactory {
     @Nonnull
     public QueryParser createQueryParser(List<DictionaryLanguage> languages) {
         String[] fields = languages.stream()
-                                   .flatMap(dl -> Stream.of(fieldNameTranslator.getWordFieldName(dl),
-                                                            fieldNameTranslator.getEdgeNGramFieldName(dl)))
+                                   .flatMap(dl -> Stream.of(fieldNameTranslator.getOriginalValueFieldName(dl),
+                                                            fieldNameTranslator.getAnalyzedValueFieldName(dl)))
                                    .toArray(String[]::new);
         return new MultiFieldQueryParser(fields, queryAnalyzerFactory.get());
     }
 
     @Nonnull
-    public QueryParser createQueryParserForExactShortFormMatch(List<DictionaryLanguage> languages) {
+    public QueryParser createQueryParserForExactOriginalMatch(List<DictionaryLanguage> languages) {
         String[] fields = languages.stream()
-                                   .flatMap(dl -> Stream.of(fieldNameTranslator.getValueFieldName(dl)))
+                                   .flatMap(dl -> Stream.of(fieldNameTranslator.getOriginalValueFieldName(dl)))
                                    .toArray(String[]::new);
         return new MultiFieldQueryParser(fields, queryAnalyzerFactory.get());
     }

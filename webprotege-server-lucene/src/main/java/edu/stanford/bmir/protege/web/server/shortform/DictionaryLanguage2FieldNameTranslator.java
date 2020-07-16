@@ -12,13 +12,10 @@ import javax.annotation.Nonnull;
 public interface DictionaryLanguage2FieldNameTranslator {
 
     @Nonnull
-    String getValueFieldName(@Nonnull DictionaryLanguage language);
+    String getOriginalValueFieldName(@Nonnull DictionaryLanguage language);
 
     @Nonnull
-    String getWordFieldName(@Nonnull DictionaryLanguage language);
-
-    @Nonnull
-    String getEdgeNGramFieldName(@Nonnull DictionaryLanguage language);
+    String getAnalyzedValueFieldName(@Nonnull DictionaryLanguage language);
 
     @Nonnull
     String getLocalNameFieldName();

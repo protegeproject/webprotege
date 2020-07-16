@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
@@ -66,10 +65,7 @@ public class LuceneShortFormMatcher {
 
         var resultBuilder = ImmutableSet.<ShortFormMatchPosition>builder();
 
-        var ngramFieldName = fieldNameTranslator.getEdgeNGramFieldName(dictionaryLanguage);
-        addPossibleTokenMatches(shortForm, ngramFieldName, searchTokens, resultBuilder);
-
-        var wordFieldName = fieldNameTranslator.getWordFieldName(dictionaryLanguage);
+        var wordFieldName = fieldNameTranslator.getAnalyzedValueFieldName(dictionaryLanguage);
         addPossibleTokenMatches(shortForm, wordFieldName, searchTokens, resultBuilder);
 
 
