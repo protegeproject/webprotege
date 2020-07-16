@@ -4,6 +4,8 @@ import com.google.auto.value.AutoValue;
 
 import javax.annotation.Nonnull;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -14,6 +16,7 @@ public abstract class ShortFormMatchPosition {
 
     @Nonnull
     public static ShortFormMatchPosition get(int start, int end) {
+        checkArgument(start <= end);
         return new AutoValue_ShortFormMatchPosition(start, end);
     }
 
