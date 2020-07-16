@@ -319,7 +319,8 @@ public class EntitySearcher {
         //        Map<Integer, String> sortedSearchWords = new TreeMap<>();
 
         int lastEnd = 0;
-        for (ShortFormMatchPosition matchPosition : match.getMatchPositions()) {
+        var sortedPositions = new TreeSet<>(match.getMatchPositions());
+        for (ShortFormMatchPosition matchPosition : sortedPositions) {
             int wordStart = matchPosition.getStart();
             int wordEnd = matchPosition.getEnd();
             if (lastEnd != wordStart) {
