@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.project.Neo4jProjectComponentFactory;
 import edu.stanford.bmir.protege.web.server.project.ProjectComponentFactory;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
@@ -24,7 +25,7 @@ public class ServerModule {
 
 
     @Provides
-    public ProjectComponentFactory provideProjectComponentFactory(ProjectComponentFactoryImpl impl) {
+    public ProjectComponentFactory provideProjectComponentFactory(Neo4jProjectComponentFactory impl) {
         return impl;
     }
 }

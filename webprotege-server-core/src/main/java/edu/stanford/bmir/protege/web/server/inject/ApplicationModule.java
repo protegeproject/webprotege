@@ -60,6 +60,9 @@ import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -82,6 +85,12 @@ public class ApplicationModule {
 
     private static final int INDEX_UPDATING_THREADS = 10;
 
+    @Provides
+    @ApplicationSingleton
+    public Driver providesDriver() {
+        return GraphDatabase.driver("bolt://localhost:7688",
+            AuthTokens.basic("neo4j", "redismyfavoritecolor"));
+    }
 
     @ApplicationSingleton
     @Provides

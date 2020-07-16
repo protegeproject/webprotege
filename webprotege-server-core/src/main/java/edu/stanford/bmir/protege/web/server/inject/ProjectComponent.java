@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRe
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataComponent;
 import edu.stanford.bmir.protege.web.server.form.EntityFrameFormDataModule;
+import edu.stanford.bmir.protege.web.server.inject.project.Neo4jProjectModule;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
@@ -21,7 +22,7 @@ import javax.annotation.Nonnull;
  */
 @Subcomponent(
         modules = {
-                ProjectModule.class,
+                Neo4jProjectModule.class,
         }
 )
 @ProjectSingleton
