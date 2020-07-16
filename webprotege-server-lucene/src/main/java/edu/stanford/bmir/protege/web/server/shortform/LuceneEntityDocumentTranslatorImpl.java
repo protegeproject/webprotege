@@ -108,8 +108,10 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         document.add(new StringField(EntityDocumentFieldNames.IRI, iri, Field.Store.YES));
 
         var localName = localNameExtractor.getLocalName(entity.getIRI());
-        var localNameFieldName = fieldNameTranslator.getLocalNameFieldName();
-        document.add(new TextField(localNameFieldName, localName, Field.Store.YES));
+        var localNameFieldNameAnalyzed = fieldNameTranslator.getAnalyzedValueFieldName(DictionaryLanguage.localName());
+        document.add(new TextField(localNameFieldNameAnalyzed, localName, Field.Store.YES));
+        var localNameFieldOriginal = fieldNameTranslator.getOriginalValueFieldName(DictionaryLanguage.localName());
+        document.add(new StringField(localNameFieldOriginal, localName, Field.Store.YES));
         annotationAssertionsIndex.getAnnotationAssertionAxioms(entity.getIRI())
                               .filter(ax -> ax.getValue() instanceof OWLLiteral)
                               .flatMap(this::toFields)
