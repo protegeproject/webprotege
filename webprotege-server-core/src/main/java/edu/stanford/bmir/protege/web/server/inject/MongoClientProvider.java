@@ -64,9 +64,9 @@ public class MongoClientProvider implements Provider<MongoClient> {
                 });
         logger.info("Created MongoClient database connection");
         disposableObjectManager.register(() -> {
-            logger.info("Closing MongoClient database connection");
+            logger.info("Closing MongoClient database connection...");
             mongoClient.close();
-            logger.info("Closed MongoClient database connection");
+            logger.info("    ...closed MongoClient database connection");
         });
         return mongoClient;
     }
