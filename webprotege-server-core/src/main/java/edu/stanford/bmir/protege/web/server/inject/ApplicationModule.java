@@ -39,10 +39,7 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
-import edu.stanford.bmir.protege.web.server.upload.DocumentResolver;
-import edu.stanford.bmir.protege.web.server.upload.DocumentResolverImpl;
-import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
-import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
+import edu.stanford.bmir.protege.web.server.upload.*;
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphEdgeLimit;
@@ -65,6 +62,7 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Matthew Horridge
@@ -265,6 +263,15 @@ public class ApplicationModule {
     }
 
     @Provides
+    @UploadedOntologiesCacheService
+    @ApplicationSingleton
+    public ScheduledExecutorService provideUploadedOntologiesCacheService(ApplicationExecutorsRegistry executorsRegistry) {
+        var executor = Executors.newSingleThreadScheduledExecutor();
+        executorsRegistry.registerService(executor, "Uploaded-Ontologies-Cache-Service");
+        return executor;
+    }
+
+    @Provides
     public WebhookRepository providesWebhookRepository(WebhookRepositoryImpl impl) {
         return impl;
     }
@@ -347,9 +354,10 @@ public class ApplicationModule {
     @Provides
     @ApplicationSingleton
     UploadedOntologiesCache provideUploadedOntologiesCache(UploadedOntologiesProcessor processor,
+                                                           @UploadedOntologiesCacheService ScheduledExecutorService cacheService,
                                                            Ticker ticker,
                                                            ApplicationDisposablesManager disposableObjectManager) {
-        var cache = new UploadedOntologiesCache(processor, ticker);
+        var cache = new UploadedOntologiesCache(processor, ticker, cacheService);
         cache.start();
         disposableObjectManager.register(cache);
         return cache;
