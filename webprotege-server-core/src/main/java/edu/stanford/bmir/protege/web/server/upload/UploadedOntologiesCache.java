@@ -59,7 +59,7 @@ public class UploadedOntologiesCache implements HasDispose {
     }
 
     public void start() {
-        logger.info("Starting uploaded ontologies cache with an expiration duration of {}", EXPIRATION_DURATION);
+        logger.info("Starting uploaded ontologies cache with an expiration duration of {} ms", EXPIRATION_DURATION.toMillis());
         service.scheduleAtFixedRate(cache::cleanUp,
                                     EXPIRATION_DURATION.toMillis(),
                                     SWEEP_PERIOD.toMillis(),
