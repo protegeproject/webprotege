@@ -18,7 +18,6 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +37,7 @@ public class UploadedOntologiesCache implements HasDispose {
 
     private static Logger logger = LoggerFactory.getLogger(UploadedOntologiesCache.class);
 
-    private final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService service;
 
     private final Cache<DocumentId, Collection<Ontology>> cache;
 
@@ -47,8 +46,10 @@ public class UploadedOntologiesCache implements HasDispose {
 
     @Inject
     public UploadedOntologiesCache(@Nonnull UploadedOntologiesProcessor uploadedOntologiesProcessor,
-                                   @Nonnull Ticker ticker) {
+                                   @Nonnull Ticker ticker,
+                                   @Nonnull @UploadedOntologiesCacheService ScheduledExecutorService service) {
         this.uploadedOntologiesProcessor = checkNotNull(uploadedOntologiesProcessor);
+        this.service = checkNotNull(service);
         checkNotNull(ticker);
         this.cache = CacheBuilder.newBuilder()
                                  .expireAfterAccess(EXPIRATION_DURATION)
@@ -67,8 +68,6 @@ public class UploadedOntologiesCache implements HasDispose {
 
     public void dispose() {
         cache.invalidateAll();
-        logger.info("Shutting down uploaded ontologies cache");
-        service.shutdown();
     }
 
     @Nonnull
