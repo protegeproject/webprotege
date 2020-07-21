@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
+import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.Term;
@@ -15,10 +17,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 
 /**
  * Matthew Horridge
@@ -40,13 +45,25 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final ImmutableMap<String, String> builtInPrefixDeclarationsByPrefix;
+
     @Inject
     public LuceneEntityDocumentTranslatorImpl(@Nonnull ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
                                               @Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator,
-                                              @Nonnull OWLDataFactory dataFactory) {
+                                              @Nonnull OWLDataFactory dataFactory,
+                                              @Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations) {
         this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
         this.fieldNameTranslator = checkNotNull(fieldNameTranslator);
         this.dataFactory = checkNotNull(dataFactory);
+        builtInPrefixDeclarationsByPrefix = getPrefixDeclarationsByPrefix(builtInPrefixDeclarations);
+    }
+
+    private static ImmutableMap<String, String> getPrefixDeclarationsByPrefix(@Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations) {
+        return builtInPrefixDeclarations.getPrefixDeclarations()
+                                 .stream()
+                                 .collect(toImmutableMap(PrefixDeclaration::getPrefix, PrefixDeclaration::getPrefixName,
+                                                         (leftPrefixDecl, rightPrefixDecl) -> rightPrefixDecl));
     }
 
     @Nonnull
@@ -108,17 +125,34 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         document.add(new StringField(EntityDocumentFieldNames.ENTITY_TYPE, entityType, Field.Store.YES));
         document.add(new StringField(EntityDocumentFieldNames.IRI, iri, Field.Store.YES));
 
-        var localName = localNameExtractor.getLocalName(entity.getIRI());
-        var localNameFieldNameAnalyzed = fieldNameTranslator.getAnalyzedValueFieldName(DictionaryLanguage.localName());
-        document.add(new TextField(localNameFieldNameAnalyzed, localName, Field.Store.YES));
-        var localNameFieldOriginal = fieldNameTranslator.getOriginalValueFieldName(DictionaryLanguage.localName());
-        document.add(new StringField(localNameFieldOriginal, localName, Field.Store.YES));
+
+        var entityIri = entity.getIRI();
+        var entityIriPrefix = entityIri.getNamespace();
+        var prefixName = builtInPrefixDeclarationsByPrefix.get(entityIriPrefix);
+        if(prefixName != null) {
+            var prefixedName = prefixName + entityIri.getFragment();
+            System.out.println(prefixedName);
+            var localNameDictionaryLanguge = DictionaryLanguage.localName();
+            addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, prefixedName);
+        }
+        else {
+            var localNameDictionaryLanguge = DictionaryLanguage.localName();
+            var localName = localNameExtractor.getLocalName(entity.getIRI());
+            addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, localName);
+        }
 
         annotationAssertionsIndex.getAnnotationAssertionAxioms(entity.getIRI())
                               .filter(ax -> ax.getValue() instanceof OWLLiteral)
                               .flatMap(this::toFields)
                               .forEach(document::add);
         return document;
+    }
+
+    private void addFieldForDictionaryLanguage(Document document, DictionaryLanguage language, String value) {
+        var localNameFieldNameAnalyzed = fieldNameTranslator.getAnalyzedValueFieldName(language);
+        document.add(new TextField(localNameFieldNameAnalyzed, value, Field.Store.YES));
+        var localNameFieldOriginal = fieldNameTranslator.getOriginalValueFieldName(language);
+        document.add(new StringField(localNameFieldOriginal, value, Field.Store.YES));
     }
 
     @Override
@@ -137,6 +171,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         var annotationPropertyIri = ax.getProperty().getIRI();
         var dictionaryLanguage = DictionaryLanguage.create(annotationPropertyIri, literal.getLang());
         var lexicalValue = literal.getLiteral();
+
 
         var valueFieldName = fieldNameTranslator.getOriginalValueFieldName(dictionaryLanguage);
         var valueField = new StringField(valueFieldName, lexicalValue, Field.Store.YES);

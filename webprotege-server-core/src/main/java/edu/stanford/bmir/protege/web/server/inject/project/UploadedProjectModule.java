@@ -9,6 +9,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
@@ -229,5 +230,10 @@ public class UploadedProjectModule {
     @Provides
     LiteralStyle provideLiteralStyle() {
         return LiteralStyle.REGULAR;
+    }
+
+    @Provides
+    BuiltInPrefixDeclarations provideBuiltInPrefixDeclarations() {
+        return BuiltInPrefixDeclarations.get(ImmutableList.of());
     }
 }
