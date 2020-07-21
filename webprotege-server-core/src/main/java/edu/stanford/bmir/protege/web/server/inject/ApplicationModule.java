@@ -225,6 +225,7 @@ public class ApplicationModule {
 
     @Provides
     @DownloadGeneratorExecutor
+    @ApplicationSingleton
     public ExecutorService provideDownloadGeneratorExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
         // Might prove to be too much of a bottle neck.  For now, this limits the memory we need
         // to generate downloads
@@ -239,6 +240,7 @@ public class ApplicationModule {
 
     @Provides
     @FileTransferExecutor
+    @ApplicationSingleton
     public ExecutorService provideFileTransferExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
         var executor = Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
@@ -251,6 +253,7 @@ public class ApplicationModule {
 
     @Provides
     @IndexUpdatingService
+    @ApplicationSingleton
     public ExecutorService provideIndexUpdatingExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
         var executor = Executors.newFixedThreadPool(INDEX_UPDATING_THREADS, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
