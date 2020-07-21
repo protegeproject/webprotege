@@ -40,6 +40,7 @@ public class ApplicationExecutorsRegistry {
         if(registeredServices.contains(service)) {
             return;
         }
+        registeredServices.add(service);
         disposablesManager.register(new ExecutorServiceShutdownTask(service, serviceName));
     }
 }
