@@ -225,34 +225,40 @@ public class ApplicationModule {
 
     @Provides
     @DownloadGeneratorExecutor
-    public ExecutorService provideDownloadGeneratorExecutorService() {
+    public ExecutorService provideDownloadGeneratorExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
         // Might prove to be too much of a bottle neck.  For now, this limits the memory we need
         // to generate downloads
-        return Executors.newSingleThreadExecutor(r -> {
+        var executor = Executors.newSingleThreadExecutor(r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName(thread.getName().replace("thread", "Download-Generator"));
             return thread;
         });
+        executorsRegistry.registerService(executor, "Download-Generator-Service");
+        return executor;
     }
 
     @Provides
     @FileTransferExecutor
-    public ExecutorService provideFileTransferExecutorService() {
-        return Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
+    public ExecutorService provideFileTransferExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
+        var executor = Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName(thread.getName().replace("thread", "Download-Streamer"));
             return thread;
         });
+        executorsRegistry.registerService(executor, "Download-Streaming-Service");
+        return executor;
     }
 
     @Provides
     @IndexUpdatingService
-    public ExecutorService provideIndexUpdatingExecutorService() {
-        return Executors.newFixedThreadPool(INDEX_UPDATING_THREADS, r -> {
+    public ExecutorService provideIndexUpdatingExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
+        var executor = Executors.newFixedThreadPool(INDEX_UPDATING_THREADS, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName(thread.getName().replace("thread", "Index-Updater"));
             return thread;
         });
+        executorsRegistry.registerService(executor, "Index-Updater");
+        return executor;
     }
 
     @Provides
