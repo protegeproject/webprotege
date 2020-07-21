@@ -49,9 +49,9 @@ public class ExecutorServiceShutdownTask implements HasDispose {
     public void dispose() {
         executorService.shutdown();
         try {
-            logger.info("Shutting down {}", serviceName);
+            logger.info("Shutting down {} ...", serviceName);
             executorService.awaitTermination(SHUTDOWN_TIMEOUT, SHUTDOWN_TIMEOUT_UNIT);
-            logger.info("{} shutdown complete", serviceName);
+            logger.info("    ... {} shutdown complete", serviceName);
 
         } catch (InterruptedException e) {
             logger.error("Could not shutdown {} within {} {}", SHUTDOWN_TIMEOUT, SHUTDOWN_TIMEOUT_UNIT);
