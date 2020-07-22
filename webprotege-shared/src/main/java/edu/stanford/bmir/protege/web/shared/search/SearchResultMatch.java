@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  */
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class SearchMatchResult {
+public abstract class SearchResultMatch {
 
     public static final String ENTITY = "entity";
 
@@ -28,11 +28,13 @@ public abstract class SearchMatchResult {
     public static final String POSITIONS = "positions";
 
     @JsonCreator
-    public static SearchMatchResult get(@JsonProperty(ENTITY) @Nonnull OWLEntityData entity,
+    public static SearchResultMatch get(@JsonProperty(ENTITY) @Nonnull OWLEntityData entity,
                                         @JsonProperty(LANGUAGE) @Nonnull DictionaryLanguage matchedDictionaryLanguage,
                                         @JsonProperty(VALUE) @Nonnull String matchedString,
-                                        @JsonProperty(POSITIONS) @Nonnull ImmutableList<SearchMatchPosition> searchMatchPositions) {
-        return new AutoValue_SearchMatchResult(entity, matchedDictionaryLanguage, matchedString, searchMatchPositions);
+                                        @JsonProperty(POSITIONS) @Nonnull ImmutableList<SearchResultMatchPosition> searchResultMatchPositions) {
+        return new AutoValue_SearchResultMatch(entity, matchedDictionaryLanguage,
+                                               matchedString,
+                                               searchResultMatchPositions);
     }
 
     @JsonProperty(ENTITY)
@@ -49,6 +51,6 @@ public abstract class SearchMatchResult {
 
     @JsonProperty(POSITIONS)
     @Nonnull
-    public abstract ImmutableList<SearchMatchPosition> getPositions();
+    public abstract ImmutableList<SearchResultMatchPosition> getPositions();
 
 }

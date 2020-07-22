@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  */
 @GwtCompatible(serializable = true)
 @AutoValue
-public abstract class SearchMatchPosition {
+public abstract class SearchResultMatchPosition {
 
     /**
      * The JSON property name for the match position start
@@ -36,9 +36,9 @@ public abstract class SearchMatchPosition {
      */
     @JsonCreator
     @Nonnull
-    public static SearchMatchPosition get(@JsonProperty(START) int start,
-                                          @JsonProperty(END) int end) {
-        return new AutoValue_SearchMatchPosition(start, end);
+    public static SearchResultMatchPosition get(@JsonProperty(START) int start,
+                                                @JsonProperty(END) int end) {
+        return new AutoValue_SearchResultMatchPosition(start, end);
     }
 
     /**
