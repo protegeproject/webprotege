@@ -128,7 +128,7 @@ public class SearchPresenter implements HasInitialFocusable {
             return;
         }
         Page<EntitySearchResult> results = result.getResults();
-        view.setSearchMatches(result.getTotalResultCount(),
+        view.setSearchMatches((int) results.getTotalElements(),
                               results.getPageElements());
         view.setPageCount(results.getPageCount());
         view.setPageNumber(results.getPageNumber());

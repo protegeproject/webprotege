@@ -60,7 +60,7 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
         int pageCount = (totalSearchResults / pageSize) + 1;
         Page<EntitySearchResult> page = new Page<>(pageNumber > pageCount ? 1 : pageNumber,
                                                    pageCount, results, totalSearchResults);
-        return new PerformEntitySearchResult(searchString, totalSearchResults, page);
+        return PerformEntitySearchResult.get(searchString, page);
     }
 }
 
