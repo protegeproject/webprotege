@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
@@ -23,6 +24,8 @@ public abstract class SearchResultMatch {
 
     public static final String LANGUAGE = "language";
 
+    private static final String LANGUAGE_RENDERING = "languageRendering";
+
     public static final String VALUE = "value";
 
     public static final String POSITIONS = "positions";
@@ -30,9 +33,12 @@ public abstract class SearchResultMatch {
     @JsonCreator
     public static SearchResultMatch get(@JsonProperty(ENTITY) @Nonnull OWLEntityData entity,
                                         @JsonProperty(LANGUAGE) @Nonnull DictionaryLanguage matchedDictionaryLanguage,
+                                        @JsonProperty(LANGUAGE_RENDERING) @Nonnull ImmutableMap<DictionaryLanguage, String> languageRendering,
                                         @JsonProperty(VALUE) @Nonnull String matchedString,
                                         @JsonProperty(POSITIONS) @Nonnull ImmutableList<SearchResultMatchPosition> searchResultMatchPositions) {
-        return new AutoValue_SearchResultMatch(entity, matchedDictionaryLanguage,
+        return new AutoValue_SearchResultMatch(entity,
+                                               matchedDictionaryLanguage,
+                                               languageRendering,
                                                matchedString,
                                                searchResultMatchPositions);
     }
@@ -44,6 +50,10 @@ public abstract class SearchResultMatch {
     @JsonProperty(LANGUAGE)
     @Nonnull
     public abstract DictionaryLanguage getLanguage();
+
+    @JsonProperty(LANGUAGE_RENDERING)
+    @Nonnull
+    public abstract ImmutableMap<DictionaryLanguage, String> getLanguageRendering();
 
     @JsonProperty(VALUE)
     @Nonnull
