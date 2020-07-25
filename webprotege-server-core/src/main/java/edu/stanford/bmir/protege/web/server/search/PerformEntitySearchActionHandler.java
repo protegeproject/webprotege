@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -48,19 +49,11 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
                                                                      searchString,
                                                                      executionContext.getUserId());
         PageRequest pageRequest = action.getPageRequest();
-        int pageSize = pageRequest.getPageSize();
         entitySearcher.setPageRequest(pageRequest);
-
-        int pageNumber = pageRequest.getPageNumber();
-
         entitySearcher.invoke();
 
-        int totalSearchResults = entitySearcher.getSearchResultsCount();
-        List<EntitySearchResult> results = entitySearcher.getResults();
-        int pageCount = (totalSearchResults / pageSize) + 1;
-        Page<EntitySearchResult> page = new Page<>(pageNumber > pageCount ? 1 : pageNumber,
-                                                   pageCount, results, totalSearchResults);
-        return PerformEntitySearchResult.get(searchString, page);
+        Page<EntitySearchResult> results = entitySearcher.getResults();
+        return PerformEntitySearchResult.get(searchString, results);
     }
 }
 

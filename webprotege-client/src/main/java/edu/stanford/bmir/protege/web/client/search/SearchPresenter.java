@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.search;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -17,10 +18,10 @@ import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 
 /**
@@ -57,13 +58,19 @@ public class SearchPresenter implements HasInitialFocusable {
         }
     };
 
+    private final EntitySearchResultPresenterFactory resultPresenterFactory;
+
+    private final List<EntitySearchResultPresenter> resultPresenters = new ArrayList<>();
+
     @Inject
     public SearchPresenter(@Nonnull ProjectId projectId,
                            @Nonnull SearchView view,
-                           @Nonnull DispatchServiceManager dispatchServiceManager) {
+                           @Nonnull DispatchServiceManager dispatchServiceManager,
+                           EntitySearchResultPresenterFactory resultPresenterFactory) {
         this.projectId = projectId;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.resultPresenterFactory = resultPresenterFactory;
     }
 
     public void start() {
@@ -91,7 +98,12 @@ public class SearchPresenter implements HasInitialFocusable {
     }
 
     public Optional<OWLEntityData> getSelectedSearchResult() {
-        return view.getSelectedSearchResult();
+        int selIndex = view.getSelectedSearchResultIndex();
+        if(selIndex == -1) {
+            return Optional.empty();
+        }
+        EntitySearchResultPresenter resultPresenter = resultPresenters.get(selIndex);
+        return Optional.of(resultPresenter.getEntity());
     }
 
     public IsWidget getView() {
@@ -110,7 +122,8 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private void performSearch() {
         if(view.getSearchString().length() <= 1) {
-            view.clearSearchMatches();
+            view.clearEntitySearchResults();
+            resultPresenters.clear();
             return;
         }
         GWT.log("[SearchPresenter] Performing search");
@@ -127,12 +140,23 @@ public class SearchPresenter implements HasInitialFocusable {
         if(!view.getSearchString().equals(result.getSearchString())) {
             return;
         }
-        Page<EntitySearchResult> results = result.getResults();
-        view.setSearchMatches((int) results.getTotalElements(),
-                              results.getPageElements());
-        view.setPageCount(results.getPageCount());
-        view.setPageNumber(results.getPageNumber());
+        resultPresenters.clear();
+        Page<EntitySearchResult> resultsPage = result.getResults();
+        resultsPage.getPageElements()
+               .stream()
+               .map(r -> {
+                   EntitySearchResultPresenter presenter = resultPresenterFactory.create(r);
+                   presenter.start();
+                   return presenter;
+               })
+               .forEach(resultPresenters::add);
+        ImmutableList<EntitySearchResultView> resultViews = resultPresenters.stream()
+                                                                        .map(EntitySearchResultPresenter::getView)
+                                                                        .collect(toImmutableList());
+        view.setEntitySearchResults(resultViews);
+        view.setPageCount(resultsPage.getPageCount());
+        view.setPageNumber(resultsPage.getPageNumber());
+        view.setTotalResultCount(resultsPage.getTotalElements());
     }
-
 
 }

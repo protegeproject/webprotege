@@ -26,9 +26,7 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
-import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
-import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchType;
-import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
+import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
@@ -251,6 +249,12 @@ public class RpcWhiteList implements Action, Result {
     GridColumnDescriptorDto gridColumnDescriptorDto;
 
     OwlSubClassBinding subClassBinding;
+
+    EntitySearchResult entitySearchResult;
+
+    SearchResultMatch searchResultMatch;
+
+    SearchResultMatchPosition searchResultMatchPosition;
 
     public PrimitiveFormControlDataDto getPrimitiveFormControlDataDto() {
         return primitiveFormControlDataDto;

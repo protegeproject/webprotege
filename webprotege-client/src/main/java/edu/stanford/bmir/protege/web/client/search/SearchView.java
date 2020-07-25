@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +22,13 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
 
     void setSearchStringChangedHandler(SearchStringChangedHandler handler);
 
-    void clearSearchMatches();
+    void clearEntitySearchResults();
 
-    void setSearchMatches(int totalSearchResults, List<EntitySearchResult> result);
+    void setEntitySearchResults(@Nonnull List<EntitySearchResultView> resultView);
 
     void setSearchResultChosenHandler(SearchResultChosenHandler handler);
 
-    Optional<OWLEntityData> getSelectedSearchResult();
+    int getSelectedSearchResultIndex();
 
 
 
@@ -39,4 +40,5 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
 
     void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
 
+    void setTotalResultCount(long totalElements);
 }
