@@ -11,6 +11,7 @@
             white-space: nowrap;
             padding: 2px;
             border-bottom: 1px solid literal("var(--separator--color)");
+            cursor: default !important;
         }
         .main:hover {
             background-color: literal("var(--item--hover--background-color)");
