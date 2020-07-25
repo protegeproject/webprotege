@@ -831,8 +831,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String search_hint();
 
     @DefaultMessage(
-            "Separate search words by spaces to perform multi-word search.  Search for tagged entities by " +
-            "entering the name of the tag.")
+            "Separate search words by spaces to perform multi-word search")
     @Key("search.help")
     String search_help();
 
