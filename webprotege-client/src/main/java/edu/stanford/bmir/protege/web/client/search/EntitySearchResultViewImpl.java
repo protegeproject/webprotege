@@ -62,7 +62,9 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
         DisplayNameSettings displayNameSettings = displayNameSettingsManager.getLocalDisplayNameSettings();
         renderer.setDisplayLanguage(displayNameSettings);
         String htmlRendering = renderer.getHtmlRendering(entityNode);
+        String primaryDisplayName = renderer.getPrimaryDisplayName(entityNode);
         entityRenderingField.setHTML(htmlRendering);
+        entityRenderingField.setTitle(primaryDisplayName);
     }
 
     @Override

@@ -110,6 +110,16 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         sb.append("</div>");
     }
 
+    @Nonnull
+    public String getPrimaryDisplayName(@Nonnull EntityNode node) {
+        if(!primaryLanguages.isEmpty()) {
+            return node.getText(primaryLanguages, NO_DISPLAY_NAME);
+        }
+        else {
+            return node.getBrowserText();
+        }
+    }
+
     private void renderPrimaryDisplayName(EntityNode node, StringBuilder sb) {
         if (node.getEntity().isBuiltIn()) {
             sb.append(highlightText(node.getBrowserText()));
