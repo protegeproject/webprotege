@@ -133,7 +133,7 @@ public class EntitySearcher {
     public void invoke() {
         var entityShortFormMatches = dictionaryManager.getShortFormsContaining(searchWords,
                                                                                entityTypes,
-                                                                               languageManager.getActiveLanguages(),
+                                                                               languageManager.getLanguages(),
                                                                                pageRequest);
         results = entityShortFormMatches.transform(matches -> {
             var entity = matches.getEntity();
