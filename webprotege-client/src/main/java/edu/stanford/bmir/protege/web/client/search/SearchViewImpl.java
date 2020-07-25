@@ -72,6 +72,11 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
         this.paginatorPresenter = paginatorPresenter;
         paginator = paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
+        Element element = searchStringField.getElement();
+        element.setPropertyString("autocomplete", "off");
+        element.setPropertyString("autocorrect", "off");
+        element.setPropertyString("autocapitalize", "off");
+        element.setPropertyString("spellcheck", "off");
     }
 
     @Override
