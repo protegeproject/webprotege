@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.*;
@@ -120,28 +121,33 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     @Override
     public Document getLuceneDocument(@Nonnull OWLEntity entity) {
         var entityType = entity.getEntityType().getName();
-        var iri = entity.getIRI().toString();
+        IRI entityIri = entity.getIRI();
+        var iri = entityIri.toString();
         var document = new Document();
         document.add(new StringField(EntityDocumentFieldNames.ENTITY_TYPE, entityType, Field.Store.YES));
         document.add(new StringField(EntityDocumentFieldNames.IRI, iri, Field.Store.YES));
 
 
-        var entityIri = entity.getIRI();
         var entityIriPrefix = entityIri.getNamespace();
         var prefixName = builtInPrefixDeclarationsByPrefix.get(entityIriPrefix);
         if(prefixName != null) {
             var prefixedName = prefixName + entityIri.getFragment();
-            System.out.println(prefixedName);
             var localNameDictionaryLanguge = DictionaryLanguage.localName();
             addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, prefixedName);
         }
         else {
             var localNameDictionaryLanguge = DictionaryLanguage.localName();
-            var localName = localNameExtractor.getLocalName(entity.getIRI());
-            addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, localName);
+            var oboId = OboId.getOboId(entityIri);
+            if(oboId.isPresent()) {
+                addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, oboId.get());
+            }
+            else {
+                var localName = localNameExtractor.getLocalName(entityIri);
+                addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, localName);
+            }
         }
 
-        annotationAssertionsIndex.getAnnotationAssertionAxioms(entity.getIRI())
+        annotationAssertionsIndex.getAnnotationAssertionAxioms(entityIri)
                               .filter(ax -> ax.getValue() instanceof OWLLiteral)
                               .flatMap(this::toFields)
                               .forEach(document::add);
