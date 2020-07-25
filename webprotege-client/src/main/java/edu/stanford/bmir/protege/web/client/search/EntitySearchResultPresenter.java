@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 
 import javax.annotation.Nonnull;
@@ -13,6 +14,7 @@ import javax.inject.Provider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -51,8 +53,14 @@ public class EntitySearchResultPresenter {
               })
               .map(SearchResultMatchPresenter::getView)
               .collect(toImmutableList());
-        this.view.setEntity(result.getEntity());
+        OWLEntityData entity = result.getEntity();
+        this.view.setEntity(entity);
         this.view.setResultMatchViews(views);
+        Optional<String> oboId = OboId.getOboId(entity.getEntity().getIRI());
+        oboId.ifPresent(view::setOboId);
+        if(!oboId.isPresent()) {
+            view.clearOboId();
+        }
     }
 
     @Nonnull

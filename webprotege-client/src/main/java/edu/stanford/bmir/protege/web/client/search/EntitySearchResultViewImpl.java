@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -40,6 +37,8 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
 
     @UiField
     HTML entityRenderingField;
+    @UiField
+    Label oboIdField;
 
     @Nonnull
     private final EntityNodeHtmlRenderer renderer;
@@ -71,5 +70,17 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
     public void setResultMatchViews(@Nonnull ImmutableList<SearchResultMatchView> views) {
         matchesContainer.clear();
         views.forEach(view -> matchesContainer.add(view));
+    }
+
+    @Override
+    public void clearOboId() {
+        oboIdField.setText("");
+        oboIdField.setVisible(false);
+    }
+
+    @Override
+    public void setOboId(@Nonnull String oboId) {
+        oboIdField.setText(oboId);
+        oboIdField.setVisible(true);
     }
 }

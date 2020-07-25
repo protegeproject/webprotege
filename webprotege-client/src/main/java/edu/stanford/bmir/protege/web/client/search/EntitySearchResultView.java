@@ -16,4 +16,8 @@ public interface EntitySearchResultView extends IsWidget {
     void setEntity(@Nonnull OWLEntityData entity);
 
     void setResultMatchViews(@Nonnull ImmutableList<SearchResultMatchView> views);
+
+    void clearOboId();
+
+    void setOboId(@Nonnull String oboId);
 }

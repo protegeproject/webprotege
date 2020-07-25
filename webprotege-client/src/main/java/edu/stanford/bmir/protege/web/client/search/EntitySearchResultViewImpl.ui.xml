@@ -5,7 +5,7 @@
         @external .searchedIri;
         .main {
             display: flex;
-            align-items: center;
+            align-items: start;
             flex-direction: row;
             font-size: 12px;
             white-space: nowrap;
@@ -17,12 +17,18 @@
             background-color: literal("var(--item--hover--background-color)");
         }
         .entityRendering {
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
             flex-grow: 0;
             flex-shrink: 0;
             flex-basis: 180px;
             overflow: hidden;
             margin-right: 0.5em;
+        }
+        .oboIdField {
+            color: literal("var(--tertiary--color)");
+            margin-left: 18px;
+            margin-top: 2px;
         }
         .main .searchedIri {
             color: literal("var(--secondary--color)") !important;
@@ -39,7 +45,10 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTML ui:field="entityRenderingField" addStyleNames="{style.entityRendering}"/>
+        <g:HTMLPanel addStyleNames="{style.entityRendering}">
+            <g:HTML ui:field="entityRenderingField"/>
+            <g:Label ui:field="oboIdField" text="OBO:Id" addStyleNames="{style.oboIdField}"/>
+        </g:HTMLPanel>
         <g:HTMLPanel ui:field="matchesContainer" addStyleNames="{style.matchesContainer}">
         </g:HTMLPanel>
     </g:HTMLPanel>
