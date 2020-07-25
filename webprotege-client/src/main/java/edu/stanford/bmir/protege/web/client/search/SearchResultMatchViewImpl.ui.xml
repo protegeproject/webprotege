@@ -17,7 +17,7 @@
             color: literal("var(--tertiary--color)");
             flex-grow: 0;
             flex-shrink: 0;
-            flex-basis: 80px;
+            flex-basis: 90px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
