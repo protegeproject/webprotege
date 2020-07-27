@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -12,6 +12,33 @@ import java.util.stream.Stream;
  */
 public interface BuiltInEntitiesIndex {
 
+    /**
+     * Gets all of the builtin entities
+     */
     @Nonnull
     Stream<OWLEntity> getBuiltInEntities();
+
+    /**
+     * Gets the annotation properties in this builtin vocabulary
+     */
+    @Nonnull
+    Stream<OWLAnnotationProperty> getAnnotationProperties();
+
+    /**
+     * Gets the classes in this builtin vocabulary
+     */
+    @Nonnull
+    Stream<OWLClass> getClasses();
+
+    /**
+     * Gets the object properties in this builtin vocabulary
+     */
+    @Nonnull
+    Stream<OWLObjectProperty> getObjectProperties();
+
+    /**
+     * Gets the data properties in this builtin vocabulary
+     */
+    @Nonnull
+    Stream<OWLDataProperty> getDataProperties();
 }

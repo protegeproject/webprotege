@@ -1,14 +1,14 @@
 package edu.stanford.bmir.protege.web.server.index;
 
 import com.google.common.collect.ImmutableSet;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.stream.Stream;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -17,18 +17,38 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class BuiltInOwlEntitiesIndexImpl implements BuiltInOwlEntitiesIndex {
 
+
+    @Nonnull
+    private final ImmutableSet<OWLClass> classes;
+
+    @Nonnull
+    private final ImmutableSet<OWLObjectProperty> objectProperties;
+
+    @Nonnull
+    private final ImmutableSet<OWLDataProperty> dataProperties;
+
+    @Nonnull
+    private final ImmutableSet<OWLAnnotationProperty> annotationProperties;
+
+
     @Nonnull
     private final ImmutableSet<OWLEntity> builtInEntities;
 
     @Inject
     public BuiltInOwlEntitiesIndexImpl(@Nonnull OWLDataFactory dataFactory) {
-        builtInEntities = ImmutableSet.of(
+        classes = ImmutableSet.of(
                 dataFactory.getOWLThing(),
-                dataFactory.getOWLNothing(),
+                dataFactory.getOWLNothing()
+        );
+        objectProperties = ImmutableSet.of(
                 dataFactory.getOWLTopObjectProperty(),
-                dataFactory.getOWLBottomObjectProperty(),
+                dataFactory.getOWLBottomObjectProperty()
+        );
+        dataProperties = ImmutableSet.of(
                 dataFactory.getOWLTopDataProperty(),
-                dataFactory.getOWLBottomDataProperty(),
+                dataFactory.getOWLBottomDataProperty()
+        );
+        annotationProperties = ImmutableSet.of(
                 dataFactory.getRDFSLabel(),
                 dataFactory.getRDFSComment(),
                 dataFactory.getRDFSIsDefinedBy(),
@@ -36,11 +56,39 @@ public class BuiltInOwlEntitiesIndexImpl implements BuiltInOwlEntitiesIndex {
                 dataFactory.getOWLBackwardCompatibleWith(),
                 dataFactory.getOWLIncompatibleWith()
         );
+        builtInEntities = ImmutableSet.of(classes, objectProperties, dataProperties, annotationProperties)
+                .stream()
+                .flatMap(Collection::stream)
+                .collect(toImmutableSet());
     }
 
     @Nonnull
     @Override
     public Stream<OWLEntity> getBuiltInEntities() {
         return builtInEntities.stream();
+    }
+
+    @Nonnull
+    @Override
+    public Stream<OWLAnnotationProperty> getAnnotationProperties() {
+        return annotationProperties.stream();
+    }
+
+    @Nonnull
+    @Override
+    public Stream<OWLClass> getClasses() {
+        return classes.stream();
+    }
+
+    @Nonnull
+    @Override
+    public Stream<OWLObjectProperty> getObjectProperties() {
+        return objectProperties.stream();
+    }
+
+    @Nonnull
+    @Override
+    public Stream<OWLDataProperty> getDataProperties() {
+        return dataProperties.stream();
     }
 }
