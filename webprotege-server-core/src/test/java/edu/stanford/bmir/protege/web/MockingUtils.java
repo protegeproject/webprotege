@@ -49,6 +49,10 @@ public class MockingUtils {
         return new OWLNamedIndividualImpl(mockIRI());
     }
 
+    public static OWLDatatype mockOWLDatatype() {
+        return new OWLDatatypeImpl(mockIRI());
+    }
+
     public HasSignature mockHasSignature(OWLEntity ... entities) {
         HasSignature hasSignature = mock(HasSignature.class);
         when(hasSignature.getSignature()).thenReturn(new HashSet<OWLEntity>(Arrays.asList(entities)));
