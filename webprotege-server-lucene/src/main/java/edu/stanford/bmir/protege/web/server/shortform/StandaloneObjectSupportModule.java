@@ -3,10 +3,16 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.collect.ImmutableList;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.index.BuiltInOwlEntitiesIndex;
+import edu.stanford.bmir.protege.web.server.index.BuiltInOwlEntitiesIndexImpl;
+import edu.stanford.bmir.protege.web.server.index.BuiltInSkosEntitiesIndex;
+import edu.stanford.bmir.protege.web.server.index.BuiltInSkosEntitiesIndexImpl;
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+
+import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
@@ -27,4 +33,15 @@ public class StandaloneObjectSupportModule {
         return BuiltInPrefixDeclarations.get(ImmutableList.of());
     }
 
+    @Provides
+    @ProjectSingleton
+    public BuiltInOwlEntitiesIndex provideBuiltInOwlEntitiesIndex(@Nonnull BuiltInOwlEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInSkosEntitiesIndex provideBuiltInSkosEntitiesIndex(@Nonnull BuiltInSkosEntitiesIndexImpl impl) {
+        return impl;
+    }
 }

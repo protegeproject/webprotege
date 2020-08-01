@@ -422,4 +422,16 @@ public class IndexModule {
     UpdatableIndex provideProjectOntologiesIndexIntoSet(ProjectOntologiesIndexImpl impl) {
         return impl;
     }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInOwlEntitiesIndex provideBuiltInOwlEntitiesIndex(@Nonnull BuiltInOwlEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInSkosEntitiesIndex provideBuiltInSkosEntitiesIndex(@Nonnull BuiltInSkosEntitiesIndexImpl impl) {
+        return impl;
+    }
 }

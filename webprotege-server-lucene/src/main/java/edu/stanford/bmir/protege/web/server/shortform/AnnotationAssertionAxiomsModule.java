@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 /**
@@ -16,16 +13,18 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 @Module
 public class AnnotationAssertionAxiomsModule {
 
-    private ProjectOntologiesIndex projectOntologiesIndex;
-
     private ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex;
 
     private ProjectSignatureIndex provideProjectSignatureIndex;
 
+    private EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex;
+
     public AnnotationAssertionAxiomsModule(ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex,
-                                           ProjectSignatureIndex provideProjectSignatureIndex) {
+                                           ProjectSignatureIndex provideProjectSignatureIndex,
+                                           EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex) {
         this.annotationAssertionAxiomsBySubjectIndex = annotationAssertionAxiomsBySubjectIndex;
         this.provideProjectSignatureIndex = provideProjectSignatureIndex;
+        this.entitiesInProjectSignatureIndex = entitiesInProjectSignatureIndex;
     }
 
     @Provides
@@ -40,5 +39,9 @@ public class AnnotationAssertionAxiomsModule {
         return provideProjectSignatureIndex;
     }
 
-
+    @Provides
+    @ProjectSingleton
+    public EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndex() {
+        return entitiesInProjectSignatureIndex;
+    }
 }

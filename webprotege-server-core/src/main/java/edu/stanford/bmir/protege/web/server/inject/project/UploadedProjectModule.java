@@ -236,4 +236,27 @@ public class UploadedProjectModule {
     BuiltInPrefixDeclarations provideBuiltInPrefixDeclarations() {
         return BuiltInPrefixDeclarations.get(ImmutableList.of());
     }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInOwlEntitiesIndex provideBuiltInOwlEntitiesIndex(@Nonnull BuiltInOwlEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInSkosEntitiesIndex provideBuiltInSkosEntitiesIndex(@Nonnull BuiltInSkosEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndex() {
+        return new EntitiesInProjectSignatureIndex() {
+            @Override
+            public boolean containsEntityInSignature(@Nonnull OWLEntity entity) {
+                return false;
+            }
+        };
+    }
 }
