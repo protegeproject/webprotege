@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 
 /**
  * Matthew Horridge
@@ -43,5 +44,11 @@ public class StandaloneObjectSupportModule {
     @ProjectSingleton
     public BuiltInSkosEntitiesIndex provideBuiltInSkosEntitiesIndex(@Nonnull BuiltInSkosEntitiesIndexImpl impl) {
         return impl;
+    }
+
+    @Provides
+    @LuceneIndexesDirectory
+    Path provideLuceneIndexesDirectory() {
+        return Path.of("/tmp", "lucene");
     }
 }

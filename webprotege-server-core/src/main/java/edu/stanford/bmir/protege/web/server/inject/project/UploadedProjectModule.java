@@ -6,7 +6,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegePropertiesProvider;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
@@ -14,6 +17,7 @@ import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.shortform.AnnotationAssertionAxiomsModule;
+import edu.stanford.bmir.protege.web.server.shortform.LuceneIndexesDirectory;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneModule;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -24,6 +28,7 @@ import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -258,5 +263,16 @@ public class UploadedProjectModule {
                 return false;
             }
         };
+    }
+
+    @Provides
+    WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider protegePropertiesProvider) {
+        return protegePropertiesProvider.get();
+    }
+
+    @Provides
+    @LuceneIndexesDirectory
+    Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
+        return dataDirectoryProvider.get().toPath().resolve("lucene-indexes");
     }
 }

@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.inject.ShortFormModule;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
@@ -66,6 +67,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -690,6 +692,14 @@ public class ProjectModule {
     @Provides
     ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
         return impl;
+    }
+
+    @Provides
+    @LuceneIndexesDirectory
+    Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
+        var dataDirectory = dataDirectoryProvider.get().toPath();
+        return dataDirectory.resolve("lucene-indexes");
+
     }
 }
 
