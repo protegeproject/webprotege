@@ -132,8 +132,8 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         var prefixName = builtInPrefixDeclarationsByPrefix.get(entityIriPrefix);
         if(prefixName != null) {
             var prefixedName = prefixName + entityIri.getFragment();
-            var localNameDictionaryLanguge = DictionaryLanguage.localName();
-            addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, prefixedName);
+            var localNameDictionaryLanguage = DictionaryLanguage.localName();
+            addFieldForDictionaryLanguage(document, localNameDictionaryLanguage, prefixedName);
         }
         else {
             var localNameDictionaryLanguge = DictionaryLanguage.localName();
