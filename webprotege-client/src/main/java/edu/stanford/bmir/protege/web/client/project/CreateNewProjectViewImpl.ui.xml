@@ -38,6 +38,7 @@
                     <g:FileUpload ui:field="fileUpload"/>
                 </g:FormPanel>
             </g:HTMLPanel>
+            <label class="{wp.style.formHelpText} {style.helpText}"><ui:safehtml from="{msg.projectSettings_owl_import_helpText}"/></label>
         </g:HTMLPanel>
 
     </g:HTMLPanel>
