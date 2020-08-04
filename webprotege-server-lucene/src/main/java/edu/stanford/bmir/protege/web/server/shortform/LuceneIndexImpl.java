@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.index.DeprecatedEntitiesByEntityIndex;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -23,8 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /**
  * Matthew Horridge
@@ -176,6 +176,4 @@ public class LuceneIndexImpl implements LuceneIndex {
             throw new UncheckedIOException(e);
         }
     }
-
-
 }
