@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.FlattenGraphFilterFactory;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.core.StopFilterFactory;
+import org.apache.lucene.analysis.core.WhitespaceTokenizerFactory;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilterFactory;
 import org.apache.lucene.analysis.ngram.EdgeNGramTokenizerFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 
@@ -28,7 +31,9 @@ public class QueryAnalyzerFactory {
     public Analyzer get() {
         try {
             return CustomAnalyzer.builder()
-                                 .withTokenizer(StandardTokenizerFactory.NAME)
+                                 .withTokenizer(WhitespaceTokenizerFactory.NAME)
+                                 .addTokenFilter(WordDelimiterGraphFilterFactory.NAME)
+                                 .addTokenFilter(FlattenGraphFilterFactory.NAME)
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)
                                  .build();

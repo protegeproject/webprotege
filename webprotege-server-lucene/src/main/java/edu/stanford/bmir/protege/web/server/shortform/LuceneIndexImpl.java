@@ -18,10 +18,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,20 +45,25 @@ public class LuceneIndexImpl implements LuceneIndex {
     private final SearcherManager searcherManager;
 
     @Nonnull
-    private final LuceneQueryParserFactory queryParserFactory;
+    private final LuceneQueryFactory queryFactory;
 
     @Nonnull
     private final LuceneShortFormMatcher luceneShortFormMatcher;
 
+    @Nonnull
+    private final QueryAnalyzerFactory queryAnalyzerFactory;
+
     @Inject
     public LuceneIndexImpl(@Nonnull LuceneEntityDocumentTranslator luceneEntityDocumentTranslator,
                            @Nonnull SearcherManager searcherManager,
-                           @Nonnull LuceneQueryParserFactory queryParserFactory,
-                           @Nonnull LuceneShortFormMatcher luceneShortFormMatcher) {
+                           @Nonnull LuceneQueryFactory queryFactory,
+                           @Nonnull LuceneShortFormMatcher luceneShortFormMatcher,
+                           @Nonnull QueryAnalyzerFactory queryAnalyzerFactory) {
         this.luceneEntityDocumentTranslator = luceneEntityDocumentTranslator;
         this.searcherManager = searcherManager;
-        this.queryParserFactory = queryParserFactory;
+        this.queryFactory = queryFactory;
         this.luceneShortFormMatcher = luceneShortFormMatcher;
+        this.queryAnalyzerFactory = queryAnalyzerFactory;
     }
 
     @Nonnull
@@ -84,16 +86,15 @@ public class LuceneIndexImpl implements LuceneIndex {
         }
     }
 
-    public Query getQuery(@Nonnull String queryString,
+    public Query getQuery(@Nonnull List<SearchString> searchStrings,
                           @Nonnull List<DictionaryLanguage> languages,
                           boolean exact) throws ParseException {
+
         if (!exact) {
-            var queryParser = queryParserFactory.createQueryParser(languages);
-            return queryParser.parse(queryString);
+            return queryFactory.createQuery(searchStrings, languages);
         }
         else {
-            var queryParser = queryParserFactory.createQueryParserForExactOriginalMatch(languages);
-            return queryParser.parse(queryString);
+            return queryFactory.createQueryForExactOriginalMatch(searchStrings, languages);
         }
     }
 
@@ -107,10 +108,9 @@ public class LuceneIndexImpl implements LuceneIndex {
         try {
 
 
-            var queryString = searchStrings.stream().map(SearchString::getSearchString).collect(joining(" AND "));
 
 
-            var q = getQuery(queryString, dictionaryLanguages, false);
+            var q = getQuery(searchStrings, dictionaryLanguages, false);
             var queryBuilder = new BooleanQuery.Builder();
             queryBuilder.add(q, BooleanClause.Occur.MUST);
 
@@ -125,7 +125,6 @@ public class LuceneIndexImpl implements LuceneIndex {
                 queryBuilder.add(typeQuery, BooleanClause.Occur.MUST);
             }
             var query = queryBuilder.build();
-            logger.info("Query: {}", query);
 
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
             var languagesSet = ImmutableSet.copyOf(dictionaryLanguages);
@@ -146,7 +145,8 @@ public class LuceneIndexImpl implements LuceneIndex {
     @Override
     public Stream<OWLEntity> findEntities(String shortForm,
                                           List<DictionaryLanguage> languages) throws ParseException, IOException {
-        var query = getQuery(shortForm, languages, true);
+        var searchStrings = SearchString.parseSearchString(shortForm);
+        var query = getQuery(Collections.singletonList(searchStrings), languages, true);
         var indexSearcher = searcherManager.acquire();
         try {
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);

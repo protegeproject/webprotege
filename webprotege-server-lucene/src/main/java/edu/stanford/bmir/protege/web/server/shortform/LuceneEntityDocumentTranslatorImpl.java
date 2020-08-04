@@ -158,7 +158,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         var localNameFieldNameAnalyzed = fieldNameTranslator.getAnalyzedValueFieldName(language);
         document.add(new TextField(localNameFieldNameAnalyzed, value, Field.Store.YES));
         var localNameFieldOriginal = fieldNameTranslator.getOriginalValueFieldName(language);
-        document.add(new StringField(localNameFieldOriginal, value, Field.Store.YES));
+        document.add(new TextField(localNameFieldOriginal, value, Field.Store.YES));
     }
 
     @Override
