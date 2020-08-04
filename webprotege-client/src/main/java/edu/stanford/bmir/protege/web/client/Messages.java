@@ -723,6 +723,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.language.helpText")
     SafeHtml projectSettings_language_helpText();
 
+    @DefaultMessage("Any owl:import that cannot be loaded will be silently ignored")
+    @Key("projectSettings.owlimport.helpText")
+    SafeHtml projectSettings_owl_import_helpText();
+
     
     @DefaultMessage("Display name")
     @Key("projectSettings.displayName")

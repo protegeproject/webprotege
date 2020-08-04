@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.project.RawProjectSourcesImporter;
 import edu.stanford.bmir.protege.web.server.project.UploadedProjectSourcesExtractor;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
@@ -50,7 +51,9 @@ public class UploadedOntologiesProcessor {
         var uploadedFile = documentResolver.resolve(documentId).toFile();
         var uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractorProvider.get();
         var rawProjectSources = uploadedProjectSourcesExtractor.extractProjectSources(uploadedFile);
-        var loaderConfig = new OWLOntologyLoaderConfiguration();
+        var loaderConfig = new OWLOntologyLoaderConfiguration()
+                // See https://github.com/protegeproject/webprotege/issues/700
+                .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
         var rawProjectSourcesImporter = new RawProjectSourcesImporter(manager, loaderConfig);
         rawProjectSourcesImporter.importRawProjectSources(rawProjectSources);
         return manager.getOntologies()
