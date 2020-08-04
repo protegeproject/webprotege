@@ -30,7 +30,7 @@ public class IndexingAnalyzerWrapper_TestCase {
     @Test
     public void shouldSplitPrefixedNames() throws IOException {
         assertHasTokens("rdfs:label",
-                        "rd", "rdf", "rdfs", "la", "lab", "labe", "label");
+                        "rd", "rdf", "rdfs", "la", "lab", "labe", "label", "rdfslabel");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class IndexingAnalyzerWrapper_TestCase {
     @Test
     public void shouldTokenizeCamelCase() throws IOException {
         assertHasTokens("hasPart",
-                        "ha", "has", "pa", "par", "part");
+                        "ha", "has", "pa", "par", "part", "haspart");
     }
 
     @Test
@@ -53,14 +53,15 @@ public class IndexingAnalyzerWrapper_TestCase {
     }
 
     @Test
-    public void shouldTokenizeAroundHyphes() throws IOException {
+    public void shouldTokenizeAroundHyphens() throws IOException {
         assertHasTokens("Non-Polar",
                         "no",
                         "non",
                         "po",
                         "pol",
                         "pola",
-                        "polar");
+                        "polar",
+                        "nonpolar");
     }
 
     @Test
@@ -71,7 +72,8 @@ public class IndexingAnalyzerWrapper_TestCase {
                         "po",
                         "pol",
                         "pola",
-                        "polar");
+                        "polar",
+                        "nonpolar");
     }
 
     @Test

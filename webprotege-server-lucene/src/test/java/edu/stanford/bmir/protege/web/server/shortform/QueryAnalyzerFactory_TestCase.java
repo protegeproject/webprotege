@@ -26,7 +26,8 @@ public class QueryAnalyzerFactory_TestCase {
     public void shouldSearchPrefixNames() throws IOException {
         assertHasTokens("rdfs:label",
                         "rdfs",
-                        "label");
+                        "label",
+                        "rdfslabel");
     }
 
     @Test
@@ -40,6 +41,22 @@ public class QueryAnalyzerFactory_TestCase {
     public void shouldSearchDiacritics() throws IOException {
         assertHasTokens("Protégé",
                         "protege");
+    }
+
+    @Test
+    public void shouldSearchHyphens() throws IOException {
+        assertHasTokens("Non-Polar",
+                        "non",
+                        "polar",
+                        "nonpolar");
+    }
+
+    @Test
+    public void shouldSearchUnderscores() throws IOException {
+        assertHasTokens("Non_Polar",
+                        "non",
+                        "polar",
+                        "nonpolar");
     }
 
     private void assertHasTokens(String fieldValue,

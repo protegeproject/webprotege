@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.FlattenGraphFilterFactory;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
@@ -7,6 +8,7 @@ import org.apache.lucene.analysis.core.StopFilterFactory;
 import org.apache.lucene.analysis.core.WhitespaceTokenizerFactory;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter;
 import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilterFactory;
 import org.apache.lucene.analysis.ngram.EdgeNGramTokenizerFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
@@ -15,6 +17,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Map;
 
 /**
  * Matthew Horridge
@@ -32,7 +35,8 @@ public class QueryAnalyzerFactory {
         try {
             return CustomAnalyzer.builder()
                                  .withTokenizer(WhitespaceTokenizerFactory.NAME)
-                                 .addTokenFilter(WordDelimiterGraphFilterFactory.NAME)
+                                 .addTokenFilter(WordDelimiterGraphFilterFactory.NAME,
+                                                 "catenateWords", "1")
                                  .addTokenFilter(FlattenGraphFilterFactory.NAME)
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)

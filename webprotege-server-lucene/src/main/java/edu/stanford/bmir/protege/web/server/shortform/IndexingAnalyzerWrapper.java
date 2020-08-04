@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.DelegatingAnalyzerWrapper;
-import org.apache.lucene.analysis.core.FlattenGraphFilterFactory;
-import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
-import org.apache.lucene.analysis.core.LetterTokenizerFactory;
-import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.*;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilterFactory;
@@ -59,8 +56,12 @@ public class IndexingAnalyzerWrapper extends DelegatingAnalyzerWrapper {
     private Analyzer createAnalyzer() {
         try {
             return CustomAnalyzer.builder()
-                                 .withTokenizer(StandardTokenizerFactory.NAME)
-                                 .addTokenFilter(WordDelimiterGraphFilterFactory.class)
+                                 /// Use whitespace tokenizer here because we use the
+                                 // @{WordDelimiterGraphFilterFactory}.  See the javadoc
+                                 // for this class
+                                 .withTokenizer(WhitespaceTokenizerFactory.NAME)
+                                 .addTokenFilter(WordDelimiterGraphFilterFactory.NAME,
+                                                 "catenateWords", "1")
                                  .addTokenFilter(FlattenGraphFilterFactory.class)
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)
