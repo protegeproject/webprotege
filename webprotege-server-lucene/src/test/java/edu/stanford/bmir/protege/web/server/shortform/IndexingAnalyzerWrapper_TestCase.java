@@ -53,6 +53,28 @@ public class IndexingAnalyzerWrapper_TestCase {
     }
 
     @Test
+    public void shouldTokenizeAroundHyphes() throws IOException {
+        assertHasTokens("Non-Polar",
+                        "no",
+                        "non",
+                        "po",
+                        "pol",
+                        "pola",
+                        "polar");
+    }
+
+    @Test
+    public void shouldTokenizeAroundUnderscors() throws IOException {
+        assertHasTokens("Non_Polar",
+                        "no",
+                        "non",
+                        "po",
+                        "pol",
+                        "pola",
+                        "polar");
+    }
+
+    @Test
     public void shouldAddLongTokens() throws IOException {
         String longFieldValue = "thisisalongtokenwithmorethantwentycharacters";
         assertHasTokens(longFieldValue,
