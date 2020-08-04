@@ -1,30 +1,34 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.server.index.DeprecatedEntitiesByEntityIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.*;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.*;
 
 /**
  * Matthew Horridge
@@ -62,9 +66,10 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
 
     private static ImmutableMap<String, String> getPrefixDeclarationsByPrefix(@Nonnull BuiltInPrefixDeclarations builtInPrefixDeclarations) {
         return builtInPrefixDeclarations.getPrefixDeclarations()
-                                 .stream()
-                                 .collect(toImmutableMap(PrefixDeclaration::getPrefix, PrefixDeclaration::getPrefixName,
-                                                         (leftPrefixDecl, rightPrefixDecl) -> rightPrefixDecl));
+                                        .stream()
+                                        .collect(toImmutableMap(PrefixDeclaration::getPrefix,
+                                                                PrefixDeclaration::getPrefixName,
+                                                                (leftPrefixDecl, rightPrefixDecl) -> rightPrefixDecl));
     }
 
     @Nonnull
@@ -101,9 +106,9 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
                                                 @Nonnull List<DictionaryLanguage> dictionaryLanguages) {
         var entity = getEntity(document);
         var shortForms = ImmutableMap.<DictionaryLanguage, String>builder();
-        for(var dictionaryLanguage : dictionaryLanguages) {
+        for (var dictionaryLanguage : dictionaryLanguages) {
             var shortForm = getShortForm(document, dictionaryLanguage);
-            if(shortForm != null) {
+            if (shortForm != null) {
                 shortForms.put(dictionaryLanguage, shortForm);
             }
         }
@@ -111,8 +116,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     }
 
     @Nullable
-    private String getShortForm(@Nonnull Document document,
-                                @Nonnull DictionaryLanguage dictionaryLanguage) {
+    private String getShortForm(@Nonnull Document document, @Nonnull DictionaryLanguage dictionaryLanguage) {
         var fieldName = fieldNameTranslator.getOriginalValueFieldName(dictionaryLanguage);
         return document.get(fieldName);
     }
@@ -124,13 +128,17 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         IRI entityIri = entity.getIRI();
         var iri = entityIri.toString();
         var document = new Document();
+        // Entity Type
         document.add(new StringField(EntityDocumentFieldNames.ENTITY_TYPE, entityType, Field.Store.YES));
+        // Entity IRI
         document.add(new StringField(EntityDocumentFieldNames.IRI, iri, Field.Store.YES));
 
+        var builtIn = entity.isBuiltIn() ? BUILT_IN_TRUE : BUILT_IN_FALSE;
+        document.add(new StringField(EntityDocumentFieldNames.BUILT_IN, builtIn, Field.Store.NO));
 
         var entityIriPrefix = entityIri.getNamespace();
         var prefixName = builtInPrefixDeclarationsByPrefix.get(entityIriPrefix);
-        if(prefixName != null) {
+        if (prefixName != null) {
             var prefixedName = prefixName + entityIri.getFragment();
             var localNameDictionaryLanguage = DictionaryLanguage.localName();
             addFieldForDictionaryLanguage(document, localNameDictionaryLanguage, prefixedName);
@@ -138,7 +146,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         else {
             var localNameDictionaryLanguge = DictionaryLanguage.localName();
             var oboId = OboId.getOboId(entityIri);
-            if(oboId.isPresent()) {
+            if (oboId.isPresent()) {
                 addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, oboId.get());
             }
             else {
@@ -147,10 +155,23 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
             }
         }
 
+        var deprecatedAssertions = new ArrayList<OWLAnnotationAssertionAxiom>();
         annotationAssertionsIndex.getAnnotationAssertionAxioms(entityIri)
-                              .filter(ax -> ax.getValue() instanceof OWLLiteral)
-                              .flatMap(this::toFields)
-                              .forEach(document::add);
+                                 .filter(ax -> ax.getValue() instanceof OWLLiteral)
+                                 .forEach(ax -> {
+                                     toFields(ax).forEach(document::add);
+                                     if(ax.isDeprecatedIRIAssertion()) {
+                                         deprecatedAssertions.add(ax);
+                                     }
+                                 });
+
+        // Special treatment for deprecated to allow search filtering
+
+        var deprecated = !deprecatedAssertions.isEmpty();
+        var deprecatedFieldValue = deprecated ? DEPRECATED_TRUE : DEPRECATED_FALSE;
+        document.add(new StringField(EntityDocumentFieldNames.DEPRECATED, deprecatedFieldValue, Field.Store.NO));
+
+
         return document;
     }
 
@@ -165,11 +186,11 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     @Nonnull
     public Query getEntityDocumentQuery(@Nonnull OWLEntity entity) {
         var iriQuery = new TermQuery(new Term(EntityDocumentFieldNames.IRI, entity.getIRI().toString()));
-        var typeQuery = new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE, entity.getEntityType().toString()));
-        return new BooleanQuery.Builder()
-                .add(iriQuery, BooleanClause.Occur.MUST)
-                .add(typeQuery, BooleanClause.Occur.MUST)
-                .build();
+        var typeQuery = new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE,
+                                               entity.getEntityType().toString()));
+        return new BooleanQuery.Builder().add(iriQuery, BooleanClause.Occur.MUST)
+                                         .add(typeQuery, BooleanClause.Occur.MUST)
+                                         .build();
     }
 
     private Stream<Field> toFields(OWLAnnotationAssertionAxiom ax) {
@@ -185,7 +206,6 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         var wordFieldName = fieldNameTranslator.getAnalyzedValueFieldName(dictionaryLanguage);
         var wordField = new TextField(wordFieldName, lexicalValue, Field.Store.NO);
 
-        return Stream.of(wordField,
-                         valueField);
+        return Stream.of(wordField, valueField);
     }
 }

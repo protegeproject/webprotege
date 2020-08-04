@@ -9,11 +9,21 @@ import javax.annotation.Nonnull;
  */
 public interface EntityDocumentFieldNames {
 
-    @Nonnull
     String ENTITY_TYPE = "entityType";
 
-    @Nonnull
     String IRI = "iri";
+
+    String BUILT_IN = "builtIn";
+
+    String BUILT_IN_TRUE = "true";
+
+    String BUILT_IN_FALSE = "false";
+
+    String DEPRECATED = "deprecated";
+
+    String DEPRECATED_TRUE = "true";
+
+    String DEPRECATED_FALSE = "false";
 
     String VALUE_FIELD_PREFIX = "value.";
 
