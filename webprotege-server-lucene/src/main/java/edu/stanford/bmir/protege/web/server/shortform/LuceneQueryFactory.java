@@ -3,11 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -48,22 +44,33 @@ public class LuceneQueryFactory {
 
     private Stream<String> getTokens(SearchString searchString) {
         try {
-            var tokenStream = queryAnalyzerFactory.get()
-                                // Field name is not relevant
-                                .tokenStream("", searchString.getSearchString());
-            tokenStream.addAttribute(CharTermAttribute.class);
-            tokenStream.reset();
-            var result = new ArrayList<String>();
-            while(tokenStream.incrementToken()) {
-                var termAttr = tokenStream.getAttribute(CharTermAttribute.class);
-                if(termAttr != null) {
-                    result.add(termAttr.toString());
-                }
+            if(isWildCardSearchString(searchString)) {
+                return Stream.of(searchString.getRawSearchString());
             }
-            return result.stream();
+            else {
+                var tokenStream = queryAnalyzerFactory.get()
+                                                      // Field name is not relevant
+                                                      .tokenStream("", searchString.getSearchString());
+                tokenStream.addAttribute(CharTermAttribute.class);
+                tokenStream.reset();
+                var result = new ArrayList<String>();
+                while(tokenStream.incrementToken()) {
+                    var termAttr = tokenStream.getAttribute(CharTermAttribute.class);
+                    if(termAttr != null) {
+                        result.add(termAttr.toString());
+                    }
+                }
+                return result.stream();
+            }
+
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private static boolean isWildCardSearchString(@Nonnull SearchString searchString) {
+        var raw = searchString.getRawSearchString();
+        return raw.contains("*") || raw.contains("?");
     }
 
     @Nonnull
@@ -89,9 +96,7 @@ public class LuceneQueryFactory {
             // Combine for all languages using SHOULD
             outerBooleanQueryBuilder.add(analyzedAndOriginalQuery, BooleanClause.Occur.SHOULD);
         }
-        var query = outerBooleanQueryBuilder.build();
-        System.out.println(query);
-        return query;
+        return outerBooleanQueryBuilder.build();
     }
 
     private BooleanQuery buildAnalyzedFieldBooleanQuery(List<SearchString> searchStrings, DictionaryLanguage lang) {
@@ -100,7 +105,12 @@ public class LuceneQueryFactory {
             // Analyzed - MUST occur
             var analyzedFieldName = fieldNameTranslator.getAnalyzedValueFieldName(lang);
             var searchStringTerm = new Term(analyzedFieldName, searchString);
-            mustOccurBuilder.add(new TermQuery(searchStringTerm), BooleanClause.Occur.MUST);
+            if(searchString.contains("*") || searchString.contains("?")) {
+                mustOccurBuilder.add(new WildcardQuery(searchStringTerm), BooleanClause.Occur.MUST);
+            }
+            else {
+                mustOccurBuilder.add(new TermQuery(searchStringTerm), BooleanClause.Occur.MUST);
+            }
         }
         return mustOccurBuilder.build();
     }
