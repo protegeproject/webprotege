@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Query;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -28,4 +29,7 @@ public interface LuceneEntityDocumentTranslator {
 
     @Nonnull
     Query getEntityDocumentQuery(@Nonnull OWLEntity entity);
+
+    @Nonnull
+    Query getEntityTypeDocumentQuery(@Nonnull EntityType<?> entityType);
 }

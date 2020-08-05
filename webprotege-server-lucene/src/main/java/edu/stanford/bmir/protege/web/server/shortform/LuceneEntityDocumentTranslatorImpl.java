@@ -1,21 +1,18 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.server.index.DeprecatedEntitiesByEntityIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.*;
-import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -186,11 +183,16 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     @Nonnull
     public Query getEntityDocumentQuery(@Nonnull OWLEntity entity) {
         var iriQuery = new TermQuery(new Term(EntityDocumentFieldNames.IRI, entity.getIRI().toString()));
-        var typeQuery = new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE,
-                                               entity.getEntityType().toString()));
+        var typeQuery = getEntityTypeDocumentQuery(entity.getEntityType());
         return new BooleanQuery.Builder().add(iriQuery, BooleanClause.Occur.MUST)
                                          .add(typeQuery, BooleanClause.Occur.MUST)
                                          .build();
+    }
+
+    @Nonnull
+    public Query getEntityTypeDocumentQuery(@Nonnull EntityType<?> entityType) {
+        return new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE,
+                                      entityType.toString()));
     }
 
     private Stream<Field> toFields(OWLAnnotationAssertionAxiom ax) {
