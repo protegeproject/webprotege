@@ -9,24 +9,28 @@ import javax.annotation.Nonnull;
  */
 public interface DictionaryLanguageVisitor<R> {
 
-    default R visit(@Nonnull LocalNameDictionaryLanguage language) {
+    default R getDefault() {
         return null;
+    }
+
+    default R visit(@Nonnull LocalNameDictionaryLanguage language) {
+        return getDefault();
     };
 
     default R visit(@Nonnull OboIdDictionaryLanguage language) {
-        return null;
+        return getDefault();
     }
 
     default R visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
-        return null;
+        return getDefault();
     }
 
     default R visit(@Nonnull AnnotationAssertionPathDictionaryLanguage language) {
-        return null;
+        return getDefault();
     }
 
     default R visit(@Nonnull PrefixedNameDictionaryLanguage language) {
-        return null;
+        return getDefault();
     }
 
 

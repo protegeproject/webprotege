@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
@@ -49,11 +51,21 @@ public class DictionaryLanguageIO {
                                return DictionaryLanguage.localName();
                            }
                            else {
-                               return DictionaryLanguage.create(IRI.create(iri), lang);
+                               return AnnotationAssertionDictionaryLanguage.get(iri, lang);
                            }
                        })
                        .filter(Objects::nonNull)
-                       .map(dl -> DictionaryLanguageData.get(dl.getAnnotationPropertyIri(), dl.getLang()))
+                       .map(dl -> dl.accept(new DictionaryLanguageVisitor<DictionaryLanguageData>() {
+                           @Override
+                           public DictionaryLanguageData getDefault() {
+                               return DictionaryLanguageData.localName();
+                           }
+
+                           @Override
+                           public DictionaryLanguageData visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
+                               return DictionaryLanguageData.get(language.getAnnotationPropertyIri(), language.getLang());
+                           }
+                       }))
                        .collect(toImmutableList());
     }
 }

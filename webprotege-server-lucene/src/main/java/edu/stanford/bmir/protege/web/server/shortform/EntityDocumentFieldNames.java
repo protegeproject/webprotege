@@ -28,4 +28,10 @@ public interface EntityDocumentFieldNames {
     String VALUE_FIELD_PREFIX = "value.";
 
     String ANALYZED_FIELD_PREFIX = "analyzed.";
+
+    String LOCAL_NAME = "localName";
+
+    String OBO_ID = "oboId";
+
+    String PREFIXED_NAME = "prefixedName";
 }

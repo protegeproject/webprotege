@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.*;
+import static java.util.stream.Collectors.joining;
 
 /**
  * Matthew Horridge
@@ -14,15 +16,37 @@ import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentField
  */
 public class DictionaryLanguage2FieldNameTranslatorImpl implements DictionaryLanguage2FieldNameTranslator {
 
-    private static final String LOCAL_NAME = "localName";
+    private static final DictionaryLanguageVisitor<String> languageVisitor = new DictionaryLanguageVisitor<>() {
+
+        @Override
+        public String visit(@Nonnull LocalNameDictionaryLanguage language) {
+            return EntityDocumentFieldNames.LOCAL_NAME;
+        }
+
+        @Override
+        public String visit(@Nonnull OboIdDictionaryLanguage language) {
+            return EntityDocumentFieldNames.OBO_ID;
+        }
+
+        @Override
+        public String visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
+            return language.getLang() + "@" + language.getJsonAnnotationPropertyIri();
+        }
+
+        @Override
+        public String visit(@Nonnull AnnotationAssertionPathDictionaryLanguage language) {
+            var path = language.getAnnotationPropertyPath().stream().map(Object::toString).collect(joining(";"));
+            return path + "@" + language.getLang();
+        }
+
+        @Override
+        public String visit(@Nonnull PrefixedNameDictionaryLanguage language) {
+            return PREFIXED_NAME;
+        }
+    };
 
     @Inject
     public DictionaryLanguage2FieldNameTranslatorImpl() {
-    }
-
-    @Nonnull
-    private String getLocalNameFieldName() {
-        return LOCAL_NAME;
     }
 
     @Nonnull
@@ -39,11 +63,6 @@ public class DictionaryLanguage2FieldNameTranslatorImpl implements DictionaryLan
 
     @Nonnull
     private String getFieldNameSuffix(@Nonnull DictionaryLanguage language) {
-        if (language.isAnnotationBased()) {
-            return language.getLang() + "@" + language.getAnnotationPropertyIri();
-        }
-        else {
-            return getLocalNameFieldName();
-        }
+        return language.accept(languageVisitor);
     }
 }

@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxio
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -137,20 +137,18 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         var prefixName = builtInPrefixDeclarationsByPrefix.get(entityIriPrefix);
         if (prefixName != null) {
             var prefixedName = prefixName + entityIri.getFragment();
-            var localNameDictionaryLanguage = DictionaryLanguage.localName();
+            var localNameDictionaryLanguage = PrefixedNameDictionaryLanguage.get();
             addFieldForDictionaryLanguage(document, localNameDictionaryLanguage, prefixedName);
         }
-        else {
-            var localNameDictionaryLanguge = DictionaryLanguage.localName();
-            var oboId = OboId.getOboId(entityIri);
-            if (oboId.isPresent()) {
-                addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, oboId.get());
-            }
-            else {
-                var localName = localNameExtractor.getLocalName(entityIri);
-                addFieldForDictionaryLanguage(document, localNameDictionaryLanguge, localName);
-            }
-        }
+
+
+        var oboId = OboId.getOboId(entityIri);
+        oboId.ifPresent(s -> addFieldForDictionaryLanguage(document, OboIdDictionaryLanguage.get(), s));
+
+        var localName = localNameExtractor.getLocalName(entityIri);
+        addFieldForDictionaryLanguage(document, LocalNameDictionaryLanguage.get(), localName);
+
+
 
         var deprecatedAssertions = new ArrayList<OWLAnnotationAssertionAxiom>();
         annotationAssertionsIndex.getAnnotationAssertionAxioms(entityIri)
@@ -198,7 +196,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     private Stream<Field> toFields(OWLAnnotationAssertionAxiom ax) {
         var literal = (OWLLiteral) ax.getValue();
         var annotationPropertyIri = ax.getProperty().getIRI();
-        var dictionaryLanguage = DictionaryLanguage.create(annotationPropertyIri, literal.getLang());
+        var dictionaryLanguage = AnnotationAssertionDictionaryLanguage.get(annotationPropertyIri, literal.getLang());
         var lexicalValue = literal.getLiteral();
 
 

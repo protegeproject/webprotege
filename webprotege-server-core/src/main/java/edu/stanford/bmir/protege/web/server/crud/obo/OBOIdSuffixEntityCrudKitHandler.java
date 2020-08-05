@@ -18,7 +18,9 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OboIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 
@@ -127,12 +129,17 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<Obo
         builder.add(AddAxiomChange.of(targetOntology, declarationAxiom));
         DictionaryLanguage language = context.getDictionaryLanguage();
         if(!shortForm.getShortForm().isBlank()) {
-            IRI annotationPropertyIri = language.getAnnotationPropertyIri();
-            if (annotationPropertyIri != null) {
-                final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
-                var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-                builder.add(AddAxiomChange.of(targetOntology, ax));
-            }
+            language.accept(new DictionaryLanguageVisitor<>() {
+                @Override
+                public Object visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
+                    IRI annotationPropertyIri = language.getAnnotationPropertyIri();
+                    final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, langTag, context);
+                    var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(
+                            annotationPropertyIri), entity.getIRI(), labellingLiteral);
+                    builder.add(AddAxiomChange.of(targetOntology, ax));
+                    return null;
+                }
+            });
         }
         OWLAnnotationAssertionAxiom createdByAx = dataFactory.getOWLAnnotationAssertionAxiom(
                 dataFactory.getOWLAnnotationProperty(CREATED_BY),

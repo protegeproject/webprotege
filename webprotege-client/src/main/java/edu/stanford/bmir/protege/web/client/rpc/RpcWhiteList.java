@@ -27,8 +27,7 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSett
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 import edu.stanford.bmir.protege.web.shared.search.*;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
@@ -93,6 +92,16 @@ public class RpcWhiteList implements Action, Result {
     DictionaryLanguageData dictionaryLanguageData;
 
     DictionaryLanguage dictionaryLanguage;
+
+    AnnotationAssertionDictionaryLanguage annotationAssertionDictionaryLanguage;
+
+    AnnotationAssertionPathDictionaryLanguage annotationAssertionPathDictionaryLanguage;
+
+    LocalNameDictionaryLanguage localNameDictionaryLanguage;
+
+    OboIdDictionaryLanguage oboIdDictionaryLanguage;
+
+    PrefixedNameDictionaryLanguage prefixedNameDictionaryLanguage;
 
     AvailableProject availableProject;
 

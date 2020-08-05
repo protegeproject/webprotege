@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

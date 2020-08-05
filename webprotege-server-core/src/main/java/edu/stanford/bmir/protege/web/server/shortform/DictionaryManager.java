@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -124,7 +125,7 @@ public class DictionaryManager {
     public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
         var shortForm = builtInShortFormDictionary.getShortForm(entity, null);
         if(shortForm != null) {
-            return ImmutableMap.of(DictionaryLanguage.localName(), shortForm);
+            return ImmutableMap.of(LocalNameDictionaryLanguage.get(), shortForm);
         }
         return dictionary.getShortForms(entity, languageManager.getLanguages());
     }

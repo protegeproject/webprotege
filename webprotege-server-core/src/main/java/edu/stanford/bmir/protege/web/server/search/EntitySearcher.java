@@ -20,7 +20,10 @@ import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.SearchField;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatchPosition;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionPathDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
@@ -162,13 +165,18 @@ public class EntitySearcher {
     }
 
     public ImmutableMap<DictionaryLanguage, String> getLanguageRendering(DictionaryLanguage matchedLanguage) {
-        if (matchedLanguage.isAnnotationBased()) {
-            var annotationPropertyIri = matchedLanguage.getAnnotationPropertyIri();
-            var annotationProperty = DataFactory.getOWLAnnotationProperty(annotationPropertyIri);
-            return dictionaryManager.getShortForms(annotationProperty);
-        }
-        else {
-            return ImmutableMap.of();
-        }
+        return matchedLanguage.accept(new DictionaryLanguageVisitor<>() {
+            @Override
+            public ImmutableMap<DictionaryLanguage, String> getDefault() {
+                return ImmutableMap.of();
+            }
+
+            @Override
+            public ImmutableMap<DictionaryLanguage, String> visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
+                var annotationPropertyIri = language.getAnnotationPropertyIri();
+                var annotationProperty = DataFactory.getOWLAnnotationProperty(annotationPropertyIri);
+                return dictionaryManager.getShortForms(annotationProperty);
+            }
+        });
     }
 }
