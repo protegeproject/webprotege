@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.shortform;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
@@ -22,9 +20,16 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
  * Stanford Center for Biomedical Informatics Research
  * 5 Apr 2018
  */
-@AutoValue
 @GwtCompatible(serializable = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(AnnotationAssertionDictionaryLanguage.class),
+        @JsonSubTypes.Type(AnnotationAssertionPathDictionaryLanguage.class),
+        @JsonSubTypes.Type(LocalNameDictionaryLanguage.class),
+        @JsonSubTypes.Type(OboIdDictionaryLanguage.class),
+        @JsonSubTypes.Type(PrefixedNameDictionaryLanguage.class)
+})
 public abstract class DictionaryLanguage {
 
     private static final DictionaryLanguage LOCAL_NAME_LANGUAGE;
@@ -153,4 +158,6 @@ public abstract class DictionaryLanguage {
         }
         return langTag;
     }
+
+    public abstract <R> R accept(@Nonnull DictionaryLanguageVisitor<R> visitor);
 }
