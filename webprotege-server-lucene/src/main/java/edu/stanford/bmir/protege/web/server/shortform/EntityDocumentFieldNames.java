@@ -25,9 +25,9 @@ public interface EntityDocumentFieldNames {
 
     String DEPRECATED_FALSE = "false";
 
-    String VALUE_FIELD_PREFIX = "value.";
+    String KEYWORD_FIELD_PREFIX = "keyword.";
 
-    String ANALYZED_FIELD_PREFIX = "analyzed.";
+    String TEXT_FIELD_PREFIX = "text.";
 
     String LOCAL_NAME = "localName";
 

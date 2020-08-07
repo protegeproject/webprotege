@@ -51,13 +51,13 @@ public class FieldNameTranslatorImpl implements FieldNameTranslator {
     @Nonnull
     @Override
     public String getNonTokenizedFieldName(@Nonnull DictionaryLanguage language) {
-        return VALUE_FIELD_PREFIX + getFieldNameSuffix(language);
+        return KEYWORD_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull
     @Override
     public String getTokenizedFieldName(@Nonnull DictionaryLanguage language) {
-        return ANALYZED_FIELD_PREFIX + getFieldNameSuffix(language);
+        return TEXT_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull
