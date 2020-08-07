@@ -14,16 +14,35 @@ import java.util.List;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-07
+ *
+ * Translates between an entity and a Lucene document representation of the entity.
  */
 public interface LuceneEntityDocumentTranslator {
 
+    /**
+     * Extracts an {@link OWLEntity} from a Lucene document
+     * @param document The Lucene document
+     * @return The entity that the Lucene document contains/represents
+     */
     @Nonnull
     OWLEntity getEntity(@Nonnull Document document);
 
+    /**
+     * Extracts the values of the fields that represent the specified dictionary languages from
+     * the specified Lucene document.
+     * @param document The Lucene document
+     * @param dictionaryLanguages The list of dictionary languages for which values should be retrieved
+     * @return The values for the specified dictionary languages
+     */
     @Nonnull
-    EntityShortForms getEntityShortForms(@Nonnull Document document,
-                                         @Nonnull List<DictionaryLanguage> dictionaryLanguages);
+    EntityShortForms getDictionaryLanguageValues(@Nonnull Document document,
+                                                 @Nonnull List<DictionaryLanguage> dictionaryLanguages);
 
+    /**
+     * Gets a Lucene document for the specified entity
+     * @param entity The entity
+     * @return A Lucene document that encodes/represents the specified entity.
+     */
     @Nonnull
     Document getLuceneDocument(@Nonnull OWLEntity entity);
 

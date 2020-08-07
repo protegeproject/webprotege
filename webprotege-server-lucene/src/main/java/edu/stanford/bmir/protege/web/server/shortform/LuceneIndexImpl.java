@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.index.DeprecatedEntitiesByEntityIndex;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -166,7 +165,7 @@ public class LuceneIndexImpl implements LuceneIndex {
         return Arrays.stream(topDocs.scoreDocs)
                      .map(scoreDoc -> scoreDoc.doc)
                      .map(docId -> getDoc(indexSearcher, docId))
-                     .map(doc -> luceneEntityDocumentTranslator.getEntityShortForms(doc, dictionaryLanguages));
+                     .map(doc -> luceneEntityDocumentTranslator.getDictionaryLanguageValues(doc, dictionaryLanguages));
     }
 
     public Document getDoc(IndexSearcher indexSearcher, Integer docId) {

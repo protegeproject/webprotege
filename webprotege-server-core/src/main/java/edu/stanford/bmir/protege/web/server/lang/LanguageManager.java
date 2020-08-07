@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionPathDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -44,7 +47,14 @@ public class LanguageManager {
             return activeLanguagesManager.getLanguagesRankedByUsage();
         }
         else {
-            return defaultDisplayLanguages;
+            var x = ImmutableList.<DictionaryLanguage>builder();
+            x.addAll(defaultDisplayLanguages);
+            x.add(AnnotationAssertionPathDictionaryLanguage.get(
+                    ImmutableList.of(IRI.create("https://data.elsevier.com/health/core/schema/extExact"),
+                                     OWLRDFVocabulary.RDFS_LABEL.getIRI()),
+                    "en"
+            ));
+            return x.build();
         }
     }
 

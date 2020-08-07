@@ -16,7 +16,4 @@ public interface DictionaryLanguage2FieldNameTranslator {
 
     @Nonnull
     String getAnalyzedValueFieldName(@Nonnull DictionaryLanguage language);
-
-//    @Nonnull
-//    String getLocalNameFieldName();
 }
