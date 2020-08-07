@@ -107,17 +107,16 @@ public class LuceneIndexImpl implements LuceneIndex {
         try {
 
 
-
-
             var q = getQuery(searchStrings, dictionaryLanguages, false);
             var queryBuilder = new BooleanQuery.Builder();
             queryBuilder.add(q, BooleanClause.Occur.MUST);
 
             var entityTypeQueries = entityTypes.stream()
                                                .map(EntityType::getName)
-                                               .map(typeName -> new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE, typeName)))
+                                               .map(typeName -> new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE,
+                                                                                       typeName)))
                                                .collect(toList());
-            if(!entityTypeQueries.isEmpty()) {
+            if (!entityTypeQueries.isEmpty()) {
                 var entityTypesBuilder = new BooleanQuery.Builder();
                 entityTypeQueries.forEach(typeQuery -> entityTypesBuilder.add(typeQuery, BooleanClause.Occur.SHOULD));
                 var typeQuery = entityTypesBuilder.build();
@@ -141,6 +140,7 @@ public class LuceneIndexImpl implements LuceneIndex {
         }
     }
 
+    @Nonnull
     @Override
     public Stream<OWLEntity> findEntities(String shortForm,
                                           List<DictionaryLanguage> languages) throws ParseException, IOException {
@@ -165,7 +165,8 @@ public class LuceneIndexImpl implements LuceneIndex {
         return Arrays.stream(topDocs.scoreDocs)
                      .map(scoreDoc -> scoreDoc.doc)
                      .map(docId -> getDoc(indexSearcher, docId))
-                     .map(doc -> luceneEntityDocumentTranslator.getDictionaryLanguageValues(doc, dictionaryLanguages));
+                     .map(doc -> luceneEntityDocumentTranslator.getDictionaryLanguageValues(doc, dictionaryLanguages))
+                     .map(EntityDictionaryLanguageValues::reduceToEntityShortForms);
     }
 
     public Document getDoc(IndexSearcher indexSearcher, Integer docId) {

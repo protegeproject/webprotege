@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.Term;
@@ -94,17 +96,17 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
 
     @Nonnull
     @Override
-    public EntityShortForms getDictionaryLanguageValues(@Nonnull Document document,
-                                                        @Nonnull List<DictionaryLanguage> dictionaryLanguages) {
+    public EntityDictionaryLanguageValues getDictionaryLanguageValues(@Nonnull Document document,
+                                                                                        @Nonnull List<DictionaryLanguage> dictionaryLanguages) {
         var entity = getEntity(document);
-        var shortForms = ImmutableMap.<DictionaryLanguage, String>builder();
+        var shortForms = ImmutableSetMultimap.<DictionaryLanguage, String>builder();
         for (var dictionaryLanguage : dictionaryLanguages) {
             var shortForm = getShortForm(document, dictionaryLanguage);
             if (shortForm != null) {
                 shortForms.put(dictionaryLanguage, shortForm);
             }
         }
-        return EntityShortForms.get(entity, shortForms.build());
+        return EntityDictionaryLanguageValues.get(entity, shortForms.build());
     }
 
     @Nullable
@@ -159,8 +161,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
 
     @Nonnull
     public Query getEntityTypeDocumentQuery(@Nonnull EntityType<?> entityType) {
-        return new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE,
-                                      entityType.toString()));
+        return new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE, entityType.toString()));
     }
 
 
