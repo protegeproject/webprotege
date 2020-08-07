@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.shared.shortform.*;
-import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -14,7 +13,7 @@ import static java.util.stream.Collectors.joining;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-07
  */
-public class DictionaryLanguage2FieldNameTranslatorImpl implements DictionaryLanguage2FieldNameTranslator {
+public class FieldNameTranslatorImpl implements FieldNameTranslator {
 
     private static final DictionaryLanguageVisitor<String> languageVisitor = new DictionaryLanguageVisitor<>() {
 
@@ -46,7 +45,7 @@ public class DictionaryLanguage2FieldNameTranslatorImpl implements DictionaryLan
     };
 
     @Inject
-    public DictionaryLanguage2FieldNameTranslatorImpl() {
+    public FieldNameTranslatorImpl() {
     }
 
     @Nonnull

@@ -8,8 +8,10 @@ import javax.annotation.Nonnull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-07
+ *
+ * Translates a {@link DictionaryLanguage} to a lucene document field name.
  */
-public interface DictionaryLanguage2FieldNameTranslator {
+public interface FieldNameTranslator {
 
     @Nonnull
     String getOriginalValueFieldName(@Nonnull DictionaryLanguage language);

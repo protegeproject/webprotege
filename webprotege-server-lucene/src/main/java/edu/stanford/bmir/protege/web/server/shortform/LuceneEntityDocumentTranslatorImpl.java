@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.Term;
@@ -29,7 +27,7 @@ import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentField
 public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentTranslator {
 
     @Nonnull
-    private final DictionaryLanguage2FieldNameTranslator fieldNameTranslator;
+    private final FieldNameTranslator fieldNameTranslator;
 
     @Nonnull
     private final EntityBuiltInStatusDocumentAugmenter builtInStatusDocumentAugmenter;
@@ -50,7 +48,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public LuceneEntityDocumentTranslatorImpl(@Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator,
+    public LuceneEntityDocumentTranslatorImpl(@Nonnull FieldNameTranslator fieldNameTranslator,
                                               @Nonnull EntityBuiltInStatusDocumentAugmenter builtInStatusDocumentAugmenter,
                                               @Nonnull EntityLocalNameDocumentAugmenter localNameDocumentAugmenter,
                                               @Nonnull EntityPrefixedNameDocumentAugmenter prefixedNameDocumentAugmenter,

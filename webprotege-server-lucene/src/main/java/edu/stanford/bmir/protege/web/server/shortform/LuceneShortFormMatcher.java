@@ -27,7 +27,7 @@ public class LuceneShortFormMatcher {
     private final LuceneSearchStringTokenizer searchStringTokenizer;
 
     @Nonnull
-    private final DictionaryLanguage2FieldNameTranslator fieldNameTranslator;
+    private final FieldNameTranslator fieldNameTranslator;
 
     @Nonnull
     private final IndexingAnalyzerFactory indexingAnalyzerFactory;
@@ -35,7 +35,7 @@ public class LuceneShortFormMatcher {
 
     @Inject
     public LuceneShortFormMatcher(@Nonnull LuceneSearchStringTokenizer searchStringTokenizer,
-                                  @Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator,
+                                  @Nonnull FieldNameTranslator fieldNameTranslator,
                                   @Nonnull IndexingAnalyzerFactory indexingAnalyzerFactory) {
         this.searchStringTokenizer = searchStringTokenizer;
         this.fieldNameTranslator = fieldNameTranslator;

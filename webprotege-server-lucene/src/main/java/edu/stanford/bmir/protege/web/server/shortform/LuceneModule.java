@@ -2,9 +2,6 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -15,10 +12,8 @@ import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -35,7 +30,7 @@ public class LuceneModule {
 
     @Provides
     @ProjectSingleton
-    public DictionaryLanguage2FieldNameTranslator provideDictionaryLanguage2FieldNameTranslator(DictionaryLanguage2FieldNameTranslatorImpl impl) {
+    public FieldNameTranslator provideDictionaryLanguage2FieldNameTranslator(FieldNameTranslatorImpl impl) {
         return impl;
     }
 

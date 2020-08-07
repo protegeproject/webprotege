@@ -24,13 +24,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class LuceneQueryFactory {
 
     @Nonnull
-    private final DictionaryLanguage2FieldNameTranslator fieldNameTranslator;
+    private final FieldNameTranslator fieldNameTranslator;
 
     @Nonnull
     private final QueryAnalyzerFactory queryAnalyzerFactory;
 
     @Inject
-    public LuceneQueryFactory(@Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator,
+    public LuceneQueryFactory(@Nonnull FieldNameTranslator fieldNameTranslator,
                               @Nonnull QueryAnalyzerFactory queryAnalyzerFactory) {
         this.fieldNameTranslator = checkNotNull(fieldNameTranslator);
         this.queryAnalyzerFactory = checkNotNull(queryAnalyzerFactory);

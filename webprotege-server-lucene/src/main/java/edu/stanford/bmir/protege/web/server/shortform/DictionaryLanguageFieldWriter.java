@@ -18,10 +18,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DictionaryLanguageFieldWriter {
 
     @Nonnull
-    private final DictionaryLanguage2FieldNameTranslator fieldNameTranslator;
+    private final FieldNameTranslator fieldNameTranslator;
 
     @Inject
-    public DictionaryLanguageFieldWriter(@Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator) {
+    public DictionaryLanguageFieldWriter(@Nonnull FieldNameTranslator fieldNameTranslator) {
         this.fieldNameTranslator = checkNotNull(fieldNameTranslator);
     }
 
