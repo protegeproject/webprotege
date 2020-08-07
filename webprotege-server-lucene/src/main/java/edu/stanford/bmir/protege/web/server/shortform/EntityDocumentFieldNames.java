@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import javax.annotation.Nonnull;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
