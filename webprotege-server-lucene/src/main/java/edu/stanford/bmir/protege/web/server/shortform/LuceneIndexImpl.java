@@ -47,7 +47,7 @@ public class LuceneIndexImpl implements LuceneIndex {
     private final LuceneQueryFactory queryFactory;
 
     @Nonnull
-    private final LuceneShortFormMatcher luceneShortFormMatcher;
+    private final LuceneDictionaryLanguageValuesMatcher luceneDictionaryLanguageValuesMatcher;
 
     @Nonnull
     private final QueryAnalyzerFactory queryAnalyzerFactory;
@@ -56,12 +56,12 @@ public class LuceneIndexImpl implements LuceneIndex {
     public LuceneIndexImpl(@Nonnull LuceneEntityDocumentTranslator luceneEntityDocumentTranslator,
                            @Nonnull SearcherManager searcherManager,
                            @Nonnull LuceneQueryFactory queryFactory,
-                           @Nonnull LuceneShortFormMatcher luceneShortFormMatcher,
+                           @Nonnull LuceneDictionaryLanguageValuesMatcher luceneDictionaryLanguageValuesMatcher,
                            @Nonnull QueryAnalyzerFactory queryAnalyzerFactory) {
         this.luceneEntityDocumentTranslator = luceneEntityDocumentTranslator;
         this.searcherManager = searcherManager;
         this.queryFactory = queryFactory;
-        this.luceneShortFormMatcher = luceneShortFormMatcher;
+        this.luceneDictionaryLanguageValuesMatcher = luceneDictionaryLanguageValuesMatcher;
         this.queryAnalyzerFactory = queryAnalyzerFactory;
     }
 
@@ -79,7 +79,7 @@ public class LuceneIndexImpl implements LuceneIndex {
         var indexSearcher = searcherManager.acquire();
         try {
             var topDocs = indexSearcher.search(query, ENTITY_TYPE_COUNT);
-            return getEntityShortFormsStream(languages, indexSearcher, topDocs);
+            return getDictionaryLanguageValues(languages, indexSearcher, topDocs).map(EntityDictionaryLanguageValues::reduceToEntityShortForms);
         } finally {
             searcherManager.release(indexSearcher);
         }
@@ -126,13 +126,15 @@ public class LuceneIndexImpl implements LuceneIndex {
 
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
             var languagesSet = ImmutableSet.copyOf(dictionaryLanguages);
-            var page = getEntityShortFormsStream(dictionaryLanguages,
-                                                 indexSearcher,
-                                                 topDocs).collect(PageCollector.toPage(pageRequest.getPageNumber(),
+            var page = getDictionaryLanguageValues(dictionaryLanguages,
+                                                   indexSearcher,
+                                                   topDocs).collect(PageCollector.toPage(pageRequest.getPageNumber(),
                                                                                        pageRequest.getPageSize()));
             return page.map(pg -> pg.transform(entityShortForms -> {
-                var matches = luceneShortFormMatcher.getShortFormMatches(entityShortForms, languagesSet, searchStrings)
-                                                    .collect(toImmutableList());
+                var matches = luceneDictionaryLanguageValuesMatcher.getShortFormMatches(entityShortForms,
+                                                                                        languagesSet,
+                                                                                        searchStrings)
+                                                                   .collect(toImmutableList());
                 return EntityShortFormMatches.get(entityShortForms.getEntity(), matches);
             }));
         } finally {
@@ -149,24 +151,23 @@ public class LuceneIndexImpl implements LuceneIndex {
         var indexSearcher = searcherManager.acquire();
         try {
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
-            return getEntityShortFormsStream(languages, indexSearcher, topDocs).filter(entityShortForms -> {
-                var shortForms = entityShortForms.getShortForms();
-                return languages.stream().map(shortForms::get).anyMatch(sf -> sf.equals(shortForm));
-            }).map(EntityShortForms::getEntity).collect(Collectors.toList()).stream();
+            return getDictionaryLanguageValues(languages, indexSearcher, topDocs).filter(values -> {
+                var shortForms = values.getValues();
+                return languages.stream().map(shortForms::get).anyMatch(sf -> sf.contains(shortForm));
+            }).map(EntityDictionaryLanguageValues::getEntity).collect(Collectors.toList()).stream();
 
         } finally {
             searcherManager.release(indexSearcher);
         }
     }
 
-    private Stream<EntityShortForms> getEntityShortFormsStream(@Nonnull List<DictionaryLanguage> dictionaryLanguages,
-                                                               IndexSearcher indexSearcher,
-                                                               TopDocs topDocs) {
+    private Stream<EntityDictionaryLanguageValues> getDictionaryLanguageValues(@Nonnull List<DictionaryLanguage> dictionaryLanguages,
+                                                                               @Nonnull IndexSearcher indexSearcher,
+                                                                               @Nonnull TopDocs topDocs) {
         return Arrays.stream(topDocs.scoreDocs)
                      .map(scoreDoc -> scoreDoc.doc)
                      .map(docId -> getDoc(indexSearcher, docId))
-                     .map(doc -> luceneEntityDocumentTranslator.getDictionaryLanguageValues(doc, dictionaryLanguages))
-                     .map(EntityDictionaryLanguageValues::reduceToEntityShortForms);
+                     .map(doc -> luceneEntityDocumentTranslator.getDictionaryLanguageValues(doc, dictionaryLanguages));
     }
 
     public Document getDoc(IndexSearcher indexSearcher, Integer docId) {

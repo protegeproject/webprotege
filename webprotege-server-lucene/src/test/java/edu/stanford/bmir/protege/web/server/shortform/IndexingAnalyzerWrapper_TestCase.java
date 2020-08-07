@@ -1,13 +1,8 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.Attribute;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +18,7 @@ public class IndexingAnalyzerWrapper_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        analyzer = new IndexingAnalyzerWrapper();
+        analyzer = new IndexingAnalyzerWrapper(2, 5);
     }
 
 
@@ -80,7 +75,7 @@ public class IndexingAnalyzerWrapper_TestCase {
     public void shouldAddLongTokens() throws IOException {
         String longFieldValue = "thisisalongtokenwithmorethantwentycharacters";
         assertHasTokens(longFieldValue,
-                        "th", longFieldValue);
+                        "th", "thi", "this", "thisi", longFieldValue);
     }
 
     private void assertHasTokens(String fieldValue,

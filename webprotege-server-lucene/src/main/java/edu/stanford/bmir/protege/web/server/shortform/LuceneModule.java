@@ -15,6 +15,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -27,6 +28,10 @@ import java.io.UncheckedIOException;
 public class LuceneModule {
 
     private static final Logger logger = LoggerFactory.getLogger(LuceneModule.class);
+
+    public static final int MIN_GRAM_SIZE = 2;
+
+    public static final int MAX_GRAM_SIZE = 11;
 
     @Provides
     @ProjectSingleton
@@ -91,6 +96,18 @@ public class LuceneModule {
     IndexWriterConfig provideIndexWriterConfig(IndexingAnalyzerFactory analyzerFactory) {
         var analyzer = analyzerFactory.get();
         return new IndexWriterConfig(analyzer);
+    }
+
+    @Provides
+    @MinGramSize
+    int provideMinGramSize() {
+        return MIN_GRAM_SIZE;
+    }
+
+    @Provides
+    @MaxGramSize
+    int provideMaxGramSize() {
+        return MAX_GRAM_SIZE;
     }
 
     @ProjectSingleton

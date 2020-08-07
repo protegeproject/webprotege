@@ -134,14 +134,14 @@ public class EntitySearcher {
     }
 
     public void invoke() {
-        var entityShortFormMatches = dictionaryManager.getShortFormsContaining(searchWords,
-                                                                               entityTypes,
-                                                                               languageManager.getLanguages(),
-                                                                               pageRequest);
-        results = entityShortFormMatches.transform(matches -> {
+        var entityMatches = dictionaryManager.getShortFormsContaining(searchWords,
+                                                                      entityTypes,
+                                                                      languageManager.getLanguages(),
+                                                                      pageRequest);
+        results = entityMatches.transform(matches -> {
             var entity = matches.getEntity();
-            var rendering = dictionaryManager.getShortForms(entity);
-            var entityData = DataFactory.getOWLEntityData(entity, rendering);
+            var shortForms = dictionaryManager.getShortForms(entity);
+            var entityData = DataFactory.getOWLEntityData(entity, shortForms);
             var matchesForEntity = matches.getShortFormMatches().stream().map(shortFormMatch -> {
                 var matchedLanguage = shortFormMatch.getLanguage();
                 var matchedShortForm = shortFormMatch.getShortForm();

@@ -7,9 +7,9 @@ import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilterFactory;
 import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
-import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -26,9 +26,16 @@ public class IndexingAnalyzerWrapper extends DelegatingAnalyzerWrapper {
 
     private final Analyzer keywordAnalyzer;
 
+    private final int minGramSize;
+
+    private final int maxGramSize;
+
     @Inject
-    public IndexingAnalyzerWrapper() {
+    public IndexingAnalyzerWrapper(@MinGramSize int minGramSize,
+                                   @MaxGramSize int maxGramSize) {
         super(PER_FIELD_REUSE_STRATEGY);
+        this.minGramSize = minGramSize;
+        this.maxGramSize = maxGramSize;
         analyzer = createAnalyzer();
         keywordAnalyzer = createKeywordAnalyzer();
     }
@@ -66,8 +73,8 @@ public class IndexingAnalyzerWrapper extends DelegatingAnalyzerWrapper {
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)
                                  .addTokenFilter(EdgeNGramFilterFactory.NAME,
-                                                 "minGramSize", "2",
-                                                 "maxGramSize", "10",
+                                                 "minGramSize", Integer.toString(minGramSize),
+                                                 "maxGramSize", Integer.toString(maxGramSize),
                                                  "preserveOriginal", "true")
                                  .build();
         } catch (IOException e) {
