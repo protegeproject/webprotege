@@ -50,13 +50,13 @@ public class FieldNameTranslatorImpl implements FieldNameTranslator {
 
     @Nonnull
     @Override
-    public String getOriginalValueFieldName(@Nonnull DictionaryLanguage language) {
+    public String getNonTokenizedFieldName(@Nonnull DictionaryLanguage language) {
         return VALUE_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 
     @Nonnull
     @Override
-    public String getAnalyzedValueFieldName(@Nonnull DictionaryLanguage language) {
+    public String getTokenizedFieldName(@Nonnull DictionaryLanguage language) {
         return ANALYZED_FIELD_PREFIX + getFieldNameSuffix(language);
     }
 

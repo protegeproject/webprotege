@@ -109,7 +109,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
 
     @Nullable
     private String getShortForm(@Nonnull Document document, @Nonnull DictionaryLanguage dictionaryLanguage) {
-        var fieldName = fieldNameTranslator.getOriginalValueFieldName(dictionaryLanguage);
+        var fieldName = fieldNameTranslator.getNonTokenizedFieldName(dictionaryLanguage);
         return document.get(fieldName);
     }
 

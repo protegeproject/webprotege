@@ -103,7 +103,7 @@ public class LuceneQueryFactory {
         var mustOccurBuilder = new BooleanQuery.Builder();
         for(var searchString : getAnalyzedSearchStrings(searchStrings)) {
             // Analyzed - MUST occur
-            var analyzedFieldName = fieldNameTranslator.getAnalyzedValueFieldName(lang);
+            var analyzedFieldName = fieldNameTranslator.getTokenizedFieldName(lang);
             var searchStringTerm = new Term(analyzedFieldName, searchString);
             if(searchString.contains("*") || searchString.contains("?")) {
                 mustOccurBuilder.add(new WildcardQuery(searchStringTerm), BooleanClause.Occur.MUST);
@@ -120,7 +120,7 @@ public class LuceneQueryFactory {
         // TODO: Lowercase analysis?
         var shouldOccurBuilder = new BooleanQuery.Builder();
         for(var searchString : searchStrings) {
-            var originalFieldName = fieldNameTranslator.getOriginalValueFieldName(lang);
+            var originalFieldName = fieldNameTranslator.getNonTokenizedFieldName(lang);
             var searchStringTerm = new Term(originalFieldName, searchString.getRawSearchString());
             shouldOccurBuilder.add(new TermQuery(searchStringTerm), BooleanClause.Occur.MUST);
         }

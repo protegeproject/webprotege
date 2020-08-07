@@ -36,10 +36,10 @@ public class DictionaryLanguageFieldWriter {
                                               @Nonnull String value) {
         // We don't need to store both, just one.  This is the value field.  Storing this
         // allows a read of the annotation value from the index
-        var valueFieldName = fieldNameTranslator.getOriginalValueFieldName(language);
+        var valueFieldName = fieldNameTranslator.getNonTokenizedFieldName(language);
         document.add(new TextField(valueFieldName, value, Field.Store.YES));
 
-        var analyzedFieldName = fieldNameTranslator.getAnalyzedValueFieldName(language);
+        var analyzedFieldName = fieldNameTranslator.getTokenizedFieldName(language);
         document.add(new TextField(analyzedFieldName, value, Field.Store.NO));
 
     }

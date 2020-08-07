@@ -65,7 +65,7 @@ public class LuceneShortFormMatcher {
 
         var resultBuilder = ImmutableSet.<ShortFormMatchPosition>builder();
 
-        var wordFieldName = fieldNameTranslator.getAnalyzedValueFieldName(dictionaryLanguage);
+        var wordFieldName = fieldNameTranslator.getTokenizedFieldName(dictionaryLanguage);
         addPossibleTokenMatches(shortForm, wordFieldName, searchTokens, resultBuilder);
 
 

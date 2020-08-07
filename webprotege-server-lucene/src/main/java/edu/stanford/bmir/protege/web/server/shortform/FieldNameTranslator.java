@@ -9,13 +9,27 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-07
  *
- * Translates a {@link DictionaryLanguage} to a lucene document field name.
+ * Translates a {@link DictionaryLanguage} to a lucene document field name.  Two types of
+ * field name can be produced for a given dictionary language: one that represents a field
+ * that WILL NOT be tokenized during analysis and one that represents a field that WILL be
+ * tokenized during analysis.
  */
 public interface FieldNameTranslator {
 
+    /**
+     * Gets the field name for the specified dictionary language where the value of the
+     * field is not tokenized (i.e. left intact) by Lucene.  This field can be used for
+     * exact matches, or to boost the score for an exact match, for example.
+     * @param language The dictionary language to translate to a field name
+     */
     @Nonnull
-    String getOriginalValueFieldName(@Nonnull DictionaryLanguage language);
+    String getNonTokenizedFieldName(@Nonnull DictionaryLanguage language);
 
+    /**
+     * Gets the field name for the specified dictionary language where the value of the
+     * field is tokenized by Lucene.
+     * @param language The dictionary language to translate to a field name
+     */
     @Nonnull
-    String getAnalyzedValueFieldName(@Nonnull DictionaryLanguage language);
+    String getTokenizedFieldName(@Nonnull DictionaryLanguage language);
 }
