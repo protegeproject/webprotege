@@ -121,7 +121,7 @@ public class SearchPresenter implements HasInitialFocusable {
     }
 
     private void performSearch() {
-        if(view.getSearchString().length() <= 1) {
+        if(view.getSearchString().length() < 1) {
             view.clearEntitySearchResults();
             resultPresenters.clear();
             return;
