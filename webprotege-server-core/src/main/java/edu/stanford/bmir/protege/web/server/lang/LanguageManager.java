@@ -42,19 +42,12 @@ public class LanguageManager {
     }
 
     public synchronized List<DictionaryLanguage> getLanguages() {
-        ImmutableList<DictionaryLanguage> defaultDisplayLanguages = projectDetailsRepository.getDisplayNameLanguages(projectId);
+        var defaultDisplayLanguages = projectDetailsRepository.getDisplayNameLanguages(projectId);
         if (defaultDisplayLanguages.isEmpty()) {
             return activeLanguagesManager.getLanguagesRankedByUsage();
         }
         else {
-            var x = ImmutableList.<DictionaryLanguage>builder();
-            x.addAll(defaultDisplayLanguages);
-            x.add(AnnotationAssertionPathDictionaryLanguage.get(
-                    ImmutableList.of(IRI.create("https://data.elsevier.com/health/core/schema/extExact"),
-                                     OWLRDFVocabulary.RDFS_LABEL.getIRI()),
-                    "en"
-            ));
-            return x.build();
+            return defaultDisplayLanguages;
         }
     }
 
