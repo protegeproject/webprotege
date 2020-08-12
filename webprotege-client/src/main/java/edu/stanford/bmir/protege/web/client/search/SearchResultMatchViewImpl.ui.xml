@@ -14,10 +14,11 @@
             margin-right: 1em;
         }
         .languageField {
-            color: literal("var(--tertiary--color)");
+            /*color: literal("var(--tertiary--color)");*/
             flex-grow: 0;
             flex-shrink: 0;
             flex-basis: 90px;
+            text-align: right;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

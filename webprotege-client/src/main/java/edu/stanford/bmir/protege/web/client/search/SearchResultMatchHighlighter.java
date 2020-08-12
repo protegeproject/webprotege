@@ -49,18 +49,6 @@ public class SearchResultMatchHighlighter {
             highlighted.append(matchedValue.substring(lastEnd));
             highlighted.append("</span>");
         }
-//        DictionaryLanguage dictionaryLanguage = match.getLanguage();
-//        if (dictionaryLanguage.isAnnotationBased()) {
-//            String propRendering = match.getLanguageRendering().getOrDefault(match.getLanguage(), "IRI");
-//            highlighted.append("&nbsp;<span style=\"color: #b4b4b4;\"> ");
-//            highlighted.append(propRendering);
-//            String lang = dictionaryLanguage.getLang();
-//            if (!lang.isEmpty()) {
-//                highlighted.append(" @");
-//                highlighted.append(lang);
-//            }
-//            highlighted.append("</span>");
-//        }
         return new SafeHtmlBuilder().appendHtmlConstant(highlighted.toString()).toSafeHtml();
     }
 }

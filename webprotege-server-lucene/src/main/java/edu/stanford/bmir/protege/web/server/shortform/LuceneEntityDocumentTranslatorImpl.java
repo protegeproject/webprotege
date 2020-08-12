@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.collect.ImmutableSetMultimap;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.apache.lucene.document.*;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.*;
@@ -97,20 +99,22 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     public EntityDictionaryLanguageValues getDictionaryLanguageValues(@Nonnull Document document,
                                                                                         @Nonnull List<DictionaryLanguage> dictionaryLanguages) {
         var entity = getEntity(document);
-        var shortForms = ImmutableSetMultimap.<DictionaryLanguage, String>builder();
+        var valuesBuilder = ImmutableSetMultimap.<DictionaryLanguage, String>builder();
         for (var dictionaryLanguage : dictionaryLanguages) {
-            var shortForm = getShortForm(document, dictionaryLanguage);
-            if (shortForm != null) {
-                shortForms.put(dictionaryLanguage, shortForm);
-            }
+            var values = getValues(document, dictionaryLanguage);
+            values.forEach(value -> {
+                valuesBuilder.put(dictionaryLanguage, value);
+            });
+
         }
-        return EntityDictionaryLanguageValues.get(entity, shortForms.build());
+        return EntityDictionaryLanguageValues.get(entity, valuesBuilder.build());
     }
 
-    @Nullable
-    private String getShortForm(@Nonnull Document document, @Nonnull DictionaryLanguage dictionaryLanguage) {
+    @Nonnull
+    private Stream<String> getValues(@Nonnull Document document, @Nonnull DictionaryLanguage dictionaryLanguage) {
         var fieldName = fieldNameTranslator.getNonTokenizedFieldName(dictionaryLanguage);
-        return document.get(fieldName);
+        return Stream.of(document.getFields(fieldName))
+                .map(IndexableField::stringValue);
     }
 
     @Nonnull

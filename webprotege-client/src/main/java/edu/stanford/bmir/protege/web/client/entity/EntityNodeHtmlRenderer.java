@@ -60,10 +60,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     public void setDisplayLanguage(@Nonnull DisplayNameSettings displayNameSettings) {
         primaryLanguages = displayNameSettings.getPrimaryDisplayNameLanguages().stream()
-                                              .map(DictionaryLanguageData::getDictionaryLanguage)
                                               .collect(toImmutableList());
         secondaryLanguages = displayNameSettings.getSecondaryDisplayNameLanguages().stream()
-                                              .map(DictionaryLanguageData::getDictionaryLanguage)
                                               .collect(toImmutableList());
 
     }

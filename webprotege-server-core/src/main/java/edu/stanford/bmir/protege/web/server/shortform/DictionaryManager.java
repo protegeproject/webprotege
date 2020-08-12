@@ -4,15 +4,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.OboIdDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.PrefixedNameDictionaryLanguage;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -123,10 +127,7 @@ public class DictionaryManager {
 
     @Nonnull
     public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
-        var shortForm = builtInShortFormDictionary.getShortForm(entity, null);
-        if(shortForm != null) {
-            return ImmutableMap.of(LocalNameDictionaryLanguage.get(), shortForm);
-        }
-        return dictionary.getShortForms(entity, languageManager.getLanguages());
+        var languages = languageManager.getLanguages();
+        return dictionary.getShortForms(entity, languages);
     }
 }

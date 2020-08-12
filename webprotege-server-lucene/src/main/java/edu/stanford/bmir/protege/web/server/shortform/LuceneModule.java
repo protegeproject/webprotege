@@ -95,7 +95,8 @@ public class LuceneModule {
     @Provides
     IndexWriterConfig provideIndexWriterConfig(IndexingAnalyzerFactory analyzerFactory) {
         var analyzer = analyzerFactory.get();
-        return new IndexWriterConfig(analyzer);
+        var config = new IndexWriterConfig(analyzer);
+        return config.setSimilarity(new EntityBasedSimilarity());
     }
 
     @Provides
@@ -126,6 +127,7 @@ public class LuceneModule {
                     logger.error("Error when disposing of Project Lucene IndexWriter", e);
                 }
             });
+
             return indexWriter;
         } catch (IOException e) {
             throw new UncheckedIOException(e);

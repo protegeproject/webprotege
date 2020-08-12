@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 
 import javax.annotation.Nonnull;
@@ -24,15 +23,15 @@ public class SearchResultMatchPresenter {
     private final SearchResultMatchView view;
 
     @Nonnull
-    private final LanguageMapCurrentLocaleMapper localeMapper;
+    private final SearchResultLanguageRenderer languageRenderer;
 
     @Inject
     public SearchResultMatchPresenter(@Nonnull SearchResultMatchHighlighter highlighter,
                                       @Nonnull SearchResultMatchView view,
-                                      @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
+                                      @Nonnull SearchResultLanguageRenderer languageRenderer) {
         this.highlighter = checkNotNull(highlighter);
         this.view = checkNotNull(view);
-        this.localeMapper = checkNotNull(localeMapper);
+        this.languageRenderer = checkNotNull(languageRenderer);
     }
 
     public void setSearchResultMatch(@Nonnull SearchResultMatch match) {
@@ -40,12 +39,7 @@ public class SearchResultMatchPresenter {
         SafeHtml rendering = highlighter.highlightSearchResult(match);
         view.setRendering(rendering);
         view.setValue(value);
-        LanguageMap dictionaryLanguageLabelMap = LanguageMap.fromDictionaryMap(match.getLanguageRendering());
-        String languageRendering = localeMapper.getValueForCurrentLocale(dictionaryLanguageLabelMap);
-        if(match.getLanguage().isAnnotationBased()) {
-            languageRendering = languageRendering + " @" + match.getLanguage().getLang();
-        }
-        view.setLanguageRendering(languageRendering);
+        view.setLanguageRendering(languageRenderer.getRendering(match));
     }
 
     @Nonnull

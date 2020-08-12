@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.lang;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
@@ -19,15 +20,17 @@ public class DefaultDisplayNameSettingsFactory {
 
     @Nonnull
     public DisplayNameSettings getDefaultDisplayNameSettings(@Nonnull String langTag) {
-        ImmutableList<DictionaryLanguageData> primaryLanguages;
+        ImmutableList<DictionaryLanguage> primaryLanguages;
         if (langTag.isEmpty()) {
-            primaryLanguages = ImmutableList.of(DictionaryLanguageData.rdfsLabel(langTag),
-                                                DictionaryLanguageData.localName());
+            primaryLanguages = ImmutableList.of(DictionaryLanguage.rdfsLabel(langTag),
+                                                DictionaryLanguage.prefixedName(),
+                                                DictionaryLanguage.localName());
         }
         else {
-            primaryLanguages = ImmutableList.of(DictionaryLanguageData.rdfsLabel(langTag),
-                                                DictionaryLanguageData.rdfsLabel(""),
-                                                DictionaryLanguageData.localName());
+            primaryLanguages = ImmutableList.of(DictionaryLanguage.rdfsLabel(langTag),
+                                                DictionaryLanguage.rdfsLabel(""),
+                                                DictionaryLanguage.prefixedName(),
+                                                DictionaryLanguage.localName());
         }
         return DisplayNameSettings.get(
                 primaryLanguages,

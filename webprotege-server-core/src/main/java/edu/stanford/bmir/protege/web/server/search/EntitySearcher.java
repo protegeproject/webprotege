@@ -20,10 +20,7 @@ import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.SearchField;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatchPosition;
-import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionPathDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
@@ -82,9 +79,6 @@ public class EntitySearcher {
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final LanguageManager languageManager;
-
-    @Nonnull
     private final Set<EntityType<?>> entityTypes;
 
     @Nonnull
@@ -94,6 +88,9 @@ public class EntitySearcher {
     private final ImmutableList<SearchString> searchWords;
 
     @Nonnull
+    private final ImmutableList<DictionaryLanguage> searchLanguages;
+
+    @Nonnull
     private Page<EntitySearchResult> results = Page.emptyPage();
 
     private PageRequest pageRequest = PageRequest.requestFirstPage();
@@ -101,20 +98,20 @@ public class EntitySearcher {
     @AutoFactory
     public EntitySearcher(@Provided @Nonnull ProjectId projectId,
                           @Provided @Nonnull DictionaryManager dictionaryManager,
-                          @Provided @Nonnull LanguageManager languageManager,
                           @Nonnull Set<EntityType<?>> entityTypes,
                           @Nonnull String searchString,
-                          @Nonnull UserId userId) {
+                          @Nonnull UserId userId,
+                          @Nonnull ImmutableList<DictionaryLanguage> searchLanguages) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.dictionaryManager = checkNotNull(dictionaryManager);
-        this.languageManager = languageManager;
         this.entityTypes = new HashSet<>(checkNotNull(entityTypes));
         this.searchString = checkNotNull(searchString);
         this.searchWords = Stream.of(searchString.split("\\s+"))
                                  .filter(s -> !s.isEmpty())
                                  .map(SearchString::parseSearchString)
                                  .collect(toImmutableList());
+        this.searchLanguages = searchLanguages;
     }
 
     public void setPageRequest(@Nonnull PageRequest pageRequest) {
@@ -136,7 +133,7 @@ public class EntitySearcher {
     public void invoke() {
         var entityMatches = dictionaryManager.getShortFormsContaining(searchWords,
                                                                       entityTypes,
-                                                                      languageManager.getLanguages(),
+                                                                      searchLanguages,
                                                                       pageRequest);
         results = entityMatches.transform(matches -> {
             var entity = matches.getEntity();
@@ -174,9 +171,19 @@ public class EntitySearcher {
             @Override
             public ImmutableMap<DictionaryLanguage, String> visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
                 var annotationPropertyIri = language.getAnnotationPropertyIri();
+                return getAnnotationPropertyRendering(annotationPropertyIri);
+            }
+
+            @Override
+            public ImmutableMap<DictionaryLanguage, String> visit(@Nonnull AnnotationAssertionPathDictionaryLanguage language) {
+                return getAnnotationPropertyRendering(language.getAnnotationPropertyPath().get(0));
+            }
+
+            private ImmutableMap<DictionaryLanguage, String> getAnnotationPropertyRendering(IRI annotationPropertyIri) {
                 var annotationProperty = DataFactory.getOWLAnnotationProperty(annotationPropertyIri);
                 return dictionaryManager.getShortForms(annotationProperty);
             }
+
         });
     }
 }

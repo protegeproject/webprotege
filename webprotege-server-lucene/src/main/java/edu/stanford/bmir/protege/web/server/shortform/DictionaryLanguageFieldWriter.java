@@ -38,7 +38,6 @@ public class DictionaryLanguageFieldWriter {
         // allows a read of the annotation value from the index
         var valueFieldName = fieldNameTranslator.getNonTokenizedFieldName(language);
         document.add(new TextField(valueFieldName, value, Field.Store.YES));
-
         var analyzedFieldName = fieldNameTranslator.getTokenizedFieldName(language);
         document.add(new TextField(analyzedFieldName, value, Field.Store.NO));
 

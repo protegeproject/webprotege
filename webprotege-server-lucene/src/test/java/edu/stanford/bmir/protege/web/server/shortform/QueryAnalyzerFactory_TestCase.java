@@ -19,7 +19,7 @@ public class QueryAnalyzerFactory_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        analyzer = new QueryAnalyzerFactory().get();
+        analyzer = new QueryAnalyzerFactory().getTokenizedQueryAnalyzer();
     }
 
     @Test

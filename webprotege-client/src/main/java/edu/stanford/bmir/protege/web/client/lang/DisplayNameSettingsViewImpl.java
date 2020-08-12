@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
@@ -33,10 +34,10 @@ public class DisplayNameSettingsViewImpl extends Composite implements DisplayNam
     private static DisplayNameSettingsViewImplUiBinder ourUiBinder = GWT.create(DisplayNameSettingsViewImplUiBinder.class);
 
     @UiField(provided = true)
-    final ValueListFlexEditorImpl<DictionaryLanguageData> primaryDisplayNameLanguages;
+    final ValueListFlexEditorImpl<DictionaryLanguage> primaryDisplayNameLanguages;
 
     @UiField(provided = true)
-    final ValueListFlexEditorImpl<DictionaryLanguageData> secondaryDisplayNameLanguages;
+    final ValueListFlexEditorImpl<DictionaryLanguage> secondaryDisplayNameLanguages;
 
     @Inject
     public DisplayNameSettingsViewImpl(Provider<DictionaryLanguageDataEditor> editorProvider) {
@@ -46,24 +47,24 @@ public class DisplayNameSettingsViewImpl extends Composite implements DisplayNam
     }
 
     @Override
-    public void setPrimaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguageData> languages) {
+    public void setPrimaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguage> languages) {
         primaryDisplayNameLanguages.setValue(languages);
     }
 
     @Nonnull
     @Override
-    public ImmutableList<DictionaryLanguageData> getPrimaryDisplayNameLanguages() {
+    public ImmutableList<DictionaryLanguage> getPrimaryDisplayNameLanguages() {
         return ImmutableList.copyOf(primaryDisplayNameLanguages.getValue().orElse(ImmutableList.of()));
     }
 
     @Override
-    public void setSecondaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguageData> languages) {
+    public void setSecondaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguage> languages) {
         secondaryDisplayNameLanguages.setValue(languages);
     }
 
     @Nonnull
     @Override
-    public ImmutableList<DictionaryLanguageData> getSecondaryDisplayNameLanguages() {
+    public ImmutableList<DictionaryLanguage> getSecondaryDisplayNameLanguages() {
         return ImmutableList.copyOf(secondaryDisplayNameLanguages.getValue().orElse(ImmutableList.of()));
     }
 

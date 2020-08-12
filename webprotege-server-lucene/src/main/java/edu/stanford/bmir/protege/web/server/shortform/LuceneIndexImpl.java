@@ -104,6 +104,7 @@ public class LuceneIndexImpl implements LuceneIndex {
                                                          @Nonnull Set<EntityType<?>> entityTypes,
                                                          @Nonnull PageRequest pageRequest) throws IOException, ParseException {
         var indexSearcher = searcherManager.acquire();
+//        indexSearcher.setSimilarity(new EntityBasedSimilarity());
         try {
 
 

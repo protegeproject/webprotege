@@ -99,31 +99,29 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
                         return lang.accept(new DictionaryLanguageVisitor<DictionaryLanguageUsage>() {
                             @Override
                             public DictionaryLanguageUsage visit(@Nonnull LocalNameDictionaryLanguage language) {
-                                return DictionaryLanguageUsage.get(DictionaryLanguageData.localName(),
+                                return DictionaryLanguageUsage.get(DictionaryLanguage.localName(),
                                                                    0);
                             }
 
                             @Override
                             public DictionaryLanguageUsage visit(@Nonnull OboIdDictionaryLanguage language) {
-                                return DictionaryLanguageUsage.get(DictionaryLanguageData.localName(),
+                                return DictionaryLanguageUsage.get(DictionaryLanguage.oboId(),
                                                                    0);
                             }
 
                             @Override
                             public DictionaryLanguageUsage visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
-                                DictionaryLanguageData langData = DictionaryLanguageData.get(language.getAnnotationPropertyIri(),
-                                                                                             language.getLang());
-                                return DictionaryLanguageUsage.get(langData, activeLangs.count(lang));
+                                return DictionaryLanguageUsage.get(language, activeLangs.count(lang));
                             }
 
                             @Override
                             public DictionaryLanguageUsage visit(@Nonnull AnnotationAssertionPathDictionaryLanguage language) {
-                                throw new RuntimeException("Not supported yet");
+                                return DictionaryLanguageUsage.get(language, activeLangs.count(lang));
                             }
 
                             @Override
                             public DictionaryLanguageUsage visit(@Nonnull PrefixedNameDictionaryLanguage language) {
-                                return DictionaryLanguageUsage.get(DictionaryLanguageData.localName(),
+                                return DictionaryLanguageUsage.get(DictionaryLanguage.prefixedName(),
                                                                    0);
                             }
                         });
@@ -195,6 +193,8 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
         Comparator<DictionaryLanguage> byActiveLangCountReversed = byActiveLangCount.reversed();
         Comparator<DictionaryLanguage> byLang = comparing(DictionaryLanguage::getLang);
         sortedLangs.sort(byActiveLangCountReversed.thenComparing(byLang));
+        sortedLangs.add(PrefixedNameDictionaryLanguage.get());
+        // TODO: Obo?
         sortedLangs.add(LocalNameDictionaryLanguage.get());
         sortedLanguages = ImmutableList.copyOf(sortedLangs);
     }

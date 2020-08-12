@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
     private static DisplayLanguagesViewImplUiBinder ourUiBinder = GWT.create(DisplayLanguagesViewImplUiBinder.class);
 
     @UiField(provided = true)
-    ValueListFlexEditorImpl<DictionaryLanguageData> languagesList;
+    ValueListFlexEditorImpl<DictionaryLanguage> languagesList;
 
     @UiField
     Button resetButton;
@@ -61,11 +62,11 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
 
     @Nonnull
     @Override
-    public ImmutableList<DictionaryLanguageData> getPrimaryLanguages() {
-        ImmutableList<DictionaryLanguageData> specifiedList = languagesList.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
+    public ImmutableList<DictionaryLanguage> getPrimaryLanguages() {
+        ImmutableList<DictionaryLanguage> specifiedList = languagesList.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
         if (fallbackCheckBox.getValue()) {
             return Streams.concat(specifiedList.stream(),
-                                  Stream.of(DictionaryLanguageData.localName())).collect(toImmutableList());
+                                  Stream.of(DictionaryLanguage.localName())).collect(toImmutableList());
         }
         else {
             return specifiedList;
@@ -73,12 +74,8 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
     }
 
     @Override
-    public void setPrimaryLanguages(@Nonnull List<DictionaryLanguageData> primaryLanguages) {
-        Map<Boolean, ImmutableList<DictionaryLanguageData>> langs = primaryLanguages.stream()
-                                                                                    .collect(partitioningBy(DictionaryLanguageData::isAnnotationBased,
-                                                                                                            toImmutableList()));
-        languagesList.setValue(langs.getOrDefault(true, ImmutableList.of()));
-        fallbackCheckBox.setValue(!langs.get(false).isEmpty());
+    public void setPrimaryLanguages(@Nonnull List<DictionaryLanguage> primaryLanguages) {
+        languagesList.setValue(primaryLanguages);
     }
 
     @Override

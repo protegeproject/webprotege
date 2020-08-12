@@ -48,7 +48,7 @@ public class LuceneQueryFactory {
                 return Stream.of(searchString.getRawSearchString());
             }
             else {
-                var tokenStream = queryAnalyzerFactory.get()
+                var tokenStream = queryAnalyzerFactory.getTokenizedQueryAnalyzer()
                                                       // Field name is not relevant
                                                       .tokenStream("", searchString.getSearchString());
                 tokenStream.addAttribute(CharTermAttribute.class);
@@ -89,7 +89,7 @@ public class LuceneQueryFactory {
             var analyzedAndOriginalQueryBuilder = new BooleanQuery.Builder();
 
             analyzedAndOriginalQueryBuilder.add(analyzedValueQuery, BooleanClause.Occur.MUST);
-            analyzedAndOriginalQueryBuilder.add(originalValueQuery, BooleanClause.Occur.SHOULD);
+            analyzedAndOriginalQueryBuilder.add(new BoostQuery(originalValueQuery, 2), BooleanClause.Occur.SHOULD);
             var analyzedAndOriginalQuery = analyzedAndOriginalQueryBuilder.build();
 
 
@@ -116,15 +116,34 @@ public class LuceneQueryFactory {
     }
 
     private BooleanQuery buildOriginalValueFieldQuery(List<SearchString> searchStrings, DictionaryLanguage lang) {
-        // No analysis here of search strings here.
-        // TODO: Lowercase analysis?
         var shouldOccurBuilder = new BooleanQuery.Builder();
         for(var searchString : searchStrings) {
-            var originalFieldName = fieldNameTranslator.getNonTokenizedFieldName(lang);
-            var searchStringTerm = new Term(originalFieldName, searchString.getRawSearchString());
+            var nonTokenizedFieldName = fieldNameTranslator.getNonTokenizedFieldName(lang);
+            var nonTokenizedQueryString = getNonTokenizedQueryString(lang, searchString);
+            var searchStringTerm = new Term(nonTokenizedFieldName, nonTokenizedQueryString);
+
             shouldOccurBuilder.add(new TermQuery(searchStringTerm), BooleanClause.Occur.MUST);
         }
         return shouldOccurBuilder.build();
+    }
+
+    private String getNonTokenizedQueryString(DictionaryLanguage lang, SearchString searchString) {
+        try {
+            var nonTokenizedFieldName = fieldNameTranslator.getNonTokenizedFieldName(lang);
+            var tokenStream = queryAnalyzerFactory.getKeywordQueryAnalyzer()
+                                .tokenStream(nonTokenizedFieldName, searchString.getRawSearchString());
+            tokenStream.addAttribute(CharTermAttribute.class);
+            tokenStream.reset();
+            // Should only be one token
+            if(tokenStream.incrementToken()) {
+                return tokenStream.getAttribute(CharTermAttribute.class).toString();
+            }
+            else {
+                throw new RuntimeException("Could not get query token");
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Nonnull

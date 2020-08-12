@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.shortform;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -32,9 +33,10 @@ public abstract class AnnotationAssertionPathDictionaryLanguage extends Dictiona
     public static final String PATH = "path";
 
 
+    @JsonCreator
     @Nonnull
-    public static AnnotationAssertionPathDictionaryLanguage get(@Nonnull ImmutableList<IRI> path,
-                                                                @Nonnull String newLang) {
+    public static AnnotationAssertionPathDictionaryLanguage get(@JsonProperty(PATH) @Nonnull ImmutableList<IRI> path,
+                                                                @JsonProperty(LANG) @Nonnull String newLang) {
         return new AutoValue_AnnotationAssertionPathDictionaryLanguage(path, newLang);
     }
 

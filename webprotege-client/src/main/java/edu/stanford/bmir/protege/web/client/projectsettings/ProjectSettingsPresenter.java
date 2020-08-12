@@ -29,6 +29,7 @@ import org.semanticweb.owlapi.model.IRI;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -155,7 +156,7 @@ public class ProjectSettingsPresenter {
 
     private void handleResetDisplayNameLanguages() {
         currentLanguageUsage.ifPresent(langUsage -> {
-            ImmutableList<DictionaryLanguageData> langUsageData = langUsage.stream()
+            ImmutableList<DictionaryLanguage> langUsageData = langUsage.stream()
                                                                            .map(DictionaryLanguageUsage::getDictionaryLanguage)
                                                                            .collect(toImmutableList());
             defaultDisplayNameSettingsView.setPrimaryLanguages(langUsageData);
@@ -199,12 +200,14 @@ public class ProjectSettingsPresenter {
 
     private void displayDefaultDisplayNameLanguages(@Nonnull DisplayNameSettings displayNameSettings,
                                                     @Nonnull ImmutableList<DictionaryLanguageUsage> languages) {
-        ImmutableList<DictionaryLanguageData> langList = displayNameSettings.getPrimaryDisplayNameLanguages();
+        ImmutableList<DictionaryLanguage> langList = displayNameSettings.getPrimaryDisplayNameLanguages()
+                .stream()
+                .collect(toImmutableList());
         if (!langList.isEmpty()) {
             defaultDisplayNameSettingsView.setPrimaryLanguages(langList);
         }
         else {
-            ImmutableList<DictionaryLanguageData> activeLanguages = languages.stream()
+            ImmutableList<DictionaryLanguage> activeLanguages = languages.stream()
                                                                              .map(DictionaryLanguageUsage::getDictionaryLanguage)
                                                                              .collect(toImmutableList());
             defaultDisplayNameSettingsView.setPrimaryLanguages(activeLanguages);
