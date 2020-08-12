@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.*;
@@ -79,7 +80,9 @@ public class LuceneIndexImpl implements LuceneIndex {
         var indexSearcher = searcherManager.acquire();
         try {
             var topDocs = indexSearcher.search(query, ENTITY_TYPE_COUNT);
-            return getDictionaryLanguageValues(languages, indexSearcher, topDocs).map(EntityDictionaryLanguageValues::reduceToEntityShortForms);
+            return getDictionaryLanguageValues(languages,
+                                               indexSearcher,
+                                               topDocs).map(EntityDictionaryLanguageValues::reduceToEntityShortForms);
         } finally {
             searcherManager.release(indexSearcher);
         }
@@ -104,7 +107,7 @@ public class LuceneIndexImpl implements LuceneIndex {
                                                          @Nonnull Set<EntityType<?>> entityTypes,
                                                          @Nonnull PageRequest pageRequest) throws IOException, ParseException {
         var indexSearcher = searcherManager.acquire();
-//        indexSearcher.setSimilarity(new EntityBasedSimilarity());
+        //        indexSearcher.setSimilarity(new EntityBasedSimilarity());
         try {
 
 
@@ -126,11 +129,12 @@ public class LuceneIndexImpl implements LuceneIndex {
             var query = queryBuilder.build();
 
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
+            explain(query, topDocs, indexSearcher);
             var languagesSet = ImmutableSet.copyOf(dictionaryLanguages);
             var page = getDictionaryLanguageValues(dictionaryLanguages,
                                                    indexSearcher,
                                                    topDocs).collect(PageCollector.toPage(pageRequest.getPageNumber(),
-                                                                                       pageRequest.getPageSize()));
+                                                                                         pageRequest.getPageSize()));
             return page.map(pg -> pg.transform(entityShortForms -> {
                 var matches = luceneDictionaryLanguageValuesMatcher.getShortFormMatches(entityShortForms,
                                                                                         languagesSet,
@@ -140,6 +144,29 @@ public class LuceneIndexImpl implements LuceneIndex {
             }));
         } finally {
             searcherManager.release(indexSearcher);
+        }
+    }
+
+    private void explain(Query query, TopDocs topDocs, IndexSearcher indexSearcher) {
+        if(!logger.isDebugEnabled()) {
+            return;
+        }
+        try {
+            var maxExplanations = 10;
+            for (int i = 0; i < maxExplanations && i < topDocs.scoreDocs.length; i++) {
+                ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+                logger.debug("");
+                var document = indexSearcher.doc(scoreDoc.doc);
+                document.getFields()
+                        .stream()
+                        .map(IndexableField::toString)
+                        .forEach(logger::debug);
+                var explanation = indexSearcher.explain(query, scoreDoc.doc);
+                logger.info(explanation.toString());
+
+            }
+        } catch (IOException e) {
+            logger.debug("Error when generating explanation", e);
         }
     }
 
