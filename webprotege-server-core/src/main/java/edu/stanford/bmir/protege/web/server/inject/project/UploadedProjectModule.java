@@ -273,6 +273,6 @@ public class UploadedProjectModule {
     @Provides
     @LuceneIndexesDirectory
     Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
-        return dataDirectoryProvider.get().toPath().resolve("lucene-indexes");
+        return dataDirectoryProvider.get().toPath().resolve("uploads-lucene-indexes");
     }
 }
