@@ -1283,4 +1283,16 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @AlternateMessage({"one", "(1 row in total)"})
     @Key("pagination.rows")
     String pagination_rows(long elementCount);
+
+    @DefaultMessage("Local name")
+    @Key("dictionaryLanguage.localName")
+    String dicationaryLanguage_localname();
+
+    @DefaultMessage("OBO Id")
+    @Key("dictionaryLanguage.oboId")
+    String dictionaryLanguage_oboId();
+
+    @DefaultMessage("Prefixed name")
+    @Key("dictionaryLanguage.prefixedName")
+    String dictionaryLanguage_prefixedName();
 }
