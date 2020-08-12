@@ -81,25 +81,25 @@ public class LuceneQueryFactory {
         var outerBooleanQueryBuilder = new BooleanQuery.Builder();
         for(var lang : languages) {
 
-            var analyzedValueQuery = buildAnalyzedFieldBooleanQuery(searchStrings, lang);
+            var tokenizedValueQuery = buildTokenizedFieldBooleanQuery(searchStrings, lang);
 
-            var originalValueQuery = buildOriginalValueFieldQuery(searchStrings, lang);
+            var nonTokenizedValueQuery = buildNonTokenizedValueFieldQuery(searchStrings, lang);
 
             // Boost the score with the original field query
-            var analyzedAndOriginalQueryBuilder = new BooleanQuery.Builder();
+            var combinedQueries = new BooleanQuery.Builder();
 
-            analyzedAndOriginalQueryBuilder.add(analyzedValueQuery, BooleanClause.Occur.MUST);
-            analyzedAndOriginalQueryBuilder.add(new BoostQuery(originalValueQuery, 2), BooleanClause.Occur.SHOULD);
-            var analyzedAndOriginalQuery = analyzedAndOriginalQueryBuilder.build();
+            combinedQueries.add(tokenizedValueQuery, BooleanClause.Occur.MUST);
+            combinedQueries.add(nonTokenizedValueQuery, BooleanClause.Occur.SHOULD);
+            var combinedQuery = combinedQueries.build();
 
 
             // Combine for all languages using SHOULD
-            outerBooleanQueryBuilder.add(analyzedAndOriginalQuery, BooleanClause.Occur.SHOULD);
+            outerBooleanQueryBuilder.add(combinedQuery, BooleanClause.Occur.SHOULD);
         }
         return outerBooleanQueryBuilder.build();
     }
 
-    private BooleanQuery buildAnalyzedFieldBooleanQuery(List<SearchString> searchStrings, DictionaryLanguage lang) {
+    private Query buildTokenizedFieldBooleanQuery(List<SearchString> searchStrings, DictionaryLanguage lang) {
         var mustOccurBuilder = new BooleanQuery.Builder();
         for(var searchString : getAnalyzedSearchStrings(searchStrings)) {
             // Analyzed - MUST occur
@@ -115,16 +115,16 @@ public class LuceneQueryFactory {
         return mustOccurBuilder.build();
     }
 
-    private BooleanQuery buildOriginalValueFieldQuery(List<SearchString> searchStrings, DictionaryLanguage lang) {
+    private Query buildNonTokenizedValueFieldQuery(List<SearchString> searchStrings, DictionaryLanguage lang) {
         var shouldOccurBuilder = new BooleanQuery.Builder();
         for(var searchString : searchStrings) {
             var nonTokenizedFieldName = fieldNameTranslator.getNonTokenizedFieldName(lang);
             var nonTokenizedQueryString = getNonTokenizedQueryString(lang, searchString);
             var searchStringTerm = new Term(nonTokenizedFieldName, nonTokenizedQueryString);
-
             shouldOccurBuilder.add(new TermQuery(searchStringTerm), BooleanClause.Occur.MUST);
         }
-        return shouldOccurBuilder.build();
+        var queryForAllTerms = shouldOccurBuilder.build();
+        return new BoostQuery(queryForAllTerms, 100f);
     }
 
     private String getNonTokenizedQueryString(DictionaryLanguage lang, SearchString searchString) {
@@ -151,7 +151,7 @@ public class LuceneQueryFactory {
                                                   List<DictionaryLanguage> languages) {
         var outerBooleanQueryBuilder = new BooleanQuery.Builder();
         for(var lang : languages) {
-            var originalValueQuery = buildOriginalValueFieldQuery(searchStrings, lang);
+            var originalValueQuery = buildNonTokenizedValueFieldQuery(searchStrings, lang);
             // Combine for all languages using SHOULD. i.e. match any field
             outerBooleanQueryBuilder.add(originalValueQuery, BooleanClause.Occur.SHOULD);
         }
