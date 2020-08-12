@@ -42,7 +42,7 @@ public class IndexingAnalyzerWrapper extends DelegatingAnalyzerWrapper {
 
     @Override
     protected Analyzer getWrappedAnalyzer(String fieldName) {
-        if(fieldName.startsWith("value.")) {
+        if(fieldName.startsWith(EntityDocumentFieldNames.KEYWORD_FIELD_PREFIX)) {
             return keywordAnalyzer;
         }
         return analyzer;
