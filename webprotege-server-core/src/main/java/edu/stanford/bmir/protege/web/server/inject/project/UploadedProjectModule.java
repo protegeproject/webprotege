@@ -30,6 +30,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -272,8 +273,11 @@ public class UploadedProjectModule {
 
     @Provides
     @LuceneIndexesDirectory
+    @ProjectSingleton
     Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
-        return dataDirectoryProvider.get().toPath().resolve("uploads-lucene-indexes");
+        return dataDirectoryProvider.get().toPath().resolve("uploads-lucene-indexes")
+                                    // Generate a different path for each upload so that we don't get any clashes
+                                    .resolve(UUID.randomUUID().toString());
     }
 
     @Provides
