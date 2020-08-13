@@ -14,20 +14,24 @@ import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
+import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.shortform.AnnotationAssertionAxiomsModule;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneIndexesDirectory;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneModule;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.UUID;
@@ -274,10 +278,19 @@ public class UploadedProjectModule {
     @Provides
     @LuceneIndexesDirectory
     @ProjectSingleton
-    Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
-        return dataDirectoryProvider.get().toPath().resolve("uploads-lucene-indexes")
-                                    // Generate a different path for each upload so that we don't get any clashes
-                                    .resolve(UUID.randomUUID().toString());
+    Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider,
+                                       ProjectDisposablesManager projectDisposablesManager) {
+        Path path = dataDirectoryProvider.get().toPath().resolve("uploads-lucene-indexes")
+                                         // Generate a different path for each upload so that we don't get any clashes
+                                         .resolve(UUID.randomUUID().toString());
+        projectDisposablesManager.register(() -> {
+            try {
+                FileUtils.deleteDirectory(path.toFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return path;
     }
 
     @Provides
@@ -292,5 +305,11 @@ public class UploadedProjectModule {
                 return Stream.empty();
             }
         };
+    }
+
+    @Provides
+    @ProjectSingleton
+    ProjectDisposablesManager provideProjectDisposablesManager(DisposableObjectManager disposableObjectManager) {
+        return new ProjectDisposablesManager(disposableObjectManager);
     }
 }
