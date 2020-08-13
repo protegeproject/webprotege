@@ -1,5 +1,6 @@
-package edu.stanford.bmir.protege.web.server.shortform;
+package edu.stanford.bmir.protege.web.server.entity;
 
+import edu.stanford.bmir.protege.web.server.entity.SubjectClosureResolver;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsByValueIndex;
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;

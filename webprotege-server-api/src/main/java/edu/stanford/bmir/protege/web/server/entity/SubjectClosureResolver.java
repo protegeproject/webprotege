@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.shortform;
+package edu.stanford.bmir.protege.web.server.entity;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsByValueIndex;

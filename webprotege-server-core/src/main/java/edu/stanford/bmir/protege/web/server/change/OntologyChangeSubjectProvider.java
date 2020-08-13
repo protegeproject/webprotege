@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
-import edu.stanford.bmir.protege.web.server.shortform.SubjectClosureResolver;
+import edu.stanford.bmir.protege.web.server.entity.SubjectClosureResolver;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
