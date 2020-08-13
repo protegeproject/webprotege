@@ -34,18 +34,18 @@ public class SearchResultMatchHighlighter {
             int wordEnd = matchPosition.getEnd();
             if (lastEnd != wordStart) {
                 // Gap from last search position
-                highlighted.append("<span style='white-space: pre;'>");
+                highlighted.append("<span'>");
                 highlighted.append(matchedValue, lastEnd, wordStart);
                 highlighted.append("</span>");
             }
-            highlighted.append("<strong span style='white-space: pre;'>");
+            highlighted.append("<strong>");
             highlighted.append(matchedValue, wordStart, wordEnd);
             highlighted.append("</strong>");
             lastEnd = wordEnd;
         }
         // Finish to end of shortForm from end of last match position
         if (lastEnd < matchedValue.length() - 1) {
-            highlighted.append("<span style='white-space: pre;'>");
+            highlighted.append("<span>");
             highlighted.append(matchedValue.substring(lastEnd));
             highlighted.append("</span>");
         }

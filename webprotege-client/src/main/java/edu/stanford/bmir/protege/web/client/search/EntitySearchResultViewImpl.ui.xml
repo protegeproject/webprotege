@@ -3,12 +3,12 @@
 
     <ui:style>
         @external .searchedIri;
+        @external .wp-entity-node__display-name;
         .main {
             display: flex;
             align-items: start;
             flex-direction: row;
             font-size: 12px;
-            white-space: nowrap;
             padding: 2px;
             border-bottom: 1px solid literal("var(--separator--color)");
             cursor: default !important;
@@ -24,6 +24,15 @@
             flex-basis: 180px;
             overflow: hidden;
             margin-right: 0.5em;
+        }
+        .entityDisplayName {
+
+        }
+        .entityDisplayName .wp-entity-node__display-name {
+            overflow: hidden;
+            width: 180px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .oboIdField {
             color: literal("var(--tertiary--color)");
@@ -46,7 +55,7 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.entityRendering}">
-            <g:HTML ui:field="entityRenderingField"/>
+            <g:HTML ui:field="entityRenderingField" addStyleNames="{style.entityDisplayName}"/>
             <g:Label ui:field="oboIdField" text="OBO:Id" addStyleNames="{style.oboIdField}"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="matchesContainer" addStyleNames="{style.matchesContainer}">
