@@ -82,7 +82,7 @@ public class DictionaryManager {
         var shortForm = getShortForm(entity, languages);
         return ShortFormQuotingUtils.getQuotedShortForm(shortForm);
     }
-    
+
     @Nonnull
     public String getShortForm(@Nonnull OWLEntity entity) {
         return getShortForm(entity,
