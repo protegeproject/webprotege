@@ -9,8 +9,9 @@ import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.owl2lpg.client.read.frame2.Neo4jClassFrameAxiomsIndex;
-import edu.stanford.owl2lpg.client.read.frame2.Neo4jNamedIndividualFrameAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jClassFrameAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jNamedIndividualFrameAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jSubClassOfAxiomsBySubClassIndex;
 
 import javax.annotation.Nonnull;
 
@@ -292,7 +293,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    SubClassOfAxiomsBySubClassIndex provideSubClassOfAxiomsBySubClassIndex(SubClassOfAxiomsBySubClassIndexImpl impl) {
+    SubClassOfAxiomsBySubClassIndex provideSubClassOfAxiomsBySubClassIndex(Neo4jSubClassOfAxiomsBySubClassIndex impl) {
         return impl;
     }
 
