@@ -55,15 +55,13 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.owl2lpg.client.read.axiom.AxiomSubjectAccessor;
-import edu.stanford.owl2lpg.client.read.axiom.AxiomSubjectAccessorImpl;
-import edu.stanford.owl2lpg.client.read.axiom.NodeMapperModule;
+import edu.stanford.owl2lpg.client.read.axiom.*;
+import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessor;
+import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessorImpl;
+import edu.stanford.owl2lpg.client.read.hierarchy.Neo4jClassHierarchyProvider;
 import edu.stanford.owl2lpg.client.read.shortform.*;
-import edu.stanford.owl2lpg.model.AxiomContext;
 import edu.stanford.owl2lpg.model.BranchId;
 import edu.stanford.owl2lpg.model.OntologyDocumentId;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.Session;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
@@ -135,13 +133,17 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  @ProjectSingleton
-  public Neo4jFullTextIndexName provideNeo4jFullTextIndexName() {
-    return Neo4jFullTextIndexName.create("annotation_value_index");
+  public AxiomSubjectAccessor provideAxiomSubjectAccessor(AxiomSubjectAccessorImpl impl) {
+    return impl;
   }
 
   @Provides
-  public AxiomSubjectAccessor provideAxiomSubjectAccessor(AxiomSubjectAccessorImpl impl) {
+  public AxiomByEntityAccessor provideAxiomByEntityAccessor(AxiomByEntityAccessorImpl impl) {
+    return impl;
+  }
+
+  @Provides
+  public ClassHierarchyAccessor provideClassHierarchyAccessor(ClassHierarchyAccessorImpl impl) {
     return impl;
   }
 
@@ -301,7 +303,7 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  public ClassHierarchyProvider getClassHierarchyProvider(ClassHierarchyProviderImpl impl) {
+  public ClassHierarchyProvider getClassHierarchyProvider(Neo4jClassHierarchyProvider impl) {
     return impl;
   }
 
