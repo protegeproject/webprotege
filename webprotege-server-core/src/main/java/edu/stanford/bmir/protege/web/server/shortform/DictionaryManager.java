@@ -82,13 +82,7 @@ public class DictionaryManager {
         var shortForm = getShortForm(entity, languages);
         return ShortFormQuotingUtils.getQuotedShortForm(shortForm);
     }
-
-    @Nonnull
-    public String getQuotedShortForm(@Nonnull OWLEntity entity) {
-        return getQuotedShortForm(entity,
-                                  languageManager.getLanguages());
-    }
-
+    
     @Nonnull
     public String getShortForm(@Nonnull OWLEntity entity) {
         return getShortForm(entity,
@@ -108,16 +102,6 @@ public class DictionaryManager {
                                                         @Nonnull List<DictionaryLanguage> languages,
                                                                 @Nonnull PageRequest pageRequest) {
         return dictionary.getShortFormsContaining(searchStrings, entityTypes, languages, pageRequest);
-    }
-
-    @Nonnull
-    public Page<EntityShortFormMatches> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
-                                                          @Nonnull Set<EntityType<?>> entityTypes,
-                                                                @Nonnull PageRequest pageRequest) {
-        if(entityTypes.isEmpty()) {
-            return Page.emptyPage();
-        }
-        return getShortFormsContaining(searchStrings, entityTypes, languageManager.getLanguages(), pageRequest);
     }
 
     public void update(@Nonnull Collection<OWLEntity> entities) {
