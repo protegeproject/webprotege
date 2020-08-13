@@ -313,6 +313,12 @@ public class IndexModule {
         return impl;
     }
 
+    @Provides
+    @ProjectSingleton
+    public AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex(AnnotationAssertionAxiomsByValueIndexImpl impl) {
+        return impl;
+    }
+
 
     @Provides
     @IntoSet
@@ -329,6 +335,14 @@ public class IndexModule {
     @Provides
     @IntoSet
     public UpdatableIndex provideAxiomsByEntityReferenceIndexImplIntoSet(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+
+
+    @Provides
+    @IntoSet
+    public UpdatableIndex provideAnnotationAssertionAxiomsByValueIndexIntoSet(AnnotationAssertionAxiomsByValueIndexImpl impl) {
         return impl;
     }
 
@@ -439,12 +453,6 @@ public class IndexModule {
     @Provides
     @ProjectSingleton
     public DeprecatedEntitiesIndex provideDeprecatedEntitiesIndex(@Nonnull DeprecatedEntitiesIndexLuceneImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @ProjectSingleton
-    public AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex(AnnotationAssertionAxiomsByValueIndexImpl impl) {
         return impl;
     }
 }

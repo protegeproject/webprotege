@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureByIriIndex;
+import edu.stanford.bmir.protege.web.server.shortform.SubjectClosureResolver;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -13,6 +14,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Matthew Horridge,
  *         Stanford University,
@@ -23,14 +26,21 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
 
     private ChangeSubjectProvider changeSubjectProvider;
 
+    private final SubjectClosureResolver closureResolver;
+
     @Inject
-    public OntologyChangeSubjectProvider(EntitiesInProjectSignatureByIriIndex entitiesByIRI) {
+    public OntologyChangeSubjectProvider(EntitiesInProjectSignatureByIriIndex entitiesByIRI,
+                                         SubjectClosureResolver closureResolver) {
         this.changeSubjectProvider = new ChangeSubjectProvider(new AxiomEntitySubjectProvider(entitiesByIRI));
+        this.closureResolver = checkNotNull(closureResolver);
     }
 
     @Override
     public Set<OWLEntity> getChangeSubjects(OntologyChange change) {
-        return change.accept(changeSubjectProvider);
+        return change.accept(changeSubjectProvider)
+                .stream()
+                .flatMap(closureResolver::resolve)
+                .collect(Collectors.toSet());
     }
 
 

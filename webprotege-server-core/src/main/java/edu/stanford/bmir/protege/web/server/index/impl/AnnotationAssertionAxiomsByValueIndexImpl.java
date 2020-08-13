@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.index.impl;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsByValueIndex;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -20,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-08-13
  */
+@ProjectSingleton
 public class AnnotationAssertionAxiomsByValueIndexImpl implements AnnotationAssertionAxiomsByValueIndex, UpdatableIndex {
 
     private final AxiomMultimapIndex<OWLAnnotationValue, OWLAnnotationAssertionAxiom> index;

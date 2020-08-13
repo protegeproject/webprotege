@@ -275,4 +275,18 @@ public class UploadedProjectModule {
     Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
         return dataDirectoryProvider.get().toPath().resolve("uploads-lucene-indexes");
     }
+
+    @Provides
+    @ProjectSingleton
+    AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex() {
+        return new AnnotationAssertionAxiomsByValueIndex() {
+            @Nonnull
+            @Override
+            public Stream<OWLAnnotationAssertionAxiom> getAxiomsByValue(@Nonnull OWLAnnotationValue value,
+                                                                        @Nonnull OWLOntologyID ontologyId) {
+                // Okay to return an empty stream here.  Only needed for stubbing purposes
+                return Stream.empty();
+            }
+        };
+    }
 }
