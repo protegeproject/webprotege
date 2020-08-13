@@ -9,10 +9,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import com.mongodb.util.JSON;
-import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionPathDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -100,13 +97,19 @@ public abstract class LanguageMap {
             dict.accept(new DictionaryLanguageVisitor<String>() {
                 @Override
                 public String visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
-                    langMap.put(language.getLang(), value);
+                    langMap.putIfAbsent(language.getLang(), value);
                     return null;
                 }
 
                 @Override
                 public String visit(@Nonnull AnnotationAssertionPathDictionaryLanguage language) {
-                    langMap.put(language.getLang(), value);
+                    langMap.putIfAbsent(language.getLang(), value);
+                    return null;
+                }
+
+                @Override
+                public String visit(@Nonnull LocalNameDictionaryLanguage language) {
+                    langMap.putIfAbsent("", value);
                     return null;
                 }
             });
