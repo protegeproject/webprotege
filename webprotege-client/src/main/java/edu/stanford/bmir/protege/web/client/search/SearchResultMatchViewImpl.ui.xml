@@ -19,6 +19,7 @@
             flex-shrink: 0;
             flex-basis: 90px;
             text-align: right;
+            white-space: nowrap;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
