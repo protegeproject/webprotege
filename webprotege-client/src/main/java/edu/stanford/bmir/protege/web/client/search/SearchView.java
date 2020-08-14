@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.search;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
@@ -30,8 +31,11 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
 
     int getSelectedSearchResultIndex();
 
+    void setLangTagFilterVisible(boolean visible);
 
+    AcceptsOneWidget getLangTagFilterContainer();
 
+    @Nonnull
     void setPageCount(int pageCount);
 
     void setPageNumber(int pageNumber);

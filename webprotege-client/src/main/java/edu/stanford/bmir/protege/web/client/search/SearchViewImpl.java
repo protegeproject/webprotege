@@ -55,6 +55,9 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     @UiField(provided = true)
     PaginatorView paginator;
 
+    @UiField
+    SimplePanel langTagsFilterContainer;
+
     private PaginatorPresenter paginatorPresenter;
 
     private int selectedIndex = -1;
@@ -92,6 +95,16 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     @Override
     public int getSelectedSearchResultIndex() {
         return selectedIndex;
+    }
+
+    @Override
+    public AcceptsOneWidget getLangTagFilterContainer() {
+        return langTagsFilterContainer;
+    }
+
+    @Override
+    public void setLangTagFilterVisible(boolean visible) {
+        langTagsFilterContainer.setVisible(visible);
     }
 
     @UiHandler("base")

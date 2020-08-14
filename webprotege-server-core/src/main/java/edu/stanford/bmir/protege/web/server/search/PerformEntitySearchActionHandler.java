@@ -11,16 +11,15 @@ import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.OboIdDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.PrefixedNameDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageFilter.EmptyLangTagTreatment.INCLUDE_EMPTY_LANG_TAGS;
 
 /**
  * Matthew Horridge
@@ -57,15 +56,17 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
         var entityTypes = action.getEntityTypes();
         var searchString = action.getSearchString();
         var languages = ImmutableList.<DictionaryLanguage>builder();
-        languages.addAll(languageManager.getLanguages());
+        var langTagFilter = action.getLangTagFilter();
+        var dictionaryLanguageFilter = DictionaryLanguageFilter.get(langTagFilter, INCLUDE_EMPTY_LANG_TAGS);
+        languageManager.getLanguages().stream().filter(dictionaryLanguageFilter::isIncluded).forEach(languages::add);
         languages.add(OboIdDictionaryLanguage.get());
         languages.add(LocalNameDictionaryLanguage.get());
         languages.add(PrefixedNameDictionaryLanguage.get());
 
-        EntitySearcher entitySearcher = entitySearcherFactory.create(entityTypes,
-                                                                     searchString,
-                                                                     executionContext.getUserId(),
-                                                                     languages.build());
+        var entitySearcher = entitySearcherFactory.create(entityTypes,
+                                                          searchString,
+                                                          executionContext.getUserId(),
+                                                          languages.build());
         PageRequest pageRequest = action.getPageRequest();
         entitySearcher.setPageRequest(pageRequest);
         entitySearcher.invoke();
