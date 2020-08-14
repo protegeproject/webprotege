@@ -24,6 +24,15 @@ import java.util.*;
 @GwtCompatible(serializable = true)
 public abstract class EntityNode implements IsSerializable, Serializable, Comparable<EntityNode>, HasTextRendering {
 
+    private static final boolean NOT_DEPRECATED = false;
+
+    private static final ImmutableSet<Watch> NO_WATCHES = ImmutableSet.of();
+
+    private static final int NO_OPEN_COMMENTS = 0;
+
+    private static final ImmutableSet<Tag> NO_ENTITY_TAGS = ImmutableSet.of();
+
+    @Nonnull
     public static EntityNode get(@Nonnull OWLEntity entity,
                                  @Nonnull String browserText,
                                  @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms,
@@ -38,6 +47,20 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
                                         ImmutableSet.copyOf(watches),
                                         openCommentCount,
                                         shortForms);
+    }
+
+    /**
+     * Gets a basic {@link EntityNode} for the specified {@link OWLEntityData}.  The
+     * node will be rendered without any indications of deprecation status,
+     * watches, open comments count, and entity tags
+     * @param entityData The entity data
+     * @return A basic rendering of the specified entity data
+     */
+    @Nonnull
+    public static EntityNode getFromEntityData(@Nonnull OWLEntityData entityData) {
+        return get(entityData.getEntity(),
+                   entityData.getBrowserText(),
+                   entityData.getShortForms(), NOT_DEPRECATED, NO_WATCHES, NO_OPEN_COMMENTS, NO_ENTITY_TAGS);
     }
 
     @Nonnull

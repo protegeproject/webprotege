@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
+import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -25,6 +26,8 @@ public class PerformEntitySearchAction implements ProjectAction<PerformEntitySea
 
     private Set<EntityType<?>> entityTypes;
 
+    private LangTagFilter langTagFilter;
+
     private PageRequest pageRequest;
 
     private PerformEntitySearchAction() {
@@ -33,10 +36,12 @@ public class PerformEntitySearchAction implements ProjectAction<PerformEntitySea
     public PerformEntitySearchAction(@Nonnull ProjectId projectId,
                                      @Nonnull String searchString,
                                      @Nonnull Set<EntityType<?>> entityTypes,
+                                     @Nonnull LangTagFilter langTagFilter,
                                      @Nonnull PageRequest pageRequest) {
         this.projectId = checkNotNull(projectId);
         this.searchString = checkNotNull(searchString);
         this.entityTypes = checkNotNull(entityTypes);
+        this.langTagFilter = checkNotNull(langTagFilter);
         this.pageRequest = checkNotNull(pageRequest);
     }
 
@@ -54,6 +59,11 @@ public class PerformEntitySearchAction implements ProjectAction<PerformEntitySea
     @Nonnull
     public String getSearchString() {
         return searchString;
+    }
+
+    @Nonnull
+    public LangTagFilter getLangTagFilter() {
+        return langTagFilter;
     }
 
     @Nonnull

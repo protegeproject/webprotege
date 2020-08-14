@@ -9,5 +9,5 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
  */
 public interface SearchResultChosenHandler {
 
-    void handleSearchResultChosen(OWLEntityData result);
+    void handleSearchResultChosen(int index);
 }

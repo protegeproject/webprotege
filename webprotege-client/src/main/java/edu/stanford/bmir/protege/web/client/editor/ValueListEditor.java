@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.user.client.ui.HasEnabled;
+import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ import java.util.function.Consumer;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/06/2013
  */
-public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled, HasRequestFocus {
+public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled, HasRequestFocus, HasPlaceholder {
 
     enum NewRowMode {
         AUTOMATIC,

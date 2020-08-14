@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxi
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
+import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;
@@ -111,7 +112,7 @@ public class IndexModule {
     }
 
     @Provides
-    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesByEntityIndexImpl impl) {
+    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesByEntityIndex(DeprecatedEntitiesByEntityIndexLuceneImpl impl) {
         return impl;
     }
 
@@ -312,6 +313,12 @@ public class IndexModule {
         return impl;
     }
 
+    @Provides
+    @ProjectSingleton
+    public AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex(AnnotationAssertionAxiomsByValueIndexImpl impl) {
+        return impl;
+    }
+
 
     @Provides
     @IntoSet
@@ -328,6 +335,14 @@ public class IndexModule {
     @Provides
     @IntoSet
     public UpdatableIndex provideAxiomsByEntityReferenceIndexImplIntoSet(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+
+
+    @Provides
+    @IntoSet
+    public UpdatableIndex provideAnnotationAssertionAxiomsByValueIndexIntoSet(AnnotationAssertionAxiomsByValueIndexImpl impl) {
         return impl;
     }
 
@@ -420,6 +435,24 @@ public class IndexModule {
     @Provides
     @IntoSet
     UpdatableIndex provideProjectOntologiesIndexIntoSet(ProjectOntologiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInOwlEntitiesIndex provideBuiltInOwlEntitiesIndex(@Nonnull BuiltInOwlEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInSkosEntitiesIndex provideBuiltInSkosEntitiesIndex(@Nonnull BuiltInSkosEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public DeprecatedEntitiesIndex provideDeprecatedEntitiesIndex(@Nonnull DeprecatedEntitiesIndexLuceneImpl impl) {
         return impl;
     }
 }

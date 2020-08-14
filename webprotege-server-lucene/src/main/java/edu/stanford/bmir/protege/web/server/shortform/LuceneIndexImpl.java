@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.*;
@@ -18,16 +19,12 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /**
  * Matthew Horridge
@@ -48,20 +45,25 @@ public class LuceneIndexImpl implements LuceneIndex {
     private final SearcherManager searcherManager;
 
     @Nonnull
-    private final LuceneQueryParserFactory queryParserFactory;
+    private final LuceneQueryFactory queryFactory;
 
     @Nonnull
-    private final LuceneShortFormMatcher luceneShortFormMatcher;
+    private final LuceneDictionaryLanguageValuesMatcher luceneDictionaryLanguageValuesMatcher;
+
+    @Nonnull
+    private final QueryAnalyzerFactory queryAnalyzerFactory;
 
     @Inject
     public LuceneIndexImpl(@Nonnull LuceneEntityDocumentTranslator luceneEntityDocumentTranslator,
                            @Nonnull SearcherManager searcherManager,
-                           @Nonnull LuceneQueryParserFactory queryParserFactory,
-                           @Nonnull LuceneShortFormMatcher luceneShortFormMatcher) {
+                           @Nonnull LuceneQueryFactory queryFactory,
+                           @Nonnull LuceneDictionaryLanguageValuesMatcher luceneDictionaryLanguageValuesMatcher,
+                           @Nonnull QueryAnalyzerFactory queryAnalyzerFactory) {
         this.luceneEntityDocumentTranslator = luceneEntityDocumentTranslator;
         this.searcherManager = searcherManager;
-        this.queryParserFactory = queryParserFactory;
-        this.luceneShortFormMatcher = luceneShortFormMatcher;
+        this.queryFactory = queryFactory;
+        this.luceneDictionaryLanguageValuesMatcher = luceneDictionaryLanguageValuesMatcher;
+        this.queryAnalyzerFactory = queryAnalyzerFactory;
     }
 
     @Nonnull
@@ -78,22 +80,23 @@ public class LuceneIndexImpl implements LuceneIndex {
         var indexSearcher = searcherManager.acquire();
         try {
             var topDocs = indexSearcher.search(query, ENTITY_TYPE_COUNT);
-            return getEntityShortFormsStream(languages, indexSearcher, topDocs);
+            return getDictionaryLanguageValues(languages,
+                                               indexSearcher,
+                                               topDocs).map(EntityDictionaryLanguageValues::reduceToEntityShortForms);
         } finally {
             searcherManager.release(indexSearcher);
         }
     }
 
-    public Query getQuery(@Nonnull String queryString,
+    public Query getQuery(@Nonnull List<SearchString> searchStrings,
                           @Nonnull List<DictionaryLanguage> languages,
                           boolean exact) throws ParseException {
+
         if (!exact) {
-            var queryParser = queryParserFactory.createQueryParser(languages);
-            return queryParser.parse(queryString);
+            return queryFactory.createQuery(searchStrings, languages);
         }
         else {
-            var queryParser = queryParserFactory.createQueryParserForExactOriginalMatch(languages);
-            return queryParser.parse(queryString);
+            return queryFactory.createQueryForExactOriginalMatch(searchStrings, languages);
         }
     }
 
@@ -104,38 +107,39 @@ public class LuceneIndexImpl implements LuceneIndex {
                                                          @Nonnull Set<EntityType<?>> entityTypes,
                                                          @Nonnull PageRequest pageRequest) throws IOException, ParseException {
         var indexSearcher = searcherManager.acquire();
+        //        indexSearcher.setSimilarity(new EntityBasedSimilarity());
         try {
 
 
-            var queryString = searchStrings.stream().map(SearchString::getSearchString).collect(joining(" AND "));
-
-
-            var q = getQuery(queryString, dictionaryLanguages, false);
+            var q = getQuery(searchStrings, dictionaryLanguages, false);
             var queryBuilder = new BooleanQuery.Builder();
             queryBuilder.add(q, BooleanClause.Occur.MUST);
 
             var entityTypeQueries = entityTypes.stream()
                                                .map(EntityType::getName)
-                                               .map(typeName -> new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE, typeName)))
+                                               .map(typeName -> new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE,
+                                                                                       typeName)))
                                                .collect(toList());
-            if(!entityTypeQueries.isEmpty()) {
+            if (!entityTypeQueries.isEmpty()) {
                 var entityTypesBuilder = new BooleanQuery.Builder();
                 entityTypeQueries.forEach(typeQuery -> entityTypesBuilder.add(typeQuery, BooleanClause.Occur.SHOULD));
                 var typeQuery = entityTypesBuilder.build();
                 queryBuilder.add(typeQuery, BooleanClause.Occur.MUST);
             }
             var query = queryBuilder.build();
-            logger.info("Query: {}", query);
 
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
+            explain(query, topDocs, indexSearcher);
             var languagesSet = ImmutableSet.copyOf(dictionaryLanguages);
-            var page = getEntityShortFormsStream(dictionaryLanguages,
-                                                 indexSearcher,
-                                                 topDocs).collect(PageCollector.toPage(pageRequest.getPageNumber(),
-                                                                                       pageRequest.getPageSize()));
+            var page = getDictionaryLanguageValues(dictionaryLanguages,
+                                                   indexSearcher,
+                                                   topDocs).collect(PageCollector.toPage(pageRequest.getPageNumber(),
+                                                                                         pageRequest.getPageSize()));
             return page.map(pg -> pg.transform(entityShortForms -> {
-                var matches = luceneShortFormMatcher.getShortFormMatches(entityShortForms, languagesSet, searchStrings)
-                                                    .collect(toImmutableList());
+                var matches = luceneDictionaryLanguageValuesMatcher.getShortFormMatches(entityShortForms,
+                                                                                        languagesSet,
+                                                                                        searchStrings)
+                                                                   .collect(toImmutableList());
                 return EntityShortFormMatches.get(entityShortForms.getEntity(), matches);
             }));
         } finally {
@@ -143,30 +147,55 @@ public class LuceneIndexImpl implements LuceneIndex {
         }
     }
 
+    private void explain(Query query, TopDocs topDocs, IndexSearcher indexSearcher) {
+        if(!logger.isDebugEnabled()) {
+            return;
+        }
+        try {
+            var maxExplanations = 10;
+            for (int i = 0; i < maxExplanations && i < topDocs.scoreDocs.length; i++) {
+                ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+                logger.debug("");
+                var document = indexSearcher.doc(scoreDoc.doc);
+                document.getFields()
+                        .stream()
+                        .map(IndexableField::toString)
+                        .forEach(logger::debug);
+                var explanation = indexSearcher.explain(query, scoreDoc.doc);
+                logger.info(explanation.toString());
+
+            }
+        } catch (IOException e) {
+            logger.debug("Error when generating explanation", e);
+        }
+    }
+
+    @Nonnull
     @Override
     public Stream<OWLEntity> findEntities(String shortForm,
                                           List<DictionaryLanguage> languages) throws ParseException, IOException {
-        var query = getQuery(shortForm, languages, true);
+        var searchStrings = SearchString.parseSearchString(shortForm);
+        var query = getQuery(Collections.singletonList(searchStrings), languages, true);
         var indexSearcher = searcherManager.acquire();
         try {
             var topDocs = indexSearcher.search(query, Integer.MAX_VALUE);
-            return getEntityShortFormsStream(languages, indexSearcher, topDocs).filter(entityShortForms -> {
-                var shortForms = entityShortForms.getShortForms();
-                return languages.stream().map(shortForms::get).anyMatch(sf -> sf.equals(shortForm));
-            }).map(EntityShortForms::getEntity).collect(Collectors.toList()).stream();
+            return getDictionaryLanguageValues(languages, indexSearcher, topDocs).filter(values -> {
+                var shortForms = values.getValues();
+                return languages.stream().map(shortForms::get).anyMatch(sf -> sf.contains(shortForm));
+            }).map(EntityDictionaryLanguageValues::getEntity).collect(Collectors.toList()).stream();
 
         } finally {
             searcherManager.release(indexSearcher);
         }
     }
 
-    private Stream<EntityShortForms> getEntityShortFormsStream(@Nonnull List<DictionaryLanguage> dictionaryLanguages,
-                                                               IndexSearcher indexSearcher,
-                                                               TopDocs topDocs) {
+    private Stream<EntityDictionaryLanguageValues> getDictionaryLanguageValues(@Nonnull List<DictionaryLanguage> dictionaryLanguages,
+                                                                               @Nonnull IndexSearcher indexSearcher,
+                                                                               @Nonnull TopDocs topDocs) {
         return Arrays.stream(topDocs.scoreDocs)
                      .map(scoreDoc -> scoreDoc.doc)
                      .map(docId -> getDoc(indexSearcher, docId))
-                     .map(doc -> luceneEntityDocumentTranslator.getEntityShortForms(doc, dictionaryLanguages));
+                     .map(doc -> luceneEntityDocumentTranslator.getDictionaryLanguageValues(doc, dictionaryLanguages));
     }
 
     public Document getDoc(IndexSearcher indexSearcher, Integer docId) {
@@ -176,6 +205,4 @@ public class LuceneIndexImpl implements LuceneIndex {
             throw new UncheckedIOException(e);
         }
     }
-
-
 }

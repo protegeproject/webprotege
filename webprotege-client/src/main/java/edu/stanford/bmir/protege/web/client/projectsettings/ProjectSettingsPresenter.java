@@ -20,13 +20,16 @@ import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectInfoAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -153,7 +156,7 @@ public class ProjectSettingsPresenter {
 
     private void handleResetDisplayNameLanguages() {
         currentLanguageUsage.ifPresent(langUsage -> {
-            ImmutableList<DictionaryLanguageData> langUsageData = langUsage.stream()
+            ImmutableList<DictionaryLanguage> langUsageData = langUsage.stream()
                                                                            .map(DictionaryLanguageUsage::getDictionaryLanguage)
                                                                            .collect(toImmutableList());
             defaultDisplayNameSettingsView.setPrimaryLanguages(langUsageData);
@@ -178,24 +181,33 @@ public class ProjectSettingsPresenter {
     }
 
     private void displayDefaultDictionaryLanguage(@Nonnull DictionaryLanguage defaultLanguage) {
-        IRI annotationPropertyIri = defaultLanguage.getAnnotationPropertyIri();
-        if (annotationPropertyIri != null) {
-            annotationPropertyIriRenderer.renderAnnotationPropertyIri(annotationPropertyIri, defaultDictionaryLanguageView::setAnnotationProperty);
-        }
-        else {
-            defaultDictionaryLanguageView.clearAnnotationProperty();
-        }
+        defaultLanguage.accept(new DictionaryLanguageVisitor<Object>() {
+            @Override
+            public Object getDefault() {
+                defaultDictionaryLanguageView.clearAnnotationProperty();
+                return null;
+            }
+
+            @Override
+            public Object visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
+                annotationPropertyIriRenderer.renderAnnotationPropertyIri(language.getAnnotationPropertyIri(),
+                                                                          defaultDictionaryLanguageView::setAnnotationProperty);
+                return null;
+            }
+        });
         defaultDictionaryLanguageView.setLanguageTag(defaultLanguage.getLang());
     }
 
     private void displayDefaultDisplayNameLanguages(@Nonnull DisplayNameSettings displayNameSettings,
                                                     @Nonnull ImmutableList<DictionaryLanguageUsage> languages) {
-        ImmutableList<DictionaryLanguageData> langList = displayNameSettings.getPrimaryDisplayNameLanguages();
+        ImmutableList<DictionaryLanguage> langList = displayNameSettings.getPrimaryDisplayNameLanguages()
+                .stream()
+                .collect(toImmutableList());
         if (!langList.isEmpty()) {
             defaultDisplayNameSettingsView.setPrimaryLanguages(langList);
         }
         else {
-            ImmutableList<DictionaryLanguageData> activeLanguages = languages.stream()
+            ImmutableList<DictionaryLanguage> activeLanguages = languages.stream()
                                                                              .map(DictionaryLanguageUsage::getDictionaryLanguage)
                                                                              .collect(toImmutableList());
             defaultDisplayNameSettingsView.setPrimaryLanguages(activeLanguages);
@@ -232,7 +244,7 @@ public class ProjectSettingsPresenter {
         OWLAnnotationPropertyData property = defaultDictionaryLanguageView.getAnnotationProperty()
                                                                           .orElse(DataFactory.getRdfsLabelData());
         String langTag = defaultDictionaryLanguageView.getLanguageTag();
-        return DictionaryLanguage.create(property.getEntity().getIRI(), langTag);
+        return AnnotationAssertionDictionaryLanguage.get(property.getEntity().getIRI(), langTag);
     }
 
     private DisplayNameSettings getDefaultDisplayNameSettings() {

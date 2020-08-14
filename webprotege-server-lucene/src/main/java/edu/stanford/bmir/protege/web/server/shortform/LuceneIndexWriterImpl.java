@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.index.BuiltInOwlEntitiesIndex;
+import edu.stanford.bmir.protege.web.server.index.EntitiesInProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import org.apache.lucene.document.Document;
@@ -38,23 +40,33 @@ public class LuceneIndexWriterImpl implements LuceneIndexWriter, HasDispose {
     private final ProjectSignatureIndex projectSignatureIndex;
 
     @Nonnull
+    private final EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex;
+
+    @Nonnull
     private final IndexWriter indexWriter;
 
     @Nonnull
     private final SearcherManager searcherManager;
+
+    @Nonnull
+    private BuiltInOwlEntitiesIndex builtInOwlEntitiesIndex;
 
 
     @Inject
     public LuceneIndexWriterImpl(@Nonnull Directory luceneDirectory,
                                  @Nonnull LuceneEntityDocumentTranslator luceneEntityDocumentTranslator,
                                  @Nonnull ProjectSignatureIndex projectSignatureIndex,
+                                 @Nonnull EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex,
                                  @Nonnull IndexWriter indexWriter,
-                                 @Nonnull SearcherManager searcherManager) {
+                                 @Nonnull SearcherManager searcherManager,
+                                 @Nonnull BuiltInOwlEntitiesIndex builtInOwlEntitiesIndex) {
         this.luceneDirectory = luceneDirectory;
         this.luceneEntityDocumentTranslator = luceneEntityDocumentTranslator;
         this.projectSignatureIndex = checkNotNull(projectSignatureIndex);
+        this.entitiesInProjectSignatureIndex = entitiesInProjectSignatureIndex;
         this.indexWriter = indexWriter;
         this.searcherManager = searcherManager;
+        this.builtInOwlEntitiesIndex = checkNotNull(builtInOwlEntitiesIndex);
     }
 
     @Override
@@ -69,6 +81,10 @@ public class LuceneIndexWriterImpl implements LuceneIndexWriter, HasDispose {
         projectSignatureIndex.getSignature()
                              .map(luceneEntityDocumentTranslator::getLuceneDocument)
                              .forEach(this::addDocumentToIndex);
+        builtInOwlEntitiesIndex.getBuiltInEntities()
+                               .filter(entity -> !entitiesInProjectSignatureIndex.containsEntityInSignature(entity))
+                               .map(luceneEntityDocumentTranslator::getLuceneDocument)
+                               .forEach(this::addDocumentToIndex);
         indexWriter.commit();
         searcherManager.maybeRefreshBlocking();
         logger.info("Built lucene based dictionary in {} ms", stopwatch.elapsed().toMillis());

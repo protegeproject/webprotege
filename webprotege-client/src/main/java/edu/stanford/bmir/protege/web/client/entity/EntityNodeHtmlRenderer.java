@@ -60,10 +60,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     public void setDisplayLanguage(@Nonnull DisplayNameSettings displayNameSettings) {
         primaryLanguages = displayNameSettings.getPrimaryDisplayNameLanguages().stream()
-                                              .map(DictionaryLanguageData::getDictionaryLanguage)
                                               .collect(toImmutableList());
         secondaryLanguages = displayNameSettings.getSecondaryDisplayNameLanguages().stream()
-                                              .map(DictionaryLanguageData::getDictionaryLanguage)
                                               .collect(toImmutableList());
 
     }
@@ -108,6 +106,16 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         renderPrimaryDisplayName(node, sb);
         renderSecondaryDisplayName(node, sb);
         sb.append("</div>");
+    }
+
+    @Nonnull
+    public String getPrimaryDisplayName(@Nonnull EntityNode node) {
+        if(!primaryLanguages.isEmpty()) {
+            return node.getText(primaryLanguages, NO_DISPLAY_NAME);
+        }
+        else {
+            return node.getBrowserText();
+        }
     }
 
     private void renderPrimaryDisplayName(EntityNode node, StringBuilder sb) {

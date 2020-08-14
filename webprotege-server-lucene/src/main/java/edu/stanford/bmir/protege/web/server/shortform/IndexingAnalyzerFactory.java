@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.apache.lucene.analysis.Analyzer;
 
 import javax.annotation.Nonnull;
@@ -13,6 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-08
  */
+@ProjectSingleton
 public class IndexingAnalyzerFactory {
 
     private final Provider<IndexingAnalyzerWrapper> indexingAnalyzerWrapperProvider;

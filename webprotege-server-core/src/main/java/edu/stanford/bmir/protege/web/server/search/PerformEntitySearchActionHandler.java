@@ -1,19 +1,25 @@
 package edu.stanford.bmir.protege.web.server.search;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageFilter.EmptyLangTagTreatment.INCLUDE_EMPTY_LANG_TAGS;
 
 /**
  * Matthew Horridge
@@ -25,11 +31,16 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
     @Nonnull
     private final EntitySearcherFactory entitySearcherFactory;
 
+    @Nonnull
+    private final LanguageManager languageManager;
+
     @Inject
     public PerformEntitySearchActionHandler(@Nonnull AccessManager accessManager,
-                                            @Nonnull EntitySearcherFactory entitySearcherFactory) {
+                                            @Nonnull EntitySearcherFactory entitySearcherFactory,
+                                            @Nonnull LanguageManager languageManager) {
         super(accessManager);
         this.entitySearcherFactory = entitySearcherFactory;
+        this.languageManager = languageManager;
     }
 
     @Nonnull
@@ -42,25 +53,26 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
     @Override
     public PerformEntitySearchResult execute(@Nonnull PerformEntitySearchAction action,
                                              @Nonnull ExecutionContext executionContext) {
-        Set<EntityType<?>> entityTypes = action.getEntityTypes();
-        String searchString = action.getSearchString();
-        EntitySearcher entitySearcher = entitySearcherFactory.create(entityTypes,
-                                                                     searchString,
-                                                                     executionContext.getUserId());
+        var entityTypes = action.getEntityTypes();
+        var searchString = action.getSearchString();
+        var languages = ImmutableList.<DictionaryLanguage>builder();
+        var langTagFilter = action.getLangTagFilter();
+        var dictionaryLanguageFilter = DictionaryLanguageFilter.get(langTagFilter, INCLUDE_EMPTY_LANG_TAGS);
+        languageManager.getLanguages().stream().filter(dictionaryLanguageFilter::isIncluded).forEach(languages::add);
+        languages.add(OboIdDictionaryLanguage.get());
+        languages.add(LocalNameDictionaryLanguage.get());
+        languages.add(PrefixedNameDictionaryLanguage.get());
+
+        var entitySearcher = entitySearcherFactory.create(entityTypes,
+                                                          searchString,
+                                                          executionContext.getUserId(),
+                                                          languages.build());
         PageRequest pageRequest = action.getPageRequest();
-        int pageSize = pageRequest.getPageSize();
         entitySearcher.setPageRequest(pageRequest);
-
-        int pageNumber = pageRequest.getPageNumber();
-
         entitySearcher.invoke();
 
-        int totalSearchResults = entitySearcher.getSearchResultsCount();
-        List<EntitySearchResult> results = entitySearcher.getResults();
-        int pageCount = (totalSearchResults / pageSize) + 1;
-        Page<EntitySearchResult> page = new Page<>(pageNumber > pageCount ? 1 : pageNumber,
-                                                   pageCount, results, totalSearchResults);
-        return new PerformEntitySearchResult(searchString, totalSearchResults, page);
+        Page<EntitySearchResult> results = entitySearcher.getResults();
+        return PerformEntitySearchResult.get(searchString, results);
     }
 }
 

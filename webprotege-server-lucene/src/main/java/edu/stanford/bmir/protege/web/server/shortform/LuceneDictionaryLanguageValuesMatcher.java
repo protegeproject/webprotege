@@ -21,40 +21,40 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-13
  */
-public class LuceneShortFormMatcher {
+public class LuceneDictionaryLanguageValuesMatcher {
 
     @Nonnull
     private final LuceneSearchStringTokenizer searchStringTokenizer;
 
     @Nonnull
-    private final DictionaryLanguage2FieldNameTranslator fieldNameTranslator;
+    private final FieldNameTranslator fieldNameTranslator;
 
     @Nonnull
     private final IndexingAnalyzerFactory indexingAnalyzerFactory;
 
 
     @Inject
-    public LuceneShortFormMatcher(@Nonnull LuceneSearchStringTokenizer searchStringTokenizer,
-                                  @Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator,
-                                  @Nonnull IndexingAnalyzerFactory indexingAnalyzerFactory) {
+    public LuceneDictionaryLanguageValuesMatcher(@Nonnull LuceneSearchStringTokenizer searchStringTokenizer,
+                                                 @Nonnull FieldNameTranslator fieldNameTranslator,
+                                                 @Nonnull IndexingAnalyzerFactory indexingAnalyzerFactory) {
         this.searchStringTokenizer = searchStringTokenizer;
         this.fieldNameTranslator = fieldNameTranslator;
         this.indexingAnalyzerFactory = indexingAnalyzerFactory;
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormMatches(@Nonnull EntityShortForms entityShortForms,
+    public Stream<ShortFormMatch> getShortFormMatches(@Nonnull EntityDictionaryLanguageValues dictionaryLanguageValues,
                                                       @Nonnull Set<DictionaryLanguage> languages,
                                                       @Nonnull List<SearchString> searchStrings) {
         var tokenizedSearchStrings = searchStringTokenizer.getTokenizedSearchStrings(searchStrings);
-        var shortForms = entityShortForms.getShortForms();
-        return shortForms.entrySet()
-                         .stream()
-                         .filter(entry -> languages.contains(entry.getKey()))
-                         .flatMap(entry -> getShortFormMatch(entityShortForms.getEntity(),
-                                                             entry.getKey(),
-                                                             entry.getValue(),
-                                                             tokenizedSearchStrings).stream());
+        var values = dictionaryLanguageValues.getValues();
+        return values.entries()
+                     .stream()
+                     .filter(entry -> languages.contains(entry.getKey()))
+                     .flatMap(entry -> getShortFormMatch(dictionaryLanguageValues.getEntity(),
+                                                         entry.getKey(),
+                                                         entry.getValue(),
+                                                         tokenizedSearchStrings).stream());
     }
 
 
@@ -65,25 +65,24 @@ public class LuceneShortFormMatcher {
 
         var resultBuilder = ImmutableSet.<ShortFormMatchPosition>builder();
 
-        var wordFieldName = fieldNameTranslator.getAnalyzedValueFieldName(dictionaryLanguage);
-        addPossibleTokenMatches(shortForm, wordFieldName, searchTokens, resultBuilder);
+        var fieldName = fieldNameTranslator.getTokenizedFieldName(dictionaryLanguage);
+        addPossibleTokenMatches(shortForm, fieldName, searchTokens, resultBuilder);
 
 
         var positionsList = ImmutableList.copyOf(resultBuilder.build());
         if (positionsList.isEmpty()) {
             return Optional.empty();
         }
-        var shortFormMatch = ShortFormMatch.get(entity, shortForm, dictionaryLanguage,
-                                                positionsList);
+        var shortFormMatch = ShortFormMatch.get(entity, shortForm, dictionaryLanguage, positionsList);
         return Optional.of(shortFormMatch);
     }
 
-    private void addPossibleTokenMatches(@Nonnull String shortForm,
+    private void addPossibleTokenMatches(@Nonnull String fieldValue,
                                          @Nonnull String luceneFieldName,
                                          @Nonnull Set<String> searchTokens,
                                          @Nonnull ImmutableSet.Builder<ShortFormMatchPosition> resultBuilder) {
         var analyzer = indexingAnalyzerFactory.get();
-        try (var tokenStream = analyzer.tokenStream(luceneFieldName, shortForm)) {
+        try (var tokenStream = analyzer.tokenStream(luceneFieldName, fieldValue)) {
             var charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
             var offsetAttribute = tokenStream.addAttribute(OffsetAttribute.class);
             tokenStream.reset();

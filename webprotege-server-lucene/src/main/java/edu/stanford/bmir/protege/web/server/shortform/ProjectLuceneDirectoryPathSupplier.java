@@ -17,15 +17,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ProjectLuceneDirectoryPathSupplier implements Supplier<Path> {
 
     @Nonnull
+    private final Path luceneIndexesDirectory;
+
+    @Nonnull
     private final ProjectId projectId;
 
     @Inject
-    public ProjectLuceneDirectoryPathSupplier(@Nonnull ProjectId projectId) {
+    public ProjectLuceneDirectoryPathSupplier(@Nonnull @LuceneIndexesDirectory Path luceneIndexesDirectory,
+                                              @Nonnull ProjectId projectId) {
+        this.luceneIndexesDirectory = checkNotNull(luceneIndexesDirectory);
         this.projectId = checkNotNull(projectId);
     }
 
     @Override
     public Path get() {
-        return Path.of("/tmp/lucene/" + projectId.getId());
+        return luceneIndexesDirectory.resolve(projectId.getId());
     }
 }

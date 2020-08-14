@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import com.google.common.collect.ImmutableSetMultimap;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.apache.lucene.document.*;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.*;
 
 /**
  * Matthew Horridge
@@ -28,24 +29,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentTranslator {
 
     @Nonnull
-    private final ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex;
+    private final FieldNameTranslator fieldNameTranslator;
 
     @Nonnull
-    private final DictionaryLanguage2FieldNameTranslator fieldNameTranslator;
+    private final EntityBuiltInStatusDocumentAugmenter builtInStatusDocumentAugmenter;
 
     @Nonnull
-    private final LocalNameExtractor localNameExtractor = new LocalNameExtractor();
+    private final EntityLocalNameDocumentAugmenter localNameDocumentAugmenter;
 
+    @Nonnull
+    private final EntityPrefixedNameDocumentAugmenter prefixedNameDocumentAugmenter;
+
+    @Nonnull
+    private final EntityOboIdDocumentAugmenter oboIdDocumentAugmenter;
+
+    @Nonnull
+    private final EntityAnnotationAssertionsDocumentAugmenter annotationAssertionsDocumentAugmenter;
 
     @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public LuceneEntityDocumentTranslatorImpl(@Nonnull ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionsIndex,
-                                              @Nonnull DictionaryLanguage2FieldNameTranslator fieldNameTranslator,
+    public LuceneEntityDocumentTranslatorImpl(@Nonnull FieldNameTranslator fieldNameTranslator,
+                                              @Nonnull EntityBuiltInStatusDocumentAugmenter builtInStatusDocumentAugmenter,
+                                              @Nonnull EntityLocalNameDocumentAugmenter localNameDocumentAugmenter,
+                                              @Nonnull EntityPrefixedNameDocumentAugmenter prefixedNameDocumentAugmenter,
+                                              @Nonnull EntityOboIdDocumentAugmenter oboIdDocumentAugmenter,
+                                              @Nonnull EntityAnnotationAssertionsDocumentAugmenter annotationAssertionsDocumentAugmenter,
                                               @Nonnull OWLDataFactory dataFactory) {
-        this.annotationAssertionsIndex = checkNotNull(annotationAssertionsIndex);
+        this.annotationAssertionsDocumentAugmenter = annotationAssertionsDocumentAugmenter;
         this.fieldNameTranslator = checkNotNull(fieldNameTranslator);
+        this.builtInStatusDocumentAugmenter = checkNotNull(builtInStatusDocumentAugmenter);
+        this.localNameDocumentAugmenter = checkNotNull(localNameDocumentAugmenter);
+        this.prefixedNameDocumentAugmenter = checkNotNull(prefixedNameDocumentAugmenter);
+        this.oboIdDocumentAugmenter = checkNotNull(oboIdDocumentAugmenter);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
@@ -79,72 +96,75 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
 
     @Nonnull
     @Override
-    public EntityShortForms getEntityShortForms(@Nonnull Document document,
-                                                @Nonnull List<DictionaryLanguage> dictionaryLanguages) {
+    public EntityDictionaryLanguageValues getDictionaryLanguageValues(@Nonnull Document document,
+                                                                                        @Nonnull List<DictionaryLanguage> dictionaryLanguages) {
         var entity = getEntity(document);
-        var shortForms = ImmutableMap.<DictionaryLanguage, String>builder();
-        for(var dictionaryLanguage : dictionaryLanguages) {
-            var shortForm = getShortForm(document, dictionaryLanguage);
-            if(shortForm != null) {
-                shortForms.put(dictionaryLanguage, shortForm);
-            }
+        var valuesBuilder = ImmutableSetMultimap.<DictionaryLanguage, String>builder();
+        for (var dictionaryLanguage : dictionaryLanguages) {
+            var values = getValues(document, dictionaryLanguage);
+            values.forEach(value -> {
+                valuesBuilder.put(dictionaryLanguage, value);
+            });
+
         }
-        return EntityShortForms.get(entity, shortForms.build());
+        return EntityDictionaryLanguageValues.get(entity, valuesBuilder.build());
     }
 
-    @Nullable
-    private String getShortForm(@Nonnull Document document,
-                                @Nonnull DictionaryLanguage dictionaryLanguage) {
-        var fieldName = fieldNameTranslator.getOriginalValueFieldName(dictionaryLanguage);
-        return document.get(fieldName);
+    @Nonnull
+    private Stream<String> getValues(@Nonnull Document document, @Nonnull DictionaryLanguage dictionaryLanguage) {
+        var fieldName = fieldNameTranslator.getNonTokenizedFieldName(dictionaryLanguage);
+        return Stream.of(document.getFields(fieldName))
+                .map(IndexableField::stringValue);
     }
 
     @Nonnull
     @Override
     public Document getLuceneDocument(@Nonnull OWLEntity entity) {
-        var entityType = entity.getEntityType().getName();
-        var iri = entity.getIRI().toString();
         var document = new Document();
-        document.add(new StringField(EntityDocumentFieldNames.ENTITY_TYPE, entityType, Field.Store.YES));
-        document.add(new StringField(EntityDocumentFieldNames.IRI, iri, Field.Store.YES));
 
-        var localName = localNameExtractor.getLocalName(entity.getIRI());
-        var localNameFieldNameAnalyzed = fieldNameTranslator.getAnalyzedValueFieldName(DictionaryLanguage.localName());
-        document.add(new TextField(localNameFieldNameAnalyzed, localName, Field.Store.YES));
-        var localNameFieldOriginal = fieldNameTranslator.getOriginalValueFieldName(DictionaryLanguage.localName());
-        document.add(new StringField(localNameFieldOriginal, localName, Field.Store.YES));
+        addEntityType(entity, document);
 
-        annotationAssertionsIndex.getAnnotationAssertionAxioms(entity.getIRI())
-                              .filter(ax -> ax.getValue() instanceof OWLLiteral)
-                              .flatMap(this::toFields)
-                              .forEach(document::add);
+        addEntityIri(entity, document);
+
+        builtInStatusDocumentAugmenter.augmentDocument(entity, document);
+
+        prefixedNameDocumentAugmenter.augmentDocument(entity, document);
+
+        oboIdDocumentAugmenter.augmentDocument(entity, document);
+
+        localNameDocumentAugmenter.augmentDocument(entity, document);
+
+        annotationAssertionsDocumentAugmenter.augmentDocument(entity, document);
+
         return document;
+    }
+
+    private static void addEntityType(OWLEntity entity, Document document) {
+        // Entity Type.  Not analyzed
+        var entityType = entity.getEntityType().getName();
+        document.add(new StringField(ENTITY_TYPE, entityType, Field.Store.YES));
+    }
+
+    private static void addEntityIri(OWLEntity entity, Document document) {
+        // Entity IRI.  Not analyzed
+        var iri = entity.getIRI().toString();
+        document.add(new StringField(EntityDocumentFieldNames.IRI, iri, Field.Store.YES));
     }
 
     @Override
     @Nonnull
     public Query getEntityDocumentQuery(@Nonnull OWLEntity entity) {
         var iriQuery = new TermQuery(new Term(EntityDocumentFieldNames.IRI, entity.getIRI().toString()));
-        var typeQuery = new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE, entity.getEntityType().toString()));
-        return new BooleanQuery.Builder()
-                .add(iriQuery, BooleanClause.Occur.MUST)
-                .add(typeQuery, BooleanClause.Occur.MUST)
-                .build();
+        var typeQuery = getEntityTypeDocumentQuery(entity.getEntityType());
+        return new BooleanQuery.Builder().add(iriQuery, BooleanClause.Occur.MUST)
+                                         .add(typeQuery, BooleanClause.Occur.MUST)
+                                         .build();
     }
 
-    private Stream<Field> toFields(OWLAnnotationAssertionAxiom ax) {
-        var literal = (OWLLiteral) ax.getValue();
-        var annotationPropertyIri = ax.getProperty().getIRI();
-        var dictionaryLanguage = DictionaryLanguage.create(annotationPropertyIri, literal.getLang());
-        var lexicalValue = literal.getLiteral();
-
-        var valueFieldName = fieldNameTranslator.getOriginalValueFieldName(dictionaryLanguage);
-        var valueField = new StringField(valueFieldName, lexicalValue, Field.Store.YES);
-
-        var wordFieldName = fieldNameTranslator.getAnalyzedValueFieldName(dictionaryLanguage);
-        var wordField = new TextField(wordFieldName, lexicalValue, Field.Store.NO);
-
-        return Stream.of(wordField,
-                         valueField);
+    @Nonnull
+    public Query getEntityTypeDocumentQuery(@Nonnull EntityType<?> entityType) {
+        return new TermQuery(new Term(EntityDocumentFieldNames.ENTITY_TYPE, entityType.toString()));
     }
+
+
 }

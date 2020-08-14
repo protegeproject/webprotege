@@ -50,8 +50,13 @@ import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRender
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchResultView;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchResultViewImpl;
+import edu.stanford.bmir.protege.web.client.search.SearchResultMatchView;
+import edu.stanford.bmir.protege.web.client.search.SearchResultMatchViewImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.viz.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchView;
@@ -79,7 +84,7 @@ import static edu.stanford.bmir.protege.web.client.uuid.UuidV4.uuidv4;
  * Stanford Center for Biomedical Informatics Research
  * 4 Oct 2016
  */
-@Module(includes = PortletModulesGenerated.class)
+@Module(includes = {PortletModulesGenerated.class, ShortFormModule.class})
 public class ClientProjectModule {
 
     private final ProjectId projectId;
@@ -853,6 +858,16 @@ public class ClientProjectModule {
 
     @Provides
     SingleChoiceControlFilterView provideSingleChoiceControlFilterView(SingleChoiceControlFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitySearchResultView provideEntitySearchResultView(EntitySearchResultViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SearchResultMatchView provideSearchResultMatchView(SearchResultMatchViewImpl impl) {
         return impl;
     }
 }

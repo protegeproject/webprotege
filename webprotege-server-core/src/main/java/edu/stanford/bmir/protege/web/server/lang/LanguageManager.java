@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionPathDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -39,7 +42,7 @@ public class LanguageManager {
     }
 
     public synchronized List<DictionaryLanguage> getLanguages() {
-        ImmutableList<DictionaryLanguage> defaultDisplayLanguages = projectDetailsRepository.getDisplayNameLanguages(projectId);
+        var defaultDisplayLanguages = projectDetailsRepository.getDisplayNameLanguages(projectId);
         if (defaultDisplayLanguages.isEmpty()) {
             return activeLanguagesManager.getLanguagesRankedByUsage();
         }

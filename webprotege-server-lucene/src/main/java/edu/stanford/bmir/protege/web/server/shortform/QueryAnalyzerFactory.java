@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.FlattenGraphFilterFactory;
+import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
-import org.apache.lucene.analysis.core.StopFilterFactory;
+import org.apache.lucene.analysis.core.WhitespaceTokenizerFactory;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
-import org.apache.lucene.analysis.ngram.EdgeNGramTokenizerFactory;
-import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilterFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -25,10 +26,26 @@ public class QueryAnalyzerFactory {
     }
 
     @Nonnull
-    public Analyzer get() {
+    public Analyzer getKeywordQueryAnalyzer() {
         try {
             return CustomAnalyzer.builder()
-                                 .withTokenizer(StandardTokenizerFactory.NAME)
+                    .withTokenizer(KeywordTokenizerFactory.NAME)
+                    .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
+                    .addTokenFilter(LowerCaseFilterFactory.NAME)
+                    .build();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Nonnull
+    public Analyzer getTokenizedQueryAnalyzer() {
+        try {
+            return CustomAnalyzer.builder()
+                                 .withTokenizer(WhitespaceTokenizerFactory.NAME)
+                                 .addTokenFilter(WordDelimiterGraphFilterFactory.NAME,
+                                                 "catenateWords", "1")
+                                 .addTokenFilter(FlattenGraphFilterFactory.NAME)
                                  .addTokenFilter(ASCIIFoldingFilterFactory.NAME)
                                  .addTokenFilter(LowerCaseFilterFactory.NAME)
                                  .build();

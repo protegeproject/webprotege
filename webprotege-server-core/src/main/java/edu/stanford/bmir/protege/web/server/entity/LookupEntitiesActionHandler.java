@@ -109,21 +109,20 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
         List<EntityLookupResult> lookupResults = new ArrayList<>();
         for (var match : result.getPageElements()) {
             var matchedEntity = match.getEntity();
-            if (matcher.matches(matchedEntity)) {
-                for(var shortFormMatch : match.getShortFormMatches()) {
+            if (!addedEntities.contains(matchedEntity) && matcher.matches(matchedEntity)) {
+                addedEntities.add(matchedEntity);
+                for (var shortFormMatch : match.getShortFormMatches()) {
                     var language = shortFormMatch.getLanguage();
                     var matchPositions = shortFormMatch.getMatchPositions();
                     var firstMatchPosition = matchPositions.get(0);
-                    var entityMatchResult = EntityNameMatchResult.get(
-                            firstMatchPosition.getStart(),
-                            firstMatchPosition.getEnd(),
-                            EntityNameMatchType.SUB_STRING_MATCH,
-                        PrefixNameMatchType.NOT_IN_PREFIX_NAME
-                    );
+                    var entityMatchResult = EntityNameMatchResult.get(firstMatchPosition.getStart(),
+                                                                      firstMatchPosition.getEnd(),
+                                                                      EntityNameMatchType.SUB_STRING_MATCH,
+                                                                      PrefixNameMatchType.NOT_IN_PREFIX_NAME);
                     var entityLookupResult = EntityLookupResult.get(language,
-                                           entityNodeRenderer.render(matchedEntity),
-                                           entityMatchResult,
-                                           placeUrl.getEntityUrl(projectId, matchedEntity));
+                                                                    entityNodeRenderer.render(matchedEntity),
+                                                                    entityMatchResult,
+                                                                    placeUrl.getEntityUrl(projectId, matchedEntity));
                     lookupResults.add(entityLookupResult);
                 }
             }

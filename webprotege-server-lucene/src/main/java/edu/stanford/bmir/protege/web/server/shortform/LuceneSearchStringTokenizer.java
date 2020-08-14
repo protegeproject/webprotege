@@ -39,7 +39,7 @@ public class LuceneSearchStringTokenizer {
     }
 
     public Stream<String> tokenize(String searchString) {
-        var queryAnalyzer = queryAnalyzerFactory.get();
+        var queryAnalyzer = queryAnalyzerFactory.getTokenizedQueryAnalyzer();
         try (var queryTokenStream = queryAnalyzer.tokenStream("", searchString)) {
             var charTermAttribute = queryTokenStream.addAttribute(CharTermAttribute.class);
             queryTokenStream.reset();

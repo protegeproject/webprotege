@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class OWLNamedIndividualData_TestCase {
 
     @Before
     public void setUp() {
-        shortForms = ImmutableMap.of(DictionaryLanguage.localName(), browserText);
+        shortForms = ImmutableMap.of(LocalNameDictionaryLanguage.get(), browserText);
         oWLNamedIndividualData = OWLNamedIndividualData.get(entity, shortForms);
     }
 

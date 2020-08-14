@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor"
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+    </ui:style>
+    <g:HTMLPanel>
+        <editor:ValueListEditor ui:field="pathEditor" newRowMode="MANUAL" placeholder="Enter annotation property"/>
+        <primitive:DefaultLanguageEditor ui:field="languageEditor" placeholder="Lang"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
         ProjectIdModule.class,
         LuceneModule.class,
         AnnotationAssertionAxiomsModule.class,
-        DataFactoryModule.class})
+        StandaloneObjectSupportModule.class})
 @ProjectSingleton
 public interface LuceneDictionaryComponent {
 

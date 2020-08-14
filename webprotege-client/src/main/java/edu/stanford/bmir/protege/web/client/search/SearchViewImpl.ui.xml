@@ -43,11 +43,15 @@
         .paginator {
             background-color: literal("var(--inlay-panel--background-color)");
         }
+        .langTagFilter {
+            padding-top: 0.8em;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
+        <g:SimplePanel ui:field="langTagsFilterContainer" visible="false" addStyleNames="{style.langTagFilter}"/>
         <g:Label ui:field="searchSummaryField" addStyleNames="{style.searchSummaryLabel}"/>
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
         <g:FocusPanel ui:field="base" addStyleNames="{style.foucusPanel}">

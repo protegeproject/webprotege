@@ -1,52 +1,44 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 21 Apr 2017
+ * 2020-07-24
  */
-public class EntitySearchResult implements IsSerializable {
+@GwtCompatible(serializable = true)
+@AutoValue
+public abstract class EntitySearchResult {
 
-    @SuppressWarnings("GwtInconsistentSerializableClass")
-    private OWLEntityData matchedEntity;
+    public static final String ENTITY = "entity";
 
-    private SearchField field;
-
-    private String fieldRendering;
-
-
-    @GwtSerializationConstructor
-    private EntitySearchResult() {
-    }
-
-    public EntitySearchResult(@Nonnull OWLEntityData matchedEntity,
-                              @Nonnull SearchField field,
-                              @Nonnull String fieldRendering) {
-        this.matchedEntity = checkNotNull(matchedEntity);
-        this.field = checkNotNull(field);
-        this.fieldRendering = checkNotNull(fieldRendering);
-    }
+    public static final String MATCHES = "matches";
 
     @Nonnull
-    public OWLEntityData getMatchedEntity() {
-        return matchedEntity;
+    public static EntitySearchResult get(@JsonProperty(ENTITY) @Nonnull OWLEntityData entity,
+                                         @JsonProperty(MATCHES) @Nonnull ImmutableList<SearchResultMatch> matches) {
+        return new AutoValue_EntitySearchResult(entity, matches);
     }
 
-    @Nonnull
-    public SearchField getField() {
-        return field;
-    }
 
+    @JsonProperty(ENTITY)
     @Nonnull
-    public String getFieldRendering() {
-        return fieldRendering;
-    }
+    public abstract OWLEntityData getEntity();
+
+    /**
+     * Get the matches for this particular entity
+     * @return The list of matches
+     */
+    @JsonProperty(MATCHES)
+    @Nonnull
+    public abstract ImmutableList<SearchResultMatch> getMatches();
 }

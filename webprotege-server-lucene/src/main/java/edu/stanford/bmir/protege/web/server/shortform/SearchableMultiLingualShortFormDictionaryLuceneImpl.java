@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -44,10 +45,12 @@ public class SearchableMultiLingualShortFormDictionaryLuceneImpl implements Sear
                                                           @Nonnull List<DictionaryLanguage> languages,
                                                           @Nonnull PageRequest pageRequest) {
         try {
+            var stopwatch = Stopwatch.createStarted();
             var entities = luceneIndex.search(searchStrings, languages, entityTypes, pageRequest);
+            var elapsedTimeMs = stopwatch.elapsed().toMillis();
             if(entities.isPresent()) {
                 var resultsPage = entities.get();
-                logger.info("Found " + resultsPage.getTotalElements() + " result.  Retrieved " + resultsPage.getPageSize());
+                logger.info("Found {} results in {} ms", resultsPage.getTotalElements(), elapsedTimeMs);
             }
             return entities.orElse(Page.emptyPage());
         } catch (IOException | ParseException e) {

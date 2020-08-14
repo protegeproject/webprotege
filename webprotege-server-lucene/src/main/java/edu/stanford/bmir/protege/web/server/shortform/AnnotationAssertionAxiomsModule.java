@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectAnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
+import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 /**
@@ -22,10 +19,24 @@ public class AnnotationAssertionAxiomsModule {
 
     private ProjectSignatureIndex provideProjectSignatureIndex;
 
-    public AnnotationAssertionAxiomsModule(ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex,
-                                           ProjectSignatureIndex provideProjectSignatureIndex) {
+    private EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex;
+
+    private EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex;
+
+    private AnnotationAssertionAxiomsByValueIndex annotationAssertionAxiomsByValueIndex;
+
+    public AnnotationAssertionAxiomsModule(ProjectOntologiesIndex projectOntologiesIndex,
+                                           ProjectAnnotationAssertionAxiomsBySubjectIndex annotationAssertionAxiomsBySubjectIndex,
+                                           ProjectSignatureIndex provideProjectSignatureIndex,
+                                           EntitiesInProjectSignatureIndex entitiesInProjectSignatureIndex,
+                                           EntitiesInProjectSignatureByIriIndex entitiesInProjectSignatureByIriIndex,
+                                           AnnotationAssertionAxiomsByValueIndex annotationAssertionAxiomsByValueIndex) {
+        this.projectOntologiesIndex = projectOntologiesIndex;
         this.annotationAssertionAxiomsBySubjectIndex = annotationAssertionAxiomsBySubjectIndex;
         this.provideProjectSignatureIndex = provideProjectSignatureIndex;
+        this.entitiesInProjectSignatureIndex = entitiesInProjectSignatureIndex;
+        this.entitiesInProjectSignatureByIriIndex = entitiesInProjectSignatureByIriIndex;
+        this.annotationAssertionAxiomsByValueIndex = annotationAssertionAxiomsByValueIndex;
     }
 
     @Provides
@@ -40,5 +51,27 @@ public class AnnotationAssertionAxiomsModule {
         return provideProjectSignatureIndex;
     }
 
+    @Provides
+    @ProjectSingleton
+    public EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndex() {
+        return entitiesInProjectSignatureIndex;
+    }
 
+    @Provides
+    @ProjectSingleton
+    public AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex() {
+        return annotationAssertionAxiomsByValueIndex;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex() {
+        return entitiesInProjectSignatureByIriIndex;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public ProjectOntologiesIndex provideProjectOntologiesIndex() {
+        return projectOntologiesIndex;
+    }
 }

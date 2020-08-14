@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -13,62 +15,18 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 21 Apr 2017
  */
-public class PerformEntitySearchResult implements Result {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class PerformEntitySearchResult implements Result {
 
-    private String searchString;
-
-    private int totalResultCount;
-
-    private Page<EntitySearchResult> results;
-
-    @GwtSerializationConstructor
-    private PerformEntitySearchResult() {
-    }
-
-    public PerformEntitySearchResult(@Nonnull String searchString,
-                                     int totalResultCount,
-                                     @Nonnull Page<EntitySearchResult> results) {
-        this.searchString = searchString;
-        this.totalResultCount = totalResultCount;
-        this.results = results;
+    @Nonnull
+    public static PerformEntitySearchResult get(String searchString, Page<EntitySearchResult> page) {
+        return new AutoValue_PerformEntitySearchResult(searchString, page);
     }
 
     @Nonnull
-    public String getSearchString() {
-        return searchString;
-    }
-
-    public int getTotalResultCount() {
-        return totalResultCount;
-    }
+    public abstract String getSearchString();
 
     @Nonnull
-    public Page<EntitySearchResult> getResults() {
-        return results;
-    }
-
-    @Override
-    public int hashCode() {
-        return results.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof PerformEntitySearchResult)) {
-            return false;
-        }
-        PerformEntitySearchResult other = (PerformEntitySearchResult) obj;
-        return this.results.equals(other.results);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("PerformEntitySearchResult")
-                .add("results", results.getTotalElements())
-                .toString();
-    }
+    public abstract Page<EntitySearchResult> getResults();
 }

@@ -31,5 +31,14 @@ public interface LuceneIndex {
                                                   @Nonnull Set<EntityType<?>> entityTypes,
                                                   @Nonnull PageRequest pageRequest) throws IOException, ParseException;
 
+    /**
+     * Finds entities that have the specified short form.
+     * @param shortForm The short form.  Entities that have a short form equal to this specified short form
+     *                  will be retrieved
+     * @param languages The languages that should be considered for the short form.
+     * @return A stream of {@link OWLEntity} where each entity has one or more short forms that are equal to the
+     * specified short form in the specified list of languages
+     */
+    @Nonnull
     Stream<OWLEntity> findEntities(String shortForm, List<DictionaryLanguage> languages) throws ParseException, IOException;
 }

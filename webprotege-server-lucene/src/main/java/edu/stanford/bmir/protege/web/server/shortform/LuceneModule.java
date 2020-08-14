@@ -2,9 +2,6 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.index.ProjectSignatureIndex;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -15,11 +12,10 @@ import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -33,9 +29,13 @@ public class LuceneModule {
 
     private static final Logger logger = LoggerFactory.getLogger(LuceneModule.class);
 
+    public static final int MIN_GRAM_SIZE = 2;
+
+    public static final int MAX_GRAM_SIZE = 11;
+
     @Provides
     @ProjectSingleton
-    public DictionaryLanguage2FieldNameTranslator provideDictionaryLanguage2FieldNameTranslator(DictionaryLanguage2FieldNameTranslatorImpl impl) {
+    public FieldNameTranslator provideDictionaryLanguage2FieldNameTranslator(FieldNameTranslatorImpl impl) {
         return impl;
     }
 
@@ -95,7 +95,20 @@ public class LuceneModule {
     @Provides
     IndexWriterConfig provideIndexWriterConfig(IndexingAnalyzerFactory analyzerFactory) {
         var analyzer = analyzerFactory.get();
-        return new IndexWriterConfig(analyzer);
+        var config = new IndexWriterConfig(analyzer);
+        return config.setSimilarity(new EntityBasedSimilarity());
+    }
+
+    @Provides
+    @MinGramSize
+    int provideMinGramSize() {
+        return MIN_GRAM_SIZE;
+    }
+
+    @Provides
+    @MaxGramSize
+    int provideMaxGramSize() {
+        return MAX_GRAM_SIZE;
     }
 
     @ProjectSingleton
@@ -114,6 +127,7 @@ public class LuceneModule {
                     logger.error("Error when disposing of Project Lucene IndexWriter", e);
                 }
             });
+
             return indexWriter;
         } catch (IOException e) {
             throw new UncheckedIOException(e);

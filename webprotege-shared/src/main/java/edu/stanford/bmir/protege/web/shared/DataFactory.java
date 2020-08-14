@@ -6,6 +6,8 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.PrefixedNameDictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -36,7 +38,9 @@ public class DataFactory {
     }
 
     public static OWLClassData getOWLThingData() {
-        return OWLClassData.get(getOWLThing(), ImmutableMap.of(DictionaryLanguage.localName(), "owl:Thing"));
+        return OWLClassData.get(getOWLThing(), ImmutableMap.of(
+                PrefixedNameDictionaryLanguage.get(), "owl:Thing",
+                LocalNameDictionaryLanguage.get(), "Thing"));
     }
 
     public static IRI getIRI(String iri) {
@@ -327,14 +331,14 @@ public class DataFactory {
     public static OWLAnnotationPropertyData getRdfsLabelData() {
         return OWLAnnotationPropertyData.get(
                 dataFactory.getRDFSLabel(),
-                ImmutableMap.of(DictionaryLanguage.localName(), OWLRDFVocabulary.RDFS_LABEL.getPrefixedName())
+                ImmutableMap.of(PrefixedNameDictionaryLanguage.get(), OWLRDFVocabulary.RDFS_LABEL.getPrefixedName())
         );
     }
 
     public static OWLAnnotationPropertyData getSkosPrefLabelData() {
         return OWLAnnotationPropertyData.get(
                 dataFactory.getOWLAnnotationProperty(SKOSVocabulary.PREFLABEL.getIRI()),
-                ImmutableMap.of(DictionaryLanguage.localName(), SKOSVocabulary.PREFLABEL.getPrefixedName())
+                ImmutableMap.of(PrefixedNameDictionaryLanguage.get(), SKOSVocabulary.PREFLABEL.getPrefixedName())
         );
     }
 

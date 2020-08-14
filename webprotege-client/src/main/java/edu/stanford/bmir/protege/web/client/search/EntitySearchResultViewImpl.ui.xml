@@ -1,0 +1,64 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        @external .searchedIri;
+        @external .wp-entity-node__display-name;
+        .main {
+            display: flex;
+            align-items: start;
+            flex-direction: row;
+            font-size: 12px;
+            padding: 2px;
+            border-bottom: 1px solid literal("var(--separator--color)");
+            cursor: default !important;
+        }
+        .main:hover {
+            background-color: literal("var(--item--hover--background-color)");
+        }
+        .entityRendering {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 180px;
+            overflow: hidden;
+            margin-right: 0.5em;
+        }
+        .entityDisplayName {
+
+        }
+        .entityDisplayName .wp-entity-node__display-name {
+            overflow: hidden;
+            width: 180px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .oboIdField {
+            color: literal("var(--tertiary--color)");
+            margin-left: 18px;
+            margin-top: 2px;
+        }
+        .main .searchedIri {
+            color: literal("var(--secondary--color)") !important;
+            padding-bottom: 10px;
+        }
+        .matchesContainer {
+            flex-grow: 1;
+            flex-shrink: 1;
+            min-width: 20px;
+        }
+        .matchesContainer div {
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{style.entityRendering}">
+            <g:HTML ui:field="entityRenderingField" addStyleNames="{style.entityDisplayName}"/>
+            <g:Label ui:field="oboIdField" text="OBO:Id" addStyleNames="{style.oboIdField}"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel ui:field="matchesContainer" addStyleNames="{style.matchesContainer}">
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>
