@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.search;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
 import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.eclipse.jdt.core.search.SearchMatch;
@@ -44,7 +45,8 @@ public class SearchResultLanguageRenderer {
         if (match.getLanguage().isAnnotationBased()) {
             String langTag = match.getLanguage().getLang();
             if (!langTag.isEmpty()) {
-                languageRendering = languageRendering + " @" + langTag;
+                String formattedLanguageTag = LanguageTagFormatter.format(langTag);
+                languageRendering = languageRendering + " @" + formattedLanguageTag;
             }
         }
         return languageRendering;
