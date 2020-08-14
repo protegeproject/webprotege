@@ -1159,10 +1159,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("displayName.settings.project.title")
     String displayName_settings_project_title();
 
-    @DefaultMessage("Specify a list of annotation property and language pairs that should be used for entity display names.  " +
-            "The display name for an entity will be chosen based on its annotations and the ordering " +
-            "of the pairs listed below. Properties and languages that appear closer to the top of the list are given priority over " +
-            "properties and languages that appear closer to the bottom of the list.")
+    @DefaultMessage("Specify how entity display names should be generated.  " +
+            "The display name for an entity will be chosen based the ordering below.  Display names can be based on annotation properties and language pairs etc." +
+            "Items that appear closer to the top of the list are given priority over " +
+            "items that appear closer to the bottom of the list.")
     @Key("displayName.settings.project.helpText")
     String displayName_settings_project_helpText();
 
