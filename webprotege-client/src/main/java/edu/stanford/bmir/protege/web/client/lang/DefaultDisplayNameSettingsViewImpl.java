@@ -1,31 +1,24 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Streams;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.stream.Collectors.partitioningBy;
 
 /**
  * Matthew Horridge
@@ -41,9 +34,6 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
 
     @UiField
     Button resetButton;
-
-    @UiField
-    CheckBox fallbackCheckBox;
 
     private ResetLanguagesHandler resetLanguagesHandler = () -> {};
 
@@ -63,14 +53,7 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
     @Nonnull
     @Override
     public ImmutableList<DictionaryLanguage> getPrimaryLanguages() {
-        ImmutableList<DictionaryLanguage> specifiedList = languagesList.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
-        if (fallbackCheckBox.getValue()) {
-            return Streams.concat(specifiedList.stream(),
-                                  Stream.of(DictionaryLanguage.localName())).collect(toImmutableList());
-        }
-        else {
-            return specifiedList;
-        }
+        return languagesList.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
     }
 
     @Override

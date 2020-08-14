@@ -47,9 +47,7 @@ public class LanguageSettingsActivity extends AbstractActivity {
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
         DefaultDisplayNameSettingsPresenter presenter = getPresenter();
-        presenter.setNextPlace(getPlace().getNextPlace());
         presenter.start(panel);
-
     }
 
     @Override
