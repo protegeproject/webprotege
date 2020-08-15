@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.search;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,9 @@ public class EntitySearchFilter_TestCase {
     private EntitySearchFilterId id;
 
     @Mock
+    private ProjectId projectId;
+
+    @Mock
     private LanguageMap label;
 
     @Mock
@@ -30,6 +34,7 @@ public class EntitySearchFilter_TestCase {
     @Before
     public void setUp() throws Exception {
         filter = EntitySearchFilter.get(id,
+                                        projectId,
                                         label,
                                         matchCriteria);
     }
@@ -37,6 +42,11 @@ public class EntitySearchFilter_TestCase {
     @Test
     public void shouldReturnProvidedId() {
         assertThat(filter.getId(), is(id));
+    }
+
+    @Test
+    public void shouldReturnProvidedProjectId() {
+        assertThat(filter.getProjectId(), is(projectId));
     }
 
     @Test
