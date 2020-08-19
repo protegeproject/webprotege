@@ -13,7 +13,7 @@ import org.semanticweb.owlapi.model.OWLEntityProvider;
  * @author Josef Hardi <josef.hardi@stanford.edu> <br>
  * Stanford Center for Biomedical Informatics Research
  */
-@Module
+@Module(includes = Neo4jLuceneModule.class)
 public class Neo4jShortFormModule {
 
   @Provides

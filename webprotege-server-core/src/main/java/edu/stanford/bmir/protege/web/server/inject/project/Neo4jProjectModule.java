@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.bmir.protege.web.server.index.Neo4jIndexModule;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.Neo4jShortFormModule;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
@@ -58,6 +59,7 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.owl2lpg.client.read.axiom.*;
 import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessor;
 import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessorImpl;
+import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessorModule;
 import edu.stanford.owl2lpg.client.read.hierarchy.Neo4jClassHierarchyProvider;
 import edu.stanford.owl2lpg.client.read.shortform.*;
 import edu.stanford.owl2lpg.model.BranchId;
@@ -72,6 +74,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -87,9 +90,8 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
 @Module(includes = {
     Neo4jIndexModule.class,
     Neo4jShortFormModule.class,
-    Neo4jMultiLingualShortFormModule.class,
     ProjectActionHandlersModule.class,
-    NodeMapperModule.class
+    ClassHierarchyAccessorModule.class
 })
 public class Neo4jProjectModule {
 
@@ -97,12 +99,6 @@ public class Neo4jProjectModule {
 
   public Neo4jProjectModule(ProjectId projectId) {
     this.projectId = projectId;
-  }
-
-  @Provides
-  @ProjectSingleton
-  OWLDataFactory providesDataFactory() {
-    return new OWLDataFactoryImpl();
   }
 
   @Provides
@@ -133,38 +129,9 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  public AxiomSubjectAccessor provideAxiomSubjectAccessor(AxiomSubjectAccessorImpl impl) {
-    return impl;
-  }
-
-  @Provides
-  public AxiomByEntityAccessor provideAxiomByEntityAccessor(AxiomByEntityAccessorImpl impl) {
-    return impl;
-  }
-
-  @Provides
-  public ClassHierarchyAccessor provideClassHierarchyAccessor(ClassHierarchyAccessorImpl impl) {
-    return impl;
-  }
-
-  @Provides
-  public LuceneIndexUpdater provideLuceneIndexUpdater() {
-    return new LuceneIndexUpdater() {
-      @Override
-      public void updateIndexForEntity(@Nonnull Collection<OWLEntity> entities) {
-
-      }
-    };
-  }
-
-  @Provides
-  public MultilingualDictionaryUpdater provideMultilingualDictionaryUpdater() {
-    return new MultilingualDictionaryUpdater() {
-      @Override
-      public void update(@Nonnull Collection<OWLEntity> entities, @Nonnull List<DictionaryLanguage> languages) {
-
-      }
-    };
+  @ProjectSingleton
+  OWLDataFactory providesDataFactory() {
+    return new OWLDataFactoryImpl();
   }
 
   @Provides
@@ -764,5 +731,13 @@ public class Neo4jProjectModule {
   @Provides
   ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
     return impl;
+  }
+
+  @Provides
+  @LuceneIndexesDirectory
+  Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
+    var dataDirectory = dataDirectoryProvider.get().toPath();
+    return dataDirectory.resolve("lucene-indexes");
+
   }
 }

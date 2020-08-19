@@ -8,10 +8,21 @@ import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxi
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
+import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.index.Neo4jAnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jClassFrameAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jDataPropertyAssertionAxiomsBySubjectIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jNamedIndividualFrameAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jObjectPropertyAssertionAxiomsBySubjectIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jPropertyAssertionAxiomsBySubjectIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jSubClassOfAxiomsBySubClassIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jSubDataPropertyAxiomsBySubPropertyIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jSubObjectPropertyAxiomsBySubPropertyIndex;
 
 import javax.annotation.Nonnull;
 
@@ -20,7 +31,11 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-09-10
  */
-@Module
+@Module(includes = {
+    AxiomBySubjectAccessorModule.class,
+    HierarchyAxiomBySubjectAccessorModule.class,
+    AssertionAxiomBySubjectAccessorModule.class
+})
 public class Neo4jIndexModule {
 
     @Provides
@@ -35,7 +50,7 @@ public class Neo4jIndexModule {
 
     @Provides
     AnnotationAssertionAxiomsBySubjectIndex provideAnnotationAssertionAxiomsBySubjectIndex(
-            AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        Neo4jAnnotationAssertionAxiomsBySubjectIndex impl) {
         return impl;
     }
 
@@ -46,7 +61,7 @@ public class Neo4jIndexModule {
 
     @Provides
     AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(
-            AnnotationPropertyDomainAxiomsIndexImpl impl) {
+        AnnotationPropertyDomainAxiomsIndexImpl impl) {
         return impl;
     }
 
@@ -83,13 +98,13 @@ public class Neo4jIndexModule {
 
     @Provides
     ClassAssertionAxiomsByIndividualIndex provideClassAssertionAxiomsByIndividualIndex(
-            ClassAssertionAxiomsByIndividualIndexImpl impl) {
+        Neo4jClassAssertionAxiomsByIndividualIndex impl) {
         return impl;
     }
 
     @Provides
     DataPropertyAssertionAxiomsBySubjectIndex provideDataPropertyAssertionAxiomsBySubjectIndex(
-            DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        Neo4jDataPropertyAssertionAxiomsBySubjectIndex impl) {
         return impl;
     }
 
@@ -114,7 +129,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesIndex(DeprecatedEntitiesByEntityIndexImpl impl) {
+    DeprecatedEntitiesByEntityIndex provideDeprecatedEntitiesByEntityIndex(DeprecatedEntitiesByEntityIndexLuceneImpl impl) {
         return impl;
     }
 
@@ -135,13 +150,13 @@ public class Neo4jIndexModule {
 
     @Provides
     DisjointObjectPropertiesAxiomsIndex provideDisjointObjectPropertiesAxiomsIndex(
-            DisjointObjectPropertiesAxiomsIndexImpl impl) {
+        DisjointObjectPropertiesAxiomsIndexImpl impl) {
         return impl;
     }
 
     @Provides
     EntitiesInOntologySignatureByIriIndex provideEntitiesInOntologySignatureByIriIndex(
-            EntitiesInOntologySignatureByIriIndexImpl impl) {
+        EntitiesInOntologySignatureByIriIndexImpl impl) {
         return impl;
     }
 
@@ -152,7 +167,7 @@ public class Neo4jIndexModule {
 
     @Provides
     EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(
-            EntitiesInProjectSignatureByIriIndexImpl impl) {
+        EntitiesInProjectSignatureByIriIndexImpl impl) {
         return impl;
     }
 
@@ -168,13 +183,13 @@ public class Neo4jIndexModule {
 
     @Provides
     EquivalentDataPropertiesAxiomsIndex provideEquivalentDataPropertiesAxiomsIndex(
-            EquivalentDataPropertiesAxiomsIndexImpl impl) {
+        EquivalentDataPropertiesAxiomsIndexImpl impl) {
         return impl;
     }
 
     @Provides
     EquivalentObjectPropertiesAxiomsIndex provideEquivalentObjectPropertiesAxiomsIndex(
-            EquivalentObjectPropertiesAxiomsIndexImpl impl) {
+        EquivalentObjectPropertiesAxiomsIndexImpl impl) {
         return impl;
     }
 
@@ -196,7 +211,7 @@ public class Neo4jIndexModule {
 
     @Provides
     ObjectPropertyAssertionAxiomsBySubjectIndex provideObjectPropertyAssertionAxiomsBySubjectIndex(
-            ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        Neo4jObjectPropertyAssertionAxiomsBySubjectIndex impl) {
         return impl;
     }
 
@@ -248,7 +263,7 @@ public class Neo4jIndexModule {
 
     @Provides
     ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(
-            ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
+        ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
         return impl;
     }
 
@@ -271,7 +286,7 @@ public class Neo4jIndexModule {
 
     @Provides
     PropertyAssertionAxiomsBySubjectIndex providePropertyAssertionAxiomsBySubjectIndex(
-            PropertyAssertionAxiomsBySubjectIndexImpl impl) {
+        Neo4jPropertyAssertionAxiomsBySubjectIndex impl) {
         return impl;
     }
 
@@ -282,13 +297,13 @@ public class Neo4jIndexModule {
 
     @Provides
     SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(
-            SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
+        SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
         return impl;
     }
 
     @Provides
     SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(
-            SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+        SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
         return impl;
     }
 
@@ -299,19 +314,25 @@ public class Neo4jIndexModule {
 
     @Provides
     SubDataPropertyAxiomsBySubPropertyIndex provideSubDataPropertyAxiomsBySubPropertyIndex(
-            SubDataPropertyAxiomsBySubPropertyIndexImpl impl) {
+        Neo4jSubDataPropertyAxiomsBySubPropertyIndex impl) {
         return impl;
     }
 
     @Provides
     SubObjectPropertyAxiomsBySubPropertyIndex provideSubObjectPropertyAxiomsBySubPropertyIndex(
-            SubObjectPropertyAxiomsBySubPropertyIndexImpl impl) {
+        Neo4jSubObjectPropertyAxiomsBySubPropertyIndex impl) {
         return impl;
     }
 
     @Provides
     ProjectAnnotationAssertionAxiomsBySubjectIndex providesHasAnnotationAssertionAxioms(
-            ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex(AnnotationAssertionAxiomsByValueIndexImpl impl) {
         return impl;
     }
 
@@ -331,6 +352,14 @@ public class Neo4jIndexModule {
     @Provides
     @IntoSet
     public UpdatableIndex provideAxiomsByEntityReferenceIndexImplIntoSet(AxiomsByEntityReferenceIndexImpl impl) {
+        return impl;
+    }
+
+
+
+    @Provides
+    @IntoSet
+    public UpdatableIndex provideAnnotationAssertionAxiomsByValueIndexIntoSet(AnnotationAssertionAxiomsByValueIndexImpl impl) {
         return impl;
     }
 
@@ -423,6 +452,24 @@ public class Neo4jIndexModule {
     @Provides
     @IntoSet
     UpdatableIndex provideProjectOntologiesIndexIntoSet(ProjectOntologiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInOwlEntitiesIndex provideBuiltInOwlEntitiesIndex(@Nonnull BuiltInOwlEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInSkosEntitiesIndex provideBuiltInSkosEntitiesIndex(@Nonnull BuiltInSkosEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public DeprecatedEntitiesIndex provideDeprecatedEntitiesIndex(@Nonnull DeprecatedEntitiesIndexLuceneImpl impl) {
         return impl;
     }
 }
