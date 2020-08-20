@@ -41,7 +41,10 @@ import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
+import edu.stanford.bmir.protege.web.server.repository.ProjectSearchFiltersRepository;
 import edu.stanford.bmir.protege.web.server.revision.*;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepository;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -690,6 +693,11 @@ public class ProjectModule {
     }
 
     @Provides
+    EntityMatcherFactory provideEntityMatcherFactory(MatcherFactory matcherFactory) {
+        return matcherFactory;
+    }
+
+    @Provides
     ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
         return impl;
     }
@@ -701,5 +709,17 @@ public class ProjectModule {
         return dataDirectory.resolve("lucene-indexes");
 
     }
+
+    @Provides
+    ProjectSearchFiltersRepository provideProjectSearchFiltersRepository(EntitySearchFilterRepository repository) {
+        return repository;
+    }
+
+    @Provides
+    @ProjectSingleton
+    EntitySearchFilterIndexesManager provideEntitySearchFilterIndexesManager(LuceneIndexWriterImpl writer) {
+        return writer;
+    }
+
 }
 

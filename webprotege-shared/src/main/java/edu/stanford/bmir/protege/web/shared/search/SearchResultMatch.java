@@ -6,7 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public abstract class SearchResultMatch {
     public static final String POSITIONS = "positions";
 
     @JsonCreator
-    public static SearchResultMatch get(@JsonProperty(ENTITY) @Nonnull OWLEntityData entity,
+    public static SearchResultMatch get(@JsonProperty(ENTITY) @Nonnull EntityNode entity,
                                         @JsonProperty(LANGUAGE) @Nonnull DictionaryLanguage matchedDictionaryLanguage,
                                         @JsonProperty(LANGUAGE_RENDERING) @Nonnull ImmutableMap<DictionaryLanguage, String> languageRendering,
                                         @JsonProperty(VALUE) @Nonnull String matchedString,
@@ -45,7 +45,7 @@ public abstract class SearchResultMatch {
 
     @JsonProperty(ENTITY)
     @Nonnull
-    public abstract OWLEntityData getEntity();
+    public abstract EntityNode getEntity();
 
     @JsonProperty(LANGUAGE)
     @Nonnull

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 
@@ -62,6 +64,8 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private final EntitySearchResultPresenterFactory resultPresenterFactory;
 
+    private final EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter;
+
     private final LangTagFilterPresenter langTagFilterPresenter;
 
     private final List<EntitySearchResultPresenter> resultPresenters = new ArrayList<>();
@@ -71,11 +75,13 @@ public class SearchPresenter implements HasInitialFocusable {
                            @Nonnull SearchView view,
                            @Nonnull DispatchServiceManager dispatchServiceManager,
                            @Nonnull EntitySearchResultPresenterFactory resultPresenterFactory,
+                           EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter,
                            @Nonnull LangTagFilterPresenter langTagFilterPresenter) {
         this.projectId = projectId;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.resultPresenterFactory = resultPresenterFactory;
+        this.entitySearchFilterTokenFieldPresenter = checkNotNull(entitySearchFilterTokenFieldPresenter);
         this.langTagFilterPresenter = langTagFilterPresenter;
     }
 
@@ -87,8 +93,12 @@ public class SearchPresenter implements HasInitialFocusable {
         view.setPageNumberChangedHandler(pageNumber -> {
             restartPageChangeTimer();
         });
+        dispatchServiceManager.beginBatch();
         dispatchServiceManager.execute(new GetProjectLangTagsAction(projectId),
                                        this::handleProjectLangTags);
+        entitySearchFilterTokenFieldPresenter.start(view.getSearchFilterContainer());
+        entitySearchFilterTokenFieldPresenter.setSearchFiltersChangedHandler(this::performSearch);
+        dispatchServiceManager.executeCurrentBatch();
     }
 
     private void handleProjectLangTags(GetProjectLangTagsResult result) {
@@ -124,7 +134,7 @@ public class SearchPresenter implements HasInitialFocusable {
             return Optional.empty();
         }
         EntitySearchResultPresenter resultPresenter = resultPresenters.get(selIndex);
-        return Optional.of(resultPresenter.getEntity());
+        return Optional.of(resultPresenter.getEntity().getEntityData());
     }
 
     public IsWidget getView() {
@@ -149,10 +159,12 @@ public class SearchPresenter implements HasInitialFocusable {
         }
         LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
         int pageNumber = view.getPageNumber();
+        ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
         dispatchServiceManager.execute(new PerformEntitySearchAction(projectId,
                                                                      view.getSearchString(),
                                                                      entityTypes,
                                                                      langTagFilter,
+                                                                     searchFilters,
                                                                      PageRequest.requestPage(pageNumber)),
                                        view,
                                        this::displaySearchResult);

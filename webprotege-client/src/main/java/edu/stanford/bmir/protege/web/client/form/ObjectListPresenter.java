@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -161,11 +163,11 @@ public class ObjectListPresenter<T> implements Presenter {
     }
 
     @Nonnull
-    public List<T> getValues() {
+    public ImmutableList<T> getValues() {
         return objectPresenters.stream()
                                .map(ObjectPresenter::getValue)
                                .filter(Optional::isPresent)
                                .map(Optional::get)
-                               .collect(toList());
+                               .collect(toImmutableList());
     }
 }

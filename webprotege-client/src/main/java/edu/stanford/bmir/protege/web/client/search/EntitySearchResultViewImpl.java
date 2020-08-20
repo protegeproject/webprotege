@@ -55,8 +55,7 @@ public class EntitySearchResultViewImpl extends Composite implements EntitySearc
     }
 
     @Override
-    public void setEntity(@Nonnull OWLEntityData entity) {
-        EntityNode entityNode = EntityNode.getFromEntityData(entity);
+    public void setEntity(@Nonnull EntityNode entityNode) {
         renderer.setRenderTags(false);
         DisplayNameSettings displayNameSettings = displayNameSettingsManager.getLocalDisplayNameSettings();
         renderer.setDisplayLanguage(displayNameSettings);

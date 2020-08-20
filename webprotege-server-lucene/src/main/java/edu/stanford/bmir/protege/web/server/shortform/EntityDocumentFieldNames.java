@@ -32,4 +32,6 @@ public interface EntityDocumentFieldNames {
     String OBO_ID = "oboId";
 
     String PREFIXED_NAME = "prefixedName";
+
+    String SEARCH_FILTER_MATCHES = "searchFilterMatches";
 }

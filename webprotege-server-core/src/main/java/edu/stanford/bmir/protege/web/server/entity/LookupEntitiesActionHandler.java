@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
@@ -103,7 +104,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
 
         var result = dictionaryManager.getShortFormsContaining(searchStrings,
                                                                entityLookupRequest.getSearchedEntityTypes(),
-                                                               languageManager.getLanguages(),
+                                                               languageManager.getLanguages(), ImmutableList.of(),
                                                                PageRequest.requestFirstPage());
 
         List<EntityLookupResult> lookupResults = new ArrayList<>();

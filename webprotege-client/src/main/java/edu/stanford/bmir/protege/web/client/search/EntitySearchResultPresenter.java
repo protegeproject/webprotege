@@ -5,6 +5,7 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
@@ -53,7 +54,7 @@ public class EntitySearchResultPresenter {
               })
               .map(SearchResultMatchPresenter::getView)
               .collect(toImmutableList());
-        OWLEntityData entity = result.getEntity();
+        EntityNode entity = result.getEntity();
         this.view.setEntity(entity);
         this.view.setResultMatchViews(views);
         Optional<String> oboId = OboId.getOboId(entity.getEntity().getIRI());
@@ -69,7 +70,7 @@ public class EntitySearchResultPresenter {
     }
 
     @Nonnull
-    public OWLEntityData getEntity() {
+    public EntityNode getEntity() {
         return result.getEntity();
     }
 }

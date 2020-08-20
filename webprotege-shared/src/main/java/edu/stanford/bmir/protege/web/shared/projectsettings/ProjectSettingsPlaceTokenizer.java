@@ -21,7 +21,7 @@ public class ProjectSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<P
 
     private static final String SETTINGS = "/settings";
 
-    private static RegExp regExp = RegExp.compile(PROJECTS + "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})" + SETTINGS);
+    private static RegExp regExp = RegExp.compile("^" + PROJECTS + "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})" + SETTINGS + "$");
 
 
     @Override

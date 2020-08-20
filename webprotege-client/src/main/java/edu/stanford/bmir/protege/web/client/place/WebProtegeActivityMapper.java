@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
 import edu.stanford.bmir.protege.web.client.inject.ProjectIdProvider;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsActivity;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsActivity;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
@@ -61,6 +63,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     private Optional<CollectionPresenter> lastCollectionPresenter = Optional.empty();
 
     private Optional<FormsManagerPresenter> lastFormsPresenter = Optional.empty();
+
+    private Optional<EntitySearchSettingsPresenter> lastSearchSettingsPresenter = Optional.empty();
 
     private Optional<UserId> lastUser = Optional.empty();
 
@@ -206,6 +210,13 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new EditFormActivity(formEditorPresenter, editFormPlace);
         }
 
+        if(place instanceof EntitySearchSettingsPlace) {
+            EntitySearchSettingsPlace searchSettingsPlace = (EntitySearchSettingsPlace) place;
+            EntitySearchSettingsPresenter entitySearchSettingsPresenter = getEntitySearchSettingsPresenter(searchSettingsPlace);
+            return EntitySearchSettingsActivity.get(entitySearchSettingsPresenter,
+                                                    searchSettingsPlace.getNextPlace());
+        }
+
         return null;
     }
 
@@ -269,6 +280,18 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             FormEditorPresenter formEditorPresenter = projectComponent.getFormEditorPresenter();
             lastFormEditorPresent = Optional.of(formEditorPresenter);
             return formEditorPresenter;
+        }
+    }
+
+    private EntitySearchSettingsPresenter getEntitySearchSettingsPresenter(EntitySearchSettingsPlace place) {
+        if(lastSearchSettingsPresenter.isPresent()) {
+            return lastSearchSettingsPresenter.get();
+        }
+        else {
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(new ClientProjectModule(place.getProjectId()));
+            EntitySearchSettingsPresenter searchSettingsPresenter = projectComponent.getEntitySearchSettingsPresenter();
+            lastSearchSettingsPresenter = Optional.of(searchSettingsPresenter);
+            return searchSettingsPresenter;
         }
     }
 

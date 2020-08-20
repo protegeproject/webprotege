@@ -35,7 +35,6 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
 
     AcceptsOneWidget getLangTagFilterContainer();
 
-    @Nonnull
     void setPageCount(int pageCount);
 
     void setPageNumber(int pageNumber);
@@ -45,4 +44,9 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
     void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
 
     void setTotalResultCount(long totalElements);
+
+    void setSearchFilterVisible(boolean visible);
+
+    @Nonnull
+    AcceptsOneWidget getSearchFilterContainer();
 }

@@ -5,6 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
@@ -24,7 +25,7 @@ public abstract class EntitySearchResult {
     public static final String MATCHES = "matches";
 
     @Nonnull
-    public static EntitySearchResult get(@JsonProperty(ENTITY) @Nonnull OWLEntityData entity,
+    public static EntitySearchResult get(@JsonProperty(ENTITY) @Nonnull EntityNode entity,
                                          @JsonProperty(MATCHES) @Nonnull ImmutableList<SearchResultMatch> matches) {
         return new AutoValue_EntitySearchResult(entity, matches);
     }
@@ -32,7 +33,7 @@ public abstract class EntitySearchResult {
 
     @JsonProperty(ENTITY)
     @Nonnull
-    public abstract OWLEntityData getEntity();
+    public abstract EntityNode getEntity();
 
     /**
      * Get the matches for this particular entity

@@ -50,10 +50,7 @@ import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRender
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
-import edu.stanford.bmir.protege.web.client.search.EntitySearchResultView;
-import edu.stanford.bmir.protege.web.client.search.EntitySearchResultViewImpl;
-import edu.stanford.bmir.protege.web.client.search.SearchResultMatchView;
-import edu.stanford.bmir.protege.web.client.search.SearchResultMatchViewImpl;
+import edu.stanford.bmir.protege.web.client.search.*;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.shortform.ShortFormModule;
@@ -868,6 +865,16 @@ public class ClientProjectModule {
 
     @Provides
     SearchResultMatchView provideSearchResultMatchView(SearchResultMatchViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitySearchFilterView provideEntitySearchFilterView(EntitySearchFilterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntitySearchFilterTokenFieldView provideEntitySearchFilterTokenFieldView(EntitySearchFilterTokenFieldViewImpl impl) {
         return impl;
     }
 }

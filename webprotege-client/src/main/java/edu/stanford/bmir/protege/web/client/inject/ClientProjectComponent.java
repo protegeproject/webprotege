@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsPrese
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
 import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
+import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsPresenter;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -45,4 +46,6 @@ public interface ClientProjectComponent {
     DefaultDisplayNameSettingsPresenter getLanguageSettingsPresenter();
 
     FormsManagerPresenter getFormsPresenter();
+
+    EntitySearchSettingsPresenter getEntitySearchSettingsPresenter();
 }

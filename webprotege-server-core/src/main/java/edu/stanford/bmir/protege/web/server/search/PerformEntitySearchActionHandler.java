@@ -5,19 +5,15 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
-import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
-import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageFilter.EmptyLangTagTreatment.INCLUDE_EMPTY_LANG_TAGS;
 
@@ -63,10 +59,13 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
         languages.add(LocalNameDictionaryLanguage.get());
         languages.add(PrefixedNameDictionaryLanguage.get());
 
+        var searchFilters = action.getSearchFilters();
+
         var entitySearcher = entitySearcherFactory.create(entityTypes,
                                                           searchString,
                                                           executionContext.getUserId(),
-                                                          languages.build());
+                                                          languages.build(),
+                                                          searchFilters);
         PageRequest pageRequest = action.getPageRequest();
         entitySearcher.setPageRequest(pageRequest);
         entitySearcher.invoke();

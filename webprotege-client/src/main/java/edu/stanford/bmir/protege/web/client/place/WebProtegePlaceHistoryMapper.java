@@ -49,6 +49,7 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
         tokenizers.add(new LanguageSettingsPlaceTokenizer());
         tokenizers.add(new FormsPlaceTokenizer());
         tokenizers.add(new EditFormPlaceTokenizer());
+        tokenizers.add(new EntitySearchSettingsPlaceTokenizer());
     }
 
     @Override
