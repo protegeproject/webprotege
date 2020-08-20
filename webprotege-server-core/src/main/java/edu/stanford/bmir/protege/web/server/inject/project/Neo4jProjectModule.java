@@ -60,7 +60,11 @@ import edu.stanford.owl2lpg.client.read.axiom.*;
 import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessor;
 import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessorImpl;
 import edu.stanford.owl2lpg.client.read.hierarchy.ClassHierarchyAccessorModule;
+import edu.stanford.owl2lpg.client.read.hierarchy.HierarchyAccessorModule;
+import edu.stanford.owl2lpg.client.read.hierarchy.Neo4jAnnotationPropertyHierarchyProvider;
 import edu.stanford.owl2lpg.client.read.hierarchy.Neo4jClassHierarchyProvider;
+import edu.stanford.owl2lpg.client.read.hierarchy.Neo4jDataPropertyHierarchyProvider;
+import edu.stanford.owl2lpg.client.read.hierarchy.Neo4jObjectPropertyHierarchyProvider;
 import edu.stanford.owl2lpg.client.read.shortform.*;
 import edu.stanford.owl2lpg.model.BranchId;
 import edu.stanford.owl2lpg.model.OntologyDocumentId;
@@ -91,7 +95,7 @@ import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
     Neo4jIndexModule.class,
     Neo4jShortFormModule.class,
     ProjectActionHandlersModule.class,
-    ClassHierarchyAccessorModule.class
+    HierarchyAccessorModule.class
 })
 public class Neo4jProjectModule {
 
@@ -247,7 +251,7 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  DataPropertyHierarchyProvider provideDataPropertyHierarchyProvider(DataPropertyHierarchyProviderImpl impl) {
+  DataPropertyHierarchyProvider provideDataPropertyHierarchyProvider(Neo4jDataPropertyHierarchyProvider impl) {
     return impl;
   }
 
@@ -260,7 +264,7 @@ public class Neo4jProjectModule {
 
   @Provides
   AnnotationPropertyHierarchyProvider provideAnnotationPropertyHierarchyProvider(
-      AnnotationPropertyHierarchyProviderImpl impl) {
+      Neo4jAnnotationPropertyHierarchyProvider impl) {
     return impl;
   }
 
@@ -285,7 +289,7 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  public ObjectPropertyHierarchyProvider provideObjectPropertyHierarchyProvider(ObjectPropertyHierarchyProviderImpl impl) {
+  public ObjectPropertyHierarchyProvider provideObjectPropertyHierarchyProvider(Neo4jObjectPropertyHierarchyProvider impl) {
     return impl;
   }
 
