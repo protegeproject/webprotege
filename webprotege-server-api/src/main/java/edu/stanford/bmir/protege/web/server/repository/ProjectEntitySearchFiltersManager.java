@@ -15,4 +15,6 @@ public interface ProjectEntitySearchFiltersManager {
 
     @Nonnull
     ImmutableList<EntitySearchFilter> getSearchFilters();
+
+    void setSearchFilters(@Nonnull ImmutableList<EntitySearchFilter> searchFilters);
 }

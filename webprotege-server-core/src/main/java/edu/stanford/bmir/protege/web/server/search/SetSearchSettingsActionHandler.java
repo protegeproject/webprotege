@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.server.search;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.search.SetSearchSettingsAction;
 import edu.stanford.bmir.protege.web.shared.search.SetSearchSettingsResult;
 
@@ -21,18 +24,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SetSearchSettingsActionHandler extends AbstractProjectActionHandler<SetSearchSettingsAction, SetSearchSettingsResult> {
 
     @Nonnull
-    private final EntitySearchFilterRepository searchFilterRepository;
-
-    @Nonnull
-    private final EntitySearchFilterIndexesManager searchFilterIndexesManager;
+    private final ProjectEntitySearchFiltersManager filtersManager;
 
     @Inject
     public SetSearchSettingsActionHandler(@Nonnull AccessManager accessManager,
-                                          @Nonnull EntitySearchFilterRepository searchFilterRepository,
-                                          @Nonnull EntitySearchFilterIndexesManager searchFilterIndexesManager) {
+                                          @Nonnull ProjectEntitySearchFiltersManager filtersManager) {
         super(accessManager);
-        this.searchFilterRepository = checkNotNull(searchFilterRepository);
-        this.searchFilterIndexesManager = checkNotNull(searchFilterIndexesManager);
+        this.filtersManager = checkNotNull(filtersManager);
     }
 
     @Nullable
@@ -51,9 +49,9 @@ public class SetSearchSettingsActionHandler extends AbstractProjectActionHandler
     @Override
     public synchronized SetSearchSettingsResult execute(@Nonnull SetSearchSettingsAction action,
                                                         @Nonnull ExecutionContext executionContext) {
-        searchFilterRepository.saveSearchFilters(action.getTo());
-        // Rebuild the lucene index.  Might take a long time
-        searchFilterIndexesManager.updateEntitySearchFilterIndexes();
+
+        var searchFilters = action.getTo();
+        filtersManager.setSearchFilters(searchFilters);
         return new SetSearchSettingsResult();
     }
 }

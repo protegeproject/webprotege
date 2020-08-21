@@ -23,16 +23,27 @@ public class ProjectEntitySearchFiltersManagerImpl implements ProjectEntitySearc
     @Nonnull
     private final EntitySearchFilterRepository repository;
 
+    @Nonnull
+    private final EntitySearchFilterIndexesManager indexesManager;
+
     @Inject
     public ProjectEntitySearchFiltersManagerImpl(@Nonnull ProjectId projectId,
-                                                 @Nonnull EntitySearchFilterRepository repository) {
+                                                 @Nonnull EntitySearchFilterRepository repository,
+                                                 @Nonnull EntitySearchFilterIndexesManager indexesManager) {
         this.projectId = checkNotNull(projectId);
         this.repository = checkNotNull(repository);
+        this.indexesManager = checkNotNull(indexesManager);
     }
 
     @Nonnull
     @Override
     public ImmutableList<EntitySearchFilter> getSearchFilters() {
         return repository.getSearchFilters(projectId);
+    }
+
+    @Override
+    public void setSearchFilters(@Nonnull ImmutableList<EntitySearchFilter> searchFilters) {
+        repository.saveSearchFilters(searchFilters);
+        indexesManager.updateEntitySearchFilterIndexes();
     }
 }

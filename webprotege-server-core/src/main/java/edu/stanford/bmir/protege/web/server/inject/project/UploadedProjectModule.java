@@ -325,6 +325,11 @@ public class UploadedProjectModule {
             public ImmutableList<EntitySearchFilter> getSearchFilters() {
                 return ImmutableList.of();
             }
+
+            @Override
+            public void setSearchFilters(@Nonnull ImmutableList<EntitySearchFilter> searchFilters) {
+
+            }
         };
     }
 
