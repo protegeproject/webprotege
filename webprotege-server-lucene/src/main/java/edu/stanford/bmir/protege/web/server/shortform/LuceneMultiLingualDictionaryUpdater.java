@@ -26,6 +26,6 @@ public class LuceneMultiLingualDictionaryUpdater implements MultilingualDictiona
     @Override
     public void update(@Nonnull Collection<OWLEntity> entities,
                        @Nonnull List<DictionaryLanguage> languages) {
-        indexUpdater.updateIndexForEntity(entities);
+        indexUpdater.updateIndexForEntities(entities);
     }
 }

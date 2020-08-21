@@ -41,7 +41,7 @@ public class LuceneIndexUpdaterImpl implements LuceneIndexUpdater {
     }
 
     @Override
-    public void updateIndexForEntity(@Nonnull Collection<OWLEntity> entities) {
+    public void updateIndexForEntities(@Nonnull Collection<OWLEntity> entities) {
         try {
             var documentTranslator = documentTranslatorProvider.get();
             var deleteQueries = entities.stream()
