@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Collection;
@@ -25,23 +26,24 @@ public class LuceneIndexUpdaterImpl implements LuceneIndexUpdater {
     private final IndexWriter indexWriter;
 
     @Nonnull
-    private final LuceneEntityDocumentTranslator documentTranslator;
+    private final Provider<LuceneEntityDocumentTranslator> documentTranslatorProvider;
 
     @Nonnull
     private final SearcherManager searcherManager;
 
     @Inject
     public LuceneIndexUpdaterImpl(@Nonnull IndexWriter indexWriter,
-                                  @Nonnull LuceneEntityDocumentTranslator documentTranslator,
+                                  @Nonnull Provider<LuceneEntityDocumentTranslator> documentTranslatorProvider,
                                   @Nonnull SearcherManager searcherManager) {
         this.indexWriter = checkNotNull(indexWriter);
-        this.documentTranslator = checkNotNull(documentTranslator);
+        this.documentTranslatorProvider = checkNotNull(documentTranslatorProvider);
         this.searcherManager = checkNotNull(searcherManager);
     }
 
     @Override
     public void updateIndexForEntity(@Nonnull Collection<OWLEntity> entities) {
         try {
+            var documentTranslator = documentTranslatorProvider.get();
             var deleteQueries = entities.stream()
                     .map(documentTranslator::getEntityDocumentQuery)
                     .toArray(Query[]::new);
