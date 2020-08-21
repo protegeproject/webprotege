@@ -19,8 +19,7 @@ import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
-import edu.stanford.bmir.protege.web.server.repository.ProjectSearchFiltersRepository;
-import edu.stanford.bmir.protege.web.server.shortform.AnnotationAssertionAxiomsModule;
+import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneIndexesDirectory;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneModule;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -319,11 +318,11 @@ public class UploadedProjectModule {
     }
 
     @Provides
-    ProjectSearchFiltersRepository provideProjectSearchFiltersRepository() {
-        return new ProjectSearchFiltersRepository() {
+    ProjectEntitySearchFiltersManager provideProjectSearchFiltersRepository() {
+        return new ProjectEntitySearchFiltersManager() {
             @Nonnull
             @Override
-            public ImmutableList<EntitySearchFilter> getSearchFilters(@Nonnull ProjectId projectId) {
+            public ImmutableList<EntitySearchFilter> getSearchFilters() {
                 return ImmutableList.of();
             }
         };

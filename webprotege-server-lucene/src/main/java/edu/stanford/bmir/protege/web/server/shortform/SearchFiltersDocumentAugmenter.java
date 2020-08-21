@@ -3,20 +3,13 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.match.EntityMatcherFactory;
 import edu.stanford.bmir.protege.web.server.match.Matcher;
-import edu.stanford.bmir.protege.web.server.repository.ProjectSearchFiltersRepository;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsNotDeprecatedCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
-import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
+import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilterId;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,11 +35,11 @@ public class SearchFiltersDocumentAugmenter implements EntityDocumentAugmenter {
     private ImmutableList<Matcher<OWLEntity>> matchers = ImmutableList.of();
 
     @Inject
-    public SearchFiltersDocumentAugmenter(@Nonnull ProjectSearchFiltersRepository projectSearchFiltersRepository,
+    public SearchFiltersDocumentAugmenter(@Nonnull ProjectEntitySearchFiltersManager projectSearchFiltersRepository,
                                           @Nonnull ProjectId projectId,
                                           @Nonnull EntityMatcherFactory entityMatcherFactory) {
         this.entityMatcherFactory = checkNotNull(entityMatcherFactory);
-        this.searchFilters = projectSearchFiltersRepository.getSearchFilters(projectId);
+        this.searchFilters = projectSearchFiltersRepository.getSearchFilters();
     }
 
 

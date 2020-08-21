@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2020-08-15
  */
-public interface ProjectSearchFiltersRepository {
+public interface ProjectEntitySearchFiltersManager {
 
     @Nonnull
-    ImmutableList<EntitySearchFilter> getSearchFilters(@Nonnull ProjectId projectId);
+    ImmutableList<EntitySearchFilter> getSearchFilters();
 }
