@@ -12,13 +12,21 @@ import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntity
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.index.Neo4jAnnotationAssertionAxiomsBySubjectIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jAnnotationPropertyDomainAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jAnnotationPropertyRangeAxiomsIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jClassFrameAxiomsIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jDataPropertyAssertionAxiomsBySubjectIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jDataPropertyDomainAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jDataPropertyRangeAxiomsIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jNamedIndividualFrameAxiomsIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jObjectPropertyAssertionAxiomsBySubjectIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jObjectPropertyDomainAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jObjectPropertyRangeAxiomsIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jPropertyAssertionAxiomsBySubjectIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jSubClassOfAxiomsBySubClassIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jSubDataPropertyAxiomsBySubPropertyIndex;
@@ -34,7 +42,9 @@ import javax.annotation.Nonnull;
 @Module(includes = {
     AxiomBySubjectAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
-    AssertionAxiomBySubjectAccessorModule.class
+    AssertionAxiomBySubjectAccessorModule.class,
+    DomainAxiomAccessorModule.class,
+    RangeAxiomAccessorModule.class
 })
 public class Neo4jIndexModule {
 
@@ -61,12 +71,12 @@ public class Neo4jIndexModule {
 
     @Provides
     AnnotationPropertyDomainAxiomsIndex provideAnnotationPropertyDomainAxiomsIndex(
-        AnnotationPropertyDomainAxiomsIndexImpl impl) {
+        Neo4jAnnotationPropertyDomainAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
-    AnnotationPropertyRangeAxiomsIndex provideAnnotationPropertyRangeAxiomsIndex(AnnotationPropertyRangeAxiomsIndexImpl impl) {
+    AnnotationPropertyRangeAxiomsIndex provideAnnotationPropertyRangeAxiomsIndex(Neo4jAnnotationPropertyRangeAxiomsIndex impl) {
         return impl;
     }
 
@@ -114,12 +124,12 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    DataPropertyDomainAxiomsIndex provideDataPropertyDomainAxiomsIndex(DataPropertyDomainAxiomsIndexImpl impl) {
+    DataPropertyDomainAxiomsIndex provideDataPropertyDomainAxiomsIndex(Neo4jDataPropertyDomainAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
-    DataPropertyRangeAxiomsIndex provideDataPropertyRangeAxiomsIndex(DataPropertyRangeAxiomsIndexImpl impl) {
+    DataPropertyRangeAxiomsIndex provideDataPropertyRangeAxiomsIndex(Neo4jDataPropertyRangeAxiomsIndex impl) {
         return impl;
     }
 
@@ -221,12 +231,12 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    ObjectPropertyDomainAxiomsIndex provideObjectPropertyDomainAxiomsIndex(ObjectPropertyDomainAxiomsIndexImpl impl) {
+    ObjectPropertyDomainAxiomsIndex provideObjectPropertyDomainAxiomsIndex(Neo4jObjectPropertyDomainAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
-    ObjectPropertyRangeAxiomsIndex provideObjectPropertyRangeAxiomsIndex(ObjectPropertyRangeAxiomsIndexImpl impl) {
+    ObjectPropertyRangeAxiomsIndex provideObjectPropertyRangeAxiomsIndex(Neo4jObjectPropertyRangeAxiomsIndex impl) {
         return impl;
     }
 
