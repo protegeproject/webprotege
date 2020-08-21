@@ -13,6 +13,12 @@ import javax.annotation.Nonnull;
  */
 public interface EntitySearchFilterView extends IsWidget {
 
+    interface LanguageMapChangedHandler {
+        void handleLanguageMapChanged();
+    }
+
+    void setLanguageMapChangedHandler(@Nonnull LanguageMapChangedHandler handler);
+
     void setLanguageMap(@Nonnull LanguageMap languageMap);
 
     @Nonnull

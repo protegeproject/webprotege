@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.search;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.form.ObjectPresenter;
 import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
@@ -42,20 +41,29 @@ public class EntitySearchFilterPresenter implements ObjectPresenter<EntitySearch
     @Nonnull
     private final ProjectId projectId;
 
+    @Nonnull
+    private Consumer<String> headerLabelChangedHandler = label -> {};
+
+    @Nonnull
+    private final LanguageMapCurrentLocaleMapper localeMapper;
+
     @Inject
     public EntitySearchFilterPresenter(@Nonnull EntitySearchFilterView view,
                                        @Nonnull EntityCriteriaPresenter entityCriteriaPresenter,
                                        @Nonnull UuidV4Provider uuidV4Provider,
-                                       @Nonnull ProjectId projectId) {
+                                       @Nonnull ProjectId projectId,
+                                       @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
         this.view = checkNotNull(view);
         this.entityCriteriaPresenter = checkNotNull(entityCriteriaPresenter);
         this.uuidV4Provider = checkNotNull(uuidV4Provider);
         this.projectId = checkNotNull(projectId);
+        this.localeMapper = checkNotNull(localeMapper);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         entityCriteriaPresenter.start(view.getCriteriaContainer());
+        view.setLanguageMapChangedHandler(this::handleLanguageMapChanged);
     }
 
     @Override
@@ -63,6 +71,10 @@ public class EntitySearchFilterPresenter implements ObjectPresenter<EntitySearch
         currentId = Optional.of(filter.getId());
         view.setLanguageMap(filter.getLabel());
         entityCriteriaPresenter.setCriteria(filter.getEntityMatchCriteria().asCompositeRootCriteria());
+    }
+
+    private void handleLanguageMapChanged() {
+        headerLabelChangedHandler.accept(getHeaderLabel());
     }
 
     @Nonnull
@@ -84,11 +96,11 @@ public class EntitySearchFilterPresenter implements ObjectPresenter<EntitySearch
     @Nonnull
     @Override
     public String getHeaderLabel() {
-        return "Search Filter";
+        return localeMapper.getValueForCurrentLocale(view.getLanguageMap());
     }
 
     @Override
     public void setHeaderLabelChangedHandler(Consumer<String> headerLabelHandler) {
-        // Doesn't Change
+        this.headerLabelChangedHandler = checkNotNull(headerLabelHandler);
     }
 }
