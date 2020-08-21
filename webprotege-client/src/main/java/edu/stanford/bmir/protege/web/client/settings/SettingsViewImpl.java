@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,6 +41,9 @@ public class SettingsViewImpl extends Composite implements SettingsView {
 
     @UiField
     Label settingsTitle;
+
+    @UiField
+    BusyViewImpl busyView;
 
     @Nonnull
     private final Messages messages;
@@ -136,5 +140,10 @@ public class SettingsViewImpl extends Composite implements SettingsView {
     @Override
     public void setSettingsTitle(@Nonnull String settingsTitle) {
         this.settingsTitle.setText(checkNotNull(settingsTitle).trim());
+    }
+
+    @Override
+    public void setBusy(boolean busy) {
+        busyView.setVisible(busy);
     }
 }

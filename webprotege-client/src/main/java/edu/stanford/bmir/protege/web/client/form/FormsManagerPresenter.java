@@ -181,6 +181,7 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
 
     @Override
     public void setBusy(boolean busy) {
+        settingsPresenter.setBusy(busy);
     }
 
     @Override
@@ -188,6 +189,7 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         settingsPresenter.setSettingsTitle(formsMessages.forms_Title());
         settingsPresenter.setApplySettingsHandler(this::handleApply);
         settingsPresenter.start(container);
+        settingsPresenter.setBusy(true);
         settingsPresenter.setCancelButtonVisible(false);
         settingsPresenter.setApplyButtonText(messages.dialog_ok());
         AcceptsOneWidget section = settingsPresenter.addSection(formsMessages.projectForms_Title());

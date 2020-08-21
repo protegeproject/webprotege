@@ -141,7 +141,7 @@ public class ProjectSettingsPresenter {
         settingsPresenter.addSection(messages.displayName_settings_project_title()).setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
-        settingsPresenter.setBusy(container, true);
+        settingsPresenter.setBusy(true);
         dispatchServiceManager.execute(new GetProjectInfoAction(projectId),
                                        result -> {
                                            ProjectSettings projectSettings = result.getProjectDetails();
@@ -177,7 +177,7 @@ public class ProjectSettingsPresenter {
         slackWebhookSettingsView.setWebhookUrl(slackIntegrationSettings.getPayloadUrl());
         WebhookSettings webhookSettings = projectSettings.getWebhookSettings();
         webhookSettingsView.setWebhookUrls(webhookSettings.getWebhookSettings());
-        settingsPresenter.setBusy(container, false);
+        settingsPresenter.setBusy(false);
     }
 
     private void displayDefaultDictionaryLanguage(@Nonnull DictionaryLanguage defaultLanguage) {
