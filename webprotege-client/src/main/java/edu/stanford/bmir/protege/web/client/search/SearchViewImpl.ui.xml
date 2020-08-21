@@ -52,7 +52,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
-        <g:SimplePanel ui:field="searchFilterContainer" addStyleNames="{style.searchFilter}"/>
+        <g:SimplePanel ui:field="searchFilterContainer" addStyleNames="{style.searchFilter}" visible="false"/>
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
         <g:SimplePanel ui:field="langTagsFilterContainer" visible="false" addStyleNames="{style.langTagFilter}"/>

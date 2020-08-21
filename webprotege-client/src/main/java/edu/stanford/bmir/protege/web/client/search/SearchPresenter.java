@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
@@ -14,10 +15,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
-import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.search.*;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -98,7 +96,13 @@ public class SearchPresenter implements HasInitialFocusable {
                                        this::handleProjectLangTags);
         entitySearchFilterTokenFieldPresenter.start(view.getSearchFilterContainer());
         entitySearchFilterTokenFieldPresenter.setSearchFiltersChangedHandler(this::performSearch);
+        dispatchServiceManager.execute(new GetSearchSettingsAction(projectId),
+                                       this::handleSearchSettings);
         dispatchServiceManager.executeCurrentBatch();
+    }
+
+    private void handleSearchSettings(GetSearchSettingsResult result) {
+        view.setSearchFilterVisible(!result.getFilters().isEmpty());
     }
 
     private void handleProjectLangTags(GetProjectLangTagsResult result) {
