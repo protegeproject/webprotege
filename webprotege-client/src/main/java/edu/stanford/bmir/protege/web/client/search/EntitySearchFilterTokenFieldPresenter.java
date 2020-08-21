@@ -79,7 +79,7 @@ public class EntitySearchFilterTokenFieldPresenter {
         container.setWidget(view);
         tokenFieldPresenter.start(view.getTokenFieldContainer());
         tokenFieldPresenter.setTokensChangedHandler(tokens -> searchFiltersChangedHandler.handleSearchFiltersChanged());
-        tokenFieldPresenter.setPlaceholder("Search filters");
+        tokenFieldPresenter.setPlaceholder("Add filter");
     }
 
     @Nonnull
@@ -89,6 +89,10 @@ public class EntitySearchFilterTokenFieldPresenter {
 
     public void setSearchFiltersChangedHandler(SearchFiltersChangedHandler searchFiltersChangedHandler) {
         this.searchFiltersChangedHandler = checkNotNull(searchFiltersChangedHandler);
+    }
+
+    public void setPlaceholder(String placeholder) {
+        tokenFieldPresenter.setPlaceholder(placeholder);
     }
 
     public interface SearchFiltersChangedHandler {

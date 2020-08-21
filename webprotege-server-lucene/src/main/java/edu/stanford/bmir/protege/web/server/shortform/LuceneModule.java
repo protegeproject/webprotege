@@ -47,7 +47,9 @@ public class LuceneModule {
 
     @Provides
     @ProjectSingleton
-    LuceneIndex provideLuceneIndex(LuceneIndexImpl impl) {
+    LuceneIndex provideLuceneIndex(LuceneIndexImpl impl,
+                                   // Not this is needed here to force an initial write of the index
+                                   LuceneIndexWriter indexWriter) {
         return impl;
     }
 

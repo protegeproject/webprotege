@@ -62,6 +62,12 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     @UiField
     SimplePanel langTagsFilterContainer;
 
+    @UiField
+    HTMLPanel searchFilterPanel;
+
+    @UiField
+    HTMLPanel langTagsFilterPanel;
+
     private PaginatorPresenter paginatorPresenter;
 
     private int selectedIndex = -1;
@@ -108,7 +114,7 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
 
     @Override
     public void setLangTagFilterVisible(boolean visible) {
-        langTagsFilterContainer.setVisible(visible);
+        langTagsFilterPanel.setVisible(visible);
     }
 
     @UiHandler("base")
@@ -305,7 +311,7 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
 
     @Override
     public void setSearchFilterVisible(boolean visible) {
-        searchFilterContainer.setVisible(visible);
+        searchFilterPanel.setVisible(visible);
     }
 
     @Nonnull

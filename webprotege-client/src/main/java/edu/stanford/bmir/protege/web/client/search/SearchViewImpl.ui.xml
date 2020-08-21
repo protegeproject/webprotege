@@ -44,18 +44,34 @@
             background-color: literal("var(--inlay-panel--background-color)");
         }
         .langTagFilter {
-            padding-top: 0.8em;
+            flex-basis: 100px;
+            flex-grow: 1;
+            flex-shrink: 1;
         }
         .searchFilter {
-            padding-bottom: 0.8rem;
+            flex-basis: 100px;
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .filteringPanel {
+            display: flex;
+            flex-direction: row;
         }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form}">
-        <g:SimplePanel ui:field="searchFilterContainer" addStyleNames="{style.searchFilter}" visible="false"/>
+        <g:HTMLPanel addStyleNames="{style.filteringPanel} {wp.style.formGroup}">
+            <g:HTMLPanel ui:field="searchFilterPanel" visible="false" addStyleNames="{style.searchFilter}">
+                <g:Label text="Filter by Category" addStyleNames="{wp.style.formLabel}"/>
+                <g:SimplePanel ui:field="searchFilterContainer"/>
+            </g:HTMLPanel>
+            <g:HTMLPanel ui:field="langTagsFilterPanel" visible="false" addStyleNames="{style.langTagFilter}">
+                <g:Label text="Filter by Language Tag" addStyleNames="{wp.style.formLabel}"/>
+                <g:SimplePanel ui:field="langTagsFilterContainer"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
-        <g:SimplePanel ui:field="langTagsFilterContainer" visible="false" addStyleNames="{style.langTagFilter}"/>
         <g:Label ui:field="searchSummaryField" addStyleNames="{style.searchSummaryLabel}"/>
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
         <g:FocusPanel ui:field="base" addStyleNames="{style.foucusPanel}">

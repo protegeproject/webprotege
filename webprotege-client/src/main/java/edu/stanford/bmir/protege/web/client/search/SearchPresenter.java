@@ -99,6 +99,8 @@ public class SearchPresenter implements HasInitialFocusable {
         dispatchServiceManager.execute(new GetSearchSettingsAction(projectId),
                                        this::handleSearchSettings);
         dispatchServiceManager.executeCurrentBatch();
+        entitySearchFilterTokenFieldPresenter.setPlaceholder("Add category filter");
+        langTagFilterPresenter.setPlaceholder("Add lang tag filter");
     }
 
     private void handleSearchSettings(GetSearchSettingsResult result) {
