@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.match.EntityMatcherFactory;
 import edu.stanford.bmir.protege.web.server.match.Matcher;
@@ -15,7 +16,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -24,33 +24,22 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class SearchFiltersDocumentAugmenter implements EntityDocumentAugmenter {
 
-    @Nonnull
-    private final ProjectEntitySearchFiltersManager searchFiltersManager;
-
-    @Nonnull
-    private final EntityMatcherFactory entityMatcherFactory;
+    private ImmutableList<EntitySearchFilterMatcher> searchFilterMatchers;
 
     @Inject
-    public SearchFiltersDocumentAugmenter(@Nonnull ProjectEntitySearchFiltersManager projectSearchFiltersRepository,
-                                          @Nonnull EntityMatcherFactory entityMatcherFactory) {
-        this.entityMatcherFactory = checkNotNull(entityMatcherFactory);
-        this.searchFiltersManager = checkNotNull(projectSearchFiltersRepository);
+    public SearchFiltersDocumentAugmenter(@Nonnull ImmutableList<EntitySearchFilterMatcher> searchFilterMatchers) {
+        this.searchFilterMatchers = checkNotNull(searchFilterMatchers);
     }
 
 
     @Override
     public void augmentDocument(@Nonnull OWLEntity entity, @Nonnull Document document) {
-        var searchFilters = searchFiltersManager.getSearchFilters();
-        if(searchFilters.isEmpty()) {
+        if(searchFilterMatchers.isEmpty()) {
             return;
         }
-        var matchers = searchFilters.stream()
-                         .map(EntitySearchFilter::getEntityMatchCriteria)
-                         .map(entityMatcherFactory::getEntityMatcher)
-                         .collect(toImmutableList());
-        for(int i = 0; i < searchFilters.size(); i++) {
-            var searchFilter = searchFilters.get(i);
-            var matcher = matchers.get(i);
+        for(var searchFilterMatcher : searchFilterMatchers) {
+            var searchFilter = searchFilterMatcher.getFilter();
+            var matcher = searchFilterMatcher.getMatcher();
             if(matcher.matches(entity)) {
                 var filterIdString = searchFilter.getId().getId();
                 var field = toDocumentField(filterIdString);
