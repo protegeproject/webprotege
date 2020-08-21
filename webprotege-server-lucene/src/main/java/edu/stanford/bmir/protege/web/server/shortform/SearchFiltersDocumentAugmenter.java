@@ -24,36 +24,30 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class SearchFiltersDocumentAugmenter implements EntityDocumentAugmenter {
 
-
     @Nonnull
-    private final ImmutableList<EntitySearchFilter> searchFilters;
+    private final ProjectEntitySearchFiltersManager searchFiltersManager;
 
     @Nonnull
     private final EntityMatcherFactory entityMatcherFactory;
 
-    @Nonnull
-    private ImmutableList<Matcher<OWLEntity>> matchers = ImmutableList.of();
-
     @Inject
     public SearchFiltersDocumentAugmenter(@Nonnull ProjectEntitySearchFiltersManager projectSearchFiltersRepository,
-                                          @Nonnull ProjectId projectId,
                                           @Nonnull EntityMatcherFactory entityMatcherFactory) {
         this.entityMatcherFactory = checkNotNull(entityMatcherFactory);
-        this.searchFilters = projectSearchFiltersRepository.getSearchFilters();
+        this.searchFiltersManager = checkNotNull(projectSearchFiltersRepository);
     }
 
 
     @Override
     public void augmentDocument(@Nonnull OWLEntity entity, @Nonnull Document document) {
+        var searchFilters = searchFiltersManager.getSearchFilters();
         if(searchFilters.isEmpty()) {
             return;
         }
-        if(matchers.size() != searchFilters.size()) {
-            matchers = searchFilters.stream()
+        var matchers = searchFilters.stream()
                          .map(EntitySearchFilter::getEntityMatchCriteria)
                          .map(entityMatcherFactory::getEntityMatcher)
                          .collect(toImmutableList());
-        }
         for(int i = 0; i < searchFilters.size(); i++) {
             var searchFilter = searchFilters.get(i);
             var matcher = matchers.get(i);
