@@ -2,21 +2,21 @@ package edu.stanford.bmir.protege.web.server.api.resources;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.api.ActionExecutor;
-import edu.stanford.bmir.protege.web.shared.form.EntityFormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.GetProjectFormDescriptorsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.BatchAction;
+import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
@@ -65,6 +65,27 @@ public class FormsResource {
                        })
                        .collect(toImmutableList());;
         return Response.accepted(result).build();
+    }
+
+    @POST
+    @Produces(APPLICATION_JSON)
+    @Path("/")
+    public Response setForms(@Context UserId userId,
+                             @Context UriInfo uriInfo,
+                             ImmutableList<EntityFormDescriptor> entityFormDescriptors) {
+        var actionListBuilder = ImmutableList.<Action<?>>builder();
+        for(var entityFormDescriptor : entityFormDescriptors) {
+            var formDescriptor = entityFormDescriptor.getDescriptor();
+            Criteria criteria = entityFormDescriptor.getSelectorCriteria();
+            if (criteria instanceof RootCriteria) {
+                var selectionCriteria = ((RootCriteria) criteria).asCompositeRootCriteria();
+                var action = new SetEntityFormDescriptorAction(projectId, formDescriptor, selectionCriteria);
+                actionListBuilder.add(action);
+            }
+        }
+        var batchAction = BatchAction.create(actionListBuilder.build());
+        executor.execute(batchAction, userId);
+        return Response.created(uriInfo.getRequestUri()).build();
     }
 
     @Path("{formId : [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}")
