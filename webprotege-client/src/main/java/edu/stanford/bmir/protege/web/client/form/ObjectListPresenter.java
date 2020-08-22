@@ -87,6 +87,7 @@ public class ObjectListPresenter<T> implements Presenter {
     public void clear() {
         view.clear();
         objectPresenters.clear();
+        viewHolders.clear();
     }
 
     public void setValues(@Nonnull List<T> values) {
