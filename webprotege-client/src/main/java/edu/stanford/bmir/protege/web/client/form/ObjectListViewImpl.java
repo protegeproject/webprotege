@@ -65,6 +65,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     public void addView(@Nonnull ObjectListViewHolder view) {
         views.add(view);
         elementDescriptorViewContainer.add(view);
+        reorder();
         updateButtons();
     }
 
@@ -72,6 +73,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     public void removeView(@Nonnull ObjectListViewHolder viewHolder) {
         views.remove(viewHolder);
         elementDescriptorViewContainer.remove(viewHolder);
+        reorder();
         updateButtons();
     }
 
@@ -135,7 +137,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
                                   formsMessages.deleteFormElementConfirmation_Message(objectId),
                                   DialogButton.NO,
                                   DialogButton.DELETE,
-                                  deleteRunnable,
+                                  () -> { reorder(); deleteRunnable.run();},
                                   DialogButton.NO);
     }
 }
