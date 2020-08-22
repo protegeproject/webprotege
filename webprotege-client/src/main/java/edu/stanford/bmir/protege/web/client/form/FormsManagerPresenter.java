@@ -4,12 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.form.*;
@@ -18,12 +16,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,16 +29,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FormsManagerPresenter implements Presenter, HasBusy {
 
     @Nonnull
-    private final ProjectId projectId;
-
-    @Nonnull
     private final FormsManagerView formManagerView;
 
     @Nonnull
     private final SettingsPresenter settingsPresenter;
 
     @Nonnull
-    private final DispatchServiceManager dispatch;
+    private final FormsManagerService formsManagerService;
 
     @Nonnull
     private final FormsMessages formsMessages;
@@ -54,129 +44,60 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     private final PlaceController placeController;
 
     @Nonnull
-    private final Provider<FormIdPresenter> formIdPresenterProvider;
-
-    @Nonnull
-    private final Map<FormId, FormIdPresenter> formIdPresentersByFormId = new HashMap<>();
-
-    @Nonnull
     private final Messages messages;
 
     @Nonnull
     private final CopyFormsFromProjectModalPresenter copyFormsFromProjectModalPresenter;
 
     @Nonnull
+    private final FormsManagerObjectListPresenter listPresenter;
 
     @Inject
-    public FormsManagerPresenter(@Nonnull ProjectId projectId,
-                                 @Nonnull FormsManagerView formManagerView,
+    public FormsManagerPresenter(@Nonnull FormsManagerView formManagerView,
                                  @Nonnull SettingsPresenter settingsPresenter,
-                                 @Nonnull DispatchServiceManager dispatchServiceManager,
+                                 @Nonnull FormsManagerService formsManagerService,
                                  @Nonnull FormsMessages formsMessages,
                                  @Nonnull PlaceController placeController,
-                                 @Nonnull Provider<FormIdPresenter> formIdPresenterProvider,
                                  @Nonnull Messages messages,
-                                 @Nonnull CopyFormsFromProjectModalPresenter copyFormsFromProjectModalPresenter) {
-        this.projectId = checkNotNull(projectId);
+                                 @Nonnull CopyFormsFromProjectModalPresenter copyFormsFromProjectModalPresenter,
+                                 @Nonnull FormsManagerObjectListPresenter listPresenter) {
         this.formManagerView = checkNotNull(formManagerView);
-        this.settingsPresenter = settingsPresenter;
-        this.dispatch = dispatchServiceManager;
-        this.formsMessages = formsMessages;
-        this.placeController = placeController;
-        this.formIdPresenterProvider = formIdPresenterProvider;
-        this.messages = messages;
-        this.copyFormsFromProjectModalPresenter = copyFormsFromProjectModalPresenter;
+        this.settingsPresenter = checkNotNull(settingsPresenter);
+        this.formsManagerService = checkNotNull(formsManagerService);
+        this.formsMessages = checkNotNull(formsMessages);
+        this.placeController = checkNotNull(placeController);
+        this.messages = checkNotNull(messages);
+        this.copyFormsFromProjectModalPresenter = checkNotNull(copyFormsFromProjectModalPresenter);
+        this.listPresenter = checkNotNull(listPresenter);
     }
 
-    private void deleteForm(@Nonnull FormId formId) {
-        dispatch.execute(new DeleteFormAction(projectId, formId),
-                         this,
-                         this::handleDeleteFormResult);
-    }
-
-    private void handleDeleteFormResult(DeleteFormResult result) {
-        retrieveAndDisplayFormsList();
-    }
-
-    private void displayFormsList(GetProjectFormDescriptorsResult result) {
-        formIdPresentersByFormId.clear();
-        ImmutableList<FormDescriptor> formDescriptors = result.getFormDescriptors();
-        List<FormIdPresenter> formIdPresenters =
-                formDescriptors.stream()
-                               .map(fd -> {
-                                   FormIdPresenter formIdPresenter = formIdPresenterProvider.get();
-                                   formIdPresenter.start(new SimplePanel());
-                                   formIdPresenter.setFormDescriptor(fd);
-                                   this.formIdPresentersByFormId.put(fd.getFormId(), formIdPresenter);
-                                   return formIdPresenter;
-                               })
-                               .collect(Collectors.toList());
-        formManagerView.setForms(formIdPresenters);
-
-    }
-
-    private FormsPlace getBackHere() {
-        Place currentPlace = placeController.getWhere();
-        Optional<Place> nextPlace;
-        if(currentPlace instanceof FormsPlace) {
-            nextPlace = ((FormsPlace) currentPlace).getNextPlace();
-        }
-        else {
-            nextPlace = Optional.empty();
-        }
-        return FormsPlace.get(projectId, nextPlace);
-    }
-
-    private EditFormPlace getFormsPlaceWithBackHere(@Nonnull FormId formId) {
-        FormsPlace backHere = getBackHere();
-        return EditFormPlace.get(projectId, formId, backHere);
-    }
-
-    private void goToFreshFormPlace(@Nonnull FormId formId) {
-        placeController.goTo(EditFormPlace.get(projectId, formId, getFormsPlaceWithBackHere(formId)));
-    }
-
-    private void handleAddForm() {
-        dispatch.execute(new GetFreshFormIdAction(projectId),
-                         this,
-                         result -> goToFreshFormPlace(result.getFormId()));
+    private void displayFormsList(ImmutableList<FormDescriptor> formDescriptors,
+                                  ImmutableList<EntityFormSelector> formSelectors) {
+        listPresenter.setValues(formDescriptors);
     }
 
     private void handleApply() {
+        ImmutableList<FormDescriptor> formDescriptors = listPresenter.getValues();
+        formsManagerService.setForms(formDescriptors,
+                                     this,
+                                     this::goToNextPlace);
+    }
+
+    private void goToNextPlace() {
         Place currentPlace = placeController.getWhere();
-        if(currentPlace instanceof FormsPlace) {
-            ((FormsPlace) currentPlace).getNextPlace()
-                                       .ifPresent(placeController::goTo);
-
+        if (currentPlace instanceof FormsPlace) {
+            ((FormsPlace) currentPlace).getNextPlace().ifPresent(placeController::goTo);
         }
-
     }
 
     private void handleCopyFormsFromProject() {
         copyFormsFromProjectModalPresenter.show();
     }
 
-    private void handleDeleteForm(@Nonnull FormId formId) {
-        FormIdPresenter formIdPresenter = formIdPresentersByFormId.get(formId);
-        if(formIdPresenter == null) {
-            return;
-        }
-        String displayName = formIdPresenter.getDisplayName();
-        formManagerView.displayDeleteFormConfirmationMessage(displayName,
-                                                             formId,
-                                                             this::deleteForm);
-    }
-
-    private void handleEditForm(@Nonnull FormId formId) {
-        EditFormPlace newPlace = getFormsPlaceWithBackHere(formId);
-        placeController.goTo(newPlace);
-    }
 
     private void retrieveAndDisplayFormsList() {
-        dispatch.execute(new GetProjectFormDescriptorsAction(projectId),
-                         this,
-                         this::displayFormsList);
-
+        formsManagerService.getForms(this,
+                                     this::displayFormsList);
     }
 
     @Override
@@ -195,9 +116,9 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         AcceptsOneWidget section = settingsPresenter.addSection(formsMessages.projectForms_Title());
         section.setWidget(formManagerView);
         formManagerView.clear();
-        formManagerView.setAddFormHandler(this::handleAddForm);
-        formManagerView.setDeleteFormHandler(this::handleDeleteForm);
-        formManagerView.setEditFormHandler(this::handleEditForm);
+
+        listPresenter.start(formManagerView.getFormsListContainer(), eventBus);
+
         formManagerView.setCopyFormsFromProjectHandler(this::handleCopyFormsFromProject);
         copyFormsFromProjectModalPresenter.setFormsCopiedHandler(this::retrieveAndDisplayFormsList);
         retrieveAndDisplayFormsList();

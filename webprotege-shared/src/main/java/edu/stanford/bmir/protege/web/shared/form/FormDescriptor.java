@@ -115,6 +115,16 @@ public class FormDescriptor implements IsSerializable {
         );
     }
 
+    @Nonnull
+    public FormDescriptor withLabel(@Nonnull LanguageMap newLabel) {
+        return new FormDescriptor(
+                formId,
+                newLabel,
+                getFields(),
+                getSubjectFactoryDescriptor()
+        );
+    }
+
     public static class Builder {
 
         private final FormId formId;

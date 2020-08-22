@@ -877,6 +877,12 @@ public class ClientProjectModule {
     EntitySearchFilterTokenFieldView provideEntitySearchFilterTokenFieldView(EntitySearchFilterTokenFieldViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    FormsManagerObjectView provideFormsManagerObjectView(FormsManagerObjectViewImpl impl) {
+        return impl;
+    }
+
 }
 
 

@@ -1,6 +1,5 @@
-package edu.stanford.bmir.protege.web.client.search;
+package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.lang.LanguageMapChangedHandler;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -10,17 +9,20 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2020-08-16
+ * 2020-08-21
  */
-public interface EntitySearchFilterView extends IsWidget {
+public interface FormsManagerObjectView extends IsWidget {
 
-    void setLanguageMapChangedHandler(@Nonnull LanguageMapChangedHandler handler);
+    interface ShowFormDetailsHandler {
+        void handleShowFormDetails();
+    }
+
+    void setShowFormDetailsHandler(@Nonnull ShowFormDetailsHandler handler);
 
     void setLanguageMap(@Nonnull LanguageMap languageMap);
 
     @Nonnull
     LanguageMap getLanguageMap();
 
-    @Nonnull
-    AcceptsOneWidget getCriteriaContainer();
+    void setLanguageMapChangedHandler(@Nonnull LanguageMapChangedHandler handler);
 }

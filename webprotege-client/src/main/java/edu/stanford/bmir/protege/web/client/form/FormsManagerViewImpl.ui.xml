@@ -12,22 +12,10 @@
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:HTMLPanel>
-                <g:Button ui:field="addFormButton" text="{msg.addForm}"
-                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
                 <g:Button ui:field="copyFormsFromProjectButton" text="{msg.copyFormsFromProject_title}"
                           addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
-
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
-            <g:Label text="{msg.availableForms}" addStyleNames="{wp.style.formLabel}"/>
-            <list:ListBox ui:field="formListField" addStyleNames="{wp.style.panelFilledBorder}"/>
-        </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{style.buttonRow}">
-            <g:Button ui:field="editFormButton" text="{msg.editForm}"
-                      addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.primaryButton}"/>
-            <g:Button ui:field="deleteFormButton" text="{msg.deleteForm}"
-                      addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
-        </g:HTMLPanel>
+        <g:SimplePanel ui:field="formsListContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>

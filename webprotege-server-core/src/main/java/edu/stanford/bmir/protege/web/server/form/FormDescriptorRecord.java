@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 
 /**
  * Matthew Horridge
@@ -15,20 +16,41 @@ import javax.annotation.Nonnull;
  * 2019-11-04
  */
 @AutoValue
-public abstract class FormDescriptorRecord {
+public abstract class FormDescriptorRecord implements Comparable<FormDescriptorRecord> {
+
+    private static final Comparator<FormDescriptorRecord> comparingByOrdinal = Comparator.comparing(FormDescriptorRecord::getOrdinal);
+
+    public static final String PROJECT_ID = "projectId";
+
+    public static final String FORM_DESCRIPTOR = "formDescriptor";
+
+    public static final String ORDINAL = "ordinal";
+
 
     @JsonCreator
-    public static FormDescriptorRecord get(@JsonProperty("projectId") @Nonnull ProjectId projectId,
-                                           @JsonProperty("formDescriptor") @Nonnull FormDescriptor formDescriptor) {
-        return new AutoValue_FormDescriptorRecord(projectId, formDescriptor == null ? FormDescriptor.empty(FormId.generate()) : formDescriptor);
+    public static FormDescriptorRecord get(@JsonProperty(PROJECT_ID) @Nonnull ProjectId projectId,
+                                           @JsonProperty(FORM_DESCRIPTOR) FormDescriptor formDescriptor,
+                                           @JsonProperty(ORDINAL) Integer ordinal) {
+        return new AutoValue_FormDescriptorRecord(projectId,
+                                                  formDescriptor == null ? FormDescriptor.empty(FormId.generate()) : formDescriptor,
+                                                  ordinal == null ? 0 : ordinal);
     }
 
-    @JsonProperty("projectId")
+    @JsonProperty(PROJECT_ID)
     @Nonnull
     public abstract ProjectId getProjectId();
 
-    @JsonProperty("formDescriptor")
+    @JsonProperty(FORM_DESCRIPTOR)
     @Nonnull
     public abstract FormDescriptor getFormDescriptor();
 
+    @JsonProperty(ORDINAL)
+    @Nonnull
+    public abstract Integer getOrdinal();
+
+    @Override
+    public int compareTo(@Nonnull FormDescriptorRecord o) {
+        return comparingByOrdinal
+                .compare(this, o);
+    }
 }

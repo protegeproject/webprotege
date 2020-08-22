@@ -159,4 +159,8 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Clear filters")
     @Key("clearFilters")
     String clearFilters();
+
+    @DefaultMessage("No label for form set")
+    @Key("noLabelForFormSet")
+    String noLabelForFormSet();
 }

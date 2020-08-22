@@ -26,33 +26,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormsManagerViewImpl extends Composite implements FormsManagerView {
 
-    private AddFormHandler addFormHandler = () -> {};
-
-    private DeleteFormHandler deleteFormHandler = (formId) -> {};
-
-    private EditFormHandler editFormHandler = (formId) -> {};
-
-    private FormSelectedHandler formSelectedHandler = (formId) -> {};
-
     private CopyFormsFromProjectHandler copyFormsFromProjectHandler = () -> {};
+
+    @UiField
+    protected SimplePanel formsListContainer;
 
     interface FormsManagerViewImplUiBinder extends UiBinder<HTMLPanel, FormsManagerViewImpl> {
 
     }
 
     private static FormsManagerViewImplUiBinder ourUiBinder = GWT.create(FormsManagerViewImplUiBinder.class);
-
-    @UiField
-    Button addFormButton;
-
-    @UiField
-    ListBox<FormId, FormIdPresenter> formListField;
-
-    @UiField
-    Button editFormButton;
-
-    @UiField
-    Button deleteFormButton;
 
     @UiField
     Button copyFormsFromProjectButton;
@@ -69,83 +52,20 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
         this.messageBox = messageBox;
         this.formsMessages = formsMessages;
         initWidget(ourUiBinder.createAndBindUi(this));
-        addFormButton.addClickHandler(this::handleAddForm);
-        deleteFormButton.addClickHandler(this::handleDeleteForm);
-        editFormButton.addClickHandler(this::handleEditForm);
         copyFormsFromProjectButton.addClickHandler(this::handleCopyFormsFromProject);
-        formListField.setRenderer(FormIdPresenter::getView);
-        formListField.addSelectionHandler(this::handleSelection);
-        deleteFormButton.setEnabled(false);
-        editFormButton.setEnabled(false);
     }
 
-    @Override
-    public void setAddFormHandler(@Nonnull AddFormHandler handler) {
-        this.addFormHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setDeleteFormHandler(@Nonnull DeleteFormHandler handler) {
-        this.deleteFormHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setEditFormHandler(@Nonnull EditFormHandler handler) {
-        this.editFormHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setFormSelectedHandler(@Nonnull FormSelectedHandler handler) {
-        this.formSelectedHandler = checkNotNull(handler);
-    }
 
     @Override
     public void clear() {
-        formListField.setListData(Collections.emptyList());
     }
 
+    @Nonnull
     @Override
-    public void setForms(List<FormIdPresenter> forms) {
-        formListField.setListData(forms);
+    public AcceptsOneWidget getFormsListContainer() {
+        return formsListContainer;
     }
 
-    @Override
-    public void displayDeleteFormConfirmationMessage(@Nonnull String displayName,
-                                                     @Nonnull FormId formId,
-                                                     @Nonnull DeleteFormCallback deleteFormCallback) {
-        messageBox.showConfirmBox("Delete form?",
-                                  formsMessages.deleteFormElementConfirmation_Message(displayName),
-                                  DialogButton.CANCEL,
-                                  DialogButton.DELETE,
-                                  () -> deleteFormCallback.deleteForm(formId),
-                                  DialogButton.CANCEL);
-    }
-
-    private void handleAddForm(ClickEvent clickEvent) {
-        addFormHandler.handleAddForm();
-    }
-
-
-    private void handleSelection(SelectionEvent<List<FormIdPresenter>> event) {
-        boolean selectionNonEmpty = !event.getSelectedItem()
-                                .isEmpty();
-        deleteFormButton.setEnabled(selectionNonEmpty);
-        editFormButton.setEnabled(selectionNonEmpty);
-        formListField.getFirstSelectedElement()
-                     .ifPresent(formIdPresenter -> formSelectedHandler.handleFormSelectionChanged(formIdPresenter.getFormId()));
-    }
-
-    private void handleDeleteForm(ClickEvent event) {
-        formListField.getFirstSelectedElement().ifPresent(f -> {
-            f.getFormId().ifPresent(fid -> deleteFormHandler.handleDeleteForm(fid));
-        });
-    }
-
-    private void handleEditForm(ClickEvent event) {
-        formListField.getFirstSelectedElement().ifPresent(f -> {
-            f.getFormId().ifPresent(fid -> editFormHandler.handleEditForm(fid));
-        });
-    }
 
     private void handleCopyFormsFromProject(ClickEvent event) {
         copyFormsFromProjectHandler.handleCopyFromsFromProject();

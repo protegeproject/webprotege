@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapEditor;
-import edu.stanford.bmir.protege.web.client.form.LanguageMapEntryPresenter;
+import edu.stanford.bmir.protege.web.client.lang.LanguageMapChangedHandler;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
