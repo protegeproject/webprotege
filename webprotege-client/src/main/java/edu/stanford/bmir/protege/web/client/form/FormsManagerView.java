@@ -19,7 +19,13 @@ public interface FormsManagerView extends IsWidget {
         void handleCopyFromsFromProject();
     }
 
+    interface ExportFormsHander {
+        void handleExportForms();
+    }
+
     void setCopyFormsFromProjectHandler(@Nonnull CopyFormsFromProjectHandler handler);
+
+    void setExportFormsHandler(@Nonnull ExportFormsHander exportFormsHandler);
 
     void clear();
 

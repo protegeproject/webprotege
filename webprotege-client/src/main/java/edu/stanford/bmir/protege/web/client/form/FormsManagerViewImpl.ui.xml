@@ -14,6 +14,8 @@
             <g:HTMLPanel>
                 <g:Button ui:field="copyFormsFromProjectButton" text="{msg.copyFormsFromProject_title}"
                           addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+                <g:Button ui:field="exportFormsFromProjectButton" text="{msg.exportFormsFromProject_title}"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
         <g:SimplePanel ui:field="formsListContainer"/>

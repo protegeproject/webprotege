@@ -12,11 +12,10 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
+import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,6 +51,9 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
     @Nonnull
     private final FormsManagerObjectListPresenter listPresenter;
 
+    @Nonnull
+    private final Provider<FormsDownloader> formDownloaderProvider;
+
     @Inject
     public FormsManagerPresenter(@Nonnull FormsManagerView formManagerView,
                                  @Nonnull SettingsPresenter settingsPresenter,
@@ -60,7 +62,8 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
                                  @Nonnull PlaceController placeController,
                                  @Nonnull Messages messages,
                                  @Nonnull CopyFormsFromProjectModalPresenter copyFormsFromProjectModalPresenter,
-                                 @Nonnull FormsManagerObjectListPresenter listPresenter) {
+                                 @Nonnull FormsManagerObjectListPresenter listPresenter,
+                                 @Nonnull Provider<FormsDownloader> formDownloaderProvider) {
         this.formManagerView = checkNotNull(formManagerView);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.formsManagerService = checkNotNull(formsManagerService);
@@ -69,6 +72,7 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         this.messages = checkNotNull(messages);
         this.copyFormsFromProjectModalPresenter = checkNotNull(copyFormsFromProjectModalPresenter);
         this.listPresenter = checkNotNull(listPresenter);
+        this.formDownloaderProvider = formDownloaderProvider;
     }
 
     private void displayFormsList(ImmutableList<FormDescriptor> formDescriptors,
@@ -116,11 +120,17 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         AcceptsOneWidget section = settingsPresenter.addSection(formsMessages.projectForms_Title());
         section.setWidget(formManagerView);
         formManagerView.clear();
+        formManagerView.setExportFormsHandler(this::handleExportForms);
 
         listPresenter.start(formManagerView.getFormsListContainer(), eventBus);
 
         formManagerView.setCopyFormsFromProjectHandler(this::handleCopyFormsFromProject);
         copyFormsFromProjectModalPresenter.setFormsCopiedHandler(this::retrieveAndDisplayFormsList);
         retrieveAndDisplayFormsList();
+    }
+
+    private void handleExportForms() {
+        FormsDownloader formsDownloader = formDownloaderProvider.get();
+        formsDownloader.download();
     }
 }

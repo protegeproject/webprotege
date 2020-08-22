@@ -163,4 +163,8 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("No label for form set")
     @Key("noLabelForFormSet")
     String noLabelForFormSet();
+
+    @DefaultMessage("Export forms...")
+    @Key("exportForms")
+    String exportFormsFromProject_title();
 }

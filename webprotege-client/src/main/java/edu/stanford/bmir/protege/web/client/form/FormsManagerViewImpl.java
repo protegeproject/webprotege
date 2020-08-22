@@ -31,6 +31,8 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @UiField
     protected SimplePanel formsListContainer;
 
+    private ExportFormsHander exportFormsHandler = () -> {};
+
     interface FormsManagerViewImplUiBinder extends UiBinder<HTMLPanel, FormsManagerViewImpl> {
 
     }
@@ -39,6 +41,9 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
 
     @UiField
     Button copyFormsFromProjectButton;
+
+    @UiField
+    Button exportFormsFromProjectButton;
 
     @Nonnull
     private final MessageBox messageBox;
@@ -53,6 +58,11 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
         this.formsMessages = formsMessages;
         initWidget(ourUiBinder.createAndBindUi(this));
         copyFormsFromProjectButton.addClickHandler(this::handleCopyFormsFromProject);
+        exportFormsFromProjectButton.addClickHandler(this::handleExportForms);
+    }
+
+    private void handleExportForms(ClickEvent event) {
+        exportFormsHandler.handleExportForms();
     }
 
 
@@ -74,5 +84,10 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @Override
     public void setCopyFormsFromProjectHandler(@Nonnull CopyFormsFromProjectHandler handler) {
         this.copyFormsFromProjectHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setExportFormsHandler(@Nonnull ExportFormsHander exportFormsHandler) {
+        this.exportFormsHandler = checkNotNull(exportFormsHandler);
     }
 }
