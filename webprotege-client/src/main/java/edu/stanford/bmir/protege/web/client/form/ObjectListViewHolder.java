@@ -38,4 +38,6 @@ public interface ObjectListViewHolder extends IsWidget, AcceptsOneWidget, HasReq
     void setMiddle();
 
     void setLast();
+
+    void setPositionOrdinal(int i);
 }

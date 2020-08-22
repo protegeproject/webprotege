@@ -81,7 +81,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
         int toIndex = fromIndex - 1;
         if(toIndex > -1) {
             Collections.swap(views, fromIndex, toIndex);
-            refill(viewHolder);
+            reorder();
         }
     }
 
@@ -91,7 +91,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
         int toIndex = fromIndex + 1;
         if(toIndex < views.size()) {
             Collections.swap(views, fromIndex, toIndex);
-            refill(viewHolder);
+            reorder();
         }
     }
 
@@ -119,12 +119,12 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
         }
     }
 
-    private void refill(ObjectListViewHolder viewHolder) {
-        elementDescriptorViewContainer.clear();
-        views.forEach(view -> elementDescriptorViewContainer.add(view));
-        if(viewHolder.isExpanded()) {
-            viewHolder.scrollIntoView();
+    private void reorder() {
+        for(int i = 0; i < views.size(); i++) {
+            ObjectListViewHolder objectListViewHolder = views.get(i);
+            objectListViewHolder.setPositionOrdinal(i);
         }
+        views.forEach(view -> elementDescriptorViewContainer.add(view));
         updateButtons();
     }
 

@@ -127,6 +127,11 @@ public class ObjectListViewHolderImpl extends Composite implements ObjectListVie
         moveDownButton.setEnabled(false);
     }
 
+    @Override
+    public void setPositionOrdinal(int i) {
+        getElement().setPropertyInt("order", i);
+    }
+
     public native void scrollIntoView(JavaScriptObject element)/*-{
         element.scrollIntoView(true)
     }-*/;
