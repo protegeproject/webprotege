@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -14,12 +12,12 @@ import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsStyleManager;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
-import edu.stanford.bmir.protege.web.shared.tag.ProjectTagsChangedEvent;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,6 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Stanford Center for Biomedical Informatics Research
  * 11/02/16
  */
+@ProjectSingleton
 public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final ProjectId projectId;
@@ -55,18 +54,18 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     private final ProjectTagsStyleManager projectTagsStyleManager;
 
 
-    @AutoFactory
     @Inject
     public ProjectPresenter(ProjectId projectId,
-                            @Provided ProjectView view,
-                            @Provided BusyView busyView,
-                            @Provided DispatchServiceManager dispatchServiceManager,
-                            @Provided EventPollingManager eventPollingManager,
-                            @Provided TopBarPresenter topBarPresenter,
-                            @Provided PerspectiveSwitcherPresenter linkBarPresenter,
-                            @Provided PerspectivePresenter perspectivePresenter,
-                            @Provided PermissionScreener permissionScreener,
-                            @Provided ProjectTagsStyleManager projectTagsStyleManager) {
+                            ProjectView view,
+                            BusyView busyView,
+                            DispatchServiceManager dispatchServiceManager,
+                            EventPollingManager eventPollingManager,
+                            TopBarPresenter topBarPresenter,
+                            PerspectiveSwitcherPresenter linkBarPresenter,
+                            PerspectivePresenter perspectivePresenter,
+                            PermissionScreener permissionScreener,
+                            ProjectTagsStyleManager projectTagsStyleManager) {
+        GWT.log("INSTANTIATED ProjectPresenter");
         this.projectId = projectId;
         this.view = view;
         this.busyView = busyView;
