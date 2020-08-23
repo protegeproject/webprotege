@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.client.library.msgbox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
@@ -29,7 +26,12 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
     protected HasText messageLabel;
 
     @UiField
-    protected ExpandingTextBox inputArea;
+    TextBox textBox;
+
+    @UiField
+    TextArea textArea;
+
+    private boolean multiline = true;
 
     private static InputBoxViewImplUiBinder ourUiBinder = GWT.create(InputBoxViewImplUiBinder.class);
 
@@ -46,12 +48,22 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
 
     @Override
     public String getInputValue() {
-        return inputArea.getText().trim();
+        if(multiline) {
+            return textArea.getValue().trim();
+        }
+        else {
+            return textBox.getValue().trim();
+        }
     }
 
     @Override
     public java.util.Optional<HasRequestFocus> getInitialFocusable() {
-        return java.util.Optional.of(() -> inputArea.setFocus(true));
+        if(multiline) {
+            return java.util.Optional.of(() -> textArea.setFocus(true));
+        }
+        else {
+            return java.util.Optional.of(() -> textBox.setFocus(true));
+        }
     }
 
     @Override
@@ -61,11 +73,38 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
 
     @Override
     public void setMultiline(boolean multiline) {
-        inputArea.setMultiline(multiline);
+        if (multiline == this.multiline) {
+            return;
+        }
+        if(multiline) {
+            switchToMultiline();
+        }
+        else {
+            switchToSingleLine();
+        }
+    }
+
+    private void switchToSingleLine() {
+        multiline = false;
+        textArea.setVisible(true);
+        textBox.setVisible(false);
+        textBox.setValue(textArea.getValue());
+    }
+
+    private void switchToMultiline() {
+        multiline = true;
+        textArea.setVisible(false);
+        textBox.setVisible(true);
+        textArea.setValue(textBox.getValue());
     }
 
     @Override
     public void setInitialInput(String initialInput) {
-        inputArea.setText(initialInput);
+        if(multiline) {
+            textArea.setValue(initialInput);
+        }
+        else {
+            textBox.setValue(initialInput);
+        }
     }
 }
