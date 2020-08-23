@@ -135,14 +135,16 @@ public class EntityFormRepositoryImpl implements EntityFormRepository {
             writeLock.lock();
             var collection = getCollection();
             collection.deleteMany(new Document(PROJECT_ID, projectId.getId()));
-            var docs = new ArrayList<Document>();
-            for (int ordinal = 0; ordinal < formDescriptors.size(); ordinal++) {
-                var formDescriptor = formDescriptors.get(ordinal);
-                var record = FormDescriptorRecord.get(projectId, formDescriptor, ordinal);
-                var recordDocument = objectMapper.convertValue(record, Document.class);
-                docs.add(recordDocument);
+            if (!formDescriptors.isEmpty()) {
+                var docs = new ArrayList<Document>();
+                for (int ordinal = 0; ordinal < formDescriptors.size(); ordinal++) {
+                    var formDescriptor = formDescriptors.get(ordinal);
+                    var record = FormDescriptorRecord.get(projectId, formDescriptor, ordinal);
+                    var recordDocument = objectMapper.convertValue(record, Document.class);
+                    docs.add(recordDocument);
+                }
+                collection.insertMany(docs);
             }
-            collection.insertMany(docs);
         } finally {
             writeLock.unlock();
         }
