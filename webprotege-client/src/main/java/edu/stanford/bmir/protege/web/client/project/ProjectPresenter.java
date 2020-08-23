@@ -65,7 +65,6 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                             PerspectivePresenter perspectivePresenter,
                             PermissionScreener permissionScreener,
                             ProjectTagsStyleManager projectTagsStyleManager) {
-        GWT.log("INSTANTIATED ProjectPresenter");
         this.projectId = projectId;
         this.view = view;
         this.busyView = busyView;

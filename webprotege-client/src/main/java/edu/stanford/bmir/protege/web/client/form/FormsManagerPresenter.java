@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
@@ -111,6 +112,10 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        listPresenter.clear();
+        listPresenter.start(formManagerView.getFormsListContainer(), eventBus);
+        retrieveAndDisplayFormsList();
+
         settingsPresenter.setSettingsTitle(formsMessages.forms_Title());
         settingsPresenter.setApplySettingsHandler(this::handleApply);
         settingsPresenter.start(container);
@@ -121,16 +126,23 @@ public class FormsManagerPresenter implements Presenter, HasBusy {
         section.setWidget(formManagerView);
         formManagerView.clear();
         formManagerView.setExportFormsHandler(this::handleExportForms);
-
-        listPresenter.start(formManagerView.getFormsListContainer(), eventBus);
-
+        formManagerView.setImportFormsHandler(this::handleImportForms);
         formManagerView.setCopyFormsFromProjectHandler(this::handleCopyFormsFromProject);
         copyFormsFromProjectModalPresenter.setFormsCopiedHandler(this::retrieveAndDisplayFormsList);
-        retrieveAndDisplayFormsList();
+    }
+
+    private void handleImportForms() {
+        formManagerView.displayImportFormsInputBox(formsJson -> {
+            formsManagerService.importForms(formsJson, this, this::retrieveAndDisplayFormsList, this::handleImportFormsError);
+        });
     }
 
     private void handleExportForms() {
         FormsDownloader formsDownloader = formDownloaderProvider.get();
         formsDownloader.download();
+    }
+
+    private void handleImportFormsError() {
+        formManagerView.displayImportFormsErrorMessage();
     }
 }

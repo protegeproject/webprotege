@@ -44,6 +44,6 @@ public class FormsActivity extends AbstractActivity {
             return false;
         }
         FormsActivity other = (FormsActivity) obj;
-        return this.formsManagerPresenter == other.formsManagerPresenter;
+        return this.formsManagerPresenter == other.formsManagerPresenter && formsPlace.equals(other.formsPlace);
     }
 }

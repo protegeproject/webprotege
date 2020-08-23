@@ -18,6 +18,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 import static java.util.stream.Collectors.toMap;
@@ -68,20 +70,18 @@ public class FormsResource {
     }
 
     @POST
-    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
     @Path("/")
     public Response setForms(@Context UserId userId,
                              @Context UriInfo uriInfo,
-                             ImmutableList<EntityFormDescriptor> entityFormDescriptors) {
+                             List<EntityFormDescriptor> entityFormDescriptors) {
         var actionListBuilder = ImmutableList.<Action<?>>builder();
         for(var entityFormDescriptor : entityFormDescriptors) {
             var formDescriptor = entityFormDescriptor.getDescriptor();
-            Criteria criteria = entityFormDescriptor.getSelectorCriteria();
-            if (criteria instanceof RootCriteria) {
-                var selectionCriteria = ((RootCriteria) criteria).asCompositeRootCriteria();
-                var action = new SetEntityFormDescriptorAction(projectId, formDescriptor, selectionCriteria);
-                actionListBuilder.add(action);
-            }
+            var criteria = entityFormDescriptor.getSelectorCriteria();
+            var selectionCriteria = criteria.asCompositeRootCriteria();
+            var action = new SetEntityFormDescriptorAction(projectId, formDescriptor, selectionCriteria);
+            actionListBuilder.add(action);
         }
         var batchAction = BatchAction.create(actionListBuilder.build());
         executor.execute(batchAction, userId);

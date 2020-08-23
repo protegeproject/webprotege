@@ -167,4 +167,20 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Export forms...")
     @Key("exportForms")
     String exportFormsFromProject_title();
+
+    @DefaultMessage("Import forms...")
+    @Key("importForms.title")
+    String importFormsIntoProject_title();
+
+    @DefaultMessage("Please paste the forms description into the text area below")
+    @Key("importForms.message")
+    String importFormsIntoProject_message();
+
+    @DefaultMessage("Forms import failed")
+    @Key("importForms.error.title")
+    String importFormsIntoProject_error_title();
+
+    @DefaultMessage("An error occurred when importing the specified forms descriptors")
+    @Key("importForms.error.message")
+    String importFormsIntoProject_error_message();
 }

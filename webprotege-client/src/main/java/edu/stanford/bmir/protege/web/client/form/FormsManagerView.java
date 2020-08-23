@@ -2,11 +2,9 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
@@ -15,20 +13,33 @@ import java.util.Optional;
  */
 public interface FormsManagerView extends IsWidget {
 
+
     interface CopyFormsFromProjectHandler {
         void handleCopyFromsFromProject();
     }
 
-    interface ExportFormsHander {
+    interface ExportFormsHandler {
         void handleExportForms();
+    }
+
+    interface ImportFormsHandler {
+        void handleImportForms();
     }
 
     void setCopyFormsFromProjectHandler(@Nonnull CopyFormsFromProjectHandler handler);
 
-    void setExportFormsHandler(@Nonnull ExportFormsHander exportFormsHandler);
+    void setExportFormsHandler(@Nonnull ExportFormsHandler exportFormsHandler);
+
+    void setImportFormsHandler(@Nonnull ImportFormsHandler importFormsHandler);
 
     void clear();
 
+    void displayImportFormsInputBox(Consumer<String> importFormsJson);
+
+    void displayImportFormsErrorMessage();
+
     @Nonnull
     AcceptsOneWidget getFormsListContainer();
+
+
 }

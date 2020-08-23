@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsPresenter;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Matthew Horridge
@@ -28,6 +29,8 @@ import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPrese
 )
 @ProjectSingleton
 public interface ClientProjectComponent {
+
+    ProjectId getProjectId();
 
     FormEditorPresenter getFormEditorPresenter();
 

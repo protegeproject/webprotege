@@ -2,20 +2,18 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.list.ListBox;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,7 +29,9 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @UiField
     protected SimplePanel formsListContainer;
 
-    private ExportFormsHander exportFormsHandler = () -> {};
+    private ExportFormsHandler exportFormsHandler = () -> {};
+
+    private ImportFormsHandler importFormsHandler = () -> {};
 
     interface FormsManagerViewImplUiBinder extends UiBinder<HTMLPanel, FormsManagerViewImpl> {
 
@@ -44,6 +44,8 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
 
     @UiField
     Button exportFormsFromProjectButton;
+    @UiField
+    Button importFormsButton;
 
     @Nonnull
     private final MessageBox messageBox;
@@ -51,14 +53,23 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @Nonnull
     private final FormsMessages formsMessages;
 
+    private InputBox inputBox;
+
     @Inject
     public FormsManagerViewImpl(@Nonnull MessageBox messageBox,
-                                @Nonnull FormsMessages formsMessages) {
+                                @Nonnull FormsMessages formsMessages,
+                                @Nonnull InputBox inputBox) {
         this.messageBox = messageBox;
         this.formsMessages = formsMessages;
+        this.inputBox = inputBox;
         initWidget(ourUiBinder.createAndBindUi(this));
         copyFormsFromProjectButton.addClickHandler(this::handleCopyFormsFromProject);
         exportFormsFromProjectButton.addClickHandler(this::handleExportForms);
+        importFormsButton.addClickHandler(this::handleImportForms);
+    }
+
+    private void handleImportForms(ClickEvent event) {
+        importFormsHandler.handleImportForms();
     }
 
     private void handleExportForms(ClickEvent event) {
@@ -68,6 +79,19 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
 
     @Override
     public void clear() {
+    }
+
+    @Override
+    public void displayImportFormsInputBox(Consumer<String> importFormsJson) {
+        inputBox.showDialog(formsMessages.importFormsIntoProject_title(),
+                            formsMessages.importFormsIntoProject_message(),
+                            true, "", importFormsJson::accept);
+    }
+
+    @Override
+    public void displayImportFormsErrorMessage() {
+        messageBox.showAlert(formsMessages.importFormsIntoProject_error_title(),
+                             formsMessages.importFormsIntoProject_error_message());
     }
 
     @Nonnull
@@ -87,7 +111,12 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     }
 
     @Override
-    public void setExportFormsHandler(@Nonnull ExportFormsHander exportFormsHandler) {
+    public void setExportFormsHandler(@Nonnull ExportFormsHandler exportFormsHandler) {
         this.exportFormsHandler = checkNotNull(exportFormsHandler);
+    }
+
+    @Override
+    public void setImportFormsHandler(@Nonnull ImportFormsHandler importFormsHandler) {
+        this.importFormsHandler = checkNotNull(importFormsHandler);
     }
 }
