@@ -45,6 +45,9 @@ public class ProjectResource {
     @Nonnull
     private final FormsResourceFactory formsResourceFactory;
 
+    @Nonnull
+    private final ProjectSettingsResourceFactory projectSettingsResourceFactory;
+
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
     @AutoFactory
     @Inject
@@ -53,13 +56,15 @@ public class ProjectResource {
                            @Provided @Nonnull AxiomsResourceFactory axiomsResourceFactory,
                            @Provided @Nonnull DeleteAxiomsResourceFactory deleteAxiomsResourceFactory,
                            @Provided @Nonnull RevisionsResourceFactory changesResourceFactory,
-                           @Provided @Nonnull FormsResourceFactory formsResourceFactory) {
+                           @Provided @Nonnull FormsResourceFactory formsResourceFactory,
+                           @Provided @Nonnull ProjectSettingsResourceFactory projectSettingsResourceFactory) {
         this.projectId = checkNotNull(projectId);
         this.executor = checkNotNull(executor);
         this.axiomsResourceFactory = checkNotNull(axiomsResourceFactory);
         this.deleteAxiomsResourceFactory = checkNotNull(deleteAxiomsResourceFactory);
         this.changesResourceFactory = checkNotNull(changesResourceFactory);
         this.formsResourceFactory = checkNotNull(formsResourceFactory);
+        this.projectSettingsResourceFactory = checkNotNull(projectSettingsResourceFactory);
     }
 
     @GET
@@ -89,5 +94,10 @@ public class ProjectResource {
     @Path("forms")
     public FormsResource getForms() {
         return formsResourceFactory.create(projectId);
+    }
+
+    @Path("settings")
+    public ProjectSettingsResource getSettings() {
+        return projectSettingsResourceFactory.create(projectId);
     }
 }
