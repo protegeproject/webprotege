@@ -1300,4 +1300,20 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Prefixed name")
     @Key("dictionaryLanguage.prefixedName")
     String dictionaryLanguage_prefixedName();
+
+    @DefaultMessage("Import Project Settings")
+    @Key("projectSettings.importSettings.title")
+    String projectSettings_importSettings_title();
+
+    @DefaultMessage("Paste the project settings that you wish to import into the text area below.  These settings will replaced any existing settings.")
+    @Key("projectSettings.importSettings.message")
+    String projectSettings_importSettings_message();
+
+    @DefaultMessage("Import Project Settings Error")
+    @Key("projectSettings.importSettings.error.title")
+    String projectSettings_importSettings_error_title();
+
+    @DefaultMessage("An error occurred when importing the project settings")
+    @Key("projectSettings.importSettings.error.message")
+    String projectSettings_importSettings_error_message();
 }

@@ -83,6 +83,9 @@ public class ProjectSettingsPresenter {
     @Nonnull
     private Optional<ImmutableList<DictionaryLanguageUsage>> currentLanguageUsage = Optional.empty();
 
+    @Nonnull
+    private final ProjectSettingsService projectSettingsService;
+
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull PermissionScreener permissionScreener,
@@ -97,7 +100,8 @@ public class ProjectSettingsPresenter {
                                     @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
                                     @Nonnull WebhookSettingsView webhookSettingsView,
                                     @Nonnull Messages messages,
-                                    @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer) {
+                                    @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
+                                    @Nonnull ProjectSettingsService projectSettingsService) {
         this.projectId = checkNotNull(projectId);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -112,6 +116,7 @@ public class ProjectSettingsPresenter {
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
         this.messages = checkNotNull(messages);
         this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
+        this.projectSettingsService = checkNotNull(projectSettingsService);
     }
 
     public ProjectId getProjectId() {
@@ -139,6 +144,7 @@ public class ProjectSettingsPresenter {
 
         AcceptsOneWidget headerContainer = settingsPresenter.addSection(messages.projectSettings_headerSection_title());
         headerSectionPresenter.start(headerContainer);
+        headerSectionPresenter.setProjectSettingsImportedHandler(this::handleProjectSettingsImported);
 
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
         // TODO: Check that the user can do this
@@ -148,17 +154,25 @@ public class ProjectSettingsPresenter {
         settingsPresenter.addSection(messages.displayName_settings_project_title()).setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
+        defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
+        reloadSettings();
+    }
+
+    private void handleProjectSettingsImported() {
+        reloadSettings();
+    }
+
+    private void reloadSettings() {
         settingsPresenter.setBusy(true);
         dispatchServiceManager.execute(new GetProjectInfoAction(projectId),
                                        result -> {
                                            ProjectSettings projectSettings = result.getProjectDetails();
-                                           displayProjectSettings(container, projectSettings, result.getProjectLanguages());
+                                           displayProjectSettings(projectSettings, result.getProjectLanguages());
                                        });
         dispatchServiceManager.execute(new GetEntityCrudKitsAction(projectId),
                                        result -> {
                                             entityCrudKitSettingsPresenter.setSettings(result.getCurrentSettings());
                                        });
-        defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
     }
 
     private void handleResetDisplayNameLanguages() {
@@ -170,8 +184,7 @@ public class ProjectSettingsPresenter {
         });
     }
 
-    private void displayProjectSettings(@Nonnull AcceptsOneWidget container,
-                                        @Nonnull ProjectSettings projectSettings,
+    private void displayProjectSettings(@Nonnull ProjectSettings projectSettings,
                                         @Nonnull ImmutableList<DictionaryLanguageUsage> languages) {
         this.currentProjectSettings = Optional.of(projectSettings);
         this.currentLanguageUsage = Optional.of(languages);

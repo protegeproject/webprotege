@@ -3,5 +3,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
         <g:Button text="Export..." ui:field="exportButton" addStyleNames="{wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+        <g:Button text="Import..." ui:field="importButton" addStyleNames="{wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
