@@ -45,4 +45,9 @@ public class ProjectMenuViewImpl extends Composite implements ProjectMenuView {
     public void addMenuAction(final UIAction uiAction) {
         popupMenu.addItem(uiAction);
     }
+
+    @Override
+    public void addSeparator() {
+        popupMenu.addSeparator();
+    }
 }

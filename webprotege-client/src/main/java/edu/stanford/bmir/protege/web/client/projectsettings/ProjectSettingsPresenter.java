@@ -51,9 +51,6 @@ public class ProjectSettingsPresenter {
     private final SettingsPresenter settingsPresenter;
 
     @Nonnull
-    private final ProjectSettingsHeaderSectionPresenter headerSectionPresenter;
-
-    @Nonnull
     private final GeneralSettingsView generalSettingsView;
 
     @Nonnull
@@ -107,7 +104,6 @@ public class ProjectSettingsPresenter {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.eventBus = checkNotNull(eventBus);
         this.settingsPresenter = checkNotNull(settingsPresenter);
-        this.headerSectionPresenter = checkNotNull(headerSectionPresenter);
         this.generalSettingsView = checkNotNull(generalSettingsView);
         this.defaultDictionaryLanguageView = checkNotNull(defaultDictionaryLanguageView);
         this.defaultDisplayNameSettingsView = checkNotNull(defaultDisplayNameSettingsView);
@@ -140,11 +136,6 @@ public class ProjectSettingsPresenter {
         settingsPresenter.start(container);
         settingsPresenter.setApplySettingsHandler(this::applySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
-
-
-        AcceptsOneWidget headerContainer = settingsPresenter.addSection(messages.projectSettings_headerSection_title());
-        headerSectionPresenter.start(headerContainer);
-        headerSectionPresenter.setProjectSettingsImportedHandler(this::handleProjectSettingsImported);
 
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
         // TODO: Check that the user can do this

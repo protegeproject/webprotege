@@ -1316,4 +1316,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("An error occurred when importing the project settings")
     @Key("projectSettings.importSettings.error.message")
     String projectSettings_importSettings_error_message();
+
+    @DefaultMessage("Export settings...")
+    @Key("settings.export")
+    String settings_export();
+
+    @DefaultMessage("Import settings...")
+    @Key("settings.import")
+    String settings_import();
 }

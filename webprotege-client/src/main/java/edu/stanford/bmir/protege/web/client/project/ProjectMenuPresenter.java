@@ -7,8 +7,10 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDownloader;
 import edu.stanford.bmir.protege.web.client.tag.EditProjectTagsUIActionHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,6 +39,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final EditProjectTagsUIActionHandler editProjectTagsUIActionHandler;
 
     private final EditProjectFormsUiHandler editProjectFormsUiHandler;
+    private ProjectSettingsDownloader projectSettingsDownloader;
+
 
     private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
         @Override
@@ -73,6 +77,13 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private AbstractUiAction exportSettings = new AbstractUiAction(MESSAGES.settings_export()) {
+        @Override
+        public void execute() {
+            projectSettingsDownloader.download();
+        }
+    };
+
     @Inject
     public ProjectMenuPresenter(LoggedInUserProjectPermissionChecker permissionChecker,
                                 ProjectMenuView view,
@@ -80,7 +91,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                 UploadAndMergeHandler uploadAndMergeHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
                                 EditProjectTagsUIActionHandler editProjectTagsUIActionHandler,
-                                EditProjectFormsUiHandler editProjectFormsUiHandler) {
+                                EditProjectFormsUiHandler editProjectFormsUiHandler,
+                                ProjectSettingsDownloader projectSettingsDownloader) {
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
@@ -88,6 +100,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         this.editProjectPrefixDeclarationsHandler = editProjectPrefixDeclarationsHandler;
         this.editProjectTagsUIActionHandler = editProjectTagsUIActionHandler;
         this.editProjectFormsUiHandler = editProjectFormsUiHandler;
+        this.projectSettingsDownloader = projectSettingsDownloader;
         setupActions();
     }
 
@@ -105,6 +118,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                         canEdit -> editProjectTags.setEnabled(canEdit));
         permissionChecker.hasPermission(EDIT_FORMS,
                                         canEdit -> editProjectForms.setEnabled(canEdit));
+        permissionChecker.hasPermission(VIEW_PROJECT,
+                                        canView -> exportSettings.setEnabled(canView));
     }
 
     public void dispose() {
@@ -120,8 +135,10 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         view.addMenuAction(editProjectTags);
         view.addMenuAction(editProjectForms);
         view.addMenuAction(editProjectPrefixes);
+        view.addSeparator();
         view.addMenuAction(uploadAndMerge);
-
+        view.addSeparator();
+        view.addMenuAction(exportSettings);
     }
 
 
