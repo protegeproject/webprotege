@@ -7,9 +7,13 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.WithProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -17,7 +21,7 @@ import javax.annotation.Nonnull;
  * 2020-08-24
  */
 @AutoValue
-public abstract class AllProjectSettings {
+public abstract class AllProjectSettings implements WithProjectId<AllProjectSettings> {
 
     public static final String PROJECT_SETTINGS = "projectSettings";
 
@@ -52,4 +56,14 @@ public abstract class AllProjectSettings {
     @JsonProperty(PROJECT_TAGS)
     @Nonnull
     public abstract ImmutableList<Tag> getProjectTags();
+
+    @Override
+    public AllProjectSettings withProjectId(@Nonnull ProjectId projectId) {
+        return AllProjectSettings.get(
+                getProjectSettings().withProjectId(projectId),
+                getEntityCreationSettings(),
+                getPrefixDeclarations(),
+                getProjectTags().stream().map(t -> t.withProjectId(projectId)).collect(toImmutableList())
+        );
+    }
 }
