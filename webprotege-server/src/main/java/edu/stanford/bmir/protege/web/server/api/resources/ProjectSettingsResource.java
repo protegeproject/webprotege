@@ -13,9 +13,7 @@ import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -60,5 +58,14 @@ public class ProjectSettingsResource {
                                                      ImmutableList.copyOf(prefixDeclarationSettingsResult.getPrefixDeclarations()),
                                                      ImmutableList.copyOf(tagsResult.getTags()));
         return Response.ok(projectSettings).build();
+    }
+
+    @Path("/")
+    @POST
+    @Consumes(APPLICATION_JSON)
+    public Response setProjectSettings(@Context UserId userId,
+                                   AllProjectSettings allProjectSettings) {
+        System.out.println(allProjectSettings);
+        return Response.ok().build();
     }
 }

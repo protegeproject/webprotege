@@ -887,6 +887,11 @@ public class ClientProjectModule {
     ProjectSettingsHeaderSectionView provideProjectSettingsHeaderSectionView(ProjectSettingsHeaderSectionViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    ProjectSettingsImporterView provideProjectSettingsImporterView(ProjectSettingsImporterViewImpl impl) {
+        return impl;
+    }
 }
 
 

@@ -1324,4 +1324,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Import settings...")
     @Key("settings.import")
     String settings_import();
+
+    @DefaultMessage("Import settings")
+    @Key("settings.import.complete.title")
+    String settings_importSettings_complete_title();
+
+    @DefaultMessage("The settings have successfuly been imported.  We recommend that your refresh your browser.")
+    @Key("settings.import.complete.message")
+    String settings_importSettings_complete_message();
 }

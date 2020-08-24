@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
@@ -17,26 +19,37 @@ import javax.annotation.Nonnull;
 @AutoValue
 public abstract class AllProjectSettings {
 
+    public static final String PROJECT_SETTINGS = "projectSettings";
+
+    public static final String ENTITY_CREATION_SETTINGS = "entityCreationSettings";
+
+    public static final String PREFIX_DECLARATIONS = "prefixDeclarations";
+
+    public static final String PROJECT_TAGS = "projectTags";
+
+    @JsonCreator
     @Nonnull
-    public static AllProjectSettings get(@Nonnull ProjectSettings projectSettings,
-                                         @Nonnull EntityCrudKitSettings entityCrudKitSettings,
-                                         @Nonnull ImmutableList<PrefixDeclaration> prefixDeclarations,
-                                         @Nonnull ImmutableList<Tag> tags) {
+    public static AllProjectSettings get(@JsonProperty(PROJECT_SETTINGS) @Nonnull ProjectSettings projectSettings,
+                                         @JsonProperty(ENTITY_CREATION_SETTINGS) @Nonnull EntityCrudKitSettings entityCrudKitSettings,
+                                         @JsonProperty(PREFIX_DECLARATIONS) @Nonnull ImmutableList<PrefixDeclaration> prefixDeclarations,
+                                         @JsonProperty(PROJECT_TAGS) @Nonnull ImmutableList<Tag> tags) {
         return new AutoValue_AllProjectSettings(projectSettings, entityCrudKitSettings, prefixDeclarations,
                                                 tags);
     }
 
+    @JsonProperty(PROJECT_SETTINGS)
     @Nonnull
-    @JsonUnwrapped
     public abstract ProjectSettings getProjectSettings();
 
+    @JsonProperty(ENTITY_CREATION_SETTINGS)
     @Nonnull
-    @JsonUnwrapped
-    public abstract EntityCrudKitSettings<?> getEntityCreationSettings();
+    public abstract EntityCrudKitSettings getEntityCreationSettings();
 
+    @JsonProperty(PREFIX_DECLARATIONS)
     @Nonnull
     public abstract ImmutableList<PrefixDeclaration> getPrefixDeclarations();
 
+    @JsonProperty(PROJECT_TAGS)
     @Nonnull
-    public abstract ImmutableList<Tag> getTags();
+    public abstract ImmutableList<Tag> getProjectTags();
 }
