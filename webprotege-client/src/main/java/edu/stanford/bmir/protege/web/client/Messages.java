@@ -728,6 +728,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.displayName")
     String projectSettings_displayName();
 
+
+    @DefaultMessage("Project Settings")
+    @Key("projectSettings.headerSection.title")
+    String projectSettings_headerSection_title();
+
     
     @DefaultMessage("Main Settings")
     @Key("projectSettings.mainSettings")

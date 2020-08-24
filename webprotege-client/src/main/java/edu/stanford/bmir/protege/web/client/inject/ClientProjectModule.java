@@ -883,6 +883,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    ProjectSettingsHeaderSectionView provideProjectSettingsHeaderSectionView(ProjectSettingsHeaderSectionViewImpl impl) {
+        return impl;
+    }
 }
 
 

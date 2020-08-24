@@ -22,14 +22,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
-import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -52,6 +49,9 @@ public class ProjectSettingsPresenter {
 
     @Nonnull
     private final SettingsPresenter settingsPresenter;
+
+    @Nonnull
+    private final ProjectSettingsHeaderSectionPresenter headerSectionPresenter;
 
     @Nonnull
     private final GeneralSettingsView generalSettingsView;
@@ -89,6 +89,7 @@ public class ProjectSettingsPresenter {
                                     @Nonnull DispatchServiceManager dispatchServiceManager,
                                     @Nonnull EventBus eventBus,
                                     @Nonnull SettingsPresenter settingsPresenter,
+                                    @Nonnull ProjectSettingsHeaderSectionPresenter headerSectionPresenter,
                                     @Nonnull GeneralSettingsView generalSettingsView,
                                     @Nonnull DefaultDictionaryLanguageView defaultDictionaryLanguageView,
                                     @Nonnull DefaultDisplayNameSettingsView defaultDisplayNameSettingsView,
@@ -102,6 +103,7 @@ public class ProjectSettingsPresenter {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.eventBus = checkNotNull(eventBus);
         this.settingsPresenter = checkNotNull(settingsPresenter);
+        this.headerSectionPresenter = checkNotNull(headerSectionPresenter);
         this.generalSettingsView = checkNotNull(generalSettingsView);
         this.defaultDictionaryLanguageView = checkNotNull(defaultDictionaryLanguageView);
         this.defaultDisplayNameSettingsView = checkNotNull(defaultDisplayNameSettingsView);
@@ -133,6 +135,11 @@ public class ProjectSettingsPresenter {
         settingsPresenter.start(container);
         settingsPresenter.setApplySettingsHandler(this::applySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
+
+
+        AcceptsOneWidget headerContainer = settingsPresenter.addSection(messages.projectSettings_headerSection_title());
+        headerSectionPresenter.start(headerContainer);
+
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
         // TODO: Check that the user can do this
         AcceptsOneWidget newEntitySettingsContainer = settingsPresenter.addSection(messages.newEntitySettings());
