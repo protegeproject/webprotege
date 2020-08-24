@@ -53,8 +53,10 @@ public class GetProjectTagsActionHandler extends AbstractProjectActionHandler<Ge
     public GetProjectTagsResult execute(@Nonnull GetProjectTagsAction action, @Nonnull ExecutionContext executionContext) {
         Collection<Tag> projectTags = tagsManager.getProjectTags();
         Map<TagId, Integer> usage = new HashMap<>();
-        projectTags.forEach(tag -> usage.put(tag.getTagId(),
-                                             tagsManager.getTaggedEntities(tag.getTagId()).size()));
+        // Disabled for now, because this is really expensive for large ontologies
+//        projectTags.forEach(tag -> usage.put(tag.getTagId(),
+//                                             tagsManager.getTaggedEntities(tag.getTagId()).size()));
+        projectTags.forEach(tag -> usage.put(tag.getTagId(), 0));
         return new GetProjectTagsResult(projectTags, usage);
     }
 }

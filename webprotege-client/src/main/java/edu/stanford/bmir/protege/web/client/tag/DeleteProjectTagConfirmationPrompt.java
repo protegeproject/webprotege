@@ -41,7 +41,7 @@ public class DeleteProjectTagConfirmationPrompt implements DeleteConfirmationPro
     @Override
     public void shouldDeleteValue(@Nonnull TagData value, @Nonnull DeleteConfirmationPromptCallback callback) {
         // Just go ahead and delete the tag if it's not used.
-        if(value.getUsageCount() == 0) {
+        if(value.getUsageCount() <= 0) {
             callback.deleteValue(true);
             return;
         }
