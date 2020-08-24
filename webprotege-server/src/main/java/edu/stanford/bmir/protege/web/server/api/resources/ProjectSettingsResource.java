@@ -2,9 +2,14 @@ package edu.stanford.bmir.protege.web.server.api.resources;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.api.ActionExecutor;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
+import edu.stanford.bmir.protege.web.shared.project.GetProjectPrefixDeclarationsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.AllProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
+import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
@@ -41,9 +46,19 @@ public class ProjectSettingsResource {
     @GET
     @Produces(APPLICATION_JSON)
     public Response getProjectSettings(@Context UserId userId) {
-        var actionResult = actionExecutor.execute(new GetProjectSettingsAction(projectId),
+        var projectSettingsResult = actionExecutor.execute(new GetProjectSettingsAction(projectId),
                                userId);
-        var projectSettings = actionResult.getProjectSettings();
+        var entityCreationSettingsResult = actionExecutor.execute(new GetEntityCrudKitSettingsAction(projectId),
+                                                           userId);
+        var prefixDeclarationSettingsResult = actionExecutor.execute(new GetProjectPrefixDeclarationsAction(projectId),
+                                                               userId);
+
+        var tagsResult = actionExecutor.execute(new GetProjectTagsAction(projectId),
+                                          userId);
+        var projectSettings = AllProjectSettings.get(projectSettingsResult.getProjectSettings(),
+                                                     entityCreationSettingsResult.getSettings(),
+                                                     ImmutableList.copyOf(prefixDeclarationSettingsResult.getPrefixDeclarations()),
+                                                     ImmutableList.copyOf(tagsResult.getTags()));
         return Response.ok(projectSettings).build();
     }
 }
