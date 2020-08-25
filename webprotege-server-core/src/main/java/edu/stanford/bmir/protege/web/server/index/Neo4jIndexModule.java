@@ -12,12 +12,14 @@ import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntity
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomByTypeAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.index.Neo4jAnnotationAssertionAxiomsBySubjectIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jAnnotationPropertyDomainAxiomsIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jAnnotationPropertyRangeAxiomsIndex;
+import edu.stanford.owl2lpg.client.read.index.Neo4jClassAssertionAxiomsByClassIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jClassAssertionAxiomsByIndividualIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jClassFrameAxiomsIndex;
 import edu.stanford.owl2lpg.client.read.index.Neo4jDataPropertyAssertionAxiomsBySubjectIndex;
@@ -43,6 +45,7 @@ import javax.annotation.Nonnull;
     AxiomBySubjectAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
     AssertionAxiomBySubjectAccessorModule.class,
+    ClassAssertionAxiomByTypeAccessorModule.class,
     DomainAxiomAccessorModule.class,
     RangeAxiomAccessorModule.class
 })
@@ -102,7 +105,7 @@ public class Neo4jIndexModule {
 
     @Provides
     @ProjectSingleton
-    public ClassAssertionAxiomsByClassIndex provideClassAssertionAxiomsByClassIndex(ClassAssertionAxiomsByClassIndexImpl impl) {
+    public ClassAssertionAxiomsByClassIndex provideClassAssertionAxiomsByClassIndex(Neo4jClassAssertionAxiomsByClassIndex impl) {
         return impl;
     }
 
