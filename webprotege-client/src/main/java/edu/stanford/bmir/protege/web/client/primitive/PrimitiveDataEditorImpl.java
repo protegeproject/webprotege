@@ -142,7 +142,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         }
         else {
             view.setPlaceholder(primitiveDataPlaceholder.get().getBrowserText());
-            setIconInsetStyleNameForEntityData(primitiveDataPlaceholder, PLACEHOLDER_ICON_OPACITY);
+            setIconInsetStyleNameForEntityData(primitiveDataPlaceholder);
         }
     }
 
@@ -585,7 +585,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private void updateDisplayForCurrentData() {
         if(currentData.isPresent()) {
-            setIconInsetStyleNameForEntityData(currentData, 1.0);
+            setIconInsetStyleNameForEntityData(currentData);
             validateCurrentEntityTypeAgainstAllowedTypes();
             if (isExternalIRI()) {
                 GWT.log("[PrimitiveDataEditorImpl] Value is external IRI");
@@ -608,7 +608,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             }
         }
         else {
-            setIconInsetStyleNameForEntityData(primitiveDataPlaceholder, PLACEHOLDER_ICON_OPACITY);
+            setIconInsetStyleNameForEntityData(primitiveDataPlaceholder);
         }
 
     }
@@ -643,7 +643,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
 
 
-    private void setIconInsetStyleNameForEntityData(final Optional<OWLPrimitiveData> data, double iconOpacity) {
+    private void setIconInsetStyleNameForEntityData(final Optional<OWLPrimitiveData> data) {
         if (!data.isPresent()) {
             view.setTitle("");
             hideErrorLabel();
