@@ -23,7 +23,7 @@
             display: block;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main} {wp.style.linkIconInset}">
+    <g:HTMLPanel addStyleNames="{style.main}">
         <img src="" class="{style.image}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
