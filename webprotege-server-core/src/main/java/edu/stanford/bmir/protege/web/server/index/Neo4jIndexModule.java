@@ -10,29 +10,14 @@ import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.signature.SignatureAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomByTypeAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jAnnotationAssertionAxiomsBySubjectIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jAnnotationPropertyDomainAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jAnnotationPropertyRangeAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jClassAssertionAxiomsByClassIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jClassAssertionAxiomsByIndividualIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jClassFrameAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jDataPropertyAssertionAxiomsBySubjectIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jDataPropertyDomainAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jDataPropertyRangeAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jNamedIndividualFrameAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jObjectPropertyAssertionAxiomsBySubjectIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jObjectPropertyDomainAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jObjectPropertyRangeAxiomsIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jPropertyAssertionAxiomsBySubjectIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jSubClassOfAxiomsBySubClassIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jSubDataPropertyAxiomsBySubPropertyIndex;
-import edu.stanford.owl2lpg.client.bind.index.Neo4jSubObjectPropertyAxiomsBySubPropertyIndex;
 
 import javax.annotation.Nonnull;
 
@@ -42,6 +27,7 @@ import javax.annotation.Nonnull;
  * 2019-09-10
  */
 @Module(includes = {
+    SignatureAccessorModule.class,
     AxiomBySubjectAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
     AssertionAxiomBySubjectAccessorModule.class,
@@ -169,23 +155,23 @@ public class Neo4jIndexModule {
 
     @Provides
     EntitiesInOntologySignatureByIriIndex provideEntitiesInOntologySignatureByIriIndex(
-        EntitiesInOntologySignatureByIriIndexImpl impl) {
+        Neo4jEntitiesInOntologySignatureByIriIndex impl) {
         return impl;
     }
 
     @Provides
-    EntitiesInOntologySignatureIndex provideEntitiesInOntologySignatureIndex(EntitiesInOntologySignatureIndexImpl impl) {
+    EntitiesInOntologySignatureIndex provideEntitiesInOntologySignatureIndex(Neo4jEntitiesInOntologySignatureIndex impl) {
         return impl;
     }
 
     @Provides
     EntitiesInProjectSignatureByIriIndex provideEntitiesInProjectSignatureByIriIndex(
-        EntitiesInProjectSignatureByIriIndexImpl impl) {
+        Neo4jEntitiesInProjectSignatureByIriIndex impl) {
         return impl;
     }
 
     @Provides
-    EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndexImpl(EntitiesInProjectSignatureIndexImpl impl) {
+    EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndexImpl(Neo4jEntitiesInProjectSignatureIndex impl) {
         return impl;
     }
 
