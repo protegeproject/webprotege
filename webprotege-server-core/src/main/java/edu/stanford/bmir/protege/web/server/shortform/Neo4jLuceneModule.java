@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.owl2lpg.client.read.shortform.MultiLingualDictionaryImpl;
+import edu.stanford.owl2lpg.client.read.shortform.Neo4jMultiLingualDictionary;
 import edu.stanford.owl2lpg.client.read.shortform.Neo4jMultiLingualShortFormDictionary;
 import edu.stanford.owl2lpg.client.read.shortform.Neo4jMultiLingualShortFormIndex;
 import edu.stanford.owl2lpg.client.read.shortform.Neo4jResultMapperModule;
@@ -88,7 +88,7 @@ public class Neo4jLuceneModule {
 
   @ProjectSingleton
   @Provides
-  MultiLingualDictionary provideMultiLingualDictionary(MultiLingualDictionaryLuceneImpl impl) {
+  MultiLingualDictionary provideMultiLingualDictionary(Neo4jMultiLingualDictionary impl) {
     return impl;
   }
 
