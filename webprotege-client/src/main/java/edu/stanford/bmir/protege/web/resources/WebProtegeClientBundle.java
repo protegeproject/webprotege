@@ -304,6 +304,26 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("glyphs.css")
     Glyphs glyphs();
 
+    @Source("primitive-data-editor.css")
+    WebProtegePrimitiveDataEditorCss primitiveDataEditor();
+
+    interface WebProtegePrimitiveDataEditorCss extends CssResource {
+
+        @ClassName("wp-pde")
+        String pde();
+
+        @ClassName("wp-pde__error-message")
+        String pde__errorMessage();
+
+        @ClassName("wp-pde__icon")
+        String pde__icon();
+
+        @ClassName("wp-pde--deprecated")
+        String pdeDeprecated();
+
+        @ClassName("wp-pde__text")
+        String pde__text();
+    }
 
     interface WebProtegeCss extends CssResource {
 

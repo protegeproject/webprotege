@@ -1,0 +1,29 @@
+@external wp-*;
+
+.wp-pde {
+
+}
+
+.wp-pde--deprecated {
+
+}
+
+.wp-pde__icon {
+}
+
+.wp-pde--deprecated .wp-pde__icon {
+    filter: grayscale(100%);
+}
+
+.wp-pde__text {
+
+}
+
+.wp-pde--deprecated .wp-pde__text textarea {
+    text-decoration: line-through;
+}
+
+.wp-pde__error-message {
+
+}
+

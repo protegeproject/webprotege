@@ -34,12 +34,12 @@
         .imageViewContainer {
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{style.iconContainer}"/>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveDataEditor.pde}">
+        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{style.iconContainer} {wp.primitiveDataEditor.pde__icon}"/>
         <g:HTMLPanel ui:field="contentContainer" addStyleNames="{style.contentContainer}">
-            <text:ExpandingTextBox ui:field="textBox" addStyleNames="{style.textBox}"/>
+            <text:ExpandingTextBox ui:field="textBox" addStyleNames="{style.textBox} {wp.primitiveDataEditor.pde__text}"/>
             <g:LazyPanel ui:field="errorViewContainer" debugId="ErrorViewCont">
-                <primitive:PrimitiveDataEditorFreshEntityViewImpl ui:field="errorView"/>
+                <primitive:PrimitiveDataEditorFreshEntityViewImpl ui:field="errorView" addStyleNames="{wp.primitiveDataEditor.pde__errorMessage}"/>
             </g:LazyPanel>
             <g:LazyPanel ui:field="imageViewContainer" debugId="ImageViewCont"
                          addStyleNames="{style.imageViewContainer}">
