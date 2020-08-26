@@ -6,12 +6,11 @@ import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.owl2lpg.client.read.shortform.Neo4jMultiLingualDictionary;
-import edu.stanford.owl2lpg.client.read.shortform.Neo4jMultiLingualShortFormDictionary;
-import edu.stanford.owl2lpg.client.read.shortform.Neo4jMultiLingualShortFormIndex;
-import edu.stanford.owl2lpg.client.read.shortform.Neo4jResultMapperModule;
-import edu.stanford.owl2lpg.client.read.shortform.Neo4jSearchableMultiLingualShortFormDictionary;
-import edu.stanford.owl2lpg.client.read.shortform.Neo4jSearchableMultiLingualShortFormModule;
+import edu.stanford.owl2lpg.client.bind.shortform.Neo4jMultiLingualDictionary;
+import edu.stanford.owl2lpg.client.bind.shortform.Neo4jMultiLingualShortFormDictionary;
+import edu.stanford.owl2lpg.client.bind.shortform.Neo4jMultiLingualShortFormIndex;
+import edu.stanford.owl2lpg.client.bind.shortform.Neo4jSearchableMultiLingualShortFormDictionary;
+import edu.stanford.owl2lpg.client.read.shortform.MultiLingualShortFormAccessorModule;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.SearcherFactory;
@@ -33,9 +32,7 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 2020-07-08
  */
-@Module(includes = {
-    Neo4jResultMapperModule.class,
-    Neo4jSearchableMultiLingualShortFormModule.class})
+@Module(includes = MultiLingualShortFormAccessorModule.class)
 public class Neo4jLuceneModule {
 
   private static final Logger logger = LoggerFactory.getLogger(LuceneModule.class);
@@ -82,7 +79,8 @@ public class Neo4jLuceneModule {
 
   @ProjectSingleton
   @Provides
-  SearchableMultiLingualShortFormDictionary provideSearchableMultiLingualShortFormDictionary(Neo4jSearchableMultiLingualShortFormDictionary impl) {
+  SearchableMultiLingualShortFormDictionary provideSearchableMultiLingualShortFormDictionary(
+      Neo4jSearchableMultiLingualShortFormDictionary impl) {
     return impl;
   }
 
