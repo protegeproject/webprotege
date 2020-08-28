@@ -12,9 +12,9 @@ import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntity
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.signature.SignatureAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomByTypeAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
     AxiomBySubjectAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
     AssertionAxiomBySubjectAccessorModule.class,
-    ClassAssertionAxiomByTypeAccessorModule.class,
+    ClassAssertionAxiomAccessorModule.class,
     DomainAxiomAccessorModule.class,
     RangeAxiomAccessorModule.class
 })
@@ -54,7 +54,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexWrapperImpl impl) {
+    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(Neo4jAnnotationAssertionAxiomsIndex impl) {
         return impl;
     }
 
@@ -70,17 +70,17 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex(AxiomsByEntityReferenceIndexImpl impl) {
+    AxiomsByEntityReferenceIndex provideAxiomsByEntityReferenceIndex(Neo4jAxiomsByEntityReferenceIndex impl) {
         return impl;
     }
 
     @Provides
-    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(AnnotationAxiomsByIriReferenceIndexImpl impl) {
+    AnnotationAxiomsByIriReferenceIndex provideAxiomsByIriReferenceIndex(Neo4jAnnotationAxiomsByIriReferenceIndex impl) {
         return impl;
     }
 
     @Provides
-    AxiomsByReferenceIndex provideAxiomsByReferenceIndex(AxiomsByReferenceIndexImpl impl) {
+    AxiomsByReferenceIndex provideAxiomsByReferenceIndex(Neo4jAxiomsByReferenceIndex impl) {
         return impl;
     }
 
