@@ -11,11 +11,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -77,6 +79,16 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
         this.textBox.addBlurHandler(event -> updateImageDisplay());
 
         initWidget(uiBinder.createAndBindUi(this));
+    }
+
+    @Override
+    public void setDeprecated(boolean deprecated) {
+        if (deprecated) {
+            this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveDataEditor().primitiveData_____Deprecated());
+        }
+        else {
+            this.removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveDataEditor().primitiveData_____Deprecated());
+        }
     }
 
     @Override

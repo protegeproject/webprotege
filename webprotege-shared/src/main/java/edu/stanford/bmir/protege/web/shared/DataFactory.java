@@ -133,41 +133,47 @@ public class DataFactory {
 
     public static OWLEntityData getOWLEntityData(OWLEntity entity,
                                                  ImmutableMap<DictionaryLanguage, String> shortForms) {
+        return getOWLEntityData(entity, shortForms, false);
+    }
+
+    public static OWLEntityData getOWLEntityData(OWLEntity entity,
+                                                 ImmutableMap<DictionaryLanguage, String> shortForms,
+                                                 boolean deprecated) {
         return entity.accept(new OWLEntityVisitorEx<OWLEntityData>() {
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLClass owlClass) {
-                return OWLClassData.get(owlClass, shortForms);
+                return OWLClassData.get(owlClass, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLObjectProperty property) {
-                return OWLObjectPropertyData.get(property, shortForms);
+                return OWLObjectPropertyData.get(property, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLDataProperty property) {
-                return OWLDataPropertyData.get(property, shortForms);
+                return OWLDataPropertyData.get(property, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLNamedIndividual individual) {
-                return OWLNamedIndividualData.get(individual, shortForms);
+                return OWLNamedIndividualData.get(individual, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLDatatype datatype) {
-                return OWLDatatypeData.get(datatype, shortForms);
+                return OWLDatatypeData.get(datatype, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLAnnotationProperty property) {
-                return OWLAnnotationPropertyData.get(property, shortForms);
+                return OWLAnnotationPropertyData.get(property, shortForms, deprecated);
             }
         });
     }

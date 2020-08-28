@@ -86,8 +86,10 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLEntityData getRendering(OWLEntity entity) {
+        var deprecated = deprecatedEntityChecker.isDeprecated(entity);
         return DataFactory.getOWLEntityData(entity,
-                                            dictionaryManager.getShortForms(entity));
+                                            dictionaryManager.getShortForms(entity),
+                                            deprecated);
     }
 
     public OWLPrimitiveData getRendering(OWLAnnotationValue value) {
@@ -103,27 +105,33 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLClassData getClassData(OWLClass cls) {
-        return OWLClassData.get(cls, dictionaryManager.getShortForms(cls));
+        var deprecated = deprecatedEntityChecker.isDeprecated(cls);
+        return OWLClassData.get(cls, dictionaryManager.getShortForms(cls), deprecated);
     }
 
     public OWLObjectPropertyData getObjectPropertyData(OWLObjectProperty property) {
-        return OWLObjectPropertyData.get(property, dictionaryManager.getShortForms(property));
+        var deprecated = deprecatedEntityChecker.isDeprecated(property);
+        return OWLObjectPropertyData.get(property, dictionaryManager.getShortForms(property), deprecated);
     }
 
     public OWLDataPropertyData getDataPropertyData(OWLDataProperty property) {
-        return OWLDataPropertyData.get(property, dictionaryManager.getShortForms(property));
+        var deprecated = deprecatedEntityChecker.isDeprecated(property);
+        return OWLDataPropertyData.get(property, dictionaryManager.getShortForms(property), deprecated);
     }
 
     public OWLAnnotationPropertyData getAnnotationPropertyData(OWLAnnotationProperty property) {
-        return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForms(property));
+        var deprecated = deprecatedEntityChecker.isDeprecated(property);
+        return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForms(property), deprecated);
     }
 
     public OWLNamedIndividualData getIndividualData(OWLNamedIndividual individual) {
-        return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForms(individual));
+        var deprecated = deprecatedEntityChecker.isDeprecated(individual);
+        return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForms(individual), deprecated);
     }
 
     public OWLDatatypeData getDatatypeData(OWLDatatype datatype) {
-        return OWLDatatypeData.get(datatype, dictionaryManager.getShortForms(datatype));
+        var deprecated = deprecatedEntityChecker.isDeprecated(datatype);
+        return OWLDatatypeData.get(datatype, dictionaryManager.getShortForms(datatype), deprecated);
     }
 
     public void dispose() {

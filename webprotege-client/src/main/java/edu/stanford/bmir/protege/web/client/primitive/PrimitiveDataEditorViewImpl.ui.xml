@@ -17,6 +17,8 @@
         .iconContainer {
             flex-grow: 0;
             flex-shrink: 0;
+            width: 22px;
+            height: 22px;
         }
         .contentContainer {
             display: flex;

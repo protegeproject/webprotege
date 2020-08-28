@@ -128,7 +128,6 @@ public class EntitySearcher {
         results = entityMatches.transform(matches -> {
             var entity = matches.getEntity();
             var shortForms = dictionaryManager.getShortForms(entity);
-            var entityData = DataFactory.getOWLEntityData(entity, shortForms);
             var entityNode = entityNodeRenderer.render(entity);
             var matchesForEntity = matches.getShortFormMatches().stream().map(shortFormMatch -> {
                 var matchedLanguage = shortFormMatch.getLanguage();

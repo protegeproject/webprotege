@@ -192,6 +192,11 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     @Override
+    public void setDeprecated(boolean deprecated) {
+        view.setDeprecated(deprecated);
+    }
+
+    @Override
     public void setMode(PrimitiveDataEditorView.Mode mode) {
         checkNotNull(mode);
         view.setMode(mode);
@@ -370,7 +375,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         OWLEntity entity = freshEntitiesHandler.getFreshEntity(text, entityType);
         ImmutableMap<DictionaryLanguage, String> shortForms = currentData.map(OWLPrimitiveData::getShortForms)
                                                                          .orElse(ImmutableMap.of());
-        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, shortForms);
+        boolean deprecated = currentData.map(OWLPrimitiveData::isDeprecated).orElse(false);
+        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, shortForms, deprecated);
         setCurrentData(Optional.of(coercedData), EventStrategy.FIRE_EVENTS);
         updateDisplayForCurrentData();
     }
@@ -655,46 +661,48 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             protected String getDefaultReturnValue() {
                 view.setTitle("");
+                view.setDeprecated(false);
                 return "empty-icon-inset";
             }
 
             @Override
             public String visit(OWLClassData data) throws RuntimeException {
-                setTooltip(data, "owl:Class");
+                setTooltipAndDeprecationStatus(data, "owl:Class");
+                view.setDeprecated(data.isDeprecated());
                 return BUNDLE.style().classIconInset();
             }
 
             @Override
             public String visit(OWLObjectPropertyData data) throws RuntimeException {
-                setTooltip(data, "owl:ObjectProperty");
+                setTooltipAndDeprecationStatus(data, "owl:ObjectProperty");
                 return BUNDLE.style().objectPropertyIconInset();
             }
 
             @Override
             public String visit(OWLDataPropertyData data) throws RuntimeException {
-                setTooltip(data, "owl:DataProperty");
+                setTooltipAndDeprecationStatus(data, "owl:DataProperty");
                 return BUNDLE.style().dataPropertyIconInset();
             }
 
             @Override
             public String visit(OWLAnnotationPropertyData data) throws RuntimeException {
-                setTooltip(data, "owl:AnnotationProperty");
+                setTooltipAndDeprecationStatus(data, "owl:AnnotationProperty");
                 return BUNDLE.style().annotationPropertyIconInset();
             }
 
             @Override
             public String visit(OWLNamedIndividualData data) throws RuntimeException {
-                setTooltip(data, "owl:NamedIndividual");
+                setTooltipAndDeprecationStatus(data, "owl:NamedIndividual");
                 return BUNDLE.style().individualIconInset();
             }
 
             @Override
             public String visit(OWLDatatypeData data) throws RuntimeException {
-                setTooltip(data, "owl:Datatype");
+                setTooltipAndDeprecationStatus(data, "owl:Datatype");
                 return BUNDLE.style().datatypeIconInset();
             }
 
-            private void setTooltip(OWLEntityData data, String typeName) {
+            private void setTooltipAndDeprecationStatus(OWLEntityData data, String typeName) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("\"");
                 sb.append(entityData.getBrowserText());
@@ -708,6 +716,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                     sb.append(">");
                 }
                 view.setTitle(sb.toString());
+                view.setDeprecated(data.isDeprecated());
             }
 
             @Override

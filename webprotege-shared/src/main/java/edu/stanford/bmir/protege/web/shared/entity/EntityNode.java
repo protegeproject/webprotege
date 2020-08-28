@@ -89,7 +89,8 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
 
     public OWLEntityData getEntityData() {
         return DataFactory.getOWLEntityData(getEntity(),
-                                            getShortForms());
+                                            getShortForms(),
+                                            isDeprecated());
     }
 
     public abstract ImmutableSet<Tag> getTags();

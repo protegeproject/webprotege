@@ -26,6 +26,8 @@ import java.util.Set;
  */
 public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChangeHandlers<String>, HasSelectionHandlers<EntitySuggestion>, HasAnchor, HasEnabled, HasPlaceholder, HasFocusHandlers, HasKeyUpHandlers, HasRequestFocus {
 
+    void setDeprecated(boolean deprecated);
+
     enum Mode {SINGLE_LINE, MULTI_LINE}
 
     /**
