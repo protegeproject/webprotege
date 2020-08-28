@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
             display: flex;
@@ -14,8 +15,8 @@
             line-height: 22px;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveDataEditor.pde}">
         <g:ListBox ui:field="comboBox" visibleItemCount="1"/>
-        <g:Label ui:field="readOnlyLabel" visible="false" addStyleNames="{style.readOnlyLabel}"/>
+        <g:Label ui:field="readOnlyLabel" visible="false" addStyleNames="{style.readOnlyLabel} {wp.primitiveDataEditor.pde__text}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
