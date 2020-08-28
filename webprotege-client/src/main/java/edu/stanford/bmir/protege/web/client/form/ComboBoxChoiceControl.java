@@ -54,13 +54,9 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
-    private final PrimitiveDataIconProvider primitiveDataIconProvider;
-
     @Inject
-    public ComboBoxChoiceControl(PrimitiveDataIconProvider primitiveDataIconProvider,
-                                 PrimitiveDataEditorImpl primitiveDataEditor) {
+    public ComboBoxChoiceControl(PrimitiveDataEditorImpl primitiveDataEditor) {
         this.readOnlyView = checkNotNull(primitiveDataEditor);
-        this.primitiveDataIconProvider = primitiveDataIconProvider;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
