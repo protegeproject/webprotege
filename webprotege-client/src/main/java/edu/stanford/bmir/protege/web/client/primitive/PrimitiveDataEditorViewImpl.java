@@ -83,10 +83,10 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public void setDeprecated(boolean deprecated) {
         if (deprecated) {
-            this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____Deprecated());
+            this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
         }
         else {
-            this.removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____Deprecated());
+            this.removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
         }
     }
 

@@ -24,6 +24,12 @@
     text-decoration: line-through;
 }
 
+
+.wp-pd--deprecated .wp-pd__text {
+    text-decoration: line-through;
+}
+
+
 .wp-pd__error-message {
 
 }

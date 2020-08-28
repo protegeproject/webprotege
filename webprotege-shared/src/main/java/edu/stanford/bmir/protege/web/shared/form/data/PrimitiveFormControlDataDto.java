@@ -78,4 +78,8 @@ public abstract class PrimitiveFormControlDataDto implements Comparable<Primitiv
             }
         }
     }
+
+    public boolean isDeprecated() {
+        return false;
+    }
 }

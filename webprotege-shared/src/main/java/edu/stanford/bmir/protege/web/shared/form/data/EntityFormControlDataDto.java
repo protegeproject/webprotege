@@ -26,4 +26,9 @@ public abstract class EntityFormControlDataDto extends PrimitiveFormControlDataD
     public Optional<OWLLiteral> asLiteral() {
         return Optional.empty();
     }
+
+    @Override
+    public boolean isDeprecated() {
+        return getEntity().isDeprecated();
+    }
 }

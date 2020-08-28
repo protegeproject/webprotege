@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
@@ -104,7 +105,15 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
             if(choice.isPresent()) {
                 int index = 1;
                 for(PrimitiveFormControlData c : choices) {
-                    if(c.equals(choice.get())) {
+                    PrimitiveFormControlData theChoice = choice.get();
+                    boolean deprecated = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::isDeprecated).orElse(false);
+                    if(deprecated) {
+                        addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
+                    }
+                    else {
+                        removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
+                    }
+                    if(c.equals(theChoice)) {
                         comboBox.setSelectedIndex(index);
                         String itemText = comboBox.getItemText(index);
                         readOnlyLabel.setText(itemText);
@@ -112,6 +121,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
                     }
                     index++;
                 }
+
             }
             else {
                 clearValue();

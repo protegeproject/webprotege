@@ -318,7 +318,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String primitiveData__icon();
 
         @ClassName("wp-pd--deprecated")
-        String primitiveData_____Deprecated();
+        String primitiveData_____deprecated();
 
         @ClassName("wp-pd__text")
         String primitiveData__text();
