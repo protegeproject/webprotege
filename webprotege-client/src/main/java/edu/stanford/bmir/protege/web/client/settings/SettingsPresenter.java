@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 
 import javax.annotation.Nonnull;
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2 Jul 2018
  */
-public class SettingsPresenter {
+public class SettingsPresenter implements HasBusy {
 
     @Nonnull
     private final SettingsView view;
@@ -38,9 +39,6 @@ public class SettingsPresenter {
     private CancelSettingsHandler cancelSettingsHandler = () -> {};
 
     @Nonnull
-    private final BusyView busyView;
-
-    @Nonnull
     private final PlaceController placeController;
 
     @Nonnull
@@ -54,7 +52,6 @@ public class SettingsPresenter {
         this.view = checkNotNull(settingsView);
         this.viewContainerProvider = checkNotNull(viewContainerProvider);
         this.activeProjectManager = checkNotNull(activeProjectManager);
-        this.busyView = checkNotNull(busyView);
         this.placeController = checkNotNull(placeController);
     }
 
@@ -113,13 +110,8 @@ public class SettingsPresenter {
         goToNextPlace();
     }
 
-    public void setBusy(@Nonnull AcceptsOneWidget container, boolean busy) {
-        if(busy) {
-            container.setWidget(busyView);
-        }
-        else {
-            container.setWidget(view);
-        }
+    public void setBusy(boolean busy) {
+        view.setBusy(busy);
     }
 
     public void setNextPlace(@Nonnull Optional<Place> nextPlace) {

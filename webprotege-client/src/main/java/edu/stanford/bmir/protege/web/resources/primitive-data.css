@@ -1,0 +1,36 @@
+@external wp-*;
+
+.wp-pd {
+
+}
+
+.wp-pd--deprecated {
+
+}
+
+.wp-pd__icon {
+
+}
+
+.wp-pd--deprecated .wp-pd__icon {
+    filter: grayscale(100%);
+}
+
+.wp-pd__text {
+
+}
+
+.wp-pd--deprecated .wp-pd__text textarea {
+    text-decoration: line-through;
+}
+
+
+.wp-pd--deprecated .wp-pd__text {
+    text-decoration: line-through;
+}
+
+
+.wp-pd__error-message {
+
+}
+

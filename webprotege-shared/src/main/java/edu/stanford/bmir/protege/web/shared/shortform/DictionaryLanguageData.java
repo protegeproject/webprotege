@@ -119,8 +119,15 @@ public abstract class DictionaryLanguageData {
     }
 
     private DictionaryLanguage createDictionaryLanguage() {
-        return DictionaryLanguage.create(getAnnotationPropertyIri(),
-                                         getLanguageTag());
+        IRI propertyIri = getAnnotationPropertyIri();
+        if(propertyIri == null) {
+            return LocalNameDictionaryLanguage.get();
+        }
+        else {
+            return AnnotationAssertionDictionaryLanguage.get(propertyIri,
+                                                             getLanguageTag());
+        }
+
     }
 
     @JsonIgnore

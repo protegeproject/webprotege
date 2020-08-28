@@ -6,26 +6,39 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegePropertiesProvider;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.match.EntityMatcherFactory;
+import edu.stanford.bmir.protege.web.server.match.Matcher;
+import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
+import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
-import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdater;
-import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionary;
-import edu.stanford.bmir.protege.web.server.shortform.MultiLingualDictionaryImpl;
-import edu.stanford.bmir.protege.web.server.shortform.MultilingualDictionaryUpdater;
+import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
+import edu.stanford.bmir.protege.web.server.shortform.LuceneIndexesDirectory;
+import edu.stanford.bmir.protege.web.server.shortform.LuceneModule;
+import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +48,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 2019-08-20
  */
-@Module
+@Module(includes = {LuceneModule.class})
 public class UploadedProjectModule {
 
     private final ProjectId projectId;
@@ -179,26 +192,6 @@ public class UploadedProjectModule {
     }
 
     @Provides
-    @ProjectSingleton
-    DictionaryUpdater providesDictionaryUpdater(ProjectAnnotationAssertionAxiomsBySubjectIndex index) {
-        return new DictionaryUpdater(index);
-    }
-
-    @Provides
-    @ProjectSingleton
-    MultiLingualDictionary providesMultiLingualDictionary(MultiLingualDictionaryImpl impl,
-                                                          ImmutableList<DictionaryLanguage> dictionaryLanguages) {
-        impl.loadLanguages(dictionaryLanguages);
-        return impl;
-    }
-
-    @Provides
-    @ProjectSingleton
-    MultilingualDictionaryUpdater provideMultilingualDictionaryUpdater(MultiLingualDictionaryImpl impl) {
-        return impl;
-    }
-
-    @Provides
     ShortFormProvider provideShortFormProvider(ShortFormAdapter shortFormAdapter) {
         return shortFormAdapter;
     }
@@ -251,5 +244,105 @@ public class UploadedProjectModule {
     @Provides
     LiteralStyle provideLiteralStyle() {
         return LiteralStyle.REGULAR;
+    }
+
+    @Provides
+    BuiltInPrefixDeclarations provideBuiltInPrefixDeclarations() {
+        return BuiltInPrefixDeclarations.get(ImmutableList.of());
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInOwlEntitiesIndex provideBuiltInOwlEntitiesIndex(@Nonnull BuiltInOwlEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public BuiltInSkosEntitiesIndex provideBuiltInSkosEntitiesIndex(@Nonnull BuiltInSkosEntitiesIndexImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ProjectSingleton
+    public EntitiesInProjectSignatureIndex provideEntitiesInProjectSignatureIndex() {
+        return new EntitiesInProjectSignatureIndex() {
+            @Override
+            public boolean containsEntityInSignature(@Nonnull OWLEntity entity) {
+                return false;
+            }
+        };
+    }
+
+    @Provides
+    WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider protegePropertiesProvider) {
+        return protegePropertiesProvider.get();
+    }
+
+    @Provides
+    @LuceneIndexesDirectory
+    @ProjectSingleton
+    Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider,
+                                       ProjectDisposablesManager projectDisposablesManager) {
+        Path path = dataDirectoryProvider.get().toPath().resolve("uploads-lucene-indexes")
+                                         // Generate a different path for each upload so that we don't get any clashes
+                                         .resolve(UUID.randomUUID().toString());
+        projectDisposablesManager.register(() -> {
+            try {
+                FileUtils.deleteDirectory(path.toFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return path;
+    }
+
+    @Provides
+    @ProjectSingleton
+    AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex() {
+        return new AnnotationAssertionAxiomsByValueIndex() {
+            @Nonnull
+            @Override
+            public Stream<OWLAnnotationAssertionAxiom> getAxiomsByValue(@Nonnull OWLAnnotationValue value,
+                                                                        @Nonnull OWLOntologyID ontologyId) {
+                // Okay to return an empty stream here.  Only needed for stubbing purposes
+                return Stream.empty();
+            }
+        };
+    }
+
+    @Provides
+    @ProjectSingleton
+    ProjectDisposablesManager provideProjectDisposablesManager(DisposableObjectManager disposableObjectManager) {
+        return new ProjectDisposablesManager(disposableObjectManager);
+    }
+
+    @Provides
+    ProjectEntitySearchFiltersManager provideProjectSearchFiltersRepository() {
+        return new ProjectEntitySearchFiltersManager() {
+            @Nonnull
+            @Override
+            public ImmutableList<EntitySearchFilter> getSearchFilters() {
+                return ImmutableList.of();
+            }
+
+            @Override
+            public void setSearchFilters(@Nonnull ImmutableList<EntitySearchFilter> searchFilters) {
+
+            }
+        };
+    }
+
+
+
+    @Provides
+    EntityMatcherFactory provideEntityMatcherFactory() {
+        return new EntityMatcherFactory() {
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> getEntityMatcher(@Nonnull EntityMatchCriteria criteria) {
+                return entity -> false;
+            }
+        };
     }
 }

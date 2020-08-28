@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("CompositeCriteria")
-public abstract class CompositeRootCriteria implements RootCriteria {
+public abstract class CompositeRootCriteria implements RootCriteria, EntityMatchCriteria {
 
     private static final String MATCH_TYPE = "matchType";
 

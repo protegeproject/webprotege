@@ -21,11 +21,9 @@ import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.*;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.inject.ShortFormModule;
-import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
-import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManagerImpl;
-import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.ShellOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.*;
@@ -40,7 +38,11 @@ import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.*;
+import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.server.revision.*;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepository;
+import edu.stanford.bmir.protege.web.server.search.ProjectEntitySearchFiltersManagerImpl;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -66,6 +68,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -688,8 +691,34 @@ public class ProjectModule {
     }
 
     @Provides
+    EntityMatcherFactory provideEntityMatcherFactory(MatcherFactory matcherFactory) {
+        return matcherFactory;
+    }
+
+    @Provides
     ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
         return impl;
     }
+
+    @Provides
+    @LuceneIndexesDirectory
+    Path provideLuceneIndexesDirectory(DataDirectoryProvider dataDirectoryProvider) {
+        var dataDirectory = dataDirectoryProvider.get().toPath();
+        return dataDirectory.resolve("lucene-indexes");
+
+    }
+
+    @Provides
+    @ProjectSingleton
+    EntitySearchFilterIndexesManager provideEntitySearchFilterIndexesManager(LuceneIndexWriterImpl writer) {
+        return writer;
+    }
+
+    @Provides
+    @ProjectSingleton
+    ProjectEntitySearchFiltersManager provideProjectEntitySearchFiltersManager(ProjectEntitySearchFiltersManagerImpl impl) {
+        return impl;
+    }
+
 }
 

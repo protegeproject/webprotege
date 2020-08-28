@@ -83,7 +83,7 @@ public class ProjectTagsPresenter implements Presenter {
         this.eventBus = Optional.of(eventBus);
         projectTagsView.setTagListChangedHandler(this::handleTagListChanged);
         settingsPresenter.start(container);
-        settingsPresenter.setBusy(container, true);
+        settingsPresenter.setBusy(true);
         settingsPresenter.setApplySettingsHandler(this::handleApplyChanges);
         settingsPresenter.setCancelSettingsHandler(this::handleCancelChanges);
         settingsPresenter.setSettingsTitle(messages.tags_projectTagsTitle());
@@ -145,7 +145,7 @@ public class ProjectTagsPresenter implements Presenter {
         tagCriteriaListPresenter.setAvailableTags(tags.stream().map(Tag::getLabel).collect(Collectors.toList()));
         tagCriteriaListPresenter.setTags(tags);
         dispatchServiceManager.executeCurrentBatch();
-        settingsPresenter.setBusy(container, false);
+        settingsPresenter.setBusy(false);
     }
 
 

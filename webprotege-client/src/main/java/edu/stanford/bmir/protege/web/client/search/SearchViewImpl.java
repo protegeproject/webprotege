@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
@@ -16,11 +16,9 @@ import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -32,7 +30,10 @@ import java.util.function.Consumer;
  */
 public class SearchViewImpl extends Composite implements SearchView, HasAcceptKeyHandler {
 
-    private List<OWLEntityData> currentResults = new ArrayList<>();
+    private long totalResultCount = 0;
+
+    @UiField
+    protected SimplePanel searchFilterContainer;
 
     interface SearchViewImplUiBinder extends UiBinder<HTMLPanel, SearchViewImpl> {
 
@@ -58,6 +59,15 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     @UiField(provided = true)
     PaginatorView paginator;
 
+    @UiField
+    SimplePanel langTagsFilterContainer;
+
+    @UiField
+    HTMLPanel searchFilterPanel;
+
+    @UiField
+    HTMLPanel langTagsFilterPanel;
+
     private PaginatorPresenter paginatorPresenter;
 
     private int selectedIndex = -1;
@@ -75,6 +85,11 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
         this.paginatorPresenter = paginatorPresenter;
         paginator = paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
+        Element element = searchStringField.getElement();
+        element.setPropertyString("autocomplete", "off");
+        element.setPropertyString("autocorrect", "off");
+        element.setPropertyString("autocapitalize", "off");
+        element.setPropertyString("spellcheck", "off");
     }
 
     @Override
@@ -88,13 +103,18 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     }
 
     @Override
-    public Optional<OWLEntityData> getSelectedSearchResult() {
-        if(selectedIndex == -1) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(currentResults.get(selectedIndex));
-        }
+    public int getSelectedSearchResultIndex() {
+        return selectedIndex;
+    }
+
+    @Override
+    public AcceptsOneWidget getLangTagFilterContainer() {
+        return langTagsFilterContainer;
+    }
+
+    @Override
+    public void setLangTagFilterVisible(boolean visible) {
+        langTagsFilterPanel.setVisible(visible);
     }
 
     @UiHandler("base")
@@ -178,7 +198,7 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
 
     private void chooseSearchResult() {
         if(selectedIndex != -1) {
-            searchResultChosenHandler.handleSearchResultChosen(currentResults.get(selectedIndex));
+            searchResultChosenHandler.handleSearchResultChosen(selectedIndex);
             acceptKeyHandler.handleAcceptKey();
         }
     }
@@ -223,32 +243,28 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     }
 
     @Override
-    public void clearSearchMatches() {
+    public void clearEntitySearchResults() {
         list.clear();
         searchSummaryField.setText("");
     }
 
     @Override
-    public void setSearchMatches(int totalSearchResults, List<EntitySearchResult> result) {
+    public void setEntitySearchResults(@Nonnull List<EntitySearchResultView> results) {
         list.clear();
-        currentResults.clear();
-        searchSummaryField.setText("Displaying " + result.size() + " of " + totalSearchResults + " results");
-        result.stream()
-              .map(EntitySearchResultRendering::new)
-              .forEach(r -> {
-                  SearchResultView widget = new SearchResultView();
-                  widget.setIcon(r.getIcon());
-                  widget.setFieldRendering(r.getRendering());
-                  widget.sinkEvents(Event.ONMOUSEUP);
-                  list.add(widget);
-                  currentResults.add(r.getEntityData());
-              });
-        if (currentResults.size() > 0) {
+        updateDisplayMessage();
+        results.forEach(view -> list.add(view));
+        if (list.getWidgetCount() > 0) {
             setSelectedIndex(0);
         }
         else {
             setSelectedIndex(-1);
         }
+    }
+
+    public void updateDisplayMessage() {
+        String formattedResultsCount = NumberFormat.getDecimalFormat()
+                .format(totalResultCount);
+        searchSummaryField.setText("Displaying " + list.getWidgetCount() + " of " + formattedResultsCount + " results");
     }
 
     private void highlightSelectedIndex() {
@@ -284,5 +300,23 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     protected void onAttach() {
         super.onAttach();
         searchStringField.setFocus(true);
+    }
+
+    @Override
+    public void setTotalResultCount(long totalElements) {
+        paginatorPresenter.setElementCount(totalElements);
+        this.totalResultCount = totalElements;
+        updateDisplayMessage();
+    }
+
+    @Override
+    public void setSearchFilterVisible(boolean visible) {
+        searchFilterPanel.setVisible(visible);
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getSearchFilterContainer() {
+        return searchFilterContainer;
     }
 }

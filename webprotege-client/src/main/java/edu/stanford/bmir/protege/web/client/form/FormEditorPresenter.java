@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
@@ -47,8 +48,6 @@ public class FormEditorPresenter implements Presenter {
     @Nonnull
     private final EntityFormSelectorPresenter entityFormSelectorPresenter;
 
-    private HasBusy hasBusy = busy -> {};
-
     private Optional<Place> nextPlace = Optional.empty();
 
     @Nonnull
@@ -76,7 +75,7 @@ public class FormEditorPresenter implements Presenter {
 
     public void setFormId(@Nonnull FormId formId) {
         dispatch.execute(new GetEntityFormDescriptorAction(projectId, formId),
-                         hasBusy,
+                         settingsPresenter,
                          result -> {
                              formDescriptorPresenter.clear();
                              formDescriptorPresenter.setFormId(formId);
@@ -108,7 +107,6 @@ public class FormEditorPresenter implements Presenter {
 
         AcceptsOneWidget descriptorViewContainer = settingsPresenter.addSection("Form");
         formDescriptorPresenter.start(descriptorViewContainer, eventBus);
-        hasBusy = busy -> settingsPresenter.setBusy(container, busy);
 
         AcceptsOneWidget selectorContainer = settingsPresenter.addSection("Selector Criteria");
 
@@ -131,7 +129,7 @@ public class FormEditorPresenter implements Presenter {
         dispatch.execute(new SetEntityFormDescriptorAction(projectId,
                                                            formDescriptorPresenter.getFormDescriptor(),
                                                            entityFormSelectorPresenter.getSelectorCriteria().orElse(null)),
-                         hasBusy,
+                         settingsPresenter,
                          result -> nextPlace.ifPresent(placeController::goTo));
 
     }

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -41,12 +42,13 @@ public class EntityFormManager {
 
     public ImmutableList<FormDescriptor> getFormDescriptors(@Nonnull OWLEntity entity,
                                                            @Nonnull ProjectId projectId) {
-        return entityFormSelectorRepository.findFormSelectors(projectId)
+        var formIds = entityFormSelectorRepository.findFormSelectors(projectId)
                                     .filter(selector -> matchingEngine.matches(entity,
                                                                                selector.getCriteria()))
                                     .map(EntityFormSelector::getFormId)
-                                    .flatMap(id -> entityFormRepository.findFormDescriptor(projectId, id).stream())
-                .collect(toImmutableList());
+                                    .collect(toImmutableSet());
+        return entityFormRepository.findFormDescriptors(formIds, projectId)
+                            .collect(toImmutableList());
     }
 
 }

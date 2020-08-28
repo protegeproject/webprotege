@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.AddTokenCallback;
 import edu.stanford.bmir.protege.web.client.library.tokenfield.TokenFieldPresenter;
@@ -53,6 +54,7 @@ public class LangTagFilterPresenter {
         this.projectId = checkNotNull(projectId);
         this.langTagTokenPresenter = checkNotNull(langTagTokenPresenter);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.langTagTokenPresenter.setPlaceholder("Language filter");
     }
 
     @Nonnull
@@ -73,9 +75,12 @@ public class LangTagFilterPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         langTagTokenPresenter.start(view.getLangTagsContainer());
-        langTagTokenPresenter.setPlaceholder("Language filter");
         langTagTokenPresenter.setAddTokenPrompt(this::handleAddLangTag);
         langTagTokenPresenter.setTokensChangedHandler((tokens) -> langTagFilterChangedHandler.handleLangTagFilterChanged());
+    }
+
+    public void setPlaceholder(String placeholder) {
+        langTagTokenPresenter.setPlaceholder(placeholder);
     }
 
     private void handleAddLangTag(ClickEvent event, AddTokenCallback<LangTag> callback) {

@@ -27,4 +27,11 @@ public class JsonSerializationTestUtil {
         assertThat(deserializedObject, is(object));
     }
 
+    public static <C, V extends C> void testDeserialization(String serialization, V object, Class<C> cls) throws IOException {
+        ObjectMapperProvider mapperProvider = new ObjectMapperProvider();
+        ObjectMapper mapper = mapperProvider.get();
+        C deserializedObject = mapper.readValue(new StringReader(serialization), cls);
+        assertThat(deserializedObject, is(object));
+    }
+
 }

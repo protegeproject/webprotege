@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
@@ -25,5 +26,11 @@ public abstract class LiteralFormControlDataDto extends PrimitiveFormControlData
     @Override
     public Optional<OWLLiteral> asLiteral() {
         return Optional.of(getLiteral().getLiteral());
+    }
+
+    @Nonnull
+    @Override
+    public OWLPrimitiveData getPrimitiveData() {
+        return getLiteral();
     }
 }

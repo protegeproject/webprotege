@@ -1,15 +1,24 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.OboIdDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.PrefixedNameDictionaryLanguage;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -77,12 +86,6 @@ public class DictionaryManager {
     }
 
     @Nonnull
-    public String getQuotedShortForm(@Nonnull OWLEntity entity) {
-        return getQuotedShortForm(entity,
-                                  languageManager.getLanguages());
-    }
-
-    @Nonnull
     public String getShortForm(@Nonnull OWLEntity entity) {
         return getShortForm(entity,
                             languageManager.getLanguages());
@@ -96,22 +99,12 @@ public class DictionaryManager {
      * @return A stream of matching short forms.
      */
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
-                                                          @Nonnull Set<EntityType<?>> entityTypes,
-                                                          @Nonnull List<DictionaryLanguage> languages) {
-        return Streams.concat(
-                builtInShortFormDictionary.getShortFormsContaining(searchStrings, entityTypes),
-                dictionary.getShortFormsContaining(searchStrings, entityTypes, languages)
-        );
-    }
-
-    @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
-                                                          @Nonnull Set<EntityType<?>> entityTypes) {
-        if(entityTypes.isEmpty()) {
-            return Stream.empty();
-        }
-        return getShortFormsContaining(searchStrings, entityTypes, languageManager.getLanguages());
+    public Page<EntityShortFormMatches> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
+                                                        @Nonnull Set<EntityType<?>> entityTypes,
+                                                        @Nonnull List<DictionaryLanguage> languages,
+                                                                @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
+                                                                @Nonnull PageRequest pageRequest) {
+        return dictionary.getShortFormsContaining(searchStrings, entityTypes, languages, searchFilters, pageRequest);
     }
 
     public void update(@Nonnull Collection<OWLEntity> entities) {
@@ -121,10 +114,7 @@ public class DictionaryManager {
 
     @Nonnull
     public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
-        var shortForm = builtInShortFormDictionary.getShortForm(entity, null);
-        if(shortForm != null) {
-            return ImmutableMap.of(DictionaryLanguage.localName(), shortForm);
-        }
-        return dictionary.getShortForms(entity, languageManager.getLanguages());
+        var languages = languageManager.getLanguages();
+        return dictionary.getShortForms(entity, languages);
     }
 }

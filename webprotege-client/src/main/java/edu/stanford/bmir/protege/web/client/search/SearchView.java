@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.search;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
@@ -7,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,15 +23,17 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
 
     void setSearchStringChangedHandler(SearchStringChangedHandler handler);
 
-    void clearSearchMatches();
+    void clearEntitySearchResults();
 
-    void setSearchMatches(int totalSearchResults, List<EntitySearchResult> result);
+    void setEntitySearchResults(@Nonnull List<EntitySearchResultView> resultView);
 
     void setSearchResultChosenHandler(SearchResultChosenHandler handler);
 
-    Optional<OWLEntityData> getSelectedSearchResult();
+    int getSelectedSearchResultIndex();
 
+    void setLangTagFilterVisible(boolean visible);
 
+    AcceptsOneWidget getLangTagFilterContainer();
 
     void setPageCount(int pageCount);
 
@@ -39,4 +43,10 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
 
     void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
 
+    void setTotalResultCount(long totalElements);
+
+    void setSearchFilterVisible(boolean visible);
+
+    @Nonnull
+    AcceptsOneWidget getSearchFilterContainer();
 }

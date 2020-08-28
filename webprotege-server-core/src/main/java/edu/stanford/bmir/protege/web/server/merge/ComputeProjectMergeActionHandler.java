@@ -132,6 +132,7 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
                                                       .toSafeHtml();
             transformedDiff.add(new DiffElement<>(element.getDiffOperation(), element.getSourceDocument(), safeHtml));
         }
+        uploadedOntologiesComponent.getProjectDisposablesManager().dispose();
         return transformedDiff;
     }
 

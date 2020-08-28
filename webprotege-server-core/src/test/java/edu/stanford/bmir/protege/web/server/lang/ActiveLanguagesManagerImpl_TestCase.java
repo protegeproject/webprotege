@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +50,9 @@ public class ActiveLanguagesManagerImpl_TestCase {
 
     private static final String FR = "fr";
 
-    private static final String LOCAL_NAME = "";
+    private static final String LOCAL_NAME = "[LocalName]";
+
+    private static final String PREFIXED_NAME = "[PrefixedName]";
 
     private ActiveLanguagesManagerImpl impl;
 
@@ -106,24 +109,25 @@ public class ActiveLanguagesManagerImpl_TestCase {
         var langs = impl.getLanguagesRankedByUsage();
         assertThat(langs, contains(DictionaryLanguage.rdfsLabel(EN),
                                    DictionaryLanguage.rdfsLabel(FR),
+                                   DictionaryLanguage.prefixedName(),
                                    DictionaryLanguage.localName()));
     }
 
     @Test
     public void shouldGetLanguageUsage() {
-        assertThatLanguageUsageIs(ImmutableMap.of(EN, 2, FR, 1, LOCAL_NAME, 0));
+        assertThatLanguageUsageIs(ImmutableMap.of(EN, 2, FR, 1, PREFIXED_NAME, 0, LOCAL_NAME, 0));
     }
 
     @Test
     public void shouldHandleRemoveChanges() {
         removeEnglishLabelAnnotationAssertions();
-        assertThatLanguageUsageIs(ImmutableMap.of(FR, 1, LOCAL_NAME, 0));
+        assertThatLanguageUsageIs(ImmutableMap.of(FR, 1, PREFIXED_NAME, 0, LOCAL_NAME, 0));
     }
 
     @Test
     public void shouldHandleAddChanges() {
         addSpanishLabelAnnotationAssertions();
-        assertThatLanguageUsageIs(ImmutableMap.of(ES, 3, EN, 2, FR, 1, LOCAL_NAME, 0));
+        assertThatLanguageUsageIs(ImmutableMap.of(ES, 3, EN, 2, FR, 1, PREFIXED_NAME, 0, LOCAL_NAME, 0));
     }
 
 
@@ -158,11 +162,13 @@ public class ActiveLanguagesManagerImpl_TestCase {
         var languageTag = entry.getKey();
         var usageCount = entry.getValue();
         if(languageTag.equals(LOCAL_NAME)) {
-            var langData = DictionaryLanguageData.localName();
-            return DictionaryLanguageUsage.get(langData, usageCount);
+            return DictionaryLanguageUsage.get(DictionaryLanguage.localName(), usageCount);
+        }
+        else if(languageTag.equals(PREFIXED_NAME)) {
+            return DictionaryLanguageUsage.get(DictionaryLanguage.prefixedName(), usageCount);
         }
         else {
-            var langData = DictionaryLanguageData.rdfsLabel(languageTag);
+            var langData = DictionaryLanguage.rdfsLabel(languageTag);
             return DictionaryLanguageUsage.get(langData, usageCount);
         }
     }

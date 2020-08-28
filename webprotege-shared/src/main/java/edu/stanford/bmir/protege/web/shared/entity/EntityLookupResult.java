@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
+import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
@@ -17,11 +18,11 @@ import java.io.Serializable;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class EntityLookupResult implements Comparable<EntityLookupResult> {
+public abstract class EntityLookupResult {
 
     public static EntityLookupResult get(@Nonnull DictionaryLanguage language,
                                          @Nonnull EntityNode entityNode,
-                                         @Nonnull EntityNameMatchResult matchResult,
+                                         @Nonnull SearchResultMatch matchResult,
                                          @Nonnull String directLink) {
         return new AutoValue_EntityLookupResult(language, entityNode, matchResult, directLink);
     }
@@ -38,34 +39,8 @@ public abstract class EntityLookupResult implements Comparable<EntityLookupResul
     }
 
     @Nonnull
-    public abstract EntityNameMatchResult getMatchResult();
+    public abstract SearchResultMatch getMatchResult();
 
     @Nonnull
     public abstract String getDirectLink();
-
-    public String getDisplayText() {
-        EntityNameMatchResult matchResult = getMatchResult();
-        int browserTextMatchStart = matchResult.getStart();
-        int browserTextMatchEnd = matchResult.getEnd();
-        StringBuilder sb = new StringBuilder();
-        String browserText = getEntityNode().getBrowserText();
-        if (browserTextMatchStart < browserText.length() && browserTextMatchEnd <= browserText.length()) {
-            sb.append("<div>");
-            sb.append(browserText.substring(0, browserTextMatchStart));
-            sb.append("<span class=\"web-protege-entity-match-substring\">");
-            sb.append(browserText.substring(browserTextMatchStart, browserTextMatchEnd));
-            sb.append("</span>");
-            sb.append(browserText.substring(browserTextMatchEnd));
-            sb.append("</div>");
-        }
-        else {
-            sb.append(browserText);
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public int compareTo(@Nonnull EntityLookupResult other) {
-        return this.getMatchResult().compareTo(other.getMatchResult());
-    }
 }

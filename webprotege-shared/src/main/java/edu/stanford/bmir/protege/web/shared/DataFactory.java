@@ -6,6 +6,8 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.PrefixedNameDictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -36,7 +38,9 @@ public class DataFactory {
     }
 
     public static OWLClassData getOWLThingData() {
-        return OWLClassData.get(getOWLThing(), ImmutableMap.of(DictionaryLanguage.localName(), "owl:Thing"));
+        return OWLClassData.get(getOWLThing(), ImmutableMap.of(
+                PrefixedNameDictionaryLanguage.get(), "owl:Thing",
+                LocalNameDictionaryLanguage.get(), "Thing"));
     }
 
     public static IRI getIRI(String iri) {
@@ -129,41 +133,47 @@ public class DataFactory {
 
     public static OWLEntityData getOWLEntityData(OWLEntity entity,
                                                  ImmutableMap<DictionaryLanguage, String> shortForms) {
+        return getOWLEntityData(entity, shortForms, false);
+    }
+
+    public static OWLEntityData getOWLEntityData(OWLEntity entity,
+                                                 ImmutableMap<DictionaryLanguage, String> shortForms,
+                                                 boolean deprecated) {
         return entity.accept(new OWLEntityVisitorEx<OWLEntityData>() {
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLClass owlClass) {
-                return OWLClassData.get(owlClass, shortForms);
+                return OWLClassData.get(owlClass, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLObjectProperty property) {
-                return OWLObjectPropertyData.get(property, shortForms);
+                return OWLObjectPropertyData.get(property, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLDataProperty property) {
-                return OWLDataPropertyData.get(property, shortForms);
+                return OWLDataPropertyData.get(property, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLNamedIndividual individual) {
-                return OWLNamedIndividualData.get(individual, shortForms);
+                return OWLNamedIndividualData.get(individual, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLDatatype datatype) {
-                return OWLDatatypeData.get(datatype, shortForms);
+                return OWLDatatypeData.get(datatype, shortForms, deprecated);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLAnnotationProperty property) {
-                return OWLAnnotationPropertyData.get(property, shortForms);
+                return OWLAnnotationPropertyData.get(property, shortForms, deprecated);
             }
         });
     }
@@ -327,14 +337,14 @@ public class DataFactory {
     public static OWLAnnotationPropertyData getRdfsLabelData() {
         return OWLAnnotationPropertyData.get(
                 dataFactory.getRDFSLabel(),
-                ImmutableMap.of(DictionaryLanguage.localName(), OWLRDFVocabulary.RDFS_LABEL.getPrefixedName())
+                ImmutableMap.of(PrefixedNameDictionaryLanguage.get(), OWLRDFVocabulary.RDFS_LABEL.getPrefixedName())
         );
     }
 
     public static OWLAnnotationPropertyData getSkosPrefLabelData() {
         return OWLAnnotationPropertyData.get(
                 dataFactory.getOWLAnnotationProperty(SKOSVocabulary.PREFLABEL.getIRI()),
-                ImmutableMap.of(DictionaryLanguage.localName(), SKOSVocabulary.PREFLABEL.getPrefixedName())
+                ImmutableMap.of(PrefixedNameDictionaryLanguage.get(), SKOSVocabulary.PREFLABEL.getPrefixedName())
         );
     }
 

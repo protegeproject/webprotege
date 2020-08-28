@@ -6,6 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
@@ -27,8 +28,8 @@ public abstract class DisplayNameSettings {
 
     @JsonCreator
     @Nonnull
-    public static DisplayNameSettings get(@Nullable @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> primaryLanguages,
-                                          @Nullable @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> secondaryLanguages) {
+    public static DisplayNameSettings get(@Nullable @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguage> primaryLanguages,
+                                          @Nullable @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguage> secondaryLanguages) {
         return new AutoValue_DisplayNameSettings(primaryLanguages == null ? ImmutableList.of() : primaryLanguages,
                                                  secondaryLanguages == null ? ImmutableList.of() : secondaryLanguages);
     }
@@ -41,18 +42,18 @@ public abstract class DisplayNameSettings {
 
     @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES)
     @Nonnull
-    public abstract ImmutableList<DictionaryLanguageData> getPrimaryDisplayNameLanguages();
+    public abstract ImmutableList<DictionaryLanguage> getPrimaryDisplayNameLanguages();
 
     @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES)
     @Nonnull
-    public abstract ImmutableList<DictionaryLanguageData> getSecondaryDisplayNameLanguages();
+    public abstract ImmutableList<DictionaryLanguage> getSecondaryDisplayNameLanguages();
 
     public boolean hasDisplayNameLanguageForLangTag(@Nonnull String langTag) {
-        Stream<DictionaryLanguageData> languages = Streams.concat(
+        Stream<DictionaryLanguage> languages = Streams.concat(
                 getPrimaryDisplayNameLanguages().stream(),
                 getSecondaryDisplayNameLanguages().stream()
         );
-        return languages.anyMatch(l -> langTag.equalsIgnoreCase(l.getLanguageTag()));
+        return languages.anyMatch(l -> langTag.equalsIgnoreCase(l.getLang()));
 
     }
 }

@@ -22,6 +22,8 @@ public class UUIDUtil {
 
     private static final transient RegExp REG_EXP = RegExp.compile(UUID_PATTERN);
 
+    private static final String ZEROED_OUT = "00000000-0000-0000-0000-000000000000";
+
     /**
      * Checks that the specified string matches the UUID pattern {@link #UUID_PATTERN}.
      * @param id The string to check.
@@ -43,4 +45,10 @@ public class UUIDUtil {
         return REG_EXP;
     }
 
+    /**
+     * Gets the nill UUID.  This is the UUID with all bits set to zero.
+     */
+    public static String getNilUuid() {
+        return ZEROED_OUT;
+    }
 }

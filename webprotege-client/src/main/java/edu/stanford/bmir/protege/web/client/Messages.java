@@ -732,6 +732,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.displayName")
     String projectSettings_displayName();
 
+
+    @DefaultMessage("Project Settings")
+    @Key("projectSettings.headerSection.title")
+    String projectSettings_headerSection_title();
+
     
     @DefaultMessage("Main Settings")
     @Key("projectSettings.mainSettings")
@@ -835,8 +840,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String search_hint();
 
     @DefaultMessage(
-            "Separate search words by spaces to perform multi-word search.  Search for tagged entities by " +
-            "entering the name of the tag.")
+            "Separate search words by spaces to perform multi-word search")
     @Key("search.help")
     String search_help();
 
@@ -1164,10 +1168,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("displayName.settings.project.title")
     String displayName_settings_project_title();
 
-    @DefaultMessage("Specify a list of annotation property and language pairs that should be used for entity display names.  " +
-            "The display name for an entity will be chosen based on its annotations and the ordering " +
-            "of the pairs listed below. Properties and languages that appear closer to the top of the list are given priority over " +
-            "properties and languages that appear closer to the bottom of the list.")
+    @DefaultMessage("Specify how entity display names should be generated.  " +
+            "The display name for an entity will be chosen based the ordering below.  Display names can be based on annotation properties and language pairs etc." +
+            "Items that appear closer to the top of the list are given priority over " +
+            "items that appear closer to the bottom of the list.")
     @Key("displayName.settings.project.helpText")
     String displayName_settings_project_helpText();
 
@@ -1288,4 +1292,48 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @AlternateMessage({"one", "(1 row in total)"})
     @Key("pagination.rows")
     String pagination_rows(long elementCount);
+
+    @DefaultMessage("Local name")
+    @Key("dictionaryLanguage.localName")
+    String dicationaryLanguage_localname();
+
+    @DefaultMessage("OBO Id")
+    @Key("dictionaryLanguage.oboId")
+    String dictionaryLanguage_oboId();
+
+    @DefaultMessage("Prefixed name")
+    @Key("dictionaryLanguage.prefixedName")
+    String dictionaryLanguage_prefixedName();
+
+    @DefaultMessage("Import Project Settings")
+    @Key("projectSettings.importSettings.title")
+    String projectSettings_importSettings_title();
+
+    @DefaultMessage("Paste the project settings that you wish to import into the text area below.  These settings will replaced any existing settings.")
+    @Key("projectSettings.importSettings.message")
+    String projectSettings_importSettings_message();
+
+    @DefaultMessage("Import Project Settings Error")
+    @Key("projectSettings.importSettings.error.title")
+    String projectSettings_importSettings_error_title();
+
+    @DefaultMessage("An error occurred when importing the project settings")
+    @Key("projectSettings.importSettings.error.message")
+    String projectSettings_importSettings_error_message();
+
+    @DefaultMessage("Export settings...")
+    @Key("settings.export")
+    String settings_export();
+
+    @DefaultMessage("Import settings...")
+    @Key("settings.import")
+    String settings_import();
+
+    @DefaultMessage("Import settings")
+    @Key("settings.import.complete.title")
+    String settings_importSettings_complete_title();
+
+    @DefaultMessage("The settings have successfuly been imported.  We recommend that your refresh your browser.")
+    @Key("settings.import.complete.message")
+    String settings_importSettings_complete_message();
 }

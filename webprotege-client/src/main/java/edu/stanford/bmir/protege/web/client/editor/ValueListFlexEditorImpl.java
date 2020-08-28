@@ -193,6 +193,10 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     @Override
     public void setPlaceholder(String placeholder) {
         this.placeholder = checkNotNull(placeholder);
+        currentEditors.stream()
+                      .filter(editor -> editor instanceof HasPlaceholder)
+                      .map(editor -> (HasPlaceholder) editor)
+                      .forEach(hasPlaceholder -> hasPlaceholder.setPlaceholder(placeholder));
     }
 
     @Override

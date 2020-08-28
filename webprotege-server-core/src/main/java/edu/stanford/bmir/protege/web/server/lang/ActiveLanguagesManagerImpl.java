@@ -7,13 +7,10 @@ import com.google.common.collect.Multiset;
 import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import edu.stanford.bmir.protege.web.server.index.AxiomsByEntityReferenceIndex;
 import edu.stanford.bmir.protege.web.server.index.ProjectOntologiesIndex;
-import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguageComparators;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DictionaryLanguageUsage;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
-import edu.stanford.bmir.protege.web.shared.shortform.WellKnownLabellingIris;
+import edu.stanford.bmir.protege.web.shared.shortform.*;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.slf4j.Logger;
@@ -99,14 +96,35 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
         ImmutableList<DictionaryLanguage> langs = getLanguagesRankedByUsage();
         return langs.stream()
                     .map(lang -> {
-                        if (lang.isAnnotationBased()) {
-                            DictionaryLanguageData langData = DictionaryLanguageData.get(lang.getAnnotationPropertyIri(),
-                                                                                         lang.getLang());
-                            return DictionaryLanguageUsage.get(langData, activeLangs.count(lang));
-                        }
-                        else {
-                            return DictionaryLanguageUsage.get(DictionaryLanguageData.localName(), 0);
-                        }
+                        return lang.accept(new DictionaryLanguageVisitor<DictionaryLanguageUsage>() {
+                            @Override
+                            public DictionaryLanguageUsage visit(@Nonnull LocalNameDictionaryLanguage language) {
+                                return DictionaryLanguageUsage.get(DictionaryLanguage.localName(),
+                                                                   0);
+                            }
+
+                            @Override
+                            public DictionaryLanguageUsage visit(@Nonnull OboIdDictionaryLanguage language) {
+                                return DictionaryLanguageUsage.get(DictionaryLanguage.oboId(),
+                                                                   0);
+                            }
+
+                            @Override
+                            public DictionaryLanguageUsage visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
+                                return DictionaryLanguageUsage.get(language, activeLangs.count(lang));
+                            }
+
+                            @Override
+                            public DictionaryLanguageUsage visit(@Nonnull AnnotationAssertionPathDictionaryLanguage language) {
+                                return DictionaryLanguageUsage.get(language, activeLangs.count(lang));
+                            }
+
+                            @Override
+                            public DictionaryLanguageUsage visit(@Nonnull PrefixedNameDictionaryLanguage language) {
+                                return DictionaryLanguageUsage.get(DictionaryLanguage.prefixedName(),
+                                                                   0);
+                            }
+                        });
                     })
                     .collect(toImmutableList());
     }
@@ -157,14 +175,14 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
 
     private void addAxiom(OWLAnnotationAssertionAxiom ax) {
         OWLLiteral literal = (OWLLiteral) ax.getValue();
-        DictionaryLanguage lang = DictionaryLanguage.create(ax.getProperty().getIRI(),
-                                                            literal.getLang());
+        DictionaryLanguage lang = AnnotationAssertionDictionaryLanguage.get(ax.getProperty().getIRI(),
+                                                                            literal.getLang());
         activeLangs.add(lang);
     }
 
     private void removeAxiom(OWLAnnotationAssertionAxiom ax) {
         OWLLiteral literal = (OWLLiteral) ax.getValue();
-        DictionaryLanguage lang = DictionaryLanguage.create(ax.getProperty().getIRI(),
+        DictionaryLanguage lang = AnnotationAssertionDictionaryLanguage.get(ax.getProperty().getIRI(),
                                                             literal.getLang());
         activeLangs.remove(lang);
     }
@@ -173,9 +191,11 @@ public class ActiveLanguagesManagerImpl implements ActiveLanguagesManager {
         List<DictionaryLanguage> sortedLangs = new ArrayList<>(activeLangs.elementSet());
         Comparator<DictionaryLanguage> byActiveLangCount = comparing(activeLangs::count);
         Comparator<DictionaryLanguage> byActiveLangCountReversed = byActiveLangCount.reversed();
-        Comparator<DictionaryLanguage> byLang = DictionaryLanguageComparators.byLang();
+        Comparator<DictionaryLanguage> byLang = comparing(DictionaryLanguage::getLang);
         sortedLangs.sort(byActiveLangCountReversed.thenComparing(byLang));
-        sortedLangs.add(DictionaryLanguage.localName());
+        sortedLangs.add(PrefixedNameDictionaryLanguage.get());
+        // TODO: Obo?
+        sortedLangs.add(LocalNameDictionaryLanguage.get());
         sortedLanguages = ImmutableList.copyOf(sortedLangs);
     }
 

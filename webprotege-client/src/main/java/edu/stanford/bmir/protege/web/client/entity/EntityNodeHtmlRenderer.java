@@ -60,10 +60,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     public void setDisplayLanguage(@Nonnull DisplayNameSettings displayNameSettings) {
         primaryLanguages = displayNameSettings.getPrimaryDisplayNameLanguages().stream()
-                                              .map(DictionaryLanguageData::getDictionaryLanguage)
                                               .collect(toImmutableList());
         secondaryLanguages = displayNameSettings.getSecondaryDisplayNameLanguages().stream()
-                                              .map(DictionaryLanguageData::getDictionaryLanguage)
                                               .collect(toImmutableList());
 
     }
@@ -80,9 +78,13 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     @Override
     public String getHtmlRendering(EntityNode node) {
-        GWT.log("[EntityNodeHtmlRenderer] Rendering node: " + node);
         StringBuilder sb = new StringBuilder();
-        sb.append("<div class='wp-entity-node'>");
+        if (node.isDeprecated()) {
+            sb.append("<div class='wp-entity-node wp-pd wp-pd--deprecated'>");
+        }
+        else {
+            sb.append("<div class='wp-entity-node wp-pd'>");
+        }
         renderIcon(node, sb);
         renderDisplayName(node, sb);
         renderCommentsIcon(node, sb);
@@ -95,19 +97,29 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
     private void renderIcon(EntityNode node, StringBuilder sb) {
         String iconIri;
         DataResource icon = getIcon(node);
-        sb.append("<img src='").append(icon.getSafeUri().asString()).append("'/>");
+        sb.append("<img src='").append(icon.getSafeUri().asString()).append("' class='wp-pd__icon'/>");
     }
 
     private void renderDisplayName(EntityNode node, StringBuilder sb) {
         if (node.isDeprecated()) {
-            sb.append("<div class='wp-entity-node__display-name wp-entity-node__display-name--deprecated-entity'>");
+            sb.append("<div class='wp-entity-node__display-name wp-entity-node__display-name--deprecated-entity wp-pd__text'>");
         }
         else {
-            sb.append("<div class='wp-entity-node__display-name'>");
+            sb.append("<div class='wp-entity-node__display-name wp-pd__text'>");
         }
         renderPrimaryDisplayName(node, sb);
         renderSecondaryDisplayName(node, sb);
         sb.append("</div>");
+    }
+
+    @Nonnull
+    public String getPrimaryDisplayName(@Nonnull EntityNode node) {
+        if(!primaryLanguages.isEmpty()) {
+            return node.getText(primaryLanguages, NO_DISPLAY_NAME);
+        }
+        else {
+            return node.getBrowserText();
+        }
     }
 
     private void renderPrimaryDisplayName(EntityNode node, StringBuilder sb) {
@@ -224,12 +236,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
     private DataResource getIcon(@Nonnull EntityNode node) {
         OWLEntity entity = node.getEntity();
         if (entity.isOWLClass()) {
-            if (node.isDeprecated()) {
-                return BUNDLE.svgDeprecatedClassIcon();
-            }
-            else {
-                return BUNDLE.svgClassIcon();
-            }
+            return BUNDLE.svgClassIcon();
         }
         else if (entity.isOWLObjectProperty()) {
             return BUNDLE.svgObjectPropertyIcon();

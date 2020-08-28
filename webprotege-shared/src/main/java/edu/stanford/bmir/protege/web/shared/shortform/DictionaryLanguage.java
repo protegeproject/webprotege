@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.shortform;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
@@ -15,6 +13,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage.LANG;
+import static edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage.PROPERTY_IRI;
 import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
 
 /**
@@ -22,44 +22,20 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
  * Stanford Center for Biomedical Informatics Research
  * 5 Apr 2018
  */
-@AutoValue
 @GwtCompatible(serializable = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = DictionaryLanguage.class)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = AnnotationAssertionDictionaryLanguage.class, name = AnnotationAssertionDictionaryLanguage.TYPE_NAME),
+        @JsonSubTypes.Type(value = AnnotationAssertionPathDictionaryLanguage.class, name = AnnotationAssertionPathDictionaryLanguage.TYPE_NAME),
+        @JsonSubTypes.Type(value = LocalNameDictionaryLanguage.class, name = LocalNameDictionaryLanguage.TYPE_NAME),
+        @JsonSubTypes.Type(value = OboIdDictionaryLanguage.class, name = OboIdDictionaryLanguage.TYPE_NAME),
+        @JsonSubTypes.Type(value = PrefixedNameDictionaryLanguage.class, name = PrefixedNameDictionaryLanguage.TYPE_NAME)
+})
 public abstract class DictionaryLanguage {
 
-    private static final DictionaryLanguage LOCAL_NAME_LANGUAGE;
-
-    private static final String PROPERTY_IRI = "propertyIri";
-
-    private static final String LANG = "lang";
-
-    static {
-        LOCAL_NAME_LANGUAGE = create(null, "");
-    }
-
     /**
-     * Creates a {@link DictionaryLanguage} that is not for any annotation property or any lang.
-     */
-    @Nonnull
-    public static DictionaryLanguage localName() {
-        return LOCAL_NAME_LANGUAGE;
-    }
-
-
-    /**
-     * Creates a {@link DictionaryLanguage} that is for the specified annotation property and lang
-     *
-     * @param annotationPropertyIri The annotation property
-     * @param lang                  The language.  May be empty.  This will be normalised to a lower case string
-     */
-    @Nonnull
-    public static DictionaryLanguage create(@Nullable @JsonProperty(PROPERTY_IRI) IRI annotationPropertyIri,
-                                            @Nonnull @JsonProperty(LANG) String lang) {
-        return new AutoValue_DictionaryLanguage(annotationPropertyIri, lowerCaseLangTag(lang));
-    }
-
-    /**
-     * Creates a {@link DictionaryLanguage} that is for the specified annotation property and lang
+     * Legacy serialization factory method.
      *
      * @param annotationPropertyIri The annotation property
      * @param lang                  The language.  May be empty.  This will be normalised to a lower case string
@@ -68,81 +44,43 @@ public abstract class DictionaryLanguage {
     @Nonnull
     private static DictionaryLanguage createFromJson(@Nullable @JsonProperty(PROPERTY_IRI) String annotationPropertyIri,
                                                      @Nullable @JsonProperty(LANG) String lang) {
-        String normalisedLang;
-        if(lang == null) {
-            normalisedLang = "";
+
+        if(annotationPropertyIri == null) {
+            return LocalNameDictionaryLanguage.get();
         }
         else {
-            normalisedLang = lowerCaseLangTag(lang);
+            return AnnotationAssertionDictionaryLanguage.get(annotationPropertyIri, lang);
         }
-        IRI iri;
-        if(RDFS_LABEL.getPrefixedName().equals(annotationPropertyIri)) {
-            iri = RDFS_LABEL.getIRI();
-        }
-        else if(annotationPropertyIri != null) {
-            iri = IRI.create(annotationPropertyIri);
-        }
-        else {
-            iri = null;
-        }
-        return new AutoValue_DictionaryLanguage(iri, normalisedLang);
     }
 
     @Nonnull
     public static DictionaryLanguage rdfsLabel(@Nonnull String lang) {
-        return DictionaryLanguage.create(RDFS_LABEL.getIRI(), lang);
+        return AnnotationAssertionDictionaryLanguage.get(RDFS_LABEL.getIRI(), lang);
     }
 
     @Nonnull
     public static DictionaryLanguage skosPrefLabel(@Nonnull String lang) {
-        return DictionaryLanguage.create(SKOSVocabulary.PREFLABEL.getIRI(), lang);
+        return AnnotationAssertionDictionaryLanguage.get(SKOSVocabulary.PREFLABEL.getIRI().toString(),
+                                                         lang);
     }
 
-    @JsonIgnore
-    @Nullable
-    public abstract IRI getAnnotationPropertyIri();
-
-    @Nullable
-    @JsonProperty(PROPERTY_IRI)
-    public String getJsonAnnotationPropertyIri() {
-        IRI annotationPropertyIri = getAnnotationPropertyIri();
-        if(annotationPropertyIri == null) {
-            return null;
-        }
-        if(RDFS_LABEL.getIRI().equals(annotationPropertyIri)) {
-            return RDFS_LABEL.getPrefixedName();
-        }
-        else {
-            return annotationPropertyIri.toString();
-        }
-    }
-
-    @JsonProperty(LANG)
     @Nonnull
-    public abstract String getLang();
+    public static DictionaryLanguage localName() {
+        return LocalNameDictionaryLanguage.get();
+    }
+
+    @Nonnull
+    public static DictionaryLanguage prefixedName() {
+        return PrefixedNameDictionaryLanguage.get();
+    }
+
+    @Nonnull
+    public static DictionaryLanguage oboId() {
+        return OboIdDictionaryLanguage.get();
+    }
 
     @JsonIgnore
-    public boolean isAnnotationBased() {
-        return !this.equals(LOCAL_NAME_LANGUAGE);
-    }
-
-    public boolean matches(@Nonnull IRI annotationPropertyIri, @Nonnull String lang) {
-        return matchesAnnotationProperty(annotationPropertyIri)
-                && matchesLang(lang);
-    }
-
-    public boolean equalsIgnoreLangCase(@Nonnull DictionaryLanguage language) {
-        return Objects.equal(this.getAnnotationPropertyIri(), language.getAnnotationPropertyIri())
-                && this.getLang().equalsIgnoreCase(language.getLang());
-    }
-
-    private boolean matchesLang(@Nonnull String lang) {
-        return this.getLang().equals(lang) || this.getLang().equals("*");
-    }
-
-    private boolean matchesAnnotationProperty(@Nonnull IRI annotationPropertyIri) {
-        return Objects.equal(this.getAnnotationPropertyIri(), annotationPropertyIri);
-    }
+    public abstract boolean isAnnotationBased();
 
     public static String lowerCaseLangTag(String langTag) {
         for(int i = 0; i < langTag.length(); i++) {
@@ -153,4 +91,13 @@ public abstract class DictionaryLanguage {
         }
         return langTag;
     }
+
+    public abstract <R> R accept(@Nonnull DictionaryLanguageVisitor<R> visitor);
+
+    /**
+     * Return the language tag for this dictionary language
+     * @return The language tag.  For certain languages this will always be the empty string
+     */
+    @Nonnull
+    public abstract String getLang();
 }

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -19,11 +21,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @GwtCompatible(serializable = true)
 public abstract class SlackIntegrationSettings implements IsSerializable {
 
+    public static final String PAYLOAD_URL = "payloadUrl";
+
+    @JsonProperty(PAYLOAD_URL)
     @Nonnull
     public abstract String getPayloadUrl();
 
+    @JsonCreator
     @Nonnull
-    public static SlackIntegrationSettings get(@Nonnull String payloadUrl) {
+    public static SlackIntegrationSettings get(@JsonProperty(PAYLOAD_URL) @Nonnull String payloadUrl) {
         return new AutoValue_SlackIntegrationSettings(payloadUrl);
     }
 }

@@ -84,7 +84,6 @@ public class ProjectDetailsRepository implements Repository {
                         .getDefaultDisplayNameSettings()
                         .getPrimaryDisplayNameLanguages()
                         .stream()
-                        .map(DictionaryLanguageData::getDictionaryLanguage)
                         .collect(toImmutableList()))
                 .orElse(ImmutableList.of());
     }

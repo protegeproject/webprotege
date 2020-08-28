@@ -6,10 +6,13 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            min-height: 1.8rem; /* This is the height of a token.  See TokenViewImpl.ui.xml */
         }
         .placeholderLabel {
             color: literal("var(--placeholder--color)");
             cursor: pointer;
+            line-height: 1.4rem;
+            vertical-align: center;
         }
         .container {
             display: flex;

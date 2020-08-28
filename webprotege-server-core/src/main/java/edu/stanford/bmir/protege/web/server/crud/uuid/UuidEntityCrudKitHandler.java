@@ -11,7 +11,9 @@ import edu.stanford.bmir.protege.web.server.util.IdUtil;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -108,11 +110,16 @@ public class UuidEntityCrudKitHandler implements EntityCrudKitHandler<UuidSuffix
         builder.add(AddAxiomChange.of(targetOntology, dataFactory.getOWLDeclarationAxiom(entity)));
 
         if(!suppliedName.isBlank()) {
-            var annotationPropertyIri = dictionaryLanguage.getAnnotationPropertyIri();
-            if (annotationPropertyIri != null) {
-                var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
-                builder.add(AddAxiomChange.of(targetOntology, ax));
-            }
+            dictionaryLanguage.accept(new DictionaryLanguageVisitor<Object>() {
+                @Override
+                public Object visit(@Nonnull AnnotationAssertionDictionaryLanguage language) {
+                    var annotationPropertyIri = language.getAnnotationPropertyIri();
+                    var ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+                    builder.add(AddAxiomChange.of(targetOntology, ax));
+                    return null;
+                }
+            });
+
         }
         return entity;
     }

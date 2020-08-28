@@ -47,6 +47,7 @@ public class TokenFieldPresenter<T> {
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
         view.setAddTokenHandler((event) -> {
+            updatePlaceholder();
             addTokenPrompt.displayAddTokenPrompt(event, this::handleAddToken);
         });
     }
@@ -83,6 +84,7 @@ public class TokenFieldPresenter<T> {
         tokenPresenter.setRemoveTokenRequestHandler(() -> {
             view.remove(tokenPresenter.getView());
             tokenPresenters.remove(tokenPresenter);
+            updatePlaceholder();
             tokensChangedHandler.handleTokensChanged(getTokenObjects());
         });
         tokenPresenters.add(tokenPresenter);

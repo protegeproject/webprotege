@@ -12,11 +12,13 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -85,7 +87,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
         this.selectedIndex = -1;
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
         for(ChoiceDescriptorDto choiceDescriptorDto : choiceDtos) {
-            InlineLabel label = new InlineLabel(choiceDescriptorDto.getLabel().get(langTag));
+            LanguageMap choiceLabel = choiceDescriptorDto.getLabel();
+            InlineLabel label = new InlineLabel(choiceLabel.get(langTag));
             segmentContainer.add(label);
             this.choices.add(choiceDescriptorDto.getValue().toPrimitiveFormControlData());
             this.choiceWidgets.add(label);

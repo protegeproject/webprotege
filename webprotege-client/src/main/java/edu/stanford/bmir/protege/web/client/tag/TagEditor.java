@@ -117,7 +117,9 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
         descriptionField.setValue(tag.getDescription());
         backgroundColor = tag.getBackgroundColor();
         backgroundColorField.getElement().getStyle().setBackgroundColor(tag.getBackgroundColor().getHex());
-        usageField.setText("(" + Integer.toString(tag.getUsageCount()) + " tagged)");
+        if (tag.getUsageCount() > 0) {
+            usageField.setText("(" + tag.getUsageCount() + " tagged)");
+        }
         usage = tag.getUsageCount();
     }
 
@@ -128,7 +130,7 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
         descriptionField.setValue("");
         backgroundColor = Color.getRGB(0, 0, 0);
         backgroundColorField.getElement().getStyle().clearBackgroundColor();
-        usageField.setText("(0 tagged)");
+        usageField.setText("");
         usage = 0;
     }
 

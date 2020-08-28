@@ -41,6 +41,8 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreIm
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.*;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepository;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.upload.*;
@@ -401,5 +403,12 @@ public class ApplicationModule {
     @EntityGraphEdgeLimit
     int provideEntityGraphEdgeLimit(WebProtegeProperties properties) {
         return properties.getEntityGraphEdgeLimit().orElse(3000);
+    }
+
+    @Provides
+    @ApplicationSingleton
+    EntitySearchFilterRepository provideEntitySearchFilterRepository(EntitySearchFilterRepositoryImpl impl) {
+        impl.ensureIndexes();
+        return impl;
     }
 }

@@ -57,9 +57,9 @@ public class DisplayLanguageStorage {
     public DisplayNameSettings get(@Nonnull DisplayNameSettings def) {
         DictionaryLanguageIO io = new DictionaryLanguageIO();
         String primaryVal = storage.getItem(getPrimaryKey());
-        ImmutableList<DictionaryLanguageData> primary = io.parse(primaryVal);
+        ImmutableList<DictionaryLanguage> primary = io.parse(primaryVal);
         String secondaryVal = storage.getItem(getSecondaryKey());
-        ImmutableList<DictionaryLanguageData> secondary = io.parse(secondaryVal);
+        ImmutableList<DictionaryLanguage> secondary = io.parse(secondaryVal);
         return DisplayNameSettings.get(primary, secondary);
     }
 

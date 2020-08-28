@@ -39,6 +39,6 @@
         <g:FocusPanel ui:field="backgroundColorFocusPanel">
             <g:HTMLPanel ui:field="backgroundColorField" addStyleNames="{style.colorWell}"/>
         </g:FocusPanel>
-        <g:Label ui:field="usageField" text="(0 tagged)" addStyleNames="{style.usageCount}"/>
+        <g:Label ui:field="usageField" text="" addStyleNames="{style.usageCount}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

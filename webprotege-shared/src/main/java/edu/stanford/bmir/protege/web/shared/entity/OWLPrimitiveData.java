@@ -77,4 +77,8 @@ public abstract class OWLPrimitiveData extends ObjectData implements Comparable<
     public int compareTo(OWLPrimitiveData o) {
         return getBrowserText().compareToIgnoreCase(o.getBrowserText());
     }
+
+    public boolean isDeprecated() {
+        return false;
+    }
 }
