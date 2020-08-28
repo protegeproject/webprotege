@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
+import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
@@ -45,15 +47,20 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @UiField
     ListBox comboBox;
 
-    @UiField
-    Label readOnlyLabel;
+    @UiField(provided = true)
+    PrimitiveDataEditorImpl readOnlyView;
 
-    private final List<PrimitiveFormControlData> choices = new ArrayList<>();
+    private final List<PrimitiveFormControlDataDto> choices = new ArrayList<>();
 
     private Optional<PrimitiveFormControlData> defaultChoice = Optional.empty();
 
+    private final PrimitiveDataIconProvider primitiveDataIconProvider;
+
     @Inject
-    public ComboBoxChoiceControl() {
+    public ComboBoxChoiceControl(PrimitiveDataIconProvider primitiveDataIconProvider,
+                                 PrimitiveDataEditorImpl primitiveDataEditor) {
+        this.readOnlyView = checkNotNull(primitiveDataEditor);
+        this.primitiveDataIconProvider = primitiveDataIconProvider;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -64,8 +71,8 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     }
 
     public void setChoices(List<ChoiceDescriptorDto> choices) {
-        List<PrimitiveFormControlData> nextChoices = choices.stream()
-                .map(d -> d.getValue().toPrimitiveFormControlData())
+        List<PrimitiveFormControlDataDto> nextChoices = choices.stream()
+                .map(ChoiceDescriptorDto::getValue)
                 .collect(toImmutableList());
         if(this.choices.equals(nextChoices)) {
             return;
@@ -75,7 +82,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
         comboBox.addItem("");
         String langTag = LocaleInfo.getCurrentLocale().getLocaleName();
         for(ChoiceDescriptorDto descriptor : choices) {
-            this.choices.add(descriptor.getValue().toPrimitiveFormControlData());
+            this.choices.add(descriptor.getValue());
             comboBox.addItem(descriptor.getLabel().get(langTag));
         }
         selectDefaultChoice();
@@ -94,18 +101,18 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     private void selectDefaultChoice() {
         comboBox.setSelectedIndex(0);
-        readOnlyLabel.setText("");
+        readOnlyView.clearValue();
     }
 
     @Override
     public void setValue(@Nonnull FormControlDataDto value) {
         if(value instanceof SingleChoiceControlDataDto) {
             SingleChoiceControlDataDto choiceControlDataDto = (SingleChoiceControlDataDto) value;
-            Optional<PrimitiveFormControlData> choice = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::toPrimitiveFormControlData);
+            Optional<PrimitiveFormControlDataDto> choice = choiceControlDataDto.getChoice();
             if(choice.isPresent()) {
                 int index = 1;
-                for(PrimitiveFormControlData c : choices) {
-                    PrimitiveFormControlData theChoice = choice.get();
+                for(PrimitiveFormControlDataDto c : choices) {
+                    PrimitiveFormControlDataDto theChoice = choice.get();
                     boolean deprecated = choiceControlDataDto.getChoice().map(PrimitiveFormControlDataDto::isDeprecated).orElse(false);
                     if(deprecated) {
                         addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
@@ -115,8 +122,10 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
                     }
                     if(c.equals(theChoice)) {
                         comboBox.setSelectedIndex(index);
-                        String itemText = comboBox.getItemText(index);
-                        readOnlyLabel.setText(itemText);
+
+                        choiceControlDataDto.getChoice()
+                                            .map(PrimitiveFormControlDataDto::getPrimitiveData)
+                                            .ifPresent(readOnlyView::setValue);
                         break;
                     }
                     index++;
@@ -135,10 +144,11 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     private void updateReadonlyLabel() {
         int sel = comboBox.getSelectedIndex();
         if(sel == -1) {
-            readOnlyLabel.setText("");
+            readOnlyView.clearValue();
         }
         else {
-            readOnlyLabel.setText(comboBox.getItemText(sel));
+            PrimitiveFormControlDataDto choice = choices.get(sel);
+            readOnlyView.setValue(choice.getPrimitiveData());
         }
     }
 
@@ -159,8 +169,8 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
         if(selIndex < 1) {
             return Optional.empty();
         }
-        PrimitiveFormControlData choice = choices.get(selIndex - 1);
-        return Optional.of(SingleChoiceControlData.get(descriptor.toFormControlDescriptor(), choice));
+        PrimitiveFormControlDataDto choice = choices.get(selIndex - 1);
+        return Optional.of(SingleChoiceControlData.get(descriptor.toFormControlDescriptor(), choice.toPrimitiveFormControlData()));
     }
 
     @Override
@@ -177,7 +187,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     public void setEnabled(boolean enabled) {
         comboBox.setEnabled(enabled);
         comboBox.setVisible(enabled);
-        readOnlyLabel.setVisible(!enabled);
+        readOnlyView.setVisible(!enabled);
     }
 
     @Override
