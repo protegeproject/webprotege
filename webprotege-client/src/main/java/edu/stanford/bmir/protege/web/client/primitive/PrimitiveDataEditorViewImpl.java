@@ -11,7 +11,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
@@ -84,10 +83,10 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public void setDeprecated(boolean deprecated) {
         if (deprecated) {
-            this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveDataEditor().primitiveData_____Deprecated());
+            this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____Deprecated());
         }
         else {
-            this.removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveDataEditor().primitiveData_____Deprecated());
+            this.removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____Deprecated());
         }
     }
 

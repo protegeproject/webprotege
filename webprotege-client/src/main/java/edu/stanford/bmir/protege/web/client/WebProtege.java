@@ -59,7 +59,7 @@ public class WebProtege implements EntryPoint {
         BUNDLE.entityNode().ensureInjected();
         BUNDLE.modal().ensureInjected();
         BUNDLE.glyphs().ensureInjected();
-        BUNDLE.primitiveDataEditor().ensureInjected();
+        BUNDLE.primitiveData().ensureInjected();
         WidgetMapClientBundle.BUNDLE.style().ensureInjected();
 
         WebProtegeClientInjector injector = WebProtegeClientInjector.get();

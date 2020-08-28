@@ -304,7 +304,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     Glyphs glyphs();
 
     @Source("primitive-data.css")
-    WebProtegePrimitiveDataCss primitiveDataEditor();
+    WebProtegePrimitiveDataCss primitiveData();
 
     interface WebProtegePrimitiveDataCss extends CssResource {
 
