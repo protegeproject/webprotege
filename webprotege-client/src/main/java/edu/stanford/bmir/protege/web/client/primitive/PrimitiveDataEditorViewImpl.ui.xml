@@ -15,8 +15,6 @@
         .textBox {
         }
         .iconContainer {
-            width: 22px;
-            height: 22px;
             flex-grow: 0;
             flex-shrink: 0;
         }
@@ -34,12 +32,12 @@
         .imageViewContainer {
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveDataEditor.pde}">
-        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{style.iconContainer} {wp.primitiveDataEditor.pde__icon}"/>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveDataEditor.primitiveData}">
+        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{style.iconContainer} {wp.primitiveDataEditor.primitiveData__icon}"/>
         <g:HTMLPanel ui:field="contentContainer" addStyleNames="{style.contentContainer}">
-            <text:ExpandingTextBox ui:field="textBox" addStyleNames="{style.textBox} {wp.primitiveDataEditor.pde__text}"/>
+            <text:ExpandingTextBox ui:field="textBox" addStyleNames="{style.textBox} {wp.primitiveDataEditor.primitiveData__text}"/>
             <g:LazyPanel ui:field="errorViewContainer" debugId="ErrorViewCont">
-                <primitive:PrimitiveDataEditorFreshEntityViewImpl ui:field="errorView" addStyleNames="{wp.primitiveDataEditor.pde__errorMessage}"/>
+                <primitive:PrimitiveDataEditorFreshEntityViewImpl ui:field="errorView" addStyleNames="{wp.primitiveDataEditor.primitiveData__errorMessage}"/>
             </g:LazyPanel>
             <g:LazyPanel ui:field="imageViewContainer" debugId="ImageViewCont"
                          addStyleNames="{style.imageViewContainer}">

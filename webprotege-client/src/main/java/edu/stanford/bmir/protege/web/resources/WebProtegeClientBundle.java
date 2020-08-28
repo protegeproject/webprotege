@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.resources;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.*;
-import org.checkerframework.checker.units.qual.C;
 
 /**
  * Author: Matthew Horridge<br>
@@ -304,25 +303,25 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("glyphs.css")
     Glyphs glyphs();
 
-    @Source("primitive-data-editor.css")
-    WebProtegePrimitiveDataEditorCss primitiveDataEditor();
+    @Source("primitive-data.css")
+    WebProtegePrimitiveDataCss primitiveDataEditor();
 
-    interface WebProtegePrimitiveDataEditorCss extends CssResource {
+    interface WebProtegePrimitiveDataCss extends CssResource {
 
-        @ClassName("wp-pde")
-        String pde();
+        @ClassName("wp-pd")
+        String primitiveData();
 
-        @ClassName("wp-pde__error-message")
-        String pde__errorMessage();
+        @ClassName("wp-pd__error-message")
+        String primitiveData__errorMessage();
 
-        @ClassName("wp-pde__icon")
-        String pde__icon();
+        @ClassName("wp-pd__icon")
+        String primitiveData__icon();
 
-        @ClassName("wp-pde--deprecated")
-        String pdeDeprecated();
+        @ClassName("wp-pd--deprecated")
+        String primitiveData_____Deprecated();
 
-        @ClassName("wp-pde__text")
-        String pde__text();
+        @ClassName("wp-pd__text")
+        String primitiveData__text();
     }
 
     interface WebProtegeCss extends CssResource {

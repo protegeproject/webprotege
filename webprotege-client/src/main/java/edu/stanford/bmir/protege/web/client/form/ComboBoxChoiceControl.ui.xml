@@ -15,8 +15,8 @@
             line-height: 22px;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveDataEditor.pde}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveDataEditor.primitiveData}">
         <g:ListBox ui:field="comboBox" visibleItemCount="1"/>
-        <g:Label ui:field="readOnlyLabel" visible="false" addStyleNames="{style.readOnlyLabel} {wp.primitiveDataEditor.pde__text}"/>
+        <g:Label ui:field="readOnlyLabel" visible="false" addStyleNames="{style.readOnlyLabel} {wp.primitiveDataEditor.primitiveData__text}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
