@@ -76,10 +76,10 @@ public class PortletWidgetMapper implements WidgetMapper {
             GWT.log("[PortletWidgetMapper] Using cached view: " + terminalNode);
             return cachedViewHolder;
         }
-        String portletClass = terminalNode.getNodeProperties().getPropertyValue("portlet", null);
+        String portletClass = terminalNode.getNodeProperties().getPropertyValue("portlet", "");
         GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
         ViewHolder viewHolder;
-        if (portletClass != null) {
+        if (!portletClass.isEmpty()) {
             Optional<WebProtegePortletComponents> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
             if (thePortlet.isPresent()) {
                 GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");

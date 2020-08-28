@@ -28,9 +28,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CollectionViewImpl extends Composite implements CollectionView {
 
-    private static final TerminalNodeId OBJECT_LIST_NODE_ID = new TerminalNodeId("ObjectList");
+    private static final TerminalNodeId OBJECT_LIST_NODE_ID = TerminalNodeId.get("ObjectList");
 
-    private static final TerminalNodeId FORM_VIEW_NODE_ID = new TerminalNodeId("FormView");
+    private static final TerminalNodeId FORM_VIEW_NODE_ID = TerminalNodeId.get("FormView");
 
     private final ViewHolder formHolder;
 

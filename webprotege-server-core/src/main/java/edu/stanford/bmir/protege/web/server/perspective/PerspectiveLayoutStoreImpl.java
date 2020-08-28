@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -25,13 +28,19 @@ import java.util.Optional;
  */
 public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
 
-    private final PerspectiveFileManager perspectiveFileManager;
-
     private static final Logger logger = LoggerFactory.getLogger(PerspectiveLayoutStoreImpl.class);
 
+
+    @Nonnull
+    private final PerspectiveFileManager perspectiveFileManager;
+
+    @Nonnull
+    private final ObjectMapper objectMapper;
+
     @Inject
-    public PerspectiveLayoutStoreImpl(PerspectiveFileManager perspectiveFileManager) {
-        this.perspectiveFileManager = perspectiveFileManager;
+    public PerspectiveLayoutStoreImpl(PerspectiveFileManager perspectiveFileManager, ObjectMapper objectMapper) {
+        this.perspectiveFileManager = checkNotNull(perspectiveFileManager);
+        this.objectMapper = checkNotNull(objectMapper);
     }
 
     @Nonnull
@@ -52,7 +61,7 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
         try {
             if(layoutFile.exists()) {
                 String serialization = Files.toString(layoutFile, Charset.forName("utf-8"));
-                Node node = new JsonNodeSerializer().deserialize(serialization);
+                Node node = new JsonNodeSerializer(objectMapper).deserialize(serialization);
                 return new PerspectiveLayout(perspectiveId, Optional.of(node));
             }
             else {
@@ -86,7 +95,7 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
         if(layout.getRootNode().isPresent()) {
             try {
                 file.getParentFile().mkdirs();
-                JsonNodeSerializer serializer = new JsonNodeSerializer();
+                JsonNodeSerializer serializer = new JsonNodeSerializer(objectMapper);
                 String serialization = serializer.serialize(layout.getRootNode().get());
                 Files.write(serialization.getBytes(Charsets.UTF_8), file);
             } catch (IOException e) {

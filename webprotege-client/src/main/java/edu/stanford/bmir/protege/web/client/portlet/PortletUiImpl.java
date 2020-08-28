@@ -261,7 +261,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     @Override
     public void setNodeProperty(@Nonnull String propertyName, @Nonnull String propertyValue) {
-        String currentValue = nodeProperties.getPropertyValue(propertyName, null);
+        String currentValue = nodeProperties.getPropertyValue(propertyName, "");
         if(!Objects.equals(currentValue, propertyValue)) {
             nodeProperties = nodeProperties.toBuilder().setValue(propertyName, propertyValue).build();
             nodePropertiesChangedHandler.accept(this, nodeProperties);
@@ -280,6 +280,6 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     @Override
     public void dispose() {
-        tooltips.forEach(tt -> tt.dispose());
+        tooltips.forEach(Tooltip::dispose);
     }
 }
