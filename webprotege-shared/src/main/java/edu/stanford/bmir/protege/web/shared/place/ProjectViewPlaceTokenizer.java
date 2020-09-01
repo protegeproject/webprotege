@@ -23,11 +23,11 @@ public class ProjectViewPlaceTokenizer implements WebProtegePlaceTokenizer<Proje
 
     private static final String PROJECTS = "projects/";
 
-    private static final String EDIT = "/edit/";
+    private static final String PERSPECTIVES = "/perspectives/";
 
     private static final String SELECTION = "?selection=";
 
-    private static RegExp regExp = RegExp.compile(PROJECTS + "(.{36})" + EDIT + "([^\\?]*)(\\" + SELECTION + "(.*))?" );
+    private static RegExp regExp = RegExp.compile(PROJECTS + "(.{36})" + PERSPECTIVES + "([^\\?]*)(\\" + SELECTION + "(.*))?" );
 
     @Override
     public boolean matches(String token) {
@@ -76,7 +76,7 @@ public class ProjectViewPlaceTokenizer implements WebProtegePlaceTokenizer<Proje
         StringBuilder sb = new StringBuilder();
         sb.append(PROJECTS);
         sb.append(place.getProjectId().getId());
-        sb.append(EDIT);
+        sb.append(PERSPECTIVES);
         sb.append(place.getPerspectiveId().getId());
 
         List<ItemToken> itemTokens = Lists.newArrayList();

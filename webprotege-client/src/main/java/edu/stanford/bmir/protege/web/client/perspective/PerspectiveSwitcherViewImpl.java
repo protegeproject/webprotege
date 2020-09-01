@@ -130,7 +130,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         PerspectiveId perspectiveId = perspectiveDescriptor.getPerspectiveId();
         this.displayedPerspectives.add(perspectiveDescriptor);
         PerspectiveLink linkWidget = linkFactory.createPerspectiveLink(perspectiveId);
-        linkWidget.setLabel(perspectiveId.getId());
+        linkWidget.setLabel(localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel()));
         linkWidget.addClickHandler(event -> {
             GWT.log("[PerspectiveSwitcherViewImpl] link clicked");
             highlightedPerspective = Optional.of(perspectiveId);
