@@ -6,6 +6,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
  * 12/02/16
  */
 
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import java.util.List;
@@ -17,14 +18,14 @@ public interface PerspectiveLinkManager {
 
 
     interface Callback {
-        void handlePerspectives(List<PerspectiveId> perspectiveIds);
+        void handlePerspectives(List<PerspectiveDescriptor> perspectiveIds);
     }
 
     void getLinkedPerspectives(Callback callback);
 
     void removeLinkedPerspective(PerspectiveId perspectiveId, Callback callback);
 
-    void addLinkedPerspective(PerspectiveId perspectiveId, Callback callback);
+    void addLinkedPerspective(PerspectiveDescriptor perspectiveDescriptor, Callback callback);
 
     void getBookmarkedPerspectives(Callback callback);
 }

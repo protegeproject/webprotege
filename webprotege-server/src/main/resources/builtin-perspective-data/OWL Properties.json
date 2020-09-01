@@ -1,0 +1,63 @@
+{
+  "@type" : "ParentNode",
+  "direction": "row",
+  "children": [
+    {
+      "weight": 0.3,
+      "node": {
+        "@type" : "LeafNode",
+        "properties": {
+          "portlet": {
+            "@type": "String",
+            "value": "portlets.PropertyHierarchy"
+          }
+        }
+      }
+    },
+    {
+      "weight": 0.5,
+      "node": {
+        "@type" : "LeafNode",
+        "properties": {
+          "portlet": {
+            "@type": "String",
+            "value": "portlets.owl.EntityDescriptionEditor"
+          }
+        }
+      }
+    },
+    {
+      "weight": 0.2,
+      "node": {
+        "@type" : "ParentNode",
+        "direction": "column",
+        "children": [
+          {
+            "weight": 0.6,
+            "node": {
+              "@type" : "LeafNode",
+              "properties": {
+                "portlet": {
+                  "@type": "String",
+                  "value": "portlets.Comments"
+                }
+              }
+            }
+          },
+          {
+            "weight": 0.4,
+            "node": {
+              "@type" : "LeafNode",
+              "properties": {
+                "portlet": {
+                  "@type": "String",
+                  "value": "portlets.ProjectFeed"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

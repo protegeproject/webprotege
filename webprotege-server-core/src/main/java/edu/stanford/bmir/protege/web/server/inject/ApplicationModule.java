@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Ticker;
+import com.google.common.collect.ImmutableList;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -36,10 +37,7 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.owlapi.NonCachingDataFactory;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
-import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
-import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreImpl;
-import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
-import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
+import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepository;
 import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepositoryImpl;
@@ -123,12 +121,6 @@ public class ApplicationModule {
     @ApplicationSingleton
     public HasGetUserIdByUserIdOrEmail provideHasGetUserIdByUserIdOrEmail(UserDetailsManager manager) {
         return manager;
-    }
-
-    @ApplicationSingleton
-    @Provides
-    public PerspectiveLayoutStore providesPerspectiveLayoutStore(PerspectiveLayoutStoreImpl impl) {
-        return impl;
     }
 
     @ApplicationSingleton
@@ -408,6 +400,26 @@ public class ApplicationModule {
     @Provides
     @ApplicationSingleton
     EntitySearchFilterRepository provideEntitySearchFilterRepository(EntitySearchFilterRepositoryImpl impl) {
+        impl.ensureIndexes();
+        return impl;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    ImmutableList<BuiltInPerspective> provideBuiltInProjectPerspectives(BuiltInPerspectivesProvider builtInPerspectivesProvider) {
+        return builtInPerspectivesProvider.getBuiltInPerspectives();
+    }
+
+    @Provides
+    @ApplicationSingleton
+    PerspectiveDescriptorRepository providePerspectiveDescriptorsRepository(PerspectiveDescriptorRepositoryImpl impl) {
+        impl.ensureIndexes();
+        return impl;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    PerspectiveLayoutRepository providePerspectiveLayoutsRepository(PerspectiveLayoutRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
     }

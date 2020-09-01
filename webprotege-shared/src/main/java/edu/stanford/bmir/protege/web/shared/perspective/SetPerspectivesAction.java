@@ -22,19 +22,19 @@ public class SetPerspectivesAction implements ProjectAction<SetPerspectivesResul
 
     private UserId userId;
 
-    private ImmutableList<PerspectiveId> perspectiveIds;
+    private ImmutableList<PerspectiveDescriptor> perspectiveIds;
 
     private SetPerspectivesAction() {
     }
 
-    public SetPerspectivesAction(ProjectId projectId, UserId userId, ImmutableList<PerspectiveId> perspectiveIds) {
+    public SetPerspectivesAction(ProjectId projectId, UserId userId, ImmutableList<PerspectiveDescriptor> perspectiveIds) {
         this.projectId = projectId;
         this.userId = userId;
         this.perspectiveIds = perspectiveIds;
-        GWT.log("[SetPerspectivesAction] " + perspectiveIds);
     }
 
-    public ImmutableList<PerspectiveId> getPerspectiveIds() {
+    @Nonnull
+    public ImmutableList<PerspectiveDescriptor> getPerspectiveDescriptors() {
         return perspectiveIds;
     }
 

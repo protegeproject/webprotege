@@ -6,7 +6,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -108,7 +107,7 @@ public class PerspectivePresenter implements HasDispose {
         dispatchServiceManager.execute(resetPerspective(projectId, perspectiveId),
                                        result -> {
                                            removePerspective(perspectiveId);
-                                           installPerspective(perspectiveId, result.getResetLayout());
+                                           installPerspective(result.getResetLayout());
                                        });
     }
 
@@ -152,27 +151,28 @@ public class PerspectivePresenter implements HasDispose {
         UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, userId, perspectiveId),
                 result -> {
-                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspectiveLayout());
-                    installPerspective(perspectiveId, result.getPerspectiveLayout());
+                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspective());
+                    installPerspective(result.getPerspective());
                 });
     }
 
-    private void installPerspective(PerspectiveId perspectiveId, PerspectiveLayout layout) {
+    private void installPerspective(PerspectiveLayout perspective) {
         permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
                                         canAddRemove -> {
                                             GWT.log("[PerspectivePresenter] Can close views: " + canAddRemove);
-                                            installPerspective(perspectiveId, layout, canAddRemove);
+                                            PerspectiveId perspectiveId = perspective.getPerspectiveId();
+                                            Optional<Node> rootNode = perspective.getLayout();
+                                            installPerspective(perspectiveId, rootNode, canAddRemove);
                                         });
     }
 
     private void installPerspective(@Nonnull PerspectiveId perspectiveId,
-                                    @Nonnull PerspectiveLayout layout,
+                                    @Nonnull Optional<Node> rootNode,
                                     boolean viewsCloseable) {
         Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
         perspective.setViewsCloseable(viewsCloseable);
         EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
         perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
-        Optional<Node> rootNode = layout.getRootNode();
         perspective.setRootNode(rootNode);
         perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
             savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
@@ -239,7 +239,7 @@ public class PerspectivePresenter implements HasDispose {
             if(currentUserId.isGuest()) {
                 return;
             }
-            PerspectiveLayout layout = new PerspectiveLayout(perspectiveId, node);
+            PerspectiveLayout layout = PerspectiveLayout.get(perspectiveId, node);
             dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), result -> {});
         }
     }

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface PerspectiveSwitcherView extends IsWidget {
     }
 
     interface AddBookmarkedPerspectiveLinkHandler {
-        void handleAddBookmarkedPerspective(PerspectiveId perspectiveId);
+        void handleAddBookmarkedPerspective(PerspectiveDescriptor perspectiveDescriptor);
     }
 
     interface RemovePerspectiveLinkRequestHandler {
@@ -53,18 +54,18 @@ public interface PerspectiveSwitcherView extends IsWidget {
      * Sets the perspective links that are displayed by this switcher.
      * @param perspectives The list of perspective links that are displayed.  Not {@code null}.
      */
-    void setPerspectiveLinks(List<PerspectiveId> perspectives);
+    void setPerspectiveLinks(List<PerspectiveDescriptor> perspectives);
 
-    void addPerspectiveLink(PerspectiveId perspectiveId);
+    void addPerspectiveLink(PerspectiveDescriptor perspectiveDescriptor);
 
-    void removePerspectiveLink(PerspectiveId perspectiveId);
+    void removePerspectiveLink(PerspectiveDescriptor perspectiveDescriptor);
 
     /**
      * Gets the perspectives that are linked to by this switcher.
      * @return The perspective links.  Modifying the collection will not change the underlying displayed links in the
      * view.
      */
-    List<PerspectiveId> getPerspectiveLinks();
+    List<PerspectiveDescriptor> getPerspectiveLinks();
 
     /**
      * Sets the handler that will be called when a perspective link is activated.
@@ -90,7 +91,7 @@ public interface PerspectiveSwitcherView extends IsWidget {
 
     void setAddViewHandler(AddViewHandler handler);
 
-    void setBookmarkedPerspectives(List<PerspectiveId> perspectives);
+    void setBookmarkedPerspectives(List<PerspectiveDescriptor> perspectives);
 
     void setAddPerspectiveAllowed(boolean addPerspectiveAllowed);
 

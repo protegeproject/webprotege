@@ -1,12 +1,16 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,7 +44,10 @@ public class SetPerspectivesActionHandler implements ProjectActionHandler<SetPer
     @Nonnull
     @Override
     public SetPerspectivesResult execute(@Nonnull SetPerspectivesAction action, @Nonnull ExecutionContext executionContext) {
-        perspectivesManager.setPerspectives(action.getProjectId(), action.getUserId(), action.getPerspectiveIds());
+        var projectId = action.getProjectId();
+        var userId = action.getUserId();
+        var perspectiveDescriptors = action.getPerspectiveDescriptors();
+        perspectivesManager.setPerspectives(projectId, userId, perspectiveDescriptors);
         return new SetPerspectivesResult();
     }
 }

@@ -19,8 +19,12 @@ public class LanguageMapCurrentLocaleMapper {
 
     @Nonnull
     public String getValueForCurrentLocale(LanguageMap languageMap) {
+        return languageMap.get(getCurrentLang());
+    }
+
+    @Nonnull
+    public String getCurrentLang() {
         LocaleInfo localeInfo = LocaleInfo.getCurrentLocale();
-        String langTag = localeInfo.getLocaleName();
-        return languageMap.get(langTag);
+        return localeInfo.getLocaleName();
     }
 }

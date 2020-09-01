@@ -1,87 +1,66 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
-import com.google.common.base.Objects;
-import com.google.gwt.user.client.rpc.IsSerializable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.WithProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 17/02/16
+ * 2020-08-28
  */
-public class PerspectiveLayout implements IsSerializable, HasPerspectiveId {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class PerspectiveLayout {
 
-    private PerspectiveId perspectiveId;
+    public static final String PERSPECTIVE_ID = "perspectiveId";
 
+    public static final String LAYOUT = "layout";
+
+    @Nonnull
+    public static PerspectiveLayout get(@Nonnull PerspectiveId perspectiveId,
+                                        @Nonnull Optional<Node> layout) {
+        return getInternal(perspectiveId, layout.orElse(null));
+    }
+    @Nonnull
+    public static PerspectiveLayout get(@Nonnull PerspectiveId perspectiveId,
+                                        @Nonnull Node layout) {
+        return getInternal(perspectiveId, layout);
+    }
+
+    @Nonnull
+    public static PerspectiveLayout get(@Nonnull PerspectiveId perspectiveId) {
+        return getInternal(perspectiveId, null);
+    }
+
+    @JsonCreator
+    @Nonnull
+    protected static PerspectiveLayout getInternal(@JsonProperty(PERSPECTIVE_ID) @Nullable PerspectiveId perspectiveId,
+                                                   @JsonProperty(LAYOUT) @Nullable Node layout) {
+        return new AutoValue_PerspectiveLayout(perspectiveId, layout);
+    }
+
+    @JsonProperty(PERSPECTIVE_ID)
+    @Nonnull
+    public abstract PerspectiveId getPerspectiveId();
+
+    @JsonProperty(LAYOUT)
     @Nullable
-    private Node rootNode;
+    protected abstract Node getLayoutInternal();
 
-
-    /**
-     * For serialization purposes only
-     */
-    private PerspectiveLayout() {
-    }
-
-    public PerspectiveLayout(PerspectiveId perspectiveId, Optional<Node> rootNode) {
-        this.perspectiveId = checkNotNull(perspectiveId);
-        this.rootNode = duplicate(checkNotNull(rootNode));
-    }
-
-    @Nullable
-    private static Node duplicate(Optional<Node> node) {
-        return node.map(Node::duplicate).orElse(null);
-    }
-
-    @Override
-    public PerspectiveId getPerspectiveId() {
-        return perspectiveId;
-    }
-
-    /**
-     * Gets the root node for the perspect.
-     * @return The root node.  Not {@code null}.  Note that this is a copy.  Modifying the returned node will not
-     * alter the underlying node for this layout.
-     */
-    public Optional<Node> getRootNode() {
-        if(rootNode == null) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.ofNullable(duplicate(Optional.of(rootNode)));
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(perspectiveId, rootNode);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof PerspectiveLayout)) {
-            return false;
-        }
-        PerspectiveLayout other = (PerspectiveLayout) obj;
-        return this.perspectiveId.equals(other.perspectiveId)
-                && this.rootNode.equals(other.rootNode);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("PerspectiveLayout")
-                .addValue(perspectiveId)
-                .addValue(rootNode)
-                .toString();
+    @JsonIgnore
+    public Optional<Node> getLayout() {
+        return Optional.ofNullable(getLayoutInternal());
     }
 }

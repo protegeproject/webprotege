@@ -1,18 +1,15 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -21,59 +18,128 @@ import java.util.List;
  */
 public class PerspectivesManagerImpl implements PerspectivesManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(PerspectivesManagerImpl.class);
+    @Nonnull
+    private final ImmutableList<BuiltInPerspective> builtInPerspectives;
 
-    private List<PerspectiveId> perspectiveIds = new ArrayList<>(
-    );
+    @Nonnull
+    private final PerspectiveDescriptorRepository descriptorsRepository;
 
-    private final PerspectiveFileManager perspectiveFileManager;
+    @Nonnull
+    private final PerspectiveLayoutRepository layoutsRepository;
 
     @Inject
-    public PerspectivesManagerImpl(PerspectiveFileManager perspectiveFileManager) {
-        this.perspectiveFileManager = perspectiveFileManager;
+    public PerspectivesManagerImpl(@Nonnull ImmutableList<BuiltInPerspective> builtInPerspectives,
+                                   @Nonnull PerspectiveDescriptorRepository descriptorsRepository,
+                                   @Nonnull PerspectiveLayoutRepository layoutsRepository) {
+        this.builtInPerspectives = checkNotNull(builtInPerspectives);
+        this.descriptorsRepository = checkNotNull(descriptorsRepository);
+        this.layoutsRepository = checkNotNull(layoutsRepository);
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableList<PerspectiveDescriptor> getPerspectives(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+        var projectUserPerspectives = descriptorsRepository.findDescriptors(projectId, userId);
+        if (!projectUserPerspectives.isEmpty()) {
+            return toPerspectiveDescriptors(projectUserPerspectives);
+        }
+        var projectPerspectives = descriptorsRepository.findDescriptors(projectId);
+        if (!projectPerspectives.isEmpty()) {
+            return toPerspectiveDescriptors(projectPerspectives);
+        }
+        var defaultProjectPerspectives = descriptorsRepository.findDescriptors();
+        if (!defaultProjectPerspectives.isEmpty()) {
+            return toPerspectiveDescriptors(defaultProjectPerspectives);
+        }
+        return builtInPerspectives.stream()
+                                  .map(builtInPerspective -> PerspectiveDescriptor.get(builtInPerspective.getPerspectiveId(),
+                                                                                       builtInPerspective.getLabel(),
+                                                                                       builtInPerspective.isFavorite()))
+                                  .collect(toImmutableList());
+    }
+
+    @Nonnull
+    private static ImmutableList<PerspectiveDescriptor> toPerspectiveDescriptors(@Nonnull ImmutableList<PerspectiveDescriptorRecord> records) {
+        return records.stream().map(PerspectiveDescriptorRecord::getDescriptor).collect(toImmutableList());
     }
 
     @Override
-    public ImmutableList<PerspectiveId> getPerspectives(ProjectId projectId, UserId userId) {
-        File userList = perspectiveFileManager.getPerspectiveListForUser(projectId, userId);
-        if(userList.exists()) {
-            return readPerspectives(userList);
-        }
-        File projectList = perspectiveFileManager.getDefaultPerspectiveListForProject(projectId);
-        if(projectList.exists()) {
-            return readPerspectives(projectList);
-        }
-        File defaultList = perspectiveFileManager.getDefaultPerspectiveList();
-        if(defaultList.exists()) {
-            return readPerspectives(defaultList);
-        }
-        return ImmutableList.copyOf(perspectiveIds);
-    }
-
-    private ImmutableList<PerspectiveId> readPerspectives(File file) {
-        try {
-            PerspectiveListSerializer serializer = new PerspectiveListSerializer();
-            return ImmutableList.copyOf(new LinkedHashSet<>(serializer.deserializePerspectiveList(file)));
-        } catch (IOException e) {
-            logger.warn("Error reading perspectives file: {}", file.getAbsoluteFile(), e);
-            return ImmutableList.copyOf(perspectiveIds);
-        }
+    public void setPerspectives(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
+        var records = perspectives.stream().map(PerspectiveDescriptorRecord::get).collect(toImmutableList());
+        descriptorsRepository.saveDescriptors(records);
     }
 
     @Override
-    public void setPerspectives(ProjectId projectId, UserId userId, List<PerspectiveId> perspectives) {
-        File file = perspectiveFileManager.getPerspectiveListForUser(projectId, userId);
-        file.getParentFile().mkdirs();
-        writePerspectives(file, new ArrayList<>(new LinkedHashSet<>(perspectives)));
+    public void setPerspectives(@Nonnull ProjectId projectId,
+                                @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
+        var records = perspectives.stream()
+                                  .map(descriptor -> PerspectiveDescriptorRecord.get(projectId, descriptor))
+                                  .collect(toImmutableList());
+        descriptorsRepository.saveDescriptors(records);
     }
 
-    private void writePerspectives(File toFile, List<PerspectiveId> perspectives) {
-        try {
-            PerspectiveListSerializer serializer = new PerspectiveListSerializer();
-            serializer.serializePerspectiveList(perspectives, toFile);
-        } catch (IOException e) {
-            logger.warn("Error saving perspectives file: {}", toFile.getAbsoluteFile(), e);
+
+    @Override
+    public void setPerspectives(@Nonnull ProjectId projectId,
+                                @Nonnull UserId userId,
+                                @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
+        var records = perspectives.stream()
+                                  .map(descriptor -> PerspectiveDescriptorRecord.get(projectId, userId, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite()))
+                                  .collect(toImmutableList());
+        descriptorsRepository.saveDescriptors(records);
+    }
+
+    @Nonnull
+    @Override
+    public PerspectiveLayout getPerspectiveLayout(@Nonnull ProjectId projectId,
+                                                  @Nonnull UserId userId,
+                                                  @Nonnull PerspectiveId perspectiveId) {
+        var userProjectLayout = layoutsRepository.findLayout(projectId, userId, perspectiveId);
+        if(userProjectLayout.isPresent()) {
+            return userProjectLayout.get().toPerspectiveLayout();
         }
+        var projectLayout = layoutsRepository.findLayout(projectId, perspectiveId);
+        if(projectLayout.isPresent()) {
+            return projectLayout.get().toPerspectiveLayout();
+        }
+        var defaultLayout = layoutsRepository.findLayout(perspectiveId);
+        if(defaultLayout.isPresent()) {
+            return defaultLayout.get().toPerspectiveLayout();
+        }
+        var builtInLayout = builtInPerspectives.stream()
+                           .filter(builtInPerspective -> builtInPerspective.getPerspectiveId().equals(perspectiveId))
+                           .map(BuiltInPerspective::getLayout)
+                           .findFirst();
+        if(builtInLayout.isPresent()) {
+            return PerspectiveLayout.get(perspectiveId, builtInLayout.get());
+        }
+        return PerspectiveLayout.get(perspectiveId);
     }
 
+    @Override
+    public void savePerspectiveLayout(@Nonnull ProjectId projectId,
+                                      @Nonnull UserId userId,
+                                      @Nonnull PerspectiveLayout layout) {
+        var record = PerspectiveLayoutRecord.get(projectId, userId, layout.getPerspectiveId(), layout.getLayout().orElse(null));
+        layoutsRepository.saveLayout(record);
+    }
+
+    @Override
+    public void savePerspectiveLayout(@Nonnull ProjectId projectId, @Nonnull PerspectiveLayout layout) {
+        var record = PerspectiveLayoutRecord.get(projectId, null, layout.getPerspectiveId(), layout.getLayout().orElse(null));
+        layoutsRepository.saveLayout(record);
+    }
+
+    @Override
+    public void savePerspectiveLayout(@Nonnull PerspectiveLayout layout) {
+        var record = PerspectiveLayoutRecord.get(null, null, layout.getPerspectiveId(), layout.getLayout().orElse(null));
+        layoutsRepository.saveLayout(record);
+    }
+
+    @Override
+    public void resetPerspectiveLayout(@Nonnull ProjectId projectId,
+                                       @Nonnull UserId userId,
+                                       @Nonnull PerspectiveId perspectiveId) {
+        layoutsRepository.dropLayout(projectId, userId, perspectiveId);
+    }
 }

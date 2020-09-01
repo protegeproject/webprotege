@@ -1,25 +1,26 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+
+import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 18/02/16
  */
-public class GetPerspectivesResult implements Result {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class GetPerspectivesResult implements Result {
 
-    private ImmutableList<PerspectiveId> perspectives;
-
-    private GetPerspectivesResult() {
+    @Nonnull
+    public static GetPerspectivesResult get(ImmutableList<PerspectiveDescriptor> perspectives) {
+        return new AutoValue_GetPerspectivesResult(perspectives);
     }
 
-    public GetPerspectivesResult(ImmutableList<PerspectiveId> perspectives) {
-        this.perspectives = perspectives;
-    }
-
-    public ImmutableList<PerspectiveId> getPerspectives() {
-        return perspectives;
-    }
+    @Nonnull
+    public abstract ImmutableList<PerspectiveDescriptor> getPerspectives();
 }

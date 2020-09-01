@@ -1,0 +1,30 @@
+{
+  "@type" : "ParentNode",
+  "direction": "row",
+  "children": [
+    {
+      "weight": 0.3,
+      "node": {
+        "@type" : "LeafNode",
+        "properties" : {
+          "portlet": {
+            "@type": "String",
+            "value": "portlets.CommentedEntities"
+          }
+        }
+      }
+    },
+    {
+      "weight": 0.7,
+      "node": {
+        "@type" : "LeafNode",
+        "properties" : {
+          "portlet": {
+            "@type": "String",
+            "value": "portlets.Comments"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -3,13 +3,12 @@ package edu.stanford.bmir.protege.web.client.projectmanager;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.place.ItemSelection;
 import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesAction;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesResult;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -41,18 +40,17 @@ public class LoadProjectInNewWindowRequestHandlerImpl implements LoadProjectInNe
     public void handleLoadProjectInNewWindow(final ProjectId projectId) {
         UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
-            ImmutableList<PerspectiveId> perspectives = result.getPerspectives();
-            handleOpenInNewWindow(perspectives, projectId);
+            handleOpenInNewWindow(result.getPerspectives(), projectId);
         });
     }
 
-    private void handleOpenInNewWindow(ImmutableList<PerspectiveId> perspectives, ProjectId projectId) {
+    private void handleOpenInNewWindow(ImmutableList<PerspectiveDescriptor> perspectives, ProjectId projectId) {
         PerspectiveId perspectiveId;
         if(perspectives.isEmpty()) {
             perspectiveId = PerspectiveId.get("Other");
         }
         else {
-            perspectiveId = perspectives.get(0);
+            perspectiveId = perspectives.get(0).getPerspectiveId();
         }
         handleOpenInNewWindow(projectId, perspectiveId);
     }

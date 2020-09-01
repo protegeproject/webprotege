@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
+import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import javax.annotation.Nonnull;
@@ -18,9 +22,19 @@ public class CreateFreshPerspectiveRequestHandlerImpl implements CreateFreshPers
     @Nonnull
     private final InputBox inputBox;
 
+    @Nonnull
+    private final UuidV4Provider uuidV4Provider;
+
+    @Nonnull
+    private final LanguageMapCurrentLocaleMapper localeMapper;
+
     @Inject
-    public CreateFreshPerspectiveRequestHandlerImpl(@Nonnull InputBox inputBox) {
+    public CreateFreshPerspectiveRequestHandlerImpl(@Nonnull InputBox inputBox,
+                                                    @Nonnull UuidV4Provider uuidV4Provider,
+                                                    @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
         this.inputBox = checkNotNull(inputBox);
+        this.uuidV4Provider = checkNotNull(uuidV4Provider);
+        this.localeMapper = checkNotNull(localeMapper);
     }
 
     @Override
@@ -30,7 +44,13 @@ public class CreateFreshPerspectiveRequestHandlerImpl implements CreateFreshPers
             if(trimmedInput.isEmpty()) {
                 return;
             }
-            callback.createNewPerspective(PerspectiveId.get(trimmedInput));
+            PerspectiveId perspectiveId = PerspectiveId.get(uuidV4Provider.get());
+            String langTag = localeMapper.getCurrentLang();
+            LanguageMap label = LanguageMap.of(langTag, trimmedInput);
+            PerspectiveDescriptor perspectiveDescriptor = PerspectiveDescriptor.get(perspectiveId,
+                                                                                    label,
+                                                                                    true);
+            callback.createNewPerspective(perspectiveDescriptor);
         });
     }
 }

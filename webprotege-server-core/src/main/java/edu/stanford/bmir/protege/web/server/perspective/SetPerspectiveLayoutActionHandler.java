@@ -1,28 +1,33 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveCoordinates;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutResult;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 28/02/16
  */
-public class SetPerspectiveLayoutActionHandler implements ProjectActionHandler<SetPerspectiveLayoutAction, SetPerspectiveLayoutResult> {
+public class SetPerspectiveLayoutActionHandler extends AbstractProjectActionHandler<SetPerspectiveLayoutAction, SetPerspectiveLayoutResult> {
 
-    private final PerspectiveLayoutStore perspectiveLayoutStore;
+    private final PerspectivesManager perspectivesManager;
 
     @Inject
-    public SetPerspectiveLayoutActionHandler(PerspectiveLayoutStore perspectiveLayoutStore) {
-        this.perspectiveLayoutStore = perspectiveLayoutStore;
+    public SetPerspectiveLayoutActionHandler(@Nonnull AccessManager accessManager,
+                                             PerspectivesManager perspectivesManager) {
+        super(accessManager);
+        this.perspectivesManager = checkNotNull(perspectivesManager);
     }
 
     @Nonnull
@@ -31,16 +36,17 @@ public class SetPerspectiveLayoutActionHandler implements ProjectActionHandler<S
         return SetPerspectiveLayoutAction.class;
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public RequestValidator getRequestValidator(@Nonnull SetPerspectiveLayoutAction action, @Nonnull RequestContext requestContext) {
-        return NullValidator.get();
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return BuiltInAction.VIEW_PROJECT;
     }
 
     @Nonnull
     @Override
     public SetPerspectiveLayoutResult execute(@Nonnull SetPerspectiveLayoutAction action, @Nonnull ExecutionContext executionContext) {
-        perspectiveLayoutStore.setPerspectiveLayout(action.getProjectId(), action.getUserId(), action.getLayout());
+        var layout = action.getLayout();
+        perspectivesManager.savePerspectiveLayout(layout);
         return new SetPerspectiveLayoutResult();
     }
 }

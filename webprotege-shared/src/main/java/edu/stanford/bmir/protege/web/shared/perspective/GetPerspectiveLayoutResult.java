@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public class GetPerspectiveLayoutResult implements Result {
 
-    private PerspectiveLayout perspectiveLayout;
+    private PerspectiveLayout perspective;
 
     /**
      * For serialization only
@@ -17,11 +17,11 @@ public class GetPerspectiveLayoutResult implements Result {
     private GetPerspectiveLayoutResult() {
     }
 
-    public GetPerspectiveLayoutResult(PerspectiveLayout perspectiveLayout) {
-        this.perspectiveLayout = perspectiveLayout;
+    public GetPerspectiveLayoutResult(PerspectiveLayout perspective) {
+        this.perspective = perspective;
     }
 
-    public PerspectiveLayout getPerspectiveLayout() {
-        return perspectiveLayout;
+    public PerspectiveLayout getPerspective() {
+        return perspective;
     }
 }

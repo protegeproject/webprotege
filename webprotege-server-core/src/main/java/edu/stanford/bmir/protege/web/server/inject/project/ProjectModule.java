@@ -53,6 +53,7 @@ import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.FrameComponentRenderer;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -719,6 +720,5 @@ public class ProjectModule {
     ProjectEntitySearchFiltersManager provideProjectEntitySearchFiltersManager(ProjectEntitySearchFiltersManagerImpl impl) {
         return impl;
     }
-
 }
 

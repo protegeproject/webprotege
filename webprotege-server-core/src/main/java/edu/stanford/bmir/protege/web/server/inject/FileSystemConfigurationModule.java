@@ -7,9 +7,6 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.chgpwd.PasswordResetEmailTemplate;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.issues.CommentNotificationEmailTemplate;
-import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
-import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectoryProvider;
-import edu.stanford.bmir.protege.web.server.perspective.PerspectiveDataCopier;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
@@ -38,17 +35,6 @@ public class FileSystemConfigurationModule {
     @UploadsDirectory
     public File provideUploadsDirectory(UploadsDirectoryProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    @DefaultPerspectiveDataDirectory
-    public File provideDefaultPerspectiveDataDirectory(DefaultPerspectiveDataDirectoryProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    public PerspectiveDataCopier provideDefaultPerspectiveDataCopier(PerspectiveDataCopier copier) {
-        return copier;
     }
 
     @Provides

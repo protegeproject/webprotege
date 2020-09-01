@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -11,11 +12,11 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -50,32 +51,28 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
     public void getLinkedPerspectives(final Callback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
-            callback.handlePerspectives(result.getPerspectives());
+            ImmutableList<PerspectiveDescriptor> perspectiveIds = result.getPerspectives();
+            callback.handlePerspectives(perspectiveIds);
         });
     }
 
     @Override
     public void getBookmarkedPerspectives(Callback callback) {
-        callback.handlePerspectives(
-                Arrays.asList(
-                        PerspectiveId.get("Classes"),
-                        PerspectiveId.get("OWL Classes"),
-                        PerspectiveId.get("Properties"),
-                        PerspectiveId.get("OWL Properties"),
-                        PerspectiveId.get("Individuals"),
-                        PerspectiveId.get("Comments"),
-                        PerspectiveId.get("Changes by Entity"),
-                        PerspectiveId.get("History"),
-                        PerspectiveId.get("Query")
-                )
-        );
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
+        dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
+            ImmutableList<PerspectiveDescriptor> perspectiveIds = result.getPerspectives();
+            GWT.log("[PerspectiveLinkManager] Linked perspectives: " + perspectiveIds);
+            callback.handlePerspectives(perspectiveIds);
+        });
     }
 
     public void removeLinkedPerspective(final PerspectiveId perspectiveId, final Callback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
-            final List<PerspectiveId> ids = new ArrayList<>(result.getPerspectives());
-            ids.remove(perspectiveId);
+            final List<PerspectiveDescriptor> ids = result.getPerspectives()
+                    .stream()
+                    .filter(perspectiveDescriptor -> !perspectiveDescriptor.getPerspectiveId().equals(perspectiveId))
+                    .collect(toImmutableList());
             dispatchServiceManager.execute(new SetPerspectivesAction(projectId, userId, ImmutableList.copyOf(ids)), new DispatchServiceCallback<SetPerspectivesResult>(errorDisplay) {
                 @Override
                 public void handleSuccess(SetPerspectivesResult setPerspectivesResult) {
@@ -85,12 +82,15 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
         });
     }
 
-    public void addLinkedPerspective(final PerspectiveId perspectiveId, final Callback callback) {
+    public void addLinkedPerspective(final PerspectiveDescriptor perspectiveDescriptor, final Callback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
-            List<PerspectiveId> ids = new ArrayList<>(result.getPerspectives());
-            ids.add(perspectiveId);
-            final ImmutableList<PerspectiveId> perspectiveIds = ImmutableList.copyOf(ids);
+            List<PerspectiveDescriptor> ids = result.getPerspectives()
+                                                    .stream()
+                                                    .filter(PerspectiveDescriptor::isFavorite)
+                                                    .collect(Collectors.toList());
+            ids.add(perspectiveDescriptor);
+            final ImmutableList<PerspectiveDescriptor> perspectiveIds = ImmutableList.copyOf(ids);
             dispatchServiceManager.execute(new SetPerspectivesAction(projectId, userId, perspectiveIds), new DispatchServiceCallback<SetPerspectivesResult>(errorDisplay) {
                 @Override
                 public void handleSuccess(SetPerspectivesResult setPerspectivesResult) {

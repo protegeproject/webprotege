@@ -8,6 +8,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -90,12 +91,12 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
      * Sets the linked perspectives and displays the specified perspective
      * @param linkedPerspective The links to display.
      */
-    private void setLinkedPerspectives(List<PerspectiveId> linkedPerspective) {
+    private void setLinkedPerspectives(List<PerspectiveDescriptor> linkedPerspective) {
         GWT.log("[PerspectiveSwitcherPresenter] setLinkedPerspectives");
         view.setPerspectiveLinks(linkedPerspective);
         Optional<PerspectiveId> perspectiveId = getCurrentPlacePerspectiveId();
         if (perspectiveId.isPresent()) {
-            ensurePerspectiveLinkExists(perspectiveId.get());
+//            ensurePerspectiveLinkExists(perspectiveId.get());
             ensurePerspectiveLinkIsActive(perspectiveId.get());
         }
     }
@@ -109,20 +110,20 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     private void displayPlace(ProjectViewPlace place) {
         GWT.log("[PerspectiveSwitcherPresenter] displayPlace: " + place);
         PerspectiveId perspectiveId = checkNotNull(place).getPerspectiveId();
-        ensurePerspectiveLinkExists(perspectiveId);
+//        ensurePerspectiveLinkExists(perspectiveId);
         ensurePerspectiveLinkIsActive(perspectiveId);
     }
 
     /**
      * Ensures that the specified perspectiveId has a corresponding link in the view.
-     * @param perspectiveId The perspective id to check.  Not {@code null}.
+     * @param perspectiveDescriptor The perspective to check.  Not {@code null}.
      */
-    private void ensurePerspectiveLinkExists(PerspectiveId perspectiveId) {
-        List<PerspectiveId> currentLinks = view.getPerspectiveLinks();
-        if(!currentLinks.contains(perspectiveId)) {
-            GWT.log("[PerspectiveSwitcherPresenter] Adding perspective link for " + perspectiveId + " because it is not present");
-            addNewPerspective(perspectiveId);
-        }
+    private void ensurePerspectiveLinkExists(PerspectiveDescriptor perspectiveDescriptor) {
+//        List<PerspectiveDescriptor> currentLinks = view.getPerspectiveLinks();
+//        if(!currentLinks.contains(perspectiveDescriptor)) {
+//            GWT.log("[PerspectiveSwitcherPresenter] Adding perspective link for " + perspectiveDescriptor + " because it is not present");
+//            addNewPerspective(perspectiveDescriptor);
+//        }
     }
 
     private void ensurePerspectiveLinkIsActive(PerspectiveId perspectiveId) {
@@ -158,12 +159,12 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
 
 
     private void handleRemoveLinkedPerspective(final PerspectiveId perspectiveId) {
-        perspectiveLinkManager.removeLinkedPerspective(perspectiveId, perspectiveIds -> {
-            view.setPerspectiveLinks(perspectiveIds);
+        perspectiveLinkManager.removeLinkedPerspective(perspectiveId, perspectiveDescriptors -> {
+            view.setPerspectiveLinks(perspectiveDescriptors);
             Optional<PerspectiveId> currentPlacePerspective = getCurrentPlacePerspectiveId();
             if (currentPlacePerspective.isPresent() && currentPlacePerspective.get().equals(perspectiveId)) {
                 // Need to change place
-                PerspectiveId nextPerspective = perspectiveIds.get(0);
+                PerspectiveId nextPerspective = perspectiveDescriptors.get(0).getPerspectiveId();
                 goToPlaceForPerspective(nextPerspective);
             }
         });
@@ -184,10 +185,10 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         createFreshPerspectiveRequestHandler.createFreshPerspective(this::addNewPerspective);
     }
 
-    private void addNewPerspective(final PerspectiveId perspectiveId) {
-        perspectiveLinkManager.addLinkedPerspective(perspectiveId, perspectiveIds -> {
-            view.setPerspectiveLinks(perspectiveIds);
-            goToPlaceForPerspective(perspectiveId);
+    private void addNewPerspective(final PerspectiveDescriptor perspectiveDescriptor) {
+        perspectiveLinkManager.addLinkedPerspective(perspectiveDescriptor, perspectives -> {
+            view.setPerspectiveLinks(perspectives);
+            goToPlaceForPerspective(perspectiveDescriptor.getPerspectiveId());
         });
     }
 
