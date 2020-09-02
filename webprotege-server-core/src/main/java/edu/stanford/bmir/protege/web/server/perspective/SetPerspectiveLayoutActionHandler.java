@@ -45,8 +45,12 @@ public class SetPerspectiveLayoutActionHandler extends AbstractProjectActionHand
     @Nonnull
     @Override
     public SetPerspectiveLayoutResult execute(@Nonnull SetPerspectiveLayoutAction action, @Nonnull ExecutionContext executionContext) {
+        var projectId = action.getProjectId();
+        var userId = action.getUserId();
         var layout = action.getLayout();
-        perspectivesManager.savePerspectiveLayout(layout);
+        if(!userId.isGuest()) {
+            perspectivesManager.savePerspectiveLayout(projectId, userId, layout);
+        }
         return new SetPerspectiveLayoutResult();
     }
 }
