@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
@@ -16,8 +17,10 @@ import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_PERSPECTIVE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
 
@@ -58,8 +61,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                 displayPlace((ProjectViewPlace) event.getNewPlace());
             }
         });
-        view.setPerspectiveLinkActivatedHandler(this::goToPlaceForPerspective);
-        view.setAddBookMarkedPerspectiveLinkHandler(this::addNewPerspective);
+        view.setPerspectiveActivatedHandler(this::goToPlaceForPerspective);
+        view.setAddToFavoritePerspectivesHandler(this::addFavoritePerspective);
         view.setResetPerspectiveToDefaultStateHandler(perspectiveId -> eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId)));
         view.setAddViewHandler(perspectiveId -> eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId)));
     }
@@ -68,10 +71,10 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         GWT.log("[PerspectiveSwitcherPresenter] start with place: " + place);
         container.setWidget(view);
         projectPerspectivesService.getPerspectives(perspectiveIds -> {
-            handleUserProjectPerspectives(perspectiveIds);
+            setUserProjectPerspectives(perspectiveIds);
             displayPlace(place);
         });
-        projectPerspectivesService.getFavoritePerspectives(view::setBookmarkedPerspectives);
+        projectPerspectivesService.getPerspectives(view::setAvailablePerspectives);
         view.setAddPerspectiveAllowed(false);
         view.setClosePerspectiveAllowed(false);
         view.setAddViewAllowed(false);
@@ -80,19 +83,24 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                                             view.setClosePerspectiveAllowed(canAddRemove);
                                             view.setAddPerspectiveAllowed(canAddRemove);
                                             view.setAddPerspectiveLinkRequestHandler(this::handleCreateNewPerspective);
-                                            view.setRemovePerspectiveLinkHandler(this::handleRemoveLinkedPerspective);
+                                            view.setRemoveFromFavoritePerspectivesHandler(this::handleRemoveFavoritePerspective);
                                         });
         permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
                                         view::setAddViewAllowed);
     }
 
     /**
-     * Sets the linked perspectives and displays the specified perspective
-     * @param linkedPerspective The links to display.
+     * Sets the linked perspectives and displays the  specified perspective
+     * @param perspectiveDescriptors The perspectives to display.
      */
-    private void handleUserProjectPerspectives(List<PerspectiveDescriptor> linkedPerspective) {
-        GWT.log("[PerspectiveSwitcherPresenter] handleUserProjectPerspectives");
-        view.setPerspectiveLinks(linkedPerspective);
+    private void setUserProjectPerspectives(List<PerspectiveDescriptor> perspectiveDescriptors) {
+        GWT.log("[PerspectiveSwitcherPresenter] setUserProjectPerspectives");
+        this.perspectiveDescriptors.clear();
+        this.perspectiveDescriptors.addAll(perspectiveDescriptors);
+        ImmutableList<PerspectiveDescriptor> favorites = perspectiveDescriptors.stream()
+                                                                             .filter(PerspectiveDescriptor::isFavorite)
+                                                                             .collect(toImmutableList());
+        view.setFavourites(favorites);
         Optional<PerspectiveId> perspectiveId = getCurrentPlacePerspectiveId();
         if (perspectiveId.isPresent()) {
 //            ensurePerspectiveLinkExists(perspectiveId.get());
@@ -111,18 +119,6 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         PerspectiveId perspectiveId = checkNotNull(place).getPerspectiveId();
 //        ensurePerspectiveLinkExists(perspectiveId);
         ensurePerspectiveLinkIsActive(perspectiveId);
-    }
-
-    /**
-     * Ensures that the specified perspectiveId has a corresponding link in the view.
-     * @param perspectiveDescriptor The perspective to check.  Not {@code null}.
-     */
-    private void ensurePerspectiveLinkExists(PerspectiveDescriptor perspectiveDescriptor) {
-//        List<PerspectiveDescriptor> currentLinks = view.getPerspectiveLinks();
-//        if(!currentLinks.contains(perspectiveDescriptor)) {
-//            GWT.log("[PerspectiveSwitcherPresenter] Adding perspective link for " + perspectiveDescriptor + " because it is not present");
-//            addNewPerspective(perspectiveDescriptor);
-//        }
     }
 
     private void ensurePerspectiveLinkIsActive(PerspectiveId perspectiveId) {
@@ -157,9 +153,17 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     }
 
 
-    private void handleRemoveLinkedPerspective(final PerspectiveId perspectiveId) {
-        projectPerspectivesService.removeLinkedPerspective(perspectiveId, perspectiveDescriptors -> {
-            view.setPerspectiveLinks(perspectiveDescriptors);
+    private void handleRemoveFavoritePerspective(final PerspectiveId perspectiveId) {
+        List<PerspectiveDescriptor> updatedPerspectivesList = perspectiveDescriptors.stream().map(perspectiveDescriptor -> {
+            if (perspectiveDescriptor.getPerspectiveId().equals(perspectiveId)) {
+                return perspectiveDescriptor.withFavorite(false);
+            }
+            else {
+                return perspectiveDescriptor;
+            }
+        }).collect(Collectors.toList());
+        setUserProjectPerspectives(updatedPerspectivesList);
+        projectPerspectivesService.setPerspectives(updatedPerspectivesList, perspectiveDescriptors -> {
             Optional<PerspectiveId> currentPlacePerspective = getCurrentPlacePerspectiveId();
             if (currentPlacePerspective.isPresent() && currentPlacePerspective.get().equals(perspectiveId)) {
                 // Need to change place
@@ -181,12 +185,14 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     }
 
     private void handleCreateNewPerspective() {
-        createFreshPerspectiveRequestHandler.createFreshPerspective(this::addNewPerspective);
+        createFreshPerspectiveRequestHandler.createFreshPerspective(this::addFavoritePerspective);
     }
 
-    private void addNewPerspective(final PerspectiveDescriptor perspectiveDescriptor) {
-        projectPerspectivesService.addFavoritePerspective(perspectiveDescriptor, perspectives -> {
-            view.setPerspectiveLinks(perspectives);
+    private void addFavoritePerspective(final PerspectiveDescriptor perspectiveDescriptor) {
+        List<PerspectiveDescriptor> updatedList = new ArrayList<>(perspectiveDescriptors);
+        updatedList.add(perspectiveDescriptor.withFavorite(true));
+        projectPerspectivesService.setPerspectives(updatedList, perspectives -> {
+            setUserProjectPerspectives(updatedList);
             goToPlaceForPerspective(perspectiveDescriptor.getPerspectiveId());
         });
     }

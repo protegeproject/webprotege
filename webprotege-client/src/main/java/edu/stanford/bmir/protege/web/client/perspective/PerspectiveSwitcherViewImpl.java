@@ -54,13 +54,13 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     private final List<PerspectiveDescriptor> bookmarkedPerspectives = new ArrayList<>();
 
 
-    private PerspectiveLinkActivatedHandler linkActivatedHandler = perspectiveId -> {};
+    private PerspectiveActivatedHandler linkActivatedHandler = perspectiveId -> {};
 
     private AddPerspectiveLinkRequestHandler addPerspectiveLinkRequestHandler = () -> {};
 
-    private AddBookmarkedPerspectiveLinkHandler addBookMarkedPerspectiveLinkHandler = perspectiveId -> {};
+    private AddToFavoritePerspectivesHandler addBookMarkedPerspectiveLinkHandler = perspectiveId -> {};
 
-    private RemovePerspectiveLinkRequestHandler removePerspectiveLinkRequestHandler = perspectiveId -> {};
+    private RemoveFromFavoritePerspectivesHandler removeFromFavoritePerspectivesHandler = perspectiveId -> {};
 
     private ResetPerspectiveToDefaultStateHandler resetPerspectiveToDefaultStateHandler = perspectiveId -> {};
 
@@ -105,7 +105,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             AbstractUiAction action = new AbstractUiAction(localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel())) {
                 @Override
                 public void execute() {
-                    addBookMarkedPerspectiveLinkHandler.handleAddBookmarkedPerspective(perspectiveDescriptor);
+                    addBookMarkedPerspectiveLinkHandler.handleAddToFavorites(perspectiveDescriptor);
                 }
             };
             action.setEnabled(!displayedPerspectives.contains(perspectiveDescriptor));
@@ -117,16 +117,16 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         popupMenu.showRelativeTo(newTabButton);
     }
 
-    public void setPerspectiveLinks(List<PerspectiveDescriptor> perspectives) {
+    public void setFavourites(List<PerspectiveDescriptor> perspectives) {
         removeAllDisplayedPerspectives();
         for (final PerspectiveDescriptor perspectiveDescriptor : perspectives) {
-            addPerspectiveLink(perspectiveDescriptor);
+            addFavorite(perspectiveDescriptor);
         }
         ensureHighlightedPerspectiveLinkIsSelected();
     }
 
     @Override
-    public void addPerspectiveLink(final PerspectiveDescriptor perspectiveDescriptor) {
+    public void addFavorite(final PerspectiveDescriptor perspectiveDescriptor) {
         PerspectiveId perspectiveId = perspectiveDescriptor.getPerspectiveId();
         this.displayedPerspectives.add(perspectiveDescriptor);
         PerspectiveLink linkWidget = linkFactory.createPerspectiveLink(perspectiveId);
@@ -134,7 +134,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         linkWidget.addClickHandler(event -> {
             GWT.log("[PerspectiveSwitcherViewImpl] link clicked");
             highlightedPerspective = Optional.of(perspectiveId);
-            linkActivatedHandler.handlePerspectiveLinkActivated(perspectiveId);
+            linkActivatedHandler.handlePerspectiveActivated(perspectiveId);
         });
         if (addViewAllowed) {
             linkWidget.addActionHandler(messages.perspective_addView(), () -> {
@@ -149,7 +149,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             linkWidget.addActionHandler(messages.perspective_close(),
                                         () -> {
                                             if (closePerspectiveAllowed) {
-                                                removePerspectiveLinkRequestHandler.handleRemovePerspectiveLinkRequest(perspectiveId);
+                                                removeFromFavoritePerspectivesHandler.handleRemoveFromFavorites(perspectiveId);
                                             }
                                         });
         }
@@ -157,7 +157,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     }
 
     @Override
-    public void removePerspectiveLink(PerspectiveDescriptor perspectiveDescriptor) {
+    public void removeFavorite(PerspectiveDescriptor perspectiveDescriptor) {
 
         int index = displayedPerspectives.indexOf(perspectiveDescriptor);
         if (index == -1) {
@@ -175,12 +175,12 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     }
 
     @Override
-    public void setAddBookMarkedPerspectiveLinkHandler(AddBookmarkedPerspectiveLinkHandler handler) {
+    public void setAddToFavoritePerspectivesHandler(AddToFavoritePerspectivesHandler handler) {
         this.addBookMarkedPerspectiveLinkHandler = handler;
     }
 
     @Override
-    public void setBookmarkedPerspectives(List<PerspectiveDescriptor> perspectives) {
+    public void setAvailablePerspectives(List<PerspectiveDescriptor> perspectives) {
         this.bookmarkedPerspectives.clear();
         this.bookmarkedPerspectives.addAll(perspectives);
     }
@@ -189,7 +189,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         return Lists.newArrayList(displayedPerspectives);
     }
 
-    public void setPerspectiveLinkActivatedHandler(PerspectiveLinkActivatedHandler handler) {
+    public void setPerspectiveActivatedHandler(PerspectiveActivatedHandler handler) {
         linkActivatedHandler = checkNotNull(handler);
     }
 
@@ -197,8 +197,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         addPerspectiveLinkRequestHandler = checkNotNull(handler);
     }
 
-    public void setRemovePerspectiveLinkHandler(RemovePerspectiveLinkRequestHandler handler) {
-        removePerspectiveLinkRequestHandler = checkNotNull(handler);
+    public void setRemoveFromFavoritePerspectivesHandler(RemoveFromFavoritePerspectivesHandler handler) {
+        removeFromFavoritePerspectivesHandler = checkNotNull(handler);
     }
 
     @Override

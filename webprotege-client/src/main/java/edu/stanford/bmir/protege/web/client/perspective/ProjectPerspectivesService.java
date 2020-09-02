@@ -26,10 +26,7 @@ public interface ProjectPerspectivesService {
      */
     void getPerspectives(PerspectiveServiceCallback callback);
 
-    void removeLinkedPerspective(PerspectiveId perspectiveId, PerspectiveServiceCallback callback);
-
-    void addFavoritePerspective(PerspectiveDescriptor perspectiveDescriptor, PerspectiveServiceCallback callback);
-
-    void getFavoritePerspectives(PerspectiveServiceCallback callback);
+    void setPerspectives(List<PerspectiveDescriptor> perspectives,
+                         PerspectiveServiceCallback callback);
 }
 
