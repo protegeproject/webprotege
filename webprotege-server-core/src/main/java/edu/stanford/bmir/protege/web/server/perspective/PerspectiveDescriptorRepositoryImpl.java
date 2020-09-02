@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescriptorsRecord.*;
@@ -50,7 +51,7 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
     public void ensureIndexes() {
         var indexKeys = new Document(PROJECT_ID, 1)
                 .append(USER_ID, 1)
-                .append(PERSPECTIVE_ID, 1);
+                .append(PERSPECTIVES, 1);
         var indexOptions = new IndexOptions().unique(true);
         getCollection().createIndex(indexKeys, indexOptions);
     }
@@ -74,60 +75,47 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
             userId = record.getUserId().getUserName();
         }
         document.append(USER_ID, userId);
-
-        String perspectiveId = record.getPerspectiveId().getId();
-        document.append(PERSPECTIVE_ID, perspectiveId);
         return document;
     }
 
     @Override
-    public void saveDescriptors(@Nonnull List<PerspectiveDescriptorsRecord> perspectiveDescriptors) {
+    public void saveDescriptors(@Nonnull PerspectiveDescriptorsRecord perspectiveDescriptors) {
         var collection = getCollection();
-        var bulkWriteModels = new ArrayList<WriteModel<Document>>();
-        for(var record : perspectiveDescriptors) {
-            var query = getQuery(record);
-            var replacementDocument = objectMapper.convertValue(record, Document.class);
-            var replaceOneModel = new ReplaceOneModel<>(query, replacementDocument, new ReplaceOptions().upsert(true));
-            bulkWriteModels.add(replaceOneModel);
-        }
-        collection.bulkWrite(bulkWriteModels);
+        var query = getQuery(perspectiveDescriptors);
+        var replacementDocument = objectMapper.convertValue(perspectiveDescriptors, Document.class);
+        collection.replaceOne(query, replacementDocument, new ReplaceOptions().upsert(true));
     }
 
     @Nonnull
     @Override
-    public ImmutableList<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId,
-                                                                       @Nonnull UserId userId) {
+    public Optional<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId,
+                                                                  @Nonnull UserId userId) {
         var query = new Document(PROJECT_ID, projectId.getId())
                 .append(USER_ID, userId.getUserName());
-        return getPerspectiveDescriptorRecords(query);
+        return getPerspectiveDescriptorRecord(query);
     }
 
     @Nonnull
     @Override
-    public ImmutableList<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId) {
+    public Optional<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId) {
         var query = new Document(PROJECT_ID, projectId.getId())
                 .append(USER_ID, null);
-        return getPerspectiveDescriptorRecords(query);
+        return getPerspectiveDescriptorRecord(query);
     }
 
     @Nonnull
     @Override
-    public ImmutableList<PerspectiveDescriptorsRecord> findDescriptors() {
+    public Optional<PerspectiveDescriptorsRecord> findDescriptors() {
         var query = new Document(PROJECT_ID, null)
                 .append(USER_ID, null);
-        return getPerspectiveDescriptorRecords(query);
+        return getPerspectiveDescriptorRecord(query);
     }
 
-    private ImmutableList<PerspectiveDescriptorsRecord> getPerspectiveDescriptorRecords(Document query) {
-        var resultBuilder = ImmutableList.<PerspectiveDescriptorsRecord>builder();
-        try(var cursor = getCollection()
-                .find(query).iterator()) {
-            while (cursor.hasNext()) {
-                var document = cursor.next();
-                var rec = objectMapper.convertValue(document, PerspectiveDescriptorsRecord.class);
-                resultBuilder.add(rec);
-            }
-        }
-        return resultBuilder.build();
+    private Optional<PerspectiveDescriptorsRecord> getPerspectiveDescriptorRecord(Document query) {
+        var document = getCollection()
+                .find(query)
+                .first();
+        return Optional.ofNullable(document)
+                .map(doc -> objectMapper.convertValue(doc, PerspectiveDescriptorsRecord.class));
     }
 }

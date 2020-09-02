@@ -7,6 +7,7 @@ import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -15,6 +16,8 @@ import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -58,32 +61,35 @@ public class PerspectiveDescriptorRepository_TestCase {
     @Test
     public void shouldSave() {
         var record = createTestRecord();
-        repository.saveDescriptors(ImmutableList.of(record));
+        repository.saveDescriptors(record);
         assertThat(getCollection().countDocuments(), Matchers.is(1L));
     }
 
     @Test
     public void shouldRetrieveSaved() {
         var record = createTestRecord();
-        repository.saveDescriptors(ImmutableList.of(record));
+        repository.saveDescriptors(record);
         var saved = repository.findDescriptors(record.getProjectId(),
                                    record.getUserId());
-        assertThat(saved, hasItems(record));
+        assertThat(saved, is(Optional.of(record)));
     }
 
     @Test
     public void shouldNotSaveDuplicates() {
         var record = createTestRecord();
-        repository.saveDescriptors(ImmutableList.of(record));
-        repository.saveDescriptors(ImmutableList.of(record));
+        repository.saveDescriptors(record);
+        repository.saveDescriptors(record);
         assertThat(getCollection().countDocuments(), Matchers.is(1L));
     }
 
     private static PerspectiveDescriptorsRecord createTestRecord() {
         return PerspectiveDescriptorsRecord.get(ProjectId.getNil(), UserId.getUserId("Matthew"),
-                                                PerspectiveId.generate(),
-                                                LanguageMap.of("en", "Hello"),
-                                                true
+                                                ImmutableList.of(PerspectiveDescriptor.get(
+                                                        PerspectiveId.generate(),
+                                                        LanguageMap.of("en", "Hello"),
+                                                        true
+                                                                 )
+                                                )
             );
     }
 

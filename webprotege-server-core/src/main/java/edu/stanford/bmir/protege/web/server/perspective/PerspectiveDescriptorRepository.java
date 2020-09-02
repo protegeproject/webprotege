@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface PerspectiveDescriptorRepository extends Repository {
 
-    void saveDescriptors(@Nonnull List<PerspectiveDescriptorsRecord> perspectiveDescriptors);
+    void saveDescriptors(@Nonnull PerspectiveDescriptorsRecord perspectiveDescriptors);
 
 
     /**
@@ -25,8 +26,8 @@ public interface PerspectiveDescriptorRepository extends Repository {
      * @param userId The user
      */
     @Nonnull
-    ImmutableList<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId,
-                                                                @Nonnull UserId userId);
+    Optional<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId,
+                                                           @Nonnull UserId userId);
 
     /**
      * Find the {@link PerspectiveDescriptor}s that are specific to a project.  There are not
@@ -34,12 +35,12 @@ public interface PerspectiveDescriptorRepository extends Repository {
      * @param projectId The project
      */
     @Nonnull
-    ImmutableList<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId);
+    Optional<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId);
 
     /**
      * Find the perspective descriptors that are not project and/or user specific.  These
      * are essentially the descriptors for the default perspectives for new projects.
      */
     @Nonnull
-    ImmutableList<PerspectiveDescriptorsRecord> findDescriptors();
+    Optional<PerspectiveDescriptorsRecord> findDescriptors();
 }

@@ -40,16 +40,16 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
     @Override
     public ImmutableList<PerspectiveDescriptor> getPerspectives(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
         var projectUserPerspectives = descriptorsRepository.findDescriptors(projectId, userId);
-        if (!projectUserPerspectives.isEmpty()) {
-            return toPerspectiveDescriptors(projectUserPerspectives);
+        if (projectUserPerspectives.isPresent()) {
+            return projectUserPerspectives.get().getPerspectives();
         }
         var projectPerspectives = descriptorsRepository.findDescriptors(projectId);
-        if (!projectPerspectives.isEmpty()) {
-            return toPerspectiveDescriptors(projectPerspectives);
+        if (projectPerspectives.isPresent()) {
+            return projectPerspectives.get().getPerspectives();
         }
         var defaultProjectPerspectives = descriptorsRepository.findDescriptors();
-        if (!defaultProjectPerspectives.isEmpty()) {
-            return toPerspectiveDescriptors(defaultProjectPerspectives);
+        if (defaultProjectPerspectives.isPresent()) {
+            return defaultProjectPerspectives.get().getPerspectives();
         }
         return builtInPerspectives.stream()
                                   .map(builtInPerspective -> PerspectiveDescriptor.get(builtInPerspective.getPerspectiveId(),
@@ -58,24 +58,18 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
                                   .collect(toImmutableList());
     }
 
-    @Nonnull
-    private static ImmutableList<PerspectiveDescriptor> toPerspectiveDescriptors(@Nonnull ImmutableList<PerspectiveDescriptorsRecord> records) {
-        return records.stream().map(PerspectiveDescriptorsRecord::getDescriptor).collect(toImmutableList());
-    }
 
     @Override
     public void setPerspectives(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
-        var records = perspectives.stream().map(PerspectiveDescriptorsRecord::get).collect(toImmutableList());
-        descriptorsRepository.saveDescriptors(records);
+        var record = PerspectiveDescriptorsRecord.get(perspectives);
+        descriptorsRepository.saveDescriptors(record);
     }
 
     @Override
     public void setPerspectives(@Nonnull ProjectId projectId,
                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
-        var records = perspectives.stream()
-                                  .map(descriptor -> PerspectiveDescriptorsRecord.get(projectId, descriptor))
-                                  .collect(toImmutableList());
-        descriptorsRepository.saveDescriptors(records);
+        var record = PerspectiveDescriptorsRecord.get(projectId, perspectives);
+        descriptorsRepository.saveDescriptors(record);
     }
 
 
@@ -83,10 +77,8 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
     public void setPerspectives(@Nonnull ProjectId projectId,
                                 @Nonnull UserId userId,
                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
-        var records = perspectives.stream()
-                                  .map(descriptor -> PerspectiveDescriptorsRecord.get(projectId, userId, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite()))
-                                  .collect(toImmutableList());
-        descriptorsRepository.saveDescriptors(records);
+        var record = PerspectiveDescriptorsRecord.get(projectId, userId, perspectives);
+        descriptorsRepository.saveDescriptors(record);
     }
 
     @Nonnull

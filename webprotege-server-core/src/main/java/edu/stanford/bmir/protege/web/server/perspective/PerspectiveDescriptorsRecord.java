@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -22,37 +23,31 @@ import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescri
  * 2020-09-01
  */
 @AutoValue
-@JsonPropertyOrder({PROJECT_ID, USER_ID, PERSPECTIVE_ID, LABEL, FAVORITE})
+@JsonPropertyOrder({PROJECT_ID, USER_ID, PERSPECTIVES})
 public abstract class PerspectiveDescriptorsRecord {
 
     public static final String PROJECT_ID = "projectId";
 
     public static final String USER_ID = "userId";
 
-    public static final String PERSPECTIVE_ID = "perspectiveId";
-
-    public static final String LABEL = "label";
-
-    public static final String FAVORITE = "favorite";
+    public static final String PERSPECTIVES = "perspectives";
 
     @JsonCreator
     public static PerspectiveDescriptorsRecord get(@JsonProperty(PROJECT_ID) @Nullable ProjectId projectId,
                                                    @JsonProperty(USER_ID) @Nullable UserId userId,
-                                                   @JsonProperty(PERSPECTIVE_ID) PerspectiveId perspectiveId,
-                                                   @JsonProperty(LABEL) LanguageMap label,
-                                                   @JsonProperty(FAVORITE) boolean favorite) {
-        return new AutoValue_PerspectiveDescriptorsRecord(projectId, userId, perspectiveId, label, favorite);
+                                                   @JsonProperty(PERSPECTIVES) ImmutableList<PerspectiveDescriptor> perspectives) {
+        return new AutoValue_PerspectiveDescriptorsRecord(projectId, userId, perspectives);
     }
 
     @Nonnull
-    public static PerspectiveDescriptorsRecord get(@Nonnull PerspectiveDescriptor descriptor) {
-        return get(null, null, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite());
+    public static PerspectiveDescriptorsRecord get(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
+        return get(null, null, perspectives);
     }
 
     @Nonnull
     public static PerspectiveDescriptorsRecord get(@Nonnull ProjectId projectId,
-                                                   @Nonnull PerspectiveDescriptor descriptor) {
-        return get(projectId, null, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite());
+                                                   @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
+        return get(projectId, null, perspectives);
     }
 
     @JsonProperty(PROJECT_ID)
@@ -63,19 +58,7 @@ public abstract class PerspectiveDescriptorsRecord {
     @Nullable
     public abstract UserId getUserId();
 
-    @JsonProperty(PERSPECTIVE_ID)
+    @JsonProperty(PERSPECTIVES)
     @Nonnull
-    public abstract PerspectiveId getPerspectiveId();
-
-    @JsonProperty(LABEL)
-    @Nonnull
-    public abstract LanguageMap getLabel();
-
-    @JsonProperty(FAVORITE)
-    public abstract boolean isFavorite();
-
-    @JsonIgnore
-    public PerspectiveDescriptor getDescriptor() {
-        return PerspectiveDescriptor.get(getPerspectiveId(), getLabel(), isFavorite());
-    }
+    public abstract ImmutableList<PerspectiveDescriptor> getPerspectives();
 }

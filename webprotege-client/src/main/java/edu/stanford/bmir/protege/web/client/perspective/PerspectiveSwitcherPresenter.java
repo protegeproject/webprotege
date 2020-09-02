@@ -15,7 +15,9 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,7 +64,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
             }
         });
         view.setPerspectiveActivatedHandler(this::goToPlaceForPerspective);
-        view.setAddToFavoritePerspectivesHandler(this::addFavoritePerspective);
+        view.setAddToFavoritePerspectivesHandler(perspectiveDescriptor -> addFavoritePerspective(perspectiveDescriptor.getPerspectiveId()));
         view.setResetPerspectiveToDefaultStateHandler(perspectiveId -> eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId)));
         view.setAddViewHandler(perspectiveId -> eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId)));
     }
@@ -101,6 +103,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                                                                              .filter(PerspectiveDescriptor::isFavorite)
                                                                              .collect(toImmutableList());
         view.setFavourites(favorites);
+        view.setAvailablePerspectives(perspectiveDescriptors);
         Optional<PerspectiveId> perspectiveId = getCurrentPlacePerspectiveId();
         if (perspectiveId.isPresent()) {
 //            ensurePerspectiveLinkExists(perspectiveId.get());
@@ -154,14 +157,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
 
 
     private void handleRemoveFavoritePerspective(final PerspectiveId perspectiveId) {
-        List<PerspectiveDescriptor> updatedPerspectivesList = perspectiveDescriptors.stream().map(perspectiveDescriptor -> {
-            if (perspectiveDescriptor.getPerspectiveId().equals(perspectiveId)) {
-                return perspectiveDescriptor.withFavorite(false);
-            }
-            else {
-                return perspectiveDescriptor;
-            }
-        }).collect(Collectors.toList());
+        List<PerspectiveDescriptor> updatedPerspectivesList = withFavorite(perspectiveId, false);
         setUserProjectPerspectives(updatedPerspectivesList);
         projectPerspectivesService.setPerspectives(updatedPerspectivesList, perspectiveDescriptors -> {
             Optional<PerspectiveId> currentPlacePerspective = getCurrentPlacePerspectiveId();
@@ -185,16 +181,33 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     }
 
     private void handleCreateNewPerspective() {
-        createFreshPerspectiveRequestHandler.createFreshPerspective(this::addFavoritePerspective);
+        createFreshPerspectiveRequestHandler.createFreshPerspective(newPerspectiveDescriptor -> {
+            GWT.log("[PerspectiveSwitcherPresenter] Create new perspective: " + newPerspectiveDescriptor);
+            ArrayList<PerspectiveDescriptor> updatedList = new ArrayList<>(this.perspectiveDescriptors);
+            updatedList.add(newPerspectiveDescriptor.withFavorite(true));
+            setUserProjectPerspectives(updatedList);
+        });
     }
 
-    private void addFavoritePerspective(final PerspectiveDescriptor perspectiveDescriptor) {
-        List<PerspectiveDescriptor> updatedList = new ArrayList<>(perspectiveDescriptors);
-        updatedList.add(perspectiveDescriptor.withFavorite(true));
+    private void addFavoritePerspective(PerspectiveId perspectiveId) {
+        ImmutableList<PerspectiveDescriptor> updatedList = withFavorite(perspectiveId, true);
         projectPerspectivesService.setPerspectives(updatedList, perspectives -> {
             setUserProjectPerspectives(updatedList);
-            goToPlaceForPerspective(perspectiveDescriptor.getPerspectiveId());
+            goToPlaceForPerspective(perspectiveId);
         });
+    }
+
+    private ImmutableList<PerspectiveDescriptor> withFavorite(@Nonnull PerspectiveId perspectiveId, boolean favorite) {
+        return perspectiveDescriptors.stream()
+                              .map(perspectiveDescriptor -> {
+                                  if(perspectiveDescriptor.getPerspectiveId().equals(perspectiveId)) {
+                                      return perspectiveDescriptor.withFavorite(favorite);
+                                  }
+                                  else {
+                                      return perspectiveDescriptor;
+                                  }
+                              })
+                              .collect(toImmutableList());
     }
 
     @Override
