@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescriptorRecord.*;
+import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescriptorsRecord.*;
 
 /**
  * Matthew Horridge
@@ -55,7 +55,7 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
         getCollection().createIndex(indexKeys, indexOptions);
     }
 
-    private Document getQuery(@Nonnull PerspectiveDescriptorRecord record) {
+    private Document getQuery(@Nonnull PerspectiveDescriptorsRecord record) {
         var document = new Document();
         String projectId;
         if(record.getProjectId() == null) {
@@ -81,7 +81,7 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
     }
 
     @Override
-    public void saveDescriptors(@Nonnull List<PerspectiveDescriptorRecord> perspectiveDescriptors) {
+    public void saveDescriptors(@Nonnull List<PerspectiveDescriptorsRecord> perspectiveDescriptors) {
         var collection = getCollection();
         var bulkWriteModels = new ArrayList<WriteModel<Document>>();
         for(var record : perspectiveDescriptors) {
@@ -95,8 +95,8 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
 
     @Nonnull
     @Override
-    public ImmutableList<PerspectiveDescriptorRecord> findDescriptors(@Nonnull ProjectId projectId,
-                                                                      @Nonnull UserId userId) {
+    public ImmutableList<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId,
+                                                                       @Nonnull UserId userId) {
         var query = new Document(PROJECT_ID, projectId.getId())
                 .append(USER_ID, userId.getUserName());
         return getPerspectiveDescriptorRecords(query);
@@ -104,7 +104,7 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
 
     @Nonnull
     @Override
-    public ImmutableList<PerspectiveDescriptorRecord> findDescriptors(@Nonnull ProjectId projectId) {
+    public ImmutableList<PerspectiveDescriptorsRecord> findDescriptors(@Nonnull ProjectId projectId) {
         var query = new Document(PROJECT_ID, projectId.getId())
                 .append(USER_ID, null);
         return getPerspectiveDescriptorRecords(query);
@@ -112,19 +112,19 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
 
     @Nonnull
     @Override
-    public ImmutableList<PerspectiveDescriptorRecord> findDescriptors() {
+    public ImmutableList<PerspectiveDescriptorsRecord> findDescriptors() {
         var query = new Document(PROJECT_ID, null)
                 .append(USER_ID, null);
         return getPerspectiveDescriptorRecords(query);
     }
 
-    private ImmutableList<PerspectiveDescriptorRecord> getPerspectiveDescriptorRecords(Document query) {
-        var resultBuilder = ImmutableList.<PerspectiveDescriptorRecord>builder();
+    private ImmutableList<PerspectiveDescriptorsRecord> getPerspectiveDescriptorRecords(Document query) {
+        var resultBuilder = ImmutableList.<PerspectiveDescriptorsRecord>builder();
         try(var cursor = getCollection()
                 .find(query).iterator()) {
             while (cursor.hasNext()) {
                 var document = cursor.next();
-                var rec = objectMapper.convertValue(document, PerspectiveDescriptorRecord.class);
+                var rec = objectMapper.convertValue(document, PerspectiveDescriptorsRecord.class);
                 resultBuilder.add(rec);
             }
         }

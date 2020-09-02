@@ -59,13 +59,13 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
     }
 
     @Nonnull
-    private static ImmutableList<PerspectiveDescriptor> toPerspectiveDescriptors(@Nonnull ImmutableList<PerspectiveDescriptorRecord> records) {
-        return records.stream().map(PerspectiveDescriptorRecord::getDescriptor).collect(toImmutableList());
+    private static ImmutableList<PerspectiveDescriptor> toPerspectiveDescriptors(@Nonnull ImmutableList<PerspectiveDescriptorsRecord> records) {
+        return records.stream().map(PerspectiveDescriptorsRecord::getDescriptor).collect(toImmutableList());
     }
 
     @Override
     public void setPerspectives(@Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
-        var records = perspectives.stream().map(PerspectiveDescriptorRecord::get).collect(toImmutableList());
+        var records = perspectives.stream().map(PerspectiveDescriptorsRecord::get).collect(toImmutableList());
         descriptorsRepository.saveDescriptors(records);
     }
 
@@ -73,7 +73,7 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
     public void setPerspectives(@Nonnull ProjectId projectId,
                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
         var records = perspectives.stream()
-                                  .map(descriptor -> PerspectiveDescriptorRecord.get(projectId, descriptor))
+                                  .map(descriptor -> PerspectiveDescriptorsRecord.get(projectId, descriptor))
                                   .collect(toImmutableList());
         descriptorsRepository.saveDescriptors(records);
     }
@@ -84,7 +84,7 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
                                 @Nonnull UserId userId,
                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectives) {
         var records = perspectives.stream()
-                                  .map(descriptor -> PerspectiveDescriptorRecord.get(projectId, userId, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite()))
+                                  .map(descriptor -> PerspectiveDescriptorsRecord.get(projectId, userId, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite()))
                                   .collect(toImmutableList());
         descriptorsRepository.saveDescriptors(records);
     }

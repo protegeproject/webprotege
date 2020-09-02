@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -80,11 +79,11 @@ public class PerspectiveDescriptorRepository_TestCase {
         assertThat(getCollection().countDocuments(), Matchers.is(1L));
     }
 
-    private static PerspectiveDescriptorRecord createTestRecord() {
-        return PerspectiveDescriptorRecord.get(ProjectId.getNil(), UserId.getUserId("Matthew"),
-                                               PerspectiveId.generate(),
-                                               LanguageMap.of("en", "Hello"),
-                                               true
+    private static PerspectiveDescriptorsRecord createTestRecord() {
+        return PerspectiveDescriptorsRecord.get(ProjectId.getNil(), UserId.getUserId("Matthew"),
+                                                PerspectiveId.generate(),
+                                                LanguageMap.of("en", "Hello"),
+                                                true
             );
     }
 

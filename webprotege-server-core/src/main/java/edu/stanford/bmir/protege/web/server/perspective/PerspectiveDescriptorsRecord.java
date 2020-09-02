@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescriptorRecord.*;
+import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescriptorsRecord.*;
 
 /**
  * Matthew Horridge
@@ -23,7 +23,7 @@ import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescri
  */
 @AutoValue
 @JsonPropertyOrder({PROJECT_ID, USER_ID, PERSPECTIVE_ID, LABEL, FAVORITE})
-public abstract class PerspectiveDescriptorRecord {
+public abstract class PerspectiveDescriptorsRecord {
 
     public static final String PROJECT_ID = "projectId";
 
@@ -36,22 +36,22 @@ public abstract class PerspectiveDescriptorRecord {
     public static final String FAVORITE = "favorite";
 
     @JsonCreator
-    public static PerspectiveDescriptorRecord get(@JsonProperty(PROJECT_ID) @Nullable ProjectId projectId,
-                                                  @JsonProperty(USER_ID) @Nullable UserId userId,
-                                                  @JsonProperty(PERSPECTIVE_ID) PerspectiveId perspectiveId,
-                                                  @JsonProperty(LABEL) LanguageMap label,
-                                                  @JsonProperty(FAVORITE) boolean favorite) {
-        return new AutoValue_PerspectiveDescriptorRecord(projectId, userId, perspectiveId, label, favorite);
+    public static PerspectiveDescriptorsRecord get(@JsonProperty(PROJECT_ID) @Nullable ProjectId projectId,
+                                                   @JsonProperty(USER_ID) @Nullable UserId userId,
+                                                   @JsonProperty(PERSPECTIVE_ID) PerspectiveId perspectiveId,
+                                                   @JsonProperty(LABEL) LanguageMap label,
+                                                   @JsonProperty(FAVORITE) boolean favorite) {
+        return new AutoValue_PerspectiveDescriptorsRecord(projectId, userId, perspectiveId, label, favorite);
     }
 
     @Nonnull
-    public static PerspectiveDescriptorRecord get(@Nonnull PerspectiveDescriptor descriptor) {
+    public static PerspectiveDescriptorsRecord get(@Nonnull PerspectiveDescriptor descriptor) {
         return get(null, null, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite());
     }
 
     @Nonnull
-    public static PerspectiveDescriptorRecord get(@Nonnull ProjectId projectId,
-                                                  @Nonnull PerspectiveDescriptor descriptor) {
+    public static PerspectiveDescriptorsRecord get(@Nonnull ProjectId projectId,
+                                                   @Nonnull PerspectiveDescriptor descriptor) {
         return get(projectId, null, descriptor.getPerspectiveId(), descriptor.getLabel(), descriptor.isFavorite());
     }
 
