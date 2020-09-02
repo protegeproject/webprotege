@@ -42,4 +42,12 @@ public abstract class PerspectiveDescriptor {
 
     @JsonProperty(FAVORITE)
     public abstract boolean isFavorite();
+
+    @Nonnull
+    public PerspectiveDescriptor withFavorite(boolean favorite) {
+        if(favorite == isFavorite()) {
+            return this;
+        }
+        return PerspectiveDescriptor.get(getPerspectiveId(), getLabel(), favorite);
+    }
 }
