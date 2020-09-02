@@ -36,7 +36,8 @@ import javax.annotation.Nonnull;
     AssertionAxiomBySubjectAccessorModule.class,
     ClassAssertionAxiomAccessorModule.class,
     DomainAxiomAccessorModule.class,
-    RangeAxiomAccessorModule.class
+    RangeAxiomAccessorModule.class,
+    CharacteristicsAxiomAccessorModule.class
 })
 public class Neo4jIndexModule {
 
@@ -111,7 +112,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    DataPropertyCharacteristicsIndex provideDataPropertyCharacteristicsIndex(DataPropertyCharacteristicsIndexImpl impl) {
+    DataPropertyCharacteristicsIndex provideDataPropertyCharacteristicsIndex(Neo4jDataPropertyCharacteristicsIndex impl) {
         return impl;
     }
 
@@ -218,7 +219,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    ObjectPropertyCharacteristicsIndex provideObjectPropertyCharacteristicsIndex(ObjectPropertyCharacteristicsIndexImpl impl) {
+    ObjectPropertyCharacteristicsIndex provideObjectPropertyCharacteristicsIndex(Neo4jObjectPropertyCharacteristicsIndex impl) {
         return impl;
     }
 
