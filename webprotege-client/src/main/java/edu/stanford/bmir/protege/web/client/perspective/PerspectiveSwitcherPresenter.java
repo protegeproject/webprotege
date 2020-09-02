@@ -15,10 +15,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_PERSPECTIVE;
@@ -32,7 +29,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
 
     private final PerspectiveSwitcherView view;
 
-    private final PerspectiveLinkManager perspectiveLinkManager;
+    private final ProjectPerspectivesService projectPerspectivesService;
 
     private final PlaceController placeController;
 
@@ -42,16 +39,18 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
 
     private final Map<PerspectiveId, ItemSelection> perspective2Selection = new HashMap<>();
 
+    private final List<PerspectiveDescriptor> perspectiveDescriptors = new ArrayList<>();
+
     @Inject
     public PerspectiveSwitcherPresenter(PerspectiveSwitcherView view,
-                                        PerspectiveLinkManager perspectiveLinkManager,
+                                        ProjectPerspectivesService projectPerspectivesService,
                                         CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler,
                                         PlaceController placeController,
                                         final EventBus eventBus,
                                         LoggedInUserProjectPermissionChecker permissionChecker) {
         this.view = view;
         this.createFreshPerspectiveRequestHandler = createFreshPerspectiveRequestHandler;
-        this.perspectiveLinkManager = perspectiveLinkManager;
+        this.projectPerspectivesService = projectPerspectivesService;
         this.placeController = placeController;
         this.permissionChecker = permissionChecker;
         eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
@@ -68,11 +67,11 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
         GWT.log("[PerspectiveSwitcherPresenter] start with place: " + place);
         container.setWidget(view);
-        perspectiveLinkManager.getLinkedPerspectives(perspectiveIds -> {
-            setLinkedPerspectives(perspectiveIds);
+        projectPerspectivesService.getPerspectives(perspectiveIds -> {
+            handleUserProjectPerspectives(perspectiveIds);
             displayPlace(place);
         });
-        perspectiveLinkManager.getBookmarkedPerspectives(view::setBookmarkedPerspectives);
+        projectPerspectivesService.getFavoritePerspectives(view::setBookmarkedPerspectives);
         view.setAddPerspectiveAllowed(false);
         view.setClosePerspectiveAllowed(false);
         view.setAddViewAllowed(false);
@@ -91,8 +90,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
      * Sets the linked perspectives and displays the specified perspective
      * @param linkedPerspective The links to display.
      */
-    private void setLinkedPerspectives(List<PerspectiveDescriptor> linkedPerspective) {
-        GWT.log("[PerspectiveSwitcherPresenter] setLinkedPerspectives");
+    private void handleUserProjectPerspectives(List<PerspectiveDescriptor> linkedPerspective) {
+        GWT.log("[PerspectiveSwitcherPresenter] handleUserProjectPerspectives");
         view.setPerspectiveLinks(linkedPerspective);
         Optional<PerspectiveId> perspectiveId = getCurrentPlacePerspectiveId();
         if (perspectiveId.isPresent()) {
@@ -159,7 +158,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
 
 
     private void handleRemoveLinkedPerspective(final PerspectiveId perspectiveId) {
-        perspectiveLinkManager.removeLinkedPerspective(perspectiveId, perspectiveDescriptors -> {
+        projectPerspectivesService.removeLinkedPerspective(perspectiveId, perspectiveDescriptors -> {
             view.setPerspectiveLinks(perspectiveDescriptors);
             Optional<PerspectiveId> currentPlacePerspective = getCurrentPlacePerspectiveId();
             if (currentPlacePerspective.isPresent() && currentPlacePerspective.get().equals(perspectiveId)) {
@@ -186,7 +185,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     }
 
     private void addNewPerspective(final PerspectiveDescriptor perspectiveDescriptor) {
-        perspectiveLinkManager.addLinkedPerspective(perspectiveDescriptor, perspectives -> {
+        projectPerspectivesService.addFavoritePerspective(perspectiveDescriptor, perspectives -> {
             view.setPerspectiveLinks(perspectives);
             goToPlaceForPerspective(perspectiveDescriptor.getPerspectiveId());
         });

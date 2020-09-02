@@ -23,7 +23,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 13/02/16
  */
-public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
+public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesService {
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -38,17 +38,17 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
     private final DispatchErrorMessageDisplay errorDisplay;
 
     @Inject
-    public PerspectiveLinkManagerImpl(@Nonnull ProjectId projectId,
-                                      @Nonnull DispatchServiceManager dispatchServiceManager,
-                                      @Nonnull LoggedInUserProvider loggedInUserProvider,
-                                      @Nonnull DispatchErrorMessageDisplay errorDisplay) {
+    public ProjectPerspectivesServiceImpl(@Nonnull ProjectId projectId,
+                                          @Nonnull DispatchServiceManager dispatchServiceManager,
+                                          @Nonnull LoggedInUserProvider loggedInUserProvider,
+                                          @Nonnull DispatchErrorMessageDisplay errorDisplay) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
         this.projectId = checkNotNull(projectId);
         this.errorDisplay = checkNotNull(errorDisplay);
     }
 
-    public void getLinkedPerspectives(final Callback callback) {
+    public void getPerspectives(final PerspectiveServiceCallback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
             ImmutableList<PerspectiveDescriptor> perspectiveIds = result.getPerspectives();
@@ -57,21 +57,28 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
     }
 
     @Override
-    public void getBookmarkedPerspectives(Callback callback) {
+    public void getFavoritePerspectives(PerspectiveServiceCallback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
             ImmutableList<PerspectiveDescriptor> perspectiveIds = result.getPerspectives();
-            GWT.log("[PerspectiveLinkManager] Linked perspectives: " + perspectiveIds);
+            GWT.log("[ProjectPerspectivesService] Linked perspectives: " + perspectiveIds);
             callback.handlePerspectives(perspectiveIds);
         });
     }
 
-    public void removeLinkedPerspective(final PerspectiveId perspectiveId, final Callback callback) {
+    public void removeLinkedPerspective(final PerspectiveId perspectiveId, final PerspectiveServiceCallback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
             final List<PerspectiveDescriptor> ids = result.getPerspectives()
                     .stream()
-                    .filter(perspectiveDescriptor -> !perspectiveDescriptor.getPerspectiveId().equals(perspectiveId))
+                    .map(perspectiveDescriptor -> {
+                        if(perspectiveDescriptor.getPerspectiveId().equals(perspectiveId)) {
+                            return perspectiveDescriptor.withFavorite(false);
+                        }
+                        else {
+                            return perspectiveDescriptor;
+                        }
+                    })
                     .collect(toImmutableList());
             dispatchServiceManager.execute(new SetPerspectivesAction(projectId, userId, ImmutableList.copyOf(ids)), new DispatchServiceCallback<SetPerspectivesResult>(errorDisplay) {
                 @Override
@@ -82,7 +89,7 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
         });
     }
 
-    public void addLinkedPerspective(final PerspectiveDescriptor perspectiveDescriptor, final Callback callback) {
+    public void addFavoritePerspective(final PerspectiveDescriptor perspectiveDescriptor, final PerspectiveServiceCallback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), result -> {
             List<PerspectiveDescriptor> ids = result.getPerspectives()

@@ -39,8 +39,8 @@ import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
-import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManager;
-import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManagerImpl;
+import edu.stanford.bmir.protege.web.client.perspective.ProjectPerspectivesService;
+import edu.stanford.bmir.protege.web.client.perspective.ProjectPerspectivesServiceImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
 import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
@@ -62,7 +62,6 @@ import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.protege.gwt.graphtree.client.MultiSelectionModel;
@@ -74,7 +73,6 @@ import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.form.FormControlStackRepeatingView.*;
-import static edu.stanford.bmir.protege.web.client.uuid.UuidV4.uuidv4;
 
 /**
  * Matthew Horridge
@@ -157,7 +155,7 @@ public class ClientProjectModule {
 
 
     @Provides
-    PerspectiveLinkManager providePerspectiveLinkManager(PerspectiveLinkManagerImpl linkManager) {
+    ProjectPerspectivesService providePerspectiveLinkManager(ProjectPerspectivesServiceImpl linkManager) {
         return linkManager;
     }
 
