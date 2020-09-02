@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntity
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.AxiomByTypeAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.CharacteristicsAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.signature.SignatureAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
@@ -29,6 +31,7 @@ import javax.annotation.Nonnull;
 @Module(includes = {
     SignatureAccessorModule.class,
     AxiomBySubjectAccessorModule.class,
+    AxiomByTypeAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
     AssertionAxiomBySubjectAccessorModule.class,
     ClassAssertionAxiomAccessorModule.class,
@@ -85,7 +88,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    AxiomsByTypeIndex provideAxiomsByTypeIndex(AxiomsByTypeIndexImpl impl) {
+    AxiomsByTypeIndex provideAxiomsByTypeIndex(Neo4jAxiomsByTypeIndex impl) {
         return impl;
     }
 
