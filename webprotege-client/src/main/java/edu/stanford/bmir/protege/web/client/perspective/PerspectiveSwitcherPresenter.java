@@ -17,9 +17,7 @@ import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -65,7 +63,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         });
         view.setPerspectiveActivatedHandler(this::goToPlaceForPerspective);
         view.setAddToFavoritePerspectivesHandler(perspectiveDescriptor -> addFavoritePerspective(perspectiveDescriptor.getPerspectiveId()));
-        view.setResetPerspectiveToDefaultStateHandler(perspectiveId -> eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId)));
+        view.setResetPerspectiveToDefaultStateHandler(perspectiveDescriptor -> eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveDescriptor)));
         view.setAddViewHandler(perspectiveId -> eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId)));
     }
 
@@ -84,7 +82,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                                         canAddRemove -> {
                                             view.setClosePerspectiveAllowed(canAddRemove);
                                             view.setAddPerspectiveAllowed(canAddRemove);
-                                            view.setAddPerspectiveLinkRequestHandler(this::handleCreateNewPerspective);
+                                            view.setAddBlankPerspectiveHandler(this::handleCreateNewPerspective);
                                             view.setRemoveFromFavoritePerspectivesHandler(this::handleRemoveFavoritePerspective);
                                         });
         permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
@@ -185,7 +183,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
             GWT.log("[PerspectiveSwitcherPresenter] Create new perspective: " + newPerspectiveDescriptor);
             ArrayList<PerspectiveDescriptor> updatedList = new ArrayList<>(this.perspectiveDescriptors);
             updatedList.add(newPerspectiveDescriptor.withFavorite(true));
-            setUserProjectPerspectives(updatedList);
+            projectPerspectivesService.setPerspectives(updatedList, this::setUserProjectPerspectives);
         });
     }
 

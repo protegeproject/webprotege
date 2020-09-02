@@ -22,8 +22,8 @@ public interface PerspectiveSwitcherView extends IsWidget {
     /**
      * Handles request to add a new perspective link.
      */
-    interface AddPerspectiveLinkRequestHandler {
-        void handleAddNewPerspectiveLinkRequest();
+    interface AddBlankPerspectiveHandler {
+        void handleAddBlankPerspective();
     }
 
     interface AddToFavoritePerspectivesHandler {
@@ -35,7 +35,7 @@ public interface PerspectiveSwitcherView extends IsWidget {
     }
 
     interface ResetPerspectiveToDefaultStateHandler {
-        void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId);
+        void handleResetPerspectiveToDefaultState(PerspectiveDescriptor perspectiveDescriptor);
     }
 
     interface AddViewHandler {
@@ -71,7 +71,7 @@ public interface PerspectiveSwitcherView extends IsWidget {
      * Sets the handler that will be called when a request to add a new perspective link is made by the user.
      * @param handler The handler.  Not {@code null}.
      */
-    void setAddPerspectiveLinkRequestHandler(AddPerspectiveLinkRequestHandler handler);
+    void setAddBlankPerspectiveHandler(AddBlankPerspectiveHandler handler);
 
     void setAddToFavoritePerspectivesHandler(AddToFavoritePerspectivesHandler handler);
 

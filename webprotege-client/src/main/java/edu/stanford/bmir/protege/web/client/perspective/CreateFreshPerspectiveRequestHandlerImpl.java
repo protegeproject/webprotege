@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
@@ -40,6 +41,7 @@ public class CreateFreshPerspectiveRequestHandlerImpl implements CreateFreshPers
     @Override
     public void createFreshPerspective(final Callback callback) {
         inputBox.showDialog("Enter tab name", false, "", input -> {
+            GWT.log("[CreateFreshPerspectiveRequestHandlerImpl] Create perspective with name: " + input);
             String trimmedInput = input.trim();
             if(trimmedInput.isEmpty()) {
                 return;

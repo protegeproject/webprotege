@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -14,14 +15,14 @@ public class ResetPerspectiveEvent extends Event<ResetPerspectiveHandler> {
 
     private static final Type<ResetPerspectiveHandler> TYPE = new Type<>();
 
-    private final PerspectiveId perspectiveId;
+    private final PerspectiveDescriptor perspectiveDescriptor;
 
-    public ResetPerspectiveEvent(PerspectiveId perspectiveId) {
-        this.perspectiveId = checkNotNull(perspectiveId);
+    public ResetPerspectiveEvent(PerspectiveDescriptor perspectiveDescriptor) {
+        this.perspectiveDescriptor = checkNotNull(perspectiveDescriptor);
     }
 
-    public PerspectiveId getPerspectiveId() {
-        return perspectiveId;
+    public PerspectiveDescriptor getPerspectiveDescriptor() {
+        return perspectiveDescriptor;
     }
 
     public static Type<ResetPerspectiveHandler> getType() {
