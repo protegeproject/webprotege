@@ -43,6 +43,7 @@ public class GetPerspectivesActionHandler implements ProjectActionHandler<GetPer
         var projectId = action.getProjectId();
         var userId = action.getUserId();
         var perspectives = perspectivesManager.getPerspectives(projectId, userId);
-        return GetPerspectivesResult.get(perspectives);
+        var resettablePerspectiveIds = perspectivesManager.getResettablePerspectiveIds(projectId, userId);
+        return GetPerspectivesResult.get(perspectives, resettablePerspectiveIds);
     }
 }

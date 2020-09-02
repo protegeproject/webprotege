@@ -14,15 +14,14 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TabBar;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,6 +30,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 23/06/2014
  */
 public class PerspectiveSwitcherViewImpl extends Composite implements PerspectiveSwitcherView {
+
+    private Set<PerspectiveId> resettablePerspectives = new HashSet<>();
 
     interface PerspectiveSwitcherViewImplUiBinder extends UiBinder<HTMLPanel, PerspectiveSwitcherViewImpl> {
 
@@ -143,8 +144,10 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                 }
             });
         }
-        linkWidget.addActionHandler(messages.perspective_reset(),
-                                    () -> resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveDescriptor));
+        if(resettablePerspectives.contains(perspectiveId)) {
+            linkWidget.addActionHandler(messages.perspective_reset(),
+                                        () -> resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveDescriptor));
+        }
         if (closePerspectiveAllowed) {
             linkWidget.addActionHandler(messages.perspective_close(),
                                         () -> {
@@ -205,6 +208,12 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @Override
     public void setAddViewHandler(AddViewHandler handler) {
         addViewHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setResettablePerspectives(Set<PerspectiveId> resettablePerspectives) {
+        this.resettablePerspectives.clear();
+        this.resettablePerspectives.addAll(resettablePerspectives);
     }
 
     public void setHighlightedPerspective(PerspectiveId perspectiveId) {

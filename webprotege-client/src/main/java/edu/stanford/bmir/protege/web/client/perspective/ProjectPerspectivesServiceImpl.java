@@ -42,7 +42,7 @@ public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesServic
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatch.execute(new GetPerspectivesAction(projectId, userId), result -> {
             ImmutableList<PerspectiveDescriptor> perspectiveIds = result.getPerspectives();
-            callback.handlePerspectives(perspectiveIds);
+            callback.handlePerspectives(perspectiveIds, result.getResettablePerspectives());
         });
     }
 
@@ -50,7 +50,7 @@ public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesServic
     public void setPerspectives(List<PerspectiveDescriptor> perspectives, PerspectiveServiceCallback callback) {
         UserId user = loggedInUserProvider.getCurrentUserId();
         dispatch.execute(new SetPerspectivesAction(projectId, user, ImmutableList.copyOf(perspectives)), result -> {
-            callback.handlePerspectives(perspectives);
+            callback.handlePerspectives(result.getPerspectives(), result.getResettablePerspectives());
         });
     }
 }

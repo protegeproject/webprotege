@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -8,8 +9,12 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collection;
+import java.util.stream.Stream;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static dagger.internal.codegen.DaggerStreams.toImmutableSet;
 
 /**
  * Matthew Horridge
@@ -133,5 +138,23 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
                                        @Nonnull UserId userId,
                                        @Nonnull PerspectiveId perspectiveId) {
         layoutsRepository.dropLayout(projectId, userId, perspectiveId);
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableSet<PerspectiveId> getResettablePerspectiveIds(@Nonnull ProjectId projectId,
+                                                                   @Nonnull UserId userId) {
+
+        var projectAndSystemPerspectiveIds = descriptorsRepository.findProjectAndSystemDescriptors(projectId)
+                             .map(PerspectiveDescriptorsRecord::getPerspectives)
+                             .flatMap(Collection::stream)
+                             .map(PerspectiveDescriptor::getPerspectiveId);
+
+        var builtInPerspectiveIds = builtInPerspectives.stream()
+                .map(BuiltInPerspective::getPerspectiveId);
+
+        return Stream.of(projectAndSystemPerspectiveIds, builtInPerspectiveIds)
+              .flatMap(s -> s)
+              .collect(toImmutableSet());
     }
 }

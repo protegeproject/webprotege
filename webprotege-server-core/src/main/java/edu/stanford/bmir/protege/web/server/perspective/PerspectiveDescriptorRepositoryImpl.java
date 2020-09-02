@@ -15,8 +15,10 @@ import org.bson.Document;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveDescriptorsRecord.*;
@@ -109,6 +111,26 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
         var query = new Document(PROJECT_ID, null)
                 .append(USER_ID, null);
         return getPerspectiveDescriptorRecord(query);
+    }
+
+    @Nonnull
+    @Override
+    public Stream<PerspectiveDescriptorsRecord> findProjectAndSystemDescriptors(@Nonnull ProjectId projectId) {
+        var projectIdQueries = Arrays.asList(
+                new Document(PROJECT_ID, null),
+                new Document(PROJECT_ID, projectId.getId()));
+        var query = new Document(new Document("$or", projectIdQueries))
+                .append(USER_ID, null);
+        var resultBuilder = Stream.<PerspectiveDescriptorsRecord>builder();
+        try(var cursor = getCollection().find(query)
+                       .cursor()) {
+            while(cursor.hasNext()) {
+                var doc = cursor.next();
+                var record = objectMapper.convertValue(doc, PerspectiveDescriptorsRecord.class);
+                resultBuilder.add(record);
+            }
+        }
+        return resultBuilder.build();
     }
 
     private Optional<PerspectiveDescriptorsRecord> getPerspectiveDescriptorRecord(Document query) {

@@ -17,8 +17,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -40,15 +42,14 @@ public class PerspectiveDescriptorRepository_TestCase {
         mongoClient = MongoTestUtils.createMongoClient();
         database = mongoClient.getDatabase(MongoTestUtils.getTestDbName());
         var objectMapper = new ObjectMapperProvider().get();
-        repository = new PerspectiveDescriptorRepositoryImpl(database,
-                                                             objectMapper);
+        repository = new PerspectiveDescriptorRepositoryImpl(database, objectMapper);
         repository.ensureIndexes();
     }
 
     @Test
     public void shouldCreateIndexes() {
         var collection = getCollection();
-        try(var cursor = collection.listIndexes().cursor()) {
+        try (var cursor = collection.listIndexes().cursor()) {
             var index = cursor.tryNext();
             assertThat(index, not(nullValue()));
         }
@@ -69,8 +70,7 @@ public class PerspectiveDescriptorRepository_TestCase {
     public void shouldRetrieveSaved() {
         var record = createTestRecord();
         repository.saveDescriptors(record);
-        var saved = repository.findDescriptors(record.getProjectId(),
-                                   record.getUserId());
+        var saved = repository.findDescriptors(record.getProjectId(), record.getUserId());
         assertThat(saved, is(Optional.of(record)));
     }
 
@@ -82,15 +82,41 @@ public class PerspectiveDescriptorRepository_TestCase {
         assertThat(getCollection().countDocuments(), Matchers.is(1L));
     }
 
+    @Test
+    public void shouldGetLessSpecficDescriptors() {
+        var userId = UserId.getUserId("TheUserName");
+        var projectId = ProjectId.getNil();
+
+        var userProjectRecord = PerspectiveDescriptorsRecord.get(projectId,
+                                                                 userId,
+                                                                 createPerspectivesList(PerspectiveId.generate()));
+        repository.saveDescriptors(userProjectRecord);
+
+        var projectPerspectiveId = PerspectiveId.generate();
+        var projectRecord = PerspectiveDescriptorsRecord.get(projectId, createPerspectivesList(projectPerspectiveId));
+        repository.saveDescriptors(projectRecord);
+
+        var systemPerspectiveId = PerspectiveId.generate();
+        var systemRecord = PerspectiveDescriptorsRecord.get(createPerspectivesList(systemPerspectiveId));
+        repository.saveDescriptors(systemRecord);
+        
+        var result = repository.findProjectAndSystemDescriptors(projectId)
+                               .map(PerspectiveDescriptorsRecord::getPerspectives)
+                               .flatMap(Collection::stream)
+                               .map(PerspectiveDescriptor::getPerspectiveId)
+                               .collect(toSet());
+        assertThat(result, hasItems(projectPerspectiveId, systemPerspectiveId));
+
+    }
+
+    private static ImmutableList<PerspectiveDescriptor> createPerspectivesList(PerspectiveId perspectiveId) {
+        return ImmutableList.of(PerspectiveDescriptor.get(perspectiveId, LanguageMap.of("en", "Hello"), true));
+    }
+
     private static PerspectiveDescriptorsRecord createTestRecord() {
-        return PerspectiveDescriptorsRecord.get(ProjectId.getNil(), UserId.getUserId("Matthew"),
-                                                ImmutableList.of(PerspectiveDescriptor.get(
-                                                        PerspectiveId.generate(),
-                                                        LanguageMap.of("en", "Hello"),
-                                                        true
-                                                                 )
-                                                )
-            );
+        return PerspectiveDescriptorsRecord.get(ProjectId.getNil(),
+                                                UserId.getUserId("Matthew"),
+                                                createPerspectivesList(PerspectiveId.generate()));
     }
 
     @After

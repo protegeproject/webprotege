@@ -6,11 +6,14 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 23/06/2014
  */
 public interface PerspectiveSwitcherView extends IsWidget {
+
+    void setResettablePerspectives(Set<PerspectiveId> resettablePerspectives);
 
     /**
      * Handles notifications for when a perspective link has been activated.

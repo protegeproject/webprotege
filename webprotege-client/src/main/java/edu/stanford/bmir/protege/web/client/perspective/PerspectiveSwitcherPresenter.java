@@ -70,7 +70,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
         GWT.log("[PerspectiveSwitcherPresenter] start with place: " + place);
         container.setWidget(view);
-        projectPerspectivesService.getPerspectives(perspectives -> {
+        projectPerspectivesService.getPerspectives((perspectives, resettablePerspectives) -> {
+            view.setResettablePerspectives(resettablePerspectives);
             setUserProjectPerspectives(perspectives);
             displayPlace(place);
         });
@@ -156,7 +157,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     private void handleRemoveFavoritePerspective(final PerspectiveId perspectiveId) {
         List<PerspectiveDescriptor> updatedPerspectivesList = withFavorite(perspectiveId, false);
         setUserProjectPerspectives(updatedPerspectivesList);
-        projectPerspectivesService.setPerspectives(updatedPerspectivesList, perspectiveDescriptors -> {
+        projectPerspectivesService.setPerspectives(updatedPerspectivesList, (descriptors, resettable) -> {
+            view.setResettablePerspectives(resettable);
             Optional<PerspectiveId> currentPlacePerspective = getCurrentPlacePerspectiveId();
             if (currentPlacePerspective.isPresent() && currentPlacePerspective.get().equals(perspectiveId)) {
                 // Need to change place
@@ -182,13 +184,18 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
             GWT.log("[PerspectiveSwitcherPresenter] Create new perspective: " + newPerspectiveDescriptor);
             ArrayList<PerspectiveDescriptor> updatedList = new ArrayList<>(this.perspectiveDescriptors);
             updatedList.add(newPerspectiveDescriptor.withFavorite(true));
-            projectPerspectivesService.setPerspectives(updatedList, this::setUserProjectPerspectives);
+            projectPerspectivesService.setPerspectives(updatedList, (perspectives, resettablePerspectives) -> {
+                view.setResettablePerspectives(resettablePerspectives);
+                setUserProjectPerspectives(updatedList);
+                goToPlaceForPerspective(newPerspectiveDescriptor.getPerspectiveId());
+            });
         });
     }
 
     private void addFavoritePerspective(PerspectiveId perspectiveId) {
         ImmutableList<PerspectiveDescriptor> updatedList = withFavorite(perspectiveId, true);
-        projectPerspectivesService.setPerspectives(updatedList, perspectives -> {
+        projectPerspectivesService.setPerspectives(updatedList, (perspectives, resettablePerspectives) -> {
+            view.setResettablePerspectives(resettablePerspectives);
             setUserProjectPerspectives(updatedList);
             goToPlaceForPerspective(perspectiveId);
         });

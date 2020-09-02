@@ -18,13 +18,13 @@ public class PerspectiveLayoutRecord_Serialization_TestCase {
 
     @Test
     public void shouldSerializeRecordWithoutUserId() throws IOException {
-        var record = PerspectiveLayoutRecord.get(ProjectId.getNil(), null, PerspectiveId.get("PerspectiveId"), null);
+        var record = PerspectiveLayoutRecord.get(ProjectId.getNil(), null, PerspectiveId.generate(), null);
         JsonSerializationTestUtil.testSerialization(record, PerspectiveLayoutRecord.class);
     }
 
     @Test
     public void shouldSerializeRecordWithUserId() throws IOException {
-        var record = PerspectiveLayoutRecord.get(ProjectId.getNil(), UserId.getUserId("Matthew"), PerspectiveId.get("PerspectiveId"), null);
+        var record = PerspectiveLayoutRecord.get(ProjectId.getNil(), UserId.getUserId("Matthew"), PerspectiveId.generate(), null);
         JsonSerializationTestUtil.testSerialization(record, PerspectiveLayoutRecord.class);
     }
 }

@@ -48,6 +48,7 @@ public class SetPerspectivesActionHandler implements ProjectActionHandler<SetPer
         var userId = action.getUserId();
         var perspectiveDescriptors = action.getPerspectiveDescriptors();
         perspectivesManager.setPerspectives(projectId, userId, perspectiveDescriptors);
-        return new SetPerspectivesResult();
+        var resettablePerspectives = perspectivesManager.getResettablePerspectiveIds(projectId, userId);
+        return SetPerspectivesResult.get(perspectiveDescriptors, resettablePerspectives);
     }
 }

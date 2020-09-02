@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
@@ -43,4 +44,12 @@ public interface PerspectiveDescriptorRepository extends Repository {
      */
     @Nonnull
     Optional<PerspectiveDescriptorsRecord> findDescriptors();
+
+    /**
+     * Find the perspective descriptors that are not user specific.  This includes project level
+     * desecriptors and system level descriptors.
+     * @param projectId The project id
+     */
+    @Nonnull
+    Stream<PerspectiveDescriptorsRecord> findProjectAndSystemDescriptors(@Nonnull ProjectId projectId);
 }
