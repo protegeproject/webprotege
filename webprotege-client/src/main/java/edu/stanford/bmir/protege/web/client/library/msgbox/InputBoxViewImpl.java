@@ -73,9 +73,6 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
 
     @Override
     public void setMultiline(boolean multiline) {
-        if (multiline == this.multiline) {
-            return;
-        }
         if(multiline) {
             switchToMultiline();
         }
@@ -86,8 +83,8 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
 
     private void switchToSingleLine() {
         multiline = false;
-        textArea.setVisible(true);
-        textBox.setVisible(false);
+        textBox.setVisible(true);
+        textArea.setVisible(false);
         textBox.setValue(textArea.getValue());
     }
 
