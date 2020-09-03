@@ -131,7 +131,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                         canEdit -> editProjectTags.setEnabled(canEdit));
         permissionChecker.hasPermission(EDIT_FORMS,
                                         canEdit -> editProjectForms.setEnabled(canEdit));
-        permissionChecker.hasPermission(VIEW_PROJECT,
+        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
                                         canView -> exportSettings.setEnabled(canView));
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
                                         canView -> importSettings.setEnabled(canView));
