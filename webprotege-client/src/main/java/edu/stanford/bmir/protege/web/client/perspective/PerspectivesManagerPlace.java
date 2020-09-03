@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.auto.value.AutoValue;
 import com.google.gwt.place.shared.Place;
+import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -14,7 +15,7 @@ import java.util.Optional;
  * 2020-09-02
  */
 @AutoValue
-public abstract class PerspectivesManagerPlace extends Place {
+public abstract class PerspectivesManagerPlace extends Place implements HasProjectId {
 
     @Nonnull
     public static PerspectivesManagerPlace get(ProjectId projectId) {

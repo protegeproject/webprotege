@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -88,10 +89,10 @@ public class PerspectivesManagerPresenter {
                                             if (canEditProjectSettings) {
                                                 AcceptsOneWidget adminSettingsContainer = settingsPresenter.addSection("Tabs Admin");
                                                 adminSettingsContainer.setWidget(adminSettingsView);
+                                                adminSettingsView.setMakeDefaultTabsForProjectHandler(this::handleMakeDefaultTabsForProject);
                                             }
                                         });
 
-        adminSettingsView.setMakeDefaultTabsForProjectHandler(this::handleMakeDefaultTabsForProject);
         refill();
     }
 
