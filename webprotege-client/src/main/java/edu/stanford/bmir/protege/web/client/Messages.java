@@ -1356,4 +1356,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Are you sure that you want to permanently delete the <strong>{0}</strong> tab?  This cannot be undone.")
     @Key("perspective.deleteConfirmation.message")
     String perspective_deleteConfirmation_message(String object);
+
+    @DefaultMessage("Reset tabs?")
+    @Key("perspective.resetConfirmation.title")
+    String perspective_resetConfirmation_title();
+
+    @DefaultMessage("Are you sure that you want to reset the tabs to the default set of tabs?  This cannot be undone.")
+    @Key("perspective.resetConfirmation.message")
+    String perspective_resetConfirmation_message();
 }

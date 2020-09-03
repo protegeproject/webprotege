@@ -72,6 +72,7 @@ public class PerspectivesManagerPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         settingsPresenter.start(container);
         settingsPresenter.setSettingsTitle(messages.perspective_tabs());
+        settingsPresenter.setApplyButtonText(messages.dialog_ok());
         settingsPresenter.setApplySettingsHandler(this::handleApplySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancelSettings);
         settingsPresenter.setBusy(true);
@@ -95,8 +96,11 @@ public class PerspectivesManagerPresenter {
     }
 
     private void handleResetPerspectives() {
-        settingsPresenter.setBusy(true);
-        perspectivesManagerService.resetPerspectives(this::refill);
+        perspectivesListView.displayResetPerspectivesConfirmation(() -> {
+            settingsPresenter.setBusy(true);
+            perspectivesManagerService.resetPerspectives(this::refill);
+        });
+
     }
 
     private void handleMakeDefaultTabsForProject() {
