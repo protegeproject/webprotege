@@ -99,7 +99,7 @@ public class PerspectiveDescriptorRepository_TestCase {
         var systemPerspectiveId = PerspectiveId.generate();
         var systemRecord = PerspectiveDescriptorsRecord.get(createPerspectivesList(systemPerspectiveId));
         repository.saveDescriptors(systemRecord);
-        
+
         var result = repository.findProjectAndSystemDescriptors(projectId)
                                .map(PerspectiveDescriptorsRecord::getPerspectives)
                                .flatMap(Collection::stream)

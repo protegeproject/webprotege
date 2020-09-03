@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDetails;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
@@ -84,6 +85,8 @@ public class RpcWhiteList implements Action, Result {
     HierarchyFilterType hierarchyFilterType;
 
     ProjectSettings projectSettings;
+
+    PerspectiveDetails perspectiveDetails;
 
     SlackIntegrationSettings slackIntegrationSettings;
 

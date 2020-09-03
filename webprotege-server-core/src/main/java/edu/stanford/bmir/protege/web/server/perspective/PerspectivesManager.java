@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.server.perspective;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
+import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -45,5 +43,12 @@ public interface PerspectivesManager {
 
     @Nonnull
     ImmutableSet<PerspectiveId> getResettablePerspectiveIds(@Nonnull ProjectId projectId,
+                                                            @Nonnull UserId userId);
+
+    void savePerspectivesAsProjectDefault(@Nonnull ProjectId projectId,
+                                          @Nonnull UserId userId);
+
+    @Nonnull
+    ImmutableList<PerspectiveDetails> getPerspectiveDetails(@Nonnull ProjectId projectId,
                                                             @Nonnull UserId userId);
 }

@@ -62,6 +62,7 @@ import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
+import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveDetailsAction;
 
 /**
  * Matthew Horridge
@@ -681,6 +682,17 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideUpdateFormDescriptorActionHandler(UpdateFormDescriptorActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideSetUserLayoutAsDefaultProjectLayoutActionHandler(
+            SetUserPerspectivesAsProjectDefaultActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetPerspectiveDetailsActionHandler(GetPerspectiveDetailsActionHandler handler) {
         return handler;
     }
 }

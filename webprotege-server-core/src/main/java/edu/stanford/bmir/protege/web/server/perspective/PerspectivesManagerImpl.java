@@ -157,4 +157,41 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
               .flatMap(s -> s)
               .collect(toImmutableSet());
     }
+
+    @Override
+    public void savePerspectivesAsProjectDefault(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+        var record = descriptorsRepository.findDescriptors(projectId, userId);
+        if(record.isEmpty()) {
+            return;
+        }
+        var theRecord = record.get();
+        var perspectives = theRecord.getPerspectives();
+        var projectRecord = PerspectiveDescriptorsRecord.get(projectId, perspectives);
+        descriptorsRepository.saveDescriptors(projectRecord);
+        for(var perspective : perspectives) {
+            var perspectiveId = perspective.getPerspectiveId();
+            layoutsRepository.findLayout(projectId, userId, perspectiveId)
+                             .ifPresent(layoutRecord -> {
+                                 var layout = layoutRecord.getLayout();
+                                 var projectPerspectiveLayout = PerspectiveLayoutRecord.get(projectId, null, perspectiveId, layout);
+                                 layoutsRepository.saveLayout(projectPerspectiveLayout);
+                             });
+        }
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableList<PerspectiveDetails> getPerspectiveDetails(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+        var perspectiveDescriptors = getPerspectives(projectId, userId);
+        var resultBuilder = ImmutableList.<PerspectiveDetails>builder();
+        for(var descriptor : perspectiveDescriptors) {
+            var perspectiveLayout = getPerspectiveLayout(projectId, userId, descriptor.getPerspectiveId());
+            var perspectiveDetails = PerspectiveDetails.get(descriptor.getPerspectiveId(),
+                                                            descriptor.getLabel(),
+                                                            descriptor.isFavorite(),
+                                                            perspectiveLayout.getLayout().orElse(null));
+            resultBuilder.add(perspectiveDetails);
+        }
+        return resultBuilder.build();
+    }
 }

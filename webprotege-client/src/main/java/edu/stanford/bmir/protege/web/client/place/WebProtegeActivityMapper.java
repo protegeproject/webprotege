@@ -13,6 +13,9 @@ import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerActivity;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPlace;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPresenter;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsActivity;
 import edu.stanford.bmir.protege.web.client.search.EntitySearchSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.tag.ProjectTagsActivity;
@@ -222,6 +225,14 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return EntitySearchSettingsActivity.get(entitySearchSettingsPresenter, searchSettingsPlace.getNextPlace());
         }
 
+        if(place instanceof PerspectivesManagerPlace) {
+            PerspectivesManagerPlace perspectivesManagerPlace = (PerspectivesManagerPlace) place;
+            PerspectivesManagerPresenter perspectivesManagerPresenter = getPerspectivesManagerPresenter(perspectivesManagerPlace);
+            return PerspectivesManagerActivity.get(perspectivesManagerPlace.getProjectId(),
+                                                   perspectivesManagerPlace.getNextPlace().orElse(null),
+                                                   perspectivesManagerPresenter);
+        }
+
         return null;
     }
 
@@ -249,6 +260,11 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     private EntitySearchSettingsPresenter getEntitySearchSettingsPresenter(EntitySearchSettingsPlace place) {
         ClientProjectComponent projectComponent = getClientProjectComponentForProjectAndLoggedInUser(place.getProjectId());
         return projectComponent.getEntitySearchSettingsPresenter();
+    }
+
+    private PerspectivesManagerPresenter getPerspectivesManagerPresenter(PerspectivesManagerPlace place) {
+        ClientProjectComponent projectComponent = getClientProjectComponentForProjectAndLoggedInUser(place.getProjectId());
+        return projectComponent.getPerspectivesManagerPresenter();
     }
 
 }

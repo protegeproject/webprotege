@@ -45,6 +45,10 @@ public interface PerspectiveSwitcherView extends IsWidget {
         void handleAddViewToPerspective(PerspectiveId perspectiveId);
     }
 
+    interface ManagerPerspectivesHandler {
+        void handleManagePerspectives();
+    }
+
     /**
      * Sets the selected perspective link.  This link will be visually distinguished from the other perspective
      * links in the view.
@@ -86,6 +90,8 @@ public interface PerspectiveSwitcherView extends IsWidget {
 
     void setResetPerspectiveToDefaultStateHandler(ResetPerspectiveToDefaultStateHandler handler);
 
+    void setManagePerspectivesHandler(ManagerPerspectivesHandler handler);
+
     void setAddViewHandler(AddViewHandler handler);
 
 
@@ -96,4 +102,6 @@ public interface PerspectiveSwitcherView extends IsWidget {
     void setClosePerspectiveAllowed(boolean closePerspectiveAllowed);
 
     void setAddViewAllowed(boolean addViewAllowed);
+
+    void setManagePerspectivesAllowed(boolean allowed);
 }

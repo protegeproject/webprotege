@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,8 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ObjectListViewImpl extends Composite implements ObjectListView {
 
     private final MessageBox messageBox;
-
-    private final FormsMessages formsMessages;
 
     private Runnable addObjectHandler = () -> {};
 
@@ -46,13 +45,28 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
 
     private final List<ObjectListViewHolder> views = new ArrayList<>();
 
+    private Function<String, String> deleteConfirmationTitle;
+
+    private Function<String, String> deleteConfirmationMessage;
+
     @Inject
     public ObjectListViewImpl(MessageBox messageBox,
                               FormsMessages formsMessages) {
         this.messageBox = messageBox;
-        this.formsMessages = formsMessages;
+        this.deleteConfirmationTitle = formsMessages::deleteFormElementConfirmation_Title;
+        this.deleteConfirmationMessage = formsMessages::deleteFormElementConfirmation_Message;
         initWidget(ourUiBinder.createAndBindUi(this));
         addObjectButton.addClickHandler(event -> addObjectHandler.run());
+    }
+
+    @Override
+    public void setDeleteConfirmationTitle(@Nonnull Function<String, String> deleteConfirmationTitle) {
+        this.deleteConfirmationTitle = checkNotNull(deleteConfirmationTitle);
+    }
+
+    @Override
+    public void setDeleteConfirmationMessage(@Nonnull Function<String, String> deleteConfirmationMessage) {
+        this.deleteConfirmationMessage = checkNotNull(deleteConfirmationMessage);
     }
 
     @Override
@@ -133,8 +147,8 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     @Override
     public void performDeleteElementConfirmation(String objectId,
                                                  @Nonnull Runnable deleteRunnable) {
-        messageBox.showConfirmBox(formsMessages.deleteFormElementConfirmation_Title(objectId),
-                                  formsMessages.deleteFormElementConfirmation_Message(objectId),
+        messageBox.showConfirmBox(deleteConfirmationTitle.apply(objectId),
+                                  deleteConfirmationMessage.apply(objectId),
                                   DialogButton.NO,
                                   DialogButton.DELETE,
                                   () -> { reorder(); deleteRunnable.run();},

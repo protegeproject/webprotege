@@ -63,6 +63,6 @@
         <g:SimplePanel addStyleNames="{style.tabBarContainer}">
             <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
         </g:SimplePanel>
-        <g:Button ui:field="newTabButton" text="{msg.addTab}" addStyleNames="{style.newTabButton} {wp.buttons.addTabButton}"/>
+        <g:Button ui:field="newTabButton" text="{msg.perspective_tabs}  &#x25be;" addStyleNames="{style.newTabButton} {wp.buttons.addTabButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

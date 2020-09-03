@@ -39,8 +39,7 @@ import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
-import edu.stanford.bmir.protege.web.client.perspective.ProjectPerspectivesService;
-import edu.stanford.bmir.protege.web.client.perspective.ProjectPerspectivesServiceImpl;
+import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
 import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
@@ -888,6 +887,16 @@ public class ClientProjectModule {
 
     @Provides
     ProjectSettingsImporterView provideProjectSettingsImporterView(ProjectSettingsImporterViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    PerspectivesManagerView providePerspectivesManagerView(PerspectivesManagerViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    PerspectiveDetailsView providePerspectiveDetailsView(PerspectiveDetailsViewImpl impl) {
         return impl;
     }
 }

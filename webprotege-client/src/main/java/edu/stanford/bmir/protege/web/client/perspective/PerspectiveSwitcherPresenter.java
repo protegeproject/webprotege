@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,14 +22,14 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_PERSPECTIVE;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 23/06/2014
  */
 public class PerspectiveSwitcherPresenter implements HasDispose {
 
+    private final ProjectId projectId;
 
     private final PerspectiveSwitcherView view;
 
@@ -45,12 +46,13 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     private final List<PerspectiveDescriptor> perspectiveDescriptors = new ArrayList<>();
 
     @Inject
-    public PerspectiveSwitcherPresenter(PerspectiveSwitcherView view,
+    public PerspectiveSwitcherPresenter(ProjectId projectId, PerspectiveSwitcherView view,
                                         ProjectPerspectivesService projectPerspectivesService,
                                         CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler,
                                         PlaceController placeController,
                                         final EventBus eventBus,
                                         LoggedInUserProjectPermissionChecker permissionChecker) {
+        this.projectId = checkNotNull(projectId);
         this.view = view;
         this.createFreshPerspectiveRequestHandler = createFreshPerspectiveRequestHandler;
         this.projectPerspectivesService = projectPerspectivesService;
@@ -78,15 +80,25 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         view.setAddPerspectiveAllowed(false);
         view.setClosePerspectiveAllowed(false);
         view.setAddViewAllowed(false);
+        view.setManagePerspectivesAllowed(false);
         permissionChecker.hasPermission(ADD_OR_REMOVE_PERSPECTIVE,
                                         canAddRemove -> {
                                             view.setClosePerspectiveAllowed(canAddRemove);
                                             view.setAddPerspectiveAllowed(canAddRemove);
-                                            view.setAddBlankPerspectiveHandler(this::handleCreateNewPerspective);
-                                            view.setRemoveFromFavoritePerspectivesHandler(this::handleRemoveFavoritePerspective);
-                                        });
+                                            view.setManagePerspectivesAllowed(canAddRemove);
+                                            if(canAddRemove) {
+                                                view.setAddBlankPerspectiveHandler(this::handleCreateNewPerspective);
+                                                view.setRemoveFromFavoritePerspectivesHandler(this::handleRemoveFavoritePerspective);
+                                                view.setManagePerspectivesHandler(this::handleManage);
+                                            }
+        });
         permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
                                         view::setAddViewAllowed);
+    }
+
+    private void handleManage() {
+        Place currentPlace = placeController.getWhere();
+        placeController.goTo(PerspectivesManagerPlace.get(projectId, currentPlace));
     }
 
     /**

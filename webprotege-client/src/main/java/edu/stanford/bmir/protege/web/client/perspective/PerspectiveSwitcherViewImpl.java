@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TabBar;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
@@ -65,6 +64,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     private ResetPerspectiveToDefaultStateHandler resetPerspectiveToDefaultStateHandler = perspectiveId -> {};
 
+    private ManagerPerspectivesHandler managePerspectivesHandler = () -> {};
+
     private AddViewHandler addViewHandler = perspectiveId -> {};
 
     private boolean addPerspectiveAllowed = true;
@@ -72,6 +73,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     private boolean closePerspectiveAllowed = true;
 
     private boolean addViewAllowed = true;
+
+    private boolean managePerspectivesAllowed = false;
 
     private static Messages messages = GWT.create(Messages.class);
 
@@ -115,7 +118,14 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         popupMenu.addSeparator();
         popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
                           () -> addBlankPerspectiveHandler.handleAddBlankPerspective());
+        if(managePerspectivesAllowed) {
+            popupMenu.addSeparator();
+            popupMenu.addItem(messages.perspective_manage(),
+                              () -> managePerspectivesHandler.handleManagePerspectives());
+        }
+
         popupMenu.showRelativeTo(newTabButton);
+
     }
 
     public void setFavourites(List<PerspectiveDescriptor> perspectives) {
@@ -206,6 +216,12 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     }
 
     @Override
+    public void setManagePerspectivesHandler(
+            ManagerPerspectivesHandler handler) {
+        this.managePerspectivesHandler = checkNotNull(handler);
+    }
+
+    @Override
     public void setAddViewHandler(AddViewHandler handler) {
         addViewHandler = checkNotNull(handler);
     }
@@ -250,5 +266,10 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @Override
     public void setAddViewAllowed(boolean addViewAllowed) {
         this.addViewAllowed = addViewAllowed;
+    }
+
+    @Override
+    public void setManagePerspectivesAllowed(boolean managePerspectivesAllowed) {
+        this.managePerspectivesAllowed = managePerspectivesAllowed;
     }
 }

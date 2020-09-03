@@ -17,9 +17,17 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("back")
     String back();
     
+    @DefaultMessage("tab")
+    @Key("perspective.tab")
+    String perspective_tab();
+
+    @DefaultMessage("Tabs")
+    @Key("perspective.tabs")
+    String perspective_tabs();
+
     @DefaultMessage("Add tab")
-    @Key("addTab")
-    String addTab();
+    @Key("perspective.perspective_addTab")
+    String perspective_addTab();
 
     
     @DefaultMessage("authored")
@@ -655,27 +663,6 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("password.resetPassword")
     String password_resetPassword();
 
-    
-    @DefaultMessage("Add blank tab")
-    @Key("perspective.addBlankTab")
-    String perspective_addBlankTab();
-
-    
-    @DefaultMessage("Add view")
-    @Key("perspective.addView")
-    String perspective_addView();
-
-    
-    @DefaultMessage("Close")
-    @Key("perspective.close")
-    String perspective_close();
-
-    
-    @DefaultMessage("Reset")
-    @Key("perspective.reset")
-    String perspective_reset();
-
-    
     @DefaultMessage("Plus")
     @Key("plus")
     String plus();
@@ -1336,4 +1323,37 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("The settings have successfuly been imported.  We recommend that your refresh your browser.")
     @Key("settings.import.complete.message")
     String settings_importSettings_complete_message();
+
+
+    @DefaultMessage("Add blank tab")
+    @Key("perspective.addBlankTab")
+    String perspective_addBlankTab();
+
+
+    @DefaultMessage("Add view")
+    @Key("perspective.addView")
+    String perspective_addView();
+
+
+    @DefaultMessage("Close")
+    @Key("perspective.close")
+    String perspective_close();
+
+
+    @DefaultMessage("Reset")
+    @Key("perspective.reset")
+    String perspective_reset();
+
+
+    @DefaultMessage("Manage...")
+    @Key("perspective.manage")
+    String perspective_manage();
+
+    @DefaultMessage("Delete {0} tab?")
+    @Key("perspective.deleteConfirmation.title")
+    String perspective_deleteConfirmation_title(String object);
+
+    @DefaultMessage("Are you sure that you want to permanently delete the <strong>{0}</strong> tab?  This cannot be undone.")
+    @Key("perspective.deleteConfirmation.message")
+    String perspective_deleteConfirmation_message(String object);
 }
