@@ -78,7 +78,7 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(CreateDataPropertiesAction action) {
         return CREATE_PROPERTY;
     }
 

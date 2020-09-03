@@ -19,8 +19,6 @@ import java.util.function.Consumer;
 public interface ProjectPerspectivesService {
 
 
-    void savePerspectivesAsProjectDefault();
-
     interface PerspectiveServiceCallback {
         void handlePerspectives(List<PerspectiveDescriptor> perspectiveIds, Set<PerspectiveId> resettable);
     }

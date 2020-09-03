@@ -133,6 +133,13 @@ public class PerspectiveDescriptorRepositoryImpl implements PerspectiveDescripto
         return resultBuilder.build();
     }
 
+    @Override
+    public void dropAllDescriptors(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+        var query = new Document(PROJECT_ID, projectId.getId())
+                .append(USER_ID, userId.getUserName());
+        getCollection().deleteMany(query);
+    }
+
     private Optional<PerspectiveDescriptorsRecord> getPerspectiveDescriptorRecord(Document query) {
         var document = getCollection()
                 .find(query)

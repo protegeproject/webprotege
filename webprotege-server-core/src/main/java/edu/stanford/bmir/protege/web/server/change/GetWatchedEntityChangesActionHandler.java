@@ -44,7 +44,7 @@ public class GetWatchedEntityChangesActionHandler extends AbstractProjectActionH
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetWatchedEntityChangesAction action) {
         return VIEW_CHANGES;
     }
 

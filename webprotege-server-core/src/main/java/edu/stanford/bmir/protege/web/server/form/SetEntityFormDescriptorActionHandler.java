@@ -1,16 +1,12 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.SetEntityFormDescriptorResult;
-import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +41,7 @@ public class SetEntityFormDescriptorActionHandler extends AbstractProjectActionH
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetEntityFormDescriptorAction action) {
         return BuiltInAction.EDIT_FORMS;
     }
 

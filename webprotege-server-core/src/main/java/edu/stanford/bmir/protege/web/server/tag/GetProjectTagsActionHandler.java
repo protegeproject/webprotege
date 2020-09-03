@@ -44,7 +44,7 @@ public class GetProjectTagsActionHandler extends AbstractProjectActionHandler<Ge
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetProjectTagsAction action) {
         return VIEW_PROJECT;
     }
 

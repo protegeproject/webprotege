@@ -89,7 +89,7 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetEntityFormsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 }

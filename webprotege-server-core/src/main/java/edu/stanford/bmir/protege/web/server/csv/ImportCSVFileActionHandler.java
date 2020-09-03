@@ -91,7 +91,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(ImportCSVFileAction action) {
         return singletonList(EDIT_ONTOLOGY);
     }
 }

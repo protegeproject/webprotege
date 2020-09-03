@@ -1,18 +1,15 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
@@ -20,12 +17,14 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 18/02/16
  */
-public class SetPerspectivesActionHandler implements ProjectActionHandler<SetPerspectivesAction, SetPerspectivesResult> {
+public class SetPerspectivesActionHandler extends AbstractProjectActionHandler<SetPerspectivesAction, SetPerspectivesResult> {
 
     private final PerspectivesManager perspectivesManager;
 
     @Inject
-    public SetPerspectivesActionHandler(PerspectivesManager perspectivesManager) {
+    public SetPerspectivesActionHandler(@Nonnull AccessManager accessManager,
+                                        @Nonnull PerspectivesManager perspectivesManager) {
+        super(accessManager);
         this.perspectivesManager = perspectivesManager;
     }
 
@@ -35,10 +34,15 @@ public class SetPerspectivesActionHandler implements ProjectActionHandler<SetPer
         return SetPerspectivesAction.class;
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public RequestValidator getRequestValidator(@Nonnull SetPerspectivesAction action, @Nonnull RequestContext requestContext) {
-        return NullValidator.get();
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetPerspectivesAction action) {
+        if(action.getUserId().isEmpty()) {
+            return BuiltInAction.EDIT_PROJECT_SETTINGS;
+        }
+        else {
+            return BuiltInAction.VIEW_PROJECT;
+        }
     }
 
     @Nonnull
@@ -47,8 +51,14 @@ public class SetPerspectivesActionHandler implements ProjectActionHandler<SetPer
         var projectId = action.getProjectId();
         var userId = action.getUserId();
         var perspectiveDescriptors = action.getPerspectiveDescriptors();
-        perspectivesManager.setPerspectives(projectId, userId, perspectiveDescriptors);
-        var resettablePerspectives = perspectivesManager.getResettablePerspectiveIds(projectId, userId);
+        var executingUser = executionContext.getUserId();
+        if(userId.isPresent()) {
+            perspectivesManager.setPerspectives(projectId, userId.get(), perspectiveDescriptors);
+        }
+        else {
+            perspectivesManager.savePerspectivesAsProjectDefault(projectId, perspectiveDescriptors, executingUser);
+        }
+        var resettablePerspectives = perspectivesManager.getResettablePerspectiveIds(projectId, executingUser);
         return SetPerspectivesResult.get(perspectiveDescriptors, resettablePerspectives);
     }
 }

@@ -83,7 +83,7 @@ public class CreateEntityDiscussionThreadHandler extends AbstractProjectActionHa
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(CreateEntityDiscussionThreadAction action) {
         return CREATE_OBJECT_COMMENT;
     }
 

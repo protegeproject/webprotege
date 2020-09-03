@@ -70,7 +70,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetMatchingEntitiesAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

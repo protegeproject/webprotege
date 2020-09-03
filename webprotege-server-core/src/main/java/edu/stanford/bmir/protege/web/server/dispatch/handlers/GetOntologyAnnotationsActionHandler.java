@@ -61,7 +61,7 @@ public class GetOntologyAnnotationsActionHandler extends AbstractProjectActionHa
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetOntologyAnnotationsAction action) {
         return VIEW_PROJECT;
     }
 

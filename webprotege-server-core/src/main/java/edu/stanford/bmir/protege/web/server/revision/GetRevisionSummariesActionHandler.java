@@ -31,7 +31,7 @@ public class GetRevisionSummariesActionHandler extends AbstractProjectActionHand
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetRevisionSummariesAction action) {
         return BuiltInAction.VIEW_CHANGES;
     }
 

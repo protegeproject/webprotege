@@ -48,7 +48,7 @@ public class MergeEntitiesActionHandler extends AbstractProjectChangeHandler<OWL
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(MergeEntitiesAction action) {
         return MERGE_ENTITIES;
     }
 

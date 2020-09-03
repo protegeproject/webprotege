@@ -899,6 +899,11 @@ public class ClientProjectModule {
     PerspectiveDetailsView providePerspectiveDetailsView(PerspectiveDetailsViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    PerspectivesManagerAdminSettingsView providePerspectivesManagerAdminSettingsView(PerspectiveManagerAdminSettingsViewImpl impl) {
+        return impl;
+    }
 }
 
 

@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveDetailsAction;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveDetailsResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +37,7 @@ public class GetPerspectiveDetailsActionHandler extends AbstractProjectActionHan
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetPerspectiveDetailsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

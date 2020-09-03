@@ -53,7 +53,7 @@ public class SetDiscussionThreadStatusHandler extends AbstractProjectActionHandl
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetDiscussionThreadStatusAction action) {
         return SET_OBJECT_COMMENT_STATUS;
     }
 

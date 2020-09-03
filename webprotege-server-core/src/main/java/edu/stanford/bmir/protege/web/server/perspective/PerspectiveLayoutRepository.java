@@ -35,4 +35,6 @@ public interface PerspectiveLayoutRepository extends Repository {
     void dropLayout(@Nonnull ProjectId projectId,
                     @Nonnull UserId userId,
                     @Nonnull PerspectiveId perspectiveId);
+
+    void dropAllLayouts(@Nonnull ProjectId projectId, @Nonnull UserId userId);
 }

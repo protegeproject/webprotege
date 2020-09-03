@@ -44,7 +44,7 @@ public class GetDeprecatedEntitiesActionHandler extends AbstractProjectActionHan
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetDeprecatedEntitiesAction action) {
         return VIEW_PROJECT;
     }
 

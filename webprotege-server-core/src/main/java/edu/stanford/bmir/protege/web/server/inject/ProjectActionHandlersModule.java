@@ -686,13 +686,12 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler provideSetUserLayoutAsDefaultProjectLayoutActionHandler(
-            SetUserPerspectivesAsProjectDefaultActionHandler handler) {
+    public ProjectActionHandler provideGetPerspectiveDetailsActionHandler(GetPerspectiveDetailsActionHandler handler) {
         return handler;
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler provideGetPerspectiveDetailsActionHandler(GetPerspectiveDetailsActionHandler handler) {
+    public ProjectActionHandler provideResetPerspectivesActionHandler(ResetPerspectivesActionHandler handler) {
         return handler;
     }
 }

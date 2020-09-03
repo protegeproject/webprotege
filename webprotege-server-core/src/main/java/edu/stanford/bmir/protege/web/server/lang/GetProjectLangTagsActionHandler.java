@@ -40,7 +40,7 @@ public class GetProjectLangTagsActionHandler extends AbstractProjectActionHandle
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetProjectLangTagsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

@@ -4,8 +4,6 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.viz.EntityGraphSettings;
 import edu.stanford.bmir.protege.web.shared.viz.ProjectUserEntityGraphSettings;
 import edu.stanford.bmir.protege.web.shared.viz.SetEntityGraphActiveFiltersAction;
@@ -14,8 +12,6 @@ import edu.stanford.bmir.protege.web.shared.viz.SetEntityGraphActiveFiltersResul
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -72,7 +68,7 @@ public class SetEntityGraphActiveFiltersActionHandler extends AbstractProjectAct
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetEntityGraphActiveFiltersAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 }

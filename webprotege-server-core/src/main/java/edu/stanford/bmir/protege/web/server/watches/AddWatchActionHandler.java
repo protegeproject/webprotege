@@ -46,7 +46,7 @@ public class AddWatchActionHandler extends AbstractProjectActionHandler<AddWatch
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(AddWatchAction action) {
         return BuiltInAction.WATCH_CHANGES;
     }
 

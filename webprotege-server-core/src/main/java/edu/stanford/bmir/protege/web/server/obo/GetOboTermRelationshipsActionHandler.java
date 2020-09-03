@@ -36,7 +36,7 @@ public class GetOboTermRelationshipsActionHandler extends AbstractProjectActionH
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetOboTermRelationshipsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

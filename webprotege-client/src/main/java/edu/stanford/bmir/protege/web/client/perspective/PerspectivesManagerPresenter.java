@@ -7,6 +7,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDetails;
 
@@ -26,7 +27,10 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class PerspectivesManagerPresenter {
 
     @Nonnull
-    private final PerspectivesManagerView view;
+    private final PerspectivesManagerView perspectivesListView;
+
+    @Nonnull
+    private final PerspectivesManagerAdminSettingsView adminSettingsView;
 
     @Nonnull
     private final PerspectiveDetailsListPresenter detailsListPresenter;
@@ -44,14 +48,16 @@ public class PerspectivesManagerPresenter {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public PerspectivesManagerPresenter(@Nonnull PerspectivesManagerView view,
+    public PerspectivesManagerPresenter(@Nonnull PerspectivesManagerView perspectivesListView,
+                                        @Nonnull PerspectivesManagerAdminSettingsView adminSettingsView,
                                         @Nonnull PerspectiveDetailsListPresenter detailsListPresenter,
                                         @Nonnull SettingsPresenter settingsPresenter,
                                         @Nonnull PerspectivesManagerService perspectivesManagerService,
                                         @Nonnull Messages messages,
                                         @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
-        this.view = checkNotNull(view);
-        this.detailsListPresenter = detailsListPresenter;
+        this.perspectivesListView = checkNotNull(perspectivesListView);
+        this.adminSettingsView = checkNotNull(adminSettingsView);
+        this.detailsListPresenter = checkNotNull(detailsListPresenter);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.perspectivesManagerService = checkNotNull(perspectivesManagerService);
         this.messages = checkNotNull(messages);
@@ -65,13 +71,43 @@ public class PerspectivesManagerPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         settingsPresenter.start(container);
+        settingsPresenter.setSettingsTitle(messages.perspective_tabs());
         settingsPresenter.setApplySettingsHandler(this::handleApplySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancelSettings);
-        AcceptsOneWidget perspectiveDetailsContainer = settingsPresenter.addSection(messages.perspective_tabs());
-        perspectiveDetailsContainer.setWidget(view);
-        detailsListPresenter.start(view.getPerspectivesListContainer(), new SimpleEventBus());
         settingsPresenter.setBusy(true);
+
+        AcceptsOneWidget perspectiveDetailsContainer = settingsPresenter.addSection(messages.perspective_tabs());
+        perspectiveDetailsContainer.setWidget(perspectivesListView);
+        detailsListPresenter.start(perspectivesListView.getPerspectivesListContainer(), new SimpleEventBus());
+
+        perspectivesListView.setResetPerspectivesHandler(this::handleResetPerspectives);
+
+        permissionChecker.hasPermission(BuiltInAction.EDIT_PROJECT_SETTINGS,
+                                        canEditProjectSettings -> {
+                                            if (canEditProjectSettings) {
+                                                AcceptsOneWidget adminSettingsContainer = settingsPresenter.addSection("Tabs Admin");
+                                                adminSettingsContainer.setWidget(adminSettingsView);
+                                            }
+                                        });
+
+        adminSettingsView.setMakeDefaultTabsForProjectHandler(this::handleMakeDefaultTabsForProject);
         refill();
+    }
+
+    private void handleResetPerspectives() {
+        settingsPresenter.setBusy(true);
+        perspectivesManagerService.resetPerspectives(this::refill);
+    }
+
+    private void handleMakeDefaultTabsForProject() {
+        settingsPresenter.setBusy(true);
+        ImmutableList<PerspectiveDescriptor> descriptors = detailsListPresenter.getValues()
+                                                                               .stream()
+                                                                               .map(PerspectiveDetails::toPerspectiveDescriptor)
+                                                                               .collect(toImmutableList());
+        perspectivesManagerService.savePerspectivesAsProjectDefaults(descriptors, () -> {
+            settingsPresenter.setBusy(false);
+        });
     }
 
     private void handleApplySettings() {

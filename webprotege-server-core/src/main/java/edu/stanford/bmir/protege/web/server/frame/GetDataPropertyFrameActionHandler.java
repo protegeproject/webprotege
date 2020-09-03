@@ -53,7 +53,7 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetDataPropertyFrameAction action) {
         return VIEW_CHANGES;
     }
 

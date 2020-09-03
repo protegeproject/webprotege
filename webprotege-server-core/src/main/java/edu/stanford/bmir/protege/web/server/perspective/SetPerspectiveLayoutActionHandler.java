@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.perspective;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveCoordinates;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutResult;
 
@@ -38,7 +36,7 @@ public class SetPerspectiveLayoutActionHandler extends AbstractProjectActionHand
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetPerspectiveLayoutAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

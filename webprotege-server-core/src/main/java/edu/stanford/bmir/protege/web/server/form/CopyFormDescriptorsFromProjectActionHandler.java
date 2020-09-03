@@ -1,19 +1,15 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectAction;
 import edu.stanford.bmir.protege.web.shared.form.CopyFormDescriptorsFromProjectResult;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,7 +38,7 @@ public class CopyFormDescriptorsFromProjectActionHandler extends AbstractProject
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(CopyFormDescriptorsFromProjectAction action) {
         return BuiltInAction.EDIT_FORMS;
     }
 

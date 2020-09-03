@@ -65,7 +65,7 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(CreateNamedIndividualsAction action) {
         return Arrays.asList(EDIT_ONTOLOGY, CREATE_INDIVIDUAL);
     }
 

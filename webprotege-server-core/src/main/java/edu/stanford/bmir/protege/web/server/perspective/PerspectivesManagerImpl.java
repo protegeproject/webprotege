@@ -159,15 +159,12 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
     }
 
     @Override
-    public void savePerspectivesAsProjectDefault(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
-        var record = descriptorsRepository.findDescriptors(projectId, userId);
-        if(record.isEmpty()) {
-            return;
-        }
-        var theRecord = record.get();
-        var perspectives = theRecord.getPerspectives();
+    public void savePerspectivesAsProjectDefault(@Nonnull ProjectId projectId,
+                                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectives,
+                                                 @Nonnull UserId userId) {
         var projectRecord = PerspectiveDescriptorsRecord.get(projectId, perspectives);
         descriptorsRepository.saveDescriptors(projectRecord);
+        // Copy over the layouts
         for(var perspective : perspectives) {
             var perspectiveId = perspective.getPerspectiveId();
             layoutsRepository.findLayout(projectId, userId, perspectiveId)
@@ -193,5 +190,11 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
             resultBuilder.add(perspectiveDetails);
         }
         return resultBuilder.build();
+    }
+
+    @Override
+    public void resetPerspectives(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+        layoutsRepository.dropAllLayouts(projectId, userId);
+        descriptorsRepository.dropAllDescriptors(projectId, userId);
     }
 }

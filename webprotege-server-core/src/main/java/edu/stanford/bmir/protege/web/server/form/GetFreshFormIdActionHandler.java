@@ -32,7 +32,7 @@ public class GetFreshFormIdActionHandler extends AbstractProjectActionHandler<Ge
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetFreshFormIdAction action) {
         return BuiltInAction.EDIT_FORMS;
     }
 

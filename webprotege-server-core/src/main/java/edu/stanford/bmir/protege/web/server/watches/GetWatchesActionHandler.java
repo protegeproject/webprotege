@@ -41,7 +41,7 @@ public class GetWatchesActionHandler extends AbstractProjectActionHandler<GetWat
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(GetWatchesAction action) {
         return Arrays.asList(WATCH_CHANGES, VIEW_PROJECT);
     }
 

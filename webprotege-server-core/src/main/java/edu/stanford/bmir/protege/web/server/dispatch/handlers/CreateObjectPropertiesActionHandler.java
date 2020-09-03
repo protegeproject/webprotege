@@ -65,7 +65,7 @@ public class CreateObjectPropertiesActionHandler extends AbstractProjectChangeHa
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(CreateObjectPropertiesAction action) {
         return Arrays.asList(CREATE_PROPERTY, EDIT_ONTOLOGY);
     }
 

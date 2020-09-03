@@ -55,4 +55,16 @@ public class PerspectivesManagerService {
         dispatch.execute(new SetPerspectivesAction(projectId, currentUserId, descriptors),
                          result -> completeHandler.run());
     }
+
+    public void savePerspectivesAsProjectDefaults(@Nonnull ImmutableList<PerspectiveDescriptor> descriptors,
+                                                  @Nonnull Runnable completeHandler) {
+        UserId currentUserId = loggedInUserProvider.getCurrentUserId();
+        dispatch.execute(new SetPerspectivesAction(projectId, descriptors),
+                         result -> completeHandler.run());
+    }
+
+    public void resetPerspectives(@Nonnull Runnable completionHandler) {
+        dispatch.execute(new ResetPerspectivesAction(projectId),
+                         result -> completionHandler.run());
+    }
 }

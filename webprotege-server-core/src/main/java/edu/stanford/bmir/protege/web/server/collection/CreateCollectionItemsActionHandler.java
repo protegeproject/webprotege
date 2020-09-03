@@ -41,7 +41,7 @@ public class CreateCollectionItemsActionHandler extends AbstractProjectActionHan
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(CreateCollectionItemsAction action) {
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 

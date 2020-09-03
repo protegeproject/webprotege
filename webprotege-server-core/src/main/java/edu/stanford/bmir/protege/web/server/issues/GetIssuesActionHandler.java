@@ -40,7 +40,7 @@ public class GetIssuesActionHandler extends AbstractProjectActionHandler<GetIssu
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetIssuesAction action) {
         return BuiltInAction.VIEW_ANY_ISSUE;
     }
 

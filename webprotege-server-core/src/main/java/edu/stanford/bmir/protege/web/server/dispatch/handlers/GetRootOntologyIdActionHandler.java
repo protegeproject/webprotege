@@ -51,7 +51,7 @@ public class GetRootOntologyIdActionHandler extends AbstractProjectActionHandler
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetRootOntologyIdAction action) {
         return VIEW_PROJECT;
     }
 

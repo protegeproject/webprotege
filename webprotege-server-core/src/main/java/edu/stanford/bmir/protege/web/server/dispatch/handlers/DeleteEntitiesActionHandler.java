@@ -47,7 +47,7 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(DeleteEntitiesAction action) {
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 

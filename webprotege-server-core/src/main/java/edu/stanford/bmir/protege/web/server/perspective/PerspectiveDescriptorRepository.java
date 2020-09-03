@@ -52,4 +52,6 @@ public interface PerspectiveDescriptorRepository extends Repository {
      */
     @Nonnull
     Stream<PerspectiveDescriptorsRecord> findProjectAndSystemDescriptors(@Nonnull ProjectId projectId);
+
+    void dropAllDescriptors(@Nonnull ProjectId projectId, @Nonnull UserId userId);
 }

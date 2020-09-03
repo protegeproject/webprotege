@@ -39,7 +39,7 @@ public class GetOboTermSynonymsActionHandler extends AbstractProjectActionHandle
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetOboTermSynonymsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

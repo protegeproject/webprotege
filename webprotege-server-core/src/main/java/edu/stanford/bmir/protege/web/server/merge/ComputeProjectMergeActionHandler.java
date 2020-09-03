@@ -70,7 +70,7 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(ComputeProjectMergeAction action) {
         return Arrays.asList(EDIT_ONTOLOGY, UPLOAD_AND_MERGE);
     }
 

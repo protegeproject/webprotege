@@ -55,7 +55,7 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetAnnotationPropertyFrameAction action) {
         return VIEW_PROJECT;
     }
 

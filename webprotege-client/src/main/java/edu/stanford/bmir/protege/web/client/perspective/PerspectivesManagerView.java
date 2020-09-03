@@ -12,6 +12,12 @@ import javax.annotation.Nonnull;
  */
 public interface PerspectivesManagerView extends IsWidget {
 
+    interface ResetPerspectivesHandler {
+        void handleResetPerspectives();
+    }
+
+    void setResetPerspectivesHandler(@Nonnull ResetPerspectivesHandler handler);
+
     @Nonnull
     AcceptsOneWidget getPerspectivesListContainer();
 }

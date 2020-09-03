@@ -38,13 +38,6 @@ public class ProjectPerspectivesServiceImpl implements ProjectPerspectivesServic
         this.projectId = checkNotNull(projectId);
     }
 
-    @Override
-    public void savePerspectivesAsProjectDefault() {
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatch.execute(new SetUserPerspectivesAsProjectDefaultAction(projectId, userId),
-                         result -> {});
-    }
-
     public void getPerspectives(final PerspectiveServiceCallback callback) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatch.execute(new GetPerspectivesAction(projectId, userId), result -> {

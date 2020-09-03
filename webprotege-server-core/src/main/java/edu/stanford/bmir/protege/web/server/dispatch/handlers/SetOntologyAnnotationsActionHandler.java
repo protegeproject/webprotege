@@ -57,7 +57,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(SetOntologyAnnotationsAction action) {
         return asList(EDIT_ONTOLOGY, EDIT_ONTOLOGY_ANNOTATIONS);
     }
 

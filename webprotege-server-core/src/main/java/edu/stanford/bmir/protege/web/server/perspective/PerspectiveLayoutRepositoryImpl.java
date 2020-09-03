@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.IndexOptions;
-import com.mongodb.client.model.ReplaceOneModel;
-import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.WriteModel;
+import com.mongodb.client.model.*;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -120,6 +117,13 @@ public class PerspectiveLayoutRepositoryImpl implements PerspectiveLayoutReposit
     public void dropLayout(@Nonnull ProjectId projectId, @Nonnull UserId userId, @Nonnull PerspectiveId perspectiveId) {
         var query = getQuery(projectId.getId(), userId.getUserName(), perspectiveId);
         getCollection().deleteOne(query);
+    }
+
+    @Override
+    public void dropAllLayouts(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
+        var query = new Document(PROJECT_ID, projectId.getId())
+                .append(USER_ID, userId.getUserName());
+        getCollection().deleteMany(query);
     }
 
     @Override

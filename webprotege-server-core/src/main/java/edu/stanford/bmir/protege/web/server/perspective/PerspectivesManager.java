@@ -45,10 +45,20 @@ public interface PerspectivesManager {
     ImmutableSet<PerspectiveId> getResettablePerspectiveIds(@Nonnull ProjectId projectId,
                                                             @Nonnull UserId userId);
 
+    /**
+     * Saves the specified list of perspectives as the project defaults, copying
+     * the layouts for the perspectives.
+     * @param projectId The project
+     * @param perspectiveDescriptors the descriptors of the perspectives
+     * @param userId The user id from which to copy the perspective layouts
+     */
     void savePerspectivesAsProjectDefault(@Nonnull ProjectId projectId,
-                                          @Nonnull UserId userId);
+                                          @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveDescriptors,
+                                          UserId userId);
 
     @Nonnull
     ImmutableList<PerspectiveDetails> getPerspectiveDetails(@Nonnull ProjectId projectId,
                                                             @Nonnull UserId userId);
+
+    void resetPerspectives(@Nonnull ProjectId projectId, @Nonnull UserId userId);
 }

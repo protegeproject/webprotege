@@ -65,7 +65,7 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetHierarchyChildrenAction action) {
         return VIEW_PROJECT;
     }
 

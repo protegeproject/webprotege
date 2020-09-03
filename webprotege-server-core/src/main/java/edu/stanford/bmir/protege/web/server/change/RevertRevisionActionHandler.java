@@ -63,7 +63,7 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<Bo
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(RevertRevisionAction action) {
         return BuiltInAction.REVERT_CHANGES;
     }
 }

@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.server.search;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.search.SetSearchSettingsAction;
 import edu.stanford.bmir.protege.web.shared.search.SetSearchSettingsResult;
 
@@ -35,7 +33,7 @@ public class SetSearchSettingsActionHandler extends AbstractProjectActionHandler
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetSearchSettingsAction action) {
         return BuiltInAction.EDIT_PROJECT_SETTINGS;
     }
 

@@ -48,7 +48,7 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractProjectActionH
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetHierarchyPathsToRootAction action) {
         return VIEW_PROJECT;
     }
 
