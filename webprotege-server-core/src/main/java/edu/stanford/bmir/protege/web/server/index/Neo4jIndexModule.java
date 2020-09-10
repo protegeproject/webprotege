@@ -247,27 +247,27 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    OntologyAnnotationsSignatureIndex provideOntologyAnnotationsSignatureIndex(@Nonnull OntologyAnnotationsIndexImpl impl) {
+    OntologyAnnotationsSignatureIndex provideOntologyAnnotationsSignatureIndex(@Nonnull Neo4jOntologyAnnotationsSignatureIndex impl) {
         return impl;
     }
 
     @Provides
-    OntologyAxiomsIndex provideOntologyAxiomsIndex(OntologyAxiomsIndexImpl impl) {
+    OntologyAxiomsIndex provideOntologyAxiomsIndex(Neo4jOntologyAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
-    OntologyAxiomsSignatureIndex provideOntologyAxiomsSignatureIndex(AxiomsByEntityReferenceIndexImpl impl) {
+    OntologyAxiomsSignatureIndex provideOntologyAxiomsSignatureIndex(Neo4jOntologyAxiomsSignatureIndex impl) {
         return impl;
     }
 
     @Provides
-    OntologySignatureByTypeIndex provideOntologySignatureByTypeIndex(OntologySignatureByTypeIndexImpl impl) {
+    OntologySignatureByTypeIndex provideOntologySignatureByTypeIndex(Neo4jOntologySignatureByTypeIndex impl) {
         return impl;
     }
 
     @Provides
-    OntologySignatureIndex provideOntologySignatureIndex(OntologySignatureIndexImpl impl) {
+    OntologySignatureIndex provideOntologySignatureIndex(Neo4jOntologySignatureIndex impl) {
         return impl;
     }
 
@@ -278,19 +278,19 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    ProjectOntologiesIndex provideProjectOntologiesIndex(ProjectOntologiesIndexImpl impl,
+    ProjectOntologiesIndex provideProjectOntologiesIndex(Neo4jProjectOntologiesIndex impl,
                                                          RevisionManager revisionManager) {
-        impl.init(revisionManager);
+//        impl.init(revisionManager);
         return impl;
     }
 
     @Provides
-    ProjectSignatureByTypeIndex provideProjectSignatureByTypeIndex(ProjectSignatureByTypeIndexImpl impl) {
+    ProjectSignatureByTypeIndex provideProjectSignatureByTypeIndex(Neo4jProjectSignatureByTypeIndex impl) {
         return impl;
     }
 
     @Provides
-    ProjectSignatureIndex provideProjectSignatureIndex(ProjectSignatureIndexImpl impl) {
+    ProjectSignatureIndex provideProjectSignatureIndex(Neo4jProjectSignatureIndex impl) {
         return impl;
     }
 
