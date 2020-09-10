@@ -204,7 +204,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    IndividualsByTypeIndex provideIndividualsByTypeIndex(IndividualsByTypeIndexImpl impl) {
+    IndividualsByTypeIndex provideIndividualsByTypeIndex(Neo4jIndividualsByTypeIndex impl) {
         return impl;
     }
 
@@ -273,7 +273,7 @@ public class Neo4jIndexModule {
 
     @Provides
     ProjectClassAssertionAxiomsByIndividualIndex provideProjectClassAssertionAxiomsByIndividualIndex(
-        ProjectClassAssertionAxiomsByIndividualIndexImpl impl) {
+        Neo4jProjectClassAssertionAxiomsByIndividualIndex impl) {
         return impl;
     }
 
@@ -336,7 +336,7 @@ public class Neo4jIndexModule {
 
     @Provides
     ProjectAnnotationAssertionAxiomsBySubjectIndex providesHasAnnotationAssertionAxioms(
-        ProjectAnnotationAssertionAxiomsBySubjectIndexImpl impl) {
+        Neo4jProjectAnnotationAssertionAxiomsBySubjectIndex impl) {
         return impl;
     }
 
