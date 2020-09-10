@@ -11,15 +11,19 @@ import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.bind.index.*;
+import edu.stanford.owl2lpg.client.read.annotation.OntologyAnnotationsAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.AxiomByTypeAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.AxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.CharacteristicsAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.signature.SignatureAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
+import edu.stanford.owl2lpg.client.read.entity.EntityAccessor;
+import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
+import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
+import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
 
 import javax.annotation.Nonnull;
 
@@ -29,9 +33,12 @@ import javax.annotation.Nonnull;
  * 2019-09-10
  */
 @Module(includes = {
-    SignatureAccessorModule.class,
+    ProjectAccessorModule.class,
+    OntologyAccessorModule.class,
+    OntologyAnnotationsAccessorModule.class,
+    EntityAccessorModule.class,
+    AxiomAccessorModule.class,
     AxiomBySubjectAccessorModule.class,
-    AxiomByTypeAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
     AssertionAxiomBySubjectAccessorModule.class,
     ClassAssertionAxiomAccessorModule.class,
