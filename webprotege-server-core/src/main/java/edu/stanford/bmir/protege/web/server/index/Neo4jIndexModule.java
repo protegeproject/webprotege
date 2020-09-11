@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.index.impl.*;
-import edu.stanford.bmir.protege.web.server.owlapi.ProjectAnnotationAssertionAxiomsBySubjectIndexImpl;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
@@ -20,8 +19,9 @@ import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.entity.EntityAccessor;
 import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
+import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessor;
+import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
 
@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
     OntologyAccessorModule.class,
     OntologyAnnotationsAccessorModule.class,
     EntityAccessorModule.class,
+    NamedIndividualAccessorModule.class,
     AxiomAccessorModule.class,
     AxiomBySubjectAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
