@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntity
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.annotation.OntologyAnnotationsAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.AnnotationAssertionAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.CharacteristicsAxiomAccessorModule;
@@ -42,6 +43,7 @@ import javax.annotation.Nonnull;
     AxiomBySubjectAccessorModule.class,
     HierarchyAxiomBySubjectAccessorModule.class,
     AssertionAxiomBySubjectAccessorModule.class,
+    AnnotationAssertionAxiomAccessorModule.class,
     ClassAssertionAxiomAccessorModule.class,
     DomainAxiomAccessorModule.class,
     RangeAxiomAccessorModule.class,
@@ -211,7 +213,7 @@ public class Neo4jIndexModule {
 
     @Provides
     @ProjectSingleton
-    IndividualsIndex provideIndividualsIndex(IndividualsIndexImpl impl) {
+    IndividualsIndex provideIndividualsIndex(Neo4jIndividualsIndex impl) {
         return impl;
     }
 
@@ -343,7 +345,7 @@ public class Neo4jIndexModule {
 
     @Provides
     @ProjectSingleton
-    public AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex(AnnotationAssertionAxiomsByValueIndexImpl impl) {
+    public AnnotationAssertionAxiomsByValueIndex provideAnnotationAssertionAxiomsByValueIndex(Neo4jAnnotationAssertionAxiomsByValueIndex impl) {
         return impl;
     }
 
