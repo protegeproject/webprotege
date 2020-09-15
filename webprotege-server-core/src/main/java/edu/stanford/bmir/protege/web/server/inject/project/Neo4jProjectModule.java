@@ -119,15 +119,6 @@ public class Neo4jProjectModule {
 
   @Provides
   @ProjectSingleton
-  public AxiomContext provideAxiomContext() {
-    return AxiomContext.create(
-        provideNeo4jProjectId(),
-        provideNeo4jBranchId(),
-        provideOntologyDocumentId());
-  }
-
-  @Provides
-  @ProjectSingleton
   OWLDataFactory providesDataFactory() {
     return new OWLDataFactoryImpl();
   }
