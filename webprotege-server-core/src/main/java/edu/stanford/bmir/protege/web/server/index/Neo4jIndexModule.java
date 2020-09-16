@@ -146,23 +146,23 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    DifferentIndividualsAxiomsIndex provideDifferentIndividualsAxiomsIndex(DifferentIndividualsAxiomsIndexImpl impl) {
+    DifferentIndividualsAxiomsIndex provideDifferentIndividualsAxiomsIndex(Neo4jDifferentIndividualsAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
-    DisjointClassesAxiomsIndex provideDisjointClassesAxiomsIndex(DisjointClassesAxiomsIndexImpl impl) {
+    DisjointClassesAxiomsIndex provideDisjointClassesAxiomsIndex(Neo4jDisjointClassesAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
-    DisjointDataPropertiesAxiomsIndex provideDisjointDataPropertiesAxiomsIndex(DisjointDataPropertiesAxiomsIndexImpl impl) {
+    DisjointDataPropertiesAxiomsIndex provideDisjointDataPropertiesAxiomsIndex(Neo4jDisjointDataPropertiesAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
     DisjointObjectPropertiesAxiomsIndex provideDisjointObjectPropertiesAxiomsIndex(
-        DisjointObjectPropertiesAxiomsIndexImpl impl) {
+        Neo4jDisjointObjectPropertiesAxiomsIndex impl) {
         return impl;
     }
 
@@ -189,19 +189,19 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    EquivalentClassesAxiomsIndex provideEquivalentClassesAxiomsIndex(EquivalentClassesAxiomsIndexImpl impl) {
+    EquivalentClassesAxiomsIndex provideEquivalentClassesAxiomsIndex(Neo4jEquivalentClassesAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
     EquivalentDataPropertiesAxiomsIndex provideEquivalentDataPropertiesAxiomsIndex(
-        EquivalentDataPropertiesAxiomsIndexImpl impl) {
+        Neo4jEquivalentDataPropertiesAxiomsIndex impl) {
         return impl;
     }
 
     @Provides
     EquivalentObjectPropertiesAxiomsIndex provideEquivalentObjectPropertiesAxiomsIndex(
-        EquivalentObjectPropertiesAxiomsIndexImpl impl) {
+        Neo4jEquivalentObjectPropertiesAxiomsIndex impl) {
         return impl;
     }
 
@@ -217,7 +217,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    InverseObjectPropertyAxiomsIndex provideInverseObjectPropertyAxiomsIndex(InverseObjectPropertyAxiomsIndexImpl impl) {
+    InverseObjectPropertyAxiomsIndex provideInverseObjectPropertyAxiomsIndex(Neo4jInverseObjectPropertyAxiomsIndex impl) {
         return impl;
     }
 
@@ -244,7 +244,7 @@ public class Neo4jIndexModule {
 
     @ProjectSingleton
     @Provides
-    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(OntologyAnnotationsIndexImpl impl) {
+    OntologyAnnotationsIndex provideOntologyAnnotationsIndex(Neo4jOntologyAnnotationsIndex impl) {
         return impl;
     }
 
@@ -303,7 +303,7 @@ public class Neo4jIndexModule {
     }
 
     @Provides
-    SameIndividualAxiomsIndex provideSameIndividualAxiomsIndex(SameIndividualAxiomsIndexImpl impl) {
+    SameIndividualAxiomsIndex provideSameIndividualAxiomsIndex(Neo4jSameIndividualAxiomsIndex impl) {
         return impl;
     }
 
