@@ -21,7 +21,6 @@ import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
-import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessor;
 import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
@@ -310,13 +309,13 @@ public class Neo4jIndexModule {
 
     @Provides
     SubAnnotationPropertyAxiomsBySubPropertyIndex provideSubAnnotationPropertyAxiomsBySubPropertyIndex(
-        SubAnnotationPropertyAxiomsBySubPropertyIndexImpl impl) {
+        Neo4jSubAnnotationPropertyAxiomsBySubPropertyIndex impl) {
         return impl;
     }
 
     @Provides
     SubAnnotationPropertyAxiomsBySuperPropertyIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndex(
-        SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
+        Neo4jSubAnnotationPropertyAxiomsBySuperPropertyIndex impl) {
         return impl;
     }
 
