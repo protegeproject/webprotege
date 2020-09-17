@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class PerspectiveId_Json_TestCase {
 
-    private static final String ID = "My Perspective: Test";
+    private static final String ID = "12345678-1234-1234-1234-123456789abc";
 
     private PerspectiveId perspectiveId;
 

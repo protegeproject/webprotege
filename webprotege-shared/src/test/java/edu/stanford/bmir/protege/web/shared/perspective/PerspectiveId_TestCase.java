@@ -14,7 +14,7 @@ public class PerspectiveId_TestCase {
 
     private PerspectiveId perspectiveId;
 
-    private String id = "The id";
+    private String id = "12345678-1234-1234-1234-123456789abc";
 
     @Before
     public void setUp() throws Exception {
@@ -48,7 +48,7 @@ public class PerspectiveId_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        assertThat(perspectiveId, is(not(PerspectiveId.get("String-4c96af5c-31d0-4b5a-9d57-ed48e6668da4"))));
+        assertThat(perspectiveId, is(not(PerspectiveId.get("4c96af5c-31d0-4b5a-9d57-ed48e6668da4"))));
     }
 
     @Test
