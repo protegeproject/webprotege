@@ -11,13 +11,9 @@ import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntity
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.annotation.OntologyAnnotationsAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.AnnotationAssertionAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomBySubjectAccessorModule;
+import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.CharacteristicsAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
 import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
 import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
@@ -37,11 +33,7 @@ import javax.annotation.Nonnull;
     EntityAccessorModule.class,
     NamedIndividualAccessorModule.class,
     AxiomAccessorModule.class,
-    AxiomBySubjectAccessorModule.class,
-    HierarchyAxiomBySubjectAccessorModule.class,
-    AssertionAxiomBySubjectAccessorModule.class,
-    AnnotationAssertionAxiomAccessorModule.class,
-    ClassAssertionAxiomAccessorModule.class,
+    AssertionAxiomAccessorModule.class,
     CharacteristicsAxiomAccessorModule.class
 })
 public class Neo4jIndexModule {
