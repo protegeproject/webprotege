@@ -17,9 +17,7 @@ import edu.stanford.owl2lpg.client.read.axiom.AxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.CharacteristicsAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.ClassAssertionAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AxiomBySubjectAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.DomainAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.HierarchyAxiomBySubjectAccessorModule;
-import edu.stanford.owl2lpg.client.read.axiom.RangeAxiomAccessorModule;
 import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
 import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
@@ -44,8 +42,6 @@ import javax.annotation.Nonnull;
     AssertionAxiomBySubjectAccessorModule.class,
     AnnotationAssertionAxiomAccessorModule.class,
     ClassAssertionAxiomAccessorModule.class,
-    DomainAxiomAccessorModule.class,
-    RangeAxiomAccessorModule.class,
     CharacteristicsAxiomAccessorModule.class
 })
 public class Neo4jIndexModule {
