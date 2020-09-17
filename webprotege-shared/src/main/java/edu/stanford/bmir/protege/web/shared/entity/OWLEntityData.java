@@ -69,4 +69,6 @@ public abstract class OWLEntityData extends OWLPrimitiveData {
     public Optional<OWLEntity> asEntity() {
         return Optional.of(getEntity());
     }
+
+    public abstract boolean isDeprecated();
 }

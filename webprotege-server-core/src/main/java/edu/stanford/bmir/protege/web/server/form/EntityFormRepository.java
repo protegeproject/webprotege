@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
@@ -20,6 +22,12 @@ public interface EntityFormRepository extends Repository {
     void deleteFormDescriptor(@Nonnull ProjectId projectId,
                               @Nonnull FormId formId);
 
+    /**
+     * Saves the specified form descriptor.  If a form descriptor with the {@link FormId}
+     * already exists then it will be updated.
+     * @param projectId The project for which the form descriptor should be set.
+     * @param formDescriptor The form descriptor.
+     */
     void saveFormDescriptor(@Nonnull ProjectId projectId,
                             @Nonnull FormDescriptor formDescriptor);
 
@@ -27,6 +35,9 @@ public interface EntityFormRepository extends Repository {
                                    @Nonnull List<FormDescriptor> formDescriptors);
 
     Stream<FormDescriptor> findFormDescriptors(@Nonnull ProjectId projectId);
+
+    Stream<FormDescriptor> findFormDescriptors(@Nonnull ImmutableSet<FormId> formIds,
+                                               @Nonnull ProjectId projectId);
 
     Optional<FormDescriptor> findFormDescriptor(@Nonnull ProjectId projectId,
                                                 @Nonnull FormId formId);

@@ -2,51 +2,32 @@ package edu.stanford.bmir.protege.web.server.search;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
-import com.google.common.primitives.ImmutableIntArray;
-import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.shortform.*;
-import edu.stanford.bmir.protege.web.server.tag.TagsManager;
-import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
-import edu.stanford.bmir.protege.web.shared.search.SearchField;
-import edu.stanford.bmir.protege.web.shared.search.SearchResultMatch;
-import edu.stanford.bmir.protege.web.shared.search.SearchResultMatchPosition;
+import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
-import static edu.stanford.bmir.protege.web.shared.search.SearchField.displayName;
 import static java.util.Comparator.comparing;
-import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 
 /**
  * Matthew Horridge
@@ -95,13 +76,19 @@ public class EntitySearcher {
 
     private PageRequest pageRequest = PageRequest.requestFirstPage();
 
+    private final ImmutableList<EntitySearchFilter> searchFilters;
+
+    private final EntityNodeRenderer entityNodeRenderer;
+
     @AutoFactory
     public EntitySearcher(@Provided @Nonnull ProjectId projectId,
                           @Provided @Nonnull DictionaryManager dictionaryManager,
                           @Nonnull Set<EntityType<?>> entityTypes,
                           @Nonnull String searchString,
                           @Nonnull UserId userId,
-                          @Nonnull ImmutableList<DictionaryLanguage> searchLanguages) {
+                          @Nonnull ImmutableList<DictionaryLanguage> searchLanguages,
+                          ImmutableList<EntitySearchFilter> searchFilters,
+                          @Provided @Nonnull EntityNodeRenderer entityNodeRenderer) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.dictionaryManager = checkNotNull(dictionaryManager);
@@ -111,7 +98,9 @@ public class EntitySearcher {
                                  .filter(s -> !s.isEmpty())
                                  .map(SearchString::parseSearchString)
                                  .collect(toImmutableList());
-        this.searchLanguages = searchLanguages;
+        this.searchLanguages = checkNotNull(searchLanguages);
+        this.searchFilters = checkNotNull(searchFilters);
+        this.entityNodeRenderer = entityNodeRenderer;
     }
 
     public void setPageRequest(@Nonnull PageRequest pageRequest) {
@@ -134,11 +123,12 @@ public class EntitySearcher {
         var entityMatches = dictionaryManager.getShortFormsContaining(searchWords,
                                                                       entityTypes,
                                                                       searchLanguages,
+                                                                      searchFilters,
                                                                       pageRequest);
         results = entityMatches.transform(matches -> {
             var entity = matches.getEntity();
             var shortForms = dictionaryManager.getShortForms(entity);
-            var entityData = DataFactory.getOWLEntityData(entity, shortForms);
+            var entityNode = entityNodeRenderer.render(entity);
             var matchesForEntity = matches.getShortFormMatches().stream().map(shortFormMatch -> {
                 var matchedLanguage = shortFormMatch.getLanguage();
                 var matchedShortForm = shortFormMatch.getShortForm();
@@ -149,7 +139,7 @@ public class EntitySearcher {
                                                              shortFormMatchPosition.getEnd()))
                                                      .collect(toImmutableList());
                 var matchedLanguageRendering = getLanguageRendering(matchedLanguage);
-                return SearchResultMatch.get(entityData,
+                return SearchResultMatch.get(entityNode,
                                              matchedLanguage,
                                              matchedLanguageRendering,
                                              matchedShortForm,
@@ -157,7 +147,7 @@ public class EntitySearcher {
 
 
             }).collect(toImmutableList());
-            return EntitySearchResult.get(entityData, matchesForEntity);
+            return EntitySearchResult.get(entityNode, matchesForEntity);
         });
     }
 

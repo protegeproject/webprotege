@@ -11,4 +11,6 @@ import edu.stanford.bmir.protege.web.client.action.UIAction;
 public interface ProjectMenuView extends IsWidget {
 
     void addMenuAction(UIAction uiAction);
+
+    void addSeparator();
 }

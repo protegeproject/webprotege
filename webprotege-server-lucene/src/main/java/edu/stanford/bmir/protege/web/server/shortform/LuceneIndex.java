@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.semanticweb.owlapi.model.EntityType;
@@ -28,6 +29,7 @@ public interface LuceneIndex {
     @Nonnull
     Optional<Page<EntityShortFormMatches>> search(@Nonnull List<SearchString> queryString,
                                                   @Nonnull List<DictionaryLanguage> dictionaryLanguages,
+                                                  @Nonnull List<EntitySearchFilter> searchFilters,
                                                   @Nonnull Set<EntityType<?>> entityTypes,
                                                   @Nonnull PageRequest pageRequest) throws IOException, ParseException;
 

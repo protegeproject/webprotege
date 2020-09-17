@@ -22,14 +22,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.AnnotationAssertionDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageVisitor;
-import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -83,12 +80,16 @@ public class ProjectSettingsPresenter {
     @Nonnull
     private Optional<ImmutableList<DictionaryLanguageUsage>> currentLanguageUsage = Optional.empty();
 
+    @Nonnull
+    private final ProjectSettingsService projectSettingsService;
+
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull PermissionScreener permissionScreener,
                                     @Nonnull DispatchServiceManager dispatchServiceManager,
                                     @Nonnull EventBus eventBus,
                                     @Nonnull SettingsPresenter settingsPresenter,
+                                    @Nonnull ProjectSettingsHeaderSectionPresenter headerSectionPresenter,
                                     @Nonnull GeneralSettingsView generalSettingsView,
                                     @Nonnull DefaultDictionaryLanguageView defaultDictionaryLanguageView,
                                     @Nonnull DefaultDisplayNameSettingsView defaultDisplayNameSettingsView,
@@ -96,7 +97,8 @@ public class ProjectSettingsPresenter {
                                     @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
                                     @Nonnull WebhookSettingsView webhookSettingsView,
                                     @Nonnull Messages messages,
-                                    @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer) {
+                                    @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
+                                    @Nonnull ProjectSettingsService projectSettingsService) {
         this.projectId = checkNotNull(projectId);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -110,6 +112,7 @@ public class ProjectSettingsPresenter {
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
         this.messages = checkNotNull(messages);
         this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
+        this.projectSettingsService = checkNotNull(projectSettingsService);
     }
 
     public ProjectId getProjectId() {
@@ -133,6 +136,7 @@ public class ProjectSettingsPresenter {
         settingsPresenter.start(container);
         settingsPresenter.setApplySettingsHandler(this::applySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
+
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
         // TODO: Check that the user can do this
         AcceptsOneWidget newEntitySettingsContainer = settingsPresenter.addSection(messages.newEntitySettings());
@@ -141,17 +145,25 @@ public class ProjectSettingsPresenter {
         settingsPresenter.addSection(messages.displayName_settings_project_title()).setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
-        settingsPresenter.setBusy(container, true);
+        defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
+        reloadSettings();
+    }
+
+    private void handleProjectSettingsImported() {
+        reloadSettings();
+    }
+
+    private void reloadSettings() {
+        settingsPresenter.setBusy(true);
         dispatchServiceManager.execute(new GetProjectInfoAction(projectId),
                                        result -> {
                                            ProjectSettings projectSettings = result.getProjectDetails();
-                                           displayProjectSettings(container, projectSettings, result.getProjectLanguages());
+                                           displayProjectSettings(projectSettings, result.getProjectLanguages());
                                        });
         dispatchServiceManager.execute(new GetEntityCrudKitsAction(projectId),
                                        result -> {
                                             entityCrudKitSettingsPresenter.setSettings(result.getCurrentSettings());
                                        });
-        defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
     }
 
     private void handleResetDisplayNameLanguages() {
@@ -163,8 +175,7 @@ public class ProjectSettingsPresenter {
         });
     }
 
-    private void displayProjectSettings(@Nonnull AcceptsOneWidget container,
-                                        @Nonnull ProjectSettings projectSettings,
+    private void displayProjectSettings(@Nonnull ProjectSettings projectSettings,
                                         @Nonnull ImmutableList<DictionaryLanguageUsage> languages) {
         this.currentProjectSettings = Optional.of(projectSettings);
         this.currentLanguageUsage = Optional.of(languages);
@@ -177,7 +188,7 @@ public class ProjectSettingsPresenter {
         slackWebhookSettingsView.setWebhookUrl(slackIntegrationSettings.getPayloadUrl());
         WebhookSettings webhookSettings = projectSettings.getWebhookSettings();
         webhookSettingsView.setWebhookUrls(webhookSettings.getWebhookSettings());
-        settingsPresenter.setBusy(container, false);
+        settingsPresenter.setBusy(false);
     }
 
     private void displayDefaultDictionaryLanguage(@Nonnull DictionaryLanguage defaultLanguage) {

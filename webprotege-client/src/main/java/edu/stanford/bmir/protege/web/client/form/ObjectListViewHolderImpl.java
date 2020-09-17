@@ -62,11 +62,21 @@ public class ObjectListViewHolderImpl extends Composite implements ObjectListVie
     @Inject
     public ObjectListViewHolderImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        moveUpButton.addClickHandler(event -> moveUpHandler.run());
-        moveDownButton.addClickHandler(event -> moveDownHandler.run());
+        moveUpButton.addClickHandler(this::handleMoveUpButtonPressed);
+        moveDownButton.addClickHandler(this::handleMoveDownButtonPressed);
         removeButton.addClickHandler(event -> removeHandler.run());
         elementHeader.sinkEvents(Event.ONCLICK);
         elementHeader.addHandler(event -> toggleExpansion(), ClickEvent.getType());
+    }
+
+    private void handleMoveDownButtonPressed(ClickEvent event) {
+        event.preventDefault();
+        moveDownHandler.run();
+    }
+
+    private void handleMoveUpButtonPressed(ClickEvent event) {
+        event.preventDefault();
+        moveUpHandler.run();
     }
 
     @Override
@@ -125,6 +135,11 @@ public class ObjectListViewHolderImpl extends Composite implements ObjectListVie
     @Override
     public void setLast() {
         moveDownButton.setEnabled(false);
+    }
+
+    @Override
+    public void setPositionOrdinal(int i) {
+        getElement().getStyle().setProperty("order", Integer.toString(i));
     }
 
     public native void scrollIntoView(JavaScriptObject element)/*-{

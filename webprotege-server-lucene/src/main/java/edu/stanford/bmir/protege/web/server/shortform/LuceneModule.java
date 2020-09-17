@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableList;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
@@ -40,7 +41,6 @@ public class LuceneModule {
     }
 
     @Provides
-    @ProjectSingleton
     LuceneEntityDocumentTranslator provideLuceneEntityDocumentTranslator(LuceneEntityDocumentTranslatorImpl impl) {
         return impl;
     }
@@ -48,7 +48,8 @@ public class LuceneModule {
     @Provides
     @ProjectSingleton
     LuceneIndex provideLuceneIndex(LuceneIndexImpl impl,
-                                   LuceneIndexWriter writer) {
+                                   // Not this is needed here to force an initial write of the index
+                                   LuceneIndexWriter indexWriter) {
         return impl;
     }
 
@@ -172,5 +173,10 @@ public class LuceneModule {
     @Provides
     MultiLingualShortFormIndex provideMultiLingualShortFormIndex(MultiLingualShortFormIndexLuceneImpl impl) {
         return impl;
+    }
+
+    @Provides
+    ImmutableList<EntitySearchFilterMatcher> provideSearchFilterMatchers(EntitySearchFilterMatchersFactory factory) {
+        return factory.getSearchFilterMatchers();
     }
 }

@@ -2,20 +2,18 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.FormsMessages;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.list.ListBox;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,15 +24,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormsManagerViewImpl extends Composite implements FormsManagerView {
 
-    private AddFormHandler addFormHandler = () -> {};
-
-    private DeleteFormHandler deleteFormHandler = (formId) -> {};
-
-    private EditFormHandler editFormHandler = (formId) -> {};
-
-    private FormSelectedHandler formSelectedHandler = (formId) -> {};
-
     private CopyFormsFromProjectHandler copyFormsFromProjectHandler = () -> {};
+
+    @UiField
+    protected SimplePanel formsListContainer;
+
+    private ExportFormsHandler exportFormsHandler = () -> {};
+
+    private ImportFormsHandler importFormsHandler = () -> {};
 
     interface FormsManagerViewImplUiBinder extends UiBinder<HTMLPanel, FormsManagerViewImpl> {
 
@@ -43,19 +40,12 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     private static FormsManagerViewImplUiBinder ourUiBinder = GWT.create(FormsManagerViewImplUiBinder.class);
 
     @UiField
-    Button addFormButton;
-
-    @UiField
-    ListBox<FormId, FormIdPresenter> formListField;
-
-    @UiField
-    Button editFormButton;
-
-    @UiField
-    Button deleteFormButton;
-
-    @UiField
     Button copyFormsFromProjectButton;
+
+    @UiField
+    Button exportFormsFromProjectButton;
+    @UiField
+    Button importFormsButton;
 
     @Nonnull
     private final MessageBox messageBox;
@@ -63,89 +53,53 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @Nonnull
     private final FormsMessages formsMessages;
 
+    private InputBox inputBox;
+
     @Inject
     public FormsManagerViewImpl(@Nonnull MessageBox messageBox,
-                                @Nonnull FormsMessages formsMessages) {
+                                @Nonnull FormsMessages formsMessages,
+                                @Nonnull InputBox inputBox) {
         this.messageBox = messageBox;
         this.formsMessages = formsMessages;
+        this.inputBox = inputBox;
         initWidget(ourUiBinder.createAndBindUi(this));
-        addFormButton.addClickHandler(this::handleAddForm);
-        deleteFormButton.addClickHandler(this::handleDeleteForm);
-        editFormButton.addClickHandler(this::handleEditForm);
         copyFormsFromProjectButton.addClickHandler(this::handleCopyFormsFromProject);
-        formListField.setRenderer(FormIdPresenter::getView);
-        formListField.addSelectionHandler(this::handleSelection);
-        deleteFormButton.setEnabled(false);
-        editFormButton.setEnabled(false);
+        exportFormsFromProjectButton.addClickHandler(this::handleExportForms);
+        importFormsButton.addClickHandler(this::handleImportForms);
     }
 
-    @Override
-    public void setAddFormHandler(@Nonnull AddFormHandler handler) {
-        this.addFormHandler = checkNotNull(handler);
+    private void handleImportForms(ClickEvent event) {
+        importFormsHandler.handleImportForms();
     }
 
-    @Override
-    public void setDeleteFormHandler(@Nonnull DeleteFormHandler handler) {
-        this.deleteFormHandler = checkNotNull(handler);
+    private void handleExportForms(ClickEvent event) {
+        exportFormsHandler.handleExportForms();
     }
 
-    @Override
-    public void setEditFormHandler(@Nonnull EditFormHandler handler) {
-        this.editFormHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setFormSelectedHandler(@Nonnull FormSelectedHandler handler) {
-        this.formSelectedHandler = checkNotNull(handler);
-    }
 
     @Override
     public void clear() {
-        formListField.setListData(Collections.emptyList());
     }
 
     @Override
-    public void setForms(List<FormIdPresenter> forms) {
-        formListField.setListData(forms);
+    public void displayImportFormsInputBox(Consumer<String> importFormsJson) {
+        inputBox.showDialog(formsMessages.importFormsIntoProject_title(),
+                            formsMessages.importFormsIntoProject_message(),
+                            true, "", importFormsJson::accept);
     }
 
     @Override
-    public void displayDeleteFormConfirmationMessage(@Nonnull String displayName,
-                                                     @Nonnull FormId formId,
-                                                     @Nonnull DeleteFormCallback deleteFormCallback) {
-        messageBox.showConfirmBox("Delete form?",
-                                  formsMessages.deleteFormElementConfirmation_Message(displayName),
-                                  DialogButton.CANCEL,
-                                  DialogButton.DELETE,
-                                  () -> deleteFormCallback.deleteForm(formId),
-                                  DialogButton.CANCEL);
+    public void displayImportFormsErrorMessage() {
+        messageBox.showAlert(formsMessages.importFormsIntoProject_error_title(),
+                             formsMessages.importFormsIntoProject_error_message());
     }
 
-    private void handleAddForm(ClickEvent clickEvent) {
-        addFormHandler.handleAddForm();
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getFormsListContainer() {
+        return formsListContainer;
     }
 
-
-    private void handleSelection(SelectionEvent<List<FormIdPresenter>> event) {
-        boolean selectionNonEmpty = !event.getSelectedItem()
-                                .isEmpty();
-        deleteFormButton.setEnabled(selectionNonEmpty);
-        editFormButton.setEnabled(selectionNonEmpty);
-        formListField.getFirstSelectedElement()
-                     .ifPresent(formIdPresenter -> formSelectedHandler.handleFormSelectionChanged(formIdPresenter.getFormId()));
-    }
-
-    private void handleDeleteForm(ClickEvent event) {
-        formListField.getFirstSelectedElement().ifPresent(f -> {
-            f.getFormId().ifPresent(fid -> deleteFormHandler.handleDeleteForm(fid));
-        });
-    }
-
-    private void handleEditForm(ClickEvent event) {
-        formListField.getFirstSelectedElement().ifPresent(f -> {
-            f.getFormId().ifPresent(fid -> editFormHandler.handleEditForm(fid));
-        });
-    }
 
     private void handleCopyFormsFromProject(ClickEvent event) {
         copyFormsFromProjectHandler.handleCopyFromsFromProject();
@@ -154,5 +108,15 @@ public class FormsManagerViewImpl extends Composite implements FormsManagerView 
     @Override
     public void setCopyFormsFromProjectHandler(@Nonnull CopyFormsFromProjectHandler handler) {
         this.copyFormsFromProjectHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setExportFormsHandler(@Nonnull ExportFormsHandler exportFormsHandler) {
+        this.exportFormsHandler = checkNotNull(exportFormsHandler);
+    }
+
+    @Override
+    public void setImportFormsHandler(@Nonnull ImportFormsHandler importFormsHandler) {
+        this.importFormsHandler = checkNotNull(importFormsHandler);
     }
 }

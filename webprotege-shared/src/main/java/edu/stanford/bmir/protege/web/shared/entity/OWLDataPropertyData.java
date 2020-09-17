@@ -25,7 +25,13 @@ public abstract class OWLDataPropertyData extends OWLPropertyData {
 
     public static OWLDataPropertyData get(@Nonnull OWLDataProperty property,
                                           @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
-        return new AutoValue_OWLDataPropertyData(shortForms, property);
+        return new AutoValue_OWLDataPropertyData(shortForms, false, property);
+    }
+
+    public static OWLDataPropertyData get(@Nonnull OWLDataProperty property,
+                                          @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms,
+                                          boolean deprecated) {
+        return new AutoValue_OWLDataPropertyData(shortForms, deprecated, property);
     }
 
     @Nonnull

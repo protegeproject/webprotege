@@ -12,5 +12,5 @@ import java.util.Collection;
  */
 public interface LuceneIndexUpdater {
 
-    void updateIndexForEntity(@Nonnull Collection<OWLEntity> entities);
+    void updateIndexForEntities(@Nonnull Collection<OWLEntity> entities);
 }

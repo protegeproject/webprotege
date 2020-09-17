@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
@@ -28,6 +30,8 @@ public class PerformEntitySearchAction implements ProjectAction<PerformEntitySea
 
     private LangTagFilter langTagFilter;
 
+    private ImmutableList<EntitySearchFilter> searchFilters;
+
     private PageRequest pageRequest;
 
     private PerformEntitySearchAction() {
@@ -37,11 +41,13 @@ public class PerformEntitySearchAction implements ProjectAction<PerformEntitySea
                                      @Nonnull String searchString,
                                      @Nonnull Set<EntityType<?>> entityTypes,
                                      @Nonnull LangTagFilter langTagFilter,
+                                     @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
                                      @Nonnull PageRequest pageRequest) {
         this.projectId = checkNotNull(projectId);
         this.searchString = checkNotNull(searchString);
         this.entityTypes = checkNotNull(entityTypes);
         this.langTagFilter = checkNotNull(langTagFilter);
+        this.searchFilters = checkNotNull(searchFilters);
         this.pageRequest = checkNotNull(pageRequest);
     }
 
@@ -64,6 +70,11 @@ public class PerformEntitySearchAction implements ProjectAction<PerformEntitySea
     @Nonnull
     public LangTagFilter getLangTagFilter() {
         return langTagFilter;
+    }
+
+    @Nonnull
+    public ImmutableList<EntitySearchFilter> getSearchFilters() {
+        return searchFilters;
     }
 
     @Nonnull

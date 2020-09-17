@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
@@ -7,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.obo.OboId;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.LocalNameDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.OboIdDictionaryLanguage;
@@ -100,8 +102,9 @@ public class DictionaryManager {
     public Page<EntityShortFormMatches> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                         @Nonnull Set<EntityType<?>> entityTypes,
                                                         @Nonnull List<DictionaryLanguage> languages,
+                                                                @Nonnull ImmutableList<EntitySearchFilter> searchFilters,
                                                                 @Nonnull PageRequest pageRequest) {
-        return dictionary.getShortFormsContaining(searchStrings, entityTypes, languages, pageRequest);
+        return dictionary.getShortFormsContaining(searchStrings, entityTypes, languages, searchFilters, pageRequest);
     }
 
     public void update(@Nonnull Collection<OWLEntity> entities) {

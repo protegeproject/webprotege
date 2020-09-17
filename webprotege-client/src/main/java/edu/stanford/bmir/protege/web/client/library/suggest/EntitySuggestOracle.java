@@ -1,20 +1,18 @@
 package edu.stanford.bmir.protege.web.client.library.suggest;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.primitive.EntitySuggestOracleSuggestLimit;
+import edu.stanford.bmir.protege.web.client.search.SearchResultMatchHighlighter;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupResult;
 import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.search.SearchResultMatchPosition;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -84,12 +82,16 @@ public class EntitySuggestOracle extends SuggestOracle {
         dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes, entityMatchCriteria)), result -> {
             List<EntitySuggestion> suggestions = new ArrayList<>();
             for (final EntityLookupResult entity : result.getEntityLookupResults()) {
-                GWT.log("EntitySuggestOracle] " + entity);
+                ImmutableList<SearchResultMatchPosition> positions = entity.getMatchResult().getPositions();
                 renderer.setPrimaryDisplayLanguage(entity.getLanguage());
-                renderer.setHighlight(entity.getMatchResult().getStart(),
-                                      entity.getMatchResult().getEnd());
+                if(!positions.isEmpty()) {
+                    SearchResultMatchPosition firstPosition = positions.get(0);
+                    renderer.setHighlight(firstPosition.getStart(),
+                                          firstPosition.getEnd());
+                }
+                String rendering = renderer.getHtmlRendering(entity.getEntityNode());
                 suggestions.add(new EntitySuggestion(entity.getOWLEntityData(),
-                                                     renderer.getHtmlRendering(entity.getEntityNode())));
+                                                     rendering));
             }
             callback.onSuggestionsReady(request, new Response(suggestions));
         });

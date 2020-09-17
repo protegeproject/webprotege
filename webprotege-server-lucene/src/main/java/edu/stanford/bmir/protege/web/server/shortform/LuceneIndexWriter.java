@@ -9,5 +9,7 @@ import java.io.IOException;
  */
 public interface LuceneIndexWriter {
 
+    void rebuildIndex() throws IOException;
+
     void writeIndex() throws IOException;
 }

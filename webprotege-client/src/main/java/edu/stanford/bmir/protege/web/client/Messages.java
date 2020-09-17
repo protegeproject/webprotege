@@ -723,10 +723,19 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("projectSettings.language.helpText")
     SafeHtml projectSettings_language_helpText();
 
+    @DefaultMessage("Any owl:import that cannot be loaded will be silently ignored")
+    @Key("projectSettings.owlimport.helpText")
+    SafeHtml projectSettings_owl_import_helpText();
+
     
     @DefaultMessage("Display name")
     @Key("projectSettings.displayName")
     String projectSettings_displayName();
+
+
+    @DefaultMessage("Project Settings")
+    @Key("projectSettings.headerSection.title")
+    String projectSettings_headerSection_title();
 
     
     @DefaultMessage("Main Settings")
@@ -1295,4 +1304,36 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Prefixed name")
     @Key("dictionaryLanguage.prefixedName")
     String dictionaryLanguage_prefixedName();
+
+    @DefaultMessage("Import Project Settings")
+    @Key("projectSettings.importSettings.title")
+    String projectSettings_importSettings_title();
+
+    @DefaultMessage("Paste the project settings that you wish to import into the text area below.  These settings will replaced any existing settings.")
+    @Key("projectSettings.importSettings.message")
+    String projectSettings_importSettings_message();
+
+    @DefaultMessage("Import Project Settings Error")
+    @Key("projectSettings.importSettings.error.title")
+    String projectSettings_importSettings_error_title();
+
+    @DefaultMessage("An error occurred when importing the project settings")
+    @Key("projectSettings.importSettings.error.message")
+    String projectSettings_importSettings_error_message();
+
+    @DefaultMessage("Export settings...")
+    @Key("settings.export")
+    String settings_export();
+
+    @DefaultMessage("Import settings...")
+    @Key("settings.import")
+    String settings_import();
+
+    @DefaultMessage("Import settings")
+    @Key("settings.import.complete.title")
+    String settings_importSettings_complete_title();
+
+    @DefaultMessage("The settings have successfuly been imported.  We recommend that your refresh your browser.")
+    @Key("settings.import.complete.message")
+    String settings_importSettings_complete_message();
 }

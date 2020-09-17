@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilterId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
@@ -104,6 +106,7 @@ public class LuceneIndexImpl implements LuceneIndex {
     @Nonnull
     public Optional<Page<EntityShortFormMatches>> search(@Nonnull List<SearchString> searchStrings,
                                                          @Nonnull List<DictionaryLanguage> dictionaryLanguages,
+                                                         @Nonnull List<EntitySearchFilter> searchFilters,
                                                          @Nonnull Set<EntityType<?>> entityTypes,
                                                          @Nonnull PageRequest pageRequest) throws IOException, ParseException {
         var indexSearcher = searcherManager.acquire();
@@ -125,6 +128,15 @@ public class LuceneIndexImpl implements LuceneIndex {
                 entityTypeQueries.forEach(typeQuery -> entityTypesBuilder.add(typeQuery, BooleanClause.Occur.SHOULD));
                 var typeQuery = entityTypesBuilder.build();
                 queryBuilder.add(typeQuery, BooleanClause.Occur.MUST);
+            }
+            if(!searchFilters.isEmpty()) {
+                var searchFiltersQueryBuilder = new BooleanQuery.Builder();
+                searchFilters.stream()
+                             .map(EntitySearchFilter::getId)
+                             .map(EntitySearchFilterId::getId)
+                             .map(id -> new TermQuery(new Term(EntityDocumentFieldNames.SEARCH_FILTER_MATCHES, id)))
+                             .forEach(query -> searchFiltersQueryBuilder.add(query, BooleanClause.Occur.SHOULD));
+                queryBuilder.add(searchFiltersQueryBuilder.build(), BooleanClause.Occur.MUST);
             }
             var query = queryBuilder.build();
 

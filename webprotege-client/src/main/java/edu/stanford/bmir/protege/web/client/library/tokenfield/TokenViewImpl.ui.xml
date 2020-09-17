@@ -15,11 +15,13 @@
             height: 1.4rem;
             margin-top: 0.2rem;
             margin-bottom: 0.2rem;
-            margin-left: 0.5rem;
             cursor: default;
         }
         .label {
             white-space: nowrap;
+        }
+        .token + .token {
+            margin-left: 0.5rem;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.token}">

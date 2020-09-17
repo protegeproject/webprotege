@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -31,6 +32,9 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
 
     private long totalResultCount = 0;
 
+    @UiField
+    protected SimplePanel searchFilterContainer;
+
     interface SearchViewImplUiBinder extends UiBinder<HTMLPanel, SearchViewImpl> {
 
     }
@@ -57,6 +61,12 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
 
     @UiField
     SimplePanel langTagsFilterContainer;
+
+    @UiField
+    HTMLPanel searchFilterPanel;
+
+    @UiField
+    HTMLPanel langTagsFilterPanel;
 
     private PaginatorPresenter paginatorPresenter;
 
@@ -104,7 +114,7 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
 
     @Override
     public void setLangTagFilterVisible(boolean visible) {
-        langTagsFilterContainer.setVisible(visible);
+        langTagsFilterPanel.setVisible(visible);
     }
 
     @UiHandler("base")
@@ -252,7 +262,9 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     }
 
     public void updateDisplayMessage() {
-        searchSummaryField.setText("Displaying " + list.getWidgetCount() + " of " + totalResultCount + " results");
+        String formattedResultsCount = NumberFormat.getDecimalFormat()
+                .format(totalResultCount);
+        searchSummaryField.setText("Displaying " + list.getWidgetCount() + " of " + formattedResultsCount + " results");
     }
 
     private void highlightSelectedIndex() {
@@ -295,5 +307,16 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
         paginatorPresenter.setElementCount(totalElements);
         this.totalResultCount = totalElements;
         updateDisplayMessage();
+    }
+
+    @Override
+    public void setSearchFilterVisible(boolean visible) {
+        searchFilterPanel.setVisible(visible);
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getSearchFilterContainer() {
+        return searchFilterContainer;
     }
 }

@@ -1,0 +1,52 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+            flex-wrap: nowrap;
+        }
+        .textBox {
+        }
+        .iconContainer {
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+        }
+        .contentContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            flex-grow: 1;
+            flex-shrink: 1;
+            min-width: 5px;
+        }
+        .focusPanel {
+            vertical-align: top;
+        }
+        .imageViewContainer {
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveData.primitiveData}">
+        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{style.iconContainer} {wp.primitiveData.primitiveData__icon}"/>
+        <g:HTMLPanel ui:field="contentContainer" addStyleNames="{style.contentContainer}">
+            <text:ExpandingTextBox ui:field="textBox" addStyleNames="{style.textBox} {wp.primitiveData.primitiveData__text}"/>
+            <g:LazyPanel ui:field="errorViewContainer" debugId="ErrorViewCont">
+                <primitive:PrimitiveDataEditorFreshEntityViewImpl ui:field="errorView" addStyleNames="{wp.primitiveData.primitiveData__errorMessage}"/>
+            </g:LazyPanel>
+            <g:LazyPanel ui:field="imageViewContainer" debugId="ImageViewCont"
+                         addStyleNames="{style.imageViewContainer}">
+                <g:FocusPanel ui:field="imageViewFocusPanel" addStyleNames="{style.focusPanel}">
+                    <primitive:PrimitiveDataEditorImageViewImpl ui:field="imageView"/>
+                </g:FocusPanel>
+            </g:LazyPanel>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

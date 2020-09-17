@@ -19,7 +19,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
  */
-public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPositionMatcherFactory {
+public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPositionMatcherFactory, EntityMatcherFactory {
 
     @Nonnull
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
@@ -103,6 +103,12 @@ public class MatcherFactory implements RelationshipMatcherFactory, HierarchyPosi
             default:
                 throw new RuntimeException();
         }
+    }
+
+    @Nonnull
+    @Override
+    public Matcher<OWLEntity> getEntityMatcher(@Nonnull EntityMatchCriteria criteria) {
+        return getMatcher(criteria);
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {

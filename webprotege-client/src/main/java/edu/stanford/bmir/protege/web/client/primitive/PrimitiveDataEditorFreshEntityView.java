@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -16,7 +17,7 @@ import java.util.Set;
  *     A view that can be displayed to suggest types for fresh entities.
  * </p>
  */
-public interface PrimitiveDataEditorFreshEntityView extends IsWidget, HasSelectionHandlers<EntityType<?>> {
+public interface PrimitiveDataEditorFreshEntityView extends IsWidget, HasSelectionHandlers<EntityType<?>>, HasVisibility {
 
     void setExpectedTypes(SafeHtml errorMessage, Set<EntityType<?>> suggestedTypes);
 

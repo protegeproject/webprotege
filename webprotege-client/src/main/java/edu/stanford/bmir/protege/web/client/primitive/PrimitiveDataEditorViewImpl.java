@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -8,17 +9,18 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,52 +34,65 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveDataEditorView {
 
-    @Nonnull
-    private final ExpandingTextBox textBox;
+    private boolean firstDisplayOfImage = true;
+
+    interface PrimitiveDataEditorViewImplUiBinder extends UiBinder<HTMLPanel, PrimitiveDataEditorViewImpl> {
+
+    }
+
 
     @Nonnull
-    private final FlowPanel holder;
-
-    @Nonnull
-    private final Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider;
-
-    @Nonnull
-    private final Provider<PrimitiveDataEditorImageView> imageViewProvider;
+    @UiField(provided = true)
+    protected ExpandingTextBox textBox;
 
     @Nonnull
     private Optional<String> lastStyleName = Optional.empty();
 
-    @Nullable
-    private PrimitiveDataEditorFreshEntityView errorView;
+    @UiField
+    protected PrimitiveDataEditorFreshEntityViewImpl errorView;
 
-    @Nullable
-    private PrimitiveDataEditorImageView imageView;
 
-    @Nullable
-    private FocusPanel imageViewContainer;
+    @UiField
+    protected LazyPanel errorViewContainer;
+
+    @UiField
+    protected PrimitiveDataEditorImageViewImpl imageView;
+
+    @UiField
+    protected LazyPanel imageViewContainer;
+
+
+    @UiField
+    protected FocusPanel imageViewFocusPanel;
+    @UiField
+    HTMLPanel iconContainer;
+
+
+    private static PrimitiveDataEditorViewImplUiBinder uiBinder = GWT.create(PrimitiveDataEditorViewImplUiBinder.class);
 
     @Inject
-    public PrimitiveDataEditorViewImpl(@Nonnull ExpandingTextBox textBox,
-                                       @Nonnull PrimitiveDataEditorImageView imageView,
-                                       @Nonnull Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider,
-                                       @Nonnull Provider<PrimitiveDataEditorImageView> imageViewProvider) {
+    public PrimitiveDataEditorViewImpl(@Nonnull ExpandingTextBox textBox) {
         this.textBox = checkNotNull(textBox);
-        this.imageView = checkNotNull(imageView);
-        this.errorViewProvider = checkNotNull(errorViewProvider);
-        this.imageViewProvider = checkNotNull(imageViewProvider);
 
         this.textBox.addValueChangeHandler(event -> updateImageDisplay());
         this.textBox.addBlurHandler(event -> updateImageDisplay());
 
-        holder = new FlowPanel();
-        holder.add(textBox);
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-        initWidget(holder);
+    @Override
+    public void setDeprecated(boolean deprecated) {
+        if (deprecated) {
+            this.addStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
+        }
+        else {
+            this.removeStyleName(WebProtegeClientBundle.BUNDLE.primitiveData().primitiveData_____deprecated());
+        }
     }
 
     @Override
     public void setMode(Mode mode) {
-        if(mode == Mode.SINGLE_LINE) {
+        if (mode == Mode.SINGLE_LINE) {
             textBox.setMode(ExpandingTextBoxMode.SINGLE_LINE);
         }
         else {
@@ -98,9 +113,9 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public void setPrimitiveDataStyleName(Optional<String> styleName) {
         checkNotNull(styleName);
-        lastStyleName.ifPresent(s -> textBox.getSuggestBox().removeStyleName(s));
+        lastStyleName.ifPresent(s -> iconContainer.removeStyleName(s));
         lastStyleName = styleName;
-        styleName.ifPresent(s -> textBox.getSuggestBox().addStyleName(s));
+        styleName.ifPresent(s -> iconContainer.addStyleName(s));
     }
 
     @Override
@@ -153,7 +168,7 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
         final HandlerRegistration handlerReg = addHandler(handler, SelectionEvent.getType());
         final HandlerRegistration delegateReg = textBox.addSelectionHandler(event -> {
             SuggestOracle.Suggestion suggestion = event.getSelectedItem();
-            if(suggestion instanceof EntitySuggestion) {
+            if (suggestion instanceof EntitySuggestion) {
                 SelectionEvent.fire(PrimitiveDataEditorViewImpl.this, (EntitySuggestion) suggestion);
             }
         });
@@ -175,66 +190,52 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     }
 
     private void updateImageDisplay() {
-        if(isPossibleImageLink()) {
+        if (isPossibleImageLink()) {
             displayImageView();
         }
     }
 
     private boolean isPossibleImageLink() {
         String text = getText().trim();
-        return (text.startsWith("http://") || text.startsWith("https://"))
-                && (text.endsWith(".jpg") || text.endsWith(".png") || text.endsWith(".svg") || text.endsWith(".jpeg"));
+        return (text.startsWith("http://") || text.startsWith("https://")) && (text.endsWith(".jpg") || text.endsWith(
+                ".png") || text.endsWith(".svg") || text.endsWith(".jpeg"));
     }
 
     private boolean imageViewHasFocus = false;
 
-    private FocusPanel getImageViewContainer() {
-        if (imageViewContainer == null) {
-            imageViewContainer = new FocusPanel();
-            imageViewContainer.getElement().getStyle().setVerticalAlign(Style.VerticalAlign.TOP);
-            imageViewContainer.addBlurHandler(event -> {
+    private void displayImageView() {
+        imageViewContainer.setVisible(true);
+        imageViewFocusPanel.setVisible(true);
+        String url = getText().trim();
+        imageView.setImageUrl(url);
+
+        textBox.setVisible(false);
+
+        if (firstDisplayOfImage) {
+            firstDisplayOfImage = false;
+            textBox.addBlurHandler(event -> {
                 imageViewHasFocus = false;
                 updateImageDisplay();
             });
-            imageViewContainer.addFocusHandler(event -> {
+            imageViewFocusPanel.addFocusHandler(event -> {
                 imageViewHasFocus = true;
                 hideImageView();
             });
         }
-        return imageViewContainer;
-    }
-
-    @Nonnull
-    private PrimitiveDataEditorImageView getImageView() {
-        if(imageView == null) {
-            imageView = imageViewProvider.get();
-        }
-        return imageView;
-    }
-
-    private void displayImageView() {
-        String url = getText().trim();
-        PrimitiveDataEditorImageView imageView = getImageView();
-        imageView.setImageUrl(url);
-        FocusPanel imageViewContainer = getImageViewContainer();
-        imageViewContainer.setWidget(imageView);
-        holder.add(imageViewContainer);
-        textBox.setVisible(false);
     }
 
     private void hideImageView() {
-        textBox.setVisible(true);
-        if (imageViewContainer != null) {
-            int height = imageViewContainer.getOffsetHeight();
-            holder.remove(imageViewContainer);
-            if(imageViewHasFocus) {
-                // Transfer the focus to the text box
-                textBox.setFocus(true);
-            }
-            // Transfer the height of the image view to the height of the
-            // expanding text box in order to avoid unnecessary jumping about in the UI
-            textBox.setMinHeight(height + "px");
+        int height = imageViewFocusPanel.getOffsetHeight();
+        if (imageViewHasFocus) {
+            // Transfer the focus to the text box
+            Scheduler.get().scheduleDeferred(() -> textBox.setFocus(true));
         }
+        // Transfer the height of the image view to the height of the
+        // expanding text box in order to avoid unnecessary jumping about in the UI
+        textBox.setMinHeight(height + "px");
+        textBox.setVisible(true);
+        imageViewFocusPanel.setVisible(false);
+
     }
 
     @Override
@@ -244,19 +245,14 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     @Override
     public void showErrorMessage(SafeHtml errorMessage, Set<EntityType<?>> expectedTypes) {
-        if(errorView == null) {
-            errorView = errorViewProvider.get();
-        }
+        errorViewContainer.setVisible(true);
         errorView.setExpectedTypes(errorMessage, expectedTypes);
-        // Remove any existing view and ensure that the error view appears last
-        clearErrorMessage();
-        holder.add(errorView);
     }
 
     @Override
     public void clearErrorMessage() {
-        if(errorView != null) {
-            holder.remove(errorView);
+        if (errorViewContainer.isVisible()) {
+            errorViewContainer.setVisible(false);
         }
     }
 

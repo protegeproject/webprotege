@@ -173,7 +173,6 @@
     background-position: 2px 1px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .objectPropertyIconInset {
@@ -182,7 +181,6 @@
     background-position: 2px 1px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .dataPropertyIconInset {
@@ -191,7 +189,6 @@
     background-position: 2px 1px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .annotationPropertyIconInset {
@@ -200,7 +197,6 @@
     background-position: 2px 1px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .datatypeIconInset {
@@ -209,7 +205,6 @@
     background-position: 2px 2px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .commentIconInset {
@@ -218,7 +213,6 @@
     background-position: 0 0;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .literalIconInset {
@@ -227,7 +221,6 @@
     background-position: 2px 2px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .individualIconInset {
@@ -236,11 +229,9 @@
     background-position: 2px 1px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .emptyIconInset {
-    padding-left: 22px !important;
 }
 
 
@@ -250,7 +241,6 @@
     background-position: 2px 2px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 .iriIconInset {
     background-image: iriIconUrl;
@@ -258,7 +248,6 @@
     background-position: 2px 2px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .wikipediaIconInset {
@@ -268,7 +257,6 @@
     background-size: 18px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .numberIconInset {
@@ -277,7 +265,6 @@
     background-position: 2px 1px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .dateTimeIconInset {
@@ -286,7 +273,6 @@
     background-position: 2px 1px;
     width: auto;
     height: auto;
-    padding-left: 22px !important;
 }
 
 .inTrash {

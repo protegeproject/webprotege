@@ -12,17 +12,21 @@ import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegePropertiesProvider;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.match.EntityMatcherFactory;
+import edu.stanford.bmir.protege.web.server.match.Matcher;
 import edu.stanford.bmir.protege.web.server.project.BuiltInPrefixDeclarations;
 import edu.stanford.bmir.protege.web.server.project.Ontology;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralLexicalFormTransformer;
 import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
-import edu.stanford.bmir.protege.web.server.shortform.AnnotationAssertionAxiomsModule;
+import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneIndexesDirectory;
 import edu.stanford.bmir.protege.web.server.shortform.LuceneModule;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchFilter;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
@@ -311,5 +315,34 @@ public class UploadedProjectModule {
     @ProjectSingleton
     ProjectDisposablesManager provideProjectDisposablesManager(DisposableObjectManager disposableObjectManager) {
         return new ProjectDisposablesManager(disposableObjectManager);
+    }
+
+    @Provides
+    ProjectEntitySearchFiltersManager provideProjectSearchFiltersRepository() {
+        return new ProjectEntitySearchFiltersManager() {
+            @Nonnull
+            @Override
+            public ImmutableList<EntitySearchFilter> getSearchFilters() {
+                return ImmutableList.of();
+            }
+
+            @Override
+            public void setSearchFilters(@Nonnull ImmutableList<EntitySearchFilter> searchFilters) {
+
+            }
+        };
+    }
+
+
+
+    @Provides
+    EntityMatcherFactory provideEntityMatcherFactory() {
+        return new EntityMatcherFactory() {
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> getEntityMatcher(@Nonnull EntityMatchCriteria criteria) {
+                return entity -> false;
+            }
+        };
     }
 }

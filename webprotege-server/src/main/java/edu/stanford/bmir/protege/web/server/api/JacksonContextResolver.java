@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import edu.stanford.bmir.protege.web.server.jackson.OWLEntitySerializer;
+import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -26,15 +28,9 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     private ObjectMapper objectMapper;
 
     public JacksonContextResolver() {
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapperProvider().get();
         this.objectMapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
-        this.objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
-                         .configure(SerializationFeature.INDENT_OUTPUT, true);
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(OWLEntity.class, new OWLEntitySerializer());
-        module.addSerializer(IRI.class, new IriQuotedSerializer());
-        this.objectMapper.registerModule(module);
-
+        this.objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
     }
 
     @Override

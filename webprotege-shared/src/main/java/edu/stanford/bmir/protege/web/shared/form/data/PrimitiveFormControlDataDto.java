@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
@@ -78,4 +79,11 @@ public abstract class PrimitiveFormControlDataDto implements Comparable<Primitiv
             }
         }
     }
+
+    public boolean isDeprecated() {
+        return false;
+    }
+
+    @Nonnull
+    public abstract OWLPrimitiveData getPrimitiveData();
 }

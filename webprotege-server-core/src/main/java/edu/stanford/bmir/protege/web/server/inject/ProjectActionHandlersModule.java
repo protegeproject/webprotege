@@ -42,7 +42,9 @@ import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsAc
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetHeadRevisionNumberActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetRevisionSummariesActionHandler;
+import edu.stanford.bmir.protege.web.server.search.GetSearchSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.search.PerformEntitySearchActionHandler;
+import edu.stanford.bmir.protege.web.server.search.SetSearchSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.tag.GetEntityTagsActionHandler;
@@ -59,6 +61,7 @@ import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.form.UpdateFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 
@@ -665,6 +668,21 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideGetProjectLangTagsActionHandler(GetProjectLangTagsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetSearchSettingsActionHandler(GetSearchSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideSetSearchSettingsActionHandler(SetSearchSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideUpdateFormDescriptorActionHandler(UpdateFormDescriptorActionHandler handler) {
         return handler;
     }
 }

@@ -12,7 +12,6 @@ import org.apache.lucene.search.TermQuery;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import java.util.List;
@@ -47,6 +46,9 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
     private final EntityAnnotationAssertionsDocumentAugmenter annotationAssertionsDocumentAugmenter;
 
     @Nonnull
+    private final SearchFiltersDocumentAugmenter searchFiltersDocumentAugmenter;
+
+    @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Inject
@@ -56,6 +58,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
                                               @Nonnull EntityPrefixedNameDocumentAugmenter prefixedNameDocumentAugmenter,
                                               @Nonnull EntityOboIdDocumentAugmenter oboIdDocumentAugmenter,
                                               @Nonnull EntityAnnotationAssertionsDocumentAugmenter annotationAssertionsDocumentAugmenter,
+                                              @Nonnull SearchFiltersDocumentAugmenter searchFiltersDocumentAugmenter,
                                               @Nonnull OWLDataFactory dataFactory) {
         this.annotationAssertionsDocumentAugmenter = annotationAssertionsDocumentAugmenter;
         this.fieldNameTranslator = checkNotNull(fieldNameTranslator);
@@ -63,6 +66,7 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         this.localNameDocumentAugmenter = checkNotNull(localNameDocumentAugmenter);
         this.prefixedNameDocumentAugmenter = checkNotNull(prefixedNameDocumentAugmenter);
         this.oboIdDocumentAugmenter = checkNotNull(oboIdDocumentAugmenter);
+        this.searchFiltersDocumentAugmenter = checkNotNull(searchFiltersDocumentAugmenter);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
@@ -135,6 +139,8 @@ public class LuceneEntityDocumentTranslatorImpl implements LuceneEntityDocumentT
         localNameDocumentAugmenter.augmentDocument(entity, document);
 
         annotationAssertionsDocumentAugmenter.augmentDocument(entity, document);
+
+        searchFiltersDocumentAugmenter.augmentDocument(entity, document);
 
         return document;
     }

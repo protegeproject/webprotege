@@ -41,12 +41,11 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreIm
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.*;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepository;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
-import edu.stanford.bmir.protege.web.server.upload.DocumentResolver;
-import edu.stanford.bmir.protege.web.server.upload.DocumentResolverImpl;
-import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
-import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesProcessor;
+import edu.stanford.bmir.protege.web.server.upload.*;
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.viz.EntityGraphEdgeLimit;
@@ -72,6 +71,7 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Matthew Horridge
@@ -238,34 +238,52 @@ public class ApplicationModule {
 
     @Provides
     @DownloadGeneratorExecutor
-    public ExecutorService provideDownloadGeneratorExecutorService() {
+    @ApplicationSingleton
+    public ExecutorService provideDownloadGeneratorExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
         // Might prove to be too much of a bottle neck.  For now, this limits the memory we need
         // to generate downloads
-        return Executors.newSingleThreadExecutor(r -> {
+        var executor = Executors.newSingleThreadExecutor(r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName(thread.getName().replace("thread", "Download-Generator"));
             return thread;
         });
+        executorsRegistry.registerService(executor, "Download-Generator-Service");
+        return executor;
     }
 
     @Provides
     @FileTransferExecutor
-    public ExecutorService provideFileTransferExecutorService() {
-        return Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
+    @ApplicationSingleton
+    public ExecutorService provideFileTransferExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
+        var executor = Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName(thread.getName().replace("thread", "Download-Streamer"));
             return thread;
         });
+        executorsRegistry.registerService(executor, "Download-Streaming-Service");
+        return executor;
     }
 
     @Provides
     @IndexUpdatingService
-    public ExecutorService provideIndexUpdatingExecutorService() {
-        return Executors.newFixedThreadPool(INDEX_UPDATING_THREADS, r -> {
+    @ApplicationSingleton
+    public ExecutorService provideIndexUpdatingExecutorService(ApplicationExecutorsRegistry executorsRegistry) {
+        var executor = Executors.newFixedThreadPool(INDEX_UPDATING_THREADS, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName(thread.getName().replace("thread", "Index-Updater"));
             return thread;
         });
+        executorsRegistry.registerService(executor, "Index-Updater");
+        return executor;
+    }
+
+    @Provides
+    @UploadedOntologiesCacheService
+    @ApplicationSingleton
+    public ScheduledExecutorService provideUploadedOntologiesCacheService(ApplicationExecutorsRegistry executorsRegistry) {
+        var executor = Executors.newSingleThreadScheduledExecutor();
+        executorsRegistry.registerService(executor, "Uploaded-Ontologies-Cache-Service");
+        return executor;
     }
 
     @Provides
@@ -351,9 +369,10 @@ public class ApplicationModule {
     @Provides
     @ApplicationSingleton
     UploadedOntologiesCache provideUploadedOntologiesCache(UploadedOntologiesProcessor processor,
+                                                           @UploadedOntologiesCacheService ScheduledExecutorService cacheService,
                                                            Ticker ticker,
                                                            ApplicationDisposablesManager disposableObjectManager) {
-        var cache = new UploadedOntologiesCache(processor, ticker);
+        var cache = new UploadedOntologiesCache(processor, ticker, cacheService);
         cache.start();
         disposableObjectManager.register(cache);
         return cache;
@@ -393,5 +412,12 @@ public class ApplicationModule {
     @EntityGraphEdgeLimit
     int provideEntityGraphEdgeLimit(WebProtegeProperties properties) {
         return properties.getEntityGraphEdgeLimit().orElse(3000);
+    }
+
+    @Provides
+    @ApplicationSingleton
+    EntitySearchFilterRepository provideEntitySearchFilterRepository(EntitySearchFilterRepositoryImpl impl) {
+        impl.ensureIndexes();
+        return impl;
     }
 }

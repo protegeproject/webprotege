@@ -71,6 +71,6 @@ public class GetEntityFormDescriptorActionHandler extends AbstractProjectActionH
     @Nullable
     @Override
     protected BuiltInAction getRequiredExecutableBuiltInAction() {
-        return BuiltInAction.EDIT_FORMS;
+        return BuiltInAction.VIEW_PROJECT;
     }
 }

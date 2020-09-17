@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:form="urn:import:edu.stanford.bmir.protege.web.client.form">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
+            <form:LanguageMapEditor ui:field="languageMapEditor"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:Button ui:field="formDetailButton" text="Form details..." addStyleNames="{wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

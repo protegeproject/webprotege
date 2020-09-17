@@ -211,6 +211,10 @@ public class RpcWhiteList implements Action, Result {
 
     RelationshipPresence relationshipPresence;
 
+    EntitySearchFilter entitySearchFilter;
+
+    EntitySearchFilterId entitySearchFilterId;
+
     public PrimitiveFormControlDataDto primitiveFormControlDataDto;
 
     public FormControlDataDto formControlDataDto;

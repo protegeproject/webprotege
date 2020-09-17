@@ -7,6 +7,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.WithProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
@@ -20,7 +21,7 @@ import java.io.Serializable;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class ProjectSettings implements Serializable, IsSerializable {
+public abstract class ProjectSettings implements Serializable, IsSerializable, WithProjectId<ProjectSettings> {
 
     private static final String PROJECT_ID = "projectId";
 
@@ -92,5 +93,16 @@ public abstract class ProjectSettings implements Serializable, IsSerializable {
                                              defaultDisplayNameSettings,
                                              slackIntegrationSettings,
                                              webhookSettings);
+    }
+
+    @Override
+    public ProjectSettings withProjectId(@Nonnull ProjectId projectId) {
+        return ProjectSettings.get(projectId,
+                                   getProjectDisplayName(),
+                                   getProjectDescription(),
+                                   getDefaultLanguage(),
+                                   getDefaultDisplayNameSettings(),
+                                   getSlackIntegrationSettings(),
+                                   getWebhookSettings());
     }
 }

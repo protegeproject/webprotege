@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
@@ -17,9 +19,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
-import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchType;
-import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
+import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
+import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -103,7 +104,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
 
         var result = dictionaryManager.getShortFormsContaining(searchStrings,
                                                                entityLookupRequest.getSearchedEntityTypes(),
-                                                               languageManager.getLanguages(),
+                                                               languageManager.getLanguages(), ImmutableList.of(),
                                                                PageRequest.requestFirstPage());
 
         List<EntityLookupResult> lookupResults = new ArrayList<>();
@@ -111,69 +112,29 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
             var matchedEntity = match.getEntity();
             if (!addedEntities.contains(matchedEntity) && matcher.matches(matchedEntity)) {
                 addedEntities.add(matchedEntity);
-                for (var shortFormMatch : match.getShortFormMatches()) {
+                for (int i = 0; i < 1 ; i++) {
+                    var shortFormMatch = match.getShortFormMatches().get(i);
                     var language = shortFormMatch.getLanguage();
-                    var matchPositions = shortFormMatch.getMatchPositions();
-                    var firstMatchPosition = matchPositions.get(0);
-                    var entityMatchResult = EntityNameMatchResult.get(firstMatchPosition.getStart(),
-                                                                      firstMatchPosition.getEnd(),
-                                                                      EntityNameMatchType.SUB_STRING_MATCH,
-                                                                      PrefixNameMatchType.NOT_IN_PREFIX_NAME);
+                    var matchPositions = shortFormMatch.getMatchPositions()
+                            .stream()
+                            .map(p -> SearchResultMatchPosition.get(p.getStart(), p.getEnd()))
+                            .collect(toImmutableList());
+                    var node = entityNodeRenderer.render(matchedEntity);
+                    var matchResult = SearchResultMatch.get(node,
+                                                            shortFormMatch.getLanguage(),
+                                                            ImmutableMap.of(),
+                                                            shortFormMatch.getShortForm(),
+                                                            matchPositions);
                     var entityLookupResult = EntityLookupResult.get(language,
-                                                                    entityNodeRenderer.render(matchedEntity),
-                                                                    entityMatchResult,
+                                                                    node,
+                                                                    matchResult,
                                                                     placeUrl.getEntityUrl(projectId, matchedEntity));
                     lookupResults.add(entityLookupResult);
                 }
+
             }
         }
         return lookupResults;
-        //        Matcher<OWLEntity> matcher = entityLookupRequest.getEntityMatchCriteria()
-        //                                                        .map(matcherFactory::getMatcher).orElse(entity -> true);
-        //        Set<OWLEntity> addedEntities = new HashSet<>();
-        //        List<SearchString> searchStrings = SearchString.parseMultiWordSearchString(entityLookupRequest.getSearchString());
-        //        return dictionaryManager.getShortFormsContaining(searchStrings,
-        //                                                         entityLookupRequest.getSearchedEntityTypes(),
-        //                                                         languageManager.getLanguages(),
-        //                                                         // This is arbitrary and possibly leads to bad completion results.  We need to
-        //                                                         // see how things work in practice when users type in enough to get the right
-        //                                                         // result.
-        //                                                         PageRequest.requestPageWithSize(0, 2000))
-        //                                .getPageElements()
-        //                                .stream()
-        //                                .map(EntityShortFormMatches::getShortFormMatches)
-        //                                .flatMap(Collection::stream)
-        //                                .filter(sf -> matcher.matches(sf.getEntity()))
-        //                                .filter(match -> !addedEntities.contains(match.getEntity()))
-        //                                .peek(match -> addedEntities.add(match.getEntity()))
-        //                                .sorted()
-        //                                .map(match -> {
-        //                                    // TODO: Change this so that all positions are returned in the result
-        //                                    ImmutableIntArray matchPositions = match.getMatchPositions();
-        //                                    int first = 0;
-        //                                    int start = matchPositions.get(first);
-        //                                    int length = searchStrings.get(first).getSearchString().length();
-        //                                    EntityNameMatchResult result = EntityNameMatchResult.get(
-        //                                            start,
-        //                                            start + length,
-        //                                            // We sort things here now, so just make everything a substring match
-        //                                            EntityNameMatchType.SUB_STRING_MATCH,
-        //                                            PrefixNameMatchType.NOT_IN_PREFIX_NAME
-        //                                    );
-        //                                    OWLEntityData ed = DataFactory.getOWLEntityData(match.getEntity(),
-        //                                                                                    dictionaryManager.getShortForms(match.getEntity()));
-        //                                    return new OWLEntityDataMatch(match.getLanguage(), ed, result);
-        //                                })
-        //                                .limit(entityLookupRequest.getSearchLimit())
-        //                                .map(this::toEntityLookupResult)
-        //                                .collect(toList());
-    }
-
-    private EntityLookupResult toEntityLookupResult(OWLEntityDataMatch match) {
-        return EntityLookupResult.get(match.getDictionaryLanguage(),
-                                      entityNodeRenderer.render(match.getEntityData().getEntity()),
-                                      match.getMatchResult(),
-                                      placeUrl.getEntityUrl(projectId, match.getEntityData().getEntity()));
     }
 
     private static class OWLEntityDataMatch implements Comparable<OWLEntityDataMatch> {

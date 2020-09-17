@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.settings;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 
 import javax.annotation.Nonnull;
 
@@ -9,7 +10,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 2 Jul 2018
  */
-public interface SettingsView extends IsWidget {
+public interface SettingsView extends IsWidget, HasBusy {
 
     void clearView();
 

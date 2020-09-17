@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.WithProjectId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +32,7 @@ import static edu.stanford.bmir.protege.web.shared.DeserializationUtil.nonNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class Tag implements IsSerializable {
+public abstract class Tag implements IsSerializable, WithProjectId<Tag> {
 
 
     public static final String ID = "_id";
@@ -130,4 +131,15 @@ public abstract class Tag implements IsSerializable {
     @JsonProperty(CRITERIA)
     @Nonnull
     public abstract ImmutableList<RootCriteria> getCriteria();
+
+    @Override
+    public Tag withProjectId(@Nonnull ProjectId projectId) {
+        return Tag.get(getTagId(),
+                       projectId,
+                       getLabel(),
+                       getDescription(),
+                       getColor(),
+                       getBackgroundColor(),
+                       getCriteria());
+    }
 }

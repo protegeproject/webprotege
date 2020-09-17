@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ import javax.annotation.Nonnull;
  */
 public interface EntitySearchResultView extends IsWidget {
 
-    void setEntity(@Nonnull OWLEntityData entity);
+    void setEntity(@Nonnull EntityNode entity);
 
     void setResultMatchViews(@Nonnull ImmutableList<SearchResultMatchView> views);
 

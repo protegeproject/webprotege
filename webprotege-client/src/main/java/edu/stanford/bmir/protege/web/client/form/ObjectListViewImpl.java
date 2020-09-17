@@ -65,6 +65,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     public void addView(@Nonnull ObjectListViewHolder view) {
         views.add(view);
         elementDescriptorViewContainer.add(view);
+        reorder();
         updateButtons();
     }
 
@@ -72,6 +73,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
     public void removeView(@Nonnull ObjectListViewHolder viewHolder) {
         views.remove(viewHolder);
         elementDescriptorViewContainer.remove(viewHolder);
+        reorder();
         updateButtons();
     }
 
@@ -81,7 +83,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
         int toIndex = fromIndex - 1;
         if(toIndex > -1) {
             Collections.swap(views, fromIndex, toIndex);
-            refill(viewHolder);
+            reorder();
         }
     }
 
@@ -91,7 +93,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
         int toIndex = fromIndex + 1;
         if(toIndex < views.size()) {
             Collections.swap(views, fromIndex, toIndex);
-            refill(viewHolder);
+            reorder();
         }
     }
 
@@ -119,12 +121,12 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
         }
     }
 
-    private void refill(ObjectListViewHolder viewHolder) {
-        elementDescriptorViewContainer.clear();
-        views.forEach(view -> elementDescriptorViewContainer.add(view));
-        if(viewHolder.isExpanded()) {
-            viewHolder.scrollIntoView();
+    private void reorder() {
+        for(int i = 0; i < views.size(); i++) {
+            ObjectListViewHolder objectListViewHolder = views.get(i);
+            objectListViewHolder.setPositionOrdinal(i);
         }
+        views.forEach(view -> elementDescriptorViewContainer.add(view));
         updateButtons();
     }
 
@@ -135,7 +137,7 @@ public class ObjectListViewImpl extends Composite implements ObjectListView {
                                   formsMessages.deleteFormElementConfirmation_Message(objectId),
                                   DialogButton.NO,
                                   DialogButton.DELETE,
-                                  deleteRunnable,
+                                  () -> { reorder(); deleteRunnable.run();},
                                   DialogButton.NO);
     }
 }
