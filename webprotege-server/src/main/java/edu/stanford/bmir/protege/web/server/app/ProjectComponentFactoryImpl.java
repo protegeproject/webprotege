@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.app;
 
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.Neo4jProjectModule;
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectComponentFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
