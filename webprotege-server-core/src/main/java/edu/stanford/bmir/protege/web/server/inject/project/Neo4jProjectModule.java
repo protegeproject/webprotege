@@ -39,7 +39,10 @@ import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
 import edu.stanford.bmir.protege.web.server.project.chg.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.*;
 import edu.stanford.bmir.protege.web.server.renderer.LiteralRenderer;
+import edu.stanford.bmir.protege.web.server.repository.ProjectEntitySearchFiltersManager;
 import edu.stanford.bmir.protege.web.server.revision.*;
+import edu.stanford.bmir.protege.web.server.search.EntitySearchFilterIndexesManager;
+import edu.stanford.bmir.protege.web.server.search.ProjectEntitySearchFiltersManagerImpl;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.*;
 import edu.stanford.bmir.protege.web.server.util.DisposableObjectManager;
@@ -718,6 +721,11 @@ public class Neo4jProjectModule {
   }
 
   @Provides
+  EntityMatcherFactory provideEntityMatcherFactory(MatcherFactory matcherFactory) {
+    return matcherFactory;
+  }
+
+  @Provides
   ClassFrameProvider provideClassFrameProvider(ClassFrameProviderImpl impl) {
     return impl;
   }
@@ -728,5 +736,17 @@ public class Neo4jProjectModule {
     var dataDirectory = dataDirectoryProvider.get().toPath();
     return dataDirectory.resolve("lucene-indexes");
 
+  }
+
+  @Provides
+  @ProjectSingleton
+  EntitySearchFilterIndexesManager provideEntitySearchFilterIndexesManager(LuceneIndexWriterImpl writer) {
+    return writer;
+  }
+
+  @Provides
+  @ProjectSingleton
+  ProjectEntitySearchFiltersManager provideProjectEntitySearchFiltersManager(ProjectEntitySearchFiltersManagerImpl impl) {
+    return impl;
   }
 }

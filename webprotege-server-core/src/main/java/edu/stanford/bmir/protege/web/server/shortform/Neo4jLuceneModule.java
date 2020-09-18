@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableList;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.project.ProjectDisposablesManager;
@@ -35,7 +36,7 @@ import java.util.List;
 @Module(includes = MultiLingualShortFormAccessorModule.class)
 public class Neo4jLuceneModule {
 
-  private static final Logger logger = LoggerFactory.getLogger(LuceneModule.class);
+  private static final Logger logger = LoggerFactory.getLogger(Neo4jLuceneModule.class);
 
   public static final int MIN_GRAM_SIZE = 2;
 
@@ -48,7 +49,6 @@ public class Neo4jLuceneModule {
   }
 
   @Provides
-  @ProjectSingleton
   LuceneEntityDocumentTranslator provideLuceneEntityDocumentTranslator(LuceneEntityDocumentTranslatorImpl impl) {
     return impl;
   }
@@ -56,7 +56,8 @@ public class Neo4jLuceneModule {
   @Provides
   @ProjectSingleton
   LuceneIndex provideLuceneIndex(LuceneIndexImpl impl,
-                                 LuceneIndexWriter writer) {
+                                 // Not this is needed here to force an initial write of the index
+                                 LuceneIndexWriter indexWriter) {
     return impl;
   }
 
@@ -79,8 +80,7 @@ public class Neo4jLuceneModule {
 
   @ProjectSingleton
   @Provides
-  SearchableMultiLingualShortFormDictionary provideSearchableMultiLingualShortFormDictionary(
-      Neo4jSearchableMultiLingualShortFormDictionary impl) {
+  SearchableMultiLingualShortFormDictionary provideSearchableMultiLingualShortFormDictionary(Neo4jSearchableMultiLingualShortFormDictionary impl) {
     return impl;
   }
 
@@ -181,5 +181,10 @@ public class Neo4jLuceneModule {
   @Provides
   MultiLingualShortFormIndex provideMultiLingualShortFormIndex(Neo4jMultiLingualShortFormIndex impl) {
     return impl;
+  }
+
+  @Provides
+  ImmutableList<EntitySearchFilterMatcher> provideSearchFilterMatchers(EntitySearchFilterMatchersFactory factory) {
+    return factory.getSearchFilterMatchers();
   }
 }
