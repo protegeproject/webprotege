@@ -31,6 +31,7 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSett
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 import edu.stanford.bmir.protege.web.shared.search.*;
+import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.viz.*;
@@ -191,6 +192,8 @@ public class RpcWhiteList implements Action, Result {
     EntityGraphSettings entityGraphSettings;
 
     Operation operation;
+
+    PersonId personId;
 
     Tag tag;
 

@@ -1,10 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,62 +21,36 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * Identifies a Person in a sharing setting.  The person may or may not be a user in webprotege.
  */
-public class PersonId implements Serializable, IsSerializable, Comparable<PersonId> {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class PersonId implements Serializable, IsSerializable, Comparable<PersonId> {
 
-    private String id;
-
-    /**
-     * For serialization purposes only
-     */
-    private PersonId() {
+    @JsonCreator
+    @Nonnull
+    public static PersonId get(@Nonnull String id) {
+        return new AutoValue_PersonId(id);
     }
 
-    public PersonId(String id) {
-        this.id = checkNotNull(id);
-    }
-
+    @Nonnull
     public static PersonId of(UserId userId) {
-        return new PersonId(userId.getUserName());
+        return get(userId.getUserName());
     }
 
-    public String getId() {
-        return id;
-    }
+    @JsonValue
+    @Nonnull
+    public abstract String getId();
+
 
 
     @Override
-    public String toString() {
-        return MoreObjects.toStringHelper("PersonId")
-                          .addValue(id)
-                          .toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof PersonId)) {
-            return false;
-        }
-        PersonId other = (PersonId) obj;
-        return this.id.equals(other.id);
-    }
-
-    @Override
-    public int compareTo(PersonId o) {
+    public int compareTo(@Nonnull PersonId o) {
         if(this == o) {
             return 0;
         }
-        int diff = id.compareToIgnoreCase(o.id);
+        int diff = this.getId().compareToIgnoreCase(o.getId());
         if(diff != 0) {
             return diff;
         }
-        return id.compareTo(o.id);
+        return this.getId().compareTo(o.getId());
     }
 }
