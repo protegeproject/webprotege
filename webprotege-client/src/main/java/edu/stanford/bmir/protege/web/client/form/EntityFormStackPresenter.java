@@ -215,7 +215,8 @@ public class EntityFormStackPresenter {
                                                           entity,
                                                           pristineFormData,
                                                           editedFormData),
-                             result -> {});
+                             // Refresh the pristine data to what was committed
+                             result -> updateFormsForCurrentEntity(ImmutableList.of()));
         });
     }
 
