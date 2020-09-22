@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
@@ -64,6 +66,9 @@ public class EntityFormStackPresenter {
     @Nonnull
     private final LangTagFilterPresenter langTagFilterPresenter;
 
+    @Nonnull
+    private EntityDisplay entityDisplay = entityData -> { };
+
     @Inject
     public EntityFormStackPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull EntityFormStackView view,
@@ -77,6 +82,10 @@ public class EntityFormStackPresenter {
         this.formStackPresenter = checkNotNull(formStackPresenter);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.langTagFilterPresenter = checkNotNull(langTagFilterPresenter);
+    }
+
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
@@ -147,11 +156,13 @@ public class EntityFormStackPresenter {
                              this::handleGetEntityFormsResult);
         });
         if(!currentEntity.isPresent()) {
+            entityDisplay.setDisplayedEntity(Optional.empty());
             formStackPresenter.clearForms();
         }
     }
 
     private void handleGetEntityFormsResult(GetEntityFormsResult result) {
+        entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
         ImmutableList<FormDataDto> formData = result.getFormData();
         // If we have a subset of the forms then just replace the ones that we have
         boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
