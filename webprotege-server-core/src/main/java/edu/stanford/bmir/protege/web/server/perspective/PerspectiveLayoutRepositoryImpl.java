@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.*;
@@ -9,6 +11,8 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +32,8 @@ import static edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayout
 public class PerspectiveLayoutRepositoryImpl implements PerspectiveLayoutRepository {
 
     public static final String PERSPECTIVE_LAYOUTS = "PerspectiveLayouts";
+
+    private static final Logger logger = LoggerFactory.getLogger(PerspectiveLayoutRepositoryImpl.class);
 
     @Nonnull
     private final MongoDatabase database;
@@ -103,27 +109,39 @@ public class PerspectiveLayoutRepositoryImpl implements PerspectiveLayoutReposit
 
     @Override
     public void saveLayouts(@Nonnull List<PerspectiveLayoutRecord> records) {
-        var writes = new ArrayList<WriteModel<Document>>(records.size());
-        for(var record : records) {
-            var query = getQuery(record);
-            var nextDocument = objectMapper.convertValue(record, Document.class);
-            var write = new ReplaceOneModel<>(query, nextDocument, new ReplaceOptions().upsert(true));
-            writes.add(write);
+        try {
+            var writes = new ArrayList<WriteModel<Document>>(records.size());
+            for(var record : records) {
+                var query = getQuery(record);
+                var nextDocument = objectMapper.convertValue(record, Document.class);
+                var write = new ReplaceOneModel<>(query, nextDocument, new ReplaceOptions().upsert(true));
+                writes.add(write);
+            }
+            getCollection().bulkWrite(writes);
+        } catch (MongoException e) {
+            logger.error("An error occurred when saving the perspective layouts", e);
         }
-        getCollection().bulkWrite(writes);
     }
 
     @Override
     public void dropLayout(@Nonnull ProjectId projectId, @Nonnull UserId userId, @Nonnull PerspectiveId perspectiveId) {
-        var query = getQuery(projectId.getId(), userId.getUserName(), perspectiveId);
-        getCollection().deleteOne(query);
+        try {
+            var query = getQuery(projectId.getId(), userId.getUserName(), perspectiveId);
+            getCollection().deleteOne(query);
+        } catch (MongoException e) {
+            logger.error("An error occurred when dropping the perspective layout for a user", e);
+        }
     }
 
     @Override
     public void dropAllLayouts(@Nonnull ProjectId projectId, @Nonnull UserId userId) {
-        var query = new Document(PROJECT_ID, projectId.getId())
-                .append(USER_ID, userId.getUserName());
-        getCollection().deleteMany(query);
+        try {
+            var query = new Document(PROJECT_ID, projectId.getId())
+                    .append(USER_ID, userId.getUserName());
+            getCollection().deleteMany(query);
+        } catch (MongoException e) {
+            logger.error("An error occurred when dropping all project layouts for a user", e);
+        }
     }
 
     @Override
