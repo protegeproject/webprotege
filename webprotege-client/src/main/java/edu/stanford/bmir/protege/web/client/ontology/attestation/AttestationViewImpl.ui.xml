@@ -1,0 +1,75 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <g:HTMLPanel>
+
+        <table width="95%">
+            <col width="100px" align="right"/>
+            <tr>
+                <td align="right">
+                    <g:Label text="Ontology IRI" styleName="{wp.style.formLabel}" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="ontologyIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <g:Label text="Version IRI" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="versionIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+        </table>
+        <hr></hr>
+        <h2>Ontology Attestation</h2>
+        <table>
+            <col width="100px" align="right"/>
+            <tr>
+                <td align="right">
+                    <g:Label text="Contract address" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="address" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+        </table>
+        <h3>Verify</h3>
+        <table>
+            <col width="100px" align="right"/>
+            <tr>
+                <td valign="top">
+                    <g:Button ui:field="verifyButton" text="Verify" addStyleNames="wp-btn wp-btn--input"/>
+                </td>
+                <tr>
+                    <td align="right">
+                        <g:Label ui:field="verifyResult" addStyleNames="{wp.style.formLabel}"/>
+                    </td>
+                </tr>
+            </tr>
+        </table>
+        <h3>Sign</h3>
+        <table>
+            <tr>
+                <td align="right">
+                    <g:Label text="Name" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="name" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <g:Button ui:field="signButton" text="Sign" addStyleNames="wp-btn wp-btn--input"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <g:Label ui:field="signResult" addStyleNames="{wp.style.formLabel}"/>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>

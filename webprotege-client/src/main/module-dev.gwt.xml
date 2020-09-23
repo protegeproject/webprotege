@@ -35,8 +35,9 @@
 
     <inherits name="com.google.gwt.user.RemoteServiceObfuscateTypeNames"/>
 
-    <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
+    <inherits name="ch.unifr.digits.webprotege.attestation.Attestation"/>
 
+    <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
     <!--
     Trim down the permutations that are compiled.  We need CSS3 features and so don't support
     earlier versions of IE.

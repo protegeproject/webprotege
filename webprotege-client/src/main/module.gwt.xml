@@ -35,6 +35,8 @@
 
     <inherits name="com.google.gwt.user.RemoteServiceObfuscateTypeNames"/>
 
+    <inherits name="ch.unifr.digits.webprotege.attestation.Attestation"/>
+
     <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
 
     <!--

@@ -38,6 +38,18 @@
         </dependency>
 
         <dependency>
+            <groupId>ch.unifr.digits.webprotege</groupId>
+            <artifactId>webprotege-attestation</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>gwt-lib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.elemental2</groupId>
+            <artifactId>elemental2-promise</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
         </dependency>
