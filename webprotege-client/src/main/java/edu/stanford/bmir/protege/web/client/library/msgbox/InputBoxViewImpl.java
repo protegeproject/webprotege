@@ -90,8 +90,8 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
 
     private void switchToMultiline() {
         multiline = true;
-        textArea.setVisible(false);
-        textBox.setVisible(true);
+        textArea.setVisible(true);
+        textBox.setVisible(false);
         textArea.setValue(textBox.getValue());
     }
 
