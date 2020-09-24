@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.owl2lpg.client.bind.change.Neo4jUpdater;
 import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.annotation.OntologyAnnotationsAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomAccessorModule;
@@ -18,6 +19,7 @@ import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
 import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
+import edu.stanford.owl2lpg.client.write.handlers.AxiomChangeHandlerModule;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +36,8 @@ import javax.annotation.Nonnull;
     NamedIndividualAccessorModule.class,
     AxiomAccessorModule.class,
     AssertionAxiomAccessorModule.class,
-    CharacteristicsAxiomAccessorModule.class
+    CharacteristicsAxiomAccessorModule.class,
+    AxiomChangeHandlerModule.class
 })
 public class Neo4jIndexModule {
 
@@ -336,102 +339,9 @@ public class Neo4jIndexModule {
         return impl;
     }
 
-
     @Provides
     @IntoSet
-    public UpdatableIndex provideAnnotationAssertionAxiomsBySubjectIndexImplIntoSet(AnnotationAssertionAxiomsBySubjectIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideAnnotationAxiomsByIriReferenceIndexImplIntoSet(AnnotationAxiomsByIriReferenceIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideAxiomsByEntityReferenceIndexImplIntoSet(AxiomsByEntityReferenceIndexImpl impl) {
-        return impl;
-    }
-
-
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideAnnotationAssertionAxiomsByValueIndexIntoSet(AnnotationAssertionAxiomsByValueIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideAxiomsByTypeIndexImplIntoSet(AxiomsByTypeIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideClassAssertionAxiomsByClassIndexImplIntoSet(ClassAssertionAxiomsByClassIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideClassAssertionAxiomsByIndividualIndexImplIntoSet(ClassAssertionAxiomsByIndividualIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideDataPropertyAssertionAxiomsBySubjectIndexImplIntoSet(DataPropertyAssertionAxiomsBySubjectIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideDifferentIndividualsAxiomsIndexImplIntoSet(DifferentIndividualsAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideDisjointClassesAxiomsIndexImplIntoSet(DisjointClassesAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideObjectPropertyAssertionAxiomsBySubjectIndexImplIntoSet(ObjectPropertyAssertionAxiomsBySubjectIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideOntologyAnnotationsIndexImplIntoSet(OntologyAnnotationsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideSameIndividualAxiomsIndexImplIntoSet(SameIndividualAxiomsIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideSubAnnotationPropertyAxiomsBySuperPropertyIndexImplIntoSet(SubAnnotationPropertyAxiomsBySuperPropertyIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideSubClassOfAxiomsBySubClassIndexImplIntoSet(SubClassOfAxiomsBySubClassIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    public UpdatableIndex provideEquivalentClassesAxiomsIndexIntoSet(EquivalentClassesAxiomsIndexImpl impl) {
+    public UpdatableIndex provideUpdatableIndex(Neo4jUpdater impl) {
         return impl;
     }
 
@@ -439,19 +349,13 @@ public class Neo4jIndexModule {
     @Provides
     IndexUpdater provideIndexUpdater(IndexUpdaterFactory factory) {
         var updater = factory.create();
-        updater.buildIndexes();
+//        updater.buildIndexes();
         return updater;
     }
 
     @ProjectSingleton
     @Provides
     RootIndex provideRootIndex(RootIndexImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @IntoSet
-    UpdatableIndex provideProjectOntologiesIndexIntoSet(ProjectOntologiesIndexImpl impl) {
         return impl;
     }
 
