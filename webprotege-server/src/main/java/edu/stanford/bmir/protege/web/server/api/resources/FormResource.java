@@ -54,7 +54,8 @@ public class FormResource {
                                userId);
         var formDescriptor = actionResult.getFormDescriptor().orElse(FormDescriptor.empty(formId));
         var criteria = actionResult.getFormSelectorCriteria().orElse(CompositeRootCriteria.get(ImmutableList.of(), MultiMatchType.ANY));
-        var result = EntityFormDescriptor.valueOf(projectId, formId, formDescriptor, criteria);
+        var purpose = actionResult.getPurpose();
+        var result = EntityFormDescriptor.valueOf(projectId, formId, formDescriptor, purpose, criteria);
         return Response.accepted(result).build();
     }
 

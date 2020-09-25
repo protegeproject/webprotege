@@ -79,6 +79,8 @@ public class RpcWhiteList implements Action, Result {
 
     FormRegionFilter formRegionFilter;
 
+    FormPurpose formPurpose;
+
     LangTagFilter langTagFilter;
 
     MultiMatchType multiMatchType;

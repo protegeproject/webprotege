@@ -31,13 +31,16 @@ public abstract class EntityFormDescriptor {
 
     public static final String SELECTOR_CRITERIA = "formSelectorCriteria";
 
+    public static final String PURPOSE = "purpose";
+
 
     @JsonCreator
     public static EntityFormDescriptor valueOf(@JsonProperty(PROJECT_ID) @Nonnull ProjectId projectId,
                                                @JsonProperty(FORM_ID) @Nonnull FormId formId,
                                                @JsonProperty(FORM_DESCRIPTOR) @Nonnull FormDescriptor newDescriptor,
+                                               @JsonProperty(PURPOSE) @Nonnull FormPurpose purpose,
                                                @JsonProperty(SELECTOR_CRITERIA) @Nonnull RootCriteria newSelectorCriteria) {
-        return new AutoValue_EntityFormDescriptor(projectId, formId, newDescriptor, newSelectorCriteria);
+        return new AutoValue_EntityFormDescriptor(projectId, formId, newDescriptor, purpose, newSelectorCriteria);
     }
 
     @Nonnull
@@ -51,6 +54,10 @@ public abstract class EntityFormDescriptor {
     @Nonnull
     @JsonProperty(FORM_DESCRIPTOR)
     public abstract FormDescriptor getDescriptor();
+
+    @Nonnull
+    @JsonProperty(PURPOSE)
+    public abstract FormPurpose getPurpose();
 
     @Nonnull
     @JsonProperty(SELECTOR_CRITERIA)

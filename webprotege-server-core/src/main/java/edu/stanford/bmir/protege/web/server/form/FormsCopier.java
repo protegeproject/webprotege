@@ -73,6 +73,7 @@ public class FormsCopier {
                                     .filter(formSelector -> formSelector.getFormId().equals(fromFormId))
                                     .map(formSelector -> EntityFormSelector.get(toProjectId,
                                                                                 formSelector.getCriteria(),
+                                                                                formSelector.getPurpose(),
                                                                                 toFormId))
                                     .forEach(entityFormSelectorRepository::save);
     }

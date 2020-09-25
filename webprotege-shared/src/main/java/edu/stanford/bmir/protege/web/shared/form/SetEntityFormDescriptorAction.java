@@ -25,12 +25,16 @@ public class SetEntityFormDescriptorAction implements ProjectAction<SetEntityFor
 
     private CompositeRootCriteria selectorCriteria;
 
+    private FormPurpose purpose;
+
 
     public SetEntityFormDescriptorAction(@Nonnull ProjectId projectId,
                                          @Nonnull FormDescriptor formDescriptor,
+                                         @Nonnull FormPurpose purpose,
                                          @Nullable CompositeRootCriteria selectorCriteria) {
         this.projectId = checkNotNull(projectId);
         this.formDescriptor = checkNotNull(formDescriptor);
+        this.purpose = checkNotNull(purpose);
         this.selectorCriteria = checkNotNull(selectorCriteria);
     }
 
@@ -52,5 +56,9 @@ public class SetEntityFormDescriptorAction implements ProjectAction<SetEntityFor
     @Nonnull
     public Optional<CompositeRootCriteria> getSelectorCriteria() {
         return Optional.ofNullable(selectorCriteria);
+    }
+
+    public FormPurpose getPurpose() {
+        return purpose;
     }
 }

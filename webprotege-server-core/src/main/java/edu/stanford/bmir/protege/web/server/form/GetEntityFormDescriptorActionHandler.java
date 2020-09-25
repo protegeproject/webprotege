@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
+import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityFormDescriptorResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -12,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -50,15 +53,17 @@ public class GetEntityFormDescriptorActionHandler extends AbstractProjectActionH
         var formId = action.getFormId();
         var formDescriptor = entityFormRepository.findFormDescriptor(projectId, formId)
                                                  .orElse(null);
-        var formSelector = selectorRepository.findFormSelectors(projectId)
-                                             .filter(selector -> selector.getFormId()
-                                                                         .equals(formId))
-                                             .findFirst()
-                                             .map(EntityFormSelector::getCriteria)
-                                             .orElse(null);
+        Optional<EntityFormSelector> firstSelector = selectorRepository.findFormSelectors(projectId)
+                                                               .filter(selector -> selector.getFormId().equals(formId))
+                                                               .findFirst();
+        var formSelector = firstSelector.map(EntityFormSelector::getCriteria)
+                                        .orElse(null);
+        var purpose = firstSelector.map(EntityFormSelector::getPurpose)
+                .orElse(FormPurpose.ENTITY_EDITING);
         return GetEntityFormDescriptorResult.get(projectId,
                                                  action.getFormId(),
                                                  formDescriptor,
+                                                 purpose,
                                                  formSelector);
     }
 

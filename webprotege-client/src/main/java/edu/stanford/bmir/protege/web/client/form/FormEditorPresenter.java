@@ -6,6 +6,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -56,6 +57,9 @@ public class FormEditorPresenter implements Presenter {
     @Nonnull
     private final MessageBox messageBox;
 
+    @Nonnull
+    private FormsMessages formsMessages;
+
     @Inject
     public FormEditorPresenter(ProjectId projectId,
                                @Nonnull DispatchServiceManager dispatch,
@@ -63,7 +67,8 @@ public class FormEditorPresenter implements Presenter {
                                @Nonnull FormDescriptorPresenter formDescriptorPresenter,
                                @Nonnull EntityFormSelectorPresenter entityFormSelectorPresenter,
                                @Nonnull PlaceController placeController,
-                               @Nonnull MessageBox messageBox) {
+                               @Nonnull MessageBox messageBox,
+                               @Nonnull FormsMessages formsMessages) {
         this.projectId = checkNotNull(projectId);
         this.dispatch = checkNotNull(dispatch);
         this.settingsPresenter = checkNotNull(settingsPresenter);
@@ -71,6 +76,7 @@ public class FormEditorPresenter implements Presenter {
         this.entityFormSelectorPresenter = entityFormSelectorPresenter;
         this.placeController = checkNotNull(placeController);
         this.messageBox = messageBox;
+        this.formsMessages = checkNotNull(formsMessages);
     }
 
     public void setFormId(@Nonnull FormId formId) {
@@ -85,6 +91,8 @@ public class FormEditorPresenter implements Presenter {
                              Optional<CompositeRootCriteria> formSelectorCriteria = result.getFormSelectorCriteria();
                              formSelectorCriteria
                                    .ifPresent(this::setSelector);
+                             entityFormSelectorPresenter.setPurpose(result.getPurpose());
+
                          });
 
     }
@@ -105,10 +113,10 @@ public class FormEditorPresenter implements Presenter {
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         settingsPresenter.start(container);
 
-        AcceptsOneWidget descriptorViewContainer = settingsPresenter.addSection("Form");
+        AcceptsOneWidget descriptorViewContainer = settingsPresenter.addSection(formsMessages.forms_Title());
         formDescriptorPresenter.start(descriptorViewContainer, eventBus);
 
-        AcceptsOneWidget selectorContainer = settingsPresenter.addSection("Selector Criteria");
+        AcceptsOneWidget selectorContainer = settingsPresenter.addSection(formsMessages.activation());
 
         entityFormSelectorPresenter.setSelectorCriteria(CompositeRootCriteria.get(
                 ImmutableList.of(EntityTypeIsOneOfCriteria.get(ImmutableSet.of(EntityType.CLASS))),
@@ -128,6 +136,7 @@ public class FormEditorPresenter implements Presenter {
         }
         dispatch.execute(new SetEntityFormDescriptorAction(projectId,
                                                            formDescriptorPresenter.getFormDescriptor(),
+                                                           entityFormSelectorPresenter.getPurpose(),
                                                            entityFormSelectorPresenter.getSelectorCriteria().orElse(null)),
                          settingsPresenter,
                          result -> nextPlace.ifPresent(placeController::goTo));

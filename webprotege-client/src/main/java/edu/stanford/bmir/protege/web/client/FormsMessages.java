@@ -183,4 +183,16 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("An error occurred when importing the specified forms descriptors")
     @Key("importForms.error.message")
     String importFormsIntoProject_error_message();
+
+    @DefaultMessage("Form activation")
+    @Key("formActivation")
+    String activation();
+
+    @DefaultMessage("Activation criteria")
+    @Key("activationCriteria")
+    String activationCriteria();
+
+    @DefaultMessage("Form purpose")
+    @Key("formPurpose")
+    String formPurpose();
 }

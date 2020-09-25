@@ -60,6 +60,7 @@ public class SetEntityFormDescriptorActionHandler extends AbstractProjectActionH
             entityFormSelectorRepository.save(EntityFormSelector.get(
                     projectId,
                     compositeRootCriteria,
+                    action.getPurpose(),
                     formId));
         });
         return SetEntityFormDescriptorResult.get();

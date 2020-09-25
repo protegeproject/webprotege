@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
 import edu.stanford.bmir.protege.web.client.match.RootCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
+import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -61,5 +62,14 @@ public class EntityFormSelectorPresenter {
         container.setWidget(view);
         AcceptsOneWidget criteriaContainer = view.getSelectorCriteriaContainer();
         criteriaPresenter.start(criteriaContainer);
+    }
+
+    @Nonnull
+    public FormPurpose getPurpose() {
+        return view.getPurpose();
+    }
+
+    public void setPurpose(@Nonnull FormPurpose purpose) {
+        view.setPurpose(purpose);
     }
 }
