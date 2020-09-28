@@ -694,4 +694,9 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler provideResetPerspectivesActionHandler(ResetPerspectivesActionHandler handler) {
         return handler;
     }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityCreationFormsActionHandler(GetEntityCreationFormsActionHandler handler) {
+        return handler;
+    }
 }
