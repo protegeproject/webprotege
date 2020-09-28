@@ -62,7 +62,6 @@ import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveDetailsAction;
 
 /**
  * Matthew Horridge
@@ -610,7 +609,7 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler providesGetEntityFormActionHandler(GetEntityFormActionHandler handler) {
+    public ProjectActionHandler providesGetEntityFormActionHandler(GetEntityFormsActionHandler handler) {
         return handler;
     }
 
