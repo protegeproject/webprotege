@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -40,9 +41,12 @@ public class EntityFormManager {
         this.matchingEngine = matchingEngine;
     }
 
+    @Nonnull
     public ImmutableList<FormDescriptor> getFormDescriptors(@Nonnull OWLEntity entity,
-                                                           @Nonnull ProjectId projectId) {
+                                                            @Nonnull ProjectId projectId,
+                                                            @Nonnull FormPurpose formPurpose) {
         var formIds = entityFormSelectorRepository.findFormSelectors(projectId)
+                                                  .filter(selector -> selector.getPurpose().equals(formPurpose))
                                     .filter(selector -> matchingEngine.matches(entity,
                                                                                selector.getCriteria()))
                                     .map(EntityFormSelector::getFormId)

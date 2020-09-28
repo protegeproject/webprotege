@@ -7,10 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -70,7 +67,7 @@ public class GetEntityFormsActionHandler extends AbstractProjectActionHandler<Ge
                                                    formRegionFilterIndex);
         var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module).formDataBuilder();
         var formsFilterList = action.getFormFilter();
-        var forms = formManager.getFormDescriptors(entity, projectId)
+        var forms = formManager.getFormDescriptors(entity, projectId, FormPurpose.ENTITY_EDITING)
                                .stream()
                                .filter(byFormIds(formsFilterList))
                                .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
