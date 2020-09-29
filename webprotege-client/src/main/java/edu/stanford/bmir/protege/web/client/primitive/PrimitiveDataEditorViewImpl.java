@@ -64,9 +64,6 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     @UiField
     protected FocusPanel imageViewFocusPanel;
-    @UiField
-    HTMLPanel iconContainer;
-
 
     private static PrimitiveDataEditorViewImplUiBinder uiBinder = GWT.create(PrimitiveDataEditorViewImplUiBinder.class);
 
@@ -113,9 +110,9 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public void setPrimitiveDataStyleName(Optional<String> styleName) {
         checkNotNull(styleName);
-        lastStyleName.ifPresent(s -> iconContainer.removeStyleName(s));
+        lastStyleName.ifPresent(s -> textBox.getSuggestBox().removeStyleName(s));
         lastStyleName = styleName;
-        styleName.ifPresent(s -> iconContainer.addStyleName(s));
+        styleName.ifPresent(s -> textBox.getSuggestBox().addStyleName(s));
     }
 
     @Override
