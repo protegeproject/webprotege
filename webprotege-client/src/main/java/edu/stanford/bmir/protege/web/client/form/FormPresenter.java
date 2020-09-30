@@ -193,8 +193,9 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         presenter.setEnabled(enabled);
         presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
         presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
-        presenter.start();
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
+        presenter.start();
+
         fieldPresenters.add(presenter);
         if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()
                                                  .getId())) {
