@@ -21,7 +21,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class FormLanguageFilterStash {
 
-    public static final String FORMS_LANGUAGE_FILTER = "forms.language-filter";
+    public static final String FORMS_LANGUAGE_FILTER = "forms-language-filter";
 
     @Nonnull
     private final HasNodeProperties hasNodeProperties;
