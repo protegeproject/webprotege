@@ -116,6 +116,12 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     }
 
     @Override
+    public void clearPrimitiveDataStyleName() {
+        lastStyleName.ifPresent(s -> textBox.getSuggestBox().removeStyleName(s));
+        lastStyleName = Optional.empty();
+    }
+
+    @Override
     public void setAnchorVisible(boolean b) {
         textBox.setAnchorVisible(b);
     }

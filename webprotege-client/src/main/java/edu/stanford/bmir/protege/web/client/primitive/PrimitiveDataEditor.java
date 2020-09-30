@@ -255,4 +255,6 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
     void setCriteria(@Nonnull CompositeRootCriteria entityMatchCriteria);
 
     void setDeprecated(boolean deprecated);
+
+    void setIconDisplayed(boolean iconDisplayed);
 }
