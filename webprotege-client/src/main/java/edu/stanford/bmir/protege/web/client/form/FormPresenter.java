@@ -294,7 +294,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         });
     }
 
-    interface FormDataChangedHandler {
+    public interface FormDataChangedHandler {
 
         void handleFormDataChanged();
     }

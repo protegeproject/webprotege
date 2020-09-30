@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
@@ -57,8 +58,6 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
 
     @UiField
     HTMLPanel content;
-
-    FormControlStackPresenter editor;
 
     @Inject
     public FormFieldViewImpl() {
@@ -114,8 +113,11 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     }
 
     @Override
-    public FormControlStackPresenter getEditor() {
-        return checkNotNull(editor);
+    public void requestFocus() {
+        Widget editor = editorHolder.getWidget();
+        if(editor instanceof HasRequestFocus) {
+            ((HasRequestFocus) editor).requestFocus();
+        }
     }
 
     @Override

@@ -123,17 +123,11 @@ public class TextControl extends Composite implements FormControl {
     }
 
     private void validateInput() {
-        GWT.log("[TextControl] Validating input.");
-        GWT.log("[TextControl] Pattern: " + pattern);
         if(pattern.isPresent()) {
-
             RegExp regExp = RegExp.compile(pattern.get());
             String value = editor.getText().trim();
-            GWT.log("[TextControl] Value: " + value);
             MatchResult mr = regExp.exec(value);
-            GWT.log("[TextControl] Match: " + mr);
             if(mr == null) {
-                GWT.log("[TextControl] Input is not valid");
                 patternViolationErrorMessage.ifPresent(s -> {
                     patternViolationErrorMessageLabel.setVisible(true);
                     patternViolationErrorMessageLabel.setText(s);
@@ -141,7 +135,6 @@ public class TextControl extends Composite implements FormControl {
                 displayErrorBorder();
             }
             else {
-                GWT.log("[TextControl] Input is valid");
                 patternViolationErrorMessageLabel.setVisible(false);
                 clearErrorBorder();
             }

@@ -326,6 +326,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleCreateAnnotationProperty() {
         createEntityPresenter.createEntities(ANNOTATION_PROPERTY,
+                                             getSelectedAnnotationProperties().stream().findFirst(),
                                              CreateEntitiesInHierarchyHandler.get(annotationPropertyTree),
                                              (projectId, browserText, langTag) ->
                                                      new CreateAnnotationPropertiesAction(projectId,
@@ -337,6 +338,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleCreateDataProperty() {
         createEntityPresenter.createEntities(DATA_PROPERTY,
+                                             getSelectedDataProperties().stream().findFirst(),
                                              CreateEntitiesInHierarchyHandler.get(dataPropertyTree),
                                              (projectId, browserText, langTag) ->
                                                      new CreateDataPropertiesAction(projectId,
@@ -348,6 +350,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleCreateObjectProperty() {
         createEntityPresenter.createEntities(OBJECT_PROPERTY,
+                                             getSelectedObjectProperties().stream().findFirst(),
                                              CreateEntitiesInHierarchyHandler.get(objectPropertyTree),
                                              (projectId, browserText, langTag) ->
                                                      new CreateObjectPropertiesAction(projectId,

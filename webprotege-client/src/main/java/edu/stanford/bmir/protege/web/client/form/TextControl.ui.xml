@@ -34,7 +34,6 @@
         }
         .patternViolationMessage {
             padding-top: 0.3em;
-            max-width: 120px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

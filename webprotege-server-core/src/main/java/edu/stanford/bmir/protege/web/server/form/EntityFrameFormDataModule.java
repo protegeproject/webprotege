@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
@@ -33,6 +35,12 @@ public class EntityFrameFormDataModule {
         this.formRegionFilterIndex = checkNotNull(formRegionFilterIndex);
     }
 
+    public EntityFrameFormDataModule() {
+        this.formRegionOrderingIndex = FormRegionOrderingIndex.get(ImmutableSet.of());
+        this.langTagFilter = LangTagFilter.get(ImmutableSet.of());
+        this.pageRequestIndex = FormPageRequestIndex.create(ImmutableList.of());
+        this.formRegionFilterIndex = FormRegionFilterIndex.get(ImmutableSet.of());
+    }
 
     @Provides
     public FormRegionOrderingIndex provideFormRegionOrderingIndex() {

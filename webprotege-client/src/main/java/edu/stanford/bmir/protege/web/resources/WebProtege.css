@@ -301,7 +301,7 @@
 }
 
 .errorBorder {
-    outline: 2px dashed #ff0000 !important;
+    outline: 2px #ff0000 !important;
 }
 
 .errorBorderColor {

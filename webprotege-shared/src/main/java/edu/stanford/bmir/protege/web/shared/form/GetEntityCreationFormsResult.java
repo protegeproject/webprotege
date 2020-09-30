@@ -17,6 +17,11 @@ import javax.annotation.Nonnull;
 public abstract class GetEntityCreationFormsResult implements Result {
 
     @Nonnull
+    public static GetEntityCreationFormsResult get(@Nonnull ImmutableList<FormDescriptorDto> formDtos) {
+        return new AutoValue_GetEntityCreationFormsResult(formDtos);
+    }
+
+    @Nonnull
     public abstract ImmutableList<FormDescriptorDto> getFormDescriptors();
 
 

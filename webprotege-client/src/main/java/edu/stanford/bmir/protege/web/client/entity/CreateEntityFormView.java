@@ -8,10 +8,10 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 2020-09-23
+ * 2020-09-29
  */
-public interface CreateEntitiesFormView extends IsWidget {
+public interface CreateEntityFormView extends IsWidget {
 
     @Nonnull
-    AcceptsOneWidget getFormContainer();
+    AcceptsOneWidget getFormsContainer();
 }
