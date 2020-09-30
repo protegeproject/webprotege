@@ -33,7 +33,7 @@
 
 .wp-btn {
     border: none;
-    border-radius: 2px;
+    border-radius: 0.4em;
 
     cursor: pointer;
 
@@ -87,6 +87,7 @@
     height: 1.8em;
     line-height: 1.8em;
     padding: 0 20px;
+    border-radius: 0.4em;
 
     font-size: 16px;
     font-weight: 400;
