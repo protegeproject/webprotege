@@ -42,6 +42,8 @@ public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChan
 
     void setPrimitiveDataStyleName(Optional<String> styleName);
 
+    void clearPrimitiveDataStyleName();
+
     void setTitle(String title);
 
     void showErrorMessage(SafeHtml errorMessage, Set<EntityType<?>> expectedTypes);

@@ -90,6 +90,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private boolean wrap = true;
 
+    private boolean displayIcon = true;
+
     @Inject
     public PrimitiveDataEditorImpl(PrimitiveDataEditorView editorView,
                                    LanguageEditor languageEditor,
@@ -194,6 +196,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     @Override
     public void setDeprecated(boolean deprecated) {
         view.setDeprecated(deprecated);
+    }
+
+    @Override
+    public void setIconDisplayed(boolean iconDisplayed) {
+        this.displayIcon = iconDisplayed;
+        updateDisplayForCurrentData();
     }
 
     @Override
@@ -645,6 +653,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     private void setIconInsetStyleName(Optional<String> name) {
         view.setPrimitiveDataStyleName(name);
     }
+
     ////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -760,7 +769,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 }
             }
         });
-        setIconInsetStyleName(Optional.of(styleName));
+        if (displayIcon) {
+            setIconInsetStyleName(Optional.of(styleName));
+        }
+        else {
+            view.clearPrimitiveDataStyleName();
+        }
     }
 
     /**

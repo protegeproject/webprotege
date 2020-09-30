@@ -35,7 +35,6 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveData.primitiveData}">
-        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{style.iconContainer} {wp.primitiveData.primitiveData__icon}"/>
         <g:HTMLPanel ui:field="contentContainer" addStyleNames="{style.contentContainer}">
             <text:ExpandingTextBox ui:field="textBox" addStyleNames="{style.textBox} {wp.primitiveData.primitiveData__text}"/>
             <g:LazyPanel ui:field="errorViewContainer" debugId="ErrorViewCont">
