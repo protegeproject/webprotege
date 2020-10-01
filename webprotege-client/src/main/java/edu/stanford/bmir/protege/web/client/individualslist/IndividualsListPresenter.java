@@ -247,14 +247,9 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private void handleCreateIndividuals() {
         OWLClass parent = currentType.orElse(DataFactory.getOWLThing());
-        ImmutableSet<OWLClass> parents = ImmutableSet.of(parent);
         createEntityPresenter.createEntities(NAMED_INDIVIDUAL,
                                              Optional.of(parent),
-                                             this::handleIndividualsCreated, (projectId, createFromText, langTag) -> {
-                    return new CreateNamedIndividualsAction(projectId, parents,
-                                                        createFromText,
-                                                        langTag);
-                });
+                                             this::handleIndividualsCreated);
     }
 
     private void handleIndividualsCreated(ImmutableCollection<EntityNode> individuals) {

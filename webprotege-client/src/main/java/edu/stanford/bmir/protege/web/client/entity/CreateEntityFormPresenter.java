@@ -78,7 +78,6 @@ public class CreateEntityFormPresenter {
     public void createEntities(@Nonnull EntityType<?> entityType,
                                @Nonnull Optional<? extends OWLEntity> parentEntity,
                                @Nonnull CreateEntityPresenter.EntitiesCreatedHandler entitiesCreatedHandler,
-                               @Nonnull CreateEntityPresenter.ActionFactory actionFactory,
                                @Nonnull ImmutableList<FormDescriptorDto> formDescriptorDtos) {
         if(formDescriptorDtos.isEmpty()) {
             throw new RuntimeException("No form descriptors have been specified");

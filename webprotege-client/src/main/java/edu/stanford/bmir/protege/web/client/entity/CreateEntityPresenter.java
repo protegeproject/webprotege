@@ -49,15 +49,13 @@ public class CreateEntityPresenter {
 
     public void createEntities(@Nonnull EntityType<?> entityType,
                                @Nonnull Optional<? extends OWLEntity> parentEntity,
-                               @Nonnull EntitiesCreatedHandler entitiesCreatedHandler,
-                               @Nonnull ActionFactory actionFactory) {
+                               @Nonnull EntitiesCreatedHandler entitiesCreatedHandler) {
         parentEntity.ifPresent(owlEntity -> dispatch.execute(new GetEntityCreationFormsAction(projectId,
                                                                                               owlEntity,
                                                                                               entityType), result -> {
             handleEntityCreationFormsResult(entityType,
                                             parentEntity,
                                             entitiesCreatedHandler,
-                                            actionFactory,
                                             result.getFormDescriptors());
         }));
 
@@ -67,19 +65,16 @@ public class CreateEntityPresenter {
     private void handleEntityCreationFormsResult(@Nonnull EntityType<?> entityType,
                                                  @Nonnull Optional<? extends OWLEntity> parentEntity,
                                                  @Nonnull EntitiesCreatedHandler entitiesCreatedHandler,
-                                                 @Nonnull ActionFactory actionFactory,
                                                  @Nonnull ImmutableList<FormDescriptorDto> createEntityForms) {
         if (createEntityForms.isEmpty()) {
             defaultCreateEntitiesPresenter.createEntities(entityType,
                                                           parentEntity,
-                                                          entitiesCreatedHandler,
-                                                          actionFactory);
+                                                          entitiesCreatedHandler);
         }
         else {
             createEntityFormPresenter.createEntities(entityType,
                                                      parentEntity,
                                                      entitiesCreatedHandler,
-                                                     actionFactory,
                                                      createEntityForms);
         }
     }
