@@ -90,7 +90,7 @@ public class SetUserProjectEntityGraphCriteriaActionHandler extends AbstractProj
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetUserProjectEntityGraphSettingsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 }

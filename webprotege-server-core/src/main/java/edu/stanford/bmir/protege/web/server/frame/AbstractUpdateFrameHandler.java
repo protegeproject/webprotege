@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -48,7 +47,7 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction, F 
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(A action) {
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 

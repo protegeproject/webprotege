@@ -17,6 +17,7 @@ import static org.mockito.Mockito.mock;
 public class ResetPerspectiveLayoutResult_TestCase {
 
     private ResetPerspectiveLayoutResult resetPerspectiveLayoutResult;
+
     @Mock
     private PerspectiveLayout resetLayout;
 

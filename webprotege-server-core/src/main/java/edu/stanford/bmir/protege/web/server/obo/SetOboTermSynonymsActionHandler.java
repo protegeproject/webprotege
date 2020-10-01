@@ -30,7 +30,7 @@ public class SetOboTermSynonymsActionHandler extends AbstractProjectActionHandle
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetOboTermSynonymsAction action) {
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 

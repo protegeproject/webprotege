@@ -40,6 +40,7 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
                                                  @Nonnull FormRegionPosition position) {
         this.formControl = checkNotNull(formControl);
         this.position = checkNotNull(position);
+        this.formControl.addValueChangeHandler(event -> ValueChangeEvent.fire(this, getValue()));
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {

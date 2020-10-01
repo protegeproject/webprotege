@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.form.FormEditorPresenter;
 import edu.stanford.bmir.protege.web.client.form.FormsManagerPresenter;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPresenter;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
 import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
@@ -51,4 +52,6 @@ public interface ClientProjectComponent {
     FormsManagerPresenter getFormsPresenter();
 
     EntitySearchSettingsPresenter getEntitySearchSettingsPresenter();
+
+    PerspectivesManagerPresenter getPerspectivesManagerPresenter();
 }

@@ -38,7 +38,7 @@ public class DeleteFormActionHandler extends AbstractProjectActionHandler<Delete
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(DeleteFormAction action) {
         return BuiltInAction.EDIT_FORMS;
     }
 

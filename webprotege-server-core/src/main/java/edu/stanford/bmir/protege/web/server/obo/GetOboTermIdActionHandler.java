@@ -36,7 +36,7 @@ public class GetOboTermIdActionHandler extends AbstractProjectActionHandler<GetO
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetOboTermIdAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

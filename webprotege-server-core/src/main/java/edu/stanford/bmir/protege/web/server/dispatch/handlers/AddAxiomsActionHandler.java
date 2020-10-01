@@ -52,7 +52,7 @@ public class AddAxiomsActionHandler extends AbstractProjectActionHandler<AddAxio
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(AddAxiomsAction action) {
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 

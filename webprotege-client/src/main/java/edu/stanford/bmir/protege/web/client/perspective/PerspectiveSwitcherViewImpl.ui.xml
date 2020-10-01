@@ -25,6 +25,10 @@
             flex-grow: 0;
             flex-shrink: 0;
             margin-right: 5px;
+            margin-left: 5px;
+            padding-left: 3px;
+            padding-right: 3px;
+            border-radius: 2px;
         }
 
         .main .gwt-TabBar .gwt-TabBarFirst {
@@ -63,6 +67,6 @@
         <g:SimplePanel addStyleNames="{style.tabBarContainer}">
             <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
         </g:SimplePanel>
-        <g:Button ui:field="newTabButton" text="{msg.addTab}" addStyleNames="{style.newTabButton} {wp.buttons.addTabButton}"/>
+        <g:Button ui:field="newTabButton" text="{msg.perspective_tabs}  &#x25be;" addStyleNames="{style.newTabButton} {wp.buttons.topBarButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

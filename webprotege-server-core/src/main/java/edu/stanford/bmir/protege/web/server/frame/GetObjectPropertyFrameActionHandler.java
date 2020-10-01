@@ -50,7 +50,7 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetObjectPropertyFrameAction action) {
         return VIEW_PROJECT;
     }
 

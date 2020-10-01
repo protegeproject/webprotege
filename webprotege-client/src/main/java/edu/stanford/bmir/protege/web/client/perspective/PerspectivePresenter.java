@@ -6,8 +6,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
@@ -60,6 +60,8 @@ public class PerspectivePresenter implements HasDispose {
 
     private java.util.Optional<PerspectiveId> currentPerspective = java.util.Optional.empty();
 
+    private final LanguageMapCurrentLocaleMapper localeMapper;
+
 
     @Inject
     public PerspectivePresenter(final PerspectiveView perspectiveView,
@@ -70,7 +72,7 @@ public class PerspectivePresenter implements HasDispose {
                                 PerspectiveFactory perspectiveFactory,
                                 EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
                                 PortletChooserPresenter portletChooserPresenter,
-                                MessageBox messageBox) {
+                                MessageBox messageBox, LanguageMapCurrentLocaleMapper localeMapper) {
         this.perspectiveView = perspectiveView;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;
@@ -80,6 +82,7 @@ public class PerspectivePresenter implements HasDispose {
         this.emptyPerspectivePresenterFactory = emptyPerspectivePresenterFactory;
         this.portletChooserPresenter = portletChooserPresenter;
         this.messageBox = messageBox;
+        this.localeMapper = localeMapper;
     }
 
     public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
@@ -96,11 +99,12 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void handleResetPerspective(ResetPerspectiveEvent event) {
-        PerspectiveId perspectiveId = event.getPerspectiveId();
+        PerspectiveDescriptor perspectiveDescriptor = event.getPerspectiveDescriptor();
+        String label = localeMapper.getValueForCurrentLocale(perspectiveDescriptor.getLabel());
         messageBox.showYesNoConfirmBox("Reset tab?",
                                        "Are you sure you want to reset the <em>" +
-                                               perspectiveId.getId() + "</em> tab to the default state?",
-                                       () -> executeResetPerspective(perspectiveId));
+                                               label + "</em> tab to the default state?",
+                                       () -> executeResetPerspective(perspectiveDescriptor.getPerspectiveId()));
     }
 
     private void executeResetPerspective(PerspectiveId perspectiveId) {
@@ -108,7 +112,7 @@ public class PerspectivePresenter implements HasDispose {
         dispatchServiceManager.execute(resetPerspective(projectId, perspectiveId),
                                        result -> {
                                            removePerspective(perspectiveId);
-                                           installPerspective(perspectiveId, result.getResetLayout());
+                                           installPerspective(result.getResetLayout());
                                        });
     }
 
@@ -152,27 +156,28 @@ public class PerspectivePresenter implements HasDispose {
         UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, userId, perspectiveId),
                 result -> {
-                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspectiveLayout());
-                    installPerspective(perspectiveId, result.getPerspectiveLayout());
+                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspective());
+                    installPerspective(result.getPerspective());
                 });
     }
 
-    private void installPerspective(PerspectiveId perspectiveId, PerspectiveLayout layout) {
+    private void installPerspective(PerspectiveLayout perspective) {
         permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
                                         canAddRemove -> {
                                             GWT.log("[PerspectivePresenter] Can close views: " + canAddRemove);
-                                            installPerspective(perspectiveId, layout, canAddRemove);
+                                            PerspectiveId perspectiveId = perspective.getPerspectiveId();
+                                            Optional<Node> rootNode = perspective.getLayout();
+                                            installPerspective(perspectiveId, rootNode, canAddRemove);
                                         });
     }
 
     private void installPerspective(@Nonnull PerspectiveId perspectiveId,
-                                    @Nonnull PerspectiveLayout layout,
+                                    @Nonnull Optional<Node> rootNode,
                                     boolean viewsCloseable) {
         Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
         perspective.setViewsCloseable(viewsCloseable);
         EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
         perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
-        Optional<Node> rootNode = layout.getRootNode();
         perspective.setRootNode(rootNode);
         perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
             savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
@@ -239,7 +244,7 @@ public class PerspectivePresenter implements HasDispose {
             if(currentUserId.isGuest()) {
                 return;
             }
-            PerspectiveLayout layout = new PerspectiveLayout(perspectiveId, node);
+            PerspectiveLayout layout = PerspectiveLayout.get(perspectiveId, node);
             dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), result -> {});
         }
     }

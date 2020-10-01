@@ -43,7 +43,7 @@ public class CheckManchesterSyntaxFrameActionHandler extends AbstractProjectActi
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(CheckManchesterSyntaxFrameAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

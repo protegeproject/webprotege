@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * Matthew Horridge
@@ -28,4 +29,8 @@ public interface ObjectListView extends IsWidget {
     void setAddObjectText(@Nonnull String addObjectText);
 
     void setAddObjectHandler(Runnable handler);
+
+    void setDeleteConfirmationTitle(@Nonnull Function<String, String> deleteConfirmationTitle);
+
+    void setDeleteConfirmationMessage(@Nonnull Function<String, String> deleteConfirmationMessage);
 }

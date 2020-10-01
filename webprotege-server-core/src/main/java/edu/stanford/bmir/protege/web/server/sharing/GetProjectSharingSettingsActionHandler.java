@@ -31,7 +31,7 @@ public class GetProjectSharingSettingsActionHandler extends AbstractProjectActio
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetProjectSharingSettingsAction action) {
         return EDIT_SHARING_SETTINGS;
     }
 

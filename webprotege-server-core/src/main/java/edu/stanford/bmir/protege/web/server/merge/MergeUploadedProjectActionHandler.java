@@ -52,7 +52,7 @@ public class MergeUploadedProjectActionHandler extends AbstractProjectActionHand
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(MergeUploadedProjectAction action) {
         return Arrays.asList(UPLOAD_AND_MERGE, EDIT_ONTOLOGY);
     }
 

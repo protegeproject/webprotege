@@ -55,7 +55,7 @@ public class EditCommentActionHandler extends AbstractProjectActionHandler<EditC
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(EditCommentAction action) {
         return EDIT_OWN_OBJECT_COMMENT;
     }
 

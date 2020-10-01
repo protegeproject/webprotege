@@ -73,6 +73,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
         else {
             setNothingSelectedVisible(true);
+            setDisplayedEntity(Optional.empty());
         }
     }
 
@@ -85,6 +86,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
         entityFormStackPresenter.setHasBusy(portletUi);
         entityFormStackPresenter.setSelectedFormIdStash(new SelectedFormIdStash(portletUi));
         entityFormStackPresenter.setLanguageFilterStash(new FormLanguageFilterStash(portletUi));
+        entityFormStackPresenter.setEntityDisplay(this);
         handleAfterSetEntity(getSelectedEntity());
     }
 

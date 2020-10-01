@@ -70,8 +70,8 @@ public class PlaceUrl_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        when(typeMapper.getPerspectiveId(Matchers.any())).thenReturn(PerspectiveId.get("TheClassPerspective"));
-        when(typeMapper.getDefaultPerspectiveId()).thenReturn(PerspectiveId.get("TheDefaultPerspective"));
+        when(typeMapper.getPerspectiveId(Matchers.any())).thenReturn(PerspectiveId.get("12345678-1234-1234-1234-123456789abc"));
+        when(typeMapper.getDefaultPerspectiveId()).thenReturn(PerspectiveId.get("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"));
 
         when(hostProvider.get()).thenReturn(THE_APPLICATION_HOST);
         when(portProvider.get()).thenReturn(Optional.empty());
@@ -104,7 +104,7 @@ public class PlaceUrl_TestCase {
         String url = placeUrl.getProjectUrl(projectId);
         assertThat(url, is(EXPECTED_URL_BASE + "#projects/"
                                    + projectId.getId()
-                                   + "/edit/TheDefaultPerspective"));
+                                   + "/perspectives/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"));
     }
 
     @Test
@@ -113,6 +113,6 @@ public class PlaceUrl_TestCase {
         String url = placeUrl.getEntityUrl(projectId, entity);
         assertThat(url, is(EXPECTED_URL_BASE + "#projects/"
                                    + projectId.getId()
-                                   + "/edit/TheClassPerspective?selection=Class(%3C" + entityIri.toString() + "%3E)"));
+                                   + "/perspectives/12345678-1234-1234-1234-123456789abc?selection=Class(%3C" + entityIri.toString() + "%3E)"));
     }
 }

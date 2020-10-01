@@ -45,7 +45,7 @@ public abstract class AbstractProjectActionHandler<A extends ProjectAction<R>, R
     public final RequestValidator getRequestValidator(@Nonnull A action, @Nonnull RequestContext requestContext) {
         List<RequestValidator> validators = new ArrayList<>();
 
-        BuiltInAction builtInAction = getRequiredExecutableBuiltInAction();
+        BuiltInAction builtInAction = getRequiredExecutableBuiltInAction(action);
         if(builtInAction != null) {
             ProjectPermissionValidator validator = new ProjectPermissionValidator(accessManager,
                                                                                   action.getProjectId(),
@@ -65,7 +65,7 @@ public abstract class AbstractProjectActionHandler<A extends ProjectAction<R>, R
             validators.add(validator);
         }
 
-        Iterable<BuiltInAction> requiredExecutableBuiltInActions = getRequiredExecutableBuiltInActions();
+        Iterable<BuiltInAction> requiredExecutableBuiltInActions = getRequiredExecutableBuiltInActions(action);
         for(BuiltInAction actionId : requiredExecutableBuiltInActions) {
             ProjectPermissionValidator validator = new ProjectPermissionValidator(accessManager,
                                                                                   action.getProjectId(),
@@ -82,7 +82,7 @@ public abstract class AbstractProjectActionHandler<A extends ProjectAction<R>, R
     }
 
     @Nullable
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(A action) {
         return null;
     }
 
@@ -94,7 +94,7 @@ public abstract class AbstractProjectActionHandler<A extends ProjectAction<R>, R
     }
 
     @Nonnull
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(A action) {
         return Collections.emptyList();
     }
 

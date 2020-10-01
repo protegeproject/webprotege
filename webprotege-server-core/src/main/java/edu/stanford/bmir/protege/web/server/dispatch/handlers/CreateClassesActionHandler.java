@@ -57,7 +57,7 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
 
     @Nonnull
     @Override
-    protected List<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected List<BuiltInAction> getRequiredExecutableBuiltInActions(CreateClassesAction action) {
         return asList(CREATE_CLASS, EDIT_ONTOLOGY);
     }
 

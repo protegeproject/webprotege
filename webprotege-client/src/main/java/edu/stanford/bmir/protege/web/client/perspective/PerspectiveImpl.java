@@ -99,7 +99,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     public void dropView(String className) {
         NodeProperties nodeProperties = NodeProperties.builder().setValue("portlet", className).build();
-        TerminalNode terminalNode = new TerminalNode(new TerminalNodeId(), nodeProperties);
+        TerminalNode terminalNode = new TerminalNode(TerminalNodeId.get(), nodeProperties);
         widgetMapPanel.doDrop(terminalNode);
     }
 

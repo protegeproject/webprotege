@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRendererFactory;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
@@ -37,16 +37,20 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
     @Nonnull
     private final ProjectComponent projectComponent;
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
     public GetEntityFormActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull ProjectId projectId,
                                       @Nonnull EntityFormManager formManager,
-                                      @Nonnull FrameComponentSessionRendererFactory sessionRendererFactory,
-                                      @Nonnull ProjectComponent projectComponent) {
+                                      @Nonnull ProjectComponent projectComponent,
+                                      @Nonnull RenderingManager renderingManager) {
         super(accessManager);
         this.projectId = projectId;
         this.formManager = formManager;
         this.projectComponent = projectComponent;
+        this.renderingManager = renderingManager;
     }
 
     @Nonnull
@@ -73,7 +77,9 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
                                .filter(byFormIds(formsFilterList))
                           .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
                           .collect(toImmutableList());
-        return new GetEntityFormsResult(action.getFormFilter(), forms);
+
+        var entityData = renderingManager.getRendering(entity);
+        return new GetEntityFormsResult(entityData, action.getFormFilter(), forms);
     }
 
     public static Predicate<FormDescriptor> byFormIds(ImmutableList<FormId> formsFilterList) {
@@ -89,7 +95,7 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetEntityFormsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 }

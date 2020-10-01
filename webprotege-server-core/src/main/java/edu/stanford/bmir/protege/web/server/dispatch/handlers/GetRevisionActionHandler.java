@@ -48,7 +48,7 @@ public class GetRevisionActionHandler extends AbstractProjectActionHandler<GetRe
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetRevisionAction action) {
         return BuiltInAction.VIEW_CHANGES;
     }
 

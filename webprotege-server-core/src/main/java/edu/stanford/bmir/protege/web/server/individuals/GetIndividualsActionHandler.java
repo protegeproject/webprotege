@@ -66,7 +66,7 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetIndividualsAction action) {
         return VIEW_PROJECT;
     }
 

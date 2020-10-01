@@ -55,7 +55,7 @@ public class GetOntologyFramesActionHandler extends AbstractProjectActionHandler
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetOntologyFramesAction action) {
         return VIEW_PROJECT;
     }
 

@@ -54,7 +54,7 @@ public class MoveHierarchyNodeActionHandler extends AbstractProjectChangeHandler
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(MoveHierarchyNodeAction action) {
         return EDIT_ONTOLOGY;
     }
 }

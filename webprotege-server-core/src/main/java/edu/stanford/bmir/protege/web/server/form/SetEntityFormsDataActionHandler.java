@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -19,7 +17,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,7 +41,7 @@ public class SetEntityFormsDataActionHandler extends AbstractProjectChangeHandle
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetEntityFormsDataAction action) {
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 

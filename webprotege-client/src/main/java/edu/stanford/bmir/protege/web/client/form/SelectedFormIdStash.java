@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SelectedFormIdStash {
 
-    private static final String KEY = "forms.selected-form";
+    private static final String KEY = "forms-selected-form";
 
     @Nonnull
     private final HasNodeProperties nodeProperties;

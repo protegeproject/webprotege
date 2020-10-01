@@ -30,6 +30,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     private boolean enabled = true;
 
+    private FormFieldValueChangedHandler formFieldValueChangedHandler = () -> {};
+
     private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
         updateRequiredValuePresent();
     }
@@ -57,6 +59,7 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
         this.formFieldDescriptor = checkNotNull(formFieldDescriptor);
         this.stackPresenter = checkNotNull(formControlStackPresenter);
         this.languageMapCurrentLocaleMapper = checkNotNull(languageMapCurrentLocaleMapper);
+        stackPresenter.addValueChangeHandler(event -> formFieldValueChangedHandler.handleFormFieldValueChanged());
     }
 
     @Nonnull
@@ -208,5 +211,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         stackPresenter.setFormRegionFilterChangedHandler(handler);
+    }
+
+    public void setFormFieldValueChangedHandler(@Nonnull FormFieldValueChangedHandler handler) {
+        this.formFieldValueChangedHandler = checkNotNull(handler);
     }
 }

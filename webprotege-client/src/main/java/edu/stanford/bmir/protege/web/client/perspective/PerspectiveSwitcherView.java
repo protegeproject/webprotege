@@ -2,43 +2,51 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 23/06/2014
  */
 public interface PerspectiveSwitcherView extends IsWidget {
 
+    void setResettablePerspectives(Set<PerspectiveId> resettablePerspectives);
+
     /**
      * Handles notifications for when a perspective link has been activated.
      */
-    interface PerspectiveLinkActivatedHandler {
-        void handlePerspectiveLinkActivated(PerspectiveId perspectiveId);
+    interface PerspectiveActivatedHandler {
+        void handlePerspectiveActivated(PerspectiveId perspectiveId);
     }
 
     /**
      * Handles request to add a new perspective link.
      */
-    interface AddPerspectiveLinkRequestHandler {
-        void handleAddNewPerspectiveLinkRequest();
+    interface AddBlankPerspectiveHandler {
+        void handleAddBlankPerspective();
     }
 
-    interface AddBookmarkedPerspectiveLinkHandler {
-        void handleAddBookmarkedPerspective(PerspectiveId perspectiveId);
+    interface AddToFavoritePerspectivesHandler {
+        void handleAddToFavorites(PerspectiveDescriptor perspectiveDescriptor);
     }
 
-    interface RemovePerspectiveLinkRequestHandler {
-        void handleRemovePerspectiveLinkRequest(PerspectiveId perspectiveId);
+    interface RemoveFromFavoritePerspectivesHandler {
+        void handleRemoveFromFavorites(PerspectiveId perspectiveId);
     }
 
     interface ResetPerspectiveToDefaultStateHandler {
-        void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId);
+        void handleResetPerspectiveToDefaultState(PerspectiveDescriptor perspectiveDescriptor);
     }
 
     interface AddViewHandler {
         void handleAddViewToPerspective(PerspectiveId perspectiveId);
+    }
+
+    interface ManagerPerspectivesHandler {
+        void handleManagePerspectives();
     }
 
     /**
@@ -53,48 +61,47 @@ public interface PerspectiveSwitcherView extends IsWidget {
      * Sets the perspective links that are displayed by this switcher.
      * @param perspectives The list of perspective links that are displayed.  Not {@code null}.
      */
-    void setPerspectiveLinks(List<PerspectiveId> perspectives);
+    void setFavourites(List<PerspectiveDescriptor> perspectives);
 
-    void addPerspectiveLink(PerspectiveId perspectiveId);
+    void addFavorite(PerspectiveDescriptor perspectiveDescriptor);
 
-    void removePerspectiveLink(PerspectiveId perspectiveId);
+    void removeFavorite(PerspectiveDescriptor perspectiveDescriptor);
 
-    /**
-     * Gets the perspectives that are linked to by this switcher.
-     * @return The perspective links.  Modifying the collection will not change the underlying displayed links in the
-     * view.
-     */
-    List<PerspectiveId> getPerspectiveLinks();
 
     /**
      * Sets the handler that will be called when a perspective link is activated.
      * @param handler The handler.  Not {@code null}.
      */
-    void setPerspectiveLinkActivatedHandler(PerspectiveLinkActivatedHandler handler);
+    void setPerspectiveActivatedHandler(PerspectiveActivatedHandler handler);
 
     /**
      * Sets the handler that will be called when a request to add a new perspective link is made by the user.
      * @param handler The handler.  Not {@code null}.
      */
-    void setAddPerspectiveLinkRequestHandler(AddPerspectiveLinkRequestHandler handler);
+    void setAddBlankPerspectiveHandler(AddBlankPerspectiveHandler handler);
 
-    void setAddBookMarkedPerspectiveLinkHandler(AddBookmarkedPerspectiveLinkHandler handler);
+    void setAddToFavoritePerspectivesHandler(AddToFavoritePerspectivesHandler handler);
 
     /**
      * Sets the handler that will be called when a request to remove a perspective link is made by the user.
      * @param handler  The handler.  Not {@code null}.
      */
-    void setRemovePerspectiveLinkHandler(RemovePerspectiveLinkRequestHandler handler);
+    void setRemoveFromFavoritePerspectivesHandler(RemoveFromFavoritePerspectivesHandler handler);
 
     void setResetPerspectiveToDefaultStateHandler(ResetPerspectiveToDefaultStateHandler handler);
 
+    void setManagePerspectivesHandler(ManagerPerspectivesHandler handler);
+
     void setAddViewHandler(AddViewHandler handler);
 
-    void setBookmarkedPerspectives(List<PerspectiveId> perspectives);
+
+    void setAvailablePerspectives(List<PerspectiveDescriptor> perspectives);
 
     void setAddPerspectiveAllowed(boolean addPerspectiveAllowed);
 
     void setClosePerspectiveAllowed(boolean closePerspectiveAllowed);
 
     void setAddViewAllowed(boolean addViewAllowed);
+
+    void setManagePerspectivesAllowed(boolean allowed);
 }

@@ -107,7 +107,7 @@ public class SharingSettingEditorImpl extends Composite implements SharingSettin
             return Optional.empty();
         }
         return Optional.of(
-                new SharingSetting(new PersonId(personIdField.getText().trim()), SharingPermission.values()[permissionField.getSelectedIndex()])
+                new SharingSetting(PersonId.get(personIdField.getText().trim()), SharingPermission.values()[permissionField.getSelectedIndex()])
         );
     }
 

@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.entity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
@@ -10,11 +9,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.match.Matcher;
 import edu.stanford.bmir.protege.web.server.match.MatcherFactory;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.shortform.EntityShortFormMatches;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -29,7 +25,6 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -82,7 +77,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(LookupEntitiesAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

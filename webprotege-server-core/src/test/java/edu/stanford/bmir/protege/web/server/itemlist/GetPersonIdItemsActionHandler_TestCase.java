@@ -53,7 +53,7 @@ public class GetPersonIdItemsActionHandler_TestCase {
     public void shouldOnlyMatchExact() {
         when(action.getItemNames()).thenReturn(Arrays.asList("John Smith"));
         GetPersonIdItemsResult result = actionHandler.execute(action, mock(ExecutionContext.class));
-        assertThat(result.getItems(), hasItems(new PersonId(johnSmith_UpperCase.getUserName())));
+        assertThat(result.getItems(), hasItems(PersonId.get(johnSmith_UpperCase.getUserName())));
     }
 
 }

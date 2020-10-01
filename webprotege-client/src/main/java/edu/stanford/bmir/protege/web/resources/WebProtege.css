@@ -171,6 +171,7 @@
     background-image: classIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -179,6 +180,7 @@
     background-image: objectPropertyIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -187,6 +189,7 @@
     background-image: dataPropertyIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -195,6 +198,7 @@
     background-image: annotationPropertyIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -203,6 +207,7 @@
     background-image: datatypeIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 2px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -211,6 +216,7 @@
     background-image: commentIconUrl;
     background-repeat: no-repeat;
     background-position: 0 0;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -219,6 +225,7 @@
     background-image: literalIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 2px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
@@ -227,11 +234,13 @@
     background-image: individualIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    padding-left: 22px;
     width: auto;
     height: auto;
 }
 
 .emptyIconInset {
+    padding-left: 22px;
 }
 
 
@@ -517,7 +526,7 @@
     padding: 0.4em;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 0.4em;
     background-color: literal("var(--tab--background-color)");
 }
 

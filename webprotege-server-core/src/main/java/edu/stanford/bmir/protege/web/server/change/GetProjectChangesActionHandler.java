@@ -41,7 +41,7 @@ public class GetProjectChangesActionHandler extends AbstractProjectActionHandler
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetProjectChangesAction action) {
         return VIEW_CHANGES;
     }
 

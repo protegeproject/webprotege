@@ -39,7 +39,7 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.editor}">
-            <primitive:PrimitiveDataEditorImpl ui:field="editor" addStyleNames="{style.value-field}"/>
+            <primitive:PrimitiveDataEditorImpl ui:field="editor" addStyleNames="{style.value-field}" iconDisplayed="false"/>
             <primitive:DefaultLanguageEditor placeholder="lang" ui:field="languageEditor"
                                              addStyleNames="{style.language-field}"/>
         </g:HTMLPanel>

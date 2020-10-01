@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +37,7 @@ public class GetEntityRenderingActionHandler extends AbstractProjectActionHandle
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetEntityRenderingAction action) {
         return VIEW_PROJECT;
     }
 

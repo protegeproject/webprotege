@@ -1,0 +1,17 @@
+{
+  "perspectiveId" : "766764b8-eeb9-43dc-b48e-aee3146bdd4b",
+  "favorite" : true,
+  "label" : {
+    "en" : "History"
+  },
+  "layout" : {
+    "@type" : "LeafNode",
+    "properties" : {
+      "portlet": {
+        "@type": "String",
+        "value": "portlets.ProjectHistory"
+      }
+    }
+  }
+
+}

@@ -43,7 +43,7 @@ public class SetProjectPrefixDeclarationsActionHandler extends AbstractProjectAc
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetProjectPrefixDeclarationsAction action) {
         return EDIT_PROJECT_PREFIXES;
     }
 

@@ -10,31 +10,50 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 18/02/16
  */
-public class SetPerspectivesAction implements ProjectAction<SetPerspectivesResult>, HasUserId, HasProjectId {
+public class SetPerspectivesAction implements ProjectAction<SetPerspectivesResult>, HasProjectId {
 
     private ProjectId projectId;
 
     private UserId userId;
 
-    private ImmutableList<PerspectiveId> perspectiveIds;
+    private ImmutableList<PerspectiveDescriptor> perspectiveIds;
 
     private SetPerspectivesAction() {
     }
 
-    public SetPerspectivesAction(ProjectId projectId, UserId userId, ImmutableList<PerspectiveId> perspectiveIds) {
-        this.projectId = projectId;
-        this.userId = userId;
-        this.perspectiveIds = perspectiveIds;
-        GWT.log("[SetPerspectivesAction] " + perspectiveIds);
+    public SetPerspectivesAction(@Nonnull ProjectId projectId,
+                                 @Nonnull UserId userId,
+                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
+        this.projectId = checkNotNull(projectId);
+        this.userId = checkNotNull(userId);
+        this.perspectiveIds = checkNotNull(perspectiveIds);
     }
 
-    public ImmutableList<PerspectiveId> getPerspectiveIds() {
+    /**
+     * Set the perspectives for the project.  The ability to edit project settings is required for this.
+     * @param projectId The project
+     * @param perspectiveIds The perspectives
+     */
+    public SetPerspectivesAction(@Nonnull ProjectId projectId,
+                                 @Nonnull ImmutableList<PerspectiveDescriptor> perspectiveIds) {
+        this.projectId = checkNotNull(projectId);
+        this.userId = null;
+        this.perspectiveIds = checkNotNull(perspectiveIds);
+    }
+
+    @Nonnull
+    public ImmutableList<PerspectiveDescriptor> getPerspectiveDescriptors() {
         return perspectiveIds;
     }
 
@@ -44,9 +63,8 @@ public class SetPerspectivesAction implements ProjectAction<SetPerspectivesResul
         return projectId;
     }
 
-    @Override
-    public UserId getUserId() {
-        return userId;
+    public Optional<UserId> getUserId() {
+        return Optional.ofNullable(userId);
     }
 }
 

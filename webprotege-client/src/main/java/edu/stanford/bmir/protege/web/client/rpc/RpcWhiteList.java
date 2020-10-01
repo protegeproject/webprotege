@@ -20,6 +20,10 @@ import edu.stanford.bmir.protege.web.shared.individuals.InstanceRetrievalMode;
 import edu.stanford.bmir.protege.web.shared.lang.*;
 import edu.stanford.bmir.protege.web.shared.match.RelationshipPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDescriptor;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveDetails;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
@@ -27,10 +31,12 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSett
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 import edu.stanford.bmir.protege.web.shared.search.*;
+import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.viz.*;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
+import edu.stanford.protege.widgetmap.shared.node.*;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplPlain;
@@ -81,6 +87,8 @@ public class RpcWhiteList implements Action, Result {
 
     ProjectSettings projectSettings;
 
+    PerspectiveDetails perspectiveDetails;
+
     SlackIntegrationSettings slackIntegrationSettings;
 
     WebhookSettings webhookSettings;
@@ -127,11 +135,23 @@ public class RpcWhiteList implements Action, Result {
 
     PrefixNameMatchType prefixNameMatchType;
 
+    NodePropertyValueMap nodePropertyValueMap;
+
+    NodePropertyValue nodePropertyValue;
+
+    StringNodePropertyValue stringNodePropertyValue;
+
     EntityNameMatchResult entityNameMatchResult;
 
     InstanceRetrievalMode instanceRetrievalMode;
 
     ActionExecutionResult actionExecutionResult;
+
+    PerspectiveId perspectiveId;
+
+    PerspectiveLayout perspectiveLayout;
+
+    PerspectiveDescriptor perspectiveDescriptor;
 
     FormFieldId formFieldId;
 
@@ -172,6 +192,8 @@ public class RpcWhiteList implements Action, Result {
     EntityGraphSettings entityGraphSettings;
 
     Operation operation;
+
+    PersonId personId;
 
     Tag tag;
 
@@ -268,6 +290,12 @@ public class RpcWhiteList implements Action, Result {
     SearchResultMatch searchResultMatch;
 
     SearchResultMatchPosition searchResultMatchPosition;
+
+    TerminalNodeId terminalNodeId;
+
+    TerminalNode terminalNode;
+
+    NodeProperties nodeProperties;
 
     public PrimitiveFormControlDataDto getPrimitiveFormControlDataDto() {
         return primitiveFormControlDataDto;

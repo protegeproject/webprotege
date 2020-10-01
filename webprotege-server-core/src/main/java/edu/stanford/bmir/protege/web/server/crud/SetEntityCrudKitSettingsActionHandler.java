@@ -61,7 +61,7 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractProjectAction
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetEntityCrudKitSettingsAction action) {
         return EDIT_NEW_ENTITY_SETTINGS;
     }
 

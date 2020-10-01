@@ -81,7 +81,7 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(CreateAnnotationPropertiesAction action) {
         return asList(EDIT_ONTOLOGY, CREATE_PROPERTY);
     }
 

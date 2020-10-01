@@ -5,15 +5,12 @@ import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutResult;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.shared.perspective.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -22,11 +19,12 @@ import javax.inject.Inject;
  */
 public class GetPerspectiveLayoutActionHandler implements ProjectActionHandler<GetPerspectiveLayoutAction, GetPerspectiveLayoutResult> {
 
-    private PerspectiveLayoutStore perspectiveLayoutStore;
+    @Nonnull
+    private final PerspectivesManager perspectivesManager;
 
     @Inject
-    public GetPerspectiveLayoutActionHandler(PerspectiveLayoutStore perspectiveLayoutStore) {
-        this.perspectiveLayoutStore = perspectiveLayoutStore;
+    public GetPerspectiveLayoutActionHandler(@Nonnull PerspectivesManager perspectivesManager) {
+        this.perspectivesManager = checkNotNull(perspectivesManager);
     }
 
     @Nonnull
@@ -44,10 +42,10 @@ public class GetPerspectiveLayoutActionHandler implements ProjectActionHandler<G
     @Nonnull
     @Override
     public GetPerspectiveLayoutResult execute(@Nonnull GetPerspectiveLayoutAction action, @Nonnull ExecutionContext executionContext) {
-        PerspectiveId perspectiveId = action.getPerspectiveId();
-        ProjectId projectId = action.getProjectId();
-        UserId userId = action.getUserId();
-        PerspectiveLayout perspectiveLayout = perspectiveLayoutStore.getPerspectiveLayout(projectId, userId, perspectiveId);
-        return new GetPerspectiveLayoutResult(perspectiveLayout);
+        var perspectiveId = action.getPerspectiveId();
+        var projectId = action.getProjectId();
+        var userId = action.getUserId();
+        var projectPerspective = perspectivesManager.getPerspectiveLayout(projectId, userId, perspectiveId);
+        return new GetPerspectiveLayoutResult(projectPerspective);
     }
 }

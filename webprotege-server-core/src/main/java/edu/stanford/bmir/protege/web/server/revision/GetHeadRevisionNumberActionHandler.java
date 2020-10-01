@@ -38,7 +38,7 @@ public class GetHeadRevisionNumberActionHandler extends AbstractProjectActionHan
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetHeadRevisionNumberAction action) {
         return VIEW_CHANGES;
     }
 

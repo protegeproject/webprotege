@@ -17,12 +17,12 @@ public class PersonId_TestCase {
     public void setUp()
         throws Exception
     {
-        personId = new PersonId(id);
+        personId = PersonId.get(id);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_id_IsNull() {
-        new PersonId(null);
+        PersonId.get(null);
     }
 
     @Test
@@ -42,17 +42,17 @@ public class PersonId_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(personId, Matchers.is(new PersonId(id)));
+        MatcherAssert.assertThat(personId, Matchers.is(PersonId.get(id)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        MatcherAssert.assertThat(personId, Matchers.is(Matchers.not(new PersonId("String-42926bfe-4f72-4c74-99aa-aef99f86dabe"))));
+        MatcherAssert.assertThat(personId, Matchers.is(Matchers.not(PersonId.get("String-42926bfe-4f72-4c74-99aa-aef99f86dabe"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(personId.hashCode(), Matchers.is(new PersonId(id).hashCode()));
+        MatcherAssert.assertThat(personId.hashCode(), Matchers.is(PersonId.get(id).hashCode()));
     }
 
     @Test

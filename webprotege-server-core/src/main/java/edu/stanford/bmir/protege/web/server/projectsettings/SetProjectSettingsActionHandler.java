@@ -39,7 +39,7 @@ public class SetProjectSettingsActionHandler extends AbstractProjectActionHandle
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetProjectSettingsAction action) {
         return EDIT_PROJECT_SETTINGS;
     }
 

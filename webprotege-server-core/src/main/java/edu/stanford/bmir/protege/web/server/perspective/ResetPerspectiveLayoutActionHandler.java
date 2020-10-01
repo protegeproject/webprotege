@@ -3,15 +3,12 @@ package edu.stanford.bmir.protege.web.server.perspective;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
-import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveLayoutAction;
-import edu.stanford.bmir.protege.web.shared.perspective.ResetPerspectiveLayoutResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.shared.perspective.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -20,14 +17,13 @@ import javax.inject.Inject;
  */
 public class ResetPerspectiveLayoutActionHandler extends AbstractProjectActionHandler<ResetPerspectiveLayoutAction, ResetPerspectiveLayoutResult> {
 
-    @Nonnull
-    private final PerspectiveLayoutStore store;
+    private final PerspectivesManager perspectivesManager;
 
     @Inject
     public ResetPerspectiveLayoutActionHandler(@Nonnull AccessManager accessManager,
-                                               @Nonnull PerspectiveLayoutStore store) {
+                                               PerspectivesManager perspectivesManager) {
         super(accessManager);
-        this.store = store;
+        this.perspectivesManager = checkNotNull(perspectivesManager);
     }
 
     @Nonnull
@@ -40,19 +36,11 @@ public class ResetPerspectiveLayoutActionHandler extends AbstractProjectActionHa
     @Override
     public ResetPerspectiveLayoutResult execute(@Nonnull ResetPerspectiveLayoutAction action,
                                                 @Nonnull ExecutionContext executionContext) {
-        ProjectId projectId = action.getProjectId();
-        PerspectiveId perspectiveId = action.getPerspectiveId();
-        PerspectiveLayout defaultLayout = store.getPerspectiveLayout(projectId, perspectiveId);
-        // Only reset the perspective if there is a default for it
-        UserId userId = executionContext.getUserId();
-        if (defaultLayout.getRootNode().isPresent()) {
-            store.clearPerspectiveLayout(projectId,
-                                         userId,
-                                         perspectiveId);
-        }
-        PerspectiveLayout perspectiveLayout = store.getPerspectiveLayout(projectId,
-                                                                         userId,
-                                                                         perspectiveId);
+        var projectId = action.getProjectId();
+        var perspectiveId = action.getPerspectiveId();
+        var userId = executionContext.getUserId();
+        perspectivesManager.resetPerspectiveLayout(projectId, userId, perspectiveId);
+        var perspectiveLayout = perspectivesManager.getPerspectiveLayout(projectId, userId, perspectiveId);
         return new ResetPerspectiveLayoutResult(perspectiveLayout);
     }
 }

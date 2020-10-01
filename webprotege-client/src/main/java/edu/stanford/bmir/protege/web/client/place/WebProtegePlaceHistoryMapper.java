@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
 import edu.stanford.bmir.protege.web.client.form.EditFormPlaceTokenizer;
 import edu.stanford.bmir.protege.web.client.form.FormsPlaceTokenizer;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectivesManagerPlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.place.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsPlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlaceTokenizer;
@@ -50,6 +51,7 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
         tokenizers.add(new FormsPlaceTokenizer());
         tokenizers.add(new EditFormPlaceTokenizer());
         tokenizers.add(new EntitySearchSettingsPlaceTokenizer());
+        tokenizers.add(new PerspectivesManagerPlaceTokenizer());
     }
 
     @Override

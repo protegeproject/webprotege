@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsAction;
 import edu.stanford.bmir.protege.web.shared.search.GetSearchSettingsResult;
 
@@ -33,7 +32,7 @@ public class GetSearchSettingsActionHandler extends AbstractProjectActionHandler
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetSearchSettingsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

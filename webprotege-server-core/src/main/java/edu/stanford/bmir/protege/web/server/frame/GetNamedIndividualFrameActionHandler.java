@@ -63,7 +63,7 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetNamedIndividualFrameAction action) {
         return VIEW_PROJECT;
     }
 

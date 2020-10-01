@@ -54,7 +54,7 @@ public class GetHierarchySiblingsActionHandler extends AbstractProjectActionHand
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetHierarchySiblingsAction action) {
         return BuiltInAction.VIEW_PROJECT;
     }
 

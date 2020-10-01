@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
+import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
+import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.project.PrefixDeclarations;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.After;
@@ -21,20 +24,24 @@ import static org.hamcrest.Matchers.is;
  */
 public class PrefixDeclarationsStore_IT {
 
+    public static final String COLLECTION_NAME = "PrefixDeclarations";
+    
     private final ProjectId projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
 
     private PrefixDeclarationsStore store;
 
-    private Datastore datastore;
-
     private PrefixDeclarations prefixDeclarations;
+
+    private MongoClient client;
+
+    private MongoDatabase database;
 
     @Before
     public void setUp() throws Exception {
-        Morphia morphia = createMorphia();
-        MongoClient client = createMongoClient();
-        datastore = morphia.createDatastore(client, getTestDbName());
-        store = new PrefixDeclarationsStore(datastore);
+        client = createMongoClient();
+        database = client.getDatabase(MongoTestUtils.getTestDbName());
+        var objectMapper = new ObjectMapperProvider().get();
+        store = new PrefixDeclarationsStore(objectMapper, database);
         ImmutableMap.Builder<String, String> prefixesMap = ImmutableMap.builder();
         prefixesMap.put("a:", "http://ont.org/a/");
         prefixDeclarations = PrefixDeclarations.get(
@@ -46,14 +53,14 @@ public class PrefixDeclarationsStore_IT {
     @Test
     public void shouldSavePrefixes() {
         store.save(prefixDeclarations);
-        assertThat(datastore.getCount(PrefixDeclarations.class), is(1L));
+        assertThat(database.getCollection(COLLECTION_NAME).countDocuments(), is(1L));
     }
 
     @Test
     public void shouldNotCreateDuplicates() {
         store.save(prefixDeclarations);
         store.save(prefixDeclarations);
-        assertThat(datastore.getCount(PrefixDeclarations.class), is(1L));
+        assertThat(database.getCollection(COLLECTION_NAME).countDocuments(), is(1L));
     }
 
     @Test
@@ -65,7 +72,7 @@ public class PrefixDeclarationsStore_IT {
 
     @After
     public void tearDown() {
-        datastore.getDB().dropDatabase();
-        datastore.getDB().getMongo().close();
+        database.drop();
+        client.close();
     }
 }

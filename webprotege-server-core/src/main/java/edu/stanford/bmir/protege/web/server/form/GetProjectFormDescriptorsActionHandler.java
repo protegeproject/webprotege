@@ -46,7 +46,7 @@ public class GetProjectFormDescriptorsActionHandler extends AbstractProjectActio
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetProjectFormDescriptorsAction action) {
         return BuiltInAction.EDIT_FORMS;
     }
 

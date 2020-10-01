@@ -72,7 +72,7 @@ public class ChangeEntityIRIActionHandler extends AbstractProjectActionHandler<C
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(ChangeEntityIRIAction action) {
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 

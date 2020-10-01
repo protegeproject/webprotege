@@ -1,5 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import org.mongodb.morphia.annotations.Entity;
@@ -18,32 +23,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 22 Feb 2018
  */
-@Entity(noClassnameStored = true)
-public class PrefixDeclarations {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class PrefixDeclarations {
 
     public static final String PROJECT_ID = "_id";
 
-    @Id
-    private ProjectId projectId;
-
-    private Map<String, String> prefixes;
-
-    // For Morphia
-    private PrefixDeclarations() {
-    }
-
-    private PrefixDeclarations(@Nonnull ProjectId projectId,
-                               @Nonnull Map<String, String> prefixes) {
-        this.projectId = checkNotNull(projectId);
-        this.prefixes = ImmutableMap.copyOf(checkNotNull(prefixes));
-    }
+    public static final String PREFIXES = "prefixes";
 
     /**
      * Gets an empty project prefixes for the specified project id.
      * @param projectId The project id.
      */
     public static PrefixDeclarations get(@Nonnull ProjectId projectId) {
-        return new PrefixDeclarations(projectId, ImmutableMap.of());
+        return new AutoValue_PrefixDeclarations(projectId, ImmutableMap.of());
     }
 
     /**
@@ -53,8 +46,9 @@ public class PrefixDeclarations {
      *                 to be null.  Prefix names must end with colons.
      * @return The created {@link PrefixDeclarations}.
      */
-    public static PrefixDeclarations get(@Nonnull ProjectId projectId,
-                                         @Nonnull Map<String, String> prefixes) {
+    @JsonCreator
+    public static PrefixDeclarations get(@JsonProperty(PROJECT_ID) @Nonnull ProjectId projectId,
+                                         @JsonProperty(PREFIXES) @Nonnull Map<String, String> prefixes) {
         checkNotNull(projectId);
         checkNotNull(prefixes);
         for(Map.Entry<String, String> entry : prefixes.entrySet()) {
@@ -69,49 +63,21 @@ public class PrefixDeclarations {
                                                        "Prefix pointed to by " + entry.getKey() + " is null.");
             }
         }
-        return new PrefixDeclarations(projectId, prefixes);
+        return new AutoValue_PrefixDeclarations(projectId, ImmutableMap.copyOf(prefixes));
     }
 
+    @JsonProperty(PROJECT_ID)
     @Nonnull
-    public ProjectId getProjectId() {
-        return projectId;
-    }
+    public abstract ProjectId getProjectId();
 
+    @JsonProperty(PREFIXES)
     @Nonnull
-    public Map<String, String> getPrefixes() {
-        return ImmutableMap.copyOf(prefixes);
-    }
+    public abstract ImmutableMap<String, String> getPrefixes();
 
+    @JsonIgnore
     @Nonnull
     public Optional<String> getPrefixForPrefixName(@Nonnull String prefixName) {
         checkArgument(prefixName.endsWith(":"), "Prefix names must end with a colon");
-        return Optional.ofNullable(prefixes.get(prefixName));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(projectId, prefixes);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof PrefixDeclarations)) {
-            return false;
-        }
-        PrefixDeclarations other = (PrefixDeclarations) obj;
-        return this.projectId.equals(other.projectId)
-                && this.prefixes.equals(other.prefixes);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("PrefixDeclarations")
-                          .addValue(projectId)
-                          .add("prefixes", prefixes)
-                          .toString();
+        return Optional.ofNullable(getPrefixes().get(prefixName));
     }
 }

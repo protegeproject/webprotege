@@ -47,7 +47,7 @@ public class SetProjectTagsActionHandler extends AbstractProjectActionHandler<Se
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetProjectTagsAction action) {
         return EDIT_PROJECT_TAGS;
     }
 

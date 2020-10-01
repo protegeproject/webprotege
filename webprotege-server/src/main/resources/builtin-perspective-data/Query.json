@@ -1,0 +1,17 @@
+{
+  "perspectiveId" : "4b0c350f-d922-46f9-8a27-fbb70a42b93a",
+  "favorite": false,
+  "label" : {
+    "en" : "Query"
+  },
+  "layout" : {
+    "@type" : "LeafNode",
+    "properties": {
+      "portlet": {
+        "@type": "String",
+        "value": "portlet.query"
+      }
+    }
+  }
+
+}

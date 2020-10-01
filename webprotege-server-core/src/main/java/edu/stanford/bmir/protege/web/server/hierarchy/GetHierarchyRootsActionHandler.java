@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -52,7 +51,7 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(GetHierarchyRootsAction action) {
         return VIEW_PROJECT;
     }
 

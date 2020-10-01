@@ -50,7 +50,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
 
     @Nullable
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+    protected BuiltInAction getRequiredExecutableBuiltInAction(SetManchesterSyntaxFrameAction action) {
         return EDIT_ONTOLOGY;
     }
 
