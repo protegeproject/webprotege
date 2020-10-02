@@ -45,7 +45,7 @@ public class CreateEntityFormPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final FormPresenter formStackPresenter;
+    private final FormPresenter formPresenter;
 
     @Nonnull
     private final CreateEntityFormView view;
@@ -67,7 +67,7 @@ public class CreateEntityFormPresenter {
 
     @Inject
     public CreateEntityFormPresenter(@Nonnull ProjectId projectId,
-                                     @Nonnull FormPresenter formStackPresenter,
+                                     @Nonnull FormPresenter formPresenter,
                                      @Nonnull CreateEntityFormView view,
                                      @Nonnull UuidV4Provider uuidV4Provider,
                                      @Nonnull ModalManager modalManager,
@@ -75,7 +75,7 @@ public class CreateEntityFormPresenter {
                                      @Nonnull LanguageMapCurrentLocaleMapper localeMapper,
                                      @Nonnull DispatchServiceManager dispatch) {
         this.projectId = projectId;
-        this.formStackPresenter = checkNotNull(formStackPresenter);
+        this.formPresenter = checkNotNull(formPresenter);
         this.view = checkNotNull(view);
         this.uuidV4Provider = uuidV4Provider;
         this.modalManager = checkNotNull(modalManager);
@@ -99,7 +99,7 @@ public class CreateEntityFormPresenter {
         FormSubjectDto subject = FormSubjectDto.getFormSubject(
             DataFactory.getOWLEntityData(entity, ImmutableMap.of())
         );
-        formStackPresenter.start(view.getFormsContainer());
+        formPresenter.start(view.getFormsContainer());
         ImmutableList<FormDataDto> formData = formDescriptorDtos.stream()
                                                                .map(descriptor -> {
                                                                    ImmutableList<FormFieldDataDto> fields = descriptor.getFields()
@@ -115,7 +115,7 @@ public class CreateEntityFormPresenter {
                                                                                    0);
                                                                })
                                                                .collect(toImmutableList());
-        formStackPresenter.displayForm(formData.get(0));
+        formPresenter.displayForm(formData.get(0));
 
         FormDescriptorDto formDescriptor = formDescriptorDtos.get(0);
         LanguageMap label = formDescriptor.getLabel();
@@ -126,8 +126,8 @@ public class CreateEntityFormPresenter {
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            FormData fd = formStackPresenter.getFormData()
-                    .orElseGet(() -> FormData.empty(entity, formDescriptor.getFormId()));
+            FormData fd = formPresenter.getFormData()
+                                       .orElseGet(() -> FormData.empty(entity, formDescriptor.getFormId()));
             dispatch.execute(new CreateEntityFromFormDataAction(projectId, entityType, freshEntityIri, fd),
                              result -> {
                                 entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
@@ -135,6 +135,6 @@ public class CreateEntityFormPresenter {
                              });
         });
         modalManager.showModal(modalPresenter);
-        Scheduler.get().scheduleDeferred(formStackPresenter::requestFocus);
+        Scheduler.get().scheduleDeferred(formPresenter::requestFocus);
     }
 }
