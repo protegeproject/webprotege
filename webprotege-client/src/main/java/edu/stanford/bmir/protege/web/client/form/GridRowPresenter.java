@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
@@ -196,5 +197,14 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    @Nonnull
+    public ValidationStatus getValidationStatus() {
+        return cellPresenters.stream()
+                .map(GridCellPresenter::getValidationStatus)
+                .filter(ValidationStatus::isInvalid)
+                .findFirst()
+                .orElse(ValidationStatus.VALID);
     }
 }

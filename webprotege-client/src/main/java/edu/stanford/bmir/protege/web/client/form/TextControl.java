@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
@@ -42,6 +43,8 @@ public class TextControl extends Composite implements FormControl {
     private StringType stringType = StringType.SIMPLE_STRING;
 
     private TextControlDescriptor descriptor = null;
+
+    private ValidationStatus validationStatus = ValidationStatus.VALID;
 
     interface TextControlUiBinder extends UiBinder<HTMLPanel, TextControl> {
 
@@ -123,12 +126,14 @@ public class TextControl extends Composite implements FormControl {
     }
 
     private void validateInput() {
+        validationStatus = ValidationStatus.VALID;
         if(pattern.isPresent()) {
             RegExp regExp = RegExp.compile(pattern.get());
             String value = editor.getText().trim();
             MatchResult mr = regExp.exec(value);
             if(mr == null) {
                 patternViolationErrorMessage.ifPresent(s -> {
+                    validationStatus = ValidationStatus.INVALID;
                     patternViolationErrorMessageLabel.setVisible(true);
                     patternViolationErrorMessageLabel.setText(s);
                 });
@@ -195,12 +200,19 @@ public class TextControl extends Composite implements FormControl {
     public void clearValue() {
         editor.clearValue();
         clearErrorBorder();
+        validationStatus = ValidationStatus.VALID;
     }
 
     @Nonnull
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.of();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return validationStatus;
     }
 
     @Override

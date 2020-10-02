@@ -512,6 +512,8 @@ public class RpcWhiteList implements Action, Result {
 
     EntityCrudKitSuffixSettings suffixSettings;
 
+    ValidationStatus validationStatus;
+
     private Color color;
 
     private Criteria criteria;

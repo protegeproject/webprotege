@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlRange;
@@ -44,6 +45,8 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     private NumberControlDescriptorDto descriptor;
 
     private Optional<OWLLiteral> currentValue = Optional.empty();
+
+    private ValidationStatus validationStatus = ValidationStatus.VALID;
 
     public void setDescriptor(NumberControlDescriptorDto formFieldDescriptor) {
         this.descriptor = formFieldDescriptor;
@@ -121,6 +124,12 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.of();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return validationStatus;
     }
 
     @Override
@@ -202,6 +211,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     private void validate() {
         String trimmedText = numberField.getText()
                                         .trim();
+        validationStatus = ValidationStatus.VALID;
         if(trimmedText.isEmpty()) {
             clearErrorMessage();
             return;
@@ -210,10 +220,12 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
             format.parse(trimmedText);
         } catch(NumberFormatException e) {
             displayErrorMessage("Incorrect number format");
+            validationStatus = ValidationStatus.INVALID;
         }
         Range<Double> r = range.toRange();
         double v = format.parse(trimmedText);
         if(!r.contains(v)) {
+            validationStatus = ValidationStatus.INVALID;
             displayErrorMessage("Value must be " + formatRange());
         }
         else {

@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
@@ -227,6 +228,16 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public void forEachFormControl(@Nonnull Consumer<FormControl> formControlConsumer) {
         formControls.forEach(formControlConsumer);
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return formControls.stream()
+                    .map(FormControl::getValidationStatus)
+                    .filter(ValidationStatus::isInvalid)
+                    .findFirst()
+                    .orElse(ValidationStatus.VALID);
     }
 
     @Override
