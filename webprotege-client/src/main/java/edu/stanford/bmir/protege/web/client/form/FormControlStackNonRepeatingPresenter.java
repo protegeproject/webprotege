@@ -150,6 +150,11 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
     }
 
     @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        formControl.setFormDataChangedHandler(formDataChangedHandler);
+    }
+
+    @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         formControl.setFormRegionFilterChangedHandler(handler);
     }

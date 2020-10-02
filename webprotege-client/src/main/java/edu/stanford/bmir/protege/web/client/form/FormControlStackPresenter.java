@@ -42,4 +42,6 @@ public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, 
 
     @Nonnull
     ValidationStatus getValidationStatus();
+
+    void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler);
 }

@@ -60,6 +60,8 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Nonnull
     private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
 
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @AutoFactory
     @Inject
     public FormControlStackRepeatingPresenter(@Provided @Nonnull FormControlStackRepeatingView view,
@@ -135,6 +137,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         formControl.setEnabled(enabled);
         formControl.addValueChangeHandler(this);
         formControl.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
+        formControl.setFormDataChangedHandler(formDataChangedHandler);
         return formControl;
     }
 
@@ -238,6 +241,11 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
                     .filter(ValidationStatus::isInvalid)
                     .findFirst()
                     .orElse(ValidationStatus.VALID);
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = formDataChangedHandler;
     }
 
     @Override

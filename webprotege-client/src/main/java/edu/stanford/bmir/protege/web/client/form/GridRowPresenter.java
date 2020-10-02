@@ -50,6 +50,9 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @Inject
     public GridRowPresenter(@Nonnull GridRowView view,
                             GridCellPresenterFactory cellPresenterFactory, @Nonnull FormControlStackPresenterFactory controlStackPresenterFactory) {
@@ -127,6 +130,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                     boolean visible = isColumnVisible(columnId);
                     cellContainer.setVisible(visible);
                     cellContainersById.put(columnId, cellContainer);
+                    cellPresenter.setFormDataChangedHandler(formDataChangedHandler);
                     cellPresenter.start(cellContainer);
                     cellPresenter.setRegionPageChangedHandler(regionPageChangedHandler);
                     cellPresenter.setEnabled(enabled);
@@ -206,5 +210,9 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                 .filter(ValidationStatus::isInvalid)
                 .findFirst()
                 .orElse(ValidationStatus.VALID);
+    }
+
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 }

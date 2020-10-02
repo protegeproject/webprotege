@@ -86,6 +86,11 @@ public class SubFormControl implements FormControl {
     }
 
     @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        formPresenter.setFormDataChangedHandler(formDataChangedHandler);
+    }
+
+    @Override
     public Optional<FormControlData> getValue() {
         return formPresenter.getFormData().map(fd -> fd);
     }

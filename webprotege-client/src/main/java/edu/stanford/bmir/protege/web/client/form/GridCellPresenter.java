@@ -40,6 +40,8 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
 
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
 
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @AutoFactory
     public GridCellPresenter(@Provided @Nonnull GridCellView view,
                              @Nonnull GridColumnDescriptorDto columnDescriptor,
@@ -132,5 +134,10 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
     @Nonnull
     public ValidationStatus getValidationStatus() {
         return stackPresenter.getValidationStatus();
+    }
+
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        stackPresenter.setFormDataChangedHandler(formDataChangedHandler);
     }
 }

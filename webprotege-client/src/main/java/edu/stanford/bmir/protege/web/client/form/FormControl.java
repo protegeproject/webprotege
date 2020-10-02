@@ -57,4 +57,6 @@ public interface FormControl extends HasRequestFocus, HasFormRegionPagedChangedH
 
     @Nonnull
     ValidationStatus getValidationStatus();
+
+    void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler);
 }

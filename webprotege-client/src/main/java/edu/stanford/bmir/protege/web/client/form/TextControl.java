@@ -46,6 +46,9 @@ public class TextControl extends Composite implements FormControl {
 
     private ValidationStatus validationStatus = ValidationStatus.VALID;
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     interface TextControlUiBinder extends UiBinder<HTMLPanel, TextControl> {
 
     }
@@ -77,6 +80,7 @@ public class TextControl extends Composite implements FormControl {
         editor.setAllowedTypes(Collections.singleton(PrimitiveType.LITERAL));
         editor.addValueChangeHandler(event -> {
             validateInput();
+            formDataChangedHandler.handleFormDataChanged();
             ValueChangeEvent.fire(TextControl.this, getValue());
         });
         editor.setFreshEntitiesSuggestStrategy(new NullFreshEntitySuggestStrategy());
@@ -213,6 +217,11 @@ public class TextControl extends Composite implements FormControl {
     @Override
     public ValidationStatus getValidationStatus() {
         return validationStatus;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

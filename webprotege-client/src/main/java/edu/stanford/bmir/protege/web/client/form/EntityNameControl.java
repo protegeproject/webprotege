@@ -34,6 +34,8 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
 
     private EntityNameControlDescriptorDto descriptor;
 
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     interface EntityNameControlUiBinder extends UiBinder<HTMLPanel, EntityNameControl> {
 
     }
@@ -67,6 +69,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     }
 
     private void handleEditorValueChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
+        formDataChangedHandler.handleFormDataChanged();
         ValueChangeEvent.fire(EntityNameControl.this, getValue());
     }
 
@@ -112,6 +115,11 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     @Override
     public ValidationStatus getValidationStatus() {
         return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

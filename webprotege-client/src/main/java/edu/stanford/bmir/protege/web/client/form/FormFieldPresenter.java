@@ -221,4 +221,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     public ValidationStatus getValidationStatus() {
         return stackPresenter.getValidationStatus();
     }
+
+    public void setFormDataChangedHander(FormDataChangedHandler formDataChangedHandler) {
+        this.stackPresenter.setFormDataChangedHandler(formDataChangedHandler);
+    }
 }
