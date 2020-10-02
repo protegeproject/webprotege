@@ -214,5 +214,6 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
         this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        cellPresenters.forEach(presenter -> presenter.setFormDataChangedHandler(formDataChangedHandler));
     }
 }

@@ -246,6 +246,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
         this.formDataChangedHandler = formDataChangedHandler;
+        formControls.forEach(control -> control.setFormDataChangedHandler(formDataChangedHandler));
     }
 
     @Override
