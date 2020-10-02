@@ -14,4 +14,8 @@ public enum ValidationStatus {
     public boolean isInvalid() {
         return this.equals(INVALID);
     }
+
+    public boolean isValid() {
+        return this.equals(VALID);
+    }
 }

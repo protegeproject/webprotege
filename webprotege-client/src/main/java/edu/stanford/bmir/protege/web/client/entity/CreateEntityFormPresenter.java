@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
@@ -125,6 +126,7 @@ public class CreateEntityFormPresenter {
         modalPresenter.setView(view);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
+        modalPresenter.setPrimaryButtonEnabled(false);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
             FormData fd = formPresenter.getFormData()
                                        .orElseGet(() -> FormData.empty(entity, formDescriptor.getFormId()));
@@ -134,7 +136,16 @@ public class CreateEntityFormPresenter {
                                 closer.closeModal();
                              });
         });
+        formPresenter.setFormDataChangedHandler(() -> {
+            updateModalPrimaryButtonState(modalPresenter);
+        });
         modalManager.showModal(modalPresenter);
         Scheduler.get().scheduleDeferred(formPresenter::requestFocus);
+        Scheduler.get().scheduleDeferred(() -> updateModalPrimaryButtonState(modalPresenter));
+    }
+
+    private void updateModalPrimaryButtonState(ModalPresenter modalPresenter) {
+        boolean enabled = formPresenter.getValidationStatus().isValid();
+        modalPresenter.setPrimaryButtonEnabled(enabled);
     }
 }

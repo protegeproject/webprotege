@@ -105,4 +105,8 @@ public class ModalPresenter {
     protected void escape() {
         modalCloser.closeModal();
     }
+
+    public void setPrimaryButtonEnabled(boolean enabled) {
+        view.setPrimaryButtonEnabled(enabled);
+    }
 }

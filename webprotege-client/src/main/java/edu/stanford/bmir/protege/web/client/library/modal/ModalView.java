@@ -44,4 +44,6 @@ public interface ModalView extends IsWidget {
     void setPrimaryButtonFocusedOnAttach(boolean focused);
 
     void hide();
+
+    void setPrimaryButtonEnabled(boolean enabled);
 }
