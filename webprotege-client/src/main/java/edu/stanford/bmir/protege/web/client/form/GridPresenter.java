@@ -67,6 +67,9 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
     @Nonnull
     private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {};
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @Inject
     public GridPresenter(@Nonnull GridView view,
                          @Nonnull GridHeaderPresenter headerPresenter,
@@ -166,6 +169,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
         rowPresenter.setColumnDescriptors(descriptor);
         rowPresenter.setEnabled(enabled);
         rowPresenter.setColumnVisibilityManager(columnVisibilityManager);
+        rowPresenter.setFormDataChangedHandler(formDataChangedHandler);
         return rowPresenter;
     }
 
@@ -276,5 +280,9 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
                 .findFirst()
                 .orElse(ValidationStatus.VALID);
 
+    }
+
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 }

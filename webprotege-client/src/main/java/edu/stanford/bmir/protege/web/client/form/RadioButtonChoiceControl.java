@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
@@ -37,6 +38,9 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     private SingleChoiceControlDescriptorDto descriptor;
 
     private boolean enabled = true;
+
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     interface RadioButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, RadioButtonChoiceControl> {
 
@@ -56,7 +60,9 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Inject
     public RadioButtonChoiceControl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        radioButtonValueChangedHandler = event -> ValueChangeEvent.fire(RadioButtonChoiceControl.this, getValue());
+        radioButtonValueChangedHandler = event -> {
+                formDataChangedHandler.handleFormDataChanged();
+                ValueChangeEvent.fire(RadioButtonChoiceControl.this, getValue()); };
     }
 
     @Override
@@ -151,6 +157,11 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Override
     public ValidationStatus getValidationStatus() {
         return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

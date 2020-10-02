@@ -38,6 +38,9 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     @Nonnull
     private final GridPresenter gridPresenter;
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @Inject
     public GridControl(@Nonnull GridPresenter gridPresenter) {
         this.gridPresenter = checkNotNull(gridPresenter);
@@ -84,6 +87,12 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     @Override
     public ValidationStatus getValidationStatus() {
         return gridPresenter.getValidationStatus();
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        gridPresenter.setFormDataChangedHandler(formDataChangedHandler);
     }
 
     @Override

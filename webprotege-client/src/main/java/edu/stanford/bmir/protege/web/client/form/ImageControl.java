@@ -39,6 +39,8 @@ public class ImageControl extends Composite implements FormControl {
 
     private boolean editable = true;
 
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     interface ImageControlUiBinder extends UiBinder<HTMLPanel, ImageControl> {
 
     }
@@ -151,6 +153,7 @@ public class ImageControl extends Composite implements FormControl {
             theIRI = newValue;
             imageField.setUrl(editedValue);
             updateUi();
+            formDataChangedHandler.handleFormDataChanged();
             ValueChangeEvent.fire(ImageControl.this, getValue());
         }
     }
@@ -172,6 +175,11 @@ public class ImageControl extends Composite implements FormControl {
     @Override
     public ValidationStatus getValidationStatus() {
         return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

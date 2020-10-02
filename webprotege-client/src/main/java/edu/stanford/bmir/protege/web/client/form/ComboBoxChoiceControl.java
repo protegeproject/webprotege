@@ -39,6 +39,9 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     private SingleChoiceControlDescriptorDto descriptor;
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     interface ComboBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
 
     }
@@ -63,6 +66,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     @UiHandler("comboBox")
     protected void handleValueChanged(ChangeEvent changeEvent) {
+        formDataChangedHandler.handleFormDataChanged();
         ValueChangeEvent.fire(this, getValue());
         updateReadonlyLabel();
     }
@@ -164,6 +168,11 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @Override
     public ValidationStatus getValidationStatus() {
         return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

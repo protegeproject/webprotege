@@ -45,6 +45,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
 
     private boolean enabled = true;
 
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     interface SegmentedButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
 
     }
@@ -115,6 +117,7 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
             updateStylesBasedOnSelection();
             if (fireEvents) {
                 fireEvent(new DirtyChangedEvent());
+                formDataChangedHandler.handleFormDataChanged();
                 ValueChangeEvent.fire(this, getValue());
             }
         }
@@ -171,6 +174,11 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     @Override
     public ValidationStatus getValidationStatus() {
         return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

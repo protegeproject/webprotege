@@ -48,6 +48,8 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private ValidationStatus validationStatus = ValidationStatus.VALID;
 
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     public void setDescriptor(NumberControlDescriptorDto formFieldDescriptor) {
         this.descriptor = formFieldDescriptor;
         setFormat(formFieldDescriptor.getFormat());
@@ -63,6 +65,7 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
 
     private void handleValueChanged(ValueChangeEvent<String> event) {
         dirty = true;
+        formDataChangedHandler.handleFormDataChanged();
         ValueChangeEvent.fire(this, getValue());
     }
 
@@ -130,6 +133,11 @@ public class NumberEditorControl extends Composite implements FormControl, HasPl
     @Override
     public ValidationStatus getValidationStatus() {
         return validationStatus;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

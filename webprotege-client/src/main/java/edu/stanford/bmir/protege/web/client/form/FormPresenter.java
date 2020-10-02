@@ -72,6 +72,9 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     private FormRegionFilterChangedHandler formRegionFilterChangeHandler = event -> {
     };
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @AutoFactory
     @Inject
     public FormPresenter(@Nonnull @Provided FormView formView,
@@ -194,6 +197,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
         presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
+        presenter.setFormDataChangedHander(formDataChangedHandler);
         presenter.start();
 
         fieldPresenters.add(presenter);
@@ -266,7 +270,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     }
 
     public void setFormDataChangedHandler(FormDataChangedHandler formDataChangedHandler) {
-        //        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+
     }
 
     /**
@@ -295,11 +300,6 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         fieldPresenters.forEach(formFieldPresenter -> {
             formFieldPresenter.setFormRegionFilterChangedHandler(handler);
         });
-    }
-
-    public interface FormDataChangedHandler {
-
-        void handleFormDataChanged();
     }
 
     @Inject
