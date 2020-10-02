@@ -176,13 +176,17 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
      * Updates the specified view so that there is a visual indication if the value is required but not present.
      */
     private void updateRequiredValuePresent() {
-        if (formFieldDescriptor.getOptionality() == REQUIRED) {
+        if (isValueRequired()) {
             boolean requiredValueNotPresent = !stackPresenter.isNonEmpty();
             view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
         }
         else {
             view.setRequiredValueNotPresentVisible(false);
         }
+    }
+
+    private boolean isValueRequired() {
+        return formFieldDescriptor.getOptionality() == REQUIRED;
     }
 
     public void setFormRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler) {
@@ -219,7 +223,14 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     }
 
     public ValidationStatus getValidationStatus() {
-        return stackPresenter.getValidationStatus();
+        ValidationStatus validationStatus = stackPresenter.getValidationStatus();
+        if(validationStatus.isInvalid()) {
+            return validationStatus;
+        }
+        if(isValueRequired() && stackPresenter.isEmpty()) {
+            return ValidationStatus.INVALID;
+        }
+        return ValidationStatus.VALID;
     }
 
     public void setFormDataChangedHander(FormDataChangedHandler formDataChangedHandler) {

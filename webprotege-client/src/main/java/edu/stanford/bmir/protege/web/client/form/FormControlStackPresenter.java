@@ -32,6 +32,8 @@ public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, 
 
     boolean isNonEmpty();
 
+    boolean isEmpty();
+
     @Nonnull
     ImmutableList<FormRegionPageRequest> getPageRequests(@Nonnull FormSubject formSubject,
                                                          @Nonnull FormRegionId formRegionId);
