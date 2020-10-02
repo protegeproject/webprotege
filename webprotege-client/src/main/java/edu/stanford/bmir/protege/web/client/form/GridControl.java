@@ -103,6 +103,9 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     @Override
     public Optional<FormControlData> getValue() {
         GridControlData value = gridPresenter.getValue();
+        if(value.getRows().getPageElements().isEmpty()) {
+            return Optional.empty();
+        }
         return Optional.of(value);
     }
 
