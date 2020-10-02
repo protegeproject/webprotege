@@ -3,27 +3,26 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
-import edu.stanford.bmir.protege.web.client.form.FormStackPresenter;
 import edu.stanford.bmir.protege.web.client.form.LanguageMapCurrentLocaleMapper;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.client.uuid.UuidV4Provider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntityFromFormDataAction;
 import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormFieldDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubjectDto;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -43,6 +42,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class CreateEntityFormPresenter {
 
     @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final FormPresenter formStackPresenter;
 
     @Nonnull
@@ -60,19 +62,26 @@ public class CreateEntityFormPresenter {
     @Nonnull
     private final LanguageMapCurrentLocaleMapper localeMapper;
 
+    @Nonnull
+    private final DispatchServiceManager dispatch;
+
     @Inject
-    public CreateEntityFormPresenter(@Nonnull FormPresenter formStackPresenter,
+    public CreateEntityFormPresenter(@Nonnull ProjectId projectId,
+                                     @Nonnull FormPresenter formStackPresenter,
                                      @Nonnull CreateEntityFormView view,
                                      @Nonnull UuidV4Provider uuidV4Provider,
                                      @Nonnull ModalManager modalManager,
                                      @Nonnull Messages messages,
-                                     @Nonnull LanguageMapCurrentLocaleMapper localeMapper) {
+                                     @Nonnull LanguageMapCurrentLocaleMapper localeMapper,
+                                     @Nonnull DispatchServiceManager dispatch) {
+        this.projectId = projectId;
         this.formStackPresenter = checkNotNull(formStackPresenter);
         this.view = checkNotNull(view);
         this.uuidV4Provider = uuidV4Provider;
         this.modalManager = checkNotNull(modalManager);
         this.messages = messages;
         this.localeMapper = localeMapper;
+        this.dispatch = dispatch;
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
@@ -108,7 +117,8 @@ public class CreateEntityFormPresenter {
                                                                .collect(toImmutableList());
         formStackPresenter.displayForm(formData.get(0));
 
-        LanguageMap label = formDescriptorDtos.get(0).getLabel();
+        FormDescriptorDto formDescriptor = formDescriptorDtos.get(0);
+        LanguageMap label = formDescriptor.getLabel();
         String title = localeMapper.getValueForCurrentLocale(label);
         ModalPresenter modalPresenter = modalManager.createPresenter();
         modalPresenter.setTitle(title);
@@ -116,9 +126,13 @@ public class CreateEntityFormPresenter {
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            Optional<FormData> formData1 = formStackPresenter.getFormData();
-            GWT.log(formData1.toString());
-            closer.closeModal();
+            FormData fd = formStackPresenter.getFormData()
+                    .orElseGet(() -> FormData.empty(entity, formDescriptor.getFormId()));
+            dispatch.execute(new CreateEntityFromFormDataAction(projectId, entityType, freshEntityIri, fd),
+                             result -> {
+                                entitiesCreatedHandler.handleEntitiesCreated(result.getEntities());
+                                closer.closeModal();
+                             });
         });
         modalManager.showModal(modalPresenter);
         Scheduler.get().scheduleDeferred(formStackPresenter::requestFocus);

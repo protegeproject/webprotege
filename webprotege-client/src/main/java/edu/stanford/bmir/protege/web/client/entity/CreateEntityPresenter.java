@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntityViaFormResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntityFromFormDataResult;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityCreationFormsAction;
@@ -81,9 +80,9 @@ public class CreateEntityPresenter {
 
     public interface ActionFactory<E extends OWLEntity> {
 
-        ProjectAction<? extends CreateEntityViaFormResult> createAction(@Nonnull ProjectId projectId,
-                                                                        @Nonnull String createFromText,
-                                                                        String langTag);
+        ProjectAction<? extends CreateEntityFromFormDataResult> createAction(@Nonnull ProjectId projectId,
+                                                                             @Nonnull String createFromText,
+                                                                             String langTag);
     }
 
     public interface EntitiesCreatedHandler {
