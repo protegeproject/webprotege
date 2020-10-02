@@ -5,8 +5,9 @@
     <ui:with field="tn" type="edu.stanford.protege.gwt.graphtree.client.TreeNodeViewResources"/>
     <ui:style>
         .main {
-            /*width: 100%;*/
-            /*height: 100%;*/
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
         .labelHeader {
             display: flex;
