@@ -8,6 +8,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -265,5 +266,15 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         headerPresenter.setFormRegionFilterChangedHandler(handler);
+    }
+
+    @Nonnull
+    public ValidationStatus getValidationStatus() {
+        return rowPresenters.stream()
+                .map(GridRowPresenter::getValidationStatus)
+                .filter(ValidationStatus::isInvalid)
+                .findFirst()
+                .orElse(ValidationStatus.VALID);
+
     }
 }

@@ -8,6 +8,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
@@ -76,6 +77,12 @@ public class SubFormControl implements FormControl {
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return formPresenter.getFilters();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return formPresenter.getValidationStatus();
     }
 
     @Override

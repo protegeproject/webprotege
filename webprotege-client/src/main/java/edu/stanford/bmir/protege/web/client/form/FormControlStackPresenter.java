@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
@@ -38,4 +39,7 @@ public interface FormControlStackPresenter extends HasEnabled, HasRequestFocus, 
     void setRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler);
 
     void forEachFormControl(@Nonnull Consumer<FormControl> formControlConsumer);
+
+    @Nonnull
+    ValidationStatus getValidationStatus();
 }

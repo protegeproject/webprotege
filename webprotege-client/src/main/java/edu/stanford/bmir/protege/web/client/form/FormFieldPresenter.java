@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -215,5 +216,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setFormFieldValueChangedHandler(@Nonnull FormFieldValueChangedHandler handler) {
         this.formFieldValueChangedHandler = checkNotNull(handler);
+    }
+
+    public ValidationStatus getValidationStatus() {
+        return stackPresenter.getValidationStatus();
     }
 }
