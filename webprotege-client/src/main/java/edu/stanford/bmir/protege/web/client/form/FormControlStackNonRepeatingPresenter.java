@@ -77,6 +77,11 @@ public class FormControlStackNonRepeatingPresenter implements FormControlStackPr
     }
 
     @Override
+    public boolean isEmpty() {
+        return !formControl.getValue().isPresent();
+    }
+
+    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<List<FormControlData>> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }

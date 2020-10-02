@@ -163,6 +163,13 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     }
 
     @Override
+    public boolean isEmpty() {
+        return formControls.stream()
+                .map(FormControl::getValue)
+                .anyMatch(Optional::isPresent);
+    }
+
+    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<List<FormControlData>> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
@@ -246,6 +253,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
         this.formDataChangedHandler = formDataChangedHandler;
+        formControls.forEach(control -> control.setFormDataChangedHandler(formDataChangedHandler));
     }
 
     @Override

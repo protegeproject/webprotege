@@ -284,5 +284,6 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
 
     public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
         this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        rowPresenters.forEach(presenter -> presenter.setFormDataChangedHandler(formDataChangedHandler));
     }
 }

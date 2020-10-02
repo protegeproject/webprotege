@@ -271,7 +271,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     public void setFormDataChangedHandler(FormDataChangedHandler formDataChangedHandler) {
         this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
-
+        fieldPresenters.forEach(presenter -> presenter.setFormDataChangedHander(formDataChangedHandler));
     }
 
     /**
