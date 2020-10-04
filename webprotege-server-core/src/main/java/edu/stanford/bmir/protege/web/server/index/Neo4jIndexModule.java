@@ -9,8 +9,8 @@ import edu.stanford.bmir.protege.web.server.project.DefaultOntologyIdManagerImpl
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.owl2lpg.client.bind.change.AxiomChangeHandlerModule;
 import edu.stanford.owl2lpg.client.bind.change.Neo4jUpdater;
+import edu.stanford.owl2lpg.client.bind.change.OntologyChangeHandlerModule;
 import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.annotation.OntologyAnnotationsAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomAccessorModule;
@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
     AxiomAccessorModule.class,
     AssertionAxiomAccessorModule.class,
     CharacteristicsAxiomAccessorModule.class,
-    AxiomChangeHandlerModule.class
+    OntologyChangeHandlerModule.class
 })
 public class Neo4jIndexModule {
 
