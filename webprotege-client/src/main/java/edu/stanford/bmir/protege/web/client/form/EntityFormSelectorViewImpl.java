@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
 import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
 
 import javax.annotation.Nonnull;
@@ -28,15 +30,22 @@ public class EntityFormSelectorViewImpl extends Composite implements EntityFormS
     RadioButton entityEditingPurposeRadio;
     @UiField
     RadioButton entityCreationPurposeRadio;
+    @UiField
+    Label criteriaLabel;
+    @UiField
+    FormsMessages msg;
 
     @Inject
     public EntityFormSelectorViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        entityEditingPurposeRadio.addValueChangeHandler(event -> updateLabels());
+        entityCreationPurposeRadio.addValueChangeHandler(event -> updateLabels());
     }
 
     @Override
     public void clear() {
         entityEditingPurposeRadio.setValue(true);
+        updateLabels();
     }
 
     @Nonnull
@@ -63,6 +72,18 @@ public class EntityFormSelectorViewImpl extends Composite implements EntityFormS
         }
         else {
             entityCreationPurposeRadio.setValue(true);
+        }
+        updateLabels();
+    }
+
+
+
+    private void updateLabels() {
+        if(entityEditingPurposeRadio.getValue()) {
+            criteriaLabel.setText(msg.entityEditing_entityCriteria());
+        }
+        else {
+            criteriaLabel.setText(msg.entityCreation_parentEntityCriteria());
         }
     }
 }

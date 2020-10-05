@@ -5,11 +5,11 @@
     <g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup} {wp.style.formGroupNarrow}">
             <g:Label addStyleNames="{wp.style.formLabel}" text="{msg.formPurpose}"/>
-            <g:RadioButton ui:field="entityEditingPurposeRadio" value="true" name="purpose" text="Entity editing"/>
-            <g:RadioButton ui:field="entityCreationPurposeRadio" name="purpose" text="Entity creation"/>
+            <g:RadioButton ui:field="entityEditingPurposeRadio" value="true" name="purpose" text="{msg.formPurpose_entityViewingAndEditing}"/>
+            <g:RadioButton ui:field="entityCreationPurposeRadio" name="purpose" text="{msg.formPurpose_entityCreation}"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label text="{msg.activationCriteria}" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="{msg.entityEditing_entityCriteria}" ui:field="criteriaLabel" addStyleNames="{wp.style.formLabel}"/>
             <g:SimplePanel ui:field="container"/>
         </g:HTMLPanel>
     </g:HTMLPanel>

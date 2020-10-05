@@ -195,4 +195,22 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Form purpose")
     @Key("formPurpose")
     String formPurpose();
+
+    @DefaultMessage("Entity viewing/editing")
+    @Key("formPurpose.entityViewingEditing")
+    String formPurpose_entityViewingAndEditing();
+
+    @DefaultMessage("Entity creation")
+    @Key("formPurpose.entityCreation")
+    String formPurpose_entityCreation();
+
+    @DefaultMessage("Parent entity criteria")
+    @Key("entityCreation.parentEntityCriteria")
+    String entityCreation_parentEntityCriteria();
+
+    @DefaultMessage("Entity criteria")
+    @Key("entityEditing.entityCriteria")
+    String entityEditing_entityCriteria();
+
+
 }
