@@ -12,7 +12,9 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 import static edu.stanford.bmir.protege.web.server.shortform.EntityDocumentFieldNames.DEPRECATED_FALSE;
@@ -41,16 +43,20 @@ public class EntityAnnotationAssertionsDocumentAugmenter implements EntityDocume
 
     @Override
     public void augmentDocument(@Nonnull OWLEntity entity, @Nonnull Document document) {
-        addAnnotationAssertions(entity, document);
+        addAnnotationAssertions(entity, document, new HashSet<>());
     }
 
-    private void addAnnotationAssertions(OWLEntity entity, Document document) {
+    private void addAnnotationAssertions(OWLEntity entity, Document document, Set<OWLAnnotationSubject> traversedSubjects) {
         var entityIri = entity.getIRI();
+        if(traversedSubjects.contains(entityIri)) {
+            return;
+        }
+        traversedSubjects.add(entityIri);
         var deprecatedAssertions = new ArrayList<OWLAnnotationAssertionAxiom>();
         annotationAssertionsIndex.getAnnotationAssertionAxioms(entityIri)
                                  .forEach(ax -> {
                                      var path = new LinkedHashSet<OWLAnnotationProperty>();
-                                     processAnnotationAssertionAxiom(ax, path, document);
+                                     processAnnotationAssertionAxiom(ax, path, document, traversedSubjects);
                                      if(ax.isDeprecatedIRIAssertion()) {
                                          deprecatedAssertions.add(ax);
                                      }
@@ -71,13 +77,14 @@ public class EntityAnnotationAssertionsDocumentAugmenter implements EntityDocume
      */
     private void processAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom ax,
                                                  LinkedHashSet<OWLAnnotationProperty> path,
-                                                 Document document) {
+                                                 Document document,
+                                                 Set<OWLAnnotationSubject> traversedSubjects) {
         var value = ax.getValue();
         if(value instanceof OWLLiteral) {
             processAnnotationAssertionPathToLiteralTerminal(ax, path, document);
         }
         else if(value instanceof OWLAnnotationSubject) {
-            processAnnotationPathToAnnotationSubject(ax, path, document);
+            processAnnotationPathToAnnotationSubject(ax, path, document, traversedSubjects);
         }
     }
 
@@ -89,11 +96,16 @@ public class EntityAnnotationAssertionsDocumentAugmenter implements EntityDocume
      */
     private void processAnnotationPathToAnnotationSubject(@Nonnull OWLAnnotationAssertionAxiom ax,
                                                           @Nonnull LinkedHashSet<OWLAnnotationProperty> path,
-                                                          @Nonnull Document document) {
+                                                          @Nonnull Document document,
+                                                          @Nonnull Set<OWLAnnotationSubject> traversedSubjects) {
         var subject = (OWLAnnotationSubject) ax.getValue();
+        if(traversedSubjects.contains(subject)) {
+            return;
+        }
+        traversedSubjects.add(subject);
         if(path.add(ax.getProperty())) {
             annotationAssertionsIndex.getAnnotationAssertionAxioms(subject)
-                                     .forEach(nestedAx -> processAnnotationAssertionAxiom(nestedAx, path, document));
+                                     .forEach(nestedAx -> processAnnotationAssertionAxiom(nestedAx, path, document, traversedSubjects));
             path.remove(ax.getProperty());
         }
     }

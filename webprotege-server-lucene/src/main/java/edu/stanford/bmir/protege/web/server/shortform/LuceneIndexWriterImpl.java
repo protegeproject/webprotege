@@ -12,6 +12,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,6 +109,7 @@ public class LuceneIndexWriterImpl implements LuceneIndexWriter, HasDispose, Ent
 
         var docTranslator = luceneEntityDocumentTranslator.get();
         projectSignatureIndex.getSignature()
+                             .peek(this::logProgress)
                              .map(docTranslator::getLuceneDocument)
                              .forEach(this::addDocumentToIndex);
         builtInOwlEntitiesIndex.getBuiltInEntities()
@@ -117,6 +119,15 @@ public class LuceneIndexWriterImpl implements LuceneIndexWriter, HasDispose, Ent
         indexWriter.commit();
         searcherManager.maybeRefreshBlocking();
         logger.info("{} Built lucene based dictionary in {} ms", projectId, stopwatch.elapsed().toMillis());
+    }
+
+    private int counter = 0;
+
+    private void logProgress(OWLEntity entity) {
+        counter++;
+        if(counter % 10_000 == 0) {
+            logger.info("    {} Lucene index writer: Added {} entities to index", projectId, counter);
+        }
     }
 
     public void addDocumentToIndex(Document doc) {
