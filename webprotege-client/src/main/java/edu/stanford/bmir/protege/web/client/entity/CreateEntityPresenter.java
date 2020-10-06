@@ -77,14 +77,7 @@ public class CreateEntityPresenter {
                                                      createEntityForms);
         }
     }
-
-    public interface ActionFactory<E extends OWLEntity> {
-
-        ProjectAction<? extends CreateEntityFromFormDataResult> createAction(@Nonnull ProjectId projectId,
-                                                                             @Nonnull String createFromText,
-                                                                             String langTag);
-    }
-
+    
     public interface EntitiesCreatedHandler {
 
         void handleEntitiesCreated(ImmutableCollection<EntityNode> entities);
