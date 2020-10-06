@@ -77,7 +77,7 @@ public class CreateEntityPresenter {
                                                      createEntityForms);
         }
     }
-    
+
     public interface EntitiesCreatedHandler {
 
         void handleEntitiesCreated(ImmutableCollection<EntityNode> entities);

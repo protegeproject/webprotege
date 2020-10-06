@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsAction;
 import edu.stanford.bmir.protege.web.shared.lang.GetProjectLangTagsResult;
@@ -41,6 +40,8 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private final SearchView view;
 
+    @Nonnull
+    private final SearchResultsListPresenter searchResultsPresenter;
 
     private final Set<EntityType<?>> entityTypes = new HashSet<>();
 
@@ -60,37 +61,40 @@ public class SearchPresenter implements HasInitialFocusable {
         }
     };
 
-    private final EntitySearchResultPresenterFactory resultPresenterFactory;
-
     private final EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter;
 
     private final LangTagFilterPresenter langTagFilterPresenter;
 
-    private final List<EntitySearchResultPresenter> resultPresenters = new ArrayList<>();
+    private SearchResultChosenHandler searchResultChosenHandler;
 
     @Inject
     public SearchPresenter(@Nonnull ProjectId projectId,
                            @Nonnull SearchView view,
+                           @Nonnull SearchResultsListPresenter searchResultsPresenter,
                            @Nonnull DispatchServiceManager dispatchServiceManager,
                            @Nonnull EntitySearchResultPresenterFactory resultPresenterFactory,
-                           EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter,
+                           @Nonnull EntitySearchFilterTokenFieldPresenter entitySearchFilterTokenFieldPresenter,
                            @Nonnull LangTagFilterPresenter langTagFilterPresenter) {
         this.projectId = projectId;
         this.view = view;
+        this.searchResultsPresenter = searchResultsPresenter;
         this.dispatchServiceManager = dispatchServiceManager;
-        this.resultPresenterFactory = resultPresenterFactory;
         this.entitySearchFilterTokenFieldPresenter = checkNotNull(entitySearchFilterTokenFieldPresenter);
         this.langTagFilterPresenter = langTagFilterPresenter;
     }
 
     public void start() {
         view.setSearchStringChangedHandler(() -> {
-            view.setPageNumber(1);
+            searchResultsPresenter.setPageNumber(1);
             restartSearchTimer();
         });
-        view.setPageNumberChangedHandler(pageNumber -> {
+        view.setIncrementSelectionHandler(searchResultsPresenter::incrementSelection);
+        view.setDecrementSelectionHandler(searchResultsPresenter::decrementSelection);
+        view.setAcceptKeyHandler(this::handleAcceptKey);
+        searchResultsPresenter.setPageNumberChangedHandler(pageNumber -> {
             restartPageChangeTimer();
         });
+        searchResultsPresenter.start(view.getSearchResultsContainer());
         dispatchServiceManager.beginBatch();
         dispatchServiceManager.execute(new GetProjectLangTagsAction(projectId),
                                        this::handleProjectLangTags);
@@ -101,6 +105,10 @@ public class SearchPresenter implements HasInitialFocusable {
         dispatchServiceManager.executeCurrentBatch();
         entitySearchFilterTokenFieldPresenter.setPlaceholder("");
         langTagFilterPresenter.setPlaceholder("");
+    }
+
+    private void handleAcceptKey() {
+
     }
 
     private void handleSearchSettings(GetSearchSettingsResult result) {
@@ -131,16 +139,8 @@ public class SearchPresenter implements HasInitialFocusable {
     }
 
     public void setSearchResultChosenHandler(SearchResultChosenHandler handler) {
-        view.setSearchResultChosenHandler(handler);
-    }
-
-    public Optional<OWLEntityData> getSelectedSearchResult() {
-        int selIndex = view.getSelectedSearchResultIndex();
-        if(selIndex == -1) {
-            return Optional.empty();
-        }
-        EntitySearchResultPresenter resultPresenter = resultPresenters.get(selIndex);
-        return Optional.of(resultPresenter.getEntity().getEntityData());
+        searchResultChosenHandler = checkNotNull(handler);
+        searchResultsPresenter.setSearchResultChosenHandler(handler);
     }
 
     public IsWidget getView() {
@@ -159,12 +159,11 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private void performSearch() {
         if(view.getSearchString().length() < 1) {
-            view.clearEntitySearchResults();
-            resultPresenters.clear();
+            searchResultsPresenter.clearSearchResults();
             return;
         }
         LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
-        int pageNumber = view.getPageNumber();
+        int pageNumber = searchResultsPresenter.getPageNumber();
         ImmutableList<EntitySearchFilter> searchFilters = entitySearchFilterTokenFieldPresenter.getSearchFilters();
         dispatchServiceManager.execute(new PerformEntitySearchAction(projectId,
                                                                      view.getSearchString(),
@@ -180,23 +179,11 @@ public class SearchPresenter implements HasInitialFocusable {
         if(!view.getSearchString().equals(result.getSearchString())) {
             return;
         }
-        resultPresenters.clear();
-        Page<EntitySearchResult> resultsPage = result.getResults();
-        resultsPage.getPageElements()
-               .stream()
-               .map(r -> {
-                   EntitySearchResultPresenter presenter = resultPresenterFactory.create(r);
-                   presenter.start();
-                   return presenter;
-               })
-               .forEach(resultPresenters::add);
-        ImmutableList<EntitySearchResultView> resultViews = resultPresenters.stream()
-                                                                        .map(EntitySearchResultPresenter::getView)
-                                                                        .collect(toImmutableList());
-        view.setEntitySearchResults(resultViews);
-        view.setPageCount(resultsPage.getPageCount());
-        view.setPageNumber(resultsPage.getPageNumber());
-        view.setTotalResultCount(resultsPage.getTotalElements());
+        searchResultsPresenter.displaySearchResult(result.getResults());
     }
 
+    @Nonnull
+    public Optional<OWLEntityData> getSelectedSearchResult() {
+        return searchResultsPresenter.getSelectedSearchResult();
+    }
 }

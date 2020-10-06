@@ -901,6 +901,16 @@ public class ClientProjectModule {
     PerspectivesManagerAdminSettingsView providePerspectivesManagerAdminSettingsView(PerspectiveManagerAdminSettingsViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    SearchResultsListView provideSearchResultsListView(SearchResultsListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SimilarEntitiesView provideSimilarEntitiesView(SimilarEntitiesViewImpl impl) {
+        return impl;
+    }
 }
 
 

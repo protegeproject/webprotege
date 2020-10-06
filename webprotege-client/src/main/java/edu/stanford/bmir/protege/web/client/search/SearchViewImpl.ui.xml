@@ -17,31 +17,13 @@
         }
         .helpText {
         }
-        .foucusPanel {
-            box-sizing: border-box;
-            border: 1px solid literal("var(--separator--color)");
-        }
-
-        .results {
-            height: 300px;
-            box-sizing: border-box;
-        }
-
         .main strong {
             background-color: #ffea8b;
             color: #000;
         }
-        .searchSummaryLabel {
-            padding-top: 10px;
-            padding-bottom: 3px;
-            color: #808080;
-        }
         .busyView {
             width: 100%;
             height: 100%;
-        }
-        .paginator {
-            background-color: literal("var(--inlay-panel--background-color)");
         }
         .langTagFilter {
             flex-basis: 100px;
@@ -72,16 +54,7 @@
         </g:HTMLPanel>
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
         <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
-        <g:Label ui:field="searchSummaryField" addStyleNames="{style.searchSummaryLabel}"/>
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
-        <g:FocusPanel ui:field="base" addStyleNames="{style.foucusPanel}">
-            <g:ScrollPanel addStyleNames="{style.results}">
-                <g:FlowPanel ui:field="list"/>
-            </g:ScrollPanel>
-        </g:FocusPanel>
-        <g:HTMLPanel addStyleNames="{style.paginator}">
-            <pagination:PaginatorView ui:field="paginator"/>
-        </g:HTMLPanel>
-
+        <g:SimplePanel ui:field="searchResultsContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>
