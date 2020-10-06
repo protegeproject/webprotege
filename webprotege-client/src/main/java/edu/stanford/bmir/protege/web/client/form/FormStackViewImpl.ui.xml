@@ -16,9 +16,10 @@
         .headerLabels {
             display: flex;
             flex-direction: row;
-            padding: 0.8em;
             flex-grow: 0;
             flex-shrink: 0;
+            padding-left: 0.8em;
+            padding-right: 0.8em;
         }
         .viewport {
             min-height: 0;
