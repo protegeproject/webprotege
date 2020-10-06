@@ -99,6 +99,7 @@ public class CreateEntityFormPresenter {
         OWLEntity entity = DataFactory.getOWLEntity(entityType, freshEntityIri.getIri());
         FormSubjectDto subject = FormSubjectDto.getFormSubject(DataFactory.getOWLEntityData(entity, ImmutableMap.of()));
         formPresenter.start(view.getFormsContainer());
+        formPresenter.setFieldsCollapsible(false);
         ImmutableList<FormDataDto> formData = formDescriptorDtos.stream().map(descriptor -> {
             ImmutableList<FormFieldDataDto> fields = descriptor.getFields()
                                                                .stream()

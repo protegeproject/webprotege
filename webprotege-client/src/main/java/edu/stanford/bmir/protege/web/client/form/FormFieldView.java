@@ -46,4 +46,6 @@ public interface FormFieldView extends IsWidget, HasRequestFocus {
     void setRequired(Optionality required);
 
     Optionality getRequired();
+
+    void setCollapsible(boolean collapsible);
 }

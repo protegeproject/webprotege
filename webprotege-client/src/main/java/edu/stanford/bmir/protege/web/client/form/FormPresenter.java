@@ -75,6 +75,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     @Nonnull
     private FormDataChangedHandler formDataChangedHandler = () -> {};
 
+    private boolean fieldsCollapsible = true;
+
     @AutoFactory
     @Inject
     public FormPresenter(@Nonnull @Provided FormView formView,
@@ -198,10 +200,11 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
         presenter.setFormDataChangedHander(formDataChangedHandler);
+        presenter.setCollapsible(fieldsCollapsible);
         presenter.start();
 
         fieldPresenters.add(presenter);
-        if (collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
+        if (fieldsCollapsible && collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
             presenter.setExpansionState(ExpansionState.COLLAPSED);
         }
         // TODO : Change handler
@@ -220,6 +223,13 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     public void expandAll() {
         fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.EXPANDED));
+    }
+
+    public void setFieldsCollapsible(boolean collapsible) {
+        this.fieldsCollapsible = collapsible;
+        fieldPresenters.forEach(presenter -> {
+            presenter.setCollapsible(collapsible);
+        });
     }
 
     /**

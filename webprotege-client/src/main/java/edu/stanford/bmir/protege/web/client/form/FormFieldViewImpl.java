@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.base.CaseFormat;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,6 +31,8 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     private Optional<Tooltip> helpTooltip = Optional.empty();
 
     private HeaderClickedHandler headerClickedHandler = () -> {};
+
+    private boolean collapsible = true;
 
     interface FormFieldViewImplUiBinder extends UiBinder<HTMLPanel, FormFieldViewImpl> {
 
@@ -81,6 +84,18 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Override
     public Optionality getRequired() {
         return required;
+    }
+
+    @Override
+    public void setCollapsible(boolean collapsible) {
+        this.collapsible = collapsible;
+        expansionHandle.setVisible(collapsible);
+        if(collapsible) {
+            fieldHeader.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+        }
+        else {
+            fieldHeader.getElement().getStyle().setCursor(Style.Cursor.DEFAULT);
+        }
     }
 
     @Override

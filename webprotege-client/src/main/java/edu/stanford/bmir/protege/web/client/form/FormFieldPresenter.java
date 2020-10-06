@@ -33,6 +33,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     private FormFieldValueChangedHandler formFieldValueChangedHandler = () -> {};
 
+    private boolean collapsibile = true;
+
     private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
         updateRequiredValuePresent();
     }
@@ -101,6 +103,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     }
 
     public void toggleExpansionState() {
+        if(!collapsibile) {
+            return;
+        }
         if(expansionState == ExpansionState.EXPANDED) {
             setExpansionState(ExpansionState.COLLAPSED);
         }
@@ -235,5 +240,13 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setFormDataChangedHander(FormDataChangedHandler formDataChangedHandler) {
         this.stackPresenter.setFormDataChangedHandler(formDataChangedHandler);
+    }
+
+    public void setCollapsible(boolean collapsible) {
+        this.collapsibile = collapsible;
+        view.setCollapsible(collapsible);
+        if(!collapsible) {
+            setExpansionState(ExpansionState.EXPANDED);
+        }
     }
 }
