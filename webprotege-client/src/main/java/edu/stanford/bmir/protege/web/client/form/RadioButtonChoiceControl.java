@@ -123,6 +123,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
         else {
             clearValue();
         }
+        updatedEnabled();
     }
 
     public void setChoice(Optional<PrimitiveFormControlData> choice) {
@@ -137,6 +138,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
         else {
             clearValue();
         }
+        updatedEnabled();
     }
 
     @Override
@@ -145,6 +147,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
             radioButton.setValue(false);
         }
         selectDefaultChoice();
+        updatedEnabled();
     }
 
     @Nonnull
@@ -191,8 +194,22 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        updatedEnabled();
+    }
+
+    private void updatedEnabled() {
         choiceButtons.keySet()
-                     .forEach(radioButton -> radioButton.setEnabled(enabled));
+                     .forEach(radioButton -> {
+                         // Don't disable the selected one, ONLY.  This cannot be changed
+                         // if is the only one that is not selected.  If we disable it,
+                         // then it is greyed out and hard to read.
+                         if(radioButton.getValue()) {
+                             radioButton.setEnabled(true);
+                         }
+                         else {
+                             radioButton.setEnabled(enabled);
+                         }
+                     });
     }
 
     @Override
