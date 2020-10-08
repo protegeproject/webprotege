@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
@@ -12,6 +12,8 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.stream.Stream;
 
 import static dagger.internal.codegen.DaggerStreams.toImmutableList;
 
@@ -66,8 +68,7 @@ public class BindingValuesExtractor {
     }
 
     @Nonnull
-    public ImmutableList<OWLPrimitive> getBindingValues(@Nonnull OWLEntity formSubject,
-                                                        @Nonnull OwlBinding binding) {
+    public ImmutableList<OWLPrimitive> getBindingValues(@Nonnull OWLEntity formSubject, @Nonnull OwlBinding binding) {
         OWLEntityVisitorEx<ImmutableList<OWLPrimitive>> subjectVisitor = new OWLEntityVisitorEx<>() {
             @Nonnull
             @Override
@@ -109,11 +110,10 @@ public class BindingValuesExtractor {
     }
 
     @Nonnull
-    private ImmutableList<OWLPrimitive> getBindingsForClass(@Nonnull OWLClass subject,
-                                                            @Nonnull OwlBinding binding) {
-        if(binding instanceof OwlPropertyBinding) {
+    private ImmutableList<OWLPrimitive> getBindingsForClass(@Nonnull OWLClass subject, @Nonnull OwlBinding binding) {
+        if (binding instanceof OwlPropertyBinding) {
             var property = ((OwlPropertyBinding) binding).getProperty();
-            if(property.isOWLAnnotationProperty()) {
+            if (property.isOWLAnnotationProperty()) {
                 return projectOntologiesIndex.getOntologyIds()
                                              .flatMap(ontId -> annotationAssertionAxiomsBySubjectIndex.getAxiomsForSubject(
                                                      subject.getIRI(),
@@ -125,18 +125,18 @@ public class BindingValuesExtractor {
             }
             // Fallback to frame for non-annotation assertions, for now
             return classFrameProvider.getFrame(subject, ClassFrameTranslationOptions.defaultOptions())
-                              .getPropertyValues()
-                              .stream()
-                              .filter(pv -> pv.getProperty().equals(property))
-                              .map(PlainPropertyValue::getValue)
+                                     .getPropertyValues()
+                                     .stream()
+                                     .filter(pv -> pv.getProperty().equals(property))
+                                     .map(PlainPropertyValue::getValue)
                                      .sorted()
-                              .collect(toImmutableList());
+                                     .collect(toImmutableList());
         }
-        else if(binding instanceof OwlClassBinding) {
+        else if (binding instanceof OwlClassBinding) {
             return classHierarchyProvider.getParents(subject).stream().sorted().collect(toImmutableList());
 
         }
-        else if(binding instanceof OwlInstanceBinding) {
+        else if (binding instanceof OwlInstanceBinding) {
             return projectOntologiesIndex.getOntologyIds()
                                          .flatMap(ontId -> classAssertionAxiomsByClassIndex.getClassAssertionAxioms(
                                                  subject,
@@ -148,7 +148,7 @@ public class BindingValuesExtractor {
                                          .collect(toImmutableList());
 
         }
-        else if(binding instanceof OwlSubClassBinding) {
+        else if (binding instanceof OwlSubClassBinding) {
             return classHierarchyProvider.getChildren(subject).stream().sorted().collect(toImmutableList());
         }
         else {
@@ -159,9 +159,9 @@ public class BindingValuesExtractor {
     @Nonnull
     private ImmutableList<OWLPrimitive> getBindingsForIndividual(@Nonnull OWLNamedIndividual individual,
                                                                  @Nonnull OwlBinding binding) {
-        if(binding instanceof OwlPropertyBinding) {
+        if (binding instanceof OwlPropertyBinding) {
             var property = ((OwlPropertyBinding) binding).getProperty();
-            if(property.isOWLAnnotationProperty()) {
+            if (property.isOWLAnnotationProperty()) {
                 return projectOntologiesIndex.getOntologyIds()
                                              .flatMap(ontId -> annotationAssertionAxiomsBySubjectIndex.getAxiomsForSubject(
                                                      individual.getIRI(),
@@ -171,39 +171,30 @@ public class BindingValuesExtractor {
                                              .sorted()
                                              .collect(toImmutableList());
             }
-            else if(property.isOWLDataProperty()) {
-                return projectOntologiesIndex.getOntologyIds()
-                                             .flatMap(ontId -> dataPropertyAssertionAxiomsBySubjectIndex.getDataPropertyAssertions(
-                                                     individual,
-                                                     ontId))
-                                             .filter(ax -> ax.getProperty().equals(property))
-                                             .map(OWLDataPropertyAssertionAxiom::getObject)
-                                             .sorted()
-                                             .collect(toImmutableList());
+            else if (property.isOWLDataProperty()) {
+                var assertionBased = getIndividualDataPropertyAssertionBasedValues(individual, property);
+                var subClassOfBased = getIndividualSubClassOfBasedValues(individual, property);
+                return Streams.concat(assertionBased, subClassOfBased)
+                              .distinct()
+                              .collect(toImmutableList());
             }
-            else if(property.isOWLObjectProperty()) {
-                return projectOntologiesIndex.getOntologyIds()
-                                             .flatMap(ontId -> objectPropertyAssertionAxiomsBySubjectIndex.getObjectPropertyAssertions(
-                                                     individual,
-                                                     ontId))
-                                             .filter(ax -> ax.getProperty().equals(property))
-                                             .map(OWLObjectPropertyAssertionAxiom::getObject)
-                                             .filter(OWLIndividual::isNamed)
-                                             .map(OWLIndividual::asOWLNamedIndividual)
-                                             .sorted()
-                                             .collect(toImmutableList());
+            else if (property.isOWLObjectProperty()) {
+                var assertionBased = getIndividualObjectPropertyAssertionBasedValues(individual, property);
+                var subClassOfBased = getIndividualSubClassOfBasedValues(individual, property);
+                return Streams.concat(assertionBased, subClassOfBased)
+                              .distinct()
+                              .collect(toImmutableList());
             }
             else {
                 // Shouldn't happen
                 return ImmutableList.of();
             }
         }
-        else if(binding instanceof OwlClassBinding) {
+        else if (binding instanceof OwlClassBinding) {
             return projectOntologiesIndex.getOntologyIds()
-                                         .flatMap(ontId ->
-                                                          classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(
-                                                                  individual,
-                                                                  ontId))
+                                         .flatMap(ontId -> classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(
+                                                 individual,
+                                                 ontId))
                                          .map(OWLClassAssertionAxiom::getClassExpression)
                                          .filter(OWLClassExpression::isNamed)
                                          .distinct()
@@ -215,5 +206,57 @@ public class BindingValuesExtractor {
         else {
             return ImmutableList.of();
         }
+    }
+
+    private Stream<OWLLiteral> getIndividualDataPropertyAssertionBasedValues(@Nonnull OWLNamedIndividual individual,
+                                                                             OWLProperty property) {
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> dataPropertyAssertionAxiomsBySubjectIndex.getDataPropertyAssertions(
+                                             individual,
+                                             ontId))
+                                     .filter(ax -> ax.getProperty().equals(property))
+                                     .map(OWLDataPropertyAssertionAxiom::getObject)
+                                     .sorted();
+    }
+
+    private Stream<OWLNamedIndividual> getIndividualObjectPropertyAssertionBasedValues(@Nonnull OWLNamedIndividual individual,
+                                                                                       OWLProperty property) {
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> objectPropertyAssertionAxiomsBySubjectIndex.getObjectPropertyAssertions(
+                                             individual,
+                                             ontId))
+                                     .filter(ax -> ax.getProperty().equals(property))
+                                     .map(OWLObjectPropertyAssertionAxiom::getObject)
+                                     .filter(OWLIndividual::isNamed)
+                                     .map(OWLIndividual::asOWLNamedIndividual);
+    }
+
+    private Stream<OWLPrimitive> getIndividualSubClassOfBasedValues(@Nonnull OWLNamedIndividual individual,
+                                                                 OWLProperty property) {
+        return projectOntologiesIndex.getOntologyIds()
+                                     .flatMap(ontId -> classAssertionAxiomsByIndividualIndex.getClassAssertionAxioms(
+                                             individual,
+                                             ontId))
+                                     .map(OWLClassAssertionAxiom::getClassExpression)
+                                     .filter(ce -> ce instanceof OWLObjectRestriction)
+                                     .map(ce -> (OWLRestriction) ce)
+                                     .filter(ce -> ce.getProperty().equals(property))
+                                     .filter(ce -> ce instanceof OWLObjectSomeValuesFrom || ce instanceof OWLObjectHasValue || ce instanceof OWLDataSomeValuesFrom || ce instanceof OWLDataHasValue)
+                                     .map(ce -> {
+                                         if (ce instanceof OWLObjectSomeValuesFrom) {
+                                             return ((OWLObjectSomeValuesFrom) ce).getFiller();
+                                         }
+                                         else if(ce instanceof OWLObjectHasValue) {
+                                             return ((OWLObjectHasValue) ce).getFiller();
+                                         }
+                                         else if(ce instanceof OWLDataHasValue) {
+                                             return ((OWLDataHasValue) ce).getFiller();
+                                         }
+                                         else {
+                                             return ((OWLDataSomeValuesFrom) ce).getFiller();
+                                         }
+                                     })
+                                     .filter(filler -> filler instanceof OWLPrimitive)
+                                     .map(filler -> (OWLPrimitive) filler);
     }
 }
