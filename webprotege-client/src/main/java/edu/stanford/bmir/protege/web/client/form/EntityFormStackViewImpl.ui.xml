@@ -13,6 +13,7 @@
         .outer {
             display:        flex;
             flex-direction: column;
+            align-items: stretch;
             position:       absolute;
             top:            0;
             left:           0;
@@ -48,7 +49,10 @@
         }
 
         .buttonBar {
-            justify-self: flex-end;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            padding: 0.2em;
         }
     </ui:style>
     <g:HTMLPanel>
@@ -57,16 +61,16 @@
                 <g:HTMLPanel addStyleNames="{style.langTagFilterContainer}">
                     <g:SimplePanel ui:field="langTagFilterContainer" addStyleNames="{style.langTagFilterContainer}"/>
                 </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{style.buttonBar}">
-                    <g:Button ui:field="applyEditsButton" visible="false" text="{formsMsg.edits_Apply}"
-                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptButton}"/>
-                    <g:Button ui:field="cancelEditsButton" visible="false" text="{formsMsg.edits_Cancel}"
-                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
-                    <g:Button ui:field="editButton" visible="false" text="{formsMsg.edit}"
-                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
-                </g:HTMLPanel>
             </g:HTMLPanel>
             <g:SimplePanel ui:field="formsStackContainer" addStyleNames="{style.container}"/>
+            <g:HTMLPanel addStyleNames="{style.buttonBar}">
+                <g:Button ui:field="applyEditsButton" visible="false" text="{formsMsg.edits_Apply}"
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptButton}"/>
+                <g:Button ui:field="cancelEditsButton" visible="false" text="{formsMsg.edits_Cancel}"
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
+                <g:Button ui:field="editButton" visible="false" text="{formsMsg.edit}"
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+            </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
