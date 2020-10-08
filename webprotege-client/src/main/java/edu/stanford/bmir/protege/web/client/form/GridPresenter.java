@@ -121,6 +121,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         view.setEnabled(enabled);
+        headerPresenter.setSortingEnabled(!enabled);
         rowPresenters.forEach(rowPresenter -> rowPresenter.setEnabled(enabled));
         rowContainers.forEach(rowContainer -> rowContainer.setEnabled(enabled));
     }
