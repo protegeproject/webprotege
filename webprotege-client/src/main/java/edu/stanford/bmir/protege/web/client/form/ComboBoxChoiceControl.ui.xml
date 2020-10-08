@@ -10,14 +10,14 @@
             min-height: 22px;
         }
         .comboBox {
-
+            max-width: 99%;
         }
         .readOnlyLabel {
             line-height: 22px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.primitiveData.primitiveData}">
-        <g:ListBox ui:field="comboBox" visibleItemCount="1"/>
+        <g:ListBox ui:field="comboBox" visibleItemCount="1" addStyleNames="{style.comboBox}"/>
         <g:HTMLPanel ui:field="iconContainer">
             <g:Image ui:field="iconImage"/>
         </g:HTMLPanel>
