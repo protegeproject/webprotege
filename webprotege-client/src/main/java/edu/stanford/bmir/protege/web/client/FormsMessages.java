@@ -128,7 +128,7 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("subForm.subject.type")
     String subFormSubjectType();
 
-    @DefaultMessage("Edit")
+    @DefaultMessage("Edit values")
     @Key("edit")
     String edit();
 
