@@ -21,6 +21,6 @@
         <g:HTMLPanel ui:field="iconContainer">
             <g:Image ui:field="iconImage"/>
         </g:HTMLPanel>
-        <primitive:PrimitiveDataEditorImpl ui:field="readOnlyView" visible="false" enabled="false"/>
+        <primitive:PrimitiveDataEditorImpl ui:field="readOnlyView" visible="false" enabled="false" iconDisplayed="false"/>
     </g:HTMLPanel>
 </ui:UiBinder>
