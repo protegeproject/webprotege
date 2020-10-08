@@ -58,6 +58,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
         editor.setDataPropertiesAllowed(true);
         editor.setAnnotationPropertiesAllowed(true);
         editor.setDatatypesAllowed(true);
+        editor.setIconDisplayed(false);
     }
 
     public void setDescriptor(@Nonnull EntityNameControlDescriptorDto descriptor) {
