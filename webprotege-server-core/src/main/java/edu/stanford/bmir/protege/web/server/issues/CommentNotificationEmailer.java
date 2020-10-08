@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.mail.MessageId;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.ProjectResource.forProject;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
@@ -70,9 +72,7 @@ public class CommentNotificationEmailer {
                                               @Nonnull OWLEntityData entityData,
                                               @Nonnull EntityDiscussionThread thread,
                                               @Nonnull Comment postedComment) {
-        Collection<UserDetails> userDetails = getParticipantUserDetails(projectId,
-                                                                        postedComment,
-                                                                        thread);
+        Collection<UserDetails> userDetails = getParticipantUserDetails(projectId, postedComment, thread);
         sendEmailToUsers(userDetails, projectId, entityData, thread, postedComment);
     }
 
@@ -90,18 +90,19 @@ public class CommentNotificationEmailer {
                                                 @Nonnull Comment postedComment,
                                                 @Nonnull EntityDiscussionThread thread) {
         // Thread participants
-        Stream<UserId> threadParticipants = participantsExtractor.extractParticipants(thread).stream();
-        // Users with specified access
-        Stream<UserId> projectParticipants = accessManager.getSubjectsWithAccessToResource(forProject(projectId)).stream()
-                                                          .map(Subject::getUserId)
-                                                          .filter(Optional::isPresent)
-                                                          .map(Optional::get)
-                                                          // Can't send out notifications to guests
-                                                          .filter(userId -> !userId.isGuest());
+        var threadParticipants = participantsExtractor.extractParticipants(thread).stream();
+        // Users that can comment on the project
+        var projectParticipants = accessManager.getSubjectsWithAccessToResource(forProject(projectId),
+                                                                                CREATE_OBJECT_COMMENT)
+                                               .stream()
+                                               .map(Subject::getUserId)
+                                               .filter(Optional::isPresent)
+                                               .map(Optional::get)
+                                               // Can't send out notifications to guests
+                                               .filter(userId -> !userId.isGuest());
         return Stream.concat(threadParticipants, projectParticipants)
                      // Don't send notifications to the person who posted the comment
-                     .filter(userId -> userIsNotCommentAuthor(userId, postedComment))
-                     .collect(toSet());
+                     .filter(userId -> userIsNotCommentAuthor(userId, postedComment)).collect(toSet());
     }
 
     private static boolean userIsNotCommentAuthor(@Nonnull UserId userId, @Nonnull Comment postedComment) {
@@ -114,11 +115,15 @@ public class CommentNotificationEmailer {
                                   @Nonnull OWLEntityData entityData,
                                   @Nonnull EntityDiscussionThread discussionThread,
                                   @Nonnull Comment postedComment) {
-        List<String> emailAddresses = userDetails.stream()
-                                                 .map(UserDetails::getEmailAddress)
-                                                 .filter(Optional::isPresent)
-                                                 .map(Optional::get)
-                                                 .collect(toList());
+        // Don't send anything if there's nobdoy to send it to!
+        if (userDetails.isEmpty()) {
+            return;
+        }
+        var emailAddresses = userDetails.stream()
+                                        .map(UserDetails::getEmailAddress)
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(toList());
         MessageId postedCommentMessageId = messageIdGenerator.generateCommentMessageId(projectId,
                                                                                        postedComment.getId());
         List<MessageHeader> messageHeaders = new ArrayList<>();
@@ -126,16 +131,17 @@ public class CommentNotificationEmailer {
         if (commentIndex != 0) {
             // Reply to the original message
             MessageId headCommentMessageId = messageIdGenerator.generateCommentMessageId(projectId,
-                                                                                         discussionThread.getComments().get(0).getId());
+                                                                                         discussionThread.getComments()
+                                                                                                         .get(0)
+                                                                                                         .getId());
             messageHeaders.add(MessageHeader.inReplyTo(headCommentMessageId.getId()));
             messageHeaders.add(MessageHeader.references(headCommentMessageId.getId()));
         }
-        sendMail.sendMail(
-                postedCommentMessageId,
-                emailAddresses,
-                formatSubjectLine(projectId, entityData, discussionThread, postedComment),
-                formatMessage(projectId, entityData, discussionThread, postedComment),
-                messageHeaders.toArray(new MessageHeader[messageHeaders.size()]));
+        sendMail.sendMail(postedCommentMessageId,
+                          emailAddresses,
+                          formatSubjectLine(projectId, entityData, discussionThread, postedComment),
+                          formatMessage(projectId, entityData, discussionThread, postedComment),
+                          messageHeaders.toArray(new MessageHeader[messageHeaders.size()]));
     }
 
 
