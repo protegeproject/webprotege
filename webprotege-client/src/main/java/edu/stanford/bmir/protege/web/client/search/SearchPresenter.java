@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.LangTagFilterPresenter;
+import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -67,6 +68,8 @@ public class SearchPresenter implements HasInitialFocusable {
 
     private SearchResultChosenHandler searchResultChosenHandler;
 
+    private AcceptKeyHandler acceptKeyHandler = () -> {};
+
     @Inject
     public SearchPresenter(@Nonnull ProjectId projectId,
                            @Nonnull SearchView view,
@@ -107,8 +110,12 @@ public class SearchPresenter implements HasInitialFocusable {
         langTagFilterPresenter.setPlaceholder("");
     }
 
-    private void handleAcceptKey() {
+    public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {
+        this.acceptKeyHandler = checkNotNull(acceptKeyHandler);
+    }
 
+    private void handleAcceptKey() {
+        this.acceptKeyHandler.handleAcceptKey();
     }
 
     private void handleSearchSettings(GetSearchSettingsResult result) {

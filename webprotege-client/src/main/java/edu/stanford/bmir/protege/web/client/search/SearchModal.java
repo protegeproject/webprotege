@@ -59,6 +59,7 @@ public class SearchModal {
             selectChosenEntity();
         });
         searchPresenter.start();
+        searchPresenter.setAcceptKeyHandler(modalPresenter::accept);
         searchPresenter.setSearchResultChosenHandler(result -> modalPresenter.accept());
         modalManager.showModal(modalPresenter);
     }
