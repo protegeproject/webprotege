@@ -30,6 +30,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -46,7 +47,7 @@ public class CreateEntityFormPresenter {
     private final ProjectId projectId;
 
     @Nonnull
-    private final FormPresenter formPresenter;
+    private final Provider<FormPresenter> formPresenterProvider;
 
     @Nonnull
     private final CreateEntityFormView view;
@@ -68,7 +69,7 @@ public class CreateEntityFormPresenter {
 
     @Inject
     public CreateEntityFormPresenter(@Nonnull ProjectId projectId,
-                                     @Nonnull FormPresenter formPresenter,
+                                     @Nonnull Provider<FormPresenter> formPresenterProvider,
                                      @Nonnull CreateEntityFormView view,
                                      @Nonnull UuidV4Provider uuidV4Provider,
                                      @Nonnull ModalManager modalManager,
@@ -76,7 +77,7 @@ public class CreateEntityFormPresenter {
                                      @Nonnull LanguageMapCurrentLocaleMapper localeMapper,
                                      @Nonnull DispatchServiceManager dispatch) {
         this.projectId = projectId;
-        this.formPresenter = checkNotNull(formPresenter);
+        this.formPresenterProvider = checkNotNull(formPresenterProvider);
         this.view = checkNotNull(view);
         this.uuidV4Provider = uuidV4Provider;
         this.modalManager = checkNotNull(modalManager);
@@ -98,8 +99,6 @@ public class CreateEntityFormPresenter {
         FreshEntityIri freshEntityIri = FreshEntityIri.get("", "", uuidV4Provider.get(), parentEntityIris);
         OWLEntity entity = DataFactory.getOWLEntity(entityType, freshEntityIri.getIri());
         FormSubjectDto subject = FormSubjectDto.getFormSubject(DataFactory.getOWLEntityData(entity, ImmutableMap.of()));
-        formPresenter.start(view.getFormsContainer());
-        formPresenter.setFieldsCollapsible(false);
         ImmutableList<FormDataDto> formData = formDescriptorDtos.stream().map(descriptor -> {
             ImmutableList<FormFieldDataDto> fields = descriptor.getFields()
                                                                .stream()
@@ -107,6 +106,11 @@ public class CreateEntityFormPresenter {
                                                                .collect(toImmutableList());
             return FormDataDto.get(subject, descriptor, fields, 0);
         }).collect(toImmutableList());
+
+        FormPresenter formPresenter = formPresenterProvider.get();
+
+        formPresenter.start(view.getFormsContainer());
+        formPresenter.setFieldsCollapsible(false);
         formPresenter.displayForm(formData.get(0));
 
         FormDescriptorDto formDescriptor = formDescriptorDtos.get(0);
@@ -119,19 +123,20 @@ public class CreateEntityFormPresenter {
         modalPresenter.setPrimaryButton(DialogButton.CREATE);
         modalPresenter.setPrimaryButtonEnabled(false);
         modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            handleCreateEntityFormCloseRequest(entityType, freshEntityIri, entitiesCreatedHandler, closer);
+            handleCreateEntityFormCloseRequest(entityType, freshEntityIri, entitiesCreatedHandler, closer, formPresenter);
 
         });
-        formPresenter.setFormDataChangedHandler(() -> updateModalPrimaryButtonState(modalPresenter));
+        formPresenter.setFormDataChangedHandler(() -> updateModalPrimaryButtonState(modalPresenter, formPresenter));
         modalManager.showModal(modalPresenter);
         Scheduler.get().scheduleDeferred(formPresenter::requestFocus);
-        Scheduler.get().scheduleDeferred(() -> updateModalPrimaryButtonState(modalPresenter));
+        Scheduler.get().scheduleDeferred(() -> updateModalPrimaryButtonState(modalPresenter, formPresenter));
     }
 
     private void handleCreateEntityFormCloseRequest(@Nonnull EntityType<?> entityType,
                                                     @Nonnull FreshEntityIri freshEntityIri,
                                                     @Nonnull CreateEntityPresenter.EntitiesCreatedHandler entitiesCreatedHandler,
-                                                    @Nonnull ModalCloser closer) {
+                                                    @Nonnull ModalCloser closer,
+                                                    @Nonnull FormPresenter formPresenter) {
         if (!formPresenter.getValidationStatus().equals(ValidationStatus.VALID)) {
             return;
         }
@@ -145,7 +150,8 @@ public class CreateEntityFormPresenter {
 
     }
 
-    private void updateModalPrimaryButtonState(ModalPresenter modalPresenter) {
+    private void updateModalPrimaryButtonState(@Nonnull ModalPresenter modalPresenter,
+                                               @Nonnull FormPresenter formPresenter) {
         boolean enabled = formPresenter.getValidationStatus().isValid();
         modalPresenter.setPrimaryButtonEnabled(enabled);
     }
