@@ -93,6 +93,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         cellPresenters.forEach(cellPresenter -> cellPresenter.setEnabled(enabled));
+        view.setEditable(enabled);
     }
 
     public void requestFocus() {

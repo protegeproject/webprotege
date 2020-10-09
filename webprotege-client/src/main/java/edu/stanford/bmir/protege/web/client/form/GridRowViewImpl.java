@@ -56,6 +56,16 @@ public class GridRowViewImpl extends Composite implements GridRowView {
     }
 
     @Override
+    public void setEditable(boolean enabled) {
+        if (enabled) {
+            rowContainer.addStyleName(WebProtegeClientBundle.BUNDLE.style().panelFilled());
+        }
+        else {
+            rowContainer.removeStyleName(WebProtegeClientBundle.BUNDLE.style().panelFilled());
+        }
+    }
+
+    @Override
     public void requestFocus() {
         if(!cellContainers.isEmpty()) {
             SimplePanel container = cellContainers.get(0);
