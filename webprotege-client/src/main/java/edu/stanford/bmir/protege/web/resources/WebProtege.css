@@ -565,3 +565,8 @@
     padding: 4px;
     border-radius: 2px;
 }
+
+.wp-form__grid__row--editable {
+    margin-top: 1px;
+    margin-bottom: 1px;
+}

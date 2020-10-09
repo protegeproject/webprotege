@@ -15,6 +15,10 @@
             flex-direction: row;
             width: 100%;
         }
+        .editable {
+            margin-top: 1px;
+            margin-bottom: 1px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel ui:field="rowContainer" addStyleNames="{style.row}"/>
