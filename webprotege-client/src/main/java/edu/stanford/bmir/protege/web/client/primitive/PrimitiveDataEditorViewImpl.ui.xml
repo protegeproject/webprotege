@@ -13,6 +13,7 @@
             flex-wrap: nowrap;
         }
         .textBox {
+            margin-right: 1px;
         }
         .iconContainer {
             flex-grow: 0;

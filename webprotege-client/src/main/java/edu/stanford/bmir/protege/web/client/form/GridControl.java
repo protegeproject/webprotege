@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionId;
 import edu.stanford.bmir.protege.web.shared.form.field.FormRegionOrdering;
@@ -36,6 +37,9 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
 
     @Nonnull
     private final GridPresenter gridPresenter;
+
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     @Inject
     public GridControl(@Nonnull GridPresenter gridPresenter) {
@@ -79,6 +83,18 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
         return gridPresenter.getFilters();
     }
 
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return gridPresenter.getValidationStatus();
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        gridPresenter.setFormDataChangedHandler(formDataChangedHandler);
+    }
+
     @Override
     public Widget asWidget() {
         return view;
@@ -87,6 +103,9 @@ public class GridControl implements FormControl, HasGridColumnVisibilityManager 
     @Override
     public Optional<FormControlData> getValue() {
         GridControlData value = gridPresenter.getValue();
+        if(value.getRows().getPageElements().isEmpty()) {
+            return Optional.empty();
+        }
         return Optional.of(value);
     }
 

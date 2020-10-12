@@ -56,18 +56,26 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     private Set<FormFieldId> collapsedFields = new HashSet<>();
 
-    private FormRegionPageChangedHandler formRegionPageChangedHandler = formId -> {};
+    private FormRegionPageChangedHandler formRegionPageChangedHandler = formId -> {
+    };
 
     private boolean enabled = true;
 
     @Nonnull
-    private FormRegionOrderingChangedHandler orderByChangedHandler = () -> {};
+    private FormRegionOrderingChangedHandler orderByChangedHandler = () -> {
+    };
 
     @Nonnull
     private Optional<FormId> formId = Optional.empty();
 
     @Nonnull
-    private FormRegionFilterChangedHandler formRegionFilterChangeHandler = event -> {};
+    private FormRegionFilterChangedHandler formRegionFilterChangeHandler = event -> {
+    };
+
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
+    private boolean fieldsCollapsible = true;
 
     @AutoFactory
     @Inject
@@ -100,15 +108,13 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         saveExpansionState();
         currentSubject = formData.getSubject();
         this.formId = Optional.of(formData.getFormDescriptor().getFormId());
-        if(currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()))) {
+        if (currentFormDescriptor.equals(Optional.of(formData.getFormDescriptor()))) {
             updateFormData(formData);
         }
         else {
             createFormAndSetFormData(formData);
         }
-        if(formData.getFormDescriptor()
-                   .getFields()
-                   .isEmpty()) {
+        if (formData.getFormDescriptor().getFields().isEmpty()) {
             container.ifPresent(c -> c.setWidget(noFormView));
         }
         else {
@@ -124,10 +130,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     public void saveExpansionState() {
         collapsedFields.clear();
         fieldPresenters.forEach(p -> {
-            if(p.getExpansionState() == ExpansionState.COLLAPSED) {
-                FormFieldId id = p.getValue()
-                                  .getFormFieldDescriptor()
-                                  .getId();
+            if (p.getExpansionState() == ExpansionState.COLLAPSED) {
+                FormFieldId id = p.getValue().getFormFieldDescriptor().getId();
                 collapsedFields.add(id);
             }
         });
@@ -144,7 +148,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     public void setFormRegionPageChangedHandler(FormRegionPageChangedHandler handler) {
         this.formRegionPageChangedHandler = checkNotNull(handler);
-        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler()));
+        fieldPresenters.forEach(formFieldPresenter -> formFieldPresenter.setFormRegionPageChangedHandler(
+                newRegionPageChangedHandler()));
     }
 
     private void updateFormData(@Nonnull FormDataDto formData) {
@@ -152,7 +157,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         this.currentSubject = formData.getSubject();
         dispatchServiceManager.beginBatch();
         ImmutableList<FormFieldDataDto> nextFormFieldData = formData.getFormFieldData();
-        for(int i = 0; i < nextFormFieldData.size(); i++) {
+        for (int i = 0; i < nextFormFieldData.size(); i++) {
             FormFieldDataDto fieldData = nextFormFieldData.get(i);
             FormFieldPresenter formFieldPresenter = fieldPresenters.get(i);
             formFieldPresenter.setValue(fieldData);
@@ -170,7 +175,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         FormDescriptorDto formDescriptor = formData.getFormDescriptor();
         currentFormDescriptor = Optional.of(formDescriptor);
         dispatchServiceManager.beginBatch();
-        for(FormFieldDataDto fieldData : formData.getFormFieldData()) {
+        for (FormFieldDataDto fieldData : formData.getFormFieldData()) {
             addFormField(fieldData);
         }
         dispatchServiceManager.executeCurrentBatch();
@@ -186,7 +191,7 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     private void addFormField(@Nonnull FormFieldDataDto formFieldData) {
         FormFieldDescriptorDto formFieldDescriptor = formFieldData.getFormFieldDescriptor();
-        if(formFieldDescriptor.getInitialExpansionState().equals(ExpansionState.COLLAPSED)) {
+        if (formFieldDescriptor.getInitialExpansionState().equals(ExpansionState.COLLAPSED)) {
             collapsedFields.add(formFieldData.getFormFieldDescriptor().getId());
         }
         FormFieldPresenter presenter = formFieldPresenterFactory.create(formFieldDescriptor);
@@ -194,11 +199,12 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         presenter.setFormRegionPageChangedHandler(newRegionPageChangedHandler());
         presenter.setFormRegionFilterChangedHandler(formRegionFilterChangeHandler);
         presenter.setGridOrderByChangedHandler(orderByChangedHandler);
+        presenter.setFormDataChangedHander(formDataChangedHandler);
+        presenter.setCollapsible(fieldsCollapsible);
         presenter.start();
 
         fieldPresenters.add(presenter);
-        if(collapsedFields.contains(formFieldData.getFormFieldDescriptor()
-                                                 .getId())) {
+        if (fieldsCollapsible && collapsedFields.contains(formFieldData.getFormFieldDescriptor().getId())) {
             presenter.setExpansionState(ExpansionState.COLLAPSED);
         }
         // TODO : Change handler
@@ -217,6 +223,13 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     public void expandAll() {
         fieldPresenters.forEach(p -> p.setExpansionState(ExpansionState.EXPANDED));
+    }
+
+    public void setFieldsCollapsible(boolean collapsible) {
+        this.fieldsCollapsible = collapsible;
+        fieldPresenters.forEach(presenter -> {
+            presenter.setCollapsible(collapsible);
+        });
     }
 
     /**
@@ -239,18 +252,23 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
 
     @Nonnull
     public ImmutableList<FormPageRequest> getPageRequest() {
-        return currentFormDescriptor.map(formDescriptor
-                                          -> currentSubject.map(subject
-                                                                        -> fieldPresenters.stream()
-                                                                                                 .map(formFieldPresenter -> formFieldPresenter.getPageRequests(subject.toFormSubject()))
-                                                                                                 .flatMap(ImmutableList::stream)
-                                                                                                 .map(pr -> FormPageRequest.get(
-                                                                                                         formDescriptor.getFormId(),
-                                                                                                         subject.toFormSubject(),
-                                                                                                         pr.getFieldId(),
-                                                                                                         pr.getSourceType(),
-                                                                                                         pr.getPageRequest()))
-                                                                                                 .collect(toImmutableList())).orElse(ImmutableList.of())).orElse(ImmutableList.of());
+        return currentFormDescriptor.map(formDescriptor -> currentSubject.map(subject -> fieldPresenters.stream()
+                                                                                                        .map(formFieldPresenter -> formFieldPresenter
+                                                                                                                .getPageRequests(
+                                                                                                                        subject.toFormSubject()))
+                                                                                                        .flatMap(
+                                                                                                                ImmutableList::stream)
+                                                                                                        .map(pr -> FormPageRequest
+                                                                                                                .get(formDescriptor
+                                                                                                                             .getFormId(),
+                                                                                                                     subject.toFormSubject(),
+                                                                                                                     pr.getFieldId(),
+                                                                                                                     pr.getSourceType(),
+                                                                                                                     pr.getPageRequest()))
+                                                                                                        .collect(
+                                                                                                                toImmutableList()))
+                                                                         .orElse(ImmutableList.of()))
+                                    .orElse(ImmutableList.of());
     }
 
     public IsWidget getView() {
@@ -262,7 +280,8 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     }
 
     public void setFormDataChangedHandler(FormDataChangedHandler formDataChangedHandler) {
-        //        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        fieldPresenters.forEach(presenter -> presenter.setFormDataChangedHander(formDataChangedHandler));
     }
 
     /**
@@ -276,14 +295,13 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
     }
 
     public Stream<FormRegionOrdering> getOrderings() {
-        return fieldPresenters.stream()
-                .flatMap(FormFieldPresenter::getOrderings);
+        return fieldPresenters.stream().flatMap(FormFieldPresenter::getOrderings);
     }
 
     public ImmutableSet<FormRegionFilter> getFilters() {
         return fieldPresenters.stream()
-                .flatMap(formFieldPresenter -> formFieldPresenter.getFilters().stream())
-                .collect(toImmutableSet());
+                              .flatMap(formFieldPresenter -> formFieldPresenter.getFilters().stream())
+                              .collect(toImmutableSet());
     }
 
     @Override
@@ -294,9 +312,12 @@ public class FormPresenter implements HasFormRegionFilterChangedHandler {
         });
     }
 
-    interface FormDataChangedHandler {
-
-        void handleFormDataChanged();
+    @Inject
+    public ValidationStatus getValidationStatus() {
+        return fieldPresenters.stream()
+                              .map(FormFieldPresenter::getValidationStatus)
+                              .filter(ValidationStatus::isInvalid)
+                              .findFirst()
+                              .orElse(ValidationStatus.VALID);
     }
-
 }

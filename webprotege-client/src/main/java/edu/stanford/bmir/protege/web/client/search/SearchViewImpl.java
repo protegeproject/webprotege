@@ -23,41 +23,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 21 Apr 2017
  */
-public class SearchViewImpl extends Composite implements SearchView, HasAcceptKeyHandler {
+public class SearchViewImpl extends Composite implements SearchView {
 
-    private long totalResultCount = 0;
+    private static SearchViewImplUiBinder ourUiBinder = GWT.create(SearchViewImplUiBinder.class);
+
+    @UiField
+    public SimplePanel searchResultsContainer;
 
     @UiField
     protected SimplePanel searchFilterContainer;
-
-    interface SearchViewImplUiBinder extends UiBinder<HTMLPanel, SearchViewImpl> {
-
-    }
-
-    private static SearchViewImplUiBinder ourUiBinder = GWT.create(SearchViewImplUiBinder.class);
 
     @UiField
     protected PlaceholderTextBox searchStringField;
 
     @UiField
-    protected FocusPanel base;
-
-    @UiField
-    protected FlowPanel list;
-
-    @UiField
-    protected HasText searchSummaryField;
-
-    @UiField
     BusyViewImpl busyView;
-
-    @UiField(provided = true)
-    PaginatorView paginator;
 
     @UiField
     SimplePanel langTagsFilterContainer;
@@ -68,22 +55,22 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     @UiField
     HTMLPanel langTagsFilterPanel;
 
-    private PaginatorPresenter paginatorPresenter;
+    @Nonnull
+    private IncrementSelectionHandler incrementSelectionHandler = () -> {};
 
-    private int selectedIndex = -1;
+    @Nonnull
+    private DecrementSelectionHandler decrementSelectionHandler = () -> {};
 
+    @Nonnull
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
-    private SearchResultChosenHandler searchResultChosenHandler = (e) -> {};
+    @Nonnull
+    private AcceptKeyHandler acceptKeyHandler = () -> {};
 
     private String previousSearchString = "";
 
-    private AcceptKeyHandler acceptKeyHandler = () -> {};
-
     @Inject
-    public SearchViewImpl(PaginatorPresenter paginatorPresenter) {
-        this.paginatorPresenter = paginatorPresenter;
-        paginator = paginatorPresenter.getView();
+    public SearchViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         Element element = searchStringField.getElement();
         element.setPropertyString("autocomplete", "off");
@@ -92,57 +79,21 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
         element.setPropertyString("spellcheck", "off");
     }
 
-    @Override
-    public void setSearchResultChosenHandler(SearchResultChosenHandler searchResultChosenHandler) {
-        this.searchResultChosenHandler = searchResultChosenHandler;
-    }
-
-    @Override
-    public void setAcceptKeyHandler(AcceptKeyHandler acceptKey) {
-        this.acceptKeyHandler = acceptKey;
-    }
-
-    @Override
-    public int getSelectedSearchResultIndex() {
-        return selectedIndex;
-    }
-
+    @Nonnull
     @Override
     public AcceptsOneWidget getLangTagFilterContainer() {
         return langTagsFilterContainer;
     }
 
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getSearchResultsContainer() {
+        return searchResultsContainer;
+    }
+
     @Override
     public void setLangTagFilterVisible(boolean visible) {
         langTagsFilterPanel.setVisible(visible);
-    }
-
-    @UiHandler("base")
-    protected void handleDoubleClick(DoubleClickEvent event) {
-        handleEventTarget(event.getClientY(), i -> acceptKeyHandler.handleAcceptKey());
-    }
-
-    @UiHandler("base")
-    protected void handleClick(ClickEvent event) {
-        handleEventTarget(event.getClientY(), this::setSelectedIndex);
-    }
-
-
-    private void handleEventTarget(int clientY, Consumer<Integer> consumer) {
-        for(int i = 0; i < list.getWidgetCount(); i++) {
-            Widget w = list.getWidget(i);
-            int itemY = w.getAbsoluteTop();
-            if(itemY < clientY && clientY < itemY + w.getOffsetHeight()) {
-                consumer.accept(i);
-                return;
-            }
-        }
-    }
-
-    private void setSelectedIndex(int i) {
-        clearCurrentSelectionBackground();
-        selectedIndex = i;
-        highlightSelectedIndex();
     }
 
     @UiHandler("searchStringField")
@@ -161,64 +112,37 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
         }
     }
 
-    @UiHandler("base")
-    protected void handleBaseKeyDown(KeyDownEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_DOWN) {
-            event.preventDefault();
-            incrementSelectedIndex();
-        }
-        else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_UP) {
-            event.preventDefault();
-            decrementSelectedIndex();
-        }
-        else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-            event.preventDefault();
-            chooseSearchResult();
-        }
+    @Override
+    public void setIncrementSelectionHandler(@Nonnull IncrementSelectionHandler handler) {
+        incrementSelectionHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setDecrementSelectionHandler(@Nonnull DecrementSelectionHandler handler) {
+        decrementSelectionHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setAcceptKeyHandler(@Nonnull AcceptKeyHandler acceptKeyHandler) {
+        this.acceptKeyHandler = checkNotNull(acceptKeyHandler);
     }
 
     @UiHandler("searchStringField")
     protected void handleSearchStringFieldKeyDown(KeyDownEvent event) {
         if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_DOWN) {
             event.preventDefault();
-            incrementSelectedIndex();
+            incrementSelectionHandler.handleIncrementSelection();
         }
         else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_UP) {
             event.preventDefault();
-            decrementSelectedIndex();
+            decrementSelectionHandler.handleDecrementSelection();
         }
         else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
             event.preventDefault();
-            chooseSearchResult();
+            acceptKeyHandler.handleAcceptKey();
         }
         else {
             performSearchIfChanged();
-        }
-    }
-
-    private void chooseSearchResult() {
-        if(selectedIndex != -1) {
-            searchResultChosenHandler.handleSearchResultChosen(selectedIndex);
-            acceptKeyHandler.handleAcceptKey();
-        }
-    }
-
-    private void decrementSelectedIndex() {
-        if (selectedIndex > 0) {
-            setSelectedIndex(selectedIndex - 1);
-        }
-    }
-
-    private void clearCurrentSelectionBackground() {
-        if(-1 < selectedIndex && selectedIndex < list.getWidgetCount()) {
-            list.getWidget(selectedIndex).getElement().getStyle().clearBackgroundColor();
-            list.getWidget(selectedIndex).getElement().getStyle().clearColor();
-        }
-    }
-
-    private void incrementSelectedIndex() {
-        if (selectedIndex < list.getWidgetCount() - 1) {
-            setSelectedIndex(selectedIndex + 1);
         }
     }
 
@@ -243,70 +167,9 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     }
 
     @Override
-    public void clearEntitySearchResults() {
-        list.clear();
-        searchSummaryField.setText("");
-    }
-
-    @Override
-    public void setEntitySearchResults(@Nonnull List<EntitySearchResultView> results) {
-        list.clear();
-        updateDisplayMessage();
-        results.forEach(view -> list.add(view));
-        if (list.getWidgetCount() > 0) {
-            setSelectedIndex(0);
-        }
-        else {
-            setSelectedIndex(-1);
-        }
-    }
-
-    public void updateDisplayMessage() {
-        String formattedResultsCount = NumberFormat.getDecimalFormat()
-                .format(totalResultCount);
-        searchSummaryField.setText("Displaying " + list.getWidgetCount() + " of " + formattedResultsCount + " results");
-    }
-
-    private void highlightSelectedIndex() {
-        if (-1 < selectedIndex && selectedIndex < list.getWidgetCount()) {
-            Element element = list.getWidget(selectedIndex).getElement();
-            element.getStyle().setBackgroundColor("var(--selected-item--background-color)");
-            element.getStyle().setColor("var(--selected-item--color)");
-            element.scrollIntoView();
-        }
-    }
-
-    @Override
-    public void setPageCount(int pageCount) {
-        paginatorPresenter.setPageCount(pageCount);
-    }
-
-    @Override
-    public void setPageNumber(int pageNumber) {
-        paginatorPresenter.setPageNumber(pageNumber);
-    }
-
-    @Override
-    public int getPageNumber() {
-        return paginatorPresenter.getPageNumber();
-    }
-
-    @Override
-    public void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler) {
-        paginatorPresenter.setPageNumberChangedHandler(handler);
-    }
-
-    @Override
     protected void onAttach() {
         super.onAttach();
         searchStringField.setFocus(true);
-    }
-
-    @Override
-    public void setTotalResultCount(long totalElements) {
-        paginatorPresenter.setElementCount(totalElements);
-        this.totalResultCount = totalElements;
-        updateDisplayMessage();
     }
 
     @Override
@@ -318,5 +181,9 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     @Override
     public AcceptsOneWidget getSearchFilterContainer() {
         return searchFilterContainer;
+    }
+
+    interface SearchViewImplUiBinder extends UiBinder<HTMLPanel, SearchViewImpl> {
+
     }
 }

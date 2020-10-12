@@ -484,6 +484,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form__grid__row")
         String formGridRow();
 
+
+        @ClassName("wp-form__grid__row--editable")
+        String formGridRowEditable();
+
         @ClassName("wp-form__grid__column")
         String formGridColumn();
 

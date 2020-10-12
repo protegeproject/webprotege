@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.FreshEntityIri;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -78,6 +79,8 @@ public class RpcWhiteList implements Action, Result {
     }
 
     FormRegionFilter formRegionFilter;
+
+    FormPurpose formPurpose;
 
     LangTagFilter langTagFilter;
 
@@ -297,6 +300,8 @@ public class RpcWhiteList implements Action, Result {
 
     NodeProperties nodeProperties;
 
+    FreshEntityIri freshEntityIri;
+
     public PrimitiveFormControlDataDto getPrimitiveFormControlDataDto() {
         return primitiveFormControlDataDto;
     }
@@ -506,6 +511,8 @@ public class RpcWhiteList implements Action, Result {
     EntityCrudKitPrefixSettings entityCrudKitPrefixSettings;
 
     EntityCrudKitSuffixSettings suffixSettings;
+
+    ValidationStatus validationStatus;
 
     private Color color;
 

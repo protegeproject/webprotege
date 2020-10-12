@@ -25,14 +25,19 @@ public class ChoiceDescriptorCache {
     @Inject
     public ChoiceDescriptorCache(@Nonnull ChoiceDescriptorDtoSupplier choiceDescriptorDtoSupplier) {
         this.choiceDescriptorDtoSupplier = checkNotNull(choiceDescriptorDtoSupplier);
+        System.out.println("INST");
     }
 
     @Nonnull
     public ImmutableList<ChoiceDescriptorDto> getChoices(@Nonnull ChoiceListSourceDescriptor sourceDescriptor) {
         var cachedChoices = descriptorCache.get(sourceDescriptor);
         if (cachedChoices == null) {
+            System.out.println("Get choices: " + sourceDescriptor);
             cachedChoices = choiceDescriptorDtoSupplier.getChoices(sourceDescriptor);
             descriptorCache.put(sourceDescriptor, cachedChoices);
+        }
+        else {
+            System.out.println("Cache hit for " + sourceDescriptor);
         }
         return cachedChoices;
     }

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptorDto;
 
@@ -32,6 +33,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EntityNameControl extends Composite implements FormControl, HasPlaceholder {
 
     private EntityNameControlDescriptorDto descriptor;
+
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     interface EntityNameControlUiBinder extends UiBinder<HTMLPanel, EntityNameControl> {
 
@@ -55,6 +58,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
         editor.setDataPropertiesAllowed(true);
         editor.setAnnotationPropertiesAllowed(true);
         editor.setDatatypesAllowed(true);
+        editor.setIconDisplayed(false);
     }
 
     public void setDescriptor(@Nonnull EntityNameControlDescriptorDto descriptor) {
@@ -66,6 +70,7 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     }
 
     private void handleEditorValueChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
+        formDataChangedHandler.handleFormDataChanged();
         ValueChangeEvent.fire(EntityNameControl.this, getValue());
     }
 
@@ -105,6 +110,17 @@ public class EntityNameControl extends Composite implements FormControl, HasPlac
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.of();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

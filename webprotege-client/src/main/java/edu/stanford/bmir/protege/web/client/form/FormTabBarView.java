@@ -12,8 +12,9 @@ import javax.annotation.Nonnull;
  */
 public interface FormTabBarView extends IsWidget {
 
-    @Nonnull
     void addView(FormTabView tabView);
 
     void clear();
+
+    void setVisible(boolean visible);
 }

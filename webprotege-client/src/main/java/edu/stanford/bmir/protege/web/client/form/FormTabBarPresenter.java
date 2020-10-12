@@ -40,6 +40,7 @@ public class FormTabBarPresenter {
     public void clear() {
         itemPresenters.clear();
         view.clear();
+        view.setVisible(false);
     }
 
     public void setSelectedFormIdStash(@Nonnull SelectedFormIdStash selectedFormIdStash) {
@@ -65,6 +66,7 @@ public class FormTabBarPresenter {
         tabPresenter.setLabel(label);
         tabPresenter.setFormContainer(formContainer);
         tabPresenter.setClickHandler(event -> selectFormAndStashId(formId));
+        view.setVisible(itemPresenters.size() > 1);
     }
 
     public void selectFormAndStashId(@Nonnull FormId formId) {

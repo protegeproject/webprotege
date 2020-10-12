@@ -116,9 +116,6 @@ public class IndividualsByTypeIndexImpl_TestCase {
 
         when(classHierarchyProvider.getDescendants(clsB))
                 .thenAnswer(invocation -> Collections.singleton(clsA));
-
-        when(dictionaryManager.getShortForm(indA))
-                .thenReturn("indA");
     }
 
     @Test

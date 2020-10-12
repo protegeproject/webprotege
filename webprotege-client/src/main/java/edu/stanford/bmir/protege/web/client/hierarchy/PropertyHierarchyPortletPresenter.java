@@ -326,35 +326,20 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleCreateAnnotationProperty() {
         createEntityPresenter.createEntities(ANNOTATION_PROPERTY,
-                                             CreateEntitiesInHierarchyHandler.get(annotationPropertyTree),
-                                             (projectId, browserText, langTag) ->
-                                                     new CreateAnnotationPropertiesAction(projectId,
-                                                                                          browserText,
-                                                                                          langTag,
-                                                                                          getSelectedAnnotationProperties())
-        );
+                                             getSelectedAnnotationProperties().stream().findFirst(),
+                                             CreateEntitiesInHierarchyHandler.get(annotationPropertyTree));
     }
 
     private void handleCreateDataProperty() {
         createEntityPresenter.createEntities(DATA_PROPERTY,
-                                             CreateEntitiesInHierarchyHandler.get(dataPropertyTree),
-                                             (projectId, browserText, langTag) ->
-                                                     new CreateDataPropertiesAction(projectId,
-                                                                                    browserText,
-                                                                                    langTag,
-                                                                                    getSelectedDataProperties())
-        );
+                                             getSelectedDataProperties().stream().findFirst(),
+                                             CreateEntitiesInHierarchyHandler.get(dataPropertyTree));
     }
 
     private void handleCreateObjectProperty() {
         createEntityPresenter.createEntities(OBJECT_PROPERTY,
-                                             CreateEntitiesInHierarchyHandler.get(objectPropertyTree),
-                                             (projectId, browserText, langTag) ->
-                                                     new CreateObjectPropertiesAction(projectId,
-                                                                                      browserText,
-                                                                                      langTag,
-                                                                                      getSelectedObjectProperties())
-        );
+                                             getSelectedObjectProperties().stream().findFirst(),
+                                             CreateEntitiesInHierarchyHandler.get(objectPropertyTree));
     }
 
     private ImmutableSet<OWLObjectProperty> getSelectedObjectProperties() {

@@ -20,7 +20,7 @@ public class EntityTypePerspectiveMapper {
 
     public static final PerspectiveId PROPERTIES_PERSPECTIVE = PerspectiveId.get("be7befeb-e42e-408d-a5bc-b040d70d3d77");
 
-    public static final PerspectiveId INDIVIDUALS_PERSPECTIVE = PerspectiveId.get("533ca7cb-2af7-4331-b9b4-d0f8603acac2");
+    public static final PerspectiveId INDIVIDUALS_PERSPECTIVE = PerspectiveId.get("b02473e4-35a8-4882-b4d2-88d204de993c");
 
     @Inject
     public EntityTypePerspectiveMapper() {

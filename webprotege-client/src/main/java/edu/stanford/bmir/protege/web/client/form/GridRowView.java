@@ -16,4 +16,6 @@ public interface GridRowView extends IsWidget, HasRequestFocus {
     GridCellContainer addCell();
 
     void clear();
+
+    void setEditable(boolean enabled);
 }

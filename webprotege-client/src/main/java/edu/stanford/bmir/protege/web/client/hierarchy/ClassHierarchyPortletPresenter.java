@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchModal;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -222,12 +223,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private void handleCreateSubClasses() {
         createEntityPresenter.createEntities(CLASS,
-                                             CreateEntitiesInHierarchyHandler.get(treeWidget),
-                                             (projectId, browserText, langTag) ->
-                                                     new CreateClassesAction(projectId,
-                                                                             browserText,
-                                                                             langTag,
-                                                                             getSelectedOwlClasses())
+                                             getFirstSelectedClass(),
+                                             CreateEntitiesInHierarchyHandler.get(treeWidget)
         );
     }
 

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
@@ -49,6 +50,9 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @Inject
     public GridRowPresenter(@Nonnull GridRowView view,
                             GridCellPresenterFactory cellPresenterFactory, @Nonnull FormControlStackPresenterFactory controlStackPresenterFactory) {
@@ -89,6 +93,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         cellPresenters.forEach(cellPresenter -> cellPresenter.setEnabled(enabled));
+        view.setEditable(enabled);
     }
 
     public void requestFocus() {
@@ -126,6 +131,7 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
                     boolean visible = isColumnVisible(columnId);
                     cellContainer.setVisible(visible);
                     cellContainersById.put(columnId, cellContainer);
+                    cellPresenter.setFormDataChangedHandler(formDataChangedHandler);
                     cellPresenter.start(cellContainer);
                     cellPresenter.setRegionPageChangedHandler(regionPageChangedHandler);
                     cellPresenter.setEnabled(enabled);
@@ -196,5 +202,19 @@ public class GridRowPresenter implements HasFormRegionPagedChangedHandler, HasGr
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    @Nonnull
+    public ValidationStatus getValidationStatus() {
+        return cellPresenters.stream()
+                .map(GridCellPresenter::getValidationStatus)
+                .filter(ValidationStatus::isInvalid)
+                .findFirst()
+                .orElse(ValidationStatus.VALID);
+    }
+
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        cellPresenters.forEach(presenter -> presenter.setFormDataChangedHandler(formDataChangedHandler));
     }
 }

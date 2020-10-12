@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
@@ -37,6 +38,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 public class ComboBoxChoiceControl extends Composite implements SingleChoiceControl {
 
     private SingleChoiceControlDescriptorDto descriptor;
+
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     interface ComboBoxChoiceControlUiBinder extends UiBinder<HTMLPanel, ComboBoxChoiceControl> {
 
@@ -62,6 +66,7 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
 
     @UiHandler("comboBox")
     protected void handleValueChanged(ChangeEvent changeEvent) {
+        formDataChangedHandler.handleFormDataChanged();
         ValueChangeEvent.fire(this, getValue());
         updateReadonlyLabel();
     }
@@ -157,6 +162,17 @@ public class ComboBoxChoiceControl extends Composite implements SingleChoiceCont
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.of();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -53,6 +54,18 @@ public class GridRowViewImpl extends Composite implements GridRowView {
     public void clear() {
         rowContainer.clear();
         cellContainers.clear();
+    }
+
+    @Override
+    public void setEditable(boolean enabled) {
+        if (enabled) {
+            rowContainer.addStyleName(WebProtegeClientBundle.BUNDLE.style().panelFilled());
+            rowContainer.addStyleName(WebProtegeClientBundle.BUNDLE.style().formGridRowEditable());
+        }
+        else {
+            rowContainer.removeStyleName(WebProtegeClientBundle.BUNDLE.style().panelFilled());
+            rowContainer.removeStyleName(WebProtegeClientBundle.BUNDLE.style().formGridRowEditable());
+        }
     }
 
     @Override

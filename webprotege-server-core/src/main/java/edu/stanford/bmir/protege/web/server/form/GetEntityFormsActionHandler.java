@@ -7,10 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsAction;
-import edu.stanford.bmir.protege.web.shared.form.GetEntityFormsResult;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -26,7 +23,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 2019-11-01
  */
-public class GetEntityFormActionHandler extends AbstractProjectActionHandler<GetEntityFormsAction, GetEntityFormsResult> {
+public class GetEntityFormsActionHandler extends AbstractProjectActionHandler<GetEntityFormsAction, GetEntityFormsResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -41,11 +38,11 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
     private final RenderingManager renderingManager;
 
     @Inject
-    public GetEntityFormActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull ProjectId projectId,
-                                      @Nonnull EntityFormManager formManager,
-                                      @Nonnull ProjectComponent projectComponent,
-                                      @Nonnull RenderingManager renderingManager) {
+    public GetEntityFormsActionHandler(@Nonnull AccessManager accessManager,
+                                       @Nonnull ProjectId projectId,
+                                       @Nonnull EntityFormManager formManager,
+                                       @Nonnull ProjectComponent projectComponent,
+                                       @Nonnull RenderingManager renderingManager) {
         super(accessManager);
         this.projectId = projectId;
         this.formManager = formManager;
@@ -64,27 +61,24 @@ public class GetEntityFormActionHandler extends AbstractProjectActionHandler<Get
         var ordering = action.getGridControlOrdering();
         var formRegionOrderingIndex = FormRegionOrderingIndex.get(ordering);
         var formRegionFilterIndex = FormRegionFilterIndex.get(action.getFilters());
-        var module = new EntityFrameFormDataModule(
-                formRegionOrderingIndex,
-                langTagFilter,
-                pageRequestIndex,
-                formRegionFilterIndex);
-        var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module)
-                                                 .formDataBuilder();
+        var module = new EntityFrameFormDataModule(formRegionOrderingIndex,
+                                                   langTagFilter,
+                                                   pageRequestIndex,
+                                                   formRegionFilterIndex);
+        var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module).formDataBuilder();
         var formsFilterList = action.getFormFilter();
-        var forms = formManager.getFormDescriptors(entity, projectId)
-                          .stream()
+        var forms = formManager.getFormDescriptors(entity, projectId, FormPurpose.ENTITY_EDITING)
+                               .stream()
                                .filter(byFormIds(formsFilterList))
-                          .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
-                          .collect(toImmutableList());
+                               .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
+                               .collect(toImmutableList());
 
         var entityData = renderingManager.getRendering(entity);
         return new GetEntityFormsResult(entityData, action.getFormFilter(), forms);
     }
 
     public static Predicate<FormDescriptor> byFormIds(ImmutableList<FormId> formsFilterList) {
-        return (FormDescriptor formDescriptor) -> formsFilterList.isEmpty()
-                || formsFilterList.contains(formDescriptor.getFormId());
+        return (FormDescriptor formDescriptor) -> formsFilterList.isEmpty() || formsFilterList.contains(formDescriptor.getFormId());
     }
 
     @Nonnull

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
 
 import javax.annotation.Nonnull;
 
@@ -16,4 +17,9 @@ public interface EntityFormSelectorView extends IsWidget {
 
     @Nonnull
     AcceptsOneWidget getSelectorCriteriaContainer();
+
+    @Nonnull
+    FormPurpose getPurpose();
+
+    void setPurpose(FormPurpose purpose);
 }

@@ -35,8 +35,6 @@ public class BuiltInPerspectivesProvider {
 
     public static final String COMMENTS = "Comments.json";
 
-    public static final String CHANGES_BY_ENTITY = "Changes by Entity.json";
-
     public static final String HISTORY = "History.json";
 
     public static final String QUERY = "Query.json";
@@ -49,7 +47,6 @@ public class BuiltInPerspectivesProvider {
                                                                                       PROPERTIES,
                                                                                       INDIVIDUALS,
                                                                                       COMMENTS,
-                                                                                      CHANGES_BY_ENTITY,
                                                                                       HISTORY,
                                                                                       QUERY,
                                                                                       OWL_CLASSES,

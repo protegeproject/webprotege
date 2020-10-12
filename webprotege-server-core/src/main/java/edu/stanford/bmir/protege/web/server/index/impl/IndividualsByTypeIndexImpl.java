@@ -103,10 +103,7 @@ public class IndividualsByTypeIndexImpl implements IndividualsByTypeIndex, Depen
                                                          .filter(OWLIndividual::isNamed)
                                                          .map(OWLIndividual::asOWLNamedIndividual));
         return individuals
-                .distinct()
-                .map(this::toIndividualRendering)
-                .sorted()
-                .map(IndividualRendering::getIndividual);
+                .distinct();
     }
 
     private IndividualRendering toIndividualRendering(OWLNamedIndividual ind) {

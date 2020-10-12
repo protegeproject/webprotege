@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
 import edu.stanford.bmir.protege.web.shared.form.field.Optionality;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public interface FormFieldView extends IsWidget {
+public interface FormFieldView extends IsWidget, HasRequestFocus {
 
     void collapse();
 
@@ -40,11 +41,11 @@ public interface FormFieldView extends IsWidget {
     @Nonnull
     AcceptsOneWidget getFormStackContainer();
 
-    FormControlStackPresenter getEditor();
-
     void setRequiredValueNotPresentVisible(boolean visible);
 
     void setRequired(Optionality required);
 
     Optionality getRequired();
+
+    void setCollapsible(boolean collapsible);
 }

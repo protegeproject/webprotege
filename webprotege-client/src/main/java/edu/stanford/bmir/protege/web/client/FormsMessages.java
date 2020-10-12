@@ -128,7 +128,7 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("subForm.subject.type")
     String subFormSubjectType();
 
-    @DefaultMessage("Edit")
+    @DefaultMessage("Edit values")
     @Key("edit")
     String edit();
 
@@ -183,4 +183,34 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("An error occurred when importing the specified forms descriptors")
     @Key("importForms.error.message")
     String importFormsIntoProject_error_message();
+
+    @DefaultMessage("Form activation")
+    @Key("formActivation")
+    String activation();
+
+    @DefaultMessage("Activation criteria")
+    @Key("activationCriteria")
+    String activationCriteria();
+
+    @DefaultMessage("Form purpose")
+    @Key("formPurpose")
+    String formPurpose();
+
+    @DefaultMessage("Entity viewing/editing")
+    @Key("formPurpose.entityViewingEditing")
+    String formPurpose_entityViewingAndEditing();
+
+    @DefaultMessage("Entity creation")
+    @Key("formPurpose.entityCreation")
+    String formPurpose_entityCreation();
+
+    @DefaultMessage("Parent entity criteria")
+    @Key("entityCreation.parentEntityCriteria")
+    String entityCreation_parentEntityCriteria();
+
+    @DefaultMessage("Entity criteria")
+    @Key("entityEditing.entityCriteria")
+    String entityEditing_entityCriteria();
+
+
 }

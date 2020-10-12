@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.form.EntityFormSelector;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
+import edu.stanford.bmir.protege.web.shared.form.FormPurpose;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
@@ -51,6 +52,7 @@ public class EntityFormSelectorRepositoryImpl_IT {
         var theFormId = FormId.get("12345678-1234-1234-1234-12345678abcd");
         var formTrigger = EntityFormSelector.get(projectId,
                                                  criteria,
+                                                 FormPurpose.ENTITY_CREATION,
                                                  theFormId);
         repository.save(formTrigger);
         var deserializedFormTrigger = repository.findFormSelectors(projectId).findFirst().orElseThrow();

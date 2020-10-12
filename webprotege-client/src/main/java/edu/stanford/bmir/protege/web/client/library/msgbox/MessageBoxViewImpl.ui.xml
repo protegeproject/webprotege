@@ -5,8 +5,8 @@
 
     <ui:style>
         .main-panel-style {
-            width: 450px;
-            max-width: 450px;
+            width: 800px;
+            max-width: 800px;
             box-sizing: border-box;
             overflow: hidden;
         }

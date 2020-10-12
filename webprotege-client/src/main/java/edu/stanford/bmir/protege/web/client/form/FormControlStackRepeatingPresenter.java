@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
@@ -58,6 +59,8 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
 
     @Nonnull
     private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
+
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     @AutoFactory
     @Inject
@@ -134,6 +137,7 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
         formControl.setEnabled(enabled);
         formControl.addValueChangeHandler(this);
         formControl.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler);
+        formControl.setFormDataChangedHandler(formDataChangedHandler);
         return formControl;
     }
 
@@ -156,6 +160,13 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public boolean isNonEmpty() {
         return formControls.size() > 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return formControls.stream()
+                .map(FormControl::getValue)
+                .anyMatch(Optional::isPresent);
     }
 
     @Override
@@ -227,6 +238,22 @@ public class FormControlStackRepeatingPresenter implements FormControlStackPrese
     @Override
     public void forEachFormControl(@Nonnull Consumer<FormControl> formControlConsumer) {
         formControls.forEach(formControlConsumer);
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return formControls.stream()
+                    .map(FormControl::getValidationStatus)
+                    .filter(ValidationStatus::isInvalid)
+                    .findFirst()
+                    .orElse(ValidationStatus.VALID);
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = formDataChangedHandler;
+        formControls.forEach(control -> control.setFormDataChangedHandler(formDataChangedHandler));
     }
 
     @Override

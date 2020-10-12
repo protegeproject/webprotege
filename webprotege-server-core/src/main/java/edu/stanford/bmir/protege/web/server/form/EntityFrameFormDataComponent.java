@@ -15,20 +15,4 @@ public interface EntityFrameFormDataComponent {
 
     @Nonnull
     EntityFrameFormDataDtoBuilder formDataBuilder();
-
-//    @Subcomponent.Builder
-//    interface Builder {
-//
-//        @BindsInstance
-//        Builder withFormRegionOrdering(@Nonnull ImmutableList<FormRegionOrdering> formRegionOrderings);
-//
-//        @BindsInstance
-//        Builder withLanguageTagFilter(@Nonnull LangTagFilter filter);
-//
-//        @BindsInstance
-//        Builder withFormPageRequestIndex(@Nonnull FormPageRequestIndex pageRequestIndex);
-//
-//        @Nonnull
-//        EntityFrameFormDataComponent build();
-//    }
 }

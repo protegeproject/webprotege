@@ -18,10 +18,7 @@ import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UuidSuffixSettingsView;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogViewImpl;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
-import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesView;
-import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesViewImpl;
+import edu.stanford.bmir.protege.web.client.entity.*;
 import edu.stanford.bmir.protege.web.client.form.*;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBoxView;
 import edu.stanford.bmir.protege.web.client.form.input.CheckBoxViewImpl;
@@ -902,6 +899,16 @@ public class ClientProjectModule {
 
     @Provides
     PerspectivesManagerAdminSettingsView providePerspectivesManagerAdminSettingsView(PerspectiveManagerAdminSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SearchResultsListView provideSearchResultsListView(SearchResultsListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SimilarEntitiesView provideSimilarEntitiesView(SimilarEntitiesViewImpl impl) {
         return impl;
     }
 }

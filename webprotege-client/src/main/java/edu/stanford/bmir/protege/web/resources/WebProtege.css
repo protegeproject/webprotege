@@ -301,7 +301,7 @@
 }
 
 .errorBorder {
-    outline: 2px dashed #ff0000 !important;
+    outline: 2px #ff0000 !important;
 }
 
 .errorBorderColor {
@@ -564,4 +564,9 @@
     background-color: #fffae6;
     padding: 4px;
     border-radius: 2px;
+}
+
+.wp-form__grid__row--editable {
+    margin-top: 1px;
+    margin-bottom: 1px;
 }

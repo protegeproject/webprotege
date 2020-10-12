@@ -1,0 +1,12 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .formViewContainer {
+            position: relative;
+            height: 300px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:SimplePanel ui:field="formContainer" addStyleNames="{style.formViewContainer}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

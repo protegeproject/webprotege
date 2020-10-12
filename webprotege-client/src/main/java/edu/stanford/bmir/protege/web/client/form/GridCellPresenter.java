@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.HasFormRegionPagedChangedHandler;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellDataDto;
@@ -38,6 +39,8 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
     private final FormControlStackPresenter stackPresenter;
 
     private Optional<GridColumnVisibilityManager> columnVisibilityManager = Optional.empty();
+
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     @AutoFactory
     public GridCellPresenter(@Provided @Nonnull GridCellView view,
@@ -128,4 +131,13 @@ public class GridCellPresenter implements HasRequestFocus, HasFormRegionPagedCha
         });
     }
 
+    @Nonnull
+    public ValidationStatus getValidationStatus() {
+        return stackPresenter.getValidationStatus();
+    }
+
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        stackPresenter.setFormDataChangedHandler(formDataChangedHandler);
+    }
 }

@@ -24,6 +24,8 @@ import edu.stanford.bmir.protege.web.client.collection.*;
 import edu.stanford.bmir.protege.web.client.dispatch.*;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletView;
 import edu.stanford.bmir.protege.web.client.editor.EditorPortletViewImpl;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityFormView;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityFormViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
@@ -527,5 +529,12 @@ public class ClientApplicationModule {
     @Provides
     AcceptsOneWidget provideAcceptsOneWidget() {
         return new SimplePanel();
+    }
+
+
+
+    @Provides
+    CreateEntityFormView provideCreateEntityFormView(CreateEntityFormViewImpl impl) {
+        return impl;
     }
 }

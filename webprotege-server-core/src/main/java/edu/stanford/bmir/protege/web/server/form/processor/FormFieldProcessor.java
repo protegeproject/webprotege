@@ -27,7 +27,8 @@ public class FormFieldProcessor {
                               @Nonnull FormFrameBuilder formFrameBuilder) {
         var formFieldDescriptor = formFieldData.getFormFieldDescriptor();
         var owlBinding = formFieldDescriptor.getOwlBinding();
-        var binding = owlBinding.orElseThrow(() -> new FormFieldBindingMissingException(formFieldDescriptor.getId()));
+        var binding = owlBinding.orElseThrow(() -> new FormFieldBindingMissingException(formFieldDescriptor.getId(),
+                                                                                        formFieldDescriptor.getLabel()));
         var formControlData = formFieldData.getFormControlData();
         formControlData.forEach(fcd -> formControlDataProcessor.processFormControlData(binding, fcd, formFrameBuilder));
     }

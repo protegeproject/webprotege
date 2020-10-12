@@ -8,6 +8,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -66,6 +67,9 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
     @Nonnull
     private FormRegionOrderingChangedHandler formRegionOrderingChangedHandler = () -> {};
 
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
+
     @Inject
     public GridPresenter(@Nonnull GridView view,
                          @Nonnull GridHeaderPresenter headerPresenter,
@@ -117,6 +121,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         view.setEnabled(enabled);
+        headerPresenter.setSortingEnabled(!enabled);
         rowPresenters.forEach(rowPresenter -> rowPresenter.setEnabled(enabled));
         rowContainers.forEach(rowContainer -> rowContainer.setEnabled(enabled));
     }
@@ -165,6 +170,7 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
         rowPresenter.setColumnDescriptors(descriptor);
         rowPresenter.setEnabled(enabled);
         rowPresenter.setColumnVisibilityManager(columnVisibilityManager);
+        rowPresenter.setFormDataChangedHandler(formDataChangedHandler);
         return rowPresenter;
     }
 
@@ -265,5 +271,20 @@ public class GridPresenter implements HasGridColumnVisibilityManager, HasFormReg
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         headerPresenter.setFormRegionFilterChangedHandler(handler);
+    }
+
+    @Nonnull
+    public ValidationStatus getValidationStatus() {
+        return rowPresenters.stream()
+                .map(GridRowPresenter::getValidationStatus)
+                .filter(ValidationStatus::isInvalid)
+                .findFirst()
+                .orElse(ValidationStatus.VALID);
+
+    }
+
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
+        rowPresenters.forEach(presenter -> presenter.setFormDataChangedHandler(formDataChangedHandler));
     }
 }

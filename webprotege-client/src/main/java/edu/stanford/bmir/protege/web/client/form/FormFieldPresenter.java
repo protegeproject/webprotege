@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import edu.stanford.bmir.protege.web.shared.form.ExpansionState;
 import edu.stanford.bmir.protege.web.shared.form.RegionPageChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.FormRegionPageRequest;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -31,6 +32,8 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     private boolean enabled = true;
 
     private FormFieldValueChangedHandler formFieldValueChangedHandler = () -> {};
+
+    private boolean collapsibile = true;
 
     private void handleFormControlValueChanged(ValueChangeEvent<List<FormControlData>> event) {
         updateRequiredValuePresent();
@@ -100,6 +103,9 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
     }
 
     public void toggleExpansionState() {
+        if(!collapsibile) {
+            return;
+        }
         if(expansionState == ExpansionState.EXPANDED) {
             setExpansionState(ExpansionState.COLLAPSED);
         }
@@ -175,13 +181,17 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
      * Updates the specified view so that there is a visual indication if the value is required but not present.
      */
     private void updateRequiredValuePresent() {
-        if (formFieldDescriptor.getOptionality() == REQUIRED) {
+        if (isValueRequired()) {
             boolean requiredValueNotPresent = !stackPresenter.isNonEmpty();
             view.setRequiredValueNotPresentVisible(requiredValueNotPresent);
         }
         else {
             view.setRequiredValueNotPresentVisible(false);
         }
+    }
+
+    private boolean isValueRequired() {
+        return formFieldDescriptor.getOptionality() == REQUIRED;
     }
 
     public void setFormRegionPageChangedHandler(RegionPageChangedHandler regionPageChangedHandler) {
@@ -215,5 +225,28 @@ public class FormFieldPresenter implements FormRegionPresenter, HasFormRegionFil
 
     public void setFormFieldValueChangedHandler(@Nonnull FormFieldValueChangedHandler handler) {
         this.formFieldValueChangedHandler = checkNotNull(handler);
+    }
+
+    public ValidationStatus getValidationStatus() {
+        ValidationStatus validationStatus = stackPresenter.getValidationStatus();
+        if(validationStatus.isInvalid()) {
+            return validationStatus;
+        }
+        if(isValueRequired() && stackPresenter.isEmpty()) {
+            return ValidationStatus.INVALID;
+        }
+        return ValidationStatus.VALID;
+    }
+
+    public void setFormDataChangedHander(FormDataChangedHandler formDataChangedHandler) {
+        this.stackPresenter.setFormDataChangedHandler(formDataChangedHandler);
+    }
+
+    public void setCollapsible(boolean collapsible) {
+        this.collapsibile = collapsible;
+        view.setCollapsible(collapsible);
+        if(!collapsible) {
+            setExpansionState(ExpansionState.EXPANDED);
+        }
     }
 }

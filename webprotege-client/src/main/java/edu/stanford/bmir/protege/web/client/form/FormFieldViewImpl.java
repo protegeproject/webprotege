@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.base.CaseFormat;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.tooltip.Tooltip;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldId;
@@ -29,6 +31,8 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     private Optional<Tooltip> helpTooltip = Optional.empty();
 
     private HeaderClickedHandler headerClickedHandler = () -> {};
+
+    private boolean collapsible = true;
 
     interface FormFieldViewImplUiBinder extends UiBinder<HTMLPanel, FormFieldViewImpl> {
 
@@ -58,8 +62,6 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @UiField
     HTMLPanel content;
 
-    FormControlStackPresenter editor;
-
     @Inject
     public FormFieldViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -82,6 +84,18 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     @Override
     public Optionality getRequired() {
         return required;
+    }
+
+    @Override
+    public void setCollapsible(boolean collapsible) {
+        this.collapsible = collapsible;
+        expansionHandle.setVisible(collapsible);
+        if(collapsible) {
+            fieldHeader.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+        }
+        else {
+            fieldHeader.getElement().getStyle().setCursor(Style.Cursor.DEFAULT);
+        }
     }
 
     @Override
@@ -114,8 +128,11 @@ public class FormFieldViewImpl extends Composite implements FormFieldView {
     }
 
     @Override
-    public FormControlStackPresenter getEditor() {
-        return checkNotNull(editor);
+    public void requestFocus() {
+        Widget editor = editorHolder.getWidget();
+        if(editor instanceof HasRequestFocus) {
+            ((HasRequestFocus) editor).requestFocus();
+        }
     }
 
     @Override

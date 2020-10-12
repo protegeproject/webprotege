@@ -59,11 +59,15 @@ public class FormsResource {
         var formSelectorsMap = formsResult.getFormSelectors().stream().collect(toMap(EntityFormSelector::getFormId,
                                                                                      EntityFormSelector::getCriteria,
                                                                                      (left, right) -> left));
+        var formPurposeMap = formsResult.getFormSelectors().stream().collect(toMap(EntityFormSelector::getFormId,
+                                                                                     EntityFormSelector::getPurpose,
+                                                                                     (left, right) -> left));
         var result = formDescriptors.stream()
                        .map(descriptor -> {
                            var formId = descriptor.getFormId();
                            var criteria = formSelectorsMap.get(descriptor.getFormId());
-                           return EntityFormDescriptor.valueOf(projectId, formId, descriptor, criteria);
+                           var purpose = formPurposeMap.getOrDefault(descriptor.getFormId(), FormPurpose.ENTITY_EDITING);
+                           return EntityFormDescriptor.valueOf(projectId, formId, descriptor, purpose, criteria);
                        })
                        .collect(toImmutableList());;
         return Response.accepted(result).build();
@@ -80,7 +84,8 @@ public class FormsResource {
             var formDescriptor = entityFormDescriptor.getDescriptor();
             var criteria = entityFormDescriptor.getSelectorCriteria();
             var selectionCriteria = criteria.asCompositeRootCriteria();
-            var action = new SetEntityFormDescriptorAction(projectId, formDescriptor, selectionCriteria);
+            var purpose = entityFormDescriptor.getPurpose();
+            var action = new SetEntityFormDescriptorAction(projectId, formDescriptor, purpose, selectionCriteria);
             actionListBuilder.add(action);
         }
         var batchAction = BatchAction.create(actionListBuilder.build());

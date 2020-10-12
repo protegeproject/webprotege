@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.CountOptions;
@@ -182,9 +183,19 @@ public class AccessManagerImpl implements AccessManager {
 
     @Override
     public Collection<Subject> getSubjectsWithAccessToResource(Resource resource) {
+        return getSubjectsWithAccessToResource(resource, Optional.empty());
+    }
+
+    @Override
+    public Collection<Subject> getSubjectsWithAccessToResource(Resource resource, BuiltInAction action) {
+        return getSubjectsWithAccessToResource(resource, Optional.of(action.getActionId()));
+    }
+
+    private Collection<Subject> getSubjectsWithAccessToResource(Resource resource, Optional<ActionId> action) {
         String projectId = toProjectId(resource);
         Query<RoleAssignment> query = datastore.createQuery(RoleAssignment.class)
                                                .field(PROJECT_ID).equal(projectId);
+        action.ifPresent(a -> query.field(ACTION_CLOSURE).contains(a.toString()));
         return query.asList().stream()
                     .map(ra -> {
                         Optional<String> userName = ra.getUserName();

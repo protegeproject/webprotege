@@ -5,28 +5,29 @@
     <ui:with field="formsMsg" type="edu.stanford.bmir.protege.web.client.FormsMessages"/>
     <ui:style>
         .container {
-            display:        flex;
+            display: flex;
             flex-direction: column;
-            justify-items:  stretch;
+            justify-items: stretch;
         }
 
         .outer {
-            display:        flex;
+            display: flex;
             flex-direction: column;
-            position:       absolute;
-            top:            0;
-            left:           0;
-            right:          0;
-            bottom:         0;
+            align-items: stretch;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
         .headerBar {
-            margin:         0.2em;
-            flex-grow:      0;
-            flex-shrink:    0;
-            display:        flex;
+            margin: 0.2em;
+            flex-grow: 0;
+            flex-shrink: 0;
+            display: flex;
             flex-direction: row;
-            align-items:    start;
+            align-items: start;
             justify-content: space-between;
             padding-bottom: 2px;
             border-bottom: 1px solid literal("var(--separator--color)");
@@ -48,7 +49,11 @@
         }
 
         .buttonBar {
-            justify-self: flex-end;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            padding: 0.4em 0.2em 0.4em;
+            border-top: literal("var(--inlay-panel--border)");
         }
     </ui:style>
     <g:HTMLPanel>
@@ -57,16 +62,16 @@
                 <g:HTMLPanel addStyleNames="{style.langTagFilterContainer}">
                     <g:SimplePanel ui:field="langTagFilterContainer" addStyleNames="{style.langTagFilterContainer}"/>
                 </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{style.buttonBar}">
-                    <g:Button ui:field="applyEditsButton" visible="false" text="{formsMsg.edits_Apply}"
-                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptButton}"/>
-                    <g:Button ui:field="cancelEditsButton" visible="false" text="{formsMsg.edits_Cancel}"
-                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
-                    <g:Button ui:field="editButton" visible="false" text="{formsMsg.edit}"
-                              addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
-                </g:HTMLPanel>
             </g:HTMLPanel>
             <g:SimplePanel ui:field="formsStackContainer" addStyleNames="{style.container}"/>
+            <g:HTMLPanel addStyleNames="{style.buttonBar} {wp.style.panelFilled}">
+                <g:Button ui:field="applyEditsButton" visible="false" text="{formsMsg.edits_Apply}"
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptButton}"/>
+                <g:Button ui:field="cancelEditsButton" visible="false" text="{formsMsg.edits_Cancel}"
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
+                <g:Button ui:field="editButton" visible="false" text="{formsMsg.edit}"
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+            </g:HTMLPanel>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

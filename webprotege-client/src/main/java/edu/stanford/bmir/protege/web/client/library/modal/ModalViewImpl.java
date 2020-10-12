@@ -32,6 +32,8 @@ public class ModalViewImpl extends Composite implements ModalView {
 
     private boolean primaryButtonFocusedOnAttach = false;
 
+    private boolean primaryButtonEnabled = true;
+
     interface ModalViewImplUiBinder extends UiBinder<HTMLPanel, ModalViewImpl> {
 
     }
@@ -61,6 +63,7 @@ public class ModalViewImpl extends Composite implements ModalView {
         super.onAttach();
         if(primaryButtonFocusedOnAttach) {
             primaryButton.ifPresent(btn -> btn.setFocus(true));
+            primaryButton.ifPresent(btn -> btn.setEnabled(primaryButtonEnabled));
         }
     }
 
@@ -80,10 +83,17 @@ public class ModalViewImpl extends Composite implements ModalView {
     }
 
     @Override
+    public void setPrimaryButtonEnabled(boolean enabled) {
+        this.primaryButtonEnabled = enabled;
+        primaryButton.ifPresent(button -> button.setEnabled(enabled));
+    }
+
+    @Override
     public void setPrimaryButtonFocusedOnAttach(boolean focused) {
         this.primaryButtonFocusedOnAttach = focused;
         if(isAttached()) {
             primaryButton.ifPresent(btn -> btn.setFocus(true));
+            primaryButton.ifPresent(btn -> btn.setEnabled(primaryButtonEnabled));
         }
     }
 
@@ -123,6 +133,7 @@ public class ModalViewImpl extends Composite implements ModalView {
         btn.addStyleName(clientBundle.buttons().primaryButton());
         installButton(button, handler, btn);
         this.primaryButton = Optional.of(btn);
+        btn.setEnabled(primaryButtonEnabled);
     }
 
     @Override

@@ -83,6 +83,8 @@ public interface AccessManager {
 
     Collection<Subject> getSubjectsWithAccessToResource(Resource resource);
 
+    Collection<Subject> getSubjectsWithAccessToResource(Resource resource, BuiltInAction action);
+
     Collection<Resource> getResourcesAccessibleToSubject(Subject subject, ActionId actionId);
 
 

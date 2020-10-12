@@ -27,10 +27,12 @@ public abstract class GetEntityFormDescriptorResult implements Result {
     public static GetEntityFormDescriptorResult get(@Nonnull ProjectId projectId,
                                                     @Nonnull FormId formId,
                                                     @Nullable FormDescriptor formDescriptor,
+                                                    @Nonnull FormPurpose purpose,
                                                     @Nullable CompositeRootCriteria formSelector) {
         return new AutoValue_GetEntityFormDescriptorResult(projectId,
                                                            formId,
                                                            formDescriptor,
+                                                           purpose,
                                                            formSelector);
     }
 
@@ -47,6 +49,9 @@ public abstract class GetEntityFormDescriptorResult implements Result {
     public Optional<FormDescriptor> getFormDescriptor() {
         return Optional.ofNullable(getFormDescriptorInternal());
     }
+
+    @Nonnull
+    public abstract FormPurpose getPurpose();
 
     @Nullable
     protected abstract CompositeRootCriteria getFormSelectorCriteriaInternal();

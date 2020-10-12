@@ -28,7 +28,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
 
-    enum FormUpdate {
+    public enum FormUpdate {
         REPLACE,
         PATCH
     }

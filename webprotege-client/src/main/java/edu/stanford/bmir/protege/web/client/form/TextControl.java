@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
@@ -42,6 +43,11 @@ public class TextControl extends Composite implements FormControl {
     private StringType stringType = StringType.SIMPLE_STRING;
 
     private TextControlDescriptor descriptor = null;
+
+    private ValidationStatus validationStatus = ValidationStatus.VALID;
+
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     interface TextControlUiBinder extends UiBinder<HTMLPanel, TextControl> {
 
@@ -74,6 +80,7 @@ public class TextControl extends Composite implements FormControl {
         editor.setAllowedTypes(Collections.singleton(PrimitiveType.LITERAL));
         editor.addValueChangeHandler(event -> {
             validateInput();
+            formDataChangedHandler.handleFormDataChanged();
             ValueChangeEvent.fire(TextControl.this, getValue());
         });
         editor.setFreshEntitiesSuggestStrategy(new NullFreshEntitySuggestStrategy());
@@ -123,25 +130,20 @@ public class TextControl extends Composite implements FormControl {
     }
 
     private void validateInput() {
-        GWT.log("[TextControl] Validating input.");
-        GWT.log("[TextControl] Pattern: " + pattern);
+        validationStatus = ValidationStatus.VALID;
         if(pattern.isPresent()) {
-
             RegExp regExp = RegExp.compile(pattern.get());
             String value = editor.getText().trim();
-            GWT.log("[TextControl] Value: " + value);
             MatchResult mr = regExp.exec(value);
-            GWT.log("[TextControl] Match: " + mr);
             if(mr == null) {
-                GWT.log("[TextControl] Input is not valid");
                 patternViolationErrorMessage.ifPresent(s -> {
+                    validationStatus = ValidationStatus.INVALID;
                     patternViolationErrorMessageLabel.setVisible(true);
                     patternViolationErrorMessageLabel.setText(s);
                 });
                 displayErrorBorder();
             }
             else {
-                GWT.log("[TextControl] Input is valid");
                 patternViolationErrorMessageLabel.setVisible(false);
                 clearErrorBorder();
             }
@@ -202,12 +204,24 @@ public class TextControl extends Composite implements FormControl {
     public void clearValue() {
         editor.clearValue();
         clearErrorBorder();
+        validationStatus = ValidationStatus.VALID;
     }
 
     @Nonnull
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.of();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return validationStatus;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

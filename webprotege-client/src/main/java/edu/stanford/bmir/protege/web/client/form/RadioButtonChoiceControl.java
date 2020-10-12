@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 
@@ -20,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
@@ -36,6 +38,9 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     private SingleChoiceControlDescriptorDto descriptor;
 
     private boolean enabled = true;
+
+    @Nonnull
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     interface RadioButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, RadioButtonChoiceControl> {
 
@@ -55,7 +60,9 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Inject
     public RadioButtonChoiceControl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        radioButtonValueChangedHandler = event -> ValueChangeEvent.fire(RadioButtonChoiceControl.this, getValue());
+        radioButtonValueChangedHandler = event -> {
+                formDataChangedHandler.handleFormDataChanged();
+                ValueChangeEvent.fire(RadioButtonChoiceControl.this, getValue()); };
     }
 
     @Override
@@ -116,6 +123,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
         else {
             clearValue();
         }
+        updatedEnabled();
     }
 
     public void setChoice(Optional<PrimitiveFormControlData> choice) {
@@ -130,6 +138,7 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
         else {
             clearValue();
         }
+        updatedEnabled();
     }
 
     @Override
@@ -138,12 +147,24 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
             radioButton.setValue(false);
         }
         selectDefaultChoice();
+        updatedEnabled();
     }
 
     @Nonnull
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.of();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override
@@ -173,8 +194,22 @@ public class RadioButtonChoiceControl extends Composite implements SingleChoiceC
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        updatedEnabled();
+    }
+
+    private void updatedEnabled() {
         choiceButtons.keySet()
-                     .forEach(radioButton -> radioButton.setEnabled(enabled));
+                     .forEach(radioButton -> {
+                         // Don't disable the selected one, ONLY.  This cannot be changed
+                         // if is the only one that is not selected.  If we disable it,
+                         // then it is greyed out and hard to read.
+                         if(radioButton.getValue()) {
+                             radioButton.setEnabled(true);
+                         }
+                         else {
+                             radioButton.setEnabled(enabled);
+                         }
+                     });
     }
 
     @Override

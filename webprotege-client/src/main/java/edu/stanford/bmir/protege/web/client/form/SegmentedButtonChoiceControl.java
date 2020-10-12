@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
+import edu.stanford.bmir.protege.web.shared.form.ValidationStatus;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageMap;
@@ -43,6 +44,8 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     private Optional<PrimitiveFormControlData> mostRecentSetValue = Optional.empty();
 
     private boolean enabled = true;
+
+    private FormDataChangedHandler formDataChangedHandler = () -> {};
 
     interface SegmentedButtonChoiceControlUiBinder extends UiBinder<HTMLPanel, SegmentedButtonChoiceControl> {
 
@@ -114,6 +117,7 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
             updateStylesBasedOnSelection();
             if (fireEvents) {
                 fireEvent(new DirtyChangedEvent());
+                formDataChangedHandler.handleFormDataChanged();
                 ValueChangeEvent.fire(this, getValue());
             }
         }
@@ -164,6 +168,17 @@ public class SegmentedButtonChoiceControl extends Composite implements SingleCho
     @Override
     public ImmutableSet<FormRegionFilter> getFilters() {
         return ImmutableSet.of();
+    }
+
+    @Nonnull
+    @Override
+    public ValidationStatus getValidationStatus() {
+        return ValidationStatus.VALID;
+    }
+
+    @Override
+    public void setFormDataChangedHandler(@Nonnull FormDataChangedHandler formDataChangedHandler) {
+        this.formDataChangedHandler = checkNotNull(formDataChangedHandler);
     }
 
     @Override

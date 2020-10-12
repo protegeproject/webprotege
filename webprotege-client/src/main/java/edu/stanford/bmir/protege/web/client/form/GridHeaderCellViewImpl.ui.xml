@@ -11,7 +11,7 @@
             flex-direction: row;
             flex-wrap: nowrap;
             align-items: center;
-            cursor: pointer;
+            cursor: default;
             overflow: hidden;
             margin-right: 2px;
         }

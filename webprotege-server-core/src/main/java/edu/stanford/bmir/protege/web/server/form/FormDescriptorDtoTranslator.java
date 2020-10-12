@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
+@FormDataBuilderSession
 public class FormDescriptorDtoTranslator {
 
     @Nonnull

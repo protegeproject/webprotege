@@ -53,6 +53,8 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     @Nonnull
     private FormRegionFilterChangedHandler formRegionFilterChangedHandler = event -> {};
 
+    private boolean sortingEnabled = true;
+
     @Inject
     public GridHeaderPresenter(@Nonnull GridHeaderView view,
                                @Nonnull Provider<GridHeaderColumnPresenter> headerColumnPresenterProvider,
@@ -123,6 +125,9 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     }
 
     private void handleColumnClicked(GridColumnId id) {
+        if(!sortingEnabled) {
+            return;
+        }
         this.orderBy = Optional.empty();
         columnPresenters.values().forEach(cp -> {
             if(cp.isPresenterFor(id)) {
@@ -207,5 +212,9 @@ public class GridHeaderPresenter implements HasGridColumnFilter, HasGridColumnVi
     @Override
     public void setFormRegionFilterChangedHandler(@Nonnull FormRegionFilterChangedHandler handler) {
         this.formRegionFilterChangedHandler = checkNotNull(handler);
+    }
+
+    public void setSortingEnabled(boolean sortingEnabled) {
+        this.sortingEnabled = sortingEnabled;
     }
 }

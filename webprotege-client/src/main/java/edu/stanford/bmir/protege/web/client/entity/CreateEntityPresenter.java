@@ -1,17 +1,13 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.common.collect.ImmutableCollection;
-import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.Messages;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
-import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.AbstractCreateEntityResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntityFromFormDataResult;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
+import edu.stanford.bmir.protege.web.shared.form.GetEntityCreationFormsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -28,119 +24,58 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CreateEntityPresenter {
 
     @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
+    private final DispatchServiceManager dispatch;
 
     @Nonnull
     private final ProjectId projectId;
 
     @Nonnull
-    private final CreateEntityDialogView view;
+    private final DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter;
 
     @Nonnull
-    private final ModalManager modalManager;
-
-    @Nonnull
-    private final ActiveProjectManager activeProjectManager;
-
-    @Nonnull
-    private final DisplayNameSettingsManager displayNameSettingsManager;
-
-    @Nonnull
-    private final Messages messages;
-
-    private Optional<String> currentLangTag = Optional.empty();
+    private final CreateEntityFormPresenter createEntityFormPresenter;
 
     @Inject
-    public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
+    public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatch,
                                  @Nonnull ProjectId projectId,
-                                 @Nonnull CreateEntityDialogView view,
-                                 @Nonnull ModalManager modalManager,
-                                 @Nonnull ActiveProjectManager activeProjectManager,
-                                 @Nonnull DisplayNameSettingsManager displayNameSettingsManager,
-                                 @Nonnull Messages messages) {
-        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+                                 @Nonnull DefaultCreateEntitiesPresenter defaultCreateEntitiesPresenter,
+                                 @Nonnull CreateEntityFormPresenter createEntityFormPresenter) {
+        this.dispatch = checkNotNull(dispatch);
         this.projectId = checkNotNull(projectId);
-        this.view = view;
-        this.modalManager = modalManager;
-        this.activeProjectManager = checkNotNull(activeProjectManager);
-        this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
-        this.messages = checkNotNull(messages);
+        this.defaultCreateEntitiesPresenter = checkNotNull(defaultCreateEntitiesPresenter);
+        this.createEntityFormPresenter = checkNotNull(createEntityFormPresenter);
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
-                               @Nonnull EntitiesCreatedHandler entitiesCreatedHandler,
-                               @Nonnull ActionFactory actionFactory) {
-        view.clear();
-        view.setEntityType(entityType);
-        view.setResetLangTagHandler(this::resetLangTag);
-        view.setLangTagChangedHandler(this::handleLangTagChanged);
-        ModalPresenter modalPresenter = modalManager.createPresenter();
-        modalPresenter.setTitle(messages.create() + " " + entityType.getPluralPrintName());
-        modalPresenter.setView(view);
-        modalPresenter.setEscapeButton(DialogButton.CANCEL);
-        modalPresenter.setPrimaryButton(DialogButton.CREATE);
-        modalPresenter.setButtonHandler(DialogButton.CREATE, closer -> {
-            handleCreateEntities(view.getText(), actionFactory, entitiesCreatedHandler);
-            closer.closeModal();
-        });
-        modalManager.showModal(modalPresenter);
-        displayCurrentLangTagOrProjectDefaultLangTag();
+                               @Nonnull Optional<? extends OWLEntity> parentEntity,
+                               @Nonnull EntitiesCreatedHandler entitiesCreatedHandler) {
+        parentEntity.ifPresent(owlEntity -> dispatch.execute(new GetEntityCreationFormsAction(projectId,
+                                                                                              owlEntity,
+                                                                                              entityType), result -> {
+            handleEntityCreationFormsResult(entityType,
+                                            parentEntity,
+                                            entitiesCreatedHandler,
+                                            result.getFormDescriptors());
+        }));
+
 
     }
 
-    private void resetLangTag() {
-        currentLangTag = Optional.empty();
-        displayCurrentLangTagOrProjectDefaultLangTag();
-    }
-
-    private void handleLangTagChanged() {
-        String langTag = view.getLangTag();
-        view.setNoDisplayLanguageForLangTagVisible(false);
-        if (displayNameSettingsManager.getLocalDisplayNameSettings().hasDisplayNameLanguageForLangTag(langTag)) {
-            return;
+    private void handleEntityCreationFormsResult(@Nonnull EntityType<?> entityType,
+                                                 @Nonnull Optional<? extends OWLEntity> parentEntity,
+                                                 @Nonnull EntitiesCreatedHandler entitiesCreatedHandler,
+                                                 @Nonnull ImmutableList<FormDescriptorDto> createEntityForms) {
+        if (createEntityForms.isEmpty()) {
+            defaultCreateEntitiesPresenter.createEntities(entityType,
+                                                          parentEntity,
+                                                          entitiesCreatedHandler);
         }
-        activeProjectManager.getActiveProjectDetails(details -> {
-            details.ifPresent(d -> {
-                if (!d.getDefaultDisplayNameSettings().hasDisplayNameLanguageForLangTag(langTag)) {
-                    view.setNoDisplayLanguageForLangTagVisible(true);
-                }
-            });
-        });
-    }
-
-    private void displayCurrentLangTagOrProjectDefaultLangTag() {
-        activeProjectManager.getActiveProjectDetails(details -> {
-            details.ifPresent(d -> {
-                currentLangTag.ifPresent(l -> view.setLangTag(l));
-                if (!currentLangTag.isPresent()) {
-                    String defaultLangTag = d.getDefaultDictionaryLanguage().getLang();
-                    currentLangTag = Optional.of(defaultLangTag);
-                    view.setLangTag(defaultLangTag);
-                    handleLangTagChanged();
-                }
-            });
-        });
-    }
-
-    private <E extends OWLEntity> void handleCreateEntities(@Nonnull String enteredText,
-                                                            @Nonnull ActionFactory<E> actionFactory,
-                                                            @Nonnull EntitiesCreatedHandler entitiesCreatedHandler) {
-
-        GWT.log("[CreateEntityPresenter] handleCreateEntities.  Lang: " + view.getLangTag());
-        currentLangTag = Optional.of(view.getLangTag());
-        AbstractCreateEntitiesAction<? extends AbstractCreateEntityResult<E>, E> action = actionFactory.createAction(projectId,
-                                                                                                                     enteredText,
-                                                                                                                     view.getLangTag());
-        dispatchServiceManager.execute(action,
-                                       result -> entitiesCreatedHandler.handleEntitiesCreated(result.getEntities()));
-
-    }
-
-    public interface ActionFactory<E extends OWLEntity> {
-
-        AbstractCreateEntitiesAction<?, E> createAction(
-                @Nonnull ProjectId projectId,
-                @Nonnull String createFromText, String langTag);
+        else {
+            createEntityFormPresenter.createEntities(entityType,
+                                                     parentEntity,
+                                                     entitiesCreatedHandler,
+                                                     createEntityForms);
+        }
     }
 
     public interface EntitiesCreatedHandler {

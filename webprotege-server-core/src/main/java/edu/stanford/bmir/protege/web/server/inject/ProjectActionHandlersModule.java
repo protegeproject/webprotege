@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionH
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
+import edu.stanford.bmir.protege.web.server.entity.CreateEntityFromFormDataActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.GetDeprecatedEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.MergeEntitiesActionHandler;
@@ -62,7 +63,6 @@ import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveDetailsAction;
 
 /**
  * Matthew Horridge
@@ -610,7 +610,7 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides @IntoSet
-    public ProjectActionHandler providesGetEntityFormActionHandler(GetEntityFormActionHandler handler) {
+    public ProjectActionHandler providesGetEntityFormActionHandler(GetEntityFormsActionHandler handler) {
         return handler;
     }
 
@@ -692,6 +692,16 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideResetPerspectivesActionHandler(ResetPerspectivesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetEntityCreationFormsActionHandler(GetEntityCreationFormsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideCreateEntityFromFormDataActionHandler(CreateEntityFromFormDataActionHandler handler) {
         return handler;
     }
 }

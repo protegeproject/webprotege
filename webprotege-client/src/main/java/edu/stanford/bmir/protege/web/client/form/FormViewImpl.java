@@ -78,6 +78,6 @@ public class FormViewImpl extends Composite implements FormView {
         if(elementViews.isEmpty()) {
             return;
         }
-        elementViews.get(0).getEditor().requestFocus();
+        elementViews.get(0).requestFocus();
     }
 }
