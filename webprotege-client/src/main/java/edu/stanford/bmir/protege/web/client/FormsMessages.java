@@ -213,4 +213,11 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     String entityEditing_entityCriteria();
 
 
+    @DefaultMessage("Save edits before switching?")
+    @Key("alerts.apply.edits.title")
+    String saveEditsAlert_Title();
+
+    @DefaultMessage("Do you want to save your edits before changing selection?")
+    @Key("alerts.apply.edits.msg")
+    String saveEditsAlert_Message();
 }

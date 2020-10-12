@@ -12,6 +12,8 @@ import javax.annotation.Nonnull;
  */
 public interface EntityFormStackView extends IsWidget {
 
+    void displayApplyOutstandingEditsConfirmation(ApplyEditsHandler applyEditsHandler, CancelEditsHandler cancelEditsHandler);
+
     interface EnterEditModeHandler {
         void handleEnterEditMode();
     }

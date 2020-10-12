@@ -189,10 +189,6 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
         }
     }
 
-    public boolean isDirty() {
-        return false;
-    }
-
     public void start(@Nonnull AcceptsOneWidget container) {
         this.container = Optional.of(container);
         container.setWidget(view);
@@ -229,4 +225,6 @@ public class FormStackPresenter implements HasFormRegionFilterChangedHandler {
         this.formRegionFilterChangedHandler = checkNotNull(formRegionFilterChangedHandler);
         getFormPresenters().forEach(formPresenter -> formPresenter.setFormRegionFilterChangedHandler(formRegionFilterChangedHandler));
     }
+
+
 }
