@@ -6,13 +6,10 @@ import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.merge.ProjectOntologiesBuilder;
-import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.server.project.chg.ProjectOWLOntologyManager;
 import edu.stanford.bmir.protege.web.server.upload.UploadedOntologiesCache;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.NewOntologyMergeAddAction;
 import edu.stanford.bmir.protege.web.shared.merge_add.NewOntologyMergeAddResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,33 +25,25 @@ public class NewOntologyMergeAddActionHandler extends AbstractProjectActionHandl
     private static final Logger logger = LoggerFactory.getLogger(NewOntologyMergeAddActionHandler.class);
 
     @Nonnull
-    private final ProjectId projectId;
-
-    @Nonnull
     private final UploadedOntologiesCache uploadedOntologiesCache;
 
     @Nonnull
     private final ProjectOntologiesBuilder projectOntologiesBuilder;
 
     @Nonnull
-    private final ProjectOWLOntologyManager ontologyManager;
+    private final MergeOntologyCalculator mergeCalculator;
 
-    private MergeOntologyCalculator mergeCalculator;
-
-    private OntologyMergeAddPatcher patcher;
+    @Nonnull
+    private final OntologyMergeAddPatcher patcher;
 
     @Inject
     public NewOntologyMergeAddActionHandler(@Nonnull AccessManager accessManager,
-                                            @Nonnull ProjectId projectId,
                                             @Nonnull UploadedOntologiesCache uploadedOntologiesCache,
                                             @Nonnull ProjectOntologiesBuilder projectOntologiesBuilder,
-                                            @Nonnull ProjectOWLOntologyManager ontologyManager,
                                             @Nonnull HasApplyChanges changeManager) {
         super(accessManager);
-        this.projectId = projectId;
         this.uploadedOntologiesCache = uploadedOntologiesCache;
         this.projectOntologiesBuilder = projectOntologiesBuilder;
-        this.ontologyManager = ontologyManager;
         this.mergeCalculator = new MergeOntologyCalculator();
         this.patcher = new OntologyMergeAddPatcher(changeManager);
     }
@@ -74,19 +63,11 @@ public class NewOntologyMergeAddActionHandler extends AbstractProjectActionHandl
             var axioms = mergeCalculator.getMergeAxioms(projectOntologies, uploadedOntologies, ontologyList);
             var annotations = mergeCalculator.getMergeAnnotations(projectOntologies, uploadedOntologies, ontologyList);
 
-            IRI iri = IRI.create(action.getIri());
+            OWLOntologyID newOntologyID = new OWLOntologyID();
 
-            OWLOntologyManager delegateManager = WebProtegeOWLManager.createConcurrentOWLOntologyManager();
-
-            ontologyManager.setDelegate(delegateManager);
-
-            OWLOntology newOntology = ontologyManager.createOntology(iri);
-
-            List<OntologyChange> changes = patcher.addAxiomsAndAnnotations(axioms, annotations, newOntology.getOntologyID());
+            List<OntologyChange> changes = patcher.addAxiomsAndAnnotations(axioms, annotations, newOntologyID);
 
             patcher.applyChanges(changes, executionContext);
-
-            ontologyManager.sealDelegate();
 
             return new NewOntologyMergeAddResult();
         }
@@ -105,7 +86,7 @@ public class NewOntologyMergeAddActionHandler extends AbstractProjectActionHandl
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(NewOntologyMergeAddAction action) {
         return Arrays.asList(EDIT_ONTOLOGY, UPLOAD_AND_MERGE_ADDITIONS);
     }
 }

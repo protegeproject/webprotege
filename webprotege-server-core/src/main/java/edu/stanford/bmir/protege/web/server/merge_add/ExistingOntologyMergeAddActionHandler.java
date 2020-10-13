@@ -92,7 +92,7 @@ public class ExistingOntologyMergeAddActionHandler extends AbstractProjectAction
 
     @Nonnull
     @Override
-    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions(ExistingOntologyMergeAddAction action) {
         return Arrays.asList(EDIT_ONTOLOGY, UPLOAD_AND_MERGE_ADDITIONS);
     }
 }

@@ -75,7 +75,7 @@ public class UploadAndMergeAdditionsProjectsWorkflow {
 
             @Override
             public String getProgressDisplayMessage() {
-                return "Uploading  and Getting Ontologies. Please Wait.";
+                return "Uploading and processing Ontologies. Please Wait.";
             }
 
             @Override
