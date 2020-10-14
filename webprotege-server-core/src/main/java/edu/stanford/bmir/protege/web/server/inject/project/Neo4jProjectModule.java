@@ -417,7 +417,7 @@ public class Neo4jProjectModule {
 
   @Provides
   @ProjectSingleton
-  HierarchyProvider<OWLClass> provideClassHierarchyProvider(ClassHierarchyProviderImpl provider) {
+  HierarchyProvider<OWLClass> provideClassHierarchyProvider(Neo4jClassHierarchyProvider provider) {
     return provider;
   }
 
