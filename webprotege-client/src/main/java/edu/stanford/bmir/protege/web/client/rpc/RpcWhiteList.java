@@ -250,6 +250,8 @@ public class RpcWhiteList implements Action, Result {
 
     public FormSubjectDto formSubjectDto;
 
+    public FormSubject formSubject;
+
     public FormEntitySubjectDto formEntitySubjectDto;
 
     public GridControlDataDto gridControlDataDto;

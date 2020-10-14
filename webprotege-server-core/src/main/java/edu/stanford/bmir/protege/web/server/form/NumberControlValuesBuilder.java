@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.NumberControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.shared.form.field.NumberControlDescriptor;
@@ -11,6 +12,8 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,8 +34,10 @@ public class NumberControlValuesBuilder {
     }
 
     @Nonnull
-    public ImmutableList<FormControlDataDto> getNumberControlDataDtoValues(NumberControlDescriptor numberControlDescriptor, @Nonnull OWLEntityData subject, OwlBinding theBinding, int depth) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+    public ImmutableList<FormControlDataDto> getNumberControlDataDtoValues(@Nonnull NumberControlDescriptor numberControlDescriptor,
+                                                                           @Nonnull Optional<FormSubject> subject,
+                                                                           @Nonnull OwlBinding theBinding, int depth) {
+        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return values.stream()
                      .filter(p -> p instanceof OWLLiteral)
                      .map(p -> (OWLLiteral) p)

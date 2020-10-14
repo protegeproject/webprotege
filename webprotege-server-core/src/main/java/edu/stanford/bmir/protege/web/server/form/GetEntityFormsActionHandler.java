@@ -8,12 +8,15 @@ import edu.stanford.bmir.protege.web.server.inject.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -67,10 +70,11 @@ public class GetEntityFormsActionHandler extends AbstractProjectActionHandler<Ge
                                                    formRegionFilterIndex);
         var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module).formDataBuilder();
         var formsFilterList = action.getFormFilter();
+        var formSubject = Optional.<FormSubject>of(FormEntitySubject.get(entity));
         var forms = formManager.getFormDescriptors(entity, projectId, FormPurpose.ENTITY_EDITING)
                                .stream()
                                .filter(byFormIds(formsFilterList))
-                               .map(formDescriptor -> formDataDtoBuilder.toFormData(entity, formDescriptor))
+                               .map(formDescriptor -> formDataDtoBuilder.toFormData(formSubject, formDescriptor))
                                .collect(toImmutableList());
 
         var entityData = renderingManager.getRendering(entity);

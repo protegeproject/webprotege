@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
@@ -12,6 +13,8 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,9 +41,9 @@ public class SingleChoiceControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getSingleChoiceControlDataDtoValues(@Nonnull SingleChoiceControlDescriptor singleChoiceControlDescriptor,
-                                                                                 @Nonnull OWLEntityData subject,
+                                                                                 @Nonnull Optional<FormSubject> subject,
                                                                                  @Nonnull OwlBinding theBinding, int depth) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return values.stream()
                          .flatMap(renderer::toFormControlDataDto)
                          .filter(this::isIncluded)

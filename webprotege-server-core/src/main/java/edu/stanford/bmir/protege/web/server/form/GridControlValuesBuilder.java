@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.form.data.FormControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.server.form.data.GridRowDataDtoComparatorFactory;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
+import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.FilterState;
@@ -13,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLPrimitive;
@@ -83,11 +86,12 @@ public class GridControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getGridControlDataDtoValues(@Nonnull GridControlDescriptor gridControlDescriptor,
-                                                                         @Nonnull OWLEntityData subject,
+                                                                         @Nonnull Optional<FormSubject>
+                                                                                 subject,
                                                                          @Nonnull OwlBinding theBinding,
                                                                          @Nonnull FormRegionId formFieldId,
                                                                          int depth) {
-        var values = bindingValuesExtractor.getBindingValues(subject.getEntity(), theBinding);
+        var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return ImmutableList.of(toGridControlData(subject,
                                                   formFieldId,
                                                   values,
@@ -108,7 +112,7 @@ public class GridControlValuesBuilder {
     }
 
 
-    private GridControlDataDto toGridControlData(OWLPrimitiveData root,
+    private GridControlDataDto toGridControlData(Optional<FormSubject> rootSubject,
                                                  FormRegionId formFieldId,
                                                  ImmutableList<OWLPrimitive> subjects,
                                                  GridControlDescriptor descriptor, int depth) {
@@ -121,16 +125,14 @@ public class GridControlValuesBuilder {
                                           filterState);
         }
 
-        var rootSubject = FormSubjectDto.getFormSubject(root);
-        var pageRequest = formPageRequestIndex.getPageRequest(rootSubject.toFormSubject(),
-                                                              formFieldId,
-                                                              FormPageRequest.SourceType.GRID_CONTROL);
+        var pageRequest = rootSubject.map(s -> formPageRequestIndex.getPageRequest(s,
+                                                                               formFieldId,
+                                                                               FormPageRequest.SourceType.GRID_CONTROL)).orElseGet(PageRequest::requestFirstPage);
         var comparator = comparatorFactory.get(descriptor, Optional.empty());
 
         var rowsPage = subjects.stream()
                                .map(this::toEntityFormSubject)
-                               .filter(Objects::nonNull)
-                               .map(entity -> toGridRow(entity, descriptor, depth))
+                               .map(s -> toGridRow(s, descriptor, depth))
                                .filter(row -> !row.containsFilteredEmptyCells())
                                .sorted(comparator)
                                .collect(PageCollector.toPage(pageRequest.getPageNumber(),
@@ -162,11 +164,22 @@ public class GridControlValuesBuilder {
      * @return null if there is no row for the specified subject (because it is filtered out)
      */
     @Nonnull
-    private GridRowDataDto toGridRow(OWLEntityData rowSubject,
+    private GridRowDataDto toGridRow(Optional<FormSubject> rowSubject,
                                      GridControlDescriptor gridControlDescriptor,
                                      int depth) {
         var columnDescriptors = gridControlDescriptor.getColumns();
-        var formSubject = FormEntitySubjectDto.get(rowSubject);
+        var formSubject = rowSubject.map(s -> s.accept(new FormSubject.FormDataSubjectVisitorEx<FormSubjectDto>() {
+            @Override
+            public FormSubjectDto visit(@Nonnull FormEntitySubject formDataEntitySubject) {
+                return FormEntitySubjectDto.get(sessionRenderer.getEntityRendering(formDataEntitySubject.getEntity()));
+            }
+
+            @Override
+            public FormSubjectDto visit(@Nonnull FormIriSubject formDataIriSubject) {
+                return FormIriSubjectDto.get(IRIData.get(formDataIriSubject.getIri(), ImmutableMap.of()));
+            }
+        }))
+                .orElse(null);
         // To Cells
         var cellData = toGridRowCells(rowSubject,
                                       columnDescriptors,
@@ -175,7 +188,7 @@ public class GridControlValuesBuilder {
     }
 
     @Nonnull
-    private ImmutableList<GridCellDataDto> toGridRowCells(OWLEntityData rowSubject,
+    private ImmutableList<GridCellDataDto> toGridRowCells(Optional<FormSubject> rowSubject,
                                                           @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors,
                                                           int depth) {
         return columnDescriptors.stream()
@@ -183,7 +196,7 @@ public class GridControlValuesBuilder {
                                 .collect(toImmutableList());
     }
 
-    private GridCellDataDto toGridCellData(OWLEntityData rowSubject, int depth, GridColumnDescriptor columnDescriptor) {
+    private GridCellDataDto toGridCellData(Optional<FormSubject> rowSubject, int depth, GridColumnDescriptor columnDescriptor) {
         var columnId = columnDescriptor.getId();
         var direction = formRegionOrderingIndex.getOrderingDirection(columnId);
         var cellValueComparator = direction.isAscending() ? formControlDataDtoComparator : formControlDataDtoComparator.reversed();
@@ -261,21 +274,17 @@ public class GridControlValuesBuilder {
     }
 
 
-    @Nullable
-    private OWLEntityData toEntityFormSubject(OWLPrimitive primitive) {
+    @Nonnull
+    private Optional<FormSubject> toEntityFormSubject(OWLPrimitive primitive) {
         if (primitive instanceof OWLEntity) {
-            return sessionRenderer.getEntityRendering((OWLEntity) primitive);
+            return Optional.of(FormEntitySubject.get((OWLEntity) primitive));
         }
         else if (primitive instanceof IRI) {
             var iri = (IRI) primitive;
-            return sessionRenderer.getRendering(iri)
-                                  .stream()
-                                  .sorted()
-                                  .findFirst()
-                                  .orElse(null);
+            return Optional.of(FormIriSubject.get(iri));
         }
         else {
-            return null;
+            return Optional.empty();
         }
     }
 

@@ -20,6 +20,11 @@ public  abstract class GridRowDataDto {
         return new AutoValue_GridRowDataDto(subject, cellData);
     }
 
+    @Nonnull
+    public static GridRowDataDto get(@Nonnull ImmutableList<GridCellDataDto> cellData) {
+        return new AutoValue_GridRowDataDto(null, cellData);
+    }
+
 
     @Nullable
     protected abstract FormSubjectDto getSubjectInternal();
