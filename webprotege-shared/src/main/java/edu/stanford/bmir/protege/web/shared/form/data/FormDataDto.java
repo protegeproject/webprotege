@@ -27,6 +27,16 @@ public abstract class FormDataDto implements FormControlDataDto {
         return new AutoValue_FormDataDto(depth, subject, formDescriptor, formFieldData);
     }
 
+    /**
+     * Create a form descriptor that does not have a subject.
+     */
+    @Nonnull
+    public static FormDataDto get(@Nonnull FormDescriptorDto formDescriptor,
+                                  @Nonnull ImmutableList<FormFieldDataDto> formFieldData,
+                                  int depth) {
+        return new AutoValue_FormDataDto(depth, null, formDescriptor, formFieldData);
+    }
+
     @Nonnull
     public Optional<FormSubjectDto> getSubject() {
         return Optional.ofNullable(getSubjectInternal());
