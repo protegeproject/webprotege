@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.EntityNameControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.EntityNameControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.EntityNameControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
@@ -45,7 +46,7 @@ public class EntityNameControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getEntityNameControlDataDtoValues(@Nonnull EntityNameControlDescriptor entityNameControlDescriptor,
-                                                                               @Nonnull Optional<FormSubject> subject,
+                                                                               @Nonnull Optional<FormEntitySubject> subject,
                                                                                @Nonnull OwlBinding theBinding,
                                                                                int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject, theBinding);

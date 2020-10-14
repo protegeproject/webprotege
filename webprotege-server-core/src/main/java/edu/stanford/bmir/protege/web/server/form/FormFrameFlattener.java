@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.*;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.frame.PlainPropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -59,7 +60,7 @@ public class FormFrameFlattener {
         var subClasses = ImmutableSet.<OWLClass>builder();
         var instances = ImmutableSet.<OWLNamedIndividual>builder();
         var propertyValues = ImmutableSet.<PlainPropertyValue>builder();
-        FormSubject subject = formFrames.iterator().next().getSubject();
+        FormEntitySubject subject = formFrames.iterator().next().getSubject();
         for(FormFrame formFrame : formFrames) {
             parents.addAll(formFrame.getClasses());
             instances.addAll(formFrame.getInstances());

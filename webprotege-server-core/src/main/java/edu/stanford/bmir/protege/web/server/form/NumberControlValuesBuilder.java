@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.NumberControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.NumberControlDataDtoComparator;
@@ -35,7 +36,7 @@ public class NumberControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getNumberControlDataDtoValues(@Nonnull NumberControlDescriptor numberControlDescriptor,
-                                                                           @Nonnull Optional<FormSubject> subject,
+                                                                           @Nonnull Optional<FormEntitySubject> subject,
                                                                            @Nonnull OwlBinding theBinding, int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return values.stream()

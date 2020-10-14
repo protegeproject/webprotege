@@ -98,7 +98,7 @@ public class EntityFrameFormDataDtoBuilder {
     }
 
     @Nonnull
-    protected ImmutableList<FormControlDataDto> toFormControlValues(@Nonnull Optional<FormSubject> subject,
+    protected ImmutableList<FormControlDataDto> toFormControlValues(@Nonnull Optional<FormEntitySubject> subject,
                                                                     @Nonnull FormRegionId formFieldId,
                                                                     @Nonnull BoundControlDescriptor descriptor,
                                                                     int depth) {
@@ -178,26 +178,16 @@ public class EntityFrameFormDataDtoBuilder {
     }
 
 
-    public FormDataDto toFormData(@Nonnull Optional<FormSubject> subject, @Nonnull FormDescriptor formDescriptor) {
+    public FormDataDto toFormData(@Nonnull Optional<FormEntitySubject> subject, @Nonnull FormDescriptor formDescriptor) {
         int depth = 0;
         return getFormDataDto(subject, formDescriptor, depth);
     }
 
-    protected FormDataDto getFormDataDto(@Nonnull Optional<FormSubject> subject,
+    protected FormDataDto getFormDataDto(@Nonnull Optional<FormEntitySubject> subject,
                                          @Nonnull FormDescriptor formDescriptor,
                                          int depth) {
         var formSubject = subject.map(s -> {
-            var renderedSubject = s.accept(new FormSubject.FormDataSubjectVisitorEx<OWLPrimitiveData>() {
-                @Override
-                public OWLPrimitiveData visit(@Nonnull FormEntitySubject formDataEntitySubject) {
-                    return sessionRenderer.getEntityRendering(formDataEntitySubject.getEntity());
-                }
-
-                @Override
-                public OWLPrimitiveData visit(@Nonnull FormIriSubject formDataIriSubject) {
-                    return IRIData.get(formDataIriSubject.getIri(), ImmutableMap.of());
-                }
-            });
+            var renderedSubject = sessionRenderer.getEntityRendering(s.getEntity());
             return FormSubjectDto.getFormSubject(renderedSubject);
         });
         var fieldData = formDescriptor.getFields().stream().map(field -> {

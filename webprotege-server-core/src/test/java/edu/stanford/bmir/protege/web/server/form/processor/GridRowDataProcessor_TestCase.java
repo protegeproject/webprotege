@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.form.FormFrameBuilder;
 import edu.stanford.bmir.protege.web.shared.form.FormFieldBindingMissingException;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.GridColumnBindingMissingException;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.GridCellData;
 import edu.stanford.bmir.protege.web.shared.form.data.GridRowData;
@@ -97,7 +98,7 @@ public class GridRowDataProcessor_TestCase {
 
     @Test
     public void shouldSetSubjectIfRowHasSubject() {
-        var formSubject = mock(FormSubject.class);
+        var formSubject = mock(FormEntitySubject.class);
         when(gridRowData.getSubject())
                 .thenReturn(Optional.of(formSubject));
         processor.processGridRowData(binding,

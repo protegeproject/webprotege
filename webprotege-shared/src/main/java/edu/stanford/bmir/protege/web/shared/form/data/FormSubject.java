@@ -17,31 +17,22 @@ import javax.annotation.Nonnull;
 )
 @JsonSubTypes({
                     @JsonSubTypes.Type(FormEntitySubject.class),
-                    @JsonSubTypes.Type(FormIriSubject.class)
               })
 public interface FormSubject {
 
     interface FormDataSubjectVisitorEx<R> {
 
         R visit(@Nonnull FormEntitySubject formDataEntitySubject);
-
-        R visit(@Nonnull FormIriSubject formDataIriSubject);
     }
 
     interface FormDataSubjectVisitor {
 
         void visit(@Nonnull FormEntitySubject formDataEntitySubject);
-
-        void visit(@Nonnull FormIriSubject formDataIriSubject);
     }
 
 
     static FormEntitySubject get(@Nonnull OWLEntity entity) {
         return FormEntitySubject.get(entity);
-    }
-
-    static FormIriSubject get(@Nonnull IRI iri) {
-        return FormIriSubject.get(iri);
     }
 
     <R> R accept(@Nonnull FormDataSubjectVisitorEx<R> visitor);

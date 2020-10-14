@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
-import edu.stanford.bmir.protege.web.shared.form.data.PrimitiveFormControlDataDto;
-import edu.stanford.bmir.protege.web.shared.form.data.SingleChoiceControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.form.field.OwlBinding;
 import edu.stanford.bmir.protege.web.shared.form.field.SingleChoiceControlDescriptor;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
@@ -41,7 +38,7 @@ public class SingleChoiceControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getSingleChoiceControlDataDtoValues(@Nonnull SingleChoiceControlDescriptor singleChoiceControlDescriptor,
-                                                                                 @Nonnull Optional<FormSubject> subject,
+                                                                                 @Nonnull Optional<FormEntitySubject> subject,
                                                                                  @Nonnull OwlBinding theBinding, int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return values.stream()

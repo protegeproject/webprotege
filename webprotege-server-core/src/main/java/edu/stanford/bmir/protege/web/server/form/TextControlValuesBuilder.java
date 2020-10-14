@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.TextControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.TextControlDataDtoComparator;
@@ -35,7 +36,7 @@ public class TextControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getTextControlDataDtoValues(@Nonnull TextControlDescriptor textControlDescriptor,
-                                                                         @Nonnull Optional<FormSubject> subject,
+                                                                         @Nonnull Optional<FormEntitySubject> subject,
                                                                          @Nonnull OwlBinding theBinding,
                                                                          int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject, theBinding);

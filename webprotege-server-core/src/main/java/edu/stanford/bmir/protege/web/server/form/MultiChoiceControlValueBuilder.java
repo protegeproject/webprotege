@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.frame.FrameComponentSessionRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.MultiChoiceControlDataDto;
 import edu.stanford.bmir.protege.web.shared.form.field.MultiChoiceControlDescriptor;
@@ -34,7 +35,7 @@ public class MultiChoiceControlValueBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getMultiChoiceControlDataDtoValues(@Nonnull MultiChoiceControlDescriptor multiChoiceControlDescriptor,
-                                                                         @Nonnull Optional<FormSubject> subject,
+                                                                         @Nonnull Optional<FormEntitySubject> subject,
                                                                          @Nonnull OwlBinding theBinding,
                                                                                 int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject, theBinding);

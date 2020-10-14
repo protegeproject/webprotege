@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormControlDataDto;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.ImageControlDataDto;
 import edu.stanford.bmir.protege.web.server.form.data.ImageControlDataDtoComparator;
@@ -35,7 +36,7 @@ public class ImageControlValuesBuilder {
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getImageControlDataDtoValues(ImageControlDescriptor imageControlDescriptor,
-                                                                          @Nonnull Optional<FormSubject> subject,
+                                                                          @Nonnull Optional<FormEntitySubject> subject,
                                                                           OwlBinding theBinding, int depth) {
         var values = bindingValuesExtractor.getBindingValues(subject, theBinding);
         return values.stream()

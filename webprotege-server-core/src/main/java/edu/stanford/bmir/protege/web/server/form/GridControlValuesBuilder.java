@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.form.data.FormControlDataDtoComparator;
 import edu.stanford.bmir.protege.web.server.form.data.GridRowDataDtoComparatorFactory;
 import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
-import edu.stanford.bmir.protege.web.shared.entity.IRIData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.form.FilterState;
 import edu.stanford.bmir.protege.web.shared.form.FormPageRequest;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
@@ -16,15 +12,11 @@ import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.lang.LangTagFilter;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLPrimitive;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -61,6 +53,9 @@ public class GridControlValuesBuilder {
     @Nonnull
     private final FormRegionFilterPredicateManager filters;
 
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
 
     @Inject
     public GridControlValuesBuilder(@Nonnull BindingValuesExtractor bindingValuesExtractor,
@@ -72,7 +67,9 @@ public class GridControlValuesBuilder {
                                     @Nonnull GridRowDataDtoComparatorFactory comparatorFactory,
                                     @Nonnull FormControlDataDtoComparator formControlDataDtoComparator,
                                     @Nonnull FormRegionFilterIndex formRegionFilterIndex,
-                                    @Nonnull FormFilterMatcherFactory formFilterMatcherFactory, @Nonnull FormRegionFilterPredicateManager filters) {
+                                    @Nonnull FormFilterMatcherFactory formFilterMatcherFactory,
+                                    @Nonnull FormRegionFilterPredicateManager filters,
+                                    @Nonnull OWLDataFactory dataFactory) {
         this.bindingValuesExtractor = checkNotNull(bindingValuesExtractor);
         this.formDataDtoBuilderProvider = checkNotNull(formDataDtoBuilderProvider);
         this.sessionRenderer = checkNotNull(sessionRenderer);
@@ -82,11 +79,12 @@ public class GridControlValuesBuilder {
         this.comparatorFactory = comparatorFactory;
         this.formControlDataDtoComparator = formControlDataDtoComparator;
         this.filters = filters;
+        this.dataFactory = dataFactory;
     }
 
     @Nonnull
     public ImmutableList<FormControlDataDto> getGridControlDataDtoValues(@Nonnull GridControlDescriptor gridControlDescriptor,
-                                                                         @Nonnull Optional<FormSubject>
+                                                                         @Nonnull Optional<FormEntitySubject>
                                                                                  subject,
                                                                          @Nonnull OwlBinding theBinding,
                                                                          @Nonnull FormRegionId formFieldId,
@@ -112,7 +110,7 @@ public class GridControlValuesBuilder {
     }
 
 
-    private GridControlDataDto toGridControlData(Optional<FormSubject> rootSubject,
+    private GridControlDataDto toGridControlData(Optional<FormEntitySubject> rootSubject,
                                                  FormRegionId formFieldId,
                                                  ImmutableList<OWLPrimitive> subjects,
                                                  GridControlDescriptor descriptor, int depth) {
@@ -130,8 +128,10 @@ public class GridControlValuesBuilder {
                                                                                FormPageRequest.SourceType.GRID_CONTROL)).orElseGet(PageRequest::requestFirstPage);
         var comparator = comparatorFactory.get(descriptor, Optional.empty());
 
+        var subjectFactoryDescriptor = descriptor.getSubjectFactoryDescriptor();
+
         var rowsPage = subjects.stream()
-                               .map(this::toEntityFormSubject)
+                               .map(s -> toEntityFormSubject(s, subjectFactoryDescriptor.orElseThrow().getEntityType()))
                                .map(s -> toGridRow(s, descriptor, depth))
                                .filter(row -> !row.containsFilteredEmptyCells())
                                .sorted(comparator)
@@ -164,20 +164,12 @@ public class GridControlValuesBuilder {
      * @return null if there is no row for the specified subject (because it is filtered out)
      */
     @Nonnull
-    private GridRowDataDto toGridRow(Optional<FormSubject> rowSubject,
+    private GridRowDataDto toGridRow(Optional<FormEntitySubject> rowSubject,
                                      GridControlDescriptor gridControlDescriptor,
                                      int depth) {
         var columnDescriptors = gridControlDescriptor.getColumns();
-        var formSubject = rowSubject.map(s -> s.accept(new FormSubject.FormDataSubjectVisitorEx<FormSubjectDto>() {
-            @Override
-            public FormSubjectDto visit(@Nonnull FormEntitySubject formDataEntitySubject) {
-                return FormEntitySubjectDto.get(sessionRenderer.getEntityRendering(formDataEntitySubject.getEntity()));
-            }
-
-            @Override
-            public FormSubjectDto visit(@Nonnull FormIriSubject formDataIriSubject) {
-                return FormIriSubjectDto.get(IRIData.get(formDataIriSubject.getIri(), ImmutableMap.of()));
-            }
+        var formSubject = rowSubject.map(s -> s.accept((FormSubject.FormDataSubjectVisitorEx<FormSubjectDto>) formDataEntitySubject -> {
+            return FormEntitySubjectDto.get(sessionRenderer.getEntityRendering(formDataEntitySubject.getEntity()));
         }))
                 .orElse(null);
         // To Cells
@@ -188,7 +180,7 @@ public class GridControlValuesBuilder {
     }
 
     @Nonnull
-    private ImmutableList<GridCellDataDto> toGridRowCells(Optional<FormSubject> rowSubject,
+    private ImmutableList<GridCellDataDto> toGridRowCells(Optional<FormEntitySubject> rowSubject,
                                                           @Nonnull ImmutableList<GridColumnDescriptor> columnDescriptors,
                                                           int depth) {
         return columnDescriptors.stream()
@@ -196,7 +188,7 @@ public class GridControlValuesBuilder {
                                 .collect(toImmutableList());
     }
 
-    private GridCellDataDto toGridCellData(Optional<FormSubject> rowSubject, int depth, GridColumnDescriptor columnDescriptor) {
+    private GridCellDataDto toGridCellData(Optional<FormEntitySubject> rowSubject, int depth, GridColumnDescriptor columnDescriptor) {
         var columnId = columnDescriptor.getId();
         var direction = formRegionOrderingIndex.getOrderingDirection(columnId);
         var cellValueComparator = direction.isAscending() ? formControlDataDtoComparator : formControlDataDtoComparator.reversed();
@@ -275,13 +267,14 @@ public class GridControlValuesBuilder {
 
 
     @Nonnull
-    private Optional<FormSubject> toEntityFormSubject(OWLPrimitive primitive) {
-        if (primitive instanceof OWLEntity) {
-            return Optional.of(FormEntitySubject.get((OWLEntity) primitive));
+    private Optional<FormEntitySubject> toEntityFormSubject(@Nonnull OWLPrimitive value,
+                                                            @Nonnull EntityType<?> rowEntityType) {
+        if(value instanceof OWLEntity) {
+            return Optional.of(FormEntitySubject.get((OWLEntity) value));
         }
-        else if (primitive instanceof IRI) {
-            var iri = (IRI) primitive;
-            return Optional.of(FormIriSubject.get(iri));
+        else if(value instanceof IRI) {
+            var entity = dataFactory.getOWLEntity(rowEntityType, (IRI) value);
+            return Optional.of(FormEntitySubject.get(entity));
         }
         else {
             return Optional.empty();

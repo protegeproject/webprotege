@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormSubjectFactoryDescriptorMissingException;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormFieldData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class FormDataProcessor_TestCase {
     private FormFieldData formFieldData;
 
     @Mock
-    private FormSubject subject;
+    private FormEntitySubject subject;
 
     @Mock
     private FormDescriptor formDescriptor;

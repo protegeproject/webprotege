@@ -70,7 +70,7 @@ public class GetEntityFormsActionHandler extends AbstractProjectActionHandler<Ge
                                                    formRegionFilterIndex);
         var formDataDtoBuilder = projectComponent.getEntityFrameFormDataComponentBuilder(module).formDataBuilder();
         var formsFilterList = action.getFormFilter();
-        var formSubject = Optional.<FormSubject>of(FormEntitySubject.get(entity));
+        var formSubject = Optional.of(FormEntitySubject.get(entity));
         var forms = formManager.getFormDescriptors(entity, projectId, FormPurpose.ENTITY_EDITING)
                                .stream()
                                .filter(byFormIds(formsFilterList))

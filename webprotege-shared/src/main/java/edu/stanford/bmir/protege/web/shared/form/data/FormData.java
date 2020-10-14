@@ -21,7 +21,7 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class FormData implements FormControlData {
 
-    public static FormData get(@Nonnull Optional<FormSubject> subject,
+    public static FormData get(@Nonnull Optional<FormEntitySubject> subject,
                                @Nonnull FormDescriptor formDescriptor,
                                @Nonnull ImmutableList<FormFieldData> formFieldData) {
         return new AutoValue_FormData(subject.orElse(null), formDescriptor, formFieldData);
@@ -45,13 +45,13 @@ public abstract class FormData implements FormControlData {
     }
 
     @Nonnull
-    public Optional<FormSubject> getSubject() {
+    public Optional<FormEntitySubject> getSubject() {
         return Optional.ofNullable(getSubjectInternal());
     }
 
     @JsonIgnore
     @Nullable
-    protected abstract FormSubject getSubjectInternal();
+    protected abstract FormEntitySubject getSubjectInternal();
 
     public abstract FormDescriptor getFormDescriptor();
 

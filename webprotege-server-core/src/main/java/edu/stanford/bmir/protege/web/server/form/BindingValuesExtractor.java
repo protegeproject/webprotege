@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.frame.ClassFrameProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.index.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
-import edu.stanford.bmir.protege.web.shared.form.data.FormIriSubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrameTranslationOptions;
@@ -76,33 +75,11 @@ public class BindingValuesExtractor {
     }
 
     @Nonnull
-    public ImmutableList<OWLPrimitive> getBindingValues(@Nonnull Optional<FormSubject> formSubject,
+    public ImmutableList<OWLPrimitive> getBindingValues(@Nonnull Optional<FormEntitySubject> formSubject,
                                                         @Nonnull OwlBinding binding) {
-        return formSubject.map(s -> getBindingValues(s, binding, Optional.empty())).orElseGet(ImmutableList::of);
+        return formSubject.map(s -> getBindingValues(s, binding)).orElseGet(ImmutableList::of);
     }
 
-    @Nonnull
-    public ImmutableList<OWLPrimitive> getBindingValuesOfType(@Nonnull Optional<FormSubject> formSubject,
-                                                        @Nonnull OwlBinding binding,
-                                                              @Nonnull EntityType<?> entityType) {
-        return formSubject.map(s -> getBindingValues(s, binding, Optional.of(entityType))).orElseGet(ImmutableList::of);
-    }
-
-    private ImmutableList<OWLPrimitive> getBindingValues(@Nonnull FormSubject formSubject,
-                                                         @Nonnull OwlBinding binding,
-                                                         @Nonnull Optional<EntityType<?>> entityType) {
-        return formSubject.accept(new FormSubject.FormDataSubjectVisitorEx<>() {
-            @Override
-            public ImmutableList<OWLPrimitive> visit(@Nonnull FormEntitySubject formDataEntitySubject) {
-                return getBindingValues(formDataEntitySubject, binding);
-            }
-
-            @Override
-            public ImmutableList<OWLPrimitive> visit(@Nonnull FormIriSubject formDataIriSubject) {
-                return getBindingValues(formDataIriSubject, binding, entityType);
-            }
-        });
-    }
 
     private ImmutableList<OWLPrimitive> getBindingValues(@Nonnull FormEntitySubject subject,
                                                          @Nonnull OwlBinding binding) {
@@ -144,20 +121,6 @@ public class BindingValuesExtractor {
             }
         };
         return subject.getEntity().accept(subjectVisitor);
-    }
-
-    private ImmutableList<OWLPrimitive> getBindingValues(@Nonnull FormIriSubject subject,
-                                                         @Nonnull OwlBinding binding,
-                                                         @Nonnull Optional<EntityType<?>> entityType) {
-        var type = entityType.orElse(EntityType.NAMED_INDIVIDUAL);
-        var iriAsEntity = dataFactory.getOWLEntity(type, subject.getIri());
-        if(type.equals(EntityType.CLASS)) {
-            return getBindingsForClass(iriAsEntity.asOWLClass(), binding);
-        }
-        else if(type.equals(EntityType.NAMED_INDIVIDUAL)) {
-            return getBindingsForIndividual(iriAsEntity.asOWLNamedIndividual(), binding);
-        }
-        return ImmutableList.of();
     }
 
     @Nonnull
