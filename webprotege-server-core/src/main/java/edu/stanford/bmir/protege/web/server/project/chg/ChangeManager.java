@@ -10,9 +10,13 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
+import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.AnnotationPropertyHierarchyProviderImpl;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProviderImpl;
+import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyHierarchyProviderImpl;
+import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyHierarchyProviderImpl;
 import edu.stanford.bmir.protege.web.server.index.RootIndex;
 import edu.stanford.bmir.protege.web.server.index.impl.IndexUpdater;
@@ -106,16 +110,16 @@ public class ChangeManager implements HasApplyChanges {
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final ClassHierarchyProviderImpl classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
-    private final ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider;
+    private final ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
 
     @Nonnull
-    private final DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider;
+    private final DataPropertyHierarchyProvider dataPropertyHierarchyProvider;
 
     @Nonnull
-    private final AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider;
+    private final AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
     @Nonnull
     private final UserInSessionFactory userInSessionFactory;
@@ -162,10 +166,10 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull RevisionManager changeManager,
                          @Nonnull RootIndex rootIndex,
                          @Nonnull DictionaryManager dictionaryManager,
-                         @Nonnull ClassHierarchyProviderImpl classHierarchyProvider,
-                         @Nonnull ObjectPropertyHierarchyProviderImpl objectPropertyHierarchyProvider,
-                         @Nonnull DataPropertyHierarchyProviderImpl dataPropertyHierarchyProvider,
-                         @Nonnull AnnotationPropertyHierarchyProviderImpl annotationPropertyHierarchyProvider,
+                         @Nonnull ClassHierarchyProvider classHierarchyProvider,
+                         @Nonnull ObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
+                         @Nonnull DataPropertyHierarchyProvider dataPropertyHierarchyProvider,
+                         @Nonnull AnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
                          @Nonnull UserInSessionFactory userInSessionFactory,
                          @Nonnull EntityCrudContextFactory entityCrudContextFactory,
                          @Nonnull RenameMapFactory renameMapFactory,
@@ -510,6 +514,7 @@ public class ChangeManager implements HasApplyChanges {
         objectPropertyHierarchyProvider.handleChanges(changes);
         dataPropertyHierarchyProvider.handleChanges(changes);
         annotationPropertyHierarchyProvider.handleChanges(changes);
+
         return revision;
     }
 
