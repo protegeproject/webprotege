@@ -4,6 +4,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.FormsMessages;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -22,6 +26,12 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     }
 
     private static EntityFormStackViewImplUiBinder ourUiBinder = GWT.create(EntityFormStackViewImplUiBinder.class);
+
+    @Nonnull
+    private final MessageBox messageBox;
+
+    @Nonnull
+    private FormsMessages formsMessages;
 
     @Nonnull
     private EnterEditModeHandler enterEditModeHandler = () -> {};
@@ -48,11 +58,26 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     Button editButton;
 
     @Inject
-    public EntityFormStackViewImpl() {
+    public EntityFormStackViewImpl(MessageBox messageBox, @Nonnull FormsMessages formsMessages) {
+        this.messageBox = checkNotNull(messageBox);
+        this.formsMessages = checkNotNull(formsMessages);
         initWidget(ourUiBinder.createAndBindUi(this));
         editButton.addClickHandler(event -> enterEditModeHandler.handleEnterEditMode());
         applyEditsButton.addClickHandler(event -> applyEditsHandler.handleApplyEdits());
         cancelEditsButton.addClickHandler(event -> cancelEditsHandler.handleCancelEdits());
+    }
+
+    @Override
+    public void displayApplyOutstandingEditsConfirmation(@Nonnull ApplyEditsHandler applyEditsHandler,
+                                                         @Nonnull CancelEditsHandler cancelEditsHandler) {
+        messageBox.showConfirmBox(MessageStyle.ALERT,
+                                  formsMessages.saveEditsAlert_Title(),
+                                  formsMessages.saveEditsAlert_Message(),
+                                  DialogButton.NO,
+                                  cancelEditsHandler::handleCancelEdits,
+                                  DialogButton.YES,
+                                  applyEditsHandler::handleApplyEdits,
+                                  DialogButton.YES);
     }
 
     @Nonnull

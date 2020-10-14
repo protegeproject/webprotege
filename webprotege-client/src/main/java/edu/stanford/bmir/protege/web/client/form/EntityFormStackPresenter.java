@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataDto;
@@ -39,14 +38,12 @@ public class EntityFormStackPresenter {
 
     private final Map<FormId, FormData> pristineFormData = new HashMap<>();
 
-    private HasBusy hasBusy = (busy) -> {};
+    private HasBusy hasBusy = (busy) -> {
+    };
 
     private Optional<FormLanguageFilterStash> formLanguageFilterStash = Optional.empty();
 
-    enum Mode {
-        EDIT_MODE,
-        READ_ONLY_MODE
-    }
+    private FormMode mode = FormMode.READ_ONLY_MODE;
 
     @Nonnull
     private final ProjectId projectId;
@@ -67,7 +64,8 @@ public class EntityFormStackPresenter {
     private final LangTagFilterPresenter langTagFilterPresenter;
 
     @Nonnull
-    private EntityDisplay entityDisplay = entityData -> { };
+    private EntityDisplay entityDisplay = entityData -> {
+    };
 
     @Inject
     public EntityFormStackPresenter(@Nonnull ProjectId projectId,
@@ -100,9 +98,8 @@ public class EntityFormStackPresenter {
         view.setApplyEditsHandler(this::handleApplyEdits);
         view.setCancelEditsHandler(this::handleCancelEdits);
 
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
-                                        view::setEditButtonVisible);
-        setMode(Mode.READ_ONLY_MODE);
+        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, view::setEditButtonVisible);
+        setMode(FormMode.READ_ONLY_MODE);
     }
 
     private void handleFormRegionFilterChanged(FormRegionFilterChangedEvent event) {
@@ -127,6 +124,21 @@ public class EntityFormStackPresenter {
     }
 
     public void setEntity(@Nonnull OWLEntity entity) {
+        if (mode.equals(FormMode.EDIT_MODE)) {
+            view.displayApplyOutstandingEditsConfirmation(() -> {
+                currentEntity.ifPresent(this::applyEdits);
+                switchToEntity(entity);
+            }, () -> {
+                handleCancelEdits();
+                switchToEntity(entity);
+            });
+        }
+        else {
+            switchToEntity(entity);
+        }
+    }
+
+    private void switchToEntity(@Nonnull OWLEntity entity) {
         this.currentEntity = Optional.of(entity);
         updateFormsForCurrentEntity(ImmutableList.of());
     }
@@ -150,12 +162,15 @@ public class EntityFormStackPresenter {
             ImmutableSet<FormRegionOrdering> orderings = formStackPresenter.getGridControlOrderings();
             ImmutableSet<FormRegionFilter> filters = formStackPresenter.getRegionFilters();
             LangTagFilter langTagFilter = langTagFilterPresenter.getFilter();
-            dispatch.execute(new GetEntityFormsAction(projectId, entity, formFilter, pageRequests, langTagFilter,
-                                                      orderings, filters),
-                             hasBusy,
-                             this::handleGetEntityFormsResult);
+            dispatch.execute(new GetEntityFormsAction(projectId,
+                                                      entity,
+                                                      formFilter,
+                                                      pageRequests,
+                                                      langTagFilter,
+                                                      orderings,
+                                                      filters), hasBusy, this::handleGetEntityFormsResult);
         });
-        if(!currentEntity.isPresent()) {
+        if (!currentEntity.isPresent()) {
             entityDisplay.setDisplayedEntity(Optional.empty());
             formStackPresenter.clearForms();
         }
@@ -169,7 +184,7 @@ public class EntityFormStackPresenter {
         if (replaceAllForms) {
             pristineFormData.clear();
         }
-        for(FormDataDto formDataDto : result.getFormData()) {
+        for (FormDataDto formDataDto : result.getFormData()) {
             pristineFormData.put(formDataDto.getFormId(), formDataDto.toFormData());
         }
         if (replaceAllForms) {
@@ -181,28 +196,32 @@ public class EntityFormStackPresenter {
     }
 
     private void handleEnterEditMode() {
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
-                                        canEdit -> setMode(Mode.EDIT_MODE));
+        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, canEdit -> setMode(FormMode.EDIT_MODE));
     }
 
     private void handleApplyEdits() {
-        setMode(Mode.READ_ONLY_MODE);
+        setMode(FormMode.READ_ONLY_MODE);
+        currentEntity.ifPresent(this::applyEdits);
+    }
+
+    private void applyEdits(@Nonnull OWLEntity entity) {
         // TODO: Offer a commit message
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY,
-                                        canEdit -> {
-                                            if(canEdit) {
-                                                commitEdits();
-                                            }
-                                        });
+        setMode(FormMode.READ_ONLY_MODE);
+        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, canEdit -> {
+            if (canEdit) {
+                commitEdits(entity);
+            }
+        });
     }
 
     private void handleCancelEdits() {
-        setMode(Mode.READ_ONLY_MODE);
+        setMode(FormMode.READ_ONLY_MODE);
         dropEdits();
     }
 
-    private void setMode(@Nonnull Mode mode) {
-        if(mode == Mode.EDIT_MODE) {
+    private void setMode(@Nonnull FormMode mode) {
+        this.mode = checkNotNull(mode);
+        if (mode == FormMode.EDIT_MODE) {
             view.setEditButtonVisible(false);
             view.setApplyEditsButtonVisible(true);
             view.setCancelEditsButtonVisible(true);
@@ -212,23 +231,15 @@ public class EntityFormStackPresenter {
             view.setApplyEditsButtonVisible(false);
             view.setCancelEditsButtonVisible(false);
         }
-        formStackPresenter.setEnabled(mode == Mode.EDIT_MODE);
+        formStackPresenter.setEnabled(mode == FormMode.EDIT_MODE);
     }
 
-
-
-
-    private void commitEdits() {
-        currentEntity.ifPresent(entity -> {
-            ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms();
-            ImmutableMap<FormId, FormData> pristineFormData = ImmutableMap.copyOf(this.pristineFormData);
-            dispatch.execute(new SetEntityFormsDataAction(projectId,
-                                                          entity,
-                                                          pristineFormData,
-                                                          editedFormData),
-                             // Refresh the pristine data to what was committed
-                             result -> updateFormsForCurrentEntity(ImmutableList.of()));
-        });
+    private void commitEdits(@Nonnull OWLEntity entity) {
+        ImmutableMap<FormId, FormData> editedFormData = formStackPresenter.getForms();
+        ImmutableMap<FormId, FormData> pristineFormData = ImmutableMap.copyOf(this.pristineFormData);
+        dispatch.execute(new SetEntityFormsDataAction(projectId, entity, pristineFormData, editedFormData),
+                         // Refresh the pristine data to what was committed
+                         result -> updateFormsForCurrentEntity(ImmutableList.of()));
     }
 
     private void dropEdits() {
@@ -241,8 +252,7 @@ public class EntityFormStackPresenter {
 
     private void stashLanguagesFilter() {
         formLanguageFilterStash.ifPresent(stash -> {
-            ImmutableSet<LangTag> filteringTags = langTagFilterPresenter.getFilter()
-                                                                        .getFilteringTags();
+            ImmutableSet<LangTag> filteringTags = langTagFilterPresenter.getFilter().getFilteringTags();
             stash.stashLanguage(filteringTags);
         });
     }

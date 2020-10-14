@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.FieldRun;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

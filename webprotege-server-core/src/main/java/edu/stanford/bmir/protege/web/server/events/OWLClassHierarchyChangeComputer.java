@@ -37,8 +37,9 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
 
     @Inject
     public OWLClassHierarchyChangeComputer(@Nonnull ProjectId projectId,
-                                           @Nonnull ClassHierarchyProvider hierarchyProvider, @Nonnull EntityNodeRenderer renderer, @Nonnull ClassHierarchyProviderImpl classHierarchyProvider) {
-        super(projectId, EntityType.CLASS, hierarchyProvider, CLASS_HIERARCHY, renderer);
+                                           @Nonnull ClassHierarchyProvider classHierarchyProvider,
+                                           @Nonnull EntityNodeRenderer renderer) {
+        super(projectId, EntityType.CLASS, classHierarchyProvider, CLASS_HIERARCHY, renderer);
         this.renderer = checkNotNull(renderer);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
     }
