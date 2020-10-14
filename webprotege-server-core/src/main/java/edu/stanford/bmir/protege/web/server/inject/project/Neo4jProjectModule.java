@@ -582,6 +582,11 @@ public class Neo4jProjectModule {
   }
 
   @Provides
+  HierarchyPositionMatchingEngine provideHierarchyPositionMatchingEngine(HierarchyPositionMatchingEngineImpl impl) {
+    return impl;
+  }
+
+  @Provides
   TagRepository provideTagRepository(TagRepositoryImpl impl) {
     impl.ensureIndexes();
     return impl;
