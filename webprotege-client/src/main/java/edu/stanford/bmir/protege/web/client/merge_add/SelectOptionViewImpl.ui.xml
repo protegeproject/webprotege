@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="mg" type="edu.stanford.bmir.protege.web.client.merge_add.MergeAddClientBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Please select how you would like to merge the ontologies" addStyleNames="{wp.style.formLabel}"/>
+        </div>
+        <div class="{wp.style.formHorizontalRadioButtonGroup}">
+            <g:RadioButton name="Group" ui:field = "radioButton1">Merge into new ontology</g:RadioButton>
+            <g:RadioButton name="Group" ui:field = "radioButton2">Merge into existing ontology</g:RadioButton>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

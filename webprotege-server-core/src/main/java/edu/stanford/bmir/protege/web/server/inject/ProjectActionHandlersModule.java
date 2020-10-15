@@ -33,6 +33,9 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingA
 import edu.stanford.bmir.protege.web.server.match.GetMatchingEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.merge_add.ExistingOntologyMergeAddActionHandler;
+import edu.stanford.bmir.protege.web.server.merge_add.NewOntologyMergeAddActionHandler;
+import edu.stanford.bmir.protege.web.server.merge_add.GetAllOntologiesActionHandler;
 import edu.stanford.bmir.protege.web.server.obo.*;
 import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.project.GetProjectInfoActionHandler;
@@ -117,6 +120,11 @@ public class ProjectActionHandlersModule {
     @Provides @IntoSet
     public ProjectActionHandler provideGetNamedIndividualFrameActionHandler(
             GetNamedIndividualFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideGetAllOntologiesActionHandler(GetAllOntologiesActionHandler handler) {
         return handler;
     }
 
@@ -285,6 +293,11 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideComputeProjectMergeActionHandler(ComputeProjectMergeActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler provideNewOntologyMergeAddActionHandler(NewOntologyMergeAddActionHandler handler) {
         return handler;
     }
 
@@ -692,6 +705,9 @@ public class ProjectActionHandlersModule {
 
     @Provides @IntoSet
     public ProjectActionHandler provideResetPerspectivesActionHandler(ResetPerspectivesActionHandler handler) {
+        return handler;
+    }
+    public ProjectActionHandler providesExistingOntologyMergeAddActionHandler(ExistingOntologyMergeAddActionHandler handler){
         return handler;
     }
 }

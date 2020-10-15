@@ -117,6 +117,8 @@ public enum BuiltInAction {
 
     UPLOAD_AND_MERGE,
 
+    UPLOAD_AND_MERGE_ADDITIONS,
+
     EDIT_FORMS;
 
 
