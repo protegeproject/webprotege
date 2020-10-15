@@ -161,10 +161,8 @@ public class FormFrameBuilder {
 
 
 
-    private void add(OwlBinding binding, FormSubject value) {
-        value.accept(formDataEntitySubject -> {
-            addEntityValue(binding, formDataEntitySubject.getEntity());
-        });
+    private void add(OwlBinding binding, FormEntitySubject value) {
+        addEntityValue(binding, value.getEntity());
     }
 
     private void addClass(@Nonnull OWLClass value) {

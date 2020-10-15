@@ -22,16 +22,6 @@ public abstract class FormEntitySubject implements FormSubject {
         return new AutoValue_FormEntitySubject(entity);
     }
 
-    @Override
-    public <R> R accept(@Nonnull FormDataSubjectVisitorEx<R> visitor) {
-        return visitor.visit(this);
-    }
-
-    @Override
-    public void accept(@Nonnull FormDataSubjectVisitor visitor) {
-        visitor.visit(this);
-    }
-
     @Nonnull
     public abstract OWLEntity getEntity();
 

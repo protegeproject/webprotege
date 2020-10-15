@@ -168,15 +168,12 @@ public class GridControlValuesBuilder {
                                      GridControlDescriptor gridControlDescriptor,
                                      int depth) {
         var columnDescriptors = gridControlDescriptor.getColumns();
-        var formSubject = rowSubject.map(s -> s.accept((FormSubject.FormDataSubjectVisitorEx<FormSubjectDto>) formDataEntitySubject -> {
-            return FormEntitySubjectDto.get(sessionRenderer.getEntityRendering(formDataEntitySubject.getEntity()));
-        }))
-                .orElse(null);
+        var formSubject = rowSubject.map(s -> FormEntitySubjectDto.get(sessionRenderer.getEntityRendering(s.getEntity())));
         // To Cells
         var cellData = toGridRowCells(rowSubject,
                                       columnDescriptors,
                                       depth);
-        return GridRowDataDto.get(formSubject, cellData);
+        return formSubject.map(s -> GridRowDataDto.get(s, cellData)).orElseGet(() -> GridRowDataDto.get(cellData));
     }
 
     @Nonnull

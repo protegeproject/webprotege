@@ -26,10 +26,7 @@ public class FormFrameConverter {
     @Nonnull
     public Optional<PlainEntityFrame> toEntityFrame(@Nonnull FormFrame formFrame) {
 
-        return formFrame.getSubject()
-                 .accept(formDataEntitySubject -> {
-                     return getEntityFrame(formDataEntitySubject, formFrame);
-                 });
+        return getEntityFrame(formFrame.getSubject(), formFrame);
     }
 
     public Optional<PlainEntityFrame> getEntityFrame(@Nonnull FormEntitySubject formDataEntitySubject,
