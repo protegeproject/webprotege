@@ -1,0 +1,14 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="mg" type="edu.stanford.bmir.protege.web.client.merge_add.MergeAddClientBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Please select the ontologies you would like to merge" addStyleNames="{wp.style.formLabel}"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:ListBox ui:field="listBox" visibleItemCount="10"/>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>
