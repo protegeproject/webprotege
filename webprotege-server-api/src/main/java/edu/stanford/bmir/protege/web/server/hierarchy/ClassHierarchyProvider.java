@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import edu.stanford.bmir.protege.web.server.change.OntologyChange;
 import org.semanticweb.owlapi.model.OWLClass;
+
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -8,4 +11,6 @@ import org.semanticweb.owlapi.model.OWLClass;
  * 2020-07-06
  */
 public interface ClassHierarchyProvider extends HierarchyProvider<OWLClass> {
+
+  void handleChanges(List<OntologyChange> changes);
 }
