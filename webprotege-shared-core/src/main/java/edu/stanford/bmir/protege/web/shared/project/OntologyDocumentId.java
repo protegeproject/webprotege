@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.core.shared.GwtIncompatible;
@@ -17,6 +19,8 @@ import java.util.UUID;
 @GwtCompatible(serializable = true)
 public abstract class OntologyDocumentId {
 
+    @JsonCreator
+    @Nonnull
     public static OntologyDocumentId get(@Nonnull String id) {
         if(!UUIDUtil.isWellFormed(id)) {
             throw new RuntimeException("Malformed OntologyDocumentId.  OntologyDocumentIds should be UUIDs");
@@ -24,6 +28,7 @@ public abstract class OntologyDocumentId {
         return new AutoValue_OntologyDocumentId(id);
     }
 
+    @JsonValue
     @Nonnull
     public abstract String getId();
 
