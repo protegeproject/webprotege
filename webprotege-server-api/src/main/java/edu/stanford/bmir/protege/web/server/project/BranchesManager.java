@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.project.BranchDetails;
 import edu.stanford.bmir.protege.web.shared.project.BranchId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -18,4 +19,7 @@ public interface BranchesManager {
 
     @Nonnull
     ImmutableSet<BranchId> getBranches(@Nonnull ProjectId projectId);
+
+    @Nonnull
+    BranchDetails getBranchDetails(BranchId branchId);
 }
