@@ -27,14 +27,14 @@ public abstract class AddOntologyAnnotationChange implements OntologyAnnotationC
     @Override
     public AddOntologyAnnotationChange replaceIris(@Nonnull IriReplacer iriReplacer) {
         OWLAnnotation duplicatedAnnotation = iriReplacer.replaceIris(getAnnotation());
-        return AddOntologyAnnotationChange.of(getOntologyId(),
+        return AddOntologyAnnotationChange.of(getOntologyDocumentId(),
                                               duplicatedAnnotation);
     }
 
     @Nonnull
     @Override
     public AddOntologyAnnotationChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
-        if(getOntologyId().equals(ontologyId)) {
+        if(getOntologyDocumentId().equals(ontologyId)) {
             return this;
         }
         else {
@@ -45,7 +45,7 @@ public abstract class AddOntologyAnnotationChange implements OntologyAnnotationC
     @Nonnull
     @Override
     public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
-        return new OWLOntologyChangeRecord(getOntologyId(), new AddOntologyAnnotationData(getAnnotation()));
+        return new OWLOntologyChangeRecord(getOntologyDocumentId(), new AddOntologyAnnotationData(getAnnotation()));
     }
 
     @Override
@@ -66,6 +66,6 @@ public abstract class AddOntologyAnnotationChange implements OntologyAnnotationC
     @Nonnull
     @Override
     public RemoveOntologyAnnotationChange getInverseChange() {
-        return RemoveOntologyAnnotationChange.of(getOntologyId(), getAnnotation());
+        return RemoveOntologyAnnotationChange.of(getOntologyDocumentId(), getAnnotation());
     }
 }

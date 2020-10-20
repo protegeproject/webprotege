@@ -95,7 +95,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         OWLAxiom axiom = processSignature(change);
         // Process the signature
         signatureBuffer.forEach(entity -> {
-            indexingVisitor.setOntologyId(change.getOntologyId());
+            indexingVisitor.setOntologyId(change.getOntologyDocumentId());
             indexingVisitor.setAxiom(axiom);
             entity.accept(indexingVisitor);
         });
@@ -105,7 +105,7 @@ public class AxiomsByEntityReferenceIndexImpl implements AxiomsByEntityReference
         var axiom = processSignature(change);
         // Process the signature
         signatureBuffer.forEach(entity -> {
-            deindexingVisitor.setOntologyId(change.getOntologyId());
+            deindexingVisitor.setOntologyId(change.getOntologyDocumentId());
             deindexingVisitor.setAxiom(axiom);
             entity.accept(deindexingVisitor);
         });

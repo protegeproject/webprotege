@@ -90,7 +90,7 @@ public class Revision2DiffElementsTranslator {
     }
 
     private DiffElement<String, OntologyChange> toElement(OntologyChange changeRecord) {
-        var ontologyID = changeRecord.getOntologyId();
+        var ontologyID = changeRecord.getOntologyDocumentId();
         final String ontologyIRIShortForm;
         if(isRootOntologySingleton(ontologyID)) {
             ontologyIRIShortForm = "";

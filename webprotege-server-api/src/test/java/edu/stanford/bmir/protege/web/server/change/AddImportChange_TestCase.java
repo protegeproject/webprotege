@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.util.IriReplacer;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +52,7 @@ public class AddImportChange_TestCase<R> {
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        assertThat(change.getOntologyId(), is(ontologyId));
+        assertThat(change.getOntologyDocumentId(), is(ontologyId));
     }
 
     @Test
@@ -138,7 +137,7 @@ public class AddImportChange_TestCase<R> {
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
         assertThat(revertingChange, is(Matchers.instanceOf(RemoveImportChange.class)));
-        assertThat(revertingChange.getOntologyId(), is(ontologyId));
+        assertThat(revertingChange.getOntologyDocumentId(), is(ontologyId));
         assertThat(revertingChange.getImportsDeclaration(), is(importsDeclaration));
     }
 
@@ -146,7 +145,7 @@ public class AddImportChange_TestCase<R> {
     public void shouldReplaceOntologyId() {
         var otherOntologyId = Mockito.mock(OWLOntologyID.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
-        assertThat(replaced.getOntologyId(), is(otherOntologyId));
+        assertThat(replaced.getOntologyDocumentId(), is(otherOntologyId));
     }
 
     @Test

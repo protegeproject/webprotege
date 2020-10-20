@@ -114,7 +114,7 @@ public class ProjectOntologyManagerLoader {
 
     private void createOntologyIfNecessary(OntologyChange chg,
                                                   OWLOntologyManager man) {
-        var ontologyId = chg.getOntologyId();
+        var ontologyId = chg.getOntologyDocumentId();
         if(!man.contains(ontologyId)) {
             try {
                 man.createOntology(ontologyId);

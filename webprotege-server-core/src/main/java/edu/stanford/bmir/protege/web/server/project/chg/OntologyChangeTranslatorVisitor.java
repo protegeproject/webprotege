@@ -61,7 +61,7 @@ public class OntologyChangeTranslatorVisitor implements OntologyChangeVisitorEx<
 
 
     private OWLOntology getOntology(OntologyChange change) {
-        var ontologyId = change.getOntologyId();
+        var ontologyId = change.getOntologyDocumentId();
         var ontology = manager.getOntology(ontologyId);
         if(ontology == null) {
             throw new UnknownOWLOntologyException(ontologyId);

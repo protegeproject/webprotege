@@ -101,10 +101,10 @@ public class OntologyAnnotationsIndexImpl implements OntologyAnnotationsSignatur
 
     private void handleOntologyAnnotationChange(@Nonnull OntologyAnnotationChange change) {
         if(change.isAddOntologyAnnotation()) {
-            annotationsMap.put(change.getOntologyId(), change.getAnnotation());
+            annotationsMap.put(change.getOntologyDocumentId(), change.getAnnotation());
         }
         else {
-            annotationsMap.remove(change.getOntologyId(), change.getAnnotation());
+            annotationsMap.remove(change.getOntologyDocumentId(), change.getAnnotation());
         }
     }
 }

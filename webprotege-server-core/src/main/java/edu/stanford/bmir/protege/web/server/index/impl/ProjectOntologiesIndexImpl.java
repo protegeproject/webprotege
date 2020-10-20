@@ -59,10 +59,10 @@ public class ProjectOntologiesIndexImpl implements ProjectOntologiesIndex, Updat
     public synchronized void applyChanges(@Nonnull ImmutableList<OntologyChange> changes) {
         for(var ontologyChange : changes) {
             if(ontologyChange.isAddAxiom() || ontologyChange.isAddOntologyAnnotation()) {
-                ontologyIds.add(ontologyChange.getOntologyId());
+                ontologyIds.add(ontologyChange.getOntologyDocumentId());
             }
             else if(ontologyChange.isRemoveAxiom() || ontologyChange.isRemoveOntologyAnnotation()) {
-                ontologyIds.remove(ontologyChange.getOntologyId());
+                ontologyIds.remove(ontologyChange.getOntologyDocumentId());
             }
         }
         cache = ImmutableList.copyOf(ontologyIds.elementSet());

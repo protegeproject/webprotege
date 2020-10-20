@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.change;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -20,13 +19,13 @@ public class ChangeListMinimiser {
 
         for (OntologyChange change : changes) {
             if (change.isAddAxiom()) {
-                var pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
+                var pair = OntologyAxiomPair.get(change.getOntologyDocumentId(), change.getAxiomOrThrow());
                 if(!removals.remove(pair)) {
                     additions.add(pair);
                 }
             }
             else if (change.isRemoveAxiom()) {
-                var pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
+                var pair = OntologyAxiomPair.get(change.getOntologyDocumentId(), change.getAxiomOrThrow());
                 if (!additions.remove(pair)) {
                     removals.add(pair);
                 }
@@ -38,14 +37,14 @@ public class ChangeListMinimiser {
         var minimisedChanges = new ArrayList<OntologyChange>();
         for (OntologyChange change : changes) {
             if (change.isAddAxiom()) {
-                var pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
+                var pair = OntologyAxiomPair.get(change.getOntologyDocumentId(), change.getAxiomOrThrow());
                 if (additions.contains(pair)) {
                     minimisedChanges.add(change);
                     additions.remove(pair);
                 }
             }
             else if (change.isRemoveAxiom()) {
-                var pair = OntologyAxiomPair.get(change.getOntologyId(), change.getAxiomOrThrow());
+                var pair = OntologyAxiomPair.get(change.getOntologyDocumentId(), change.getAxiomOrThrow());
                 if (removals.contains(pair)) {
                     minimisedChanges.add(change);
                     removals.remove(pair);

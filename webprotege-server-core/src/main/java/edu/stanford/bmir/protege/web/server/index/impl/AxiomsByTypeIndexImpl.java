@@ -58,7 +58,7 @@ public class AxiomsByTypeIndexImpl implements AxiomsByTypeIndex, UpdatableIndex 
     }
 
     private void handleAxiomChange(AxiomChange change) {
-        var ontId = change.getOntologyId();
+        var ontId = change.getOntologyDocumentId();
         var axiom = change.getAxiom();
         var axiomType = axiom.getAxiomType();
         var ont2Axioms = getAxiomsByOntologyMap(axiomType);

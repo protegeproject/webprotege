@@ -24,13 +24,13 @@ public abstract class AddImportChange implements OntologyImportChange {
     @Nonnull
     @Override
     public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
-        return new OWLOntologyChangeRecord(getOntologyId(), new AddImportData(getImportsDeclaration()));
+        return new OWLOntologyChangeRecord(getOntologyDocumentId(), new AddImportData(getImportsDeclaration()));
     }
 
     @Nonnull
     @Override
     public AddImportChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
-        if(getOntologyId().equals(ontologyId)) {
+        if(getOntologyDocumentId().equals(ontologyId)) {
             return this;
         }
         else {
@@ -51,6 +51,6 @@ public abstract class AddImportChange implements OntologyImportChange {
     @Nonnull
     @Override
     public RemoveImportChange getInverseChange() {
-        return RemoveImportChange.of(getOntologyId(), getImportsDeclaration());
+        return RemoveImportChange.of(getOntologyDocumentId(), getImportsDeclaration());
     }
 }

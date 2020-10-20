@@ -58,7 +58,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
 
     @Test
     public void shouldGetSuppliedOntologyId() {
-        MatcherAssert.assertThat(change.getOntologyId(), Matchers.is(ontologyId));
+        MatcherAssert.assertThat(change.getOntologyDocumentId(), Matchers.is(ontologyId));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     public void shouldGetRevertingChange() {
         var revertingChange = change.getInverseChange();
         MatcherAssert.assertThat(revertingChange, Matchers.is(Matchers.instanceOf(AddOntologyAnnotationChange.class)));
-        MatcherAssert.assertThat(revertingChange.getOntologyId(), Matchers.is(ontologyId));
+        MatcherAssert.assertThat(revertingChange.getOntologyDocumentId(), Matchers.is(ontologyId));
         MatcherAssert.assertThat(revertingChange.getAnnotation(), Matchers.is(ontologyAnnotation));
     }
 
@@ -152,7 +152,7 @@ public class RemoveOntologyAnnotationChange_TestCase<R> {
     public void shouldReplaceOntologyId() {
         var otherOntologyId = Mockito.mock(OWLOntologyID.class);
         var replaced = change.replaceOntologyId(otherOntologyId);
-        MatcherAssert.assertThat(replaced.getOntologyId(), Matchers.is(otherOntologyId));
+        MatcherAssert.assertThat(replaced.getOntologyDocumentId(), Matchers.is(otherOntologyId));
     }
 
     @Test

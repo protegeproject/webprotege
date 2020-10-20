@@ -108,7 +108,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                    }
 
                    private void handleOntologyFrameChange(OntologyChange change) {
-                       var ontologyId = change.getOntologyId();
+                       var ontologyId = change.getOntologyDocumentId();
                        if(!changedOntologies.add(ontologyId)) {
                            return;
                        }

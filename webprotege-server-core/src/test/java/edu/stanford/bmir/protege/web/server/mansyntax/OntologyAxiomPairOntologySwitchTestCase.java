@@ -73,13 +73,13 @@ public class OntologyAxiomPairOntologySwitchTestCase {
         OntologyChange change0 = changes.get(0);
         assertThat(change0.isRemoveAxiom(), is(true));
         assertThat(change0.getAxiomOrThrow(), is(equalTo(ax)));
-        assertThat(change0.getOntologyId(), is(equalTo(ontAId)));
+        assertThat(change0.getOntologyDocumentId(), is(equalTo(ontAId)));
 
 
         OntologyChange change1 = changes.get(1);
         assertThat(change1.isAddAxiom(), is(true));
         assertThat(change1.getAxiomOrThrow(), is(equalTo(ax)));
-        assertThat(change1.getOntologyId(), is(equalTo(ontBId)));
+        assertThat(change1.getOntologyDocumentId(), is(equalTo(ontBId)));
     }
 
 }

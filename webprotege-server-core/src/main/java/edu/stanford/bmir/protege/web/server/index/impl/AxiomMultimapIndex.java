@@ -98,7 +98,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
         if(isNaryKeyValue()) {
             var values = getNaryKeyValueExtractor(ax);
             values.forEach(val -> {
-                var key = Key.get(change.getOntologyId(), val);
+                var key = Key.get(change.getOntologyDocumentId(), val);
                 handleOntologyChange(change, key, ax);
             });
         }
@@ -107,7 +107,7 @@ public class AxiomMultimapIndex<V, A extends OWLAxiom> {
             if(keyValue == null) {
                 return;
             }
-            var key = Key.get(change.getOntologyId(),
+            var key = Key.get(change.getOntologyDocumentId(),
                               keyValue);
             handleOntologyChange(change, key, ax);
         }

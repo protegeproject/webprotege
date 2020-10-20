@@ -84,7 +84,7 @@ public class RevisionManagerImpl implements RevisionManager {
                     for(OntologyChange record : rev.getChanges()) {
                         // Anonymous ontologies are not handled nicely at all.
                         var normalisedChangeRecord = normaliseChangeRecord(record, singletonOntologyId);
-                        var ontologyId = normalisedChangeRecord.getOntologyId();
+                        var ontologyId = normalisedChangeRecord.getOntologyDocumentId();
                         if(!manager.contains(ontologyId)) {
                             manager.createOntology(ontologyId);
                         }
@@ -108,7 +108,7 @@ public class RevisionManagerImpl implements RevisionManager {
 
     private OntologyChange normaliseChangeRecord(@Nonnull OntologyChange change,
                                                  @Nonnull OWLOntologyID singletonAnonymousId) {
-        var ontologyID = change.getOntologyId();
+        var ontologyID = change.getOntologyDocumentId();
         if(ontologyID.isAnonymous()) {
             return change.replaceOntologyId(singletonAnonymousId);
         }

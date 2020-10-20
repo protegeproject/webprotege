@@ -17,7 +17,7 @@ import java.util.Set;
 public interface OntologyChange {
 
     @Nonnull
-    OWLOntologyID getOntologyId();
+    OWLOntologyID getOntologyDocumentId();
 
     @Nonnull
     Set<OWLEntity> getSignature();

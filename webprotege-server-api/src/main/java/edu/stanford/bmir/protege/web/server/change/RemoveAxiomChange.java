@@ -31,13 +31,13 @@ public abstract class RemoveAxiomChange implements AxiomChange {
     @Override
     public RemoveAxiomChange replaceIris(@Nonnull IriReplacer iriReplacer) {
         OWLAxiom duplicatedAxiom = iriReplacer.replaceIris(getAxiom());
-        return RemoveAxiomChange.of(getOntologyId(), duplicatedAxiom);
+        return RemoveAxiomChange.of(getOntologyDocumentId(), duplicatedAxiom);
     }
 
     @Nonnull
     @Override
     public RemoveAxiomChange replaceOntologyId(@Nonnull OWLOntologyID ontologyId) {
-        if(getOntologyId().equals(ontologyId)) {
+        if(getOntologyDocumentId().equals(ontologyId)) {
             return this;
         }
         else {
@@ -48,13 +48,13 @@ public abstract class RemoveAxiomChange implements AxiomChange {
     @Nonnull
     @Override
     public AddAxiomChange getInverseChange() {
-        return AddAxiomChange.of(getOntologyId(), getAxiom());
+        return AddAxiomChange.of(getOntologyDocumentId(), getAxiom());
     }
 
     @Nonnull
     @Override
     public OWLOntologyChangeRecord toOwlOntologyChangeRecord() {
-        return new OWLOntologyChangeRecord(getOntologyId(), new RemoveAxiomData(getAxiom()));
+        return new OWLOntologyChangeRecord(getOntologyDocumentId(), new RemoveAxiomData(getAxiom()));
     }
 
     @Override
