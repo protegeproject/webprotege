@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -17,6 +19,7 @@ import java.util.UUID;
 @GwtCompatible(serializable = true)
 public abstract class BranchId {
 
+    @JsonCreator
     @Nonnull
     public static BranchId get(@Nonnull String id) {
         if(!UUIDUtil.isWellFormed(id)) {
@@ -28,6 +31,7 @@ public abstract class BranchId {
     /**
      * Gets the string form of the {@link BranchId}.
      */
+    @JsonValue
     @Nonnull
     public abstract String getId();
 
