@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.crud.ConditionalIriPrefix;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UuidFormat;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionResult;
@@ -517,6 +518,8 @@ public class RpcWhiteList implements Action, Result {
     private Color color;
 
     private Criteria criteria;
+
+    private WhiteSpaceTreatment whiteSpaceTreatment;
 
     private CompositeRelationshipValueCriteria compositeRelationshipValueCriteria;
 
@@ -1116,5 +1119,11 @@ public class RpcWhiteList implements Action, Result {
         this.compositeRelationshipValueCriteria = compositeRelationshipValueCriteria;
     }
 
+    public WhiteSpaceTreatment getWhiteSpaceTreatment() {
+        return whiteSpaceTreatment;
+    }
 
+    public void setWhiteSpaceTreatment(WhiteSpaceTreatment whiteSpaceTreatment) {
+        this.whiteSpaceTreatment = whiteSpaceTreatment;
+    }
 }
