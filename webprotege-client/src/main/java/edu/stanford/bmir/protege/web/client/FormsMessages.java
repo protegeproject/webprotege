@@ -208,10 +208,17 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("entityCreation.parentEntityCriteria")
     String entityCreation_parentEntityCriteria();
 
+    @DefaultMessage("Entity deprecation")
+    @Key("formPurpose.entityDeprecation")
+    String formPurpose_entityDeprecation();
+
     @DefaultMessage("Entity criteria")
     @Key("entityEditing.entityCriteria")
     String entityEditing_entityCriteria();
 
+    @DefaultMessage("Entity criteria")
+    @Key("entityDeprecation.entityCriteria")
+    String entityDeprecation_entityCriteria();
 
     @DefaultMessage("Save edits before switching?")
     @Key("alerts.apply.edits.title")
@@ -220,4 +227,5 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Do you want to save your edits before changing selection?")
     @Key("alerts.apply.edits.msg")
     String saveEditsAlert_Message();
+
 }

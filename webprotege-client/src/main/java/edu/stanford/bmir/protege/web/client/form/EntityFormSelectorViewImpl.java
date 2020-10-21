@@ -31,6 +31,8 @@ public class EntityFormSelectorViewImpl extends Composite implements EntityFormS
     @UiField
     RadioButton entityCreationPurposeRadio;
     @UiField
+    RadioButton entityDeprecationPurposeRadio;
+    @UiField
     Label criteriaLabel;
     @UiField
     FormsMessages msg;
@@ -60,18 +62,26 @@ public class EntityFormSelectorViewImpl extends Composite implements EntityFormS
         if(entityEditingPurposeRadio.getValue()) {
             return FormPurpose.ENTITY_EDITING;
         }
-        else {
+        else if(entityCreationPurposeRadio.getValue()) {
             return FormPurpose.ENTITY_CREATION;
+        }
+        else {
+            return FormPurpose.ENTITY_DEPRECATION;
         }
     }
 
     @Override
     public void setPurpose(FormPurpose purpose) {
-        if(purpose.equals(FormPurpose.ENTITY_EDITING)) {
-            entityEditingPurposeRadio.setValue(true);
-        }
-        else {
-            entityCreationPurposeRadio.setValue(true);
+        switch (purpose) {
+            case ENTITY_EDITING:
+                entityEditingPurposeRadio.setValue(true);
+                break;
+            case ENTITY_CREATION:
+                entityCreationPurposeRadio.setValue(true);
+                break;
+            case ENTITY_DEPRECATION:
+                entityDeprecationPurposeRadio.setValue(true);
+                break;
         }
         updateLabels();
     }
@@ -82,8 +92,11 @@ public class EntityFormSelectorViewImpl extends Composite implements EntityFormS
         if(entityEditingPurposeRadio.getValue()) {
             criteriaLabel.setText(msg.entityEditing_entityCriteria());
         }
-        else {
+        else if(entityCreationPurposeRadio.getValue()) {
             criteriaLabel.setText(msg.entityCreation_parentEntityCriteria());
+        }
+        else if(entityCreationPurposeRadio.getValue()) {
+            criteriaLabel.setText(msg.entityDeprecation_entityCriteria());
         }
     }
 }
