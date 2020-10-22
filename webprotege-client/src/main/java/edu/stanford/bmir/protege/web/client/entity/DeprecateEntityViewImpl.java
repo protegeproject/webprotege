@@ -9,11 +9,14 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,8 +49,21 @@ public class DeprecateEntityViewImpl extends Composite implements DeprecateEntit
 
     @Nonnull
     @Override
+    public Optional<OWLEntity> getReplacementEntity() {
+        return replacementEntityEditor.getValue()
+                .filter(v -> v instanceof OWLEntityData)
+                .map(v -> (OWLEntityData) v)
+                .map(OWLEntityData::getEntity);
+    }
+
+    @Nonnull
+    @Override
     public AcceptsOneWidget getFormContainer() {
         return entityFormContainer;
     }
 
+    @Override
+    public void requestFocus() {
+        replacementEntityEditor.requestFocus();
+    }
 }

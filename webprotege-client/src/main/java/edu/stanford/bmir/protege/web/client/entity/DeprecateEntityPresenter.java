@@ -9,15 +9,20 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.client.form.FormStackPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.Entity;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptorDto;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityDeprecationFormsAction;
 import edu.stanford.bmir.protege.web.shared.form.GetEntityDeprecationFormsResult;
 import edu.stanford.bmir.protege.web.shared.form.data.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -60,8 +65,19 @@ public class DeprecateEntityPresenter {
     public void start(@Nonnull AcceptsOneWidget container) {
         dispatch.execute(new GetEntityDeprecationFormsAction(projectId, entity),
                          this::displayForm);
+        EntityType<?> entityType = entity.getEntityType();
+        if(entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
+            view.setParentEntityType(PrimitiveType.CLASS);
+        }
+        else {
+            view.setParentEntityType(PrimitiveType.get(entityType));
+        }
         container.setWidget(view);
 
+    }
+
+    public Optional<FormData> getDeprecationFormData() {
+        return formPresenter.getFormData();
     }
 
     private void displayForm(GetEntityDeprecationFormsResult result) {
@@ -79,4 +95,7 @@ public class DeprecateEntityPresenter {
     }
 
 
+    public Optional<OWLEntity> getReplacementEntity() {
+        return view.getReplacementEntity();
+    }
 }

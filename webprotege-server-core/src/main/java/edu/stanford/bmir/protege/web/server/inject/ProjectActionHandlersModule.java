@@ -723,6 +723,11 @@ public class ProjectActionHandlersModule {
         return handler;
     }
 
+    @Provides @IntoSet
+    public ProjectActionHandler provideDeprecateEntityByFormActionHandler(DeprecateEntityByFormActionHandler handler) {
+        return handler;
+    }
+
     public ProjectActionHandler providesExistingOntologyMergeAddActionHandler(ExistingOntologyMergeAddActionHandler handler){
         return handler;
     }

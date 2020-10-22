@@ -3,9 +3,12 @@ package edu.stanford.bmir.protege.web.client.entity;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalButtonHandler;
+import edu.stanford.bmir.protege.web.client.library.modal.ModalCloser;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalManager;
 import edu.stanford.bmir.protege.web.client.library.modal.ModalPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.form.DeprecateEntityByFormAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
@@ -63,10 +66,22 @@ public class DeprecateEntityModal {
         modalPresenter.setTitle("Deprecate " + entityRendering);
         modalPresenter.setPrimaryButton(DEPRECATE_BUTTON);
         modalPresenter.setEscapeButton(DialogButton.CANCEL);
+        modalPresenter.setPrimaryButtonFocusedOnShow(false);
+
         DeprecateEntityPresenter deprecateEntityPresenter = deprecateEntityPresenterFactory.create(entity);
         SimplePanel simplePanel = new SimplePanel();
         modalPresenter.setView(simplePanel);
         deprecateEntityPresenter.start(simplePanel);
+
+
+        modalPresenter.setButtonHandler(DEPRECATE_BUTTON, closer -> {
+            dispatch.execute(new DeprecateEntityByFormAction(entity,
+                                                             deprecateEntityPresenter.getDeprecationFormData(),
+                                                             deprecateEntityPresenter.getReplacementEntity(),
+                                                             projectId),
+                             r -> closer.closeModal());
+        });
+
         modalManager.showModal(modalPresenter);
     }
 }
