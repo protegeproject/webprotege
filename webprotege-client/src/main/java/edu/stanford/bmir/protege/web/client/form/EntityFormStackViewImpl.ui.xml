@@ -69,6 +69,8 @@
                           addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.acceptButton}"/>
                 <g:Button ui:field="cancelEditsButton" visible="false" text="{formsMsg.edits_Cancel}"
                           addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.escapeButton}"/>
+                <g:Button ui:field="deprecateButton" visible="true" text="{formsMsg.deprecate}"
+                          addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
                 <g:Button ui:field="editButton" visible="false" text="{formsMsg.edit}"
                           addStyleNames="{style.btn} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
             </g:HTMLPanel>

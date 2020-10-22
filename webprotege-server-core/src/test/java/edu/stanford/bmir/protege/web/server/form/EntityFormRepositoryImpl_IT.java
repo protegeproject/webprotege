@@ -69,6 +69,7 @@ public class EntityFormRepositoryImpl_IT {
                                                      null),
                               languageMap,
                               FieldRun.START,
+                              FormFieldDeprecationStrategy.DELETE_VALUES,
                               new TextControlDescriptor(
                                       LanguageMap.of("en", "Enter brand name"),
                                       StringType.SIMPLE_STRING,

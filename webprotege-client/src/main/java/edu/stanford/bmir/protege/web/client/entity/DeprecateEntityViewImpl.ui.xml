@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:Label text="Replace with"/>
+            <primitive:PrimitiveDataEditor ui:field="replacementEntityEditor"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:SimplePanel ui:field="entityFormContainer"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

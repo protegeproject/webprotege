@@ -916,6 +916,11 @@ public class ClientProjectModule {
     SimilarEntitiesView provideSimilarEntitiesView(SimilarEntitiesViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    DeprecateEntityView provideDeprecateEntityView(DeprecateEntityViewImpl impl) {
+        return impl;
+    }
 }
 
 

@@ -46,6 +46,7 @@ public class SubFormControlDescriptor_IT {
                                                                                        null),
                                                                 LanguageMap.of("en", "The Label"),
                                                                 FieldRun.START,
+                                                                FormFieldDeprecationStrategy.LEAVE_VALUES_INTACT,
                                                                 new TextControlDescriptor(
                                                                         LanguageMap.empty(),
                                                                         StringType.SIMPLE_STRING,

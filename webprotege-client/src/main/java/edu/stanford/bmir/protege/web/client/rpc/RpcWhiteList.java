@@ -303,6 +303,8 @@ public class RpcWhiteList implements Action, Result {
 
     FreshEntityIri freshEntityIri;
 
+    FormFieldDeprecationStrategy deprecationStrategy;
+
     public PrimitiveFormControlDataDto getPrimitiveFormControlDataDto() {
         return primitiveFormControlDataDto;
     }

@@ -228,4 +228,7 @@ public interface FormsMessages extends com.google.gwt.i18n.client.Messages {
     @Key("alerts.apply.edits.msg")
     String saveEditsAlert_Message();
 
+    @DefaultMessage("Deprecate")
+    @Key("deprecate")
+    String deprecate();
 }

@@ -14,6 +14,12 @@ public interface EntityFormStackView extends IsWidget {
 
     void displayApplyOutstandingEditsConfirmation(ApplyEditsHandler applyEditsHandler, CancelEditsHandler cancelEditsHandler);
 
+    void setDeprecateEntityHandler(DeprecateEntityHandler handler);
+
+    interface DeprecateEntityHandler {
+        void handleDeprecateEntity();
+    }
+
     interface EnterEditModeHandler {
         void handleEnterEditMode();
     }

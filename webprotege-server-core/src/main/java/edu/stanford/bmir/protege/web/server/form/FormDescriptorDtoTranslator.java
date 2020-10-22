@@ -87,6 +87,7 @@ public class FormDescriptorDtoTranslator {
                                           toFormControlDescriptorDto(descriptor.getFormControlDescriptor()),
                                           descriptor.getOptionality(),
                                           descriptor.getRepeatability(),
+                                          descriptor.getDeprecationStrategy(),
                                           descriptor.isReadOnly(),
                                           descriptor.getInitialExpansionState(),
                                           descriptor.getHelp());
@@ -105,4 +106,6 @@ public class FormDescriptorDtoTranslator {
     public FormControlDescriptorDto toFormControlDescriptorDto(@Nonnull FormControlDescriptor descriptor) {
         return descriptor.accept(translatorVisitor);
     }
+
+
 }

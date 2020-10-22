@@ -28,6 +28,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormF
                                                 FormControlDescriptorDto descriptorDto,
                                                 Optionality optionality,
                                                 Repeatability repeatability,
+                                                FormFieldDeprecationStrategy deprecationStrategy,
                                                 boolean newReadOnly,
                                                 ExpansionState initialExpansionState,
                                                 LanguageMap help) {
@@ -38,6 +39,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormF
                                                     descriptorDto,
                                                     optionality,
                                                     repeatability,
+                                                    deprecationStrategy,
                                                     newReadOnly,
                                                     initialExpansionState,
                                                     help);
@@ -73,6 +75,9 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormF
     @Nonnull
     public abstract Repeatability getRepeatability();
 
+    @Nonnull
+    public abstract FormFieldDeprecationStrategy getDeprecationStrategy();
+
     public abstract boolean isReadOnly();
 
     @Nonnull
@@ -92,6 +97,7 @@ public abstract class FormFieldDescriptorDto implements IsSerializable, HasFormF
                 getOwlBindingInternal(),
                 getLabel(),
                 getFieldRun(),
+                getDeprecationStrategy(),
                 getFormControlDescriptor().toFormControlDescriptor(),
                 getRepeatability(),
                 getOptionality(),
