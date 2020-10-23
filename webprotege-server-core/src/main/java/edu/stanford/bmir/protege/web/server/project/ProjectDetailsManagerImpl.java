@@ -8,10 +8,7 @@ import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
@@ -144,7 +141,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                    projectDetails.getDefaultDictionaryLanguage(),
                                    projectDetails.getDefaultDisplayNameSettings(),
                                    SlackIntegrationSettings.get(slackPayloadUrl),
-                                   WebhookSettings.get(webhookSettings));
+                                   WebhookSettings.get(webhookSettings),
+                                   EntityDeprecationSettings.empty());
     }
 
 }

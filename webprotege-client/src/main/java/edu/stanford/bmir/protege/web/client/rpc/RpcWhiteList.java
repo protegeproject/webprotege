@@ -28,10 +28,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
-import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.search.*;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.shortform.*;
@@ -130,6 +127,8 @@ public class RpcWhiteList implements Action, Result {
     PropertyValueDescriptor propertyValueDescriptor;
 
     PropertyValue propertyValue;
+
+    EntityDeprecationSettings entityDeprecationSettings;
 
     DisplayNameSettings displayNameSettings;
 

@@ -236,7 +236,8 @@ public class ProjectSettingsPresenter {
                 getDefaultLanguage(),
                 getDefaultDisplayNameSettings(),
                 slackIntegrationSettings,
-                webhookSettings
+                webhookSettings,
+                EntityDeprecationSettings.empty()
         );
         dispatchServiceManager.execute(new SetProjectSettingsAction(projectSettings), result -> {
             eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
