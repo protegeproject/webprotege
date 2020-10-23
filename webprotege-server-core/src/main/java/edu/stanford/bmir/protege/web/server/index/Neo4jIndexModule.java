@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DeprecatedEntitiesByEntityIndexLuceneImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.owl2lpg.client.bind.change.Neo4jUpdater;
-import edu.stanford.owl2lpg.client.bind.change.OntologyChangeHandlerModule;
 import edu.stanford.owl2lpg.client.bind.index.*;
 import edu.stanford.owl2lpg.client.read.annotation.OntologyAnnotationsAccessorModule;
 import edu.stanford.owl2lpg.client.read.axiom.AssertionAxiomAccessorModule;
@@ -20,6 +19,7 @@ import edu.stanford.owl2lpg.client.read.entity.EntityAccessorModule;
 import edu.stanford.owl2lpg.client.read.individual.NamedIndividualAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.OntologyAccessorModule;
 import edu.stanford.owl2lpg.client.read.ontology.ProjectAccessorModule;
+import edu.stanford.owl2lpg.client.write.handlers.OntologyChangeHandlerModule;
 
 import javax.annotation.Nonnull;
 
