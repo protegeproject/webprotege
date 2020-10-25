@@ -1,0 +1,16 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <g:HTMLPanel>
+        <g:Label text="Deprecated classes parent"/>
+        <primitive:PrimitiveDataEditor ui:field="classesParentEditor" classesAllowed="true"/>
+        <g:Label text="Deprecated object properties parent"/>
+        <primitive:PrimitiveDataEditor ui:field="objectPropertiesParentEditor" objectPropertiesAllowed="true"/>
+        <g:Label text="Deprecated data properties parent"/>
+        <primitive:PrimitiveDataEditor ui:field="dataPropertiesParentEditor" dataPropertiesAllowed="true"/>
+        <g:Label text="Deprecated annotation properties parent"/>
+        <primitive:PrimitiveDataEditor ui:field="annotationPropertiesParentEditor" annotationPropertiesAllowed="true"/>
+        <g:Label text="Deprecated individual parent"/>
+        <primitive:PrimitiveDataEditor ui:field="individualsParentEditor" classesAllowed="true"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

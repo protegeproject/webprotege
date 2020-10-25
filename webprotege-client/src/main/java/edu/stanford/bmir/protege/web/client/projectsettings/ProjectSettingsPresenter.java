@@ -83,6 +83,9 @@ public class ProjectSettingsPresenter {
     @Nonnull
     private final ProjectSettingsService projectSettingsService;
 
+    @Nonnull
+    private final EntityDeprecationSettingsPresenter entityDeprecationSettingsPresenter;
+
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull PermissionScreener permissionScreener,
@@ -98,7 +101,8 @@ public class ProjectSettingsPresenter {
                                     @Nonnull WebhookSettingsView webhookSettingsView,
                                     @Nonnull Messages messages,
                                     @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
-                                    @Nonnull ProjectSettingsService projectSettingsService) {
+                                    @Nonnull ProjectSettingsService projectSettingsService,
+                                    @Nonnull EntityDeprecationSettingsPresenter entityDeprecationSettingsPresenter) {
         this.projectId = checkNotNull(projectId);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -113,6 +117,7 @@ public class ProjectSettingsPresenter {
         this.messages = checkNotNull(messages);
         this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
         this.projectSettingsService = checkNotNull(projectSettingsService);
+        this.entityDeprecationSettingsPresenter = checkNotNull(entityDeprecationSettingsPresenter);
     }
 
     public ProjectId getProjectId() {
@@ -145,6 +150,10 @@ public class ProjectSettingsPresenter {
         settingsPresenter.addSection(messages.displayName_settings_project_title()).setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
+
+        AcceptsOneWidget entityDeprecationSettingsContainer = settingsPresenter.addSection(messages.entityDeprecationSettings_title());
+        entityDeprecationSettingsPresenter.start(entityDeprecationSettingsContainer);
+
         defaultDisplayNameSettingsView.setResetLanguagesHandler(this::handleResetDisplayNameLanguages);
         reloadSettings();
     }
@@ -188,6 +197,7 @@ public class ProjectSettingsPresenter {
         slackWebhookSettingsView.setWebhookUrl(slackIntegrationSettings.getPayloadUrl());
         WebhookSettings webhookSettings = projectSettings.getWebhookSettings();
         webhookSettingsView.setWebhookUrls(webhookSettings.getWebhookSettings());
+        entityDeprecationSettingsPresenter.setValue(projectSettings.getEntityDeprecationSettings());
         settingsPresenter.setBusy(false);
     }
 
@@ -237,7 +247,7 @@ public class ProjectSettingsPresenter {
                 getDefaultDisplayNameSettings(),
                 slackIntegrationSettings,
                 webhookSettings,
-                EntityDeprecationSettings.empty()
+                entityDeprecationSettingsPresenter.getValue()
         );
         dispatchServiceManager.execute(new SetProjectSettingsAction(projectSettings), result -> {
             eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());

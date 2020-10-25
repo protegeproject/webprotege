@@ -921,6 +921,11 @@ public class ClientProjectModule {
     DeprecateEntityView provideDeprecateEntityView(DeprecateEntityViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntityDeprecationSettingsView provideEntityDeprecationSettingsView(EntityDeprecationSettingsViewImpl impl) {
+        return impl;
+    }
 }
 
 
