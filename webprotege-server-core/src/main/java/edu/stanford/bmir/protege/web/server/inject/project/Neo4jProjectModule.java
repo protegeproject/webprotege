@@ -64,8 +64,7 @@ import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jAnnotationPropertyHierarc
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jClassHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jDataPropertyHierarchyProvider;
 import edu.stanford.owl2lpg.client.bind.hierarchy.Neo4jObjectPropertyHierarchyProvider;
-import edu.stanford.owl2lpg.model.BranchId;
-import edu.stanford.owl2lpg.model.OntologyDocumentId;
+import edu.stanford.owl2lpg.translator.shared.BranchId;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
@@ -104,20 +103,14 @@ public class Neo4jProjectModule {
 
   @Provides
   @ProjectSingleton
-  public edu.stanford.owl2lpg.model.ProjectId provideNeo4jProjectId() {
-    return edu.stanford.owl2lpg.model.ProjectId.create("8e62c425-8d8f-4e6a-a188-2d4b4b586468");
+  public edu.stanford.owl2lpg.translator.shared.ProjectId provideNeo4jProjectId() {
+    return edu.stanford.owl2lpg.translator.shared.ProjectId.create("8e62c425-8d8f-4e6a-a188-2d4b4b586468");
   }
 
   @Provides
   @ProjectSingleton
   public BranchId provideNeo4jBranchId() {
     return BranchId.create("49b40337-06ff-4d94-a043-7d81733f10d3");
-  }
-
-  @Provides
-  @ProjectSingleton
-  public OntologyDocumentId provideOntologyDocumentId() {
-    return OntologyDocumentId.create("f7b5f0b4-fc40-40c0-a9ef-050fce37e0e4");
   }
 
   @Provides
