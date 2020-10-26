@@ -25,14 +25,20 @@ public class DbModule {
 
     @Provides
     @DbHost
-    public String provideDbHost(DbHostProvider dbHostProvider) {
+    public Optional<String> provideDbHost(DbHostProvider dbHostProvider) {
         return dbHostProvider.get();
     }
 
     @Provides
     @DbPort
-    public int provideDbPort(DbPortProvider dbPortProvider) {
+    public Optional<Integer> provideDbPort(DbPortProvider dbPortProvider) {
         return dbPortProvider.get();
+    }
+
+    @Provides
+    @DbUri
+    public Optional<String> provideDbUri(DbUriProvider dbUriProvider) {
+        return dbUriProvider.get();
     }
 
     @Provides
