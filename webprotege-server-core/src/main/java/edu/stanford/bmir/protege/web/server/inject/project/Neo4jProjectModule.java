@@ -218,17 +218,14 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  public HierarchyProvider<OWLObjectProperty>
-  provideHierarchyProviderOfObjectProperty(ObjectPropertyHierarchyProvider provider) {
-    return provider;
+  public HierarchyProvider<OWLObjectProperty> provideHierarchyProviderOfObjectProperty(Neo4jObjectPropertyHierarchyProvider impl) {
+    return impl;
   }
 
 
   @Provides
-  public HierarchyProvider<OWLDataProperty>
-  provideHierarchyProviderOfDataProperty(
-      DataPropertyHierarchyProvider provider) {
-    return provider;
+  public HierarchyProvider<OWLDataProperty> provideHierarchyProviderOfDataProperty(Neo4jDataPropertyHierarchyProvider impl) {
+    return impl;
   }
 
   @Provides
@@ -237,21 +234,18 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  public HierarchyProvider<OWLAnnotationProperty>
-  provideHierarchyProviderOfAnnotationProperty(
-      AnnotationPropertyHierarchyProvider provider) {
-    return provider;
-  }
-
-  @Provides
-  AnnotationPropertyHierarchyProvider provideAnnotationPropertyHierarchyProvider(
-      Neo4jAnnotationPropertyHierarchyProvider impl) {
+  public HierarchyProvider<OWLAnnotationProperty> provideHierarchyProviderOfAnnotationProperty(Neo4jAnnotationPropertyHierarchyProvider impl) {
     return impl;
   }
 
   @Provides
-  public HasGetAncestors<OWLClass> providesOWLClassAncestors(HierarchyProvider<OWLClass> hierarchyProvider) {
-    return hierarchyProvider;
+  AnnotationPropertyHierarchyProvider provideAnnotationPropertyHierarchyProvider(Neo4jAnnotationPropertyHierarchyProvider impl) {
+    return impl;
+  }
+
+  @Provides
+  public HasGetAncestors<OWLClass> providesOWLClassAncestors(Neo4jClassHierarchyProvider impl) {
+    return impl;
   }
 
   @Provides
@@ -260,13 +254,13 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(HierarchyProvider<OWLObjectProperty> hierarchyProvider) {
-    return hierarchyProvider;
+  public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(Neo4jObjectPropertyHierarchyProvider impl) {
+    return impl;
   }
 
   @Provides
-  public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(HierarchyProvider<OWLDataProperty> hierarchyProvider) {
-    return hierarchyProvider;
+  public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(Neo4jDataPropertyHierarchyProvider impl) {
+    return impl;
   }
 
   @Provides
@@ -275,8 +269,8 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(HierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
-    return hierarchyProvider;
+  public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(Neo4jAnnotationPropertyHierarchyProvider impl) {
+    return impl;
   }
 
   @Provides
@@ -420,8 +414,7 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  OWLObjectSelector<OWLObjectPropertyExpression> provideObjectPropertyExpressionSelector(
-      OWLObjectPropertyExpressionSelector selector) {
+  OWLObjectSelector<OWLObjectPropertyExpression> provideObjectPropertyExpressionSelector(OWLObjectPropertyExpressionSelector selector) {
     return selector;
   }
 
@@ -544,21 +537,18 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(
-      ObjectPropertyObjectPropertyAncestorChecker checker) {
+  HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(ObjectPropertyObjectPropertyAncestorChecker checker) {
     return checker;
   }
 
 
   @Provides
-  HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(
-      DataPropertyDataPropertyAncestorChecker checker) {
+  HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(DataPropertyDataPropertyAncestorChecker checker) {
     return checker;
   }
 
   @Provides
-  HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(
-      NamedIndividualClassAncestorChecker checker) {
+  HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(NamedIndividualClassAncestorChecker checker) {
     return checker;
   }
 
@@ -611,8 +601,7 @@ public class Neo4jProjectModule {
   }
 
   @Provides
-  LiteralRenderer provideLiteralRenderer(@Nonnull
-                                             StringFormatterLiteralRendererImpl impl) {
+  LiteralRenderer provideLiteralRenderer(@Nonnull StringFormatterLiteralRendererImpl impl) {
     return impl;
   }
 
