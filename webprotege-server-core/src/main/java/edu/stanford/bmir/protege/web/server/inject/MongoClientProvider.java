@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import edu.stanford.bmir.protege.web.server.app.ApplicationDisposablesManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.slf4j.Logger;
@@ -12,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -52,15 +51,16 @@ public class MongoClientProvider implements Provider<MongoClient> {
     @Override
     public MongoClient get() {
         var serverAddress = new ServerAddress(host, port);
+        var seeds = Collections.singletonList(serverAddress);
         var mongoClient = mongoCredential
                 .map(Collections::singletonList)
                 .map(credentials -> {
                     logger.info("Creating MongoClient database connection with credentials for authentication");
-                    return new MongoClient(serverAddress, credentials);
+                    return new MongoClient(seeds, credentials);
                 })
                 .orElseGet(() -> {
                     logger.info("Created MongoClient database connection without credentials for authentication");
-                    return new MongoClient(serverAddress);
+                    return new MongoClient(seeds);
                 });
         logger.info("Created MongoClient database connection");
         disposableObjectManager.register(() -> {
