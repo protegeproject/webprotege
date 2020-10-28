@@ -50,4 +50,6 @@ public interface EntityFormStackView extends IsWidget {
 
     void setCancelEditsButtonVisible(boolean visible);
 
+    void setDeprecateButtonVisible(boolean visible);
+
 }

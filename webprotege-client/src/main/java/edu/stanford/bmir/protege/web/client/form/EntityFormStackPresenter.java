@@ -185,6 +185,7 @@ public class EntityFormStackPresenter {
 
     private void handleGetEntityFormsResult(GetEntityFormsResult result) {
         entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
+        view.setDeprecateButtonVisible(!result.getEntityData().isDeprecated());
         ImmutableList<FormDataDto> formData = result.getFormData();
         // If we have a subset of the forms then just replace the ones that we have
         boolean replaceAllForms = result.getFilteredFormIds().isEmpty();
@@ -222,7 +223,11 @@ public class EntityFormStackPresenter {
     }
 
     private void handleDeprecateEntity() {
-        currentEntity.ifPresent(deprecateEntityModal::showModal);
+        currentEntity.ifPresent(entity -> deprecateEntityModal.showModal(
+                entity,
+                () -> view.setDeprecateButtonVisible(false),
+                () -> {}
+        ));
     }
 
     private void handleCancelEdits() {

@@ -129,6 +129,11 @@ public class EntityFormStackViewImpl extends Composite implements EntityFormStac
     }
 
     @Override
+    public void setDeprecateButtonVisible(boolean visible) {
+        this.deprecateButton.setVisible(visible);
+    }
+
+    @Override
     public void setDeprecateEntityHandler(DeprecateEntityHandler handler) {
         this.deprecateEntityHandler = checkNotNull(handler);
     }

@@ -53,12 +53,16 @@ public class DeprecateEntityModal {
         this.projectId = checkNotNull(projectId);
     }
 
-    public void showModal(@Nonnull OWLEntity entity) {
+    public void showModal(@Nonnull OWLEntity entity,
+                          @Nonnull Runnable entityDeprecatedHandler,
+                          @Nonnull Runnable cancelHandler) {
         dispatch.execute(new GetEntityRenderingAction(projectId, entity),
-                         this::showModalForEntity);
+                         result -> showModalForEntity(result, entityDeprecatedHandler, cancelHandler));
     }
 
-    private void showModalForEntity(GetEntityRenderingResult result) {
+    private void showModalForEntity(GetEntityRenderingResult result,
+                                    @Nonnull Runnable entityDeprecatedHandler,
+                                    @Nonnull Runnable cancelHandler) {
         OWLEntityData entityData = result.getEntityData();
         String entityRendering = entityData.getBrowserText();
         OWLEntity entity = entityData.getEntity();
@@ -79,8 +83,10 @@ public class DeprecateEntityModal {
                                                              deprecateEntityPresenter.getDeprecationFormData(),
                                                              deprecateEntityPresenter.getReplacementEntity(),
                                                              projectId),
-                             r -> closer.closeModal());
+                             r -> {closer.closeModal(); entityDeprecatedHandler.run();});
         });
+        modalPresenter.setButtonHandler(DialogButton.CANCEL,
+                                        closer -> {closer.closeModal(); cancelHandler.run();});
 
         modalManager.showModal(modalPresenter);
     }
