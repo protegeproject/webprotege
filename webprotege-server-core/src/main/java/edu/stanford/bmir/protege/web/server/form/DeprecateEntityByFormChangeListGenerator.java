@@ -19,9 +19,8 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormEntitySubject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormSubject;
 import edu.stanford.bmir.protege.web.shared.form.field.FormFieldDeprecationStrategy;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import edu.stanford.bmir.protege.web.shared.projectsettings.EntityDeprecationSettings;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorExAdapter;
 import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorExAdapter;
 
@@ -51,6 +50,8 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
 
     @Nonnull
     private final Optional<OWLEntity> replacementEntity;
+
+    private EntityDeprecationSettings entityDeprecationSettings;
 
     @Nonnull
     private final EntityFormChangeListGeneratorFactory formChangeListGeneratorFactory;
@@ -84,6 +85,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
     public DeprecateEntityByFormChangeListGenerator(@Nonnull OWLEntity entityToBeDeprecated,
                                                     @Nonnull Optional<FormData> deprecationFormData,
                                                     @Nonnull Optional<OWLEntity> replacementEntity,
+                                                    @Nonnull EntityDeprecationSettings entityDeprecationSettings,
                                                     @Provided @Nonnull EntityFormChangeListGeneratorFactory formChangeListGeneratorFactory,
                                                     @Provided @Nonnull EntityFormManager entityFormManager,
                                                     @Provided @Nonnull MessageFormatter messageFormatter,
@@ -95,6 +97,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         this.entityToBeDeprecated = checkNotNull(entityToBeDeprecated);
         this.deprecationFormData = checkNotNull(deprecationFormData);
         this.replacementEntity = checkNotNull(replacementEntity);
+        this.entityDeprecationSettings = checkNotNull(entityDeprecationSettings);
         this.formChangeListGeneratorFactory = formChangeListGeneratorFactory;
         this.entityFormManager = entityFormManager;
         this.messageFormatter = messageFormatter;
@@ -127,7 +130,7 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         var changesToCleanUpReplacementEntity = cleanUpReplacementEntity(context);
         allChangesBuilder.addAll(changesToCleanUpReplacementEntity);
 
-        // Add the stuff we want to preserver to the deprecated entity
+        // Add the stuff we want to preserve to the deprecated entity
         var changesToPreserveFormData = getChangesToPreserveFields(context, formDescriptors);
         allChangesBuilder.addAll(changesToPreserveFormData);
 
@@ -135,15 +138,68 @@ public class DeprecateEntityByFormChangeListGenerator implements ChangeListGener
         var changesToAddEntityDeprecationFormData = getChangesToAddDeprecationFormData(context).getChanges();
         allChangesBuilder.addAll(changesToAddEntityDeprecationFormData);
 
+        var defaultOntologyId = defaultOntologyIdManager.getDefaultOntologyId();
         // Mark the deprecated entity as deprecated.  Make sure it's also declared, otherwise
         // it will just be a deprecated IRI
-        allChangesBuilder.add(AddAxiomChange.of(defaultOntologyIdManager.getDefaultOntologyId(),
+        allChangesBuilder.add(AddAxiomChange.of(defaultOntologyId,
                                                 dataFactory.getOWLDeclarationAxiom(entityToBeDeprecated)));
-        allChangesBuilder.add(AddAxiomChange.of(defaultOntologyIdManager.getDefaultOntologyId(),
+        allChangesBuilder.add(AddAxiomChange.of(defaultOntologyId,
                                                 dataFactory.getDeprecatedOWLAnnotationAssertionAxiom(
                                                         entityToBeDeprecated.getIRI())));
 
+        // Reparent the deprecated entity if a parent is specified by the settings
+        getPlacementAxiom()
+                .ifPresent(ax -> allChangesBuilder.add(AddAxiomChange.of(defaultOntologyId,
+                                                                         ax)));
+
         return allChangesBuilder.build(entityToBeDeprecated);
+    }
+
+    private Optional<OWLAxiom> getPlacementAxiom() {
+        return entityToBeDeprecated.accept(new OWLEntityVisitorEx<>() {
+            @Nonnull
+            @Override
+            public Optional<OWLAxiom> visit(@Nonnull OWLClass cls) {
+                return entityDeprecationSettings.getDeprecatedClassesParent()
+                                                .map(parent -> dataFactory.getOWLSubClassOfAxiom(cls, parent));
+            }
+
+            @Nonnull
+            @Override
+            public Optional<OWLAxiom> visit(@Nonnull OWLObjectProperty property) {
+                return entityDeprecationSettings.getDeprecatedObjectPropertiesParent()
+                                                .map(parent -> dataFactory.getOWLSubObjectPropertyOfAxiom(property,
+                                                                                                          parent));
+            }
+
+            @Nonnull
+            @Override
+            public Optional<OWLAxiom> visit(@Nonnull OWLDataProperty property) {
+                return entityDeprecationSettings.getDeprecatedDataPropertiesParent()
+                                                .map(parent -> dataFactory.getOWLSubDataPropertyOfAxiom(property, parent));
+            }
+
+            @Nonnull
+            @Override
+            public Optional<OWLAxiom> visit(@Nonnull OWLNamedIndividual individual) {
+                return entityDeprecationSettings.getDeprecatedIndividualsParent()
+                                                .map(parent -> dataFactory.getOWLClassAssertionAxiom(parent, individual));
+            }
+
+            @Nonnull
+            @Override
+            public Optional<OWLAxiom> visit(@Nonnull OWLDatatype datatype) {
+                return Optional.empty();
+            }
+
+            @Nonnull
+            @Override
+            public Optional<OWLAxiom> visit(@Nonnull OWLAnnotationProperty property) {
+                return entityDeprecationSettings.getDeprecatedAnnotationPropertiesParent()
+                                                .map(parent -> dataFactory.getOWLSubAnnotationPropertyOfAxiom(property,
+                                                                                                              parent));
+            }
+        });
     }
 
     private List<OntologyChange> getChangesToPreserveFields(ChangeGenerationContext context,
